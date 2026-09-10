@@ -3,7 +3,7 @@ name: Update emacs-devel mbox
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 16 * * *"
+    - cron: "0 16,17 * * *"
 
 permissions:
   contents: write
@@ -13,14 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check Madrid time
+        id: madrid
+        run: |
+          HOUR=$(TZ=Europe/Madrid date +%H)
+          if [ "$HOUR" != "18" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout repository
+        if: steps.madrid.outputs.run == 'true'
         uses: actions/checkout@v4
 
       - name: Compute current month
+        if: steps.madrid.outputs.run == 'true'
         id: month
-        run: echo "value=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+        run: echo "value=$(TZ=Europe/Madrid date +%Y-%m)" >> "$GITHUB_OUTPUT"
 
       - name: Download emacs-devel mbox
+        if: steps.madrid.outputs.run == 'true'
         run: |
           mkdir -p mbox
 
@@ -29,6 +42,7 @@ jobs:
             -o "mbox/${{ steps.month.outputs.value }}"
 
       - name: Commit changes
+        if: steps.madrid.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
