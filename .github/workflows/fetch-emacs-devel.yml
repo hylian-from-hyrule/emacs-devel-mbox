@@ -1,0 +1,44 @@
+name: Update emacs-devel mbox
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 16 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compute current month
+        id: month
+        run: echo "value=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+      - name: Download emacs-devel mbox
+        run: |
+          mkdir -p mbox
+
+          curl -fL \
+            "https://lists.gnu.org/archive/mbox/emacs-devel/${{ steps.month.outputs.value }}" \
+            -o "mbox/${{ steps.month.outputs.value }}"
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add mbox/
+
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+
+          git commit -m "Update emacs-devel mbox ${{ steps.month.outputs.value }}"
+          git push
