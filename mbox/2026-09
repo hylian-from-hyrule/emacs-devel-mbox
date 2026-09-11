@@ -23536,3 +23536,2163 @@ must be "visited" first (or maybe I'm imagining things).
 Jo=C3=A3o
 
 
+From MAILER-DAEMON Thu Sep 10 14:11:32 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x4jFE-0002pI-Dl
+	for mharc-emacs-devel@gnu.org; Thu, 10 Sep 2026 14:11:32 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <enrico@eflor.net>) id 1x4jFD-0002p7-LF
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 14:11:31 -0400
+Received: from fout-a4-smtp.messagingengine.com ([103.168.172.147])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <enrico@eflor.net>) id 1x4jFA-0006Ip-ES
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 14:11:31 -0400
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+ by mailfout.phl.internal (Postfix) with ESMTP id A9F7DEC0175;
+ Thu, 10 Sep 2026 14:11:26 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-03.internal (MEProxy); Thu, 10 Sep 2026 14:11:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eflor.net; h=cc
+ :cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm2; t=1789063886; x=1789150286; bh=sAMFbeFp4l
+ yZsyqguf7eBp+SNFqM+HS/Bu5trTYOSms=; b=gI493n0N66qg2LVvATzGUyUzq2
+ jC/5hx7filF/GHPI/DmLUdqBUg/KXHmwD0N84LKb7JX2JV+6IX5AnuL9G0MfXM6p
+ 3LVFQxzByo9Xibvrw+cnfRmST2zIhPNUOOcUF0bhB+mVOAPiPgDBQMhbMlRfY783
+ eDJLuR+JkxXuN7rKh1cwpP9cwjVNxCgEZtzQrMh4WvDKjQWuMdq4kVu+QX0WopeK
+ iVteSUfRZl9/ued6XQ7uoNe6Q0GBHlGLijrZu2Uc9dWeKy2iFdKi2Nmh97OljbnR
+ BqjJsI3wIKh0MhI0mlEFTN8dTYPXIIojJbVqLM4AbtRyJ7P2v9olWsqS97/A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+ 1789063886; x=1789150286; bh=sAMFbeFp4lyZsyqguf7eBp+SNFqM+HS/Bu5
+ trTYOSms=; b=x9RbmDwCdWBJsPd7LyQ9m7iX5DZoHN/Ds4iV+B3Om6gQM3Ojnr0
+ pHOUFO0ZD+BEK0NhgzUbLOYuF4r5HoqpuWriJw1bsEIgvnrWMh59/9zwTa45hpoF
+ 2+D0OU2vGWY+Bay4Opi/GE2ujeqxeflMOBnlhLZyUtwHLq97DznAifBJ8wltrPEb
+ vlSjgHHM4KlWH2LIu62nLGcFq1DrRPbjGMDcaDmmyfKR8q0O+SfbeyXLLvYNvsVq
+ M5VETV0/LeOa8iiWRbM+QExl4mw3B+3gNjcY8gKwGDlRAEHLvsiwwP7bAjdzoeRa
+ BWM2i+4Hbru3Qh+7H/mgMO+BbvN4Y4k1dkg==
+X-ME-Sender: <xms:zvKiavuut1xHLDEgG0kQwwKTpIvRHQUa3luwyjHdpGhNr8ECLbedag>
+ <xme:zvKianfD_d0IJhrqR2sPIsUC6s0g3me28Cmle7WGPHmN9UI5orbXQ_h0lapec3XAC
+ 5T1nH3fCc0UHXLAKF6O6OlBAk5kljS08bBHjeTv6NpiexM0pl3pCDau>
+X-ME-Received: <xmr:zvKianwxR1RAJMtcd436vGglq_vWQg93yLHUtbVzLlKFEUqFlJnYJw2c>
+X-ME-Proxy-Cause: dmFkZTET7Kr9hE/FFzt8VypwZDF1aPTd0COsgH0Y52Km0CQsYTCQslXx9BRWsvdJbkjHc+
+ dcruAL1vqHEDAC9eAdwwh5bWMTAr2VjfaX53FQNYWo+EX+KDG5b21falgGkdsIcRID7PhS
+ PgzutCL5OIzMDj4PFkUr4IuvFkRN2lb87mGCfATCxEqMf265HJSf9gkPafg2WG28MzLAl3
+ DG9S1Keay6obBu5fwZpp/P6OPbdZpev8GOhSeXfQjPu9gsBxSmAe/JeJ+hnxHx/yQ1mBCz
+ VVT2SLwWnegn4r84LLQX3oQXAiAbC/YV6nQkE8QqIlL74sNw0HndMTc21Ro8nWqIS5hrfn
+ HIjMlhC7WpgkBnBEqqXRoMORnjbzcHiHwJUrcSJsYXeK290RrtDjbvc5ON/0qejMUdivZD
+ wk964jSSjL26m6C6hmqQbu9gxJKQ0NT06PfN6/LHr9d6SGq9ivxneAXW8SeBB5NdKY4gWL
+ NH+c11/AjtHdwJG1prq2LihHIIGvpcby4tY1XG9jLxgw4jc3XuDYoeBts6Evp7o4hh+3eZ
+ FkrfV7hZAO3stgmg9QNrT0fXMF1tv3xNw40GJOE0VDaSdvYlN9jk++CZw2B3hu0UZZTd5l
+ 8qRTFDc05NQLv7lZIipbVgY6s9nTTMNIMOiRcVfiLa1g1PtkB4c/+XHogjTA
+X-ME-Proxy: <xmx:zvKiatGHNdjD0lTHp29MKpeuO5RuLuUW_MdYzL2PJvEzibXwW_jwDw>
+ <xmx:zvKiarzPvUYOBextMjZyKGMVTE8yAigdhvvgTUP4vZi7jP2ABQGtQQ>
+ <xmx:zvKiauuoWn-zs4FRWExjc7eWcT35wrlBKfslsQFQZTQcKc7LEOrX1A>
+ <xmx:zvKiao0h7LdXCagdAKy40wYOMWBLQPoVbXt9OHowyhk-FGD_EsHEVg>
+ <xmx:zvKialDF0mwjUu_zHm1Qr6D75-A68bvXc3NdKIXbhN0UXgoRMbsk-hh5>
+Feedback-ID: i20f9467d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 10 Sep 2026 14:11:26 -0400 (EDT)
+From: Enrico Flor <enrico@eflor.net>
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: emacs-devel@gnu.org, Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: New package `typewriter.el'
+In-Reply-To: <87se3mqmm5.fsf@posteo.net>
+References: <m2zeygq0ze.fsf@efl.local.mail-host-address-is-not-set>
+ <87ecfsk493.fsf@posteo.net>
+ <m2zeygbnhb.fsf@efl.local.mail-host-address-is-not-set>
+ <875x14k1tc.fsf@posteo.net>
+ <m2wltkb1y0.fsf@efl.local.mail-host-address-is-not-set>
+ <87se48hsfv.fsf@posteo.net> <m2zey2w85v.fsf@dhcp-10-29-154-10.dyn.mit.edu>
+ <87se3mqmm5.fsf@posteo.net>
+Date: Thu, 10 Sep 2026 14:11:24 -0400
+Message-ID: <m27bkt9dtf.fsf@dhcp-10-29-167-110.dyn.mit.edu>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=-=-="
+Received-SPF: pass client-ip=103.168.172.147; envelope-from=enrico@eflor.net;
+ helo=fout-a4-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 10 Sep 2026 18:11:31 -0000
+
+--=-=-=
+Content-Type: multipart/signed; boundary="==-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
+
+--==-=-=
+Content-Type: text/plain; format=flowed
+
+Hi Philip,  I've removed the double bindings, in the sense Stefan 
+urged me to, along with other improvements you suggested. 
+Attached is the last version, which corresponds to the most recent 
+commit on the repository (e374920).    As far as the name is 
+concerned, thank you for spotting the inconsistency: I renamed the 
+repository.  The package should be typewriter (as the file is 
+typewriter.el).  The new address of the repository is: 
+https://github.com/enricoflor/typewriter.el
+
+Regarding your last two points, here's my (perhaps flawed) 
+thinking.  I opted to not use a symbol property because I 
+concluded that there was no good way to get the symbol plist 
+mechanism to be buffer local, whereas the way this is now it's 
+guaranteed to behave well if the minor mode is turned on in two 
+different buffers that have different initial states.  As far as 
+the counter is concerned: initially it was an expression added to 
+:lighter, but then I realized doing it that way makes the counter 
+disappear if a user has minions or diminish on (to unclutter the 
+mode-line).  (For example, I use minions).  After all the user is 
+not forced to have the counter on, and by default it isn't, since 
+typewriter-fill-column's default is nil.
+
+Enrico
+
+
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJFBAEBCAAvFiEERVv7soLxAz8JCV7Vj/ouJc5xpgYFAmqi8swRHGVucmljb0Bl
+Zmxvci5uZXQACgkQj/ouJc5xpgbg9Q//WZnHIg3zLmd9tBK+vIVOYPaTYNfnKaID
+hniM5CuB2cVW6aM5h9/b2ByZLkChCRhRkU6sWmTpzHl00C9x3LCLEOT13b0XXjUB
+rvxhz62BwPEK9cVPVXmiLzQspRljRs1OCT6MaeUyfzeXrWBMKjF1I/uT4LBQ0KCi
+mXYsAVm8/Wk3RNJqMt98IIalVQajaj3J3XPjS3hW9vJvzxyhir+rr4QejxlrTk2P
+zhp7jyA+ijQfhnm7NENGtwIl//BCmcjFqHFnxZaM4SS2JNZqOoQdkUrONwU+Mz1p
+UKOtpZsMMHnWQ6IvCUvuHEU5+9tp8iX+bilQ7l7nUd/JxnzDoWIli3wj4SYWcNlE
+IROQo8njgOLnYj3W5CHV8ko6eIWBcKxCmC6j09Q59uSSUXNauhMyReRzwkyYVcR+
+UUjBNKvve77P3acb3dQR6wKOS4rEwU4x11pRyHD89IHwPZN3fzUrR2FwefxkKnpY
+5YaEHnnmLoy8Ct+LLQlxBgbcpwyOF/WVOS5D6SHa19slJN82XJGfbkheRRG+JIEM
+F8aoH1wFvoqQ7bNtDpmQO8liou2GNQWLLwFRso661Gt2/+Gc3AGm1IbzojILDQCl
+1n7BgRCtMjvCVy5mn+Npff1caid9Ho88MylYTOR2FOl/QShgHiu/jVw3A5J1lGtQ
+q5P5aUyEg7s=
+=skzm
+-----END PGP SIGNATURE-----
+--==-=-=--
+
+--=-=-=
+Content-Type: application/emacs-lisp
+Content-Disposition: attachment; filename=typewriter.el
+Content-Transfer-Encoding: quoted-printable
+
+;;; typewriter.el --- Turn Emacs into a text adder  -*- lexical-binding: t;=
+ -*-
+
+;; Copyright (C) 2026 Free Software Foundation, Inc.
+
+;; Author: Enrico Flor <enrico@eflor.net>
+;; Maintainer: Enrico Flor <enrico@eflor.net>
+;; URL: https://github.com/enricoflor/typewriter.el
+;; Version: 1.0.0
+;; Keywords: wp
+
+;; Package-Requires: ((emacs "30.1"))
+
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation, either version 3 of the
+;; License, or (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see
+;; <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; This package provides typewriter-mode, a small minor mode that
+;; deliberately handicaps Emacs to an extreme degree in order to
+;; provide something as close as possible to the strict forward-only
+;; typewriter experience.  Some find that the lack of editing
+;; facilities fosters a state of concentration and focus that makes
+;; certain types of creative writing more satisfying.
+;;
+;; The package has several configuration options (M-x customize-group
+;; RET typewriter).
+;;
+;; Although no systematic test has been carried out, this package's
+;; minimality should ensure its compatibility with packages that
+;; change the layout of text in the window, such as the fairly popular
+;; olivetti, or any configuration that (for instance) hides or alters
+;; element of the emacs interface.
+
+;;; Code:
+
+(defgroup typewriter nil
+  "Configuration options for `typewriter-mode'."
+  :prefix "typewriter-"
+  :link '(url-link :tag "Website for typewriter-mode"
+                   "https://github.com/enricoflor/typewriter.el")
+  :group 'wp)
+
+(defcustom typewriter-preserve-undo-history t
+  "If non-nil, keep tracking undo history while in `typewriter-mode'.
+
+You still cannot undo while the mode is active (buffer will be in
+`read-only-mode'), but the history will be fully available after you
+exit the mode."
+  :type 'boolean)
+
+(defcustom typewriter-fill-column nil
+  "The margin limit in `typewriter-mode'.
+
+If set to an integer, the typewriter will lock up and \\=3D'ding\\=3D' when
+you reach this column. You must press RET to continue.  If nil, no
+margin is enforced."
+  :type '(choice (const :tag "No margin" nil)
+                 (natnum :tag "Margin at column")))
+
+(defcustom typewriter-warning-bell-offset 8
+  "Number of columns before the margin to sound the warning bell."
+  :type '(choice (const :tag "No warning bell" nil)
+                 (natnum :tag "Warning bell offset at")))
+
+(defcustom typewriter-show-chars-remaining t
+  "If non-nil, show columns remaining before the margin in the mode line.
+
+Has no effect unless `typewriter-fill-column' is also set to an integer,
+since without a margin there is nothing to count down to."
+  :type 'boolean)
+
+(defcustom typewriter-modeline-format " [%d]"
+  "Format string for the modeline character counter.
+
+This is passed directly to `format'.  The `%d' construct will be
+replaced by the number of remaining characters.  Include a leading space
+to visually separate the counter from preceding items in the modeline."
+  :type 'string)
+
+(defcustom typewriter-tab-width 8
+  "The number of columns a tab key advances the carriage.
+
+If 0, `typewriter-tab' is disabled."
+  :type 'natnum)
+
+(defcustom typewriter-keystroke-hook nil
+  "Hook run after successfully striking a key (inserting a character)."
+  :type 'hook)
+
+(defcustom typewriter-carriage-return-hook nil
+  "Hook run after inserting a new line."
+  :type 'hook)
+
+(defun typewriter--modeline-remaining ()
+  "Return a mode-line string with columns left before the margin.
+
+Returns the empty string outside `typewriter-mode', or when
+`typewriter-show-chars-remaining' or `typewriter-fill-column' is nil."
+  (declare (side-effect-free t))
+  (if (and typewriter-show-chars-remaining
+           typewriter-fill-column)
+      (let ((curr (save-excursion
+                    (end-of-line)
+                    (current-column))))
+        (format typewriter-modeline-format (max 0 (- typewriter-fill-column=
+ curr))))
+    ""))
+
+(defun typewriter-backward-char ()
+  "Move the carriage left without deleting, allowing overstrikes."
+  (interactive)
+  (let ((active-line-start (save-excursion
+                             (goto-char (point-max))
+                             (line-beginning-position))))
+    (if (> (point) active-line-start)
+        (backward-char 1)
+      ;; carriage can't go back further than the left margin!
+      (ding)
+      (message "Carriage is at the left margin!"))))
+
+(defun typewriter-tab ()
+  "Glide the carriage to the next tab stop without erasing existing ink.
+
+If `typewriter-tab-width' is not positive, does nothing except message
+the user."
+  (interactive)
+  (if (> typewriter-tab-width 0)
+      (let* ((col (current-column))
+             ;; calculate the next multiple of the tab width
+             (next-stop (* (/ (+ col typewriter-tab-width) typewriter-tab-w=
+idth)
+                           typewriter-tab-width))
+             (inhibit-read-only t))
+        ;; move-to-column with t automatically pads spaces only if
+        ;; needed
+        (move-to-column next-stop t))
+    (message "TAB is disabled (typewriter-tab-width is not positive)")))
+
+(defun typewriter-self-insert ()
+  "Typewriter replacement for `self-insert-command'.
+
+The buffer is normally kept read-only for the whole time
+`typewriter-mode' is on, and `typewriter--pre-command' has already
+decided, before this command runs, whether the pending insertion is
+allowed.  So by the time control reaches here, insertion is always meant
+to succeed, and the only job left is to make the buffer briefly writable
+for it."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (call-interactively #'self-insert-command)))
+
+(defun typewriter-newline ()
+  "Typewriter replacement for `newline'.
+
+The buffer is normally kept read-only for the whole time
+`typewriter-mode' is on, and `typewriter--pre-command' has already
+decided, before this command runs, whether the pending insertion is
+allowed.  So by the time control reaches here, insertion is always meant
+to succeed, and the only job left is to make the buffer briefly writable
+for it."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (call-interactively #'newline)))
+
+(defun typewriter--bell-ring (&optional maybe)
+  "Ring the typewriter bell, or ring it only near the margin.
+
+If MAYBE is nil, ring unconditionally.  If MAYBE is non-nil, ring only
+when point is `typewriter-warning-bell-offset' columns short of
+`typewriter-fill-column' and the current command is not
+`typewriter-newline'."
+  (when (or (not maybe)
+            (and typewriter-fill-column
+                 typewriter-warning-bell-offset
+                 (=3D (current-column)
+                    (- typewriter-fill-column
+                       typewriter-warning-bell-offset))
+                 (not (eq this-command 'typewriter-newline))))
+    (ding)))
+
+(defun typewriter--pre-command ()
+  "Enforce margins and ink permanence for the pending keystroke."
+  (when (memq this-command '(typewriter-self-insert
+                             typewriter-newline
+                             typewriter-tab
+                             typewriter-backward-char))
+
+    (when (and (not (eq this-command 'typewriter-backward-char))
+               (or (eq this-command 'typewriter-newline)
+                   (< (point) (save-excursion
+                                (goto-char (point-max))
+                                (line-beginning-position)))))
+      (goto-char (point-max)))
+
+    (let ((col (current-column)))
+      (cond
+       ((and (eq this-command 'typewriter-self-insert)
+             (not (eobp))
+             (not (looking-at-p "\t\\|\s")))
+        ;; trying to type over existing ink
+        (typewriter--bell-ring)
+        (message
+         (substitute-command-keys
+          "You can only overstrike blank spaces.  \\[typewriter-mode] to to=
+ggle off and edit"))
+        (setq this-command 'ignore))
+
+       ((and typewriter-fill-column
+             (not (eq this-command 'typewriter-newline))
+             (>=3D col typewriter-fill-column))
+        ;; we're at the margin
+        (typewriter--bell-ring t)
+        (typewriter--bell-ring)
+        (message
+         (substitute-command-keys
+          "Margin reached!  Press \\[typewriter-newline] to return the carr=
+iage."))
+        (setq this-command 'ignore))
+
+       (t
+        ;; just type
+        (typewriter--bell-ring t)
+        ;; This lift of inhibit-read-only is unrelated to the one in
+        ;; typewriter-self-insert: that one wraps the insertion
+        ;; command itself, while this one only covers deleting the
+        ;; placeholder space/tab that the new character is about to
+        ;; overstrike.
+        (when (and (eq this-command 'typewriter-self-insert)
+                   (looking-at-p "\t\\|\s"))
+          (let ((inhibit-read-only t))
+            (delete-char 1))))))))
+
+(defun typewriter--post-command ()
+  "Run configured hooks after a keystroke or carriage return.
+
+Also, refresh the mode line if `typewriter-show-chars-remaining' is
+non-nil."
+  (cond ((eq this-command 'typewriter-self-insert)
+         (run-hooks 'typewriter-keystroke-hook))
+        ((eq this-command 'typewriter-newline)
+         (run-hooks 'typewriter-carriage-return-hook)))
+  (when (and typewriter-fill-column
+             typewriter-show-chars-remaining)
+    (force-mode-line-update)))
+
+(defun typewriter--error-handler (data context caller)
+  "Handle read-only errors with a custom unlogged message."
+  (if (eq (car data) 'buffer-read-only)
+      (message
+       (substitute-command-keys
+        "You're in typewriter mode.  \\[typewriter-mode] to toggle off and =
+edit"))
+    (command-error-default-function data context caller)))
+
+(defvar-keymap typewriter-mode-map
+  :doc "Keymap for `typewriter-mode'."
+  "RET" #'typewriter-newline
+  "TAB" #'typewriter-tab
+  "DEL" #'typewriter-backward-char
+  "<remap> <self-insert-command>" #'typewriter-self-insert)
+
+(defconst typewriter--overridden-variables '(buffer-read-only
+                                             indent-line-function
+                                             tab-width
+                                             tab-stop-list
+                                             command-error-function)
+  "Buffer-local variables that `typewriter-mode' temporarily overrides.
+
+Used to save their pre-mode values into `typewriter--saved-state' on
+enable, and restore them on disable.")
+
+(defvar-local typewriter--saved-state nil
+  "Alist of (VARIABLE . VALUE) saved before `typewriter-mode' was enabled.
+
+Populated from `typewriter--overridden-variables'.")
+
+(define-minor-mode typewriter-mode
+  "A minor mode emulating a strict typewriter.
+
+Only allows appending text to the end of the buffer or on whitespace.
+No deletions or arbitrary edits."
+  :init-value nil
+  :lighter " Typewriter"
+  :keymap typewriter-mode-map
+
+  (if typewriter-mode
+
+      (progn
+        (electric-indent-local-mode -1)
+        (unless typewriter-preserve-undo-history
+          (setq-local buffer-undo-list t))
+
+        ;; Save original variable states before overriding
+        (setq typewriter--saved-state
+              (mapcar (lambda (sym) (cons sym (symbol-value sym)))
+                      typewriter--overridden-variables))
+        (setq-local buffer-read-only t
+                    indent-line-function #'tab-to-tab-stop
+                    ;; tab-width still needs a 1 floor because it's
+                    ;; (probably) read by many other things that don't
+                    ;; assume a 0 value (tolerated by this minor mode
+                    ;; as a value for typewriter-tab-width)
+                    tab-width (max 1 typewriter-tab-width)
+                    tab-stop-list nil
+                    command-error-function #'typewriter--error-handler)
+        (add-hook 'pre-command-hook #'typewriter--pre-command nil t)
+        (add-hook 'post-command-hook #'typewriter--post-command nil t)
+        (when (<=3D typewriter-tab-width 0)
+          (message "typewriter-tab-width is %S; TAB key will be disabled"
+                   typewriter-tab-width)
+          (sit-for 2)))
+
+    (electric-indent-local-mode 1)
+    ;; Only restore undo tracking if WE were the ones who disabled it
+    (when (eq buffer-undo-list t)
+      (kill-local-variable 'buffer-undo-list))
+    (when typewriter--saved-state
+      (dolist (entry typewriter--saved-state)
+        (set (make-local-variable (car entry)) (cdr entry)))
+      (setq typewriter--saved-state nil))
+    (remove-hook 'pre-command-hook #'typewriter--pre-command t)
+    (remove-hook 'post-command-hook #'typewriter--post-command t)))
+
+(add-to-list 'mode-line-misc-info
+             '(typewriter-mode ("" (:eval (typewriter--modeline-remaining))=
+))
+             t)
+
+(provide 'typewriter)
+
+;;; typewriter.el ends here
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+
+=20
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> (Unrelated question, but why do you fill your paragraphs like you do?  I
+> find it more difficult to read.)
+>
+> Enrico Flor <enrico@eflor.net> writes:
+>
+>> Hi,
+>>
+>> Attached is the new minor mode version.  As for the name, I really
+>> have no preference (although I'm still partial to "typewriter-mode").
+>> I'm fine with anything.  Suggestions in the thread so far:
+>>
+>> + strict-type-mode
+>> + insert-only-mode
+>> + insert-at-eob-mode
+>>
+>> Summary of changes (all meant to address
+>> Philip's recommendations):
+>>
+>> + Commentary section made shorter
+>> + Removed redundand :groups tags
+>> + variable types from integer to natnum
+>>   whenever appropriate
+>> + removed typewriter-silent and the
+>>   --ding wrapper
+>> + used substitute-command-keys in
+>>   docstring
+>> + Removed all (let ((message-log-max
+>>   nil)) .. ) wrappers
+>> + no more dedicated commands for
+>>   quitting the mode
+>> + the mode now saves the values of a
+>>   bunch of buffer-local variables (the
+>>   ones stored in
+>>   `typewriter--overridden-variables')
+>>   and restores them when quit
+>> + the temporary lifting of
+>>   inhibit-read-only is now done simply
+>>   by dedicated -self-insert and -newline
+>>   command that typewriter-mode-map
+>>   remaps the standard ones to
+>> + with the switch to minor-mode, the
+>>   optional character counter is now
+>>   appended to mode-line-misc-info
+>>
+>> Enrico
+>>
+>> ;;; typewriter.el --- Turn Emacs into a text adder  -*- lexical-binding:=
+ t; -*-
+>>
+>> ;; Copyright (C) 2026 Free Software Foundation, Inc.
+>>
+>> ;; Author: Enrico Flor <enrico@eflor.net>
+>> ;; Maintainer: Enrico Flor <enrico@eflor.net>
+>> ;; URL: https://github.com/enricoflor/typewriter-mode
+>> ;; Version: 0.9.0
+>> ;; Keywords: wp
+>>
+>> ;; Package-Requires: ((emacs "30.1"))
+>>
+>> ;; SPDX-License-Identifier: GPL-3.0-or-later
+>
+> You don't need the newlines here, we usually group the headers in one
+> "block".
+>
+>>
+>> ;; This program is free software; you can redistribute it and/or
+>> ;; modify it under the terms of the GNU General Public License as
+>> ;; published by the Free Software Foundation, either version 3 of the
+>> ;; License, or (at your option) any later version.
+>> ;;
+>> ;; This program is distributed in the hope that it will be useful, but
+>> ;; WITHOUT ANY WARRANTY; without even the implied warranty of
+>> ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+>> ;; General Public License for more details.
+>> ;;
+>> ;; You should have received a copy of the GNU General Public License
+>> ;; along with this program.  If not, see
+>> ;; <https://www.gnu.org/licenses/>.
+>>
+>> ;;; Commentary:
+>>
+>> ;; This package provides a small minor mode that deliberately
+>> ;; handicaps Emacs to an extreme degree in order to provide something
+>> ;; as close as possible to the strict forward-only typewriter
+>> ;; experience.  Some find that the lack of editing facilities fosters
+>> ;; a state of concentration and focus that makes certain types of
+>> ;; creative writing more satisfying.
+>
+> I'd mention at least one minor mode straight away.
+>
+>> ;;
+>> ;; The package has several configuration options (M-x customize-group
+>> ;; RET typewriter).
+>> ;;
+>> ;; Although no systematic test has been carried out, this package's
+>> ;; minimality should ensure its compatibility with packages that
+>> ;; change the layout of text in the window, such as the fairly popular
+>> ;; olivetti, or any configuration that (for instance) hides or alters
+>> ;; element of the emacs interface.
+>>
+>> ;;; Code:
+>>
+>> (defgroup typewriter nil
+>>   "Configuration options for `typewriter-mode'."
+>>   :prefix "typewriter-"
+>>   :link '(url-link :tag "Website for typewriter-mode"
+>>                    "https://github.com/enricoflor/typewriter-mode")
+>>   :group 'wp)
+>>
+>> (defcustom typewriter-preserve-undo-history t
+>>   "If non-nil, keep tracking undo history while in `typewriter-mode'.
+>>
+>> You still cannot undo while the mode is active (buffer will be in
+>> `read-only-mode'), but the history will be fully available after you
+>> exit the mode."
+>>   :type 'boolean)
+>>
+>> (defcustom typewriter-fill-column nil
+>>   "The margin limit in `typewriter-mode'.
+>>
+>> If set to an integer, the typewriter will lock up and \\=3D'ding\\=3D' w=
+hen
+>> you reach this column. You must press RET to continue.  If nil, no
+>> margin is enforced."
+>>   :type '(choice (const :tag "No margin" nil)
+>>                  (natnum :tag "Margin at column")))
+>>
+>> (defcustom typewriter-warning-bell-offset 8
+>>   "Number of columns before the margin to sound the warning bell."
+>>   :type '(choice (const :tag "No warning bell" nil)
+>>                  (natnum :tag "Warning bell offset at")))
+>>
+>> (defcustom typewriter-show-chars-remaining t
+>>   "If non-nil, show columns remaining before the margin in the mode line.
+>>
+>> Has no effect unless `typewriter-fill-column' is also set to an integer,
+>> since without a margin there is nothing to count down to."
+>>   :type 'boolean)
+>>
+>> (defcustom typewriter-modeline-format " [%d]"
+>>   "Format string for the modeline character counter.
+>>
+>> This is passed directly to `format'.  The `%d' construct will be
+>> replaced by the number of remaining characters.  Include a leading space
+>> to visually separate the counter from preceding items in the modeline."
+>>   :type 'string)
+>>
+>> (defcustom typewriter-tab-width 8
+>>   "The number of columns a tab key advances the carriage."
+>>   :type 'natnum)
+>>
+>> (defcustom typewriter-keystroke-hook nil
+>>   "Hook run after successfully striking a key (inserting a character)."
+>>   :type 'hook)
+>>
+>> (defcustom typewriter-carriage-return-hook nil
+>>   "Hook run after inserting a new line."
+>>   :type 'hook)
+>>
+>> (defun typewriter--modeline-remaining ()
+>>   "Return a mode-line string with columns left before the margin.
+>>
+>> Returns the empty string outside `typewriter-mode', or when
+>> `typewriter-show-chars-remaining' or `typewriter-fill-column' is nil."
+>>   (declare (side-effect-free t))
+>>   (if (and typewriter-show-chars-remaining
+>>            typewriter-fill-column)
+>>       (let ((curr (save-excursion
+>>                     (end-of-line)
+>>                     (current-column))))
+>>         (format typewriter-modeline-format (max 0 (- typewriter-fill-col=
+umn curr))))
+>>     ""))
+>>
+>> (defun typewriter-backward-char ()
+>>   "Move the carriage left without deleting, allowing overstrikes."
+>>   (interactive)
+>>   (let ((active-line-start (save-excursion
+>>                              (goto-char (point-max))
+>>                              (line-beginning-position))))
+>>     (if (> (point) active-line-start)
+>>         (backward-char 1)
+>>       ;; carriage can't go back further than the left margin!
+>>       (ding)
+>>       (message "Carriage is at the left margin!"))))
+>>
+>> (defun typewriter-tab ()
+>>   "Glide the carriage to the next tab stop without erasing existing ink."
+>>   (interactive)
+>>   (if (> typewriter-tab-width 0)
+>>       (let* ((col (current-column))
+>>              ;; calculate the next multiple of the tab width
+>>              (next-stop (* (/ (+ col typewriter-tab-width) typewriter-ta=
+b-width)
+>>                            typewriter-tab-width))
+>>              (inhibit-read-only t))
+>>         ;; move-to-column with t automatically pads spaces only if
+>>         ;; needed
+>>         (move-to-column next-stop t))
+>>     (message "TAB is disabled (typewriter-tab-width is not positive)")))
+>>
+>> (defun typewriter-self-insert ()
+>>   "Typewriter replacement for `self-insert-command'.
+>>
+>> The buffer is normally kept read-only for the whole time
+>> `typewriter-mode' is on, and `typewriter--pre-command' has already
+>> decided, before this command runs, whether the pending insertion is
+>> allowed.  So by the time control reaches here, insertion is always meant
+>> to succeed, and the only job left is to make the buffer briefly writable
+>> for it."
+>>   (interactive)
+>>   (let ((inhibit-read-only t))
+>>     (call-interactively #'self-insert-command)))
+>>
+>> (defun typewriter-newline ()
+>>   "Typewriter replacement for `newline'.
+>>
+>> The buffer is normally kept read-only for the whole time
+>> `typewriter-mode' is on, and `typewriter--pre-command' has already
+>> decided, before this command runs, whether the pending insertion is
+>> allowed.  So by the time control reaches here, insertion is always meant
+>> to succeed, and the only job left is to make the buffer briefly writable
+>> for it."
+>>   (interactive)
+>>   (let ((inhibit-read-only t))
+>>     (call-interactively #'newline)))
+>>
+>> (defun typewriter--bell-ring (&optional maybe)
+>>   "Ring the typewriter bell, or ring it only near the margin.
+>>
+>> If MAYBE is nil, ring unconditionally.  If MAYBE is non-nil, ring only
+>> when point is `typewriter-warning-bell-offset' columns short of
+>> `typewriter-fill-column' and the current command is not
+>> `typewriter-newline'."
+>>   (when (or (not maybe)
+>>             (and typewriter-fill-column
+>>                  typewriter-warning-bell-offset
+>>                  (=3D (current-column)
+>>                     (- typewriter-fill-column
+>>                        typewriter-warning-bell-offset))
+>>                  (not (eq this-command 'typewriter-newline))))
+>>     (ding)))
+>>
+>> (defun typewriter--pre-command ()
+>>   "Prepare buffer for typing, enforcing margins and ink permanence."
+>>   (when (memq this-command '(typewriter-self-insert
+>>                              typewriter-newline
+>>                              typewriter-tab
+>>                              typewriter-backward-char))
+>>
+>>     (when (and (not (eq this-command 'typewriter-backward-char))
+>>                (or (eq this-command 'typewriter-newline)
+>>                    (< (point) (save-excursion
+>>                                 (goto-char (point-max))
+>>                                 (line-beginning-position)))))
+>>       (goto-char (point-max)))
+>>
+>>     (let* ((col (current-column)))
+>
+> The * is not necessary here
+>
+>>       (cond
+>>        ((and (eq this-command 'typewriter-self-insert)
+>>              (not (eobp))
+>>              (not (looking-at-p "\t\\|\s")))
+>>         ;; trying to type over existing ink
+>>         (typewriter--bell-ring)
+>>         (message
+>>          (substitute-command-keys
+>>           "You can only overstrike blank spaces.  \\[typewriter-mode] to=
+ toggle off and edit"))
+>>         (setq this-command 'ignore))
+>>
+>>        ((and typewriter-fill-column
+>>              (not (eq this-command 'typewriter-newline))
+>>              (>=3D col typewriter-fill-column))
+>>         ;; we're at the margin
+>>         (typewriter--bell-ring t)
+>>         (typewriter--bell-ring)
+>>         (message "Margin reached! Press RET to return the carriage.")
+>
+> You can use `substitute-command-keys' here again to have RET highlighted.
+>
+>>         (setq this-command 'ignore))
+>>
+>>        (t
+>>         ;; just type
+>>         (typewriter--bell-ring t)
+>>         ;; This lift of inhibit-read-only is unrelated to the one in
+>>         ;; typewriter-self-insert: that one wraps the insertion
+>>         ;; command itself, while this one only covers deleting the
+>>         ;; placeholder space/tab that the new character is about to
+>>         ;; overstrike.
+>>         (when (and (eq this-command 'typewriter-self-insert)
+>>                    (looking-at-p "\t\\|\s"))
+>>           (let ((inhibit-read-only t))
+>>             (delete-char 1))))))))
+>>
+>> (defun typewriter--post-command ()
+>>   "Run configured hooks after a keystroke or carriage return."
+>>   (cond ((eq this-command 'typewriter-self-insert)
+>>          (run-hooks 'typewriter-keystroke-hook))
+>>         ((eq this-command 'typewriter-newline)
+>>          (run-hooks 'typewriter-carriage-return-hook)))
+>>   (when (and typewriter-fill-column
+>>              typewriter-show-chars-remaining)
+>>     (force-mode-line-update)))
+>>
+>> (defun typewriter--error-handler (data context caller)
+>>   "Handle read-only errors with a custom unlogged message."
+>>   (if (eq (car data) 'buffer-read-only)
+>>       (message
+>>        (substitute-command-keys
+>>         "You're in typewriter mode.  \\[typewriter-mode] to toggle off a=
+nd edit"))
+>>     (command-error-default-function data context caller)))
+>>
+>> (defvar-keymap typewriter-mode-map
+>>   :doc "Keymap for `typewriter-mode'."
+>>   "RET" #'typewriter-newline
+>>   "<return>" #'typewriter-newline
+>>   "TAB" #'typewriter-tab
+>>   "<tab>" #'typewriter-tab
+>>   "DEL" #'typewriter-backward-char
+>>   "<delete>" #'typewriter-backward-char
+>>   "<backspace>" #'typewriter-backward-char
+>
+> Are you sure you need the double bindings here?
+>
+>>   "<remap> <self-insert-command>" #'typewriter-self-insert)
+>>
+>> (defconst typewriter--overridden-variables '(buffer-read-only
+>>                                              indent-line-function
+>>                                              tab-width
+>>                                              tab-stop-list
+>>                                              command-error-function)
+>>   "Buffer-local variables that `typewriter-mode' temporarily overrides.
+>>
+>> Used to save their pre-mode values into `typewriter--saved-state' on
+>> enable, and restore them on disable.")
+>>
+>> (defvar-local typewriter--saved-state nil
+>>   "Alist of (VARIABLE . VALUE) saved before `typewriter-mode' was enable=
+d.
+>>
+>> Populated from `typewriter--overridden-variables'.")
+>
+> Just as an alternative idea, you could also use a symbol property,
+> e.g. `typewriter-saved-state' to back up the old value.
+>
+>>
+>> (define-minor-mode typewriter-mode
+>>   "A minor mode emulating a strict typewriter.
+>>
+>> Only allows appending text to the end of the buffer or on whitespace.
+>> No deletions or arbitrary edits."
+>>   :init-value nil
+>>   :lighter " Typewriter"
+>>   :keymap typewriter-mode-map
+>>
+>>   (if typewriter-mode
+>>
+>>       (progn
+>>         (electric-indent-local-mode -1)
+>>         (unless typewriter-preserve-undo-history
+>>           (setq-local buffer-undo-list t))
+>>
+>>         ;; Save original variable states before overriding
+>>         (setq typewriter--saved-state
+>>               (mapcar (lambda (sym) (cons sym (symbol-value sym)))
+>>                       typewriter--overridden-variables))
+>>         (setq-local buffer-read-only t
+>>                     indent-line-function #'tab-to-tab-stop
+>>                     ;; tab-width still needs a 1 floor because it's
+>>                     ;; (probably) read by many other things that don't
+>>                     ;; assume a 0 value (tolerated by this minor mode
+>>                     ;; as a value for typewriter-tab-width)
+>>                     tab-width (max 1 typewriter-tab-width)
+>>                     tab-stop-list nil
+>>                     command-error-function #'typewriter--error-handler)
+>>         (add-hook 'pre-command-hook #'typewriter--pre-command nil t)
+>>         (add-hook 'post-command-hook #'typewriter--post-command nil t)
+>>         (when (<=3D typewriter-tab-width 0)
+>>           (message "typewriter-tab-width is %S; TAB key will be disabled"
+>>                    typewriter-tab-width)
+>>           (sit-for 2)))
+>>
+>>     (electric-indent-local-mode 1)
+>>     ;; Only restore undo tracking if WE were the ones who disabled it
+>>     (when (eq buffer-undo-list t)
+>>       (kill-local-variable 'buffer-undo-list))
+>>     (when typewriter--saved-state
+>>       (dolist (entry typewriter--saved-state)
+>>         (set (make-local-variable (car entry)) (cdr entry)))
+>>       (setq typewriter--saved-state nil))
+>>     (remove-hook 'pre-command-hook #'typewriter--pre-command t)
+>>     (remove-hook 'post-command-hook #'typewriter--post-command t)))
+>>
+>> (add-to-list 'mode-line-misc-info
+>>              '(typewriter-mode ("" (:eval (typewriter--modeline-remainin=
+g))))
+>>              t)
+>
+> Why not add this information to the lighter?
+>
+>>
+>> (provide 'typewriter)
+>>
+>> ;;; typewriter.el ends here
+>
+> None of the above comments are blocking, you can make any of the changes
+> I propose if you agree.  Just one question: Should the package be called
+> typewriter-mode (following the repository name) or typewriter (the main
+> file name)?=20=20
+>
+>> Philip Kaludercic <philipk@posteo.net>
+>> writes:
+>>
+>>> Enrico Flor <enrico@eflor.net> writes:
+>>>
+>>>>> How sever is this flooding?  The Messages buffer already has some
+>>>>> duplication.  I would generally advise to not be too clever with thin=
+gs
+>>>>> like these, in case the user has customizations use the Messages buff=
+er.
+>>>>
+>>>> Fair point.  You've convinced me.
+>>>
+>>> =F0=9F=99=8C
+>>>
+>>>>> [...]
+>>>>>
+>>>>>>> Can you explain why you do this?
+>>>>>>
+>>>>>> You mean instead of simply
+>>>>>>
+>>>>>>   (setq-local inhibit-read-only nil)
+>>>>>>=20=20=20
+>>>>>> ?  I actually don't remember but it would do the same thing.  If it's
+>>>>>> preferable, I have no issue.
+>>>>>
+>>>>> No, I meant as in why are you setting inhibit-read-only to nil at all.
+>>>>> Are you ensuring that it is nil, or are you deactivating something set
+>>>>> somewhere else.
+>>>>>
+>>>>
+>>>> Oh, this is in the "post-command" function, and it's because the major
+>>>> mode sets buffer-read-only to t, and the "pre-command" function, when
+>>>> insertion is licit, sets inhibit-read-only to t.  So this is to
+>>>> restore the read only state.  I thought this was the cleanest way of
+>>>> enforcing the general ban on any buffer modification that has only
+>>>> very narrow exceptions.  Is this bad design?
+>>>
+>>> Ah OK I didn't immediately understand this.  I think it would be good to
+>>> check if inhibit-read-only was already enabled and ensure that you don't
+>>> set it to a fixed value, but try to restore the previous value.  You can
+>>> use another buffer local variable to that end.  Also, it would be good
+>>> to add a comment that explains this in the source code, because the
+>>> connection to the other parts of the code are not obvious in isolation.
+>>>
+>>>>>>> This is my main gripe, why is this a major mode and not a minor mod=
+e?
+>>>>>>> And as a major mode, why does it inherit from fundamental-mode and =
+not
+>>>>>>> text-mode?
+>>>>>>
+>>>>>> Hah, I pondered this too actually.  I landed on the major mode for a
+>>>>>> few reasons.  This mode imposes really fundamental restrictions on
+>>>>>> things.  I don't see why someone would use activate this while worki=
+ng
+>>>>>> on an org-mode buffer, or latex-mode, let along any of the prog-mode=
+s.
+>>>>>> It doesn't really provide any supplementary feature, it's more a
+>>>>>> radical zero-features state.
+>>>>>
+>>>>> What about text-mode?  Or something for a lightweight language like
+>>>>> markdown-mode?  Generally it is good to assume an open-world model: y=
+ou
+>>>>> don't know much about the Emacs that will load this file, or what oth=
+er
+>>>>> packages, hooks, minor modes, etc. the user has installed for their
+>>>>> particular workflow.  Reducing assumptions, including things like "I
+>>>>> don't know why someone would do this" is one such example.  But this =
+is
+>>>>> just personal advice, opinions might differ.
+>>>>>
+>>>>>> And this is also, in part, why fundamental mode.  The typewriter is =
+so
+>>>>>> "dumb" that it has no use for text-specific syntax tables, awareness
+>>>>>> about paragraphs, and stuff like that.  I just thought it was simpler
+>>>>>> to have no default to "undo"?  But you'll note that text-mode is whe=
+re
+>>>>>> the user will be if they want to quit the mode and do some editing on
+>>>>>> the text they wrote, because of course they will be treating the
+>>>>>> buffer content as text.
+>>>>>
+>>>>> It seems like an orthogonal concern.  If the user really wants to keep
+>>>>> it dumb, they can use fundamental-mode, but I don't see why this had =
+to
+>>>>> be a package-deal.  Also, major modes are fundamentally for the type =
+of
+>>>>> file you are dealing with, while minor modes are supposed to provide
+>>>>> "well defined" modifications to the base behavior.
+>>>>>
+>>>>
+>>>> Ok, you're making a convincing case.
+>>>> I'll think about it and come back with
+>>>> all your suggestions implemented,
+>>>> including the switch to minor mode.
+>>>
+>>> OK, just ping this thread when you are ready.  I think there were also a
+>>> few other suggestions for the package name that could be interesting, so
+>>> it makes sense to wait with adding the package for now.  If you have any
+>>> further questions about what I wrote or just need a second opinion, feel
+>>> free to shoot me or the mailing list a message :)
+>>>
+>>>> Enrico
+
+--=-=-=--
+
+
+From MAILER-DAEMON Thu Sep 10 18:22:23 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x4n9D-0004nd-PV
+	for mharc-emacs-devel@gnu.org; Thu, 10 Sep 2026 18:21:56 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1x4m3V-00068x-78
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 17:12:13 -0400
+Received: from mout01.posteo.de ([185.67.36.65])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1x4m3Q-0000mO-5i
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 17:11:36 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout01.posteo.de (Postfix) with ESMTPS id AB707240027
+ for <emacs-devel@gnu.org>; Thu, 10 Sep 2026 23:11:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1789074686;
+ bh=DzfOdBdOCuZp24IHHnidj22FQgEg0ymuoqIYhFIqIo8=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:From;
+ b=mPzk3cClqHlFNSZEPjMTt6jKzb3zw0Ff+93QnA/kXgDy0o1LTcxJkjnjQ1iNhVkCd
+ 1r+f7oA/QOzICTUIFeEN2lsLo5uyYF2zYvyrHC+Il1KuS8Kk+8hDIr3kAup+DEKHNe
+ x2FRKfNYpBQ6oFroiBJ4GIHOhoPaTpC0nSETEtnkSwJQ+SbStpUaET2CoxJM4GudMk
+ 8iaRITqdZVmd0oV6Gy8AlJ0ARhb+lMH7PWcaWBoIfWu/Oky4ZPT+7P4ELfkiRcBoMJ
+ zLmDVryZwTvnWGRgm6zvPIGql19rx9gtEIshfDvi9n1H7vTOwTg9dYllzIHbA3a6vp
+ fCktCQUQNDjXg==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4hgr2P6znrz6tsb;
+ Thu, 10 Sep 2026 23:11:25 +0200 (CEST)
+From: Philip Kaludercic <philipk@posteo.net>
+To: Enrico Flor <enrico@eflor.net>
+Cc: emacs-devel@gnu.org,  Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: New package `typewriter.el'
+In-Reply-To: <m27bkt9dtf.fsf@dhcp-10-29-167-110.dyn.mit.edu>
+References: <m2zeygq0ze.fsf@efl.local.mail-host-address-is-not-set>
+ <87ecfsk493.fsf@posteo.net>
+ <m2zeygbnhb.fsf@efl.local.mail-host-address-is-not-set>
+ <875x14k1tc.fsf@posteo.net>
+ <m2wltkb1y0.fsf@efl.local.mail-host-address-is-not-set>
+ <87se48hsfv.fsf@posteo.net>
+ <m2zey2w85v.fsf@dhcp-10-29-154-10.dyn.mit.edu>
+ <87se3mqmm5.fsf@posteo.net>
+ <m27bkt9dtf.fsf@dhcp-10-29-167-110.dyn.mit.edu>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Thu, 10 Sep 2026 21:11:26 +0000
+Message-ID: <87pkykolqa.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=185.67.36.65; envelope-from=philipk@posteo.net;
+ helo=mout01.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 10 Sep 2026 21:13:02 -0000
+X-List-Received-Date: Thu, 10 Sep 2026 21:13:02 -0000
+
+Enrico Flor <enrico@eflor.net> writes:
+
+> Hi Philip,  I've removed the double bindings, in the sense Stefan
+> urged me to, along with other improvements you suggested. Attached is
+> the last version, which corresponds to the most recent commit on the
+> repository (e374920).    As far as the name is concerned, thank you
+> for spotting the inconsistency: I renamed the repository.  The package
+> should be typewriter (as the file is typewriter.el).  The new address
+> of the repository is: https://github.com/enricoflor/typewriter.el
+
+OK, that looks good, I've pushed the package to gnu.git.  Just one thing
+we can fix: We are currently distributing the "readme.org" file, but not
+using it.  If you want us to use it for the package description via
+`describe-package', we can update the package specification to
+explicitly use the file, or you can rename the file to the more
+conventional README.org.
+
+> Regarding your last two points, here's my (perhaps flawed) thinking.
+> I opted to not use a symbol property because I concluded that there
+> was no good way to get the symbol plist mechanism to be buffer local,
+> whereas the way this is now it's guaranteed to behave well if the
+> minor mode is turned on in two different buffers that have different
+> initial states.  
+
+That is a good point, your approach ought to be fine.  But just for the
+sake of completeness, you _can_ manually reproduce buffer locality by
+having the symbol property store an alist or hash-table that maps
+buffers to values -- but I am not suggesting you do that :)
+
+>                  As far as the counter is concerned: initially it was
+> an expression added to :lighter, but then I realized doing it that way
+> makes the counter disappear if a user has minions or diminish on (to
+> unclutter the mode-line).  (For example, I use minions).  After all
+> the user is not forced to have the counter on, and by default it
+> isn't, since typewriter-fill-column's default is nil.
+
+I wouldn't inconvenience yourself for people who use special packages
+like this (in Emacs, someone can usually come up with something that
+breaks some assumption you'd like to have -- e.g. in your case people
+who have a custom mode line that doesn't include `mode-line-misc-info'),
+but if you prefer it in your usage, then that is absolutely fine.  My
+motivation is just to raise questions that I think are worth thinking
+about.
+
+
+From MAILER-DAEMON Thu Sep 10 18:24:48 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x4nAS-00050V-EV
+	for mharc-emacs-devel@gnu.org; Thu, 10 Sep 2026 18:23:04 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1x4mL2-0001Qa-Pb
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 17:30:00 -0400
+Received: from mout02.posteo.de ([185.67.36.66])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1x4mKb-00034T-Ev
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 17:29:28 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout02.posteo.de (Postfix) with ESMTPS id 9FC7F240103
+ for <emacs-devel@gnu.org>; Thu, 10 Sep 2026 23:28:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1789075717;
+ bh=W6zwct750A08jrEH6ZDZhpAl8xk48/0KlxJT93uM3pE=;
+ h=From:To:Subject:OpenPGP:Date:Message-ID:MIME-Version:Content-Type:
+ From;
+ b=AJ4qZQyCIBQJVwD9k8V53SPVsnYLmR56Iab7ZjBRho27yKY0BJY9n74bvBJULT8zl
+ 7ZsWip37/lp1XD/jDo0H5+hBRKpdFJnwNxH9m3aOlcqnpKDfImWHxID4Pfc8SUOLZr
+ Q01LzA0aaGPRRfDs96EuLvCN6Hq3zq1BiQRYaUMe5f/Y4DwupPLOIJNgVK8c2asRio
+ JeJUkBeNdMJCXqQbJQXL5/RpD38xO1ZEAeO/DUfXhyhsNzsx3pDao4jMbeRCzCuunO
+ f8bLF6IwSrrMjbtxJZ0meTZJhCPAaKKo3ncn8aFrl1HHZjKWqTbjAgOMz0LaAEDDGV
+ OT3HZl53KEUew==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4hgrQF2CnYz6txc
+ for <emacs-devel@gnu.org>; Thu, 10 Sep 2026 23:28:37 +0200 (CEST)
+From: Philip Kaludercic <philipk@posteo.net>
+To: emacs-devel@gnu.org
+Subject: Re: [ELPA] New package: isbn.el
+In-Reply-To: <m2pkymkv47.fsf@fclr.net>
+References: <m2bjaiw42g.fsf@fclr.net> <871pb8hnn5.fsf@posteo.net>
+ <m2pkymkv47.fsf@fclr.net>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Thu, 10 Sep 2026 21:28:37 +0000
+Message-ID: <87h5jwokxn.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=185.67.36.66; envelope-from=philipk@posteo.net;
+ helo=mout02.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 10 Sep 2026 21:30:20 -0000
+
+Maximilian Cook <maximilian@fclr.net> writes:
+
+> I've implemented almost all your suggestions in some shape or form --
+> thank you!  You can find a diff of all the changes since the last draft
+> below my message.  The biggest change is probably the removal of the
+> autoupdate code; I want to stew on that functionality a bit more before
+> offering it as a feature.
+
+Sounds good.  I think that should be everything we need to add the
+package to GNU ELPA?  I currently cannot test if it works since there
+appears to be some issue with SourceHut:
+
+  fatal: unable to access 'https://git.sr.ht/~cook/isbn.el/': SSL certificate verification failed: certificate signer not trusted. (CAfile: none CRLfile: none)
+
+I'll try it again tomorrow.
+
+>> If you have any further questions about what I wrote, or anything beyond
+>> that, I am glad to help!
+>
+> Almost everything has been quite clear, and again I deeply appreciate
+> the help.  
+
+I am very happy to hear that :)
+
+>            I would say that I'm still unsure about whether to remove the
+> autoloads or not.  Yes, the package is first and foremost a library, but
+> I myself use it interactively.  As such, I'm not sure whether removing
+> the autoloads makes sense if I want to encourage interactive use.  If
+> there is a convention or a precedent I could follow here, or if you or
+> someone else has some wisdom to share, I would love to know.
+
+I'd say that it should be OK to keep the autoloads for interactive entry
+points to the package, regardless of whether or not it should be used as
+a library.  It is just that library entry points ought not the be
+autoloaded IMO.
+
+> diff --git a/isbn.el b/isbn.el
+> index 63077f8..a32c3b0 100644
+> --- a/isbn.el
+> +++ b/isbn.el
+> @@ -30,6 +30,20 @@
+>  ;; Manage ISBNs via elisp.  Currently it is possible to validate,
+>  ;; convert and hyphenate ISBNs.
+>  
+> +;;;; Definition
+> +
+> +;; An 'International Standard Book Number' (ISBN) is a sequence of 10
+> +;; or 13 digits (hereafter called 'ISBN-10' and 'ISBN-13'
+> +;; respectively) composed of the following pieces of information:
+> +;;
+> +;;   <group><publisher><title><check digit>.
+> +;;
+> +;; For ISBN-13s, an additional three digits (often referred to as an
+> +;; 'EAN') are prepended to the sequence.
+> +
+> +;; In this library, an 'ISBN' is a string consisting of digits
+> +;; (including ISBN-10's 'X') and optionally hyphens.
+> +
+>  ;;;; API
+>  
+>  ;; In addition to programmatic invocation, each API function can be
+> @@ -57,11 +71,8 @@
+>  ;; which provides a complete set of ISBN hyphenation ranges in XML
+>  ;; format [1].  Since hyphenation ranges are only updated yearly,
+>  ;; ranges are cached to `isbn-hyphenation-ranges-cache-file'.  To
+> -;; cache this file, users must run `isbn-hyphenation-ranges-update' at
+> -;; least once before calling any of the functions below.  Users may
+> -;; wish to add `isbn-hyphenation-ranges-maybe-prompt-update' to their
+> -;; `init.el' to check for updates automatically (every 365 days by
+> -;; default).
+> +;; cache this file, users must run `isbn-update-hyphenation-ranges' at
+> +;; least once before calling any of the functions below.
+>  
+>  ;; [1] <https://www.isbn-international.org/range_file_generation>
+>  
+> @@ -70,10 +81,6 @@
+>  
+>  ;;; Code:
+>  
+> -(require 'dom)
+> -(require 'seq)
+> -(eval-and-compile (require 'subr-x))
+
+Why did you end up removing these?
+
+>  (defgroup isbn nil
+>    "ISBN library."
+>    :prefix "isbn-"
+> @@ -87,6 +94,15 @@ defun isbn--get-interactively
+>        (buffer-substring-no-properties (region-beginning) (region-end))
+>      (read-string "ISBN: ")))
+>  
+> +(defun isbn--place-string (string &optional msg)
+> +  "If there is an active region, replace it with STRING.
+> +Otherwise, add STRING to the kill ring and send MSG."
+> +  (if (region-active-p)
+> +      (replace-region-contents (region-beginning) (region-end) string)
+> +    (kill-new string)
+> +    (when msg
+> +      (message "%s" msg))))
+
+Wouldn't it make sense to prefix the message with something?
+
+> +
+>  (defun isbn--list->string (isbn)
+>    "Convert ISBN (list) to a string."
+>    (mapconcat
+> @@ -99,7 +115,7 @@ defun isbn--string->list
+>    "Convert ISBN (string) to a list of numbers."
+>    (mapcar
+>     (lambda (digit)
+> -     (if (eq digit 88) 10
+> +     (if (eq digit ?X) 10
+>         (string-to-number (char-to-string digit))))
+>     (upcase (string-replace "-" "" isbn))))
+>  
+> @@ -113,22 +129,22 @@ defun isbn-valid-p
+>  concerning ISBN's validation."
+>    (interactive (list (isbn--get-interactively) t))
+>    (if (string-match-p (rx (not (any digit ?X ?x ?-))) isbn)
+> -      (when interactive (user-error "ISBN has invalid characters"))
+> +      (error "ISBN has invalid characters")
+>      (setq isbn (isbn--string->list isbn))
+> -    (let ((res (pcase (length isbn)
+> -                 (10 (thread-first
+> -                       (apply #'+
+> -                              (seq-map-indexed
+> -                               (lambda (digit index) (* digit (1+ index)))
+> -                               isbn))
+> -                       (mod 11) (eq 0)))
+> -                 (13 (thread-first
+> -                       (apply #'+
+> -                              (seq-map-indexed
+> -                               (lambda (digit index) (* digit (if (eq (logand index 1) 0) 1 3)))
+> -                               (butlast isbn)))
+> -                       (+ (car (last isbn)))
+> -                       (mod 10) (eq 0))))))
+> +    (let* ((index 0) (sum 0)
+> +           ;; ISBNs not of length 10 or 13 are automatically invalid.
+> +           (res (pcase (length isbn)
+> +                  (10 (while (< index 10)
+> +                        (setq
+> +                         sum (+ sum (* (nth index isbn) (1+ index)))
+> +                         index (1+ index)))
+> +                      (= (mod sum 11) 0))
+> +                  (13 (while (< index 12) ; check digit added separately
+> +                        (setq
+> +                         sum (+ sum (* (nth index isbn)
+> +                                       (if (eq (logand index 1) 0) 1 3)))
+> +                         index (1+ index)))
+> +                      (= (mod (+ sum (car (last isbn))) 10) 0)))))
+>        (when interactive
+>          (message (if res "ISBN is valid" "ISBN is not valid")))
+>        res)))
+> @@ -161,44 +177,42 @@ defun isbn-convert
+>  region with the converted ISBN."
+>    (interactive (list (isbn--get-interactively) nil t))
+>    (unless (isbn-valid-p isbn)
+> -    (user-error "ISBN is invalid"))
+> +    (error "ISBN is invalid"))
+>    (setq isbn (string-replace "-" "" isbn))
+> -  (let ((res (pcase isbn
+> -               ((pred isbn-10-p)
+> -                (if (eq format 10) isbn
+> -                  (let* ((isbn (concat "978" (substring isbn 0 -1)))
+> -                         (checkint (seq-map-indexed
+> -                                    (lambda (digit index) (* digit (if (eq (logand index 1) 0) 1 3)))
+> -                                    (isbn--string->list isbn)))
+> -                         (check (- 10 (mod (apply #'+ checkint) 10))))
+> -                    (format "%s%i" isbn check))))
+> -               ((pred isbn-13-p)
+> -                (if (eq format 13) isbn
+> -                  (unless (string-prefix-p "978" isbn)
+> -                    (user-error "ISBN does not start with `978'"))
+> -                  (let* ((isbn (string-remove-prefix "978" isbn))
+> -                         (checkint (seq-map-indexed
+> -                                    (lambda (digit index) (* digit (1+ index)))
+> -                                    (isbn--string->list (substring isbn 0 -1))))
+> -                         (check (mod (apply #'+ checkint) 11)))
+> -                    (concat (substring isbn 0 -1)
+> -                            (if (eq check 10) "X" (int-to-string check))))))
+> -               (_ (user-error "ISBN is not 10 or 13 digits")))))
+> +  (let ((res (cond
+> +              ((isbn-10-p isbn)
+> +               (if (eq format 10) isbn
+> +                 (let* ((isbn (concat "978" (substring isbn 0 -1)))
+> +                        (checkint (seq-map-indexed
+> +                                   (lambda (digit index) (* digit (if (eq (logand index 1) 0) 1 3)))
+> +                                   (isbn--string->list isbn)))
+> +                        (check (- 10 (mod (apply #'+ checkint) 10))))
+> +                   (format "%s%i" isbn check))))
+> +              ((isbn-13-p isbn)
+> +               (if (eq format 13) isbn
+> +                 (unless (string-prefix-p "978" isbn)
+> +                   (error "ISBN does not start with `978'"))
+> +                 (let* ((isbn (string-remove-prefix "978" isbn))
+> +                        (checkint (seq-map-indexed
+> +                                   (lambda (digit index) (* digit (1+ index)))
+> +                                   (isbn--string->list (substring isbn 0 -1))))
+> +                        (check (mod (apply #'+ checkint) 11)))
+> +                   (concat (substring isbn 0 -1)
+> +                           (if (eq check 10) "X" (int-to-string check))))))
+> +              (_ (error "ISBN is not 10 or 13 digits")))))
+>      (when interactive
+> -      (if (region-active-p)
+> -          (replace-region-contents (region-beginning) (region-end) res)
+> -        (kill-new res)
+> -        (message "Converted ISBN added to kill ring")))
+> +      (isbn--place-string res "Converted ISBN added to kill ring"))
+>      res))
+>  
+>  ;;;; Hyphenation
+>  
+>  (defcustom isbn-hyphenation-ranges-cache-file
+>    (file-name-concat user-emacs-directory "isbn-hyphenation-ranges.eld")
+> -  "File containing a cache of ISBN hyphenation ranges."
+> -  :type 'file
+> +  "File containing a cache of ISBN hyphenation ranges.
+> +If nil, reading from, or caching to, a file is disabled."
+> +  :type '(choice (file :tag "File")
+> +                 (const :tag "Disabled" nil))
+>    :group 'isbn
+> -  :version "30.2"
+>    :package-version '((isbn . "0.1.0")))
+>  
+>  ;; Cache the ranges so that nested operations (hyphenation ->
+> @@ -207,70 +221,27 @@ defcustom isbn-hyphenation-ranges-cache-file
+>  (defvar isbn-hyphenation-ranges-cache nil
+>    "Cache of all valid ISBN ranges from the International ISBN Agency.")
+>  
+> -(defcustom isbn-hyphenation-ranges-update-interval 365
+> -  "Interval in days (integer) which must elapse before updating ranges.
+> -Set to nil to prevent automatic updates.
+> -
+> -ISBN ranges from the International ISBN Agency are updated yearly."
+> -  :type '(choice (integer :tag "Days")
+> -                 (const :tag "Do not update" nil))
+> -  :group 'isbn
+> -  :version "30.2"
+> -  :package-version '((isbn . "0.1.0")))
+> -
+> -(defun isbn-hyphenation-ranges-update (&optional nofile)
+> -  "Update cache of ISBN hyphenation ranges.
+> -
+> -Optional argument NOFILE, if non-nil, prevents writing to
+> -`isbn-hyphenation-ranges-cache-file'."
+> +;;;###autoload
+> +(defun isbn-update-hyphenation-ranges ()
+> +  "Update cache of ISBN hyphenation ranges."
+>    (interactive)
+>    (let ((prgrp (make-progress-reporter
+>                  "Fetching hyphenation ranges from `www.isbn-international.org'...")))
+> -    (condition-case-unless-debug nil
+> +    (condition-case nil
+>          (with-current-buffer
+>              (url-retrieve-synchronously
+>               "https://www.isbn-international.org/export_rangemessage.xml"
+> -             :silent :inhibit-cookies 5)
+> +             t t 5)
+>            (let* ((ranges (libxml-parse-xml-region (point))))
+>              (unless ranges (signal 'error))
+> -            (unless nofile
+> +            (when isbn-hyphenation-ranges-cache-file
+>                (write-region
+> -               (concat ";; TIME: " (prin1-to-string (current-time)) "\n")
+> -               :ignored isbn-hyphenation-ranges-cache-file)
+> -              (write-region
+> -               (prin1-to-string ranges) :ignored
+> -               isbn-hyphenation-ranges-cache-file :append))
+> +               (prin1-to-string ranges)
+> +               nil isbn-hyphenation-ranges-cache-file t))
+>              (setq isbn-hyphenation-ranges-cache ranges)
+> -            (progress-reporter-done prgrp))
+> -          (lambda (_status &rest _cbargs)))
+> +            (progress-reporter-done prgrp)))
+>        (error (error "Failed to retrieve hyphenation data")))))
+>  
+> -(defun isbn-hyphenation-ranges-maybe-prompt-update (&optional time)
+> -  "Prompt user to update ranges cache if enough time has elapsed.
+> -The amount of time before prompting is determined by
+> -`isbn-hyphenation-ranges-update-interval'.
+> -
+> -Optional argument TIME, if non-nil, overrides the time recorded within
+> -`isbn-hyphenation-ranges-cache-file'.
+> -
+> -This function returns t if available if enough time has elapsed."
+> -  (require 'time-date)
+> -  (when (and isbn-hyphenation-ranges-update-interval
+> -             (file-exists-p isbn-hyphenation-ranges-cache-file))
+> -    (setq time (or time (with-temp-buffer
+> -                          (insert-file-contents isbn-hyphenation-ranges-cache-file nil 0 64)
+> -                          (goto-char (point-min)) (search-forward "TIME:" (line-end-position))
+> -                          (read (string-trim (buffer-substring (point) (line-end-position)))))))
+> -    (when (> (time-to-number-of-days (time-since time)) isbn-hyphenation-ranges-update-interval)
+> -      (let ((msg "New ISBN hyphenation ranges may be available"))
+> -        (if inhibit-interaction
+> -            (message "%s, but interaction is inhibited" msg)
+> -          (when (yes-or-no-p (concat msg ".  Download them? "))
+> -            (isbn-hyphenation-ranges-update))))
+> -      ;; While this return may be useful for users, it's mostly for
+> -      ;; testing purposes.
+> -      t)))
+> -
+>  ;;;###autoload
+>  (defun isbn-hyphenate (isbn &optional interactive)
+>    "Hyphenate ISBN as an ISBN-13.
+> @@ -280,18 +251,20 @@ defun isbn-hyphenate
+>  with the hyphenated ISBN."
+>    (interactive (list (isbn--get-interactively) t))
+>  
+> +  (require 'dom)
+
+Oh, I see now.  You are trying to just require the dependencies when
+they are actually needed...  Are you sure that you don't need to add
+`declare-function' calls somewhere to prevent byte-compilation issues?
+
+>    (unless (libxml-available-p)
+> -    (user-error "Hyphenation requires libxml2 support"))
+> +    (error "Hyphenation requires libxml2 support"))
+>  
+>    (unless isbn-hyphenation-ranges-cache
+> -    (let ((prgrp (make-progress-reporter "Loading hyphenation ranges from cache...")))
+> -      (with-temp-buffer
+> -        (condition-case-unless-debug nil
+> +    (if isbn-hyphenation-ranges-cache-file
+> +        (let ((prgrp (make-progress-reporter "Loading hyphenation ranges from cache...")))
+> +          (with-temp-buffer
+>              (insert-file-contents isbn-hyphenation-ranges-cache-file)
+> -          (error (error "Hyphenation ranges are not cached.  \
+> -Please run `isbn-hyphenation-ranges-update'")))
+> -        (setq isbn-hyphenation-ranges-cache (read (current-buffer))))
+> -      (progress-reporter-done prgrp)))
+> +            (setq isbn-hyphenation-ranges-cache (read (current-buffer))))
+> +          (progress-reporter-done prgrp))
+> +      (error (error "Hyphenation ranges are not cached.  \
+> +Please run `isbn-update-hyphenation-ranges'"))))
+>  
+>    (setq isbn (isbn-convert isbn 13))
+>  
+> @@ -309,44 +282,38 @@ defun isbn-hyphenate
+>           (length-from-range
+>            (lambda (dom number)
+>              (setq number (string-to-number number))
+> -            (thread-last
+> -              (dom-child-by-tag rule 'Length)
+> -              dom-text string-to-number
+> -              (throw 'len)
+> -              (when (and (>= number (car range)) (<= number (cadr range))))
+> -              (let ((range (mapcar #'string-to-number
+> -                                   (split-string (dom-text (dom-child-by-tag rule 'Range)) "-")))))
+> -              (dolist (rule (dom-by-tag dom 'Rule)))
+> -              (catch 'len)))))
+> +            (catch 'len
+> +              (dolist (rule (dom-by-tag dom 'Rule))
+> +                (let ((range (mapcar #'string-to-number
+> +                                     (split-string (dom-text (dom-child-by-tag rule 'Range)) "-"))))
+> +                  (when (and (>= number (car range)) (<= number (cadr range)))
+> +                    (throw 'len (string-to-number (dom-text (dom-child-by-tag rule 'Length)))))))))))
+
+Much easier to read :)
+
+>      ;; 1. EAN prefix
+>      (push ean hyphenated)
+>  
+>      ;; 2. Group identifier
+> -    (condition-case-unless-debug nil
+> +    (condition-case nil
+>          (let* ((rem (funcall remaining))
+>                 ;; The DOM holds several `Prefix' nodes, but only two
+>                 ;; reside under an `EAN.UCC' node.  One of these
+>                 ;; *should* contain the EAN prefix as its only text.
+> -               (len (thread-last
+> -                      (throw 'len (funcall length-from-range n rem))
+> -                      (when (string= (dom-text (dom-child-by-tag n 'Prefix)) ean))
+> -                      (dolist (n (dom-by-tag isbn-hyphenation-ranges-cache 'EAN.UCC)))
+> -                      (catch 'len))))
+> +               (len (catch 'len
+> +                      (dolist (n (dom-by-tag isbn-hyphenation-ranges-cache 'EAN.UCC))
+> +                        (when (string= (dom-text (dom-child-by-tag n 'Prefix)) ean)
+> +                          (throw 'len (funcall length-from-range n rem)))))))
+>            (unless (eq len 0)
+>              (push (substring rem 0 len) hyphenated)))
+>        (error (error "Could not determine group identifier")))
+>  
+>      ;; 3. Publisher code
+> -    (condition-case-unless-debug nil
+> +    (condition-case nil
+>          (let* ((prefix (string-join (reverse hyphenated) "-"))
+>                 (rem (funcall remaining))
+> -               (len (thread-last
+> -                      (funcall length-from-range n rem)
+> -                      (throw 'len)
+> -                      (when (string= (dom-text (dom-child-by-tag n 'Prefix)) prefix))
+> -                      (dolist (n (dom-by-tag isbn-hyphenation-ranges-cache 'Group)))
+> -                      (catch 'len))))
+> +               (len (catch 'len
+> +                      (dolist (n (dom-by-tag isbn-hyphenation-ranges-cache 'Group))
+> +                        (when (string= (dom-text (dom-child-by-tag n 'Prefix)) prefix)
+> +                          (throw 'len (funcall length-from-range n rem)))))))
+>            (push (substring rem 0 len) hyphenated))
+>        (error (error "Could not determine publisher code")))
+>  
+> @@ -358,10 +325,7 @@ defun isbn-hyphenate
+>  
+>      (setq isbn (string-join (reverse hyphenated) "-")))
+>    (when interactive
+> -    (if (region-active-p)
+> -        (replace-region-contents (region-beginning) (region-end) isbn)
+> -      (kill-new isbn)
+> -      (message "Hyphenated ISBN added to kill ring")))
+> +    (isbn--place-string isbn "Hyphenated ISBN added to kill ring"))
+>    isbn)
+>  
+>  (provide 'isbn)
+>
+>
+> --
+> Maximilian Cook
+
+
+From MAILER-DAEMON Fri Sep 11 00:56:03 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x4tIx-0004Bv-BY
+	for mharc-emacs-devel@gnu.org; Fri, 11 Sep 2026 00:56:03 -0400
+Received: from eggs.gnu.org ([209.51.188.92])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <netocenusa@gmail.com>)
+ id 1x4mSE-000290-01
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 17:38:32 -0400
+Received: from mail-wm2-x10.google.com ([2a00:1450:4864:31::10])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <netocenusa@gmail.com>)
+ id 1x4mN5-0004P2-R4
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 17:31:58 -0400
+Received: by mail-wm2-x10.google.com with SMTP id
+ 5b1f17b1804b1-49d1fb0cf5eso2452365e9.3
+ for <emacs-devel@gnu.org>; Thu, 10 Sep 2026 14:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789075892; x=1789680692; darn=gnu.org;
+ h=content-type:mime-version:user-agent:date:references:in-reply-to
+ :subject:cc:to:from:message-id:from:to:cc:subject:date:message-id
+ :reply-to:content-type;
+ bh=s1/C16/XQ2GWh0U4TfmYXqarHl9YLnDM8n+mKCLxyT0=;
+ b=fIoYJ2D+pstZUEITWzEdFIBLyqUmcZ+koOz4xEw5uH2Hi3rou0suIZrzC15xwVslh3
+ WKfAm/eCkOfvgTibJWTtqVUXS86zN8eYEnDQ17fpr9w2TV8fCl7WfBNonmyAYxMNJ2ON
+ wz+uG92Ra2F4b5L1sWFOfGT7jHyrNI4gnb+mowoOcj8ZWfa/SPo381Du4LHzGJ2QDcK1
+ gy6S1OHw2VbdL4HRMt6Odf4CQun6m+xXrIQLJ60JV/0MzFNMQ4+yx5bp7fOwcrQUOYwy
+ kLcK6yy6Gyy5PBqtLzKbW0T1zHppr3FF0u97gkV4epoGCK8jePQfHsxqDbwyy2yK8f00
+ jZoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20251104; t=1789075892; x=1789680692;
+ h=content-type:mime-version:user-agent:date:references:in-reply-to
+ :subject:cc:to:from:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=s1/C16/XQ2GWh0U4TfmYXqarHl9YLnDM8n+mKCLxyT0=;
+ b=VXbML5EElKXlxaVDTvwdI15fUxDKCLf65nWGQj6XzTrK5XtZ5Hbe81qmHUVXu31AcX
+ 3AyxEHpnXFf1M3mxw9v0JkbX3fNOQcSNh0H+3a8ZLQNlvMSi5ydJcMRE5s5mFQWq8Fbr
+ /KudP8FnToRgLlK+OdKavPh3vupmur+Ti7fmgacwp3bkZyuGZojNwi1gtEmdMebPEsZY
+ RuYmhDWiRbTbferfoWiqMki9abZofgbW6860xWwm0H09R/yaoqoPX5NTfMAr+6ybir4I
+ JTRl9HJr9OPs0PJPyflg5HCd8/bXkmj/XNJwoW51XZWWzSYwYdjPwITK13OtXL7xk9sZ
+ F4fg==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBx11P/4suRcitGLIBC9bFPkFdo7Wff4LyrUHK4ZD8F+VHRb9o/o4GNVl2Hv30Yryc8nxgjgeLOc5xEMaQ==@gnu.org
+X-Gm-Message-State: AFuF++m/1T8seOnQYsn4Uw2T9eHjUmdA1BcGTJjTO5nQeUA6FC7spQh7
+ wfT7sw7Cfu9kQRU3hhlCKURFIL+UvKOIqvwk5LHas2zfxEjtDno7WqI6tTEqz8Z3KCQ=
+X-Gm-Gg: AYBFou0/UxVSakrrVMqqfDIv0hAlEH0cLanpbXypYw+p8KQLDoCDLJvagJHw5IqLvPI
+ lHEZfxaINrsL+mTyogIofAsDt2HMj/zM0Qaal97upJ7Lo1Slq1f0ka5zneIYzYSmvpHbr8q2V8Z
+ dI+2NUfO6IYVIBiu6BfcCYbNVAnSsAe3zpJJ/fF1dj/83zY+D2nao3emv7gY9MYHRjHJcDkwO0N
+ WeNAoPMAIgWUDhkc5lva51EKKFX0Lf4tbCU/fjVeJkOa2bQQd/3hiqwK+6wuKP7ZF4SoBKd3veI
+ 5owYJ5S3DOV+3Sb9XFpvWa2IBnQojtXLpgcGfB717H8c1rqngI5OFiQAg/kR0tla1WqqbLRxE6p
+ 59s19dNDk+uU67DENA2PzYm66AZVQW0avyPrWbS9J8zHR2I0QHMMSEySX+wy7VUTW2IGuz5VK95
+ QiutEexKEGpzYl0swy4EJd2pu3En8A2qIoHNt660de6AIWzIKcCkdYE2qaC/SOUyLiqrYscjq1E
+ w==
+X-Received: by 2002:a05:600c:19c8:b0:499:b65e:49c9 with SMTP id
+ 5b1f17b1804b1-49e619f3ae1mr16619355e9.10.1789075891859; 
+ Thu, 10 Sep 2026 14:31:31 -0700 (PDT)
+Received: from pc-ernesto ([2a04:cec0:109b:dd38:b11e:14a5:e03e:9921])
+ by smtp.gmail.com with ESMTPSA id
+ ffacd0b85a97d-486eb32e81asm1150343f8f.7.2026.09.10.14.31.30
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Thu, 10 Sep 2026 14:31:31 -0700 (PDT)
+Message-ID: <6aa321b3.a02854e2.1a0266.ce2b@mx.google.com>
+X-Google-Original-Message-ID: <87ik4c4wum.fsf@pc-ernesto.>
+From: Ernesto CENUSA <netocenusa@gmail.com>
+To: Ihor Radchenko <yantar92@posteo.net>
+Cc: Sean Whitton <spwhitton@spwhitton.name>,  Philip Kaludercic
+ <philipk@posteo.net>,  emacs-devel@gnu.org
+Subject: Re: Operation "Fat Emacs"
+In-Reply-To: <87tso4w775.fsf@localhost> (Ihor Radchenko's message of "Sat, 05
+ Sep 2026 06:20:32 +0000")
+References: <87pkz7pzmz.fsf@melete.silentflame.com>
+ <87ld9vfpmw.fsf@posteo.net> <6a8ef014.55a5960c.2f838f.29ee@mx.google.com>
+ <87zey8anxp.fsf@posteo.net> <6a904f71.ecee4ed6.22013e.538e@mx.google.com>
+ <87o6en8lcq.fsf@posteo.net> <6a918d57.ba918990.1b43d3.833d@mx.google.com>
+ <877bla9w0s.fsf@athena.silentflame.com>
+ <6a9347f7.3810f6ce.19b908.110e@mx.google.com> <87tso4w775.fsf@localhost>
+Date: Thu, 10 Sep 2026 23:31:29 +0200
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=2a00:1450:4864:31::10;
+ envelope-from=netocenusa@gmail.com; helo=mail-wm2-x10.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Fri, 11 Sep 2026 00:56:00 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 10 Sep 2026 21:38:52 -0000
+
+Ihor Radchenko <yantar92@posteo.net> writes:
+
+> Ernesto CENUSA <netocenusa@gmail.com> writes:
+>
+>> Are there any newcomer-friendly tasks you would recommend for someone who
+>> wants to start contributing and gradually become more familiar with the Emacs
+>> source code?
+>
+> If you are using Org mode, I can suggest a number of tasks.
+>
+> For Emacs itself, you can try "easy" bugs - https://debbugs.gnu.org/cgi/pkgreport.cgi?include=tags%3Aeasy;package=emacs
+
+Thanks, and Yes I use org-mode, so if you have some suggestions, I will look what I can do 
+
+
+From MAILER-DAEMON Fri Sep 11 00:56:06 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x4tIz-0004CI-QP
+	for mharc-emacs-devel@gnu.org; Fri, 11 Sep 2026 00:56:05 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rahuljuliato@gmail.com>)
+ id 1x4nPY-0000aF-00
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 18:38:55 -0400
+Received: from mail-ua1-x92f.google.com ([2607:f8b0:4864:20::92f])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <rahuljuliato@gmail.com>)
+ id 1x4nPS-0000Pl-1P
+ for emacs-devel@gnu.org; Thu, 10 Sep 2026 18:38:25 -0400
+Received: by mail-ua1-x92f.google.com with SMTP id
+ a1e0cc1a2514c-98286dbe569so272665241.0
+ for <emacs-devel@gnu.org>; Thu, 10 Sep 2026 15:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789079898; x=1789684698; darn=gnu.org;
+ h=content-type:mime-version:user-agent:message-id:date:face
+ :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+ :message-id:reply-to:content-type;
+ bh=bOTeCRYYeUgTLN4RoaEm7W2VAhY6X2Ny7vtsqdkV0So=;
+ b=OSklf+b5LsdEAE+66aGMAerHYiYKlQ8tbosN30eCjvWJX7rsOSQzBamrkp0RObv9PY
+ hZOOiJhfe1T7zFbuI5DZ9FUNTXlJMWUEQoUcnS+Mg7KRLhNQ2/UEOyuYKGnespvTFMzs
+ MlKnyU0URanDhCy3wPBcUvZX1X34yDHIZxNNiwdDG7sCvmtPuz3SuCJmKqOVdCaVmu4/
+ /0oMYNRceZ8aXs6ISEvvj0dkaWeTZr/VtpvuUfJXQCQkiHs9bT+qaIMA92uNhr8bgfwN
+ CLZOzS3jV37vVP3jKjr7nS7MGD4RIF/5l6oaDj01JoSafrETl7AahrVvLZFx35Z6F3kE
+ kCUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20251104; t=1789079898; x=1789684698;
+ h=content-type:mime-version:user-agent:message-id:date:face
+ :references:in-reply-to:subject:cc:to:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=bOTeCRYYeUgTLN4RoaEm7W2VAhY6X2Ny7vtsqdkV0So=;
+ b=hrGZ9P5CUNlJ/oUzPRS4ocQGAuYEJndoZCmKdXfvMHjeL09kvlyfxdbFDyrfE3jQ0q
+ z7aD2I1FJGOLm+vj1bhmcZMigoMdfrOXA11kmnV5GGhxkmFAiimYXzPatNKGZIyCGQaG
+ lfZayK6xfXgovctE2zzyU87Ert+tmQi7T2DC7yAZKNrsWtuCA/dThgrcpzyC4x9O7Ayq
+ Dv/3qY4Lq10EyPPYPemfb8z5qyc0qbEKOxANf1Vns68Faj3ridhbfgltC/C37b810KVd
+ BjdKcXCP7M+2OpWxywLx0QQ1/f83mohxMdRWCpI6PqngsJYt357+f5ky1FCGIKH8K9B9
+ hR3w==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBz6slqUB4ONJ2fZLMpGgr00hiA1gplfoWx6VrF9Le5qHG0h9ksM6hzIuizgMbSt9r2onw84JblJD5tKyg==@gnu.org
+X-Gm-Message-State: AFuF++mCuPptKMbj8EZ9raVW7ZQNck0yq+iyzFDB8430tZY6u9jzvNNR
+ Irurkk98+N94YTnb21Ojg8Tsj4dXEH4bPzeK4glIhx+kQ34xcqvKIcM8qCDZhlXJpa03IQ==
+X-Gm-Gg: AYBFou1Th8kFALYRV4P+/Uc8SUyxuvMevi5/XbcL1uKtcNJRGCh6TEmXfjUfM8n2Ogp
+ HGeeA67KlsA4a8ktQVsmBFOmt6cEe3edqoPAh08gR/o/BTs3kXq0DTlCWhRvwHqOv5ZeR7uR/QD
+ T1tfrS4wlSepmaWcL+uGsijeJXiWVZdnLOXs//qac/wx6nKFfQon5nLF3Vgc4xekQudyMW6xD53
+ uMA+RVhuXDMMsFSduNWKDujseC+NsiFGHYOGmd70UKhGxHoA3bBzBtsOqyQwWSgLfb1zOb4vWoX
+ aIUKNzfRbv0A7AsZMQxzOBy84EpCW5cVoQtEsjlipUzRFJsyI8pTRv/9UEBUYcp2JPZhvXROi4U
+ ZyOEKmPKoVnojYjZ4uWPFCdZLZxpRNEkZUk5JPoHyxzti4Uky19TsdTm+7jefS4Rzjkq2++zTeM
+ HBjnr1QdvdjsXF9pWFMwcYybEgpKUCkK2xjxAC7et7JuvT4X+UzcJf7/73+k2x9/8iRi0V/VrI4
+ 5mAb9HcECGz9uS92A==
+X-Received: by 2002:a05:6122:4d08:b0:5bf:9461:91d with SMTP id
+ 71dfb90a1353d-5c8462916f5mr3273921e0c.5.1789079893549; 
+ Thu, 10 Sep 2026 15:38:13 -0700 (PDT)
+Received: from relic ([179.232.55.158]) by smtp.gmail.com with ESMTPSA id
+ 71dfb90a1353d-5c846f77dedsm851056e0c.1.2026.09.10.15.38.10
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Thu, 10 Sep 2026 15:38:13 -0700 (PDT)
+From: Rahul Martim Juliato <rahuljuliato@gmail.com>
+X-Google-Original-From: Rahul Martim Juliato <rahul.juliato@gmail.com>
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: Juri Linkov <juri@jurta.org>,  Rahul Martim Juliato
+ <rahuljuliato@gmail.com>,  emacs-devel@gnu.org
+Subject: Re: master 92acd66831b 1/2: Use short symbols for
+ query-replace-show-preview (bug#81583)
+In-Reply-To: <87ld99e89q.fsf@athena.silentflame.com>
+References: <178897652600.20505.16069557510840405887@vcs2.savannah.gnu.org>
+ <20260909175526.D925DC0DA3A@vcs2.savannah.gnu.org>
+ <87ld99e89q.fsf@athena.silentflame.com>
+Face: iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABhQTFRFDxIfFR9FMD+RM2CBkZPbZKPEn+Xt////lKVMgwAAAAFiS0dEAIgFHUgAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQfqAhsDFwcfcr7WAAACY0lEQVRIx7VVWbLbMAwzBZG6/41LcJHXpl/Vm/G8OADBBWKOo44c//mM2yeoH7go/kqQG3zlucDxgwTzkwz9XVl+K8Z8igL5p4KYKbApCHDC5aGXn7EcD1KCkUl9154EtSJUJWwWIIJbZyLVIIgTguGdCobxQ4nLI3gRLECO9axcwgNYQi81yH5KhGXZ1oU7XSH3YUnQ488YsesOCWrwxYOAgAtW1ZCEZKxoNR4TCILXGnPbjJ65v8ZrbB4fbI02pUaelSjuDKboCS1LifMEg1HwaOpRvV/2Ylja5ekjafyFYU2AnGOTMagh5Qbrs6OngFxTkhFPxUYUZePl3iQnSB7Y+3gcvQocDSYeWOuDYorXZagzhioeqWVSH3ivfvS54/EcW8LvB2eTSJDtbtkJXeGTD/1FwCbMNI/pnC0CjYi3ej2HhDvOD121dGzGFyHgM+5DUnhLNc0lKm0OYptQsWPTJKPMMuil0rhU6+E51th4obJqinOMntOBM59pzlg0wmICoRc3ML5tgpzpODRdk02MQmaEL8YIhdEElJniQbvDRSh7DicV9qjmQFeFHA3mosS8EU6+8g2jV8dzc3jpTK0ZFwWObITvpXZv1MRJXDSOs6WskFcxVKqIlKPMJpzxp9I+udrjLx3tKfB9unHslNi/Wj9AZt8+mGEnnTmPIzMYM5ZENgp1XVghv+uN4/ZE7sf4gXJV9yvHJp1/7EvJlTlz
+ pUspOFJt723pVYz9c2cpgHYfKSMXVz72TvL/rJqxL92+D2cGuelri9Nkc5wX6Hjf6cqEsoPptle/Vtllqb3eEPkHU2QXL+sLC8kAAAAASUVORK5CYII=
+X-PGP-Key: https://www.rahuljuliato.com/rahul_pub_key.asc
+Date: Thu, 10 Sep 2026 19:38:08 -0300
+Message-ID: <864ifwspf3.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=2607:f8b0:4864:20::92f;
+ envelope-from=rahuljuliato@gmail.com; helo=mail-ua1-x92f.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Fri, 11 Sep 2026 00:56:04 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 10 Sep 2026 22:39:12 -0000
+
+Sean Whitton <spwhitton@spwhitton.name> writes:
+
+> Juri Linkov [09/Sep  1:55pm -04] wrote:
+>> branch: master
+>> [...]
+>
+> Thanks for this.  I did some copyediting.
+>
+> I don't think it's good to explicitly suggest copying code, but it
+> makes sense to reference things as useful examples.
+
+Thanks for the copyediting.  I just pulled it, and it now reads much
+clearer.
+
+-- 
+Rahul Martim Juliato
+
+
+From MAILER-DAEMON Fri Sep 11 10:52:07 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x52bn-0003xB-9z
+	for mharc-emacs-devel@gnu.org; Fri, 11 Sep 2026 10:52:07 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <maximilian@fclr.net>)
+ id 1x52bg-0003jm-06
+ for emacs-devel@gnu.org; Fri, 11 Sep 2026 10:52:03 -0400
+Received: from sendmail.purelymail.com ([34.202.193.197])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <maximilian@fclr.net>)
+ id 1x52bd-0003Eq-Dd
+ for emacs-devel@gnu.org; Fri, 11 Sep 2026 10:51:59 -0400
+DKIM-Signature: a=rsa-sha256;
+ b=CALfHQ60gm/mG8BL9/oDHygF/atA83ufgU+YX3fbgAnty9JcKspPraDp84Qlyp8RbFJU35M4DPVWk59ZQLbtbpuGuCXjQYQuWmvRGwQ2fJBdvrS9EOwnGpUMaSLnLJNUS2xTCqLwmO/g2pPs3RMhSGhjJdCZ+ZQfB3uT0JC+ZgS55MxeMTJpdYZrEGh1cv3rq7bzul6n0GsqHSK4RE+FUaQmcPZIaFBV+9UkqsFQYziPcqdVZqlPO0nXVXTkpbsynzSKJDuzysRFWhjUdkGI2f5DckXj60jEog9K75GvRRISHONAquP+6sIgWwhyomz3c7qjp8Xg7GCOKQTtw53fTQ==;
+ s=purelymail1; d=fclr.net; v=1;
+ bh=hrJ9tFgOuu9Qf0ATyaPB5v3fJvDA73eX07l02xj2zsg=;
+ h=Received:From:To:Subject:Date; 
+DKIM-Signature: a=rsa-sha256;
+ b=vCZjOzDioLiQSKS2aLwzRIILWM9Oph2K1zW7fXOOESjcGCOeRWZuSUrYx3PyqGTCZyfKiffYYWStaovpskRpu6fuPrn9aBxzNgOrgbyjDveILnhI+nsSTo84FaduvVYn4ARtcHChPDfso44CT3fos522VSYj4BLHJVc34vCgFVG+882WXE1aGYP/4MFusT4kmMZbIWv4HowgG+JtdEGVSo0+lt/+Yz0XahQUBuT0R+8aDhAyK6c8BW23bmkKsBNAahUUx+mf5BAMV/PZueKOb++i573HsQttT2ql1tGe/hwEjcW2Dua1vp1Log0oB6QwuJZsscMsCSRvJjxtybGdug==;
+ s=purelymail1; d=purelymail.com; v=1;
+ bh=hrJ9tFgOuu9Qf0ATyaPB5v3fJvDA73eX07l02xj2zsg=;
+ h=Feedback-ID:Received:From:To:Subject:Date; 
+Feedback-ID: 45487:7817:null:purelymail
+X-Pm-Original-To: emacs-devel@gnu.org
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -1906694806; 
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Fri, 11 Sep 2026 14:51:55 +0000 (UTC)
+From: Maximilian Cook <maximilian@fclr.net>
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: emacs-devel@gnu.org
+Subject: Re: [ELPA] New package: isbn.el
+In-Reply-To: <87h5jwokxn.fsf@posteo.net>
+References: <m2bjaiw42g.fsf@fclr.net> <871pb8hnn5.fsf@posteo.net>
+ <m2pkymkv47.fsf@fclr.net> <87h5jwokxn.fsf@posteo.net>
+Mail-Followup-To: Philip Kaludercic <philipk@posteo.net>, emacs-devel@gnu.org
+Date: Fri, 11 Sep 2026 10:51:54 -0400
+Message-ID: <m233vflu2d.fsf@fclr.net>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=-=-="
+Received-SPF: pass client-ip=34.202.193.197; envelope-from=maximilian@fclr.net;
+ helo=sendmail.purelymail.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 11 Sep 2026 14:52:04 -0000
+
+--=-=-=
+Content-Type: text/plain
+
+> Sounds good.  I think that should be everything we need to add the
+> package to GNU ELPA?
+
+I've made a couple of last-minute changes following your new
+suggestions; see below.  (The patch is attached at the end.)
+
+> I'd say that it should be OK to keep the autoloads for interactive entry
+> points to the package, regardless of whether or not it should be used as
+> a library.  It is just that library entry points ought not the be
+> autoloaded IMO.
+
+I agree.  I've decided to drop the autoloads since it's a library first
+and foremost; i.e., interactive use is secondary.  If users want
+interactive use rightaway, it's trivial to add their own autoloads or
+simply load the entire library since it's so small.
+
+>>  ;;; Code:
+>>
+>> -(require 'dom)
+>> -(require 'seq)
+>> -(eval-and-compile (require 'subr-x))
+>
+> Why did you end up removing these?
+
+I've kept dom where it is, but I've since removed code requiring seq and
+subr-x, so they've been removed.
+
+>>  (defgroup isbn nil
+>>    "ISBN library."
+>>    :prefix "isbn-"
+>> @@ -87,6 +94,15 @@ defun isbn--get-interactively
+>>        (buffer-substring-no-properties (region-beginning) (region-end))
+>>      (read-string "ISBN: ")))
+>>
+>> +(defun isbn--place-string (string &optional msg)
+>> +  "If there is an active region, replace it with STRING.
+>> +Otherwise, add STRING to the kill ring and send MSG."
+>> +  (if (region-active-p)
+>> +      (replace-region-contents (region-beginning) (region-end) string)
+>> +    (kill-new string)
+>> +    (when msg
+>> +      (message "%s" msg))))
+>
+> Wouldn't it make sense to prefix the message with something?
+
+I've added a prefix for interactive messages; conventionally do errors
+also have a prefix?  I haven't seen prefices usually.
+
+>>  ;;;###autoload
+>>  (defun isbn-hyphenate (isbn &optional interactive)
+>>    "Hyphenate ISBN as an ISBN-13.
+>> @@ -280,18 +251,20 @@ defun isbn-hyphenate
+>>  with the hyphenated ISBN."
+>>    (interactive (list (isbn--get-interactively) t))
+>>
+>> +  (require 'dom)
+>
+> Oh, I see now.  You are trying to just require the dependencies when
+> they are actually needed...  Are you sure that you don't need to add
+> `declare-function' calls somewhere to prevent byte-compilation issues?
+
+I'm not terribly familiar with Emacs's byte-compilation and function
+declaration, so I'll play it safe and load dom as one normally does.
+Looks like a good topic to read up on...
+
+>>    (unless (libxml-available-p)
+>> -    (user-error "Hyphenation requires libxml2 support"))
+>> +    (error "Hyphenation requires libxml2 support"))
+>>
+>>    (unless isbn-hyphenation-ranges-cache
+>> -    (let ((prgrp (make-progress-reporter "Loading hyphenation ranges from cache...")))
+>> -      (with-temp-buffer
+>> -        (condition-case-unless-debug nil
+>> +    (if isbn-hyphenation-ranges-cache-file
+>> +        (let ((prgrp (make-progress-reporter "Loading hyphenation ranges from cache...")))
+>> +          (with-temp-buffer
+>>              (insert-file-contents isbn-hyphenation-ranges-cache-file)
+>> -          (error (error "Hyphenation ranges are not cached.  \
+>> -Please run `isbn-hyphenation-ranges-update'")))
+>> -        (setq isbn-hyphenation-ranges-cache (read (current-buffer))))
+>> -      (progress-reporter-done prgrp)))
+>> +            (setq isbn-hyphenation-ranges-cache (read (current-buffer))))
+>> +          (progress-reporter-done prgrp))
+>> +      (error (error "Hyphenation ranges are not cached.  \
+>> +Please run `isbn-update-hyphenation-ranges'"))))
+>>
+>>    (setq isbn (isbn-convert isbn 13))
+>>
+>> @@ -309,44 +282,38 @@ defun isbn-hyphenate
+>>           (length-from-range
+>>            (lambda (dom number)
+>>              (setq number (string-to-number number))
+>> -            (thread-last
+>> -              (dom-child-by-tag rule 'Length)
+>> -              dom-text string-to-number
+>> -              (throw 'len)
+>> -              (when (and (>= number (car range)) (<= number (cadr range))))
+>> -              (let ((range (mapcar #'string-to-number
+>> -                                   (split-string (dom-text (dom-child-by-tag rule 'Range)) "-")))))
+>> -              (dolist (rule (dom-by-tag dom 'Rule)))
+>> -              (catch 'len)))))
+>> +            (catch 'len
+>> +              (dolist (rule (dom-by-tag dom 'Rule))
+>> +                (let ((range (mapcar #'string-to-number
+>> +                                     (split-string (dom-text (dom-child-by-tag rule 'Range)) "-"))))
+>> +                  (when (and (>= number (car range)) (<= number (cadr range)))
+>> +                    (throw 'len (string-to-number (dom-text (dom-child-by-tag rule 'Length)))))))))))
+>
+> Much easier to read :)
+
+Great!
+
+
+--=-=-=
+Content-Type: text/x-patch
+Content-Disposition: inline; filename=philip-kaludercic-02.patch
+
+diff --git a/isbn.el b/isbn.el
+index a32c3b0..9142508 100644
+--- a/isbn.el
++++ b/isbn.el
+@@ -81,6 +81,8 @@
+ 
+ ;;; Code:
+ 
++(require 'dom)
++
+ (defgroup isbn nil
+   "ISBN library."
+   :prefix "isbn-"
+@@ -101,7 +103,7 @@ defun isbn--place-string
+       (replace-region-contents (region-beginning) (region-end) string)
+     (kill-new string)
+     (when msg
+-      (message "%s" msg))))
++      (message "ISBN: %s" msg))))
+ 
+ (defun isbn--list->string (isbn)
+   "Convert ISBN (list) to a string."
+@@ -121,7 +123,6 @@ defun isbn--string->list
+ 
+ ;;;; Validation
+ 
+-;;;###autoload
+ (defun isbn-valid-p (isbn &optional interactive)
+   "Return t if ISBN is valid, otherwise nil.
+ 
+@@ -146,17 +147,15 @@ defun isbn-valid-p
+                          index (1+ index)))
+                       (= (mod (+ sum (car (last isbn))) 10) 0)))))
+       (when interactive
+-        (message (if res "ISBN is valid" "ISBN is not valid")))
++        (message "ISBN: %s" (if res "ISBN is valid" "ISBN is not valid")))
+       res)))
+ 
+-;;;###autoload
+ (defun isbn-10-p (isbn)
+   "Return t if ISBN matches the ISBN-10 format."
+   (and
+    (isbn-valid-p isbn)
+    (eq (length (isbn--string->list isbn)) 10)))
+ 
+-;;;###autoload
+ (defun isbn-13-p (isbn)
+   "Return t if ISBN matches the ISBN-13 format."
+   (and
+@@ -165,7 +164,6 @@ defun isbn-13-p
+ 
+ ;;;; Conversion
+ 
+-;;;###autoload
+ (defun isbn-convert (isbn &optional format interactive)
+   "Convert ISBN between 10- and 13-digit formats.
+ 
+@@ -221,7 +219,6 @@ defcustom isbn-hyphenation-ranges-cache-file
+ (defvar isbn-hyphenation-ranges-cache nil
+   "Cache of all valid ISBN ranges from the International ISBN Agency.")
+ 
+-;;;###autoload
+ (defun isbn-update-hyphenation-ranges ()
+   "Update cache of ISBN hyphenation ranges."
+   (interactive)
+@@ -242,7 +239,6 @@ defun isbn-update-hyphenation-ranges
+             (progress-reporter-done prgrp)))
+       (error (error "Failed to retrieve hyphenation data")))))
+ 
+-;;;###autoload
+ (defun isbn-hyphenate (isbn &optional interactive)
+   "Hyphenate ISBN as an ISBN-13.
+ 
+@@ -251,8 +247,6 @@ defun isbn-hyphenate
+ with the hyphenated ISBN."
+   (interactive (list (isbn--get-interactively) t))
+ 
+-  (require 'dom)
+-
+   (unless (libxml-available-p)
+     (error "Hyphenation requires libxml2 support"))
+ 
+
+--=-=-=
+Content-Type: text/plain
+
+
+--
+Maximilian Cook
+
+--=-=-=--
+
+
