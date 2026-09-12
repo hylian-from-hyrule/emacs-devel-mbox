@@ -1,4 +1,4 @@
-name: Update emacs-devel mbox
+name: Update emacs-devel archive
 
 on:
   workflow_dispatch:
@@ -33,32 +33,141 @@ jobs:
         if: steps.madrid.outputs.run == 'true'
         uses: actions/checkout@v4
 
-      - name: Compute current month
+      - name: Compute dates
         if: steps.madrid.outputs.run == 'true'
-        id: month
-        run: echo "value=$(TZ=Europe/Madrid date +%Y-%m)" >> "$GITHUB_OUTPUT"
+        id: dates
+        run: |
+          echo "month=$(TZ=Europe/Madrid date +%Y-%m)" >> "$GITHUB_OUTPUT"
+          echo "day=$(TZ=Europe/Madrid date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
-      - name: Download emacs-devel mbox
+      - name: Download monthly mbox
         if: steps.madrid.outputs.run == 'true'
         run: |
-          mkdir -p mbox
-          
+          mkdir -p mbox daily
+
           curl -fL \
-            "https://lists.gnu.org/archive/mbox/emacs-devel/${{ steps.month.outputs.value }}" \
-            -o "mbox/${{ steps.month.outputs.value }}.txt"
-         
+            "https://lists.gnu.org/archive/mbox/emacs-devel/${{ steps.dates.outputs.month }}" \
+            -o "mbox/${{ steps.dates.outputs.month }}.txt"
+
+      - name: Extract last 24 hours
+        if: steps.madrid.outputs.run == 'true'
+        run: |
+          python3 <<'PY'
+          import mailbox
+          import email.utils
+          from datetime import datetime, timedelta, timezone
+          from zoneinfo import ZoneInfo
+          from pathlib import Path
+
+          month = "${{ steps.dates.outputs.month }}"
+          day = "${{ steps.dates.outputs.day }}"
+
+          source = Path(f"mbox/{month}.txt")
+          output = Path(f"daily/{day}.txt")
+
+          madrid = ZoneInfo("Europe/Madrid")
+
+          end = datetime.now(madrid).replace(
+              hour=18,
+              minute=15,
+              second=0,
+              microsecond=0,
+          )
+          start = end - timedelta(hours=24)
+
+          messages = []
+
+          mbox = mailbox.mbox(source)
+
+          for msg in mbox:
+              raw_date = msg.get("Date")
+              if not raw_date:
+                  continue
+
+              try:
+                  dt = email.utils.parsedate_to_datetime(raw_date)
+              except Exception:
+                  continue
+
+              if dt is None:
+                  continue
+
+              if dt.tzinfo is None:
+                  dt = dt.replace(tzinfo=timezone.utc)
+
+              dt_madrid = dt.astimezone(madrid)
+
+              if start <= dt_madrid <= end:
+                  messages.append((dt_madrid, msg))
+
+          messages.sort(key=lambda x: x[0])
+
+          with output.open("w", encoding="utf-8") as f:
+              f.write(
+                  f"emacs-devel messages from "
+                  f"{start.isoformat()} to {end.isoformat()}\n\n"
+              )
+
+              for dt, msg in messages:
+                  f.write("=" * 80 + "\n")
+                  f.write(f"Date: {dt.isoformat()}\n")
+                  f.write(f"From: {msg.get('From', '')}\n")
+                  f.write(f"Subject: {msg.get('Subject', '')}\n")
+                  f.write(f"Message-ID: {msg.get('Message-ID', '')}\n")
+                  f.write(f"In-Reply-To: {msg.get('In-Reply-To', '')}\n")
+                  f.write(f"References: {msg.get('References', '')}\n")
+                  f.write("\n")
+
+                  if msg.is_multipart():
+                      body = ""
+
+                      for part in msg.walk():
+                          content_type = part.get_content_type()
+                          disposition = part.get_content_disposition()
+
+                          if (
+                              content_type == "text/plain"
+                              and disposition != "attachment"
+                          ):
+                              charset = part.get_content_charset() or "utf-8"
+                              payload = part.get_payload(decode=True)
+
+                              if payload:
+                                  body = payload.decode(
+                                      charset,
+                                      errors="replace",
+                                  )
+                                  break
+                  else:
+                      charset = msg.get_content_charset() or "utf-8"
+                      payload = msg.get_payload(decode=True)
+
+                      if payload:
+                          body = payload.decode(
+                              charset,
+                              errors="replace",
+                          )
+                      else:
+                          body = str(msg.get_payload())
+
+                  f.write(body.strip())
+                  f.write("\n\n")
+
+          print(f"Wrote {len(messages)} messages to {output}")
+          PY
+
       - name: Commit changes
         if: steps.madrid.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add mbox/
+          git add mbox/ daily/
 
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0
           fi
 
-          git commit -m "Update emacs-devel mbox ${{ steps.month.outputs.value }}"
+          git commit -m "Update emacs-devel archive ${{ steps.dates.outputs.day }}"
           git push
