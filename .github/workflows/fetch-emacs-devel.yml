@@ -42,11 +42,11 @@ jobs:
         if: steps.madrid.outputs.run == 'true'
         run: |
           mkdir -p mbox
-
+          
           curl -fL \
             "https://lists.gnu.org/archive/mbox/emacs-devel/${{ steps.month.outputs.value }}" \
-            -o "mbox/${{ steps.month.outputs.value }}"
-
+            -o "mbox/${{ steps.month.outputs.value }}.txt"
+         
       - name: Commit changes
         if: steps.madrid.outputs.run == 'true'
         run: |
