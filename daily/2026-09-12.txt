@@ -1,0 +1,1424 @@
+emacs-devel messages from 2026-09-11T18:15:00+02:00 to 2026-09-12T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-11T19:54:16+02:00
+From: Ihor Radchenko <yantar92@posteo.net>
+Subject: Re: Operation "Fat Emacs"
+Message-ID: <87zexnk72x.fsf@localhost>
+In-Reply-To: <6aa321b3.a02854e2.1a0266.ce2b@mx.google.com>
+References: <87pkz7pzmz.fsf@melete.silentflame.com>
+ <87ld9vfpmw.fsf@posteo.net> <6a8ef014.55a5960c.2f838f.29ee@mx.google.com>
+ <87zey8anxp.fsf@posteo.net> <6a904f71.ecee4ed6.22013e.538e@mx.google.com>
+ <87o6en8lcq.fsf@posteo.net> <6a918d57.ba918990.1b43d3.833d@mx.google.com>
+ <877bla9w0s.fsf@athena.silentflame.com>
+ <6a9347f7.3810f6ce.19b908.110e@mx.google.com> <87tso4w775.fsf@localhost>
+ <6aa321b3.a02854e2.1a0266.ce2b@mx.google.com>
+
+Ernesto CENUSA <netocenusa@gmail.com> writes:
+
+> Thanks, and Yes I use org-mode, so if you have some suggestions, I will look what I can do 
+
+Here are a few examples:
+
+1. Adding new customization: https://list.orgmode.org/orgmode/87a5mrlnsa.fsf@localhost/
+2. Adding footnote hints https://list.orgmode.org/orgmode/CAL1eYuL+WKh3ST3tP8AT-QVnn41Mi_OsPUwOGa4S=BzvAbB03A@mail.gmail.com/
+3. Internal performance optimization https://list.orgmode.org/orgmode/87se46xd74.fsf@localhost/
+4. Important work on moving ob-* documentation from wiki to the actual manual https://list.orgmode.org/orgmode/87zfl3uxhb.fsf@localhost/
+
+There are also many bugs and feature requests you can explore in
+https://tracker.orgmode.org/?types=bug%2Crequest
+
+Contribution instructions: https://orgmode.org/worg/org-contribute.html
+Note that you can join one of the meetups if you need more guidance.
+
+And you can ask me about something more specific if you are interested
+in specific parts of Org or types of tasks to do.
+
+-- 
+Ihor Radchenko // yantar92,
+Org mode maintainer,
+Learn more about Org mode at <https://orgmode.org/>.
+Support Org development at <https://liberapay.com/org-mode>,
+or support my work at <https://liberapay.com/yantar92>
+
+================================================================================
+Date: 2026-09-11T20:44:09+02:00
+From: Daniel Mendler <mail@daniel-mendler.de>
+Subject: Newcomer friendly tasks
+Message-ID: <87ik4br5l2.fsf_-_@daniel-mendler.de>
+In-Reply-To: <6aa321b3.a02854e2.1a0266.ce2b@mx.google.com>
+References: <87pkz7pzmz.fsf@melete.silentflame.com> <87ld9vfpmw.fsf@posteo.net>
+ <6a8ef014.55a5960c.2f838f.29ee@mx.google.com>
+ <87zey8anxp.fsf@posteo.net>
+ <6a904f71.ecee4ed6.22013e.538e@mx.google.com>
+ <87o6en8lcq.fsf@posteo.net>
+ <6a918d57.ba918990.1b43d3.833d@mx.google.com>
+ <877bla9w0s.fsf@athena.silentflame.com>
+ <6a9347f7.3810f6ce.19b908.110e@mx.google.com>
+ <87tso4w775.fsf@localhost>
+ <6aa321b3.a02854e2.1a0266.ce2b@mx.google.com>
+
+Ernesto CENUSA <netocenusa@gmail.com> writes:
+
+> Ihor Radchenko <yantar92@posteo.net> writes:
+>
+>> Ernesto CENUSA <netocenusa@gmail.com> writes:
+>>
+>>> Are there any newcomer-friendly tasks you would recommend for someone who
+>>> wants to start contributing and gradually become more familiar with the Emacs
+>>> source code?
+>>
+>> If you are using Org mode, I can suggest a number of tasks.
+>>
+>> For Emacs itself, you can try "easy" bugs - https://debbugs.gnu.org/cgi/pkgreport.cgi?include=tags%3Aeasy;package=emacs
+>
+> Thanks, and Yes I use org-mode, so if you have some suggestions, I will look what I can do 
+
+Hello Ernesto,
+
+maybe bug#81840 would be interesting to get started? The goal is to tag
+most commands to make the M-x command list more organized and more
+discoverable. While the edits itself are trivial, one can look into many
+user-facing Emacs features, across the whole code base. bug#66335 is
+similar. The idea is to improve the finder keyword list, to cover
+existing packages better, and this will also help discoverability. Both
+of these tasks might be helpful when you want to familiarize yourself
+with the code base.
+
+Daniel
+
+================================================================================
+Date: 2026-09-12T03:27:10+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master 0ed3fa830d8: Eglot: simplify and consolidade xref
+ integration
+Message-ID: <e9a9ca75-6128-4a0f-a7a4-e7905eed3957@gutov.dev>
+In-Reply-To: <87a4ppntjo.fsf@gmail.com>
+References: <178878111084.17646.2370664031226432114@vcs2.savannah.gnu.org>
+ <20260907113831.36E95C0DA38@vcs2.savannah.gnu.org>
+ <41d6f135-a39c-4b6c-977b-0d53667e91bb@gutov.dev> <874ifya1o4.fsf@gmail.com>
+ <83cf39e3-3bc5-4e63-b30d-8a1001463f7b@gutov.dev> <87a4ppntjo.fsf@gmail.com>
+
+On 10/09/2026 16:07, João Távora wrote:
+
+>> If you are in the same file, you could often get by with C-s,
+>> constructing a similar search. But all right.
+> 
+> Of course, but that's not the scenario at all.  Just picture yourself in
+> a medium-sized project in an area where you've already visited all the
+> files that cover a given portion of the symbol reference graph you're
+> interested in and you want to get all references to arbitrary symbol
+> xyz() that is not under the cursor?  That's the scenario that works well
+> today.
+
+Difficult to imagine: I would almost always not have visited all the 
+relevant files at any given time. But it depends on how thin the project 
+code is sliced into files - varies from language to language.
+
+>> Yeah, I'm fine with waiting for users' feedback. Maybe we should
+>> document the caveat somewhere prominently.
+> 
+> Hmmm.  Prominently document this extremely niche, hitherto unsupported,
+> no-ones-ever-complained-about-this-in-10-years-except-you-and-me use
+> case within a largely undocumented Eglot-Xref integration?
+
+Not quite nobody (I think there were 1-2 issues filed over the years), 
+but you have a point: both Eglot's and LSP-Mode's replacements don't 
+bother with C-u behavior.
+
+> OK, but
+> first minimally document the _integration in a
+> chapter/section/subsection of the manual, else it's going to do more
+> harm than good.  And then I don't think we should be documenting
+> Eglot-Xref integration without throwing in (sub)sections at least for
+> Eglot-Flymake and Eglot-Eldoc (the latter has alredy a number of notes
+> that could easily migrate to that new section).
+
+All fair.
+
+I was thinking of a quick reference in Emacs's own NEWS or the manual 
+(Emacs not Eglot), but otherwise it does seem to require more groundwork 
+to introduce.
+
+If you had a "known issues" node, a quick description could go there.
+Might also go into etc/PROBLEMS if we ever decide it's important enough.
+
+> In other words, stuff that some minutes of LLM-human interaction would
+> scaffold and develop pretty well but takes a normal volunteer human a
+> number of hours.  We need to match the style of the existing manual and
+> provide some good flow.  A number of hours I don't have right now,
+> sorry.  But I'm more than welcome to this effort by someone else.  Let
+> me know when they lift the LLM embargo.
+
+Let's see how it goes.
+
+================================================================================
+Date: 2026-09-12T04:19:47+02:00
+From: =?UTF-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+Subject: Re: master 0ed3fa830d8: Eglot: simplify and consolidade xref
+ integration
+Message-ID: <CALDnm52GcDA+p0ofO8cv=CQ7K9_JEg2Bc9V5cWd-u2L5wFr+ug@mail.gmail.com>
+In-Reply-To: <e9a9ca75-6128-4a0f-a7a4-e7905eed3957@gutov.dev>
+References: <178878111084.17646.2370664031226432114@vcs2.savannah.gnu.org>
+ <20260907113831.36E95C0DA38@vcs2.savannah.gnu.org>
+ <41d6f135-a39c-4b6c-977b-0d53667e91bb@gutov.dev>
+ <874ifya1o4.fsf@gmail.com> <83cf39e3-3bc5-4e63-b30d-8a1001463f7b@gutov.dev>
+ <87a4ppntjo.fsf@gmail.com> <e9a9ca75-6128-4a0f-a7a4-e7905eed3957@gutov.dev>
+
+On Sat, Sep 12, 2026 at 2:27 AM Dmitry Gutov <dmitry@gutov.dev> wrote:
+>
+> On 10/09/2026 16:07, João Távora wrote:
+>
+> >> If you are in the same file, you could often get by with C-s,
+> >> constructing a similar search. But all right.
+> >
+> > Of course, but that's not the scenario at all.  Just picture yourself in
+> > a medium-sized project in an area where you've already visited all the
+> > files that cover a given portion of the symbol reference graph you're
+> > interested in and you want to get all references to arbitrary symbol
+> > xyz() that is not under the cursor?  That's the scenario that works well
+> > today.
+>
+> Difficult to imagine: I would almost always not have visited all the
+> relevant files at any given time. But it depends on how thin the project
+> code is sliced into files - varies from language to language.
+
+Actually, I made it way more complex and unlikely than it needs to be.
+
+One only needs to have visited the URL of the canonical definition of xyz().
+So if it lives in dmitry.c and you have visited it, then you may ask
+for references
+to xyz() from anywhere in your project.  And if clangd has done its job it will
+give you references even from joao.c which you haven't visited.  Get it?
+
+> > Hmmm.  Prominently document this extremely niche, hitherto unsupported,
+> > no-ones-ever-complained-about-this-in-10-years-except-you-and-me use
+> > case within a largely undocumented Eglot-Xref integration?
+>
+> Not quite nobody (I think there were 1-2 issues filed over the years),
+> but you have a point: both Eglot's and LSP-Mode's replacements don't
+> bother with C-u behavior.
+
+OK.  That's good.  I don't feel so empty having put effort into this (and
+neither should you!)
+
+> I was thinking of a quick reference in Emacs's own NEWS or the manual
+> (Emacs not Eglot), but otherwise it does seem to require more groundwork
+> to introduce.
+>
+> If you had a "known issues" node, a quick description could go there.
+
+There are tons of known issues and workarounds but I don't have them well
+indexed anywhere. They used to be half-smell indexed in my head, but I
+erased it from my brain. If someone could help them index them, like
+collect the 10 most important ones, it would help.
+
+Anyway, if this really becomes a big problem, we can just think about adding a
+little helper that does the didOpen/didClose for unvisited URLs.  The
+only reason
+I didn't do it is that the didOpen must send the languageId, and doing
+so requires
+having Emacs machinery choose and set the mode.  The latter is what I wanted
+to avoid, because it can run tons of user hooks that the user doesn't expect to
+be run under the hood.  But probably somewhere in this machinery there is
+a way for Emacs to just say the mode it would have chosen, and then we can
+write that helper and this whole question will be moot.
+
+> Let's see how it goes.
+
+Let's.
+
+João
+
+
+João Távora
+
+================================================================================
+Date: 2026-09-12T05:02:22+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master 0ed3fa830d8: Eglot: simplify and consolidade xref
+ integration
+Message-ID: <a54fd7da-773e-4f22-ab99-d8703a8eb504@gutov.dev>
+In-Reply-To: <CALDnm52GcDA+p0ofO8cv=CQ7K9_JEg2Bc9V5cWd-u2L5wFr+ug@mail.gmail.com>
+References: <178878111084.17646.2370664031226432114@vcs2.savannah.gnu.org>
+ <20260907113831.36E95C0DA38@vcs2.savannah.gnu.org>
+ <41d6f135-a39c-4b6c-977b-0d53667e91bb@gutov.dev> <874ifya1o4.fsf@gmail.com>
+ <83cf39e3-3bc5-4e63-b30d-8a1001463f7b@gutov.dev> <87a4ppntjo.fsf@gmail.com>
+ <e9a9ca75-6128-4a0f-a7a4-e7905eed3957@gutov.dev>
+ <CALDnm52GcDA+p0ofO8cv=CQ7K9_JEg2Bc9V5cWd-u2L5wFr+ug@mail.gmail.com>
+
+On 12/09/2026 05:19, João Távora wrote:
+
+> Actually, I made it way more complex and unlikely than it needs to be.
+> 
+> One only needs to have visited the URL of the canonical definition of xyz().
+> So if it lives in dmitry.c and you have visited it, then you may ask
+> for references
+> to xyz() from anywhere in your project.  And if clangd has done its job it will
+> give you references even from joao.c which you haven't visited.  Get it?
+
+I think our explanations match, I just don't expect "have visited xyz.c" 
+to be true often enough. It's probably fine for "references" which I 
+wouldn't expect to be used with C-u often anyway, but with C-u before 
+"declarations" or "type definitions" I would more likely be exploring 
+the project.
+
+>> Not quite nobody (I think there were 1-2 issues filed over the years),
+>> but you have a point: both Eglot's and LSP-Mode's replacements don't
+>> bother with C-u behavior.
+> 
+> OK.  That's good.  I don't feel so empty having put effort into this (and
+> neither should you!)
+
+Thanks :-)
+
+>> I was thinking of a quick reference in Emacs's own NEWS or the manual
+>> (Emacs not Eglot), but otherwise it does seem to require more groundwork
+>> to introduce.
+>>
+>> If you had a "known issues" node, a quick description could go there.
+> 
+> There are tons of known issues and workarounds but I don't have them well
+> indexed anywhere. They used to be half-smell indexed in my head, but I
+> erased it from my brain. If someone could help them index them, like
+> collect the 10 most important ones, it would help.
+
+I guess we can begin adding things to the list next time it comes up.
+
+There is an easy way to print some still-open reports that are not 
+mentioned in Troubleshooting (just using this as a prompt), but one 
+would still need to prioritize and triage.
+
+> Anyway, if this really becomes a big problem, we can just think about adding a
+> little helper that does the didOpen/didClose for unvisited URLs.  The
+> only reason
+> I didn't do it is that the didOpen must send the languageId, and doing
+> so requires
+> having Emacs machinery choose and set the mode.  The latter is what I wanted
+> to avoid, because it can run tons of user hooks that the user doesn't expect to
+> be run under the hood.  But probably somewhere in this machinery there is
+> a way for Emacs to just say the mode it would have chosen, and then we can
+> write that helper and this whole question will be moot.
+Not yet, but I suppose we can add it. In the meantime, here's a recipe 
+adapted from xref--collect-matches, it has been working for some years:
+
+(let ((file buffer-file-name))
+   (with-temp-buffer
+     (let ((inhibit-modification-hooks t))
+       (erase-buffer)
+       (insert-file-contents file nil 0 200)
+       ;; Xref does not do that, but we might as well.
+       (setq-local delay-mode-hooks t)
+       (let ((buffer-file-name file)
+             (inhibit-message t)
+             message-log-max)
+         (when (ignore-errors
+                 (set-auto-mode t)
+                 t)
+           (eglot--languageId))))))
+
+================================================================================
+Date: 2026-09-12T05:52:27+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: AGENTS.md
+Message-ID: <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+In-Reply-To: <865x0n7rtu.fsf@gnu.org> (message from Eli Zaretskii on Wed, 02
+ Sep 2026 15:36:45 +0300)
+References: <87ldan4juo.fsf@melete.silentflame.com>
+ <E1wrTpy-00F00e-H9@fencepost.gnu.org>
+ <87jyq43od0.fsf@melete.silentflame.com>
+ <e1f5bfb8854ea15141597a20c88a3fcb@gnu.support> <86se4r6erv.fsf@gnu.org>
+ <875x1m1mgk.fsf@web.de> <86y0ei4ejb.fsf@gnu.org> <87fr0qyv0g.fsf@web.de>
+ <86ik5m3y02.fsf@gnu.org> <87a4qxzwne.fsf@web.de>
+ <86h5l53zmm.fsf@gnu.org> <E1wt9Mr-00Gtm2-UL@fencepost.gnu.org>
+ <86ik5izp0l.fsf@gnu.org> <E1x1cEa-00DQYc-IG@fencepost.gnu.org>
+ <865x0n7rtu.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > Somehow people skipped over the decision of whether Emacs should have
+  > > support for "harnesses" such as Hermes.  When that was proposed, the
+  > > we failed to investigate the implications of supporting such a thing.
+  > > We need to find out what those implications are, and think about them.
+
+  > Sorry, I don't understand what you mean.  What is "such a thing"?
+
+"Such a thing", here, means a package in ELPA specifically to
+interface to something like Hermes.
+
+  > Anyway, Hermes is not part of Emacs, so what kind of "support" are we
+  > talking about?
+
+Code in Emacs to communicate with a site or a program is a kind of
+support for it.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-12T08:24:41+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: AGENTS.md
+Message-ID: <86jyor3s2e.fsf@gnu.org>
+In-Reply-To: <E1x5Emx-00C8Bd-VX@fencepost.gnu.org> (message from Richard
+ Stallman on Fri, 11 Sep 2026 23:52:27 -0400)
+References: <87ldan4juo.fsf@melete.silentflame.com>
+ <E1wrTpy-00F00e-H9@fencepost.gnu.org>
+ <87jyq43od0.fsf@melete.silentflame.com>
+ <e1f5bfb8854ea15141597a20c88a3fcb@gnu.support> <86se4r6erv.fsf@gnu.org>
+ <875x1m1mgk.fsf@web.de> <86y0ei4ejb.fsf@gnu.org> <87fr0qyv0g.fsf@web.de>
+ <86ik5m3y02.fsf@gnu.org> <87a4qxzwne.fsf@web.de>
+ <86h5l53zmm.fsf@gnu.org> <E1wt9Mr-00Gtm2-UL@fencepost.gnu.org>
+ <86ik5izp0l.fsf@gnu.org> <E1x1cEa-00DQYc-IG@fencepost.gnu.org>
+ <865x0n7rtu.fsf@gnu.org> <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: spwhitton@spwhitton.name, jporterbugs@gmail.com,
+> 	emacs-devel@gnu.org
+> Date: Fri, 11 Sep 2026 23:52:27 -0400
+> 
+ >   > > Somehow people skipped over the decision of whether Emacs should have
+>   > > support for "harnesses" such as Hermes.  When that was proposed, the
+>   > > we failed to investigate the implications of supporting such a thing.
+>   > > We need to find out what those implications are, and think about them.
+> 
+>   > Sorry, I don't understand what you mean.  What is "such a thing"?
+> 
+> "Such a thing", here, means a package in ELPA specifically to
+> interface to something like Hermes.
+> 
+>   > Anyway, Hermes is not part of Emacs, so what kind of "support" are we
+>   > talking about?
+> 
+> Code in Emacs to communicate with a site or a program is a kind of
+> support for it.
+
+You already sent the above on Sep 6th, and I already replied, as
+follows:
+
+  >   > Anyway, Hermes is not part of Emacs, so what kind of "support" are we
+  >   > talking about?  And why would there be any implications?
+  > 
+  > I think I read that a package for interfacing to Hermes was included
+  > in ELPA.  That's what I mean by "support for Hermes."
+  > 
+  > Was that a misunderstanding on my part?  Do we have a package in ELPA
+  > to support use of Hermes with Emacs?
+
+  Yes, we do, on nonGNU ELPA.  But why do you think we failed to
+  investigate the implications?  This _was_ discussed, and discussed at
+  some length.  Here's the beginning of that discussion:
+
+    https://lists.gnu.org/archive/html/emacs-devel/2026-08/msg00231.html
+
+  Not only was it discussed, you were part of that discussion, and even
+  posted a message to the discussion, here:
+
+    https://lists.gnu.org/archive/html/emacs-devel/2026-08/msg00225.html
+
+================================================================================
+Date: 2026-09-12T08:35:23+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: AGENTS.md
+Message-ID: <86ik4b3rkk.fsf@gnu.org>
+In-Reply-To: <E1x5Emx-00C8Bd-VX@fencepost.gnu.org> (message from Richard
+ Stallman on Fri, 11 Sep 2026 23:52:27 -0400)
+References: <87ldan4juo.fsf@melete.silentflame.com>
+ <E1wrTpy-00F00e-H9@fencepost.gnu.org>
+ <87jyq43od0.fsf@melete.silentflame.com>
+ <e1f5bfb8854ea15141597a20c88a3fcb@gnu.support> <86se4r6erv.fsf@gnu.org>
+ <875x1m1mgk.fsf@web.de> <86y0ei4ejb.fsf@gnu.org> <87fr0qyv0g.fsf@web.de>
+ <86ik5m3y02.fsf@gnu.org> <87a4qxzwne.fsf@web.de>
+ <86h5l53zmm.fsf@gnu.org> <E1wt9Mr-00Gtm2-UL@fencepost.gnu.org>
+ <86ik5izp0l.fsf@gnu.org> <E1x1cEa-00DQYc-IG@fencepost.gnu.org>
+ <865x0n7rtu.fsf@gnu.org> <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: spwhitton@spwhitton.name, jporterbugs@gmail.com,
+> 	emacs-devel@gnu.org
+> Date: Fri, 11 Sep 2026 23:52:27 -0400
+> 
+>   > > Somehow people skipped over the decision of whether Emacs should have
+>   > > support for "harnesses" such as Hermes.  When that was proposed, the
+>   > > we failed to investigate the implications of supporting such a thing.
+>   > > We need to find out what those implications are, and think about them.
+> 
+>   > Sorry, I don't understand what you mean.  What is "such a thing"?
+> 
+> "Such a thing", here, means a package in ELPA specifically to
+> interface to something like Hermes.
+> 
+>   > Anyway, Hermes is not part of Emacs, so what kind of "support" are we
+>   > talking about?
+> 
+> Code in Emacs to communicate with a site or a program is a kind of
+> support for it.
+
+You already sent the above on Sep 6th, and I already replied, as
+follows:
+
+  >   > Anyway, Hermes is not part of Emacs, so what kind of "support" are we
+  >   > talking about?  And why would there be any implications?
+  > 
+  > I think I read that a package for interfacing to Hermes was included
+  > in ELPA.  That's what I mean by "support for Hermes."
+  > 
+  > Was that a misunderstanding on my part?  Do we have a package in ELPA
+  > to support use of Hermes with Emacs?
+
+  Yes, we do, on nonGNU ELPA.  But why do you think we failed to
+  investigate the implications?  This _was_ discussed, and discussed at
+  some length.  Here's the beginning of that discussion:
+
+    https://lists.gnu.org/archive/html/emacs-devel/2026-08/msg00231.html
+
+  Not only was it discussed, you were part of that discussion, and even
+  posted a message to the discussion, here:
+
+    https://lists.gnu.org/archive/html/emacs-devel/2026-08/msg00225.html
+
+================================================================================
+Date: 2026-09-12T11:47:33+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: AGENTS.md
+Message-ID: <6c53e2c1eefad77cab0454b69b7e5aaf@gnu.support>
+In-Reply-To: <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+References: <87ldan4juo.fsf@melete.silentflame.com>
+ <E1wrTpy-00F00e-H9@fencepost.gnu.org>
+ <87jyq43od0.fsf@melete.silentflame.com>
+ <e1f5bfb8854ea15141597a20c88a3fcb@gnu.support> <86se4r6erv.fsf@gnu.org>
+ <875x1m1mgk.fsf@web.de> <86y0ei4ejb.fsf@gnu.org> <87fr0qyv0g.fsf@web.de>
+ <86ik5m3y02.fsf@gnu.org> <87a4qxzwne.fsf@web.de> <86h5l53zmm.fsf@gnu.org>
+ <E1wt9Mr-00Gtm2-UL@fencepost.gnu.org> <86ik5izp0l.fsf@gnu.org>
+ <E1x1cEa-00DQYc-IG@fencepost.gnu.org> <865x0n7rtu.fsf@gnu.org>
+ <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+
+The real issue is that GNU is adopting an external standard from the 
+so-called “AI” industry: AGENTS.md. That is not a neutral technical 
+file. It is a convention promoted by AI vendors to steer the behavior of 
+their agents. By using it, GNU implicitly treats those agents and that 
+industry as legitimate parts of Emacs and possibly the GNU development 
+process.
+
+Even if AGENTS.md says “do not generate LLM code,” it still requires LLM 
+agents to read and obey it. So it makes dependency (or signals such 
+depenedcy) on the very systems that are meant to be excluded. It also 
+sets a precedent: tomorrow it may be CLAUDE.md, another agent rule file, 
+or some other vendor-defined format. No matter how much corporations say 
+that "format is free" -- it is meant for their software agents, all of 
+them proprietary, so that they lessen their own development efforts.
+
+The principle should be: GNU does not adopt standards controlled by 
+proprietary AI companies, especially to regulate AI contributions. If 
+GNU needs a policy, such should be defined internally, not through their 
+file format.
+
+Those corporations do not share the same values as GNU.
+
+Their standard should not be adopted for sake of popularity, or with the 
+excuse to deter those agents.
+
+Jean Louis
+
+
+
+On 2026-09-12 06:52, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+>   > > Somehow people skipped over the decision of whether Emacs should 
+> have
+>   > > support for "harnesses" such as Hermes.  When that was proposed, 
+> the
+>   > > we failed to investigate the implications of supporting such a 
+> thing.
+>   > > We need to find out what those implications are, and think about 
+> them.
+> 
+>   > Sorry, I don't understand what you mean.  What is "such a thing"?
+> 
+> "Such a thing", here, means a package in ELPA specifically to
+> interface to something like Hermes.
+> 
+>   > Anyway, Hermes is not part of Emacs, so what kind of "support" are 
+> we
+>   > talking about?
+> 
+> Code in Emacs to communicate with a site or a program is a kind of
+> support for it.
+
+================================================================================
+Date: 2026-09-12T11:58:48+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: AGENTS.md
+Message-ID: <37e752524a95733e724bc6d8a809ff7b@gnu.support>
+In-Reply-To: <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+References: <87ldan4juo.fsf@melete.silentflame.com>
+ <E1wrTpy-00F00e-H9@fencepost.gnu.org>
+ <87jyq43od0.fsf@melete.silentflame.com>
+ <e1f5bfb8854ea15141597a20c88a3fcb@gnu.support> <86se4r6erv.fsf@gnu.org>
+ <875x1m1mgk.fsf@web.de> <86y0ei4ejb.fsf@gnu.org> <87fr0qyv0g.fsf@web.de>
+ <86ik5m3y02.fsf@gnu.org> <87a4qxzwne.fsf@web.de> <86h5l53zmm.fsf@gnu.org>
+ <E1wt9Mr-00Gtm2-UL@fencepost.gnu.org> <86ik5izp0l.fsf@gnu.org>
+ <E1x1cEa-00DQYc-IG@fencepost.gnu.org> <865x0n7rtu.fsf@gnu.org>
+ <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+
+The real issue is that GNU is adopting an external standard from the 
+so-called “AI” industry: AGENTS.md. That is not a neutral technical 
+file. It is a convention promoted by AI vendors to steer the behavior of 
+their agents. By using it, GNU implicitly treats those agents and that 
+industry as legitimate parts of Emacs and possibly the GNU development 
+process.
+
+Even if AGENTS.md says “do not generate LLM code,” it still requires LLM 
+agents to read and obey it. So it makes dependency (or signals such 
+depenedcy) on the very systems that are meant to be excluded. It also 
+sets a precedent: tomorrow it may be CLAUDE.md, another agent rule file, 
+or some other vendor-defined format. No matter how much corporations say 
+that "format is free" -- it is meant for their software agents, all of 
+them proprietary, so that they lessen their own development efforts.
+
+The principle should be: GNU does not adopt standards controlled by 
+proprietary AI companies, especially to regulate AI contributions. If 
+GNU needs a policy, such should be defined internally, not through their 
+file format.
+
+Those corporations do not share the same values as GNU.
+
+Their standard should not be adopted for sake of popularity, or with the 
+excuse to deter those agents.
+
+Jean Louis
+
+================================================================================
+Date: 2026-09-12T13:05:26+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: AGENTS.md
+Message-ID: <868q563f2h.fsf@gnu.org>
+In-Reply-To: <37e752524a95733e724bc6d8a809ff7b@gnu.support> (message from Jean
+ Louis on Sat, 12 Sep 2026 12:58:48 +0300)
+References: <87ldan4juo.fsf@melete.silentflame.com>
+ <E1wrTpy-00F00e-H9@fencepost.gnu.org>
+ <87jyq43od0.fsf@melete.silentflame.com>
+ <e1f5bfb8854ea15141597a20c88a3fcb@gnu.support> <86se4r6erv.fsf@gnu.org>
+ <875x1m1mgk.fsf@web.de> <86y0ei4ejb.fsf@gnu.org> <87fr0qyv0g.fsf@web.de>
+ <86ik5m3y02.fsf@gnu.org> <87a4qxzwne.fsf@web.de> <86h5l53zmm.fsf@gnu.org>
+ <E1wt9Mr-00Gtm2-UL@fencepost.gnu.org> <86ik5izp0l.fsf@gnu.org>
+ <E1x1cEa-00DQYc-IG@fencepost.gnu.org> <865x0n7rtu.fsf@gnu.org>
+ <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+ <37e752524a95733e724bc6d8a809ff7b@gnu.support>
+
+> Date: Sat, 12 Sep 2026 12:58:48 +0300
+> From: Jean Louis <bugs@gnu.support>
+> 
+> The real issue is that GNU is adopting an external standard from the 
+> so-called “AI” industry: AGENTS.md. That is not a neutral technical 
+> file. It is a convention promoted by AI vendors to steer the behavior of 
+> their agents. By using it, GNU implicitly treats those agents and that 
+> industry as legitimate parts of Emacs and possibly the GNU development 
+> process.
+
+I see no problem with using such standards to pursue our goals.  I
+also see no way in which using this standard means we "treat that
+industry as legitimate parts of Emacs", there's absolutely no basis
+for such an assertion.
+
+As another example, the Unicode Bidirectional Algorithm (UBA) was
+originally promoted by companies such as Microsoft, and its early
+drafts were included in their word processors.  And yet Emacs includes
+its implementation, to the benefit of our users who need to use
+bidirectional scripts.  Moreover, the UBA is now part of the Unicode
+Standard, so others also didn't see any problem with standardizing
+based on initiatives by vendors of proprietary software.
+
+Ideas that originated from such sources by themselves are not
+"tainted" in any sense, just because their originators are proponents
+of proprietary software.  We need to examine the ideas and standards
+themselves to make up our minds about them, not blindly reject them
+based on their origins.
+
+> Even if AGENTS.md says “do not generate LLM code,” it still requires LLM 
+> agents to read and obey it.
+
+No, it requires the agent that our users use (something on which we
+have no control) to read the file and act according to our policies.
+If the user doesn't use an LLM agent, the file does nothing at
+all, and requires no actions from such users.
+
+Please stop spreading FUD, as you have been asked many times already.
+
+> So it makes dependency (or signals such 
+> depenedcy) on the very systems that are meant to be excluded. It also 
+> sets a precedent: tomorrow it may be CLAUDE.md, another agent rule file, 
+> or some other vendor-defined format. No matter how much corporations say 
+> that "format is free" -- it is meant for their software agents, all of 
+> them proprietary, so that they lessen their own development efforts.
+
+The way we use these files is to prevent LLM agents from generating
+code which we will reject.  IOW, we are using these files in support
+of our policies.
+
+> The principle should be: GNU does not adopt standards controlled by 
+> proprietary AI companies
+
+If the standard can serve our goals, I see no reasons not to use it to
+our benefits.
+
+> especially to regulate AI contributions.
+
+We do not require any contributions.
+
+> If GNU needs a policy, such should be defined internally, not
+> through their file format.
+
+I don't see why not.  You haven't brought up any real reasons, except
+that the standard's origins, which should not have any bearing on our
+decisions.  There's nothing wrong with using useful ideas, regardless
+of who uttered them first.
+
+> Those corporations do not share the same values as GNU.
+> 
+> Their standard should not be adopted for sake of popularity, or with the 
+> excuse to deter those agents.
+
+There are no values in any standard except what it says to do (or not
+to do).  We should judge these on their own merits.  As has been
+pointed out to you many times already, but to no avail.
+
+P.S. You also "hijacked" a discussion thread which was not about the
+AGENTS.md file, but about something entirely different.  Please don't
+do that here.
+
+================================================================================
+Date: 2026-09-12T14:47:34+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+In-Reply-To: <861pb3opn7.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+
+orry about the wait.
+
+On 08/09/2026 16:10, Eli Zaretskii wrote:
+
+>>>> The other two built-in ones (Elisp and Eglot) support it.
+>>>
+>>> This should be documented, IMO.
+>>
+>> We mention both of these in the manual entry for xref-find-by-kind. Do
+>> you thing "etags does not support" deserves a separate sentence there?
+> 
+> Yes, I think so.
+
+I've applied such a change now.
+
+>>>> Would be nice for etags to have this too, but since it doesn't have any
+>>>> annotations in the file (unlike, say, ctags), it would have to be an
+>>>> ad-hoc solution, if at all possible.
+>>>
+>>> Look at a typical TAGS file, and you will see that there's enough
+>>> evidence there to implement that, although the implementation will
+>>> need to consider the source-code language.  For example, the Emacs
+>>> src/TAGS file has stuff like
+>>>
+>>>     #define emacs_closedir 50,1252
+>>>     typedef struct android_vdir emacs_dir;57,1423
+>>>     DEFUN ("directory-files", Fdirectory_files,379,10794
+>>>     struct image_type1322,35567
+>>>
+>>> and it should be clear that the 1st one is a macro, the second a type,
+>>> the third a primitive-function, the 4th a data structure, etc.  This
+>>> is for C; other languages will have different keywords, but the
+>>> information is there.
+>>
+>> This is not just C, but also the knowledge of our specific macros: that
+>> DEFUN creates a function definition.
+> 
+> Yes, but Emacs already has special support for these in more than one
+> place, so why not yet another?
+
+Sure we can. I just think that telling more classical categories/kinds 
+apart would be generally useful. Regexps for fixed format of DFEFUN
+
+>> But here is the language-specific decision: will "kinds" be
+>> functions/variables/types/macros? Or will they use a different split
+>> like Eglot and other LSP clients?
+> 
+> What different split is that?  I just went after what the ELisp
+> backend offers.
+
+And I suggest trying to do what Eglot does: declarations and 
+implementations ("split" meaning that a reguar cageroru th gnea=ral unfini)
+
+>> I'm inclined towards the latter, because IIRC the C languages does not
+>> allow reusing the same name between a function and a variable. Or even
+>> if that's allowed, it doesn't really happen (unlike with Elisp). So the
+>> declaration/implementation split could be a lot more useful. And we'd
+>> also need to consider which would be more feasible to implement.
+> 
+> I think etags prefers implementation in C-like languages, so I'm not
+> sure what you are suggesting here.  At least in C, declarations are
+> almost useless when you need the hep of M-. etc.
+
+Yes, I suppose the first question is whether etags records declarations 
+at all, by default or with a flag.
+
+IME it is useful to be able to find specifically the declaration, 
+sometimes. And the implementaiton in other cases. But again, depends on 
+whether it is available.
+
+Or we could indeed just do the functions/variables split, if you find it 
+useful. I think it is probably less so than with Elisp because function 
+and variable names don't intersect, but that's just my impression.
+
+>>> The key point here is that tags tables show a substantial portion of a
+>>> source line where the tag appeared, and so the information is there.
+>>>
+>>> Which is why I tried to decipher the way this feature is supposed to
+>>> work, and failed miserably, as always with any serious attempt to
+>>> understand how stuff works in xref.el.  It's all over-opaqued and
+>>> under-documented, sorry for being blunt.
+>>
+>> I'm sorry, how about we continue with question/answers and try to refine
+>> the explanations where they are. I don't quite understand the
+>> over-opaque characterization, or at least the design seems appropriate.
+> 
+> "Over-opaque" means that there are a lot of opaque data types and
+> objects involved in how this command works, and these types and
+> objects are not documented in enough detail to understand how to
+> implement them for a different backend.  The first question I asked
+> myself was what should the various backend-specific methods it uses
+> return, and I couldn't find the answer to that.  Even understanding
+> the significance of the arguments with which these methods are called
+> was a challenge.
+
+Ideally, the docstrings for the various cl-defgeneric forms should 
+answer these questions. Aside from maybe what an "xref value" is, or 
+maybe not in detail, because there is no one specific docstring among 
+those that fits.
+
+>> The way the feature works on the level of Xref is very simple:
+>> 1) The backend's method 'xref-backend-xref-kinds' returns a list of
+>> supported kinds.
+>> 2) The user is prompted to choose the kind.
+>> 3) The backend is queried for definitions of that particular kind
+>> through the method 'xref-backend-xrefs-by-kind', with KIND being the
+>> symbol corresponding to the user's choice in step 2.
+> 
+> This is trivial to understand, and I did.  The next level, where I
+> need to understand what is the significance of each argument these
+> methods accept, and what should they return, was where I hit a brick
+> wall.  Let's start from the first one: what is "the list of supported
+> kinds",
+
+Which "kinds" to support is decided by the backend. Like at the 
+beginning of this message we're discussing whether to support 
+"declaration" or "variable".
+
+> and how will the caller use each of its elements?  The doc
+> string says:
+> 
+>      "Return list of descriptors for xref kinds supported by BACKEND.
+> 
+>    Each descriptor is a plist with properties `:kind', `:name' and `:key'
+>    where the kind is a symbol value, name is a string and the key is a
+>    unique character that can be used to choose among them.  Optionally, it
+>    can also include `:prompt-format' which defaults to \"Find %s\".
+> 
+>    Having a kind in this list means that the backend can try to find such
+>    xrefs in the current and related buffers, with no guarantee of success.
+>    These locations might or might not be included in the results of
+>    `xref-backend-definitions' or `xref-backend-references'."
+> 
+> OK, so we know the data types of the list elements.  But what
+> requirements should each plist property satisfy?  To figure that out,
+> we need to know how each of the properties will be used.  For example,
+> if you document that :name is just a user-friendly description of
+> :kind and that it is only shown in the following prompt so the user
+> could select a type, that would be enough.  (But I'm not sure even now
+> if the above is the correct description, even though :name is the
+> easiest to understand of all of them.  And the too-general and vague
+> :name doesn't help in this task.)
+
+How about this:
+
+   Each descriptor is a plist with properties `:kind', `:name' and `:key'
+where the kind is a symbol value the backend will be able to recognize
+later, name is a string suitable for messages shown to the user, and the
+key is a unique character that can be used to choose among them.
+Optionally, it can include `:prompt-format' which defaults to \"Find
+%s\".
+
+>> I think the difficult part is how to implement it for each specific
+>> backend, given the information that the backend internally possesses.
+>> Those that posses the kind-separation info already (like Elisp and Eglot
+>> did) make that easier.
+> 
+> See, that's "Chinese" for me: I don't have the foggiest what you mean
+> by "kind-separation info", and how it is relevant here.
+
+E.g. whether we can find both declarations and implementations (and know 
+which is which), by the contents of TAGS.
+
+> To implement the support for each property of the above list, I need
+> to know how it will be used by the backend-independent code, or I need
+> to know that backend-independent code will not use it, just pass it
+> verbatim to this-and-that other methods of the backend.  But none of
+> that is in the doc string, sadly.
+
+KIND will be passed verbatim. But perhaps the proposed phrasing above 
+implies that sufficiently?
+
+>> Those what ever looked at the signature of 'require' might recognize it
+>> more easily. And we use this term in other places too.
+>>
+>> But I'm happy to concede: which other term would you prefer? 'library'?
+> 
+> I just added something to the manual to explain it.
+
+Great, thank you.
+
+>>>>> For example, the doc string of
+>>>>> xref-backend-xref-kinds doesn't say how the :kind and :name properties
+>>>>> of the list are expected to be used by the backend and by functions
+>>>>> like xref-read-identifier,
+>>>>
+>>>> The :kind value is just a symbol value - it's passed later to
+>>>> xref-backend-xrefs-by-kind. That method's docstring says that.
+>>>
+>>> Passed to do what? to use it how?  The _meaning_ of the symbol is not
+>>> where it is passed, it's how it is used by those to whom it is passed.
+>>
+>> The backend looks at the value and dispatches on it, returning a list of
+>> xrefs of appropriate kind. Not sure how to explain that better
+> 
+> Is the backend the only one that should understand the meaning of
+> :kind?  This is important information, and should be documented.
+> Because if xref.el itself looks at :kind and does something with it, I
+> need to know that, don't you agree?
+
+Yes, and sure.
+
+>> there are examples of such dispatches in elisp-mode.el
+>> (xref-backend-identifier-completion-predicate uses cl-ecase;
+>> xref-backend-xrefs-by-kind compares the symbol with fields in structs
+>> already returned from the list of definitions) and eglot.el
+>> (xref-backend-xrefs-by-kind uses cl-ecase on KIND to choose the argument
+>> for eglot--lsp-xrefs-for-method).
+> 
+> There are several rabbit holes to go down, yes.  I even tried.  But
+> one can never be sure one understands all of that, since this stuff is
+> passed via variables, sent to other functions and methods, etc., and
+> those are also under-documented.  Here's the doc string of
+> xref-backend-identifier-completion-predicate:
+> 
+>      "Return the predicate for identifier completion.
+>    The argument KIND will be provided when the caller intends to narrow
+>    down the search.  The backend can use it to narrow down to only
+>    identifiers that have xrefs belonging to KIND."
+> 
+> What is "the predicate for identifier completion"?
+
+It is the predicate that will be used with 'completing-read' (the 
+PREDICATE argument) when an identifier is read with completion (e.g. 
+during 'C-u M-.').
+
+> I'm guessing it
+> will be passed to some completion-related function, but to which
+> one(s)?
+
+Basically any that could be used to read an identifier? At least that's 
+how I think about it - in practice it all usually delegates to 
+completing-read.
+
+> And what do the next 2 sentences try to tell me? KIND will be
+> provided to whom?
+
+To this function. KIND is optional, so it will be provided (used) by 
+this function's callers when the caller (referred to in the docstring) 
+intends to narrow down the search. That is, for the identifier 
+completion to show only symbols that have definitions of specified kind.
+
+Only supported by the Elisp backend, FWIW.
+
+> And if I try to find the answer by looking at the
+> ELisp implementation, I find it having not a single human-readable
+> comment, not even a doc string, and :kind is used there in cl-ecase,
+> so I now need to learn what that does (which leads to cl-case,
+> etc. etc.).
+
+cl-ecase is basically an exclusive case switching expression. I would 
+look at the docstring only for the details of the syntax.
+
+>> The backend "owns" the kind symbols, since it provides the available
+>> list.
+> 
+> See, even this is not documented anywhere.  One could think that the
+> list of possible :kind's is a generic one, so a backend cannot just
+> return an arbitrary symbol it wants, but instead must choose one of
+> the valid ones.  After all, the union of types in all the programming
+> languages is finite and quite small.
+
+We describe that in the manual entry for xref-find-by-kind, which you 
+changes just recently: that Elisp and Eglot use different sets of 
+"kinds" which do not intersect.
+
+>>>> About usage in xref-read-identifier, I think the user would quickly get
+>>>> the idea by using xref-find-by-kind in practice. Having :name strings
+>>>> usually implies that they would be used for message text, though not
+>>>> necessarily I guess.
+>>>
+>>> Are they used _only_ for showing in the prompt?  That is also not
+>>> documented.
+>>
+>> For two prompts and for an error message later.
+> 
+> Again, this should be clearly documented, since it's part of the
+> contract of each backend.
+
+How about the short description above? Or indeed we could say "prompts 
+and error messages".
+
+>> Do lines 52-63 in xref.el help in any way?
+> 
+> After that, I need to study a lot of non-trivial code, with several
+> other unfamiliar types, to begin to understand what could be a
+> location.  It seems xref-file-location is used by many/most
+> implementations, but the commentary above doesn't even mention it
+> directly.
+
+I don't think the xref-file-location is the specifically *recommended* 
+type to use. But it's certainly mentioned in the commentary.
+
+In the etags backend you wouldn't use it.
+
+> And xref-buffer-location doesn't even have a doc string!
+
+It's a struct with fields "buffer" and "position". I think the docstring 
+would mostly reiterate that.
+
+> And again, how the backend-independent code uses these locations is
+> not clear.  E.g., the commentary says xref-location-line is optional,
+> but not what happens if it exists and what happens if it doesn't.  How
+> can one tell whether implementing it is worthwhile?
+
+That's good to try to add. Initially the difference was only cosmetic, 
+but now it affects the "Xref Edit" feature due to an external 
+constraint, too.
+
+>> If you 'M-x describe-function' on xref-make or
+>> `xref-make-file-location', you will at least see the list of arguments.
+>> eldoc (or company completion, if installed) also show the list of
+>> arguments in the echo area.
+> 
+> Yes, but how can one guess that I need to look up documentation of
+> these functions?
+
+You try to call them and look up the documentation to see the list of 
+arguments?
+
+> All I want is a concise documentation of locations,
+> enough for me to start working with it in Lisp code I want to write:
+> call the correct constructor with the correct arguments, then pass the
+> result around.  You are instead suggesting me to take a "tour de
+> France" through much of xref.el and elisp-mode.el, just to understand
+> that basic bit.
+
+If I was someone just starting with the code, I would look at how the 
+existing code in etags.el creates xref-etags-location values and 
+basically copied that.
+
+It's similar to how the current Xref code produces the TAG-INFO values: 
+I don't really think about what's inside even though it is documented: I 
+just found that (funcall snarf-tag-function) returns such a value, and 
+knows how to use it.
+
+>>> And for types like 'xref' and 'location', I also need to know
+>>> whether the type should be only understood by my code
+>>> (a.k.a. "private") or also by other places in xref.el.  In the latter
+>>> case, I need to know which parts of the type are "public" and what
+>>> those public places assume and expect from these public parts.  None
+>>> of that is documented, AFAICS; apologies if I missed something.
+>>
+>> It seems like this question is based on a need to undestand how the
+>> cl-defgeneric/defmethod dispatch works.
+> 
+> No!  I know how the dispatch works.  But why do I need to read and
+> understand the implementation of half a dozen of cl-defmethod's just
+> to be able to use a data type as ubiquitous in xref.el as 'location'?
+
+What a data type is already defined, I don't think you have to read 
+them. Just be aware that they exist, maybe.
+
+>> The public parts of a location type are its generic method definitions:
+>> xref-location-group, xref-location-marker, xref-location-line. But you
+>> don't have to worry about those because etags.el already has its own
+>> location type and the definition for its methods. The constructor is
+>> xref-make-etags-location.
+> 
+> How can I know that the locations created by etags.el are good for
+> this feature?
+
+I hoped that might be conveyed by the docstrings of 
+xref-backend-definitions and xref-backend-xrefs-by-kind in their 
+cl-defgeneric forms.
+
+In particular, the latter says directly:
+
+   The result must be a list of xref values, like in
+`xref-backend-definitions'
+
+That should mean that a list of the same type of values that etags.el 
+returns in "definitions" would be good for "xrefs by kind".
+
+> E.g., of the two location types, the file type and the
+> buffer type, which onces will work with xref-find-by-kind?
+
+Both the file type and the buffer type would work, but the type defined 
+by etags.el is xref-etags-location. It is the one to use here.
+
+Otherwise you'd have to spend time and memory on converting the etags 
+references to files ahead of time.
+
+> I hope I've succeeded to explain why it is difficult to extend
+> xref.el, at least for this particular feature.  If it's still not
+> clear, or if you think the problem is that I don't understand how to
+> use cl-defmethod, then let's just forget about it and move on.
+
+A lot of concerns are totally fair, but I hope we'll be able to meet in 
+the middle, keeping the somewhat abstract way of defining things, but 
+adding more concrete information where necessary.
+
+================================================================================
+Date: 2026-09-12T16:32:57+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 7b2c3aea86b: Let callers ask for the Quail guidance in
+ an overlay
+Message-ID: <jwvzexmlews.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20260912073514.60F4FC0DEC0@vcs2.savannah.gnu.org>
+References: <178919851393.24714.9342930566348473696@vcs2.savannah.gnu.org>
+ <20260912073514.60F4FC0DEC0@vcs2.savannah.gnu.org>
+
+> +(defvar quail-guidance-use-overlay nil
+> +  "Non-nil means display the guidance with an overlay, not by inserting it.
+> +Inserted guidance is part of `minibuffer-contents' while it is shown, so
+> +code reading them from `after-change-functions' sees it too.  Bind this
+> +around such code rather than setting it globally: an overlay string
+> +places the cursor by rules of its own.")
+
+This discussed downsides of having this var set to nil but not downsides
+to having it set to non-nil.  Should we change the default or should we
+document some known downsides?
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-12T17:19:11+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 7b2c3aea86b: Let callers ask for the Quail guidance in
+ an overlay
+Message-ID: <86zexm1or4.fsf@gnu.org>
+In-Reply-To: <jwvzexmlews.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Sat, 12 Sep 2026 10:32:57 -0400)
+References: <178919851393.24714.9342930566348473696@vcs2.savannah.gnu.org>
+ <20260912073514.60F4FC0DEC0@vcs2.savannah.gnu.org>
+ <jwvzexmlews.fsf-monnier+emacs@gnu.org>
+
+> From: Stefan Monnier <monnier@iro.umontreal.ca>
+> Cc: Rahul Martim Juliato <rahul.juliato@gmail.com>
+> Date: Sat, 12 Sep 2026 10:32:57 -0400
+> 
+> > +(defvar quail-guidance-use-overlay nil
+> > +  "Non-nil means display the guidance with an overlay, not by inserting it.
+> > +Inserted guidance is part of `minibuffer-contents' while it is shown, so
+> > +code reading them from `after-change-functions' sees it too.  Bind this
+> > +around such code rather than setting it globally: an overlay string
+> > +places the cursor by rules of its own.")
+> 
+> This discussed downsides of having this var set to nil but not downsides
+> to having it set to non-nil.  Should we change the default or should we
+> document some known downsides?
+
+Using overlays has quite a few downsides, but it is not easy to
+explain them, even to Lisp programmers.
+
+As for the default, this was considered, but IMO we should first
+collect some experience with this feature, to make sure it doesn't
+have some underwater rocks.  Because changing the default then
+changing it back is something I'd like to avoid if possible.
+
+================================================================================
+Date: 2026-09-12T18:06:51+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86y0d61mjo.fsf@gnu.org>
+In-Reply-To: <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> (message from
+ Dmitry Gutov on Sat, 12 Sep 2026 15:47:34 +0300)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+
+> Date: Sat, 12 Sep 2026 15:47:34 +0300
+> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> >> We mention both of these in the manual entry for xref-find-by-kind. Do
+> >> you thing "etags does not support" deserves a separate sentence there?
+> > 
+> > Yes, I think so.
+> 
+> I've applied such a change now.
+
+Thanks.
+
+> >>>> Would be nice for etags to have this too, but since it doesn't have any
+> >>>> annotations in the file (unlike, say, ctags), it would have to be an
+> >>>> ad-hoc solution, if at all possible.
+> >>>
+> >>> Look at a typical TAGS file, and you will see that there's enough
+> >>> evidence there to implement that, although the implementation will
+> >>> need to consider the source-code language.  For example, the Emacs
+> >>> src/TAGS file has stuff like
+> >>>
+> >>>     #define emacs_closedir 50,1252
+> >>>     typedef struct android_vdir emacs_dir;57,1423
+> >>>     DEFUN ("directory-files", Fdirectory_files,379,10794
+> >>>     struct image_type1322,35567
+> >>>
+> >>> and it should be clear that the 1st one is a macro, the second a type,
+> >>> the third a primitive-function, the 4th a data structure, etc.  This
+> >>> is for C; other languages will have different keywords, but the
+> >>> information is there.
+> >>
+> >> This is not just C, but also the knowledge of our specific macros: that
+> >> DEFUN creates a function definition.
+> > 
+> > Yes, but Emacs already has special support for these in more than one
+> > place, so why not yet another?
+> 
+> Sure we can. I just think that telling more classical categories/kinds 
+> apart would be generally useful. Regexps for fixed format of DFEFUN
+
+I plan on making them a separate :kind.
+
+> >> But here is the language-specific decision: will "kinds" be
+> >> functions/variables/types/macros? Or will they use a different split
+> >> like Eglot and other LSP clients?
+> > 
+> > What different split is that?  I just went after what the ELisp
+> > backend offers.
+> 
+> And I suggest trying to do what Eglot does: declarations and 
+> implementations ("split" meaning that a reguar cageroru th gnea=ral unfini)
+
+Something is garbled here, but in any case, this is only doable if
+(a) a language has such a split, and (b) if etags collects both tags.
+
+> > "Over-opaque" means that there are a lot of opaque data types and
+> > objects involved in how this command works, and these types and
+> > objects are not documented in enough detail to understand how to
+> > implement them for a different backend.  The first question I asked
+> > myself was what should the various backend-specific methods it uses
+> > return, and I couldn't find the answer to that.  Even understanding
+> > the significance of the arguments with which these methods are called
+> > was a challenge.
+> 
+> Ideally, the docstrings for the various cl-defgeneric forms should 
+> answer these questions.
+
+They don't always do.
+
+> Aside from maybe what an "xref value" is, or maybe not in detail,
+> because there is no one specific docstring among those that fits.
+
+But then the specific cl-defmethod should document that, don't you
+agree?
+
+> How about this:
+> 
+>    Each descriptor is a plist with properties `:kind', `:name' and `:key'
+> where the kind is a symbol value the backend will be able to recognize
+> later, name is a string suitable for messages shown to the user, and the
+> key is a unique character that can be used to choose among them.
+> Optionally, it can include `:prompt-format' which defaults to \"Find
+> %s\".
+
+That's a significant improvement, thanks.
+
+> > To implement the support for each property of the above list, I need
+> > to know how it will be used by the backend-independent code, or I need
+> > to know that backend-independent code will not use it, just pass it
+> > verbatim to this-and-that other methods of the backend.  But none of
+> > that is in the doc string, sadly.
+> 
+> KIND will be passed verbatim. But perhaps the proposed phrasing above 
+> implies that sufficiently?
+
+Almost.  I think it would be better to say this explicitly.
+
+> >      "Return the predicate for identifier completion.
+> >    The argument KIND will be provided when the caller intends to narrow
+> >    down the search.  The backend can use it to narrow down to only
+> >    identifiers that have xrefs belonging to KIND."
+> > 
+> > What is "the predicate for identifier completion"?
+> 
+> It is the predicate that will be used with 'completing-read' (the 
+> PREDICATE argument) when an identifier is read with completion (e.g. 
+> during 'C-u M-.').
+
+That helps.
+
+> > And if I try to find the answer by looking at the
+> > ELisp implementation, I find it having not a single human-readable
+> > comment, not even a doc string, and :kind is used there in cl-ecase,
+> > so I now need to learn what that does (which leads to cl-case,
+> > etc. etc.).
+> 
+> cl-ecase is basically an exclusive case switching expression. I would 
+> look at the docstring only for the details of the syntax.
+
+Here we differ: I expect the doc strings to tell me enough about an
+interface to be able to write code that uses the interface.  I don't
+expect to have to read the implementation in order to understand how
+to use the interface.
+
+> >> The backend "owns" the kind symbols, since it provides the available
+> >> list.
+> > 
+> > See, even this is not documented anywhere.  One could think that the
+> > list of possible :kind's is a generic one, so a backend cannot just
+> > return an arbitrary symbol it wants, but instead must choose one of
+> > the valid ones.  After all, the union of types in all the programming
+> > languages is finite and quite small.
+> 
+> We describe that in the manual entry for xref-find-by-kind, which you 
+> changes just recently: that Elisp and Eglot use different sets of 
+> "kinds" which do not intersect.
+
+Since the lists are not exhaustive, the text can be interpreted as
+just examples, in which case the conclusion that the lists do not
+intersect is not warranted.
+
+Anyway, this aspect is clear; what's left is to document it.
+
+> >>>> About usage in xref-read-identifier, I think the user would quickly get
+> >>>> the idea by using xref-find-by-kind in practice. Having :name strings
+> >>>> usually implies that they would be used for message text, though not
+> >>>> necessarily I guess.
+> >>>
+> >>> Are they used _only_ for showing in the prompt?  That is also not
+> >>> documented.
+> >>
+> >> For two prompts and for an error message later.
+> > 
+> > Again, this should be clearly documented, since it's part of the
+> > contract of each backend.
+> 
+> How about the short description above? Or indeed we could say "prompts 
+> and error messages".
+
+Yes.
+
+> >> Do lines 52-63 in xref.el help in any way?
+> > 
+> > After that, I need to study a lot of non-trivial code, with several
+> > other unfamiliar types, to begin to understand what could be a
+> > location.  It seems xref-file-location is used by many/most
+> > implementations, but the commentary above doesn't even mention it
+> > directly.
+> 
+> I don't think the xref-file-location is the specifically *recommended* 
+> type to use. But it's certainly mentioned in the commentary.
+> 
+> In the etags backend you wouldn't use it.
+> 
+> > And xref-buffer-location doesn't even have a doc string!
+> 
+> It's a struct with fields "buffer" and "position". I think the docstring 
+> would mostly reiterate that.
+
+It would be useful to say (1) what buffer is "buffer", and (2) whether
+"position" is a position in that buffer.
+
+> > All I want is a concise documentation of locations,
+> > enough for me to start working with it in Lisp code I want to write:
+> > call the correct constructor with the correct arguments, then pass the
+> > result around.  You are instead suggesting me to take a "tour de
+> > France" through much of xref.el and elisp-mode.el, just to understand
+> > that basic bit.
+> 
+> If I was someone just starting with the code, I would look at how the 
+> existing code in etags.el creates xref-etags-location values and 
+> basically copied that.
+
+Without knowing the data structures involved, that's not easy.  I
+eventually needed to call the relevant functions (and that required
+creating a situation where I can call an internal function), to see
+what xref-etags-location includes.  For example, it took me an
+inordinate amount of time to become sure that tag-info's TEXT is the
+text from the TAGS table, upto the line number, and that
+xref-item-summary returns it.  Why wasn't it documented?  The name
+"summary" is too general, so doesn't even hint what it produces.
+
+> It's similar to how the current Xref code produces the TAG-INFO values: 
+> I don't really think about what's inside even though it is documented: I 
+> just found that (funcall snarf-tag-function) returns such a value, and 
+> knows how to use it.
+
+I don't expect to need to run the code to understand its interface.  I
+expect the information for using an interface to be part of the
+interface's documentation.  Are these expectations unreasonable?
+
+> > How can I know that the locations created by etags.el are good for
+> > this feature?
+> 
+> I hoped that might be conveyed by the docstrings of 
+> xref-backend-definitions and xref-backend-xrefs-by-kind in their 
+> cl-defgeneric forms.
+> 
+> In particular, the latter says directly:
+> 
+>    The result must be a list of xref values, like in
+> `xref-backend-definitions'
+> 
+> That should mean that a list of the same type of values that etags.el 
+> returns in "definitions" would be good for "xrefs by kind".
+
+You are able to make these conclusions because you know what etags's
+xref-backend-definitions does.  But if I look at that for the first
+time, I see that it performs non-trivial filtering of what
+etags--xref-find-definitions returns.  So the question how to generate
+a valid list of xref values is still unanswered at that point;
+answering it requires, among other things, to understand what are xref
+"location groups".  (I have since succeeded to figure this stuff out,
+but it wasn't easy.)
+
+> > I hope I've succeeded to explain why it is difficult to extend
+> > xref.el, at least for this particular feature.  If it's still not
+> > clear, or if you think the problem is that I don't understand how to
+> > use cl-defmethod, then let's just forget about it and move on.
+> 
+> A lot of concerns are totally fair, but I hope we'll be able to meet in 
+> the middle, keeping the somewhat abstract way of defining things, but 
+> adding more concrete information where necessary.
+
+I will try to add the documentation bits I sorely missed as I go, and
+we can then take it from there.
+
+Thanks.
+
