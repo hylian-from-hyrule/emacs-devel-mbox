@@ -1,0 +1,408 @@
+emacs-devel messages from 2026-09-12T18:15:00+02:00 to 2026-09-13T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-12T23:01:43+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: HTML-formatted NEWS for Emacs 29
+Message-ID: <87qziy9oaw.fsf@melete.silentflame.com>
+In-Reply-To: <7efb9b88-cb87-eb54-5fe5-0104e42c4165@mavit.org.uk>
+References: <3b142eba-fff4-b6d0-addd-4d970b40fde2@mavit.org.uk>
+ <83wmy8pfk9.fsf@gnu.org>
+ <CADwFkm=hE0g+xrKMdY=MchiN+KWixbJEoqp7f60eviz1+VWpJQ@mail.gmail.com>
+ <83sf7w8kln.fsf@gnu.org>
+ <63abad1f-89a4-54a3-35c0-f6e020753f98@mavit.org.uk>
+ <87v78u8dqm.fsf@athena.silentflame.com>
+ <0055b8d0-f76c-da83-a13d-49524ca838c0@mavit.org.uk>
+ <86qzjhcwic.fsf@gnu.org>
+ <62989c26-6e5f-ae4f-8169-de98d6a5e5ca@mavit.org.uk>
+ <87zexyptpp.fsf@athena.silentflame.com>
+ <7efb9b88-cb87-eb54-5fe5-0104e42c4165@mavit.org.uk>
+
+Peter Oliver [03/Sep 10:36am +01] wrote:
+> Any chance you could generate and upload an HTML NEWS for Emacs 31.1?
+> I would like to link to it from the upcoming Fedora 45 release notes.
+
+Now done.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-09-13T12:31:23+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86fqzd1lz8.fsf@gnu.org>
+In-Reply-To: <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> (message from
+ Dmitry Gutov on Sat, 12 Sep 2026 15:47:34 +0300)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+
+> Date: Sat, 12 Sep 2026 15:47:34 +0300
+> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> >      "Return the predicate for identifier completion.
+> >    The argument KIND will be provided when the caller intends to narrow
+> >    down the search.  The backend can use it to narrow down to only
+> >    identifiers that have xrefs belonging to KIND."
+> > 
+> > What is "the predicate for identifier completion"?
+> 
+> It is the predicate that will be used with 'completing-read' (the 
+> PREDICATE argument) when an identifier is read with completion (e.g. 
+> during 'C-u M-.').
+
+One problem with this PREDICATE business is that the completion
+infrastructure passes only the candidates to the predicate function,
+whereas here we need to also pass the KIND.  This is very
+inconvenient, and sounds like an omission in the design: a backend
+that supports many KINDs is expected to gazillion separate functions,
+one each for every KIND.  It almost sounds like the design assumes
+that a backend knows the KIND just by looking at the identifier, which
+is correct in Lisp, but not in general.
+
+There are various hacks and kludges to get around this (I used
+apply-partially), but I hope we will be able to find a cleaner
+approach, which will also speed up the completion as a nice
+side-effect.  IMO, it is not an incident that Eglot doesn't provide
+such a predicate.
+
+Another problem which surprised me a bit can be reproduced as follows:
+
+  emacs -Q
+  C-x C-f src/dispnew.c
+  C-u M-g M-.
+
+This signals an error, evidently because Emacs doesn't yet have a
+suitable backend activated/known (and therefore etags.el is not yet
+loaded)?  I need to visit-tags-table to get around this.  I think we
+need a smarter initialization.
+
+================================================================================
+Date: 2026-09-13T13:32:40+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86ecex1j53.fsf@gnu.org>
+In-Reply-To: <86fqzd1lz8.fsf@gnu.org> (message from Eli Zaretskii on Sun, 13
+ Sep 2026 13:31:23 +0300)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+
+> Date: Sun, 13 Sep 2026 13:31:23 +0300
+> From: Eli Zaretskii <eliz@gnu.org>
+> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> 
+> > Date: Sat, 12 Sep 2026 15:47:34 +0300
+> > Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> > From: Dmitry Gutov <dmitry@gutov.dev>
+> > 
+> > >      "Return the predicate for identifier completion.
+> > >    The argument KIND will be provided when the caller intends to narrow
+> > >    down the search.  The backend can use it to narrow down to only
+> > >    identifiers that have xrefs belonging to KIND."
+> > > 
+> > > What is "the predicate for identifier completion"?
+> > 
+> > It is the predicate that will be used with 'completing-read' (the 
+> > PREDICATE argument) when an identifier is read with completion (e.g. 
+> > during 'C-u M-.').
+> 
+> One problem with this PREDICATE business is that the completion
+> infrastructure passes only the candidates to the predicate function,
+> whereas here we need to also pass the KIND.  This is very
+> inconvenient, and sounds like an omission in the design: a backend
+> that supports many KINDs is expected to gazillion separate functions,
+> one each for every KIND.  It almost sounds like the design assumes
+> that a backend knows the KIND just by looking at the identifier, which
+> is correct in Lisp, but not in general.
+
+A similar problem exists with
+xref-backend-identifier-completion-ignore-case: it doesn't receive
+enough information to DTRT.  Evidently, the assumption is that a
+backend supports only a single programming language, or a small set of
+similar ones, so that they all are either case-sensitive or
+case-insensitive.  But that assumption is not true for a backend such
+as etags, which supports many different languages, each one with its
+own case-sensitivity.
+
+================================================================================
+Date: 2026-09-13T15:21:55+02:00
+From: Teoten <teoten@teoten.me>
+Subject: Re: Request for adding r-ts-mode to GNU ELPA
+Message-ID: <dxROnDylppPlfSdQhzEugwO2Xe1kWLdBpeyjuokBFNgDhmMPKlpnp7zFPu04_hjGPibKNL7LvPL9WsHlNDJkDYW9wM5C2E4xhYatQNB7JgI=@teoten.me>
+In-Reply-To: 
+References: 
+
+Teoten <teoten@teoten.me> writes:
+
+Thanks everybody for all the comments on r-ts-mode and its inclusion to GNU ELPA.
+
+Here are the latest changes reflected already in branch main:
+
+- Copyright changed
+- Removed AI macro from tests
+- Added patch proposed by Steffan on this same thread on Mon, 07 Sep 2026
+
+> Stefan Monnier <monnier@iro.umontreal.ca> writes:
+>
+>>> Here is what I have so far:
+>>
+>> Thanks.  Looking good to me.
+>> I think the package is ready for addition to GNU ELPA.  Philip?
+>> [ Also, you'll need to change the `Copyright` lines to reflect the fact
+>>   that you consider that code covered by your copyright assignment.
+>>   elpa.gnu.org won't generate tarballs before this happens.  ]
+>
+> What exactly needs to change, could you be more specific please?
+> Should I remove the copyright lines? Or how exactly it should be
+> written? I am sorry but I am not very familiar with this aspect.
+>
+>>
+>> In the mean time, here is the patch I came up with while looking
+>> at your code.
+>>
+>> BTW, it's not clear to me what is the role of `r-ts-setup.el`.
+>
+> It uses the R package `treesitter.r' and finds the compiled grammar
+> file from the package to move it to tree-sitter dir as
+> libtree-sitter-r.so (or the appropriate extension). Since most R users
+> are familiar with the R package and the installation takes care of the
+> compilation, I figure that it can be useful, particularly for Windows
+> environments.
+>
+>> Would it be simpler to try and refrain from installing that R package
+>> and focus only on supporting the use of the `treesitter.r` package if
+>> it's installed [ Then again, maybe I'm not making sense because maybe
+>
+> That is what the code does. It does not install the package but only
+> finds if it is installed.
+>
+>> I misunderstood what this is about.  IIUC `treesitter.r` is an "R
+>> package" (i.e. something installed via R's package manager) which
+>> actually doesn't contain any R code (despite the `.r` of its name)
+>> but
+>> instead combines an R grammar for Treesitter together with bindings
+>> to
+>> the Treesitter parser for use in other R packages.  ]
+>
+> That is correct.
+>
+>>
+>>
+>> `=' Stefan
+>>
+>>
+>> diff --git a/.gitignore b/.gitignore
+>> new file mode 100644
+>> index 00000000000..069afe371c6
+>> --- /dev/null
+>> +++ b/.gitignore
+>> @@ -0,0 +1,5 @@
+>> +*.elc
+>> +
+>> +# ELPA-generated files.
+>> +/r-ts-mode-autoloads.el
+>> +/r-ts-mode-pkg.el
+>> diff --git a/r-ts-mode-tests.el b/r-ts-mode-tests.el
+>> index 08a6f01eb07..a1c492cc390 100644
+>> --- a/r-ts-mode-tests.el
+>> +++ b/r-ts-mode-tests.el
+>> @@ -13,7 +13,7 @@
+>>  
+>>  (require 'ert)
+>>  (require 'cl-lib)
+>> -
+>> +(require 'treesit)
+>>  
+>>  ;;;; Test utilities
+>>  ;; ---------------------------------------------------------------------------
+>> diff --git a/r-ts-mode.el b/r-ts-mode.el
+>> index 527e6461597..29968ae1c46 100644
+>> --- a/r-ts-mode.el
+>> +++ b/r-ts-mode.el
+>> @@ -46,13 +46,11 @@
+>>  
+>>  (defcustom r-ts-mode-inherit-ess nil
+>>    "When non-nil, inherit from `ess-r-mode' for R process interaction."
+>> -  :type 'boolean
+>> -   :group 'r-ts)
+>> +  :type 'boolean)
+>>  
+>>  (defcustom r-ts-mode-indent-level 2
+>>    "Number of spaces per indentation level."
+>> -  :type 'integer
+>> -   :group 'r-ts)
+>> +  :type 'integer)
+>>  
+>>  (defvar r-ts-mode--debug nil
+>>    "When non-nil, enable verbose debugging messages.  For development use.")
+>> @@ -183,29 +181,6 @@ Intended to silence ESS fontification.")
+>>  ;;;; Parent Mode (ESS or prog-mode)
+>>  ;; `==========================================================================='
+>>  
+>> -;; ESS declarations — kept here so the byte-compiler is happy,
+>> -;; but ESS-specific logic is intentionally left untouched for now.
+>> -(declare-function ess-r-mode                "ext:ess-r-mode.el")
+>> -(declare-function ess-mode                  "ext:ess-r-mode.el")
+>> -(declare-function ess-setq-vars-local       "ext:ess-r-mode.el")
+>> -(declare-function ess-set-style             "ext:ess-r-mode.el")
+>> -(declare-function ess--setup-eldoc          "ext:ess-r-mode.el")
+>> -(declare-function ess--setup-auto-complete  "ext:ess-r-mode.el")
+>> -(declare-function ess--setup-company        "ext:ess-r-mode.el")
+>> -(declare-function ess-r-eldoc-function      "ext:ess-r-mode.el")
+>> -(declare-function ess-filename-completion   "ext:ess-r-mode.el")
+>> -(declare-function ess-r-project             "ext:ess-r-mode.el")
+>> -(declare-function ess-r-xref-backend        "ext:ess-r-mode.el")
+>> -(declare-function ess-r-package-completion  "ext:ess-r-mode.el")
+>> -(declare-function ess-r-object-completion   "ext:ess-r-mode.el")
+>> -(defvar ess-r-mode-syntax-table)
+>> -(defvar ess-r-customize-alist)
+>> -(defvar ess-font-lock-keywords)
+>> -(defvar ess-r--syntax-propertize-function)
+>> -(defvar ess-r-ac-sources)
+>> -(defvar ess-r-company-backends)
+>> -(defvar ess-mode-map)
+>> -
+>>  (if r-ts-mode-inherit-ess
+>>      (if (not (fboundp 'ess-r-mode))
+>>          (error "ESS is not available.  Is it installed?")
+>> @@ -214,16 +189,32 @@ Intended to silence ESS fontification.")
+>>          (require 'ess-r-mode)
+>>          (require 'ess-r-completion)
+>>          (require 'ess-utils)
+>> -        (defvar r-ts-mode-parent-mode-map
+>> -          (let ((map (make-sparse-keymap)))
+>> -            (set-keymap-parent map ess-mode-map)
+>> -            map)
+>> -          "Keymap for `r-ts-mode-parent-mode' when inheriting from ESS.")
+>> -
+>> +        ;; ESS declarations — kept here so the byte-compiler is happy,
+>> +        ;; but ESS-specific logic is intentionally left untouched for now.
+>> +        (declare-function ess-r-mode                "ext:ess-r-mode.el")
+>> +        (declare-function ess-mode                  "ext:ess-r-mode.el")
+>> +        (declare-function ess-setq-vars-local       "ext:ess-r-mode.el")
+>> +        (declare-function ess-set-style             "ext:ess-r-mode.el")
+>> +        (declare-function ess--setup-eldoc          "ext:ess-r-mode.el")
+>> +        (declare-function ess--setup-auto-complete  "ext:ess-r-mode.el")
+>> +        (declare-function ess--setup-company        "ext:ess-r-mode.el")
+>> +        (declare-function ess-r-eldoc-function      "ext:ess-r-mode.el")
+>> +        (declare-function ess-filename-completion   "ext:ess-r-mode.el")
+>> +        (declare-function ess-r-project             "ext:ess-r-mode.el")
+>> +        (declare-function ess-r-xref-backend        "ext:ess-r-mode.el")
+>> +        (declare-function ess-r-package-completion  "ext:ess-r-mode.el")
+>> +        (declare-function ess-r-object-completion   "ext:ess-r-mode.el")
+>> +        (defvar ess-r-mode-syntax-table)
+>> +        (defvar ess-r-customize-alist)
+>> +        (defvar ess-font-lock-keywords)
+>> +        (defvar ess-r--syntax-propertize-function)
+>> +        (defvar ess-r-ac-sources)
+>> +        (defvar ess-r-company-backends)
+>> +        (defvar ess-mode-map)
+>> +        
+>>          (define-derived-mode r-ts-mode-parent-mode ess-mode "" ""
+>> -           :group 'r-ts
+>> -          :keymap r-ts-mode-parent-mode-map
+>> -          (set-syntax-table ess-r-mode-syntax-table)
+>> +          :group 'r-ts
+>> +          :syntax-table ess-r-mode-syntax-table
+>>            (ess-setq-vars-local ess-r-customize-alist)
+>>            (setq-local ess-font-lock-keywords 'r-ts-mode-font-lock-keywords)
+>>            (setq-local add-log-current-defun-header-regexp
+>> diff --git a/r-ts-setup.el b/r-ts-setup.el
+>> index 59399782e42..81bd2921de8 100644
+>> --- a/r-ts-setup.el
+>> +++ b/r-ts-setup.el
+>> @@ -46,20 +46,18 @@
+>>  
+>>  (defcustom r-ts-setup-r-program "R"
+>>    "Program name or path for invoking R."
+>> -  :type '(choice string file)
+>> -  :group 'r-ts-setup)
+>> +  :type '(choice string file))
+>>  
+>>  (defcustom r-ts-setup-create-treesitter-dir t
+>>    "When non-nil, automatically create `~/<user-emacs-directory>/tree-sitter/'.
+>>  When nil, signal an error if the target directory does not exist."
+>> -  :type 'boolean
+>> -  :group 'r-ts-setup)
+>> +  :type 'boolean)
+>>  
+>>  
+>>  ;;;; Grammar / Binary Preparation — Pure Helpers
+>>  ;; `==========================================================================='
+>>  (defun r-ts-setup--build-r-find-package-command (r-program)
+>> -  "Return the shell command that prints the path of the \='treesitter.r\=' R package.
+>> +  "Return the shell command that prints the path of the \\='treesitter.r\\=' R package.
+>>  R-PROGRAM is the executable name or path.  Pure function — no side effects."
+>>    (if (string-match-p "\\.exe\\'" r-program)
+>>        (format "%s --no-echo -q -e print(find.package('treesitter.r'))" r-program)
+>> @@ -77,9 +75,12 @@ Pure function — no side effects."
+>>      (error "Could not parse R output: %s" output)))
+>>  
+>>  (defun r-ts-setup--find-treesitter-r-package-path ()
+>> -  "Run R to find the installed path of the \='treesitter.r\=' package.
+>> +  "Run R to find the installed path of the \\='treesitter.r\\=' package.
+>>  Returns the path string.  Signals an error on failure."
+>>    (let* ((cmd (r-ts-setup--build-r-find-package-command r-ts-setup-r-program))
+>> +         ;; FIXME: I'd recommend `with-temp-buffer' + `call-process' so
+>> +         ;; you avoid the shell which just gets in the way (thus saving
+>> +         ;; you the trouble of quoting the arguments).
+>>           (output (progn
+>>                     (shell-command cmd)
+>>                     (with-current-buffer "*Shell Command Output*"
+>> @@ -89,8 +90,11 @@ Returns the path string.  Signals an error on failure."
+>>  
+>>  ;; Path construction and validation
+>>  (defun r-ts-setup--binary-path-unix (package-path)
+>> +  ;; Side note: The GNU convention recommends you use "path" only for lists
+>> +  ;; of directories, like `load-path' and `$PATH' so `package-path' should
+>> +  ;; be renamed to `package-dir'.
+>>    "Return the expected .so path for PACKAGE-PATH on Unix.  Pure."
+>> -  (format "%s/libs/treesitter.r.so" package-path))
+>> +  (expand-file-name "libs/treesitter.r.so" package-path))
+>>  
+>>  (defun r-ts-setup--binary-path-win (package-path)
+>>    "Return candidate .dll paths for PACKAGE-PATH on Windows as a list.  Pure."
+>> @@ -139,7 +143,7 @@ otherwise signal an error."
+>>  ;; `==========================================================================='
+>>  ;;;###autoload
+>>  (defun r-ts-setup-prepare-binaries-from-r-library (&optional package-path emacs-ts-path)
+>> -  "Copy the tree-sitter R grammar from the \='treesitter.r\=' R package to Emacs.
+>> +  "Copy the tree-sitter R grammar from the \\='treesitter.r\\=' R package to Emacs.
+>>  Searches for the package in PACKAGE-PATH (or auto-detects via R) and
+>>  copies the compiled binary to EMACS-TS-PATH (default:
+>>  ~/<user-emacs-directory>/tree-sitter/)."
+> <#!/part>
+> <#!/multipart>
+> Date: Tue, 08 Sep 2026 22:39:44 +0200
+
+================================================================================
+Date: 2026-09-13T15:51:01+02:00
+From: Thomas Koch <thomas@koch.ro>
+Subject: Re: logging in emacs
+Message-ID: <23739583.5650.1789307461187@office.mailbox.org>
+In-Reply-To: <e22742d9b25df94e3c6244d5d85894d8@gnu.support>
+References: <350862672.42926.1788167384081@office.mailbox.org>
+ <e22742d9b25df94e3c6244d5d85894d8@gnu.support>
+
+To round this up, Matúš Goljer, on 11.3.2023 on this very list, with the subject
+"New (only?) extensible logging package for Emacs"
+introduced his logging library lgr:
+
+https://melpa.org/#/lgr
+https://github.com/Fuco1/emacs-lgr
+
+And I participated in the thread and forgot about it.
+
+I proposed including the library in the Emacs Package Developers handbook:
+
+https://github.com/alphapapa/emacs-package-dev-handbook/issues/29
+
