@@ -1,0 +1,1346 @@
+emacs-devel messages from 2026-09-13T18:15:00+02:00 to 2026-09-14T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-13T23:45:19+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Request for adding r-ts-mode to GNU ELPA
+Message-ID: <jwv8q54zv3g.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <dxROnDylppPlfSdQhzEugwO2Xe1kWLdBpeyjuokBFNgDhmMPKlpnp7zFPu04_hjGPibKNL7LvPL9WsHlNDJkDYW9wM5C2E4xhYatQNB7JgI=@teoten.me>
+ (message from Teoten <teoten@teoten.me> on Sun, 13 Sep 2026 13:21:55 +0000)
+References: <dxROnDylppPlfSdQhzEugwO2Xe1kWLdBpeyjuokBFNgDhmMPKlpnp7zFPu04_hjGPibKNL7LvPL9WsHlNDJkDYW9wM5C2E4xhYatQNB7JgI=@teoten.me>
+
+> Here are the latest changes reflected already in branch main:
+>
+> - Copyright changed
+> - Removed AI macro from tests
+> - Added patch proposed by Stefan on this same thread on Mon, 07 Sep 2026
+
+Looks goods.  When you're happy with
+https://elpa.gnu.org/devel/r-ts-mode.html just bump the `Version:` to
+make a release.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-14T04:36:02+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <f9c3305d-cf7f-4a1d-a025-7e3b177b8652@gutov.dev>
+In-Reply-To: <86y0d61mjo.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86y0d61mjo.fsf@gnu.org>
+
+On 12/09/2026 19:06, Eli Zaretskii wrote:
+>>>> This is not just C, but also the knowledge of our specific macros: that
+>>>> DEFUN creates a function definition.
+>>>
+>>> Yes, but Emacs already has special support for these in more than one
+>>> place, so why not yet another?
+>>
+>> Sure we can. I just think that telling more classical categories/kinds
+>> apart would be generally useful. Regexps for fixed format of DFEFUN
+> 
+> I plan on making them a separate :kind.
+
+A 'defun' kind sounds fine. It sounds like it will need a new alist 
+translating kind->regexp, per language.
+
+Or a new field in TAGS for etags itself to write the "kind" there.
+
+>>>> But here is the language-specific decision: will "kinds" be
+>>>> functions/variables/types/macros? Or will they use a different split
+>>>> like Eglot and other LSP clients?
+>>>
+>>> What different split is that?  I just went after what the ELisp
+>>> backend offers.
+>>
+>> And I suggest trying to do what Eglot does: declarations and
+>> implementations ("split" meaning that a reguar cageroru th gnea=ral unfini)
+> 
+> Something is garbled here, but in any case, this is only doable if
+> (a) a language has such a split, and (b) if etags collects both tags.
+
+Right.
+
+>> Aside from maybe what an "xref value" is, or maybe not in detail,
+>> because there is no one specific docstring among those that fits.
+> 
+> But then the specific cl-defmethod should document that, don't you
+> agree?
+
+First, the math doesn't change for cl-defmethod (there are still four 
+methods, each with backend specific implementations).
+
+You're probably asking whether the cl-defmethod just mention the types 
+used (which is a different question than "what is an xref value" (*)). 
+I'm leaning towards "should not" because that would be documenting 
+implementation behavior, and the callers of e.g. 
+'xref-backend-definitions' would generally not find it helpful (the Help 
+buffer for 'xref-backend-definitions' will just get longer by that much).
+
+I think lower-level info like types used, when not obvious, would be 
+better placed as a developer commentary inside the definition. The 
+methods' individual docstrings might serve better to describe whatever 
+oddities the implementations have. Like for example the LSP based 
+backends struggle with the IDENTIFIER argument because of the 
+differences between protocols.
+
+Mentioning the types would not  "what is an xref" - since it's a common 
+concern, it's still the area of to cl-defgeneric docstrings, if we put 
+it into docstrings at all.
+
+Note that the corresponding part of the Commentary is 17 lines. Could we 
+reference that intro in the docstrings? Alternatively, we could compress 
+that description somehow and/or reference 'xref-make' and 
+'xref-make-match', the constructors for the common "xref item" types.
+
+>> How about this:
+>>
+>>     Each descriptor is a plist with properties `:kind', `:name' and `:key'
+>> where the kind is a symbol value the backend will be able to recognize
+>> later, name is a string suitable for messages shown to the user, and the
+>> key is a unique character that can be used to choose among them.
+>> Optionally, it can include `:prompt-format' which defaults to \"Find
+>> %s\".
+> 
+> That's a significant improvement, thanks.
+
+I've pushed a variant of that, aiming for a nicer looking paragraph, 
+commit 4e8b038cfc9.
+
+>>> To implement the support for each property of the above list, I need
+>>> to know how it will be used by the backend-independent code, or I need
+>>> to know that backend-independent code will not use it, just pass it
+>>> verbatim to this-and-that other methods of the backend.  But none of
+>>> that is in the doc string, sadly.
+>>
+>> KIND will be passed verbatim. But perhaps the proposed phrasing above
+>> implies that sufficiently?
+> 
+> Almost.  I think it would be better to say this explicitly.
+
+Not sure how it would be phrased, above that the amended docstring says 
+now. If you have a phrasing in mind, please propose.
+
+>>>       "Return the predicate for identifier completion.
+>>>     The argument KIND will be provided when the caller intends to narrow
+>>>     down the search.  The backend can use it to narrow down to only
+>>>     identifiers that have xrefs belonging to KIND."
+>>>
+>>> What is "the predicate for identifier completion"?
+>>
+>> It is the predicate that will be used with 'completing-read' (the
+>> PREDICATE argument) when an identifier is read with completion (e.g.
+>> during 'C-u M-.').
+> 
+> That helps.
+
+Added that in docstrings for -completion-table and 
+-completion-table-predicate.
+
+>>> And if I try to find the answer by looking at the
+>>> ELisp implementation, I find it having not a single human-readable
+>>> comment, not even a doc string, and :kind is used there in cl-ecase,
+>>> so I now need to learn what that does (which leads to cl-case,
+>>> etc. etc.).
+>>
+>> cl-ecase is basically an exclusive case switching expression. I would
+>> look at the docstring only for the details of the syntax.
+> 
+> Here we differ: I expect the doc strings to tell me enough about an
+> interface to be able to write code that uses the interface.  I don't
+> expect to have to read the implementation in order to understand how
+> to use the interface.
+
+This subthread started with "if I try to find the answer by looking at 
+the Elisp implementation" - and I've described how I would do so. That 
+is of course not the whole answer to the documentation issue.
+
+>> We describe that in the manual entry for xref-find-by-kind, which you
+>> changes just recently: that Elisp and Eglot use different sets of
+>> "kinds" which do not intersect.
+> 
+> Since the lists are not exhaustive, the text can be interpreted as
+> just examples, in which case the conclusion that the lists do not
+> intersect is not warranted.
+> 
+> Anyway, this aspect is clear; what's left is to document it.
+
+I though this sentence could suffice, in the current manual:
+
+   The list of supported kinds depends
+   on the backend, which are advised to use mnemonic keys and common
+   sense
+
+As a reader this would be the place where I might expect the set of 
+possible kinds to be mentioned, and would make conclusions from its 
+absence. If we want more explicit call out, it might be the place to do 
+it as well.
+
+Tangentially, if the list of possible kinds was fixed, we'd most likely 
+have a variable with names and keys corresponding to 'kind' somewhere, 
+rather than have each backend return them in a plist, and 
+xref-backend-xref-kinds would return a list of symbols.
+
+>>>> For two prompts and for an error message later.
+>>>
+>>> Again, this should be clearly documented, since it's part of the
+>>> contract of each backend.
+>>
+>> How about the short description above? Or indeed we could say "prompts
+>> and error messages".
+> 
+> Yes.
+
+Added.
+
+>>> And xref-buffer-location doesn't even have a doc string!
+>>
+>> It's a struct with fields "buffer" and "position". I think the docstring
+>> would mostly reiterate that.
+> 
+> It would be useful to say (1) what buffer is "buffer", and (2) whether
+> "position" is a position in that buffer.
+
+Hopefully the new docstring is okay.
+
+>>> All I want is a concise documentation of locations,
+>>> enough for me to start working with it in Lisp code I want to write:
+>>> call the correct constructor with the correct arguments, then pass the
+>>> result around.  You are instead suggesting me to take a "tour de
+>>> France" through much of xref.el and elisp-mode.el, just to understand
+>>> that basic bit.
+>>
+>> If I was someone just starting with the code, I would look at how the
+>> existing code in etags.el creates xref-etags-location values and
+>> basically copied that.
+> 
+> Without knowing the data structures involved, that's not easy.  I
+> eventually needed to call the relevant functions (and that required
+> creating a situation where I can call an internal function), to see
+> what xref-etags-location includes.
+
+I would suggest just edebug-instrumenting xref-backend-definitions in 
+etags.el, or etags--xref-find-definitions directly. And then M-. 
+somewhere where the etags backend is used.
+
+> For example, it took me an
+> inordinate amount of time to become sure that tag-info's TEXT is the
+> text from the TAGS table, upto the line number, and that
+> xref-item-summary returns it.  Why wasn't it documented?  The name
+> "summary" is too general, so doesn't even hint what it produces.
+
+More idiomatically, you might want to take the tag-info value 
+(accessible as xref-etags-location-tag-info). Summary is really a string 
+for the Xref's UI - so it has to look good and relevant, but is not 
+required to contain a specific piece of information.
+
+There is a fun comment near etags-snarf-tag. But as mentioned, TAG-INFO 
+is described in the docstring of etags-goto-tag-location.
+
+ From the question I'm also inferring that you want to post-filter the 
+list etags--xref-find-definitions, following the example of 
+xref-backend-xrefs-by-kind. If you make etags--xref-find-definitions 
+itself make the filtering decision, it could have tag-info already 
+available in a local variable. But either approach should be fine since 
+the list of all matching definitions is usually short (no need to save 
+on memory).
+
+>> It's similar to how the current Xref code produces the TAG-INFO values:
+>> I don't really think about what's inside even though it is documented: I
+>> just found that (funcall snarf-tag-function) returns such a value, and
+>> knows how to use it.
+> 
+> I don't expect to need to run the code to understand its interface.  I
+> expect the information for using an interface to be part of the
+> interface's documentation.  Are these expectations unreasonable?
+
+Yes in general, but we are probably talking about different things. The 
+information about how TAG-INFO looks is not part of the Xref API. A 
+hypothetical etags.el maintainer could add more and better docstrings 
+throughout the file, however.
+
+>> In particular, the latter says directly:
+>>
+>>     The result must be a list of xref values, like in
+>> `xref-backend-definitions'
+>>
+>> That should mean that a list of the same type of values that etags.el
+>> returns in "definitions" would be good for "xrefs by kind".
+> 
+> You are able to make these conclusions because you know what etags's
+> xref-backend-definitions does.
+
+I hope that this sort of a general statement can be reasoned about 
+without knowing all the details of data structures involved. But of 
+course you would need them too for the full picture.
+
+> But if I look at that for the first
+> time, I see that it performs non-trivial filtering of what
+> etags--xref-find-definitions returns.
+
+Sorting, to be more precise. It would help to document that 
+xref-find-definitions<etags> honors etags-xref-prefer-current-file, but 
+that's somewhat secondary. If etags's xref-backend-xrefs-by-kind does 
+not honor that option, that could be improved later, the result would 
+still be valuable.
+
+> So the question how to generate
+> a valid list of xref values is still unanswered at that point;
+
+In general or for the etags backend?
+
+> answering it requires, among other things, to understand what are xref
+> "location groups".  (I have since succeeded to figure this stuff out,
+> but it wasn't easy.)
+
+Again, knowledge is good, but xref-location-group is already defined for 
+xref-etags-location, so this seems secondary for the task at hand.
+
+>> A lot of concerns are totally fair, but I hope we'll be able to meet in
+>> the middle, keeping the somewhat abstract way of defining things, but
+>> adding more concrete information where necessary.
+> 
+> I will try to add the documentation bits I sorely missed as I go, and
+> we can then take it from there.
+
+Thank you.
+
+================================================================================
+Date: 2026-09-14T04:50:48+02:00
+From: Jared Finder <jared@finder.org>
+Subject: Should we automatically detect terminal only sessions for pgtk build
+Message-ID: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+In-Reply-To: 
+References: 
+
+For a while now I've been running the pgtk build of Emacs with the 
+following wrapper bash function:
+
+$ type emacs
+emacs is a function
+emacs ()
+{
+     if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+         command emacs -nw "$@";
+     else
+         command emacs "$@";
+     fi
+}
+
+With this wrapper script, pgtk Emacs builds can detect that there is no 
+windowing system available and start up in terminal mode when I'm 
+running a remote Emacs in an ssh session.  This was previously a big 
+annoyance with the pgtk build.  Would it be safe to make this check part 
+of Emacs proper?
+
+   -- MJF
+
+================================================================================
+Date: 2026-09-14T05:14:39+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev>
+In-Reply-To: <86fqzd1lz8.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+
+On 13/09/2026 13:31, Eli Zaretskii wrote:
+>> Date: Sat, 12 Sep 2026 15:47:34 +0300
+>> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+>> From: Dmitry Gutov <dmitry@gutov.dev>
+>>
+>>>       "Return the predicate for identifier completion.
+>>>     The argument KIND will be provided when the caller intends to narrow
+>>>     down the search.  The backend can use it to narrow down to only
+>>>     identifiers that have xrefs belonging to KIND."
+>>>
+>>> What is "the predicate for identifier completion"?
+>>
+>> It is the predicate that will be used with 'completing-read' (the
+>> PREDICATE argument) when an identifier is read with completion (e.g.
+>> during 'C-u M-.').
+> 
+> One problem with this PREDICATE business is that the completion
+> infrastructure passes only the candidates to the predicate function,
+> whereas here we need to also pass the KIND.
+
+Do you mean that 'completing-read' should support KIND explicitly? How?
+
+Kinds are introduced by xref, and don't have a meaning for completion in 
+general, so at best is would be a &rest kind of argument, passed 
+verbatim to the predicate, or something like that. Does not seem worth it.
+
+> This is very
+> inconvenient, and sounds like an omission in the design: a backend
+> that supports many KINDs is expected to gazillion separate functions,
+> one each for every KIND.
+
+It doesn't have to, it could instead return a common anonymous function 
+which would make the decision based on the lexically captured value of 
+KIND. That is what happened in elisp-mode.el before commit 2daeb3ca35.
+
+The current implementation seems more efficient to me, but performance 
+tradeoffs might not matter in your scenario, measurements needed.
+
+> It almost sounds like the design assumes
+> that a backend knows the KIND just by looking at the identifier, which
+> is correct in Lisp, but not in general.
+
+No more than it assumes that the backend knows the list of definitions 
+for that identifier "just by looking".
+
+Indeed it might be harder to do for some backends than others (so Eglot 
+does not have a predicate, and I assumed it might be a pain to do for 
+etags too), but those limitations seem natural.
+
+> There are various hacks and kludges to get around this (I used
+> apply-partially), but I hope we will be able to find a cleaner
+> approach, which will also speed up the completion as a nice
+> side-effect.
+
+I'm not sure how you see it working better. 
+xref-backend-identifier-completion-predicate designed as returning a 
+predicate function has a chance to take the value of KIND and 
+pre-populate any caches it needs and return a appropriate function.
+
+If the cache is in a local variable (e.g. hash table), the returned 
+value will need to be an anonymous function. If the cache is in a global 
+variable, then one of the named functions could be returned. Using 
+'apply-partially' does not get around it, and does not print any nicer 
+function literals in backtraces, unfortunately.
+
+> IMO, it is not an incident that Eglot doesn't provide
+> such a predicate.
+
+For Eglot it's a consequence of what the LSP protocol can and cannot do.
+
+> Another problem which surprised me a bit can be reproduced as follows:
+> 
+>    emacs -Q
+>    C-x C-f src/dispnew.c
+>    C-u M-g M-.
+> 
+> This signals an error, evidently because Emacs doesn't yet have a
+> suitable backend activated/known (and therefore etags.el is not yet
+> loaded)?  I need to visit-tags-table to get around this.  I think we
+> need a smarter initialization.
+
+We might be looking at different scenarios here, but I've pushed a fix 
+for one in commit 30cc90dcbc6 just now, thanks.
+
+Is your problem still present?
+
+================================================================================
+Date: 2026-09-14T05:31:39+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <8c05686c-d377-4159-9577-6a91165fc476@gutov.dev>
+In-Reply-To: <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+
+On 13/09/2026 18:23, Stefan Monnier via Emacs development discussions. 
+wrote:
+> But, as for the completion-ignore-case, I tend to lean towards filtering
+> for KIND in the completion-table rather than via the predicate.
+
+For this particular one, it was the choice between adding a new argument 
+to an existing generic function and adding a new generic function (with 
+a default implementation returning nil).
+
+================================================================================
+Date: 2026-09-14T06:29:00+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Discussion about why GNU/Linux system upgrades cause old
+ programs to break
+Message-ID: <E1x5yJQ-00Ge2x-F2@fencepost.gnu.org>
+In-Reply-To: <86pkyv7uxd.fsf@aarsen.me> (message from Arsen
+ =?iso-8859-1?Q?Arsenovi=C4=87?= on Wed,
+ 02 Sep 2026 13:29:50 +0200)
+References: <m2jyroz5j7.fsf@groovy.net> <878q6ce0ka.fsf@jeremybryant.net>
+ <86zeyrdz4y.fsf@aarsen.me> <867blua82x.fsf@gnu.org>
+ <867blt699w.fsf@aarsen.me> <86v79d89z4.fsf@gnu.org>
+ <86o6f3ojrd.fsf@aarsen.me> <86v79b7e8x.fsf@gnu.org>
+ <E1wvoBs-00CWZC-RF@fencepost.gnu.org> <86cxvh3stv.fsf@gnu.org>
+ <E1wxHy4-009VsK-KU@fencepost.gnu.org> <86fr07whxj.fsf@aarsen.me>
+ <E1wyMhw-002Em7-VI@fencepost.gnu.org> <86o6erwmsg.fsf@aarsen.me>
+ <E1wzd1P-0011bw-Od@fencepost.gnu.org> <8733vvyxb0.fsf@aarsen.me>
+ <E1x1FUU-0031TJ-T2@fencepost.gnu.org> <8633vtfeou.fsf@aarsen.me>
+ <877bl56v2t.fsf@web.de> <86ld9kaazf.fsf@aarsen.me>
+ <87wlt4k123.fsf@web.de> <86pkyv7uxd.fsf@aarsen.me>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > The C99 mode was not made default until long after.  One would have to
+  > specifically opt into it until the mid-2010s.
+
+  > When you did, you'd immediately get hit with diagnostics for these
+  > cases, just as warnings rather than errors.
+
+Precisely that change is what we are complaining about!
+
+If the goal is to inform people that problems may come in the future,
+warnings are sufficient.
+
+If the goal is to nudge people who are actively developing programs
+to update them to C99 at a convenient moment, warnings are sufficient.
+
+Making them errors will cause trouble bother many other users who
+would have trouble doing anything aside from giving up.
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-14T07:28:59+02:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <CA+TD5hh2fB8m8CRwSFZ_cqnbvQ3o=K2fSMemjD_q1DD_5i5fGA@mail.gmail.com>
+In-Reply-To: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+
+On Mon, 14 Sept 2026 at 05:52, Jared Finder <jared@finder.org> wrote:
+
+> For a while now I've been running the pgtk build of Emacs with the
+> following wrapper bash function:
+>
+> $ type emacs
+> emacs is a function
+> emacs ()
+> {
+>      if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+>          command emacs -nw "$@";
+>      else
+>          command emacs "$@";
+>      fi
+> }
+>
+> With this wrapper script, pgtk Emacs builds can detect that there is no
+> windowing system available and start up in terminal mode when I'm
+> running a remote Emacs in an ssh session.  This was previously a big
+> annoyance with the pgtk build.  Would it be safe to make this check part
+> of Emacs proper?
+>
+
+This is related to the annoying behaviour of the gdk_display_get_name
+function, which too eagerly returns the fixed string "wayland-0" if no
+other information is available. This value is a pure guess. This was
+discussed in the comments to bug 53969.
+
+I would not be happy with the simple logic in your script. Basing the
+decision on just the value of XDG_SESSION_TYPE would break a use case I
+have: I connect to a remote server using the command "waypipe ssh
+remote_host". This opens a normal ssh connection to remote_host, with
+XDG_SESSION_TYPE set to "tty". Despite this I can start Emacs on the
+headless remote host and the graphical Emacs window is shown on the local
+screen. The check in Emacs proper would at least need to include a check to
+see if WAYLAND_DISPLAY or DISPLAY are set.
+
+================================================================================
+Date: 2026-09-14T11:27:17+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <874ifsnpxm.fsf@athena.silentflame.com>
+In-Reply-To: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+
+Jared Finder [13/Sep  7:50pm -07] wrote:
+> For a while now I've been running the pgtk build of Emacs with the
+> following wrapper bash function:
+>
+> $ type emacs
+> emacs is a function
+> emacs ()
+> {
+>      if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+>          command emacs -nw "$@";
+>      else
+>          command emacs "$@";
+>      fi
+> }
+>
+> With this wrapper script, pgtk Emacs builds can detect that there is no
+> windowing system available and start up in terminal mode when I'm
+> running a remote Emacs in an ssh session.  This was previously a big
+> annoyance with the pgtk build.  Would it be safe to make this check part
+> of Emacs proper?
+
+Hmm, I use the pgtk build, and on my headless box, it starts in terminal
+mode just fine.  I think we need to be more specific about what
+assumptions are being made, and where, that cause something annoying to
+happen.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-09-14T11:28:51+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Request for adding r-ts-mode to GNU ELPA
+Message-ID: <871pawnpv0.fsf@athena.silentflame.com>
+In-Reply-To: <dxROnDylppPlfSdQhzEugwO2Xe1kWLdBpeyjuokBFNgDhmMPKlpnp7zFPu04_hjGPibKNL7LvPL9WsHlNDJkDYW9wM5C2E4xhYatQNB7JgI=@teoten.me>
+References: <dxROnDylppPlfSdQhzEugwO2Xe1kWLdBpeyjuokBFNgDhmMPKlpnp7zFPu04_hjGPibKNL7LvPL9WsHlNDJkDYW9wM5C2E4xhYatQNB7JgI=@teoten.me>
+
+Teoten [13/Sep  1:21pm GMT] wrote:
+> Teoten <teoten@teoten.me> writes:
+>
+> Thanks everybody for all the comments on r-ts-mode and its inclusion to GNU ELPA.
+>
+> Here are the latest changes reflected already in branch main:
+>
+> - Copyright changed
+> - Removed AI macro from tests
+> - Added patch proposed by Steffan on this same thread on Mon, 07 Sep 2026
+
+Many thanks!
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-09-14T11:32:26+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: master 4700767c9ba: use-package-tests.el: Fix bug#81863
+Message-ID: <87y0d4mb4l.fsf@athena.silentflame.com>
+In-Reply-To: <20260914021507.923B7C0DEC8@vcs2.savannah.gnu.org>
+References: <178935210560.31981.10700271373317077622@vcs2.savannah.gnu.org>
+ <20260914021507.923B7C0DEC8@vcs2.savannah.gnu.org>
+
+Stefan Monnier via Mailing list for Emacs changes [13/Sep 10:15pm -04] wrote:
+> diff --git a/test/lisp/use-package/use-package-tests.el b/test/lisp/use-package/use-package-tests.el
+> index 57ab98e012b..8e9fbc89d97 100644
+> --- a/test/lisp/use-package/use-package-tests.el
+> +++ b/test/lisp/use-package/use-package-tests.el
+> @@ -70,6 +70,12 @@
+>    `(should (pcase (expand-minimally ,form)
+>               ,@(mapcar #'(lambda (x) (list x t)) value))))
+>
+> +(defmacro use-package-test--with-compiling-p (&rest body)
+> +  (declare (debug t) (indent 0))
+> +  `(cl-letf (((symbol-function 'use-package--macroexp-compiling-p)
+> +              (lambda () t)))
+> +     ,@body))
+
+aka #'always
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-09-14T12:20:16+02:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <CA+TD5hiStvRcfsftBRa8e-JB8WADEt7meZBfrdYwkTUNsnbMUw@mail.gmail.com>
+In-Reply-To: <874ifsnpxm.fsf@athena.silentflame.com>
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+ <874ifsnpxm.fsf@athena.silentflame.com>
+
+On Mon, 14 Sept 2026 at 12:28, Sean Whitton <spwhitton@spwhitton.name>
+wrote:
+
+>
+> Hmm, I use the pgtk build, and on my headless box, it starts in terminal
+> mode just fine.  I think we need to be more specific about what
+> assumptions are being made, and where, that cause something annoying to
+> happen.
+>
+
+I can reproduce the problem by connecting normally with ssh to a headless
+server in the cloud. When I start emacs, I get the following error:
+
+(emacs:657): Gtk-WARNING **: 10:01:36.730: cannot open display:
+
+Now I am not sure if it is looking for an X11 display or a Wayland display,
+but Emacs does not start in text mode. However, "emacs -nw" does work.
+
+I also tried logging in on a virtual console on my Linux machine.
+XDG_SESSION_TYPE was set to "tty", and neither the DISPLAY nor the
+WAYLAND_DISPLAY variables were set. Somehow Emacs/Gtk/Gdk was able to
+figure out that there is a Wayland display server available on the machine
+and started a non-text mode Emacs on the virtual console with the
+graphical interface.
+
+Anyway, I object to incorporating the functionality of Jared's bash
+function into Emacs, for the reasons I stated in my earlier email.
+
+================================================================================
+Date: 2026-09-14T12:24:00+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <87zexkku67.fsf@athena.silentflame.com>
+In-Reply-To: <CA+TD5hiStvRcfsftBRa8e-JB8WADEt7meZBfrdYwkTUNsnbMUw@mail.gmail.com>
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+ <874ifsnpxm.fsf@athena.silentflame.com>
+ <CA+TD5hiStvRcfsftBRa8e-JB8WADEt7meZBfrdYwkTUNsnbMUw@mail.gmail.com>
+
+Johan Myréen [14/Sep  1:20pm +03] wrote:
+> On Mon, 14 Sept 2026 at 12:28, Sean Whitton <spwhitton@spwhitton.name>
+> wrote:
+>
+>>
+>> Hmm, I use the pgtk build, and on my headless box, it starts in terminal
+>> mode just fine.  I think we need to be more specific about what
+>> assumptions are being made, and where, that cause something annoying to
+>> happen.
+>>
+>
+> I can reproduce the problem by connecting normally with ssh to a headless
+> server in the cloud. When I start emacs, I get the following error:
+>
+> (emacs:657): Gtk-WARNING **: 10:01:36.730: cannot open display:
+>
+> Now I am not sure if it is looking for an X11 display or a Wayland display,
+> but Emacs does not start in text mode. However, "emacs -nw" does work.
+
+On my headless machine, XDG_SESSION_TYPE=tty, and as I say it works.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-09-14T12:54:49+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86o6e0yufa.fsf@gnu.org>
+In-Reply-To: <f9c3305d-cf7f-4a1d-a025-7e3b177b8652@gutov.dev> (message from
+ Dmitry Gutov on Mon, 14 Sep 2026 05:36:02 +0300)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86y0d61mjo.fsf@gnu.org>
+ <f9c3305d-cf7f-4a1d-a025-7e3b177b8652@gutov.dev>
+
+> Date: Mon, 14 Sep 2026 05:36:02 +0300
+> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 12/09/2026 19:06, Eli Zaretskii wrote:
+> >>>> This is not just C, but also the knowledge of our specific macros: that
+> >>>> DEFUN creates a function definition.
+> >>>
+> >>> Yes, but Emacs already has special support for these in more than one
+> >>> place, so why not yet another?
+> >>
+> >> Sure we can. I just think that telling more classical categories/kinds
+> >> apart would be generally useful. Regexps for fixed format of DFEFUN
+> > 
+> > I plan on making them a separate :kind.
+> 
+> A 'defun' kind sounds fine. It sounds like it will need a new alist 
+> translating kind->regexp, per language.
+
+Emacs primitives exist only in C, so there's only one language.  Or
+what am I missing?
+
+> Or a new field in TAGS for etags itself to write the "kind" there.
+
+The tag info already includes a literal "DEFUN", which is a telltale
+sign, no?
+
+> You're probably asking whether the cl-defmethod just mention the types 
+> used (which is a different question than "what is an xref value" (*)). 
+> I'm leaning towards "should not" because that would be documenting 
+> implementation behavior, and the callers of e.g. 
+> 'xref-backend-definitions' would generally not find it helpful (the Help 
+> buffer for 'xref-backend-definitions' will just get longer by that much).
+
+So how do you expect someone who wants to enhance a specific backend
+to find out this information?
+
+> I think lower-level info like types used, when not obvious, would be 
+> better placed as a developer commentary inside the definition. The 
+> methods' individual docstrings might serve better to describe whatever 
+> oddities the implementations have. Like for example the LSP based 
+> backends struggle with the IDENTIFIER argument because of the 
+> differences between protocols.
+
+I fail to see the difference between documenting in a doc string vs a
+comment, but currently we have none...
+
+> Note that the corresponding part of the Commentary is 17 lines. Could we 
+> reference that intro in the docstrings? Alternatively, we could compress 
+> that description somehow and/or reference 'xref-make' and 
+> 'xref-make-match', the constructors for the common "xref item" types.
+
+I'd need to understand what 17 lines you have in mind and which doc
+strings to absorb them, before I could suggest the wording.
+
+> >>> To implement the support for each property of the above list, I need
+> >>> to know how it will be used by the backend-independent code, or I need
+> >>> to know that backend-independent code will not use it, just pass it
+> >>> verbatim to this-and-that other methods of the backend.  But none of
+> >>> that is in the doc string, sadly.
+> >>
+> >> KIND will be passed verbatim. But perhaps the proposed phrasing above
+> >> implies that sufficiently?
+> > 
+> > Almost.  I think it would be better to say this explicitly.
+> 
+> Not sure how it would be phrased, above that the amended docstring says 
+> now. If you have a phrasing in mind, please propose.
+
+Just what you said: :kind will be passed verbatim.
+
+> >> We describe that in the manual entry for xref-find-by-kind, which you
+> >> changes just recently: that Elisp and Eglot use different sets of
+> >> "kinds" which do not intersect.
+> > 
+> > Since the lists are not exhaustive, the text can be interpreted as
+> > just examples, in which case the conclusion that the lists do not
+> > intersect is not warranted.
+> > 
+> > Anyway, this aspect is clear; what's left is to document it.
+> 
+> I though this sentence could suffice, in the current manual:
+> 
+>    The list of supported kinds depends
+>    on the backend, which are advised to use mnemonic keys and common
+>    sense
+> 
+> As a reader this would be the place where I might expect the set of 
+> possible kinds to be mentioned, and would make conclusions from its 
+> absence. If we want more explicit call out, it might be the place to do 
+> it as well.
+
+I will do that at some point.
+
+> >> It's similar to how the current Xref code produces the TAG-INFO values:
+> >> I don't really think about what's inside even though it is documented: I
+> >> just found that (funcall snarf-tag-function) returns such a value, and
+> >> knows how to use it.
+> > 
+> > I don't expect to need to run the code to understand its interface.  I
+> > expect the information for using an interface to be part of the
+> > interface's documentation.  Are these expectations unreasonable?
+> 
+> Yes in general, but we are probably talking about different things. The 
+> information about how TAG-INFO looks is not part of the Xref API. A 
+> hypothetical etags.el maintainer could add more and better docstrings 
+> throughout the file, however.
+
+I thought that maintainer was you, at least for the xref part...
+
+> > answering it requires, among other things, to understand what are xref
+> > "location groups".  (I have since succeeded to figure this stuff out,
+> > but it wasn't easy.)
+> 
+> Again, knowledge is good, but xref-location-group is already defined for 
+> xref-etags-location, so this seems secondary for the task at hand.
+
+It wasn't secondary in my case, because I needed it to figure out
+whether what etags--xref-find-definitions does with the list of xrefs
+is or isn't relevant to what I wanted to do.
+
+Thanks for the documentation updates, they are important.
+
+================================================================================
+Date: 2026-09-14T13:45:45+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86ld94ys2e.fsf@gnu.org>
+In-Reply-To: <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> (emacs-devel@gnu.org)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+
+> Date: Sun, 13 Sep 2026 11:23:34 -0400
+> From: Stefan Monnier via "Emacs development discussions." <emacs-devel@gnu.org>
+> 
+> >> It is the predicate that will be used with 'completing-read' (the 
+> >> PREDICATE argument) when an identifier is read with completion (e.g. 
+> >> during 'C-u M-.').
+> >
+> > One problem with this PREDICATE business is that the completion
+> > infrastructure passes only the candidates to the predicate function,
+> > whereas here we need to also pass the KIND.  This is very
+> > inconvenient, and sounds like an omission in the design: a backend
+> > that supports many KINDs is expected to gazillion separate functions,
+> > one each for every KIND.  It almost sounds like the design assumes
+> > that a backend knows the KIND just by looking at the identifier, which
+> > is correct in Lisp, but not in general.
+> 
+> I don't understand the problem.  Here I have a "single" predicate but it
+> knows which kind is being completed:
+> 
+>     (cl-defmethod xref-backend-identifier-completion-predicate
+>         ((backend FOO) &optional kind)
+>       (lambda (candidate)
+>         ... check CANDIDATE using KIND ...))
+
+Maybe _I_ don't understand the problem.  This method returns a
+function, and that function could be called much later with a
+completely different KIND.  Why should I rely on KIND passed to the
+method to be the one corresponding to the candidate with which the
+predicate is called, when each candidate has its own KIND?
+
+> But, as for the completion-ignore-case, I tend to lean towards filtering
+> for KIND in the completion-table rather than via the predicate.
+
+In the case in point, the completion-table is a large heap of strings,
+each one of which comes from a different file with potentially
+different case-sensitivity (as determined by the major-mode of that
+file).  How can such a completion-table know which candidate needs to
+be compared case-sensitively and which case-insensitively?
+
+================================================================================
+Date: 2026-09-14T13:54:42+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86jyooyrnh.fsf@gnu.org>
+In-Reply-To: <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev> (message from
+ Dmitry Gutov on Mon, 14 Sep 2026 06:14:39 +0300)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev>
+
+> Date: Mon, 14 Sep 2026 06:14:39 +0300
+> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 13/09/2026 13:31, Eli Zaretskii wrote:
+> >> Date: Sat, 12 Sep 2026 15:47:34 +0300
+> >> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> >> From: Dmitry Gutov <dmitry@gutov.dev>
+> >>
+> >>>       "Return the predicate for identifier completion.
+> >>>     The argument KIND will be provided when the caller intends to narrow
+> >>>     down the search.  The backend can use it to narrow down to only
+> >>>     identifiers that have xrefs belonging to KIND."
+> >>>
+> >>> What is "the predicate for identifier completion"?
+> >>
+> >> It is the predicate that will be used with 'completing-read' (the
+> >> PREDICATE argument) when an identifier is read with completion (e.g.
+> >> during 'C-u M-.').
+> > 
+> > One problem with this PREDICATE business is that the completion
+> > infrastructure passes only the candidates to the predicate function,
+> > whereas here we need to also pass the KIND.
+> 
+> Do you mean that 'completing-read' should support KIND explicitly? How?
+
+I'm asking how to write a predicate that needs to filter by KIND, when
+KIND is not passed to the predicate by completion infrastructure.
+
+> > This is very
+> > inconvenient, and sounds like an omission in the design: a backend
+> > that supports many KINDs is expected to gazillion separate functions,
+> > one each for every KIND.
+> 
+> It doesn't have to, it could instead return a common anonymous function 
+> which would make the decision based on the lexically captured value of 
+> KIND. That is what happened in elisp-mode.el before commit 2daeb3ca35.
+
+I guess you are saying what Stefan said, and I'm missing something
+here.  Will take a look when I have time.
+
+(Wouldn't producing an anonymous function for each KIND cause a lot of
+consing, just like apply-partially does?)
+
+> The current implementation seems more efficient to me, but performance 
+> tradeoffs might not matter in your scenario, measurements needed.
+
+I already made the measurements, so I know it matters.
+
+> > It almost sounds like the design assumes
+> > that a backend knows the KIND just by looking at the identifier, which
+> > is correct in Lisp, but not in general.
+> 
+> No more than it assumes that the backend knows the list of definitions 
+> for that identifier "just by looking".
+
+Backend doesn't have to understand anything about the definitions (the
+etags backend doesn't).  It only cares about the location (which it
+does understand).
+
+By contrast, to filter by KIND, the backend does need to be able to
+figure out the KIND of the candidate in order to compare it with the
+one requested.
+
+> > There are various hacks and kludges to get around this (I used
+> > apply-partially), but I hope we will be able to find a cleaner
+> > approach, which will also speed up the completion as a nice
+> > side-effect.
+> 
+> I'm not sure how you see it working better. 
+> xref-backend-identifier-completion-predicate designed as returning a 
+> predicate function has a chance to take the value of KIND and 
+> pre-populate any caches it needs and return a appropriate function.
+> 
+> If the cache is in a local variable (e.g. hash table), the returned 
+> value will need to be an anonymous function. If the cache is in a global 
+> variable, then one of the named functions could be returned. Using 
+> 'apply-partially' does not get around it, and does not print any nicer 
+> function literals in backtraces, unfortunately.
+
+Sorry, you lost me here.  "Caches"?
+
+Anyway, if the solution is as easy as what Stefan suggested, this
+issue can be put to rest.
+
+> > Another problem which surprised me a bit can be reproduced as follows:
+> > 
+> >    emacs -Q
+> >    C-x C-f src/dispnew.c
+> >    C-u M-g M-.
+> > 
+> > This signals an error, evidently because Emacs doesn't yet have a
+> > suitable backend activated/known (and therefore etags.el is not yet
+> > loaded)?  I need to visit-tags-table to get around this.  I think we
+> > need a smarter initialization.
+> 
+> We might be looking at different scenarios here, but I've pushed a fix 
+> for one in commit 30cc90dcbc6 just now, thanks.
+> 
+> Is your problem still present?
+
+Thanks, will look at that when I have time.  It isn't a hard obstacle,
+since the workaround is easy.
+
+================================================================================
+Date: 2026-09-14T14:17:41+02:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <CA+TD5hijdj4d=_f2j6C=E1EnYQFXQkL1Gxo-jkVrjzYZVDaeRA@mail.gmail.com>
+In-Reply-To: <87zexkku67.fsf@athena.silentflame.com>
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+ <874ifsnpxm.fsf@athena.silentflame.com>
+ <CA+TD5hiStvRcfsftBRa8e-JB8WADEt7meZBfrdYwkTUNsnbMUw@mail.gmail.com>
+ <87zexkku67.fsf@athena.silentflame.com>
+
+On Mon, 14 Sept 2026 at 13:24, Sean Whitton <spwhitton@spwhitton.name>
+wrote:
+
+> > Now I am not sure if it is looking for an X11 display or a Wayland
+> display,
+> > but Emacs does not start in text mode. However, "emacs -nw" does work.
+>
+> On my headless machine, XDG_SESSION_TYPE=tty, and as I say it works.
+
+
+I don't think Emacs cares about the XDG_SESSION_TYPE variable. I tried the
+following:
+
+env XDG_SESSION_TYPE=tty emacs
+env XDG_SESSION_TYPE=x11 emacs
+env XDG_SESSION_TYPE=wayland emacs
+env XDG_SESSION_TYPE=oatmeal emacs
+env -u XDG_SESSION_TYPE emacs    # Unset the variable.
+
+Here Emacs is started as a Wayland app regardless of the value of the
+variable. Also, the value of XDG_SESSION_TYPE only tells what the local
+display server (if any) provides, but it should not hinder you from setting
+the DISPLAY variable to point to some display server elsewhere, as is done
+with ssh combined with X forwarding, or with Waypipe. Therefore I think the
+XDG_SESSION_TYPE is a bad choice to determine whether you want to start
+Emacs in text mode or not.
+
+A better alternative would be for Emacs to examine if both the DISPLAY and
+WAYLAND_DISPLAY variables are unset, and if that is the case, start Emacs
+in text mode. Currently, at least for me, PGTK Emacs refuses to start with
+the warning "cannot open display".
+
+If your PGTK build does not display the warning and starts in text mode
+without the -nw option, there must be something different with how your
+Emacs is built, or maybe different versions of GTK3, or something different
+about the environment where it is started. Here PGTK Emacs (configured
+simply with "--with-pgtk") does not automatically fall back to text mode.
+
+================================================================================
+Date: 2026-09-14T14:19:01+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [gnu] externals/auctex bc4bfbde77a: ; * latex.el
+ (LaTeX-what-macro): Fix last change.
+Message-ID: <jwv5x08jafo.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20260914105753.E5C35C0DEC8@vcs2.savannah.gnu.org>
+References: <178938347343.16216.4701564708377222671@vcs2.savannah.gnu.org>
+ <20260914105753.E5C35C0DEC8@vcs2.savannah.gnu.org>
+
+> diff --git a/latex.el b/latex.el
+> index c5b0a022a9f..338c4f33c53 100644
+> --- a/latex.el
+> +++ b/latex.el
+> @@ -7752,8 +7752,9 @@ this point.  If nil, limit to the previous 15 lines."
+>                            (LaTeX-completion-macro-delimiters 'open))
+>                     ;; Deal with spaces between macro name and argument
+>                     ;; in `docTeX-mode':
+> -                   (when (derived-mode-p 'docTeX-mode)
+> -                     (skip-chars-backward "[ ]"))
+> +                   (if (derived-mode-p 'docTeX-mode)
+> +                       (skip-chars-backward "[ ]")
+> +                     t)
+
+When I read (skip-chars-backward "[ ]"), I get the impression that the
+coder confused the syntax of its argument (it skips SPC, open brackets,
+and close brackets).  Maybe it should be rewritten to "][ " (tho, the
+comment just before suggests that maybe my hunch is right and it should
+really be just " ").
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-14T14:34:28+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86ld94ys2e.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org>
+
+>>     (cl-defmethod xref-backend-identifier-completion-predicate
+>>         ((backend FOO) &optional kind)
+>>       (lambda (candidate)
+>>         ... check CANDIDATE using KIND ...))
+>
+> Maybe _I_ don't understand the problem.  This method returns a
+> function, and that function could be called much later with a
+> completely different KIND.
+
+How can that happen (other than because of a bug)?
+
+> Why should I rely on KIND passed to the method to be the one
+> corresponding to the candidate with which the predicate is called,
+> when each candidate has its own KIND?
+
+The caller of the predicate function doesn't know the KIND of
+a candidate (it's infrastructure code which passes strings around
+without any idea of what they might mean), so only the predicate
+function can know it and compare it to the desired KIND (the one passed
+earlier to the generic function).
+
+>> But, as for the completion-ignore-case, I tend to lean towards filtering
+>> for KIND in the completion-table rather than via the predicate.
+> In the case in point, the completion-table is a large heap of strings,
+> each one of which comes from a different file with potentially
+> different case-sensitivity (as determined by the major-mode of that
+> file).  How can such a completion-table know which candidate needs to
+> be compared case-sensitively and which case-insensitively?
+
+If some parts of your completion table need to be matched
+case-sensitively and other parts case-*in*sensitively, then clearly the
+caller of the completion-table is not in a position to decide because
+it sees the completion table as a single object with
+table-wide operations.
+
+This said, AFAICT, in 99% of the desired case-sensitivity depends mostly
+on the major mode (and potentially also on the KIND of the desired result of
+that completion): any candidate that comes from a file that uses
+different case-sensitivity is usually a bad candidate anyway (it's very
+unusual to want to complete a C variable name from an identifier found
+in a Common Lisp file, for example).
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-14T14:36:11+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 4700767c9ba: use-package-tests.el: Fix bug#81863
+Message-ID: <jwvtsnshuzf.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87y0d4mb4l.fsf@athena.silentflame.com>
+References: <178935210560.31981.10700271373317077622@vcs2.savannah.gnu.org>
+ <20260914021507.923B7C0DEC8@vcs2.savannah.gnu.org>
+ <87y0d4mb4l.fsf@athena.silentflame.com>
+
+>> diff --git a/test/lisp/use-package/use-package-tests.el b/test/lisp/use-package/use-package-tests.el
+>> index 57ab98e012b..8e9fbc89d97 100644
+>> --- a/test/lisp/use-package/use-package-tests.el
+>> +++ b/test/lisp/use-package/use-package-tests.el
+>> @@ -70,6 +70,12 @@
+>>    `(should (pcase (expand-minimally ,form)
+>>               ,@(mapcar #'(lambda (x) (list x t)) value))))
+>>
+>> +(defmacro use-package-test--with-compiling-p (&rest body)
+>> +  (declare (debug t) (indent 0))
+>> +  `(cl-letf (((symbol-function 'use-package--macroexp-compiling-p)
+>> +              (lambda () t)))
+>> +     ,@body))
+>
+> aka #'always
+
+I resisted the urge to use #'always because use-package.el says
+
+    ;; Package-Requires: ((emacs "24.3") (bind-key "2.4"))
+
+but now that I think about it, `use-package-tests.el` is probably not
+included in the ELPA package.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-14T15:10:25+02:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: [gnu] externals/auctex bc4bfbde77a: ; * latex.el
+ (LaTeX-what-macro): Fix last change.
+Message-ID: <m2zexkt1vi.fsf@macmutant.fritz.box>
+In-Reply-To: <jwv5x08jafo.fsf-monnier+emacs@gnu.org>
+References: <178938347343.16216.4701564708377222671@vcs2.savannah.gnu.org>
+ <20260914105753.E5C35C0DEC8@vcs2.savannah.gnu.org>
+ <jwv5x08jafo.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+> When I read (skip-chars-backward "[ ]"), I get the impression that the
+> coder confused the syntax of its argument (it skips SPC, open brackets,
+> and close brackets).  Maybe it should be rewritten to "][ " (tho, the
+> comment just before suggests that maybe my hunch is right and it should
+> really be just " ").
+
+Thanks for catching this.  I just pushed a change fixing the coders
+confusedness.
+
+Best, Arash
+
+================================================================================
+Date: 2026-09-14T15:49:50+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86ecewymbl.fsf@gnu.org>
+In-Reply-To: <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Mon, 14 Sep 2026 08:34:28 -0400)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+
+> From: Stefan Monnier <monnier@iro.umontreal.ca>
+> Cc: emacs-devel@gnu.org
+> Date: Mon, 14 Sep 2026 08:34:28 -0400
+> 
+> >>     (cl-defmethod xref-backend-identifier-completion-predicate
+> >>         ((backend FOO) &optional kind)
+> >>       (lambda (candidate)
+> >>         ... check CANDIDATE using KIND ...))
+> >
+> > Maybe _I_ don't understand the problem.  This method returns a
+> > function, and that function could be called much later with a
+> > completely different KIND.
+> 
+> How can that happen (other than because of a bug)?
+
+Does the method have any control how its return value will be used by
+the caller?  The caller could do whatever it likes with the function
+it receives.
+
+I feel that I'm missing something very basic here...
+
+> >> But, as for the completion-ignore-case, I tend to lean towards filtering
+> >> for KIND in the completion-table rather than via the predicate.
+> > In the case in point, the completion-table is a large heap of strings,
+> > each one of which comes from a different file with potentially
+> > different case-sensitivity (as determined by the major-mode of that
+> > file).  How can such a completion-table know which candidate needs to
+> > be compared case-sensitively and which case-insensitively?
+> 
+> If some parts of your completion table need to be matched
+> case-sensitively and other parts case-*in*sensitively, then clearly the
+> caller of the completion-table is not in a position to decide because
+> it sees the completion table as a single object with
+> table-wide operations.
+> 
+> This said, AFAICT, in 99% of the desired case-sensitivity depends mostly
+> on the major mode (and potentially also on the KIND of the desired result of
+> that completion): any candidate that comes from a file that uses
+> different case-sensitivity is usually a bad candidate anyway (it's very
+> unusual to want to complete a C variable name from an identifier found
+> in a Common Lisp file, for example).
+
+The command xref-find-by-kind can be invoked from a buffer whose
+major-mode is c-mode, for example, but the user wants to look at (for
+example) the definition of a Fortran subroutine.  We are talking about
+completion of the symbol that the user types at the prompt of
+xref-find-by-kind: for symbols that come from Fortran sources the
+completion should be case-insensitive, whereas for symbols from C or
+ELisp etc. it should be case-sensitivity.
+
+Thus, "a file that uses different case-sensitivity" kind of strategy
+doesn't help here, because the question is "different from what?"
+
+This is the problem I face: the completion's case-sensitivity can be
+different for each candidate, and I wonder how to provide the
+necessary information about that to the completion infrastructure.
+The method as defined accepts no arguments at all.
+
+================================================================================
+Date: 2026-09-14T16:27:42+02:00
+From: Tomas Hlavaty <tom@logand.com>
+Subject: Re: master 4700767c9ba: use-package-tests.el: Fix bug#81863
+Message-ID: <877bkn6h7l.fsf@logand.com>
+In-Reply-To: <87y0d4mb4l.fsf@athena.silentflame.com>
+References: <178935210560.31981.10700271373317077622@vcs2.savannah.gnu.org>
+ <20260914021507.923B7C0DEC8@vcs2.savannah.gnu.org>
+ <87y0d4mb4l.fsf@athena.silentflame.com>
+
+On Mon 14 Sep 2026 at 10:32, Sean Whitton <spwhitton@spwhitton.name> wrote:
+> Stefan Monnier via Mailing list for Emacs changes [13/Sep 10:15pm -04] wrote:
+>> +              (lambda () t)))
+> aka #'always
+
+why?
+
+(lambda () t) is clear, simple and precise.
+
+Moreover #'always does something different:
+This function accepts any number of arguments in ARGUMENTS.
+
+It is better to be as specific as possible
+to get better error messages in case something goes wrong somewhere
+rather than letting badness to proxy through quietly.
+

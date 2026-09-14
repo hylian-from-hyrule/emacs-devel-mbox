@@ -28734,3 +28734,3161 @@ I proposed including the library in the Emacs Package Developers handbook:
 https://github.com/alphapapa/emacs-package-dev-handbook/issues/29
 
 
+From MAILER-DAEMON Sun Sep 13 22:36:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x5wYW-00079h-62
+	for mharc-emacs-devel@gnu.org; Sun, 13 Sep 2026 22:36:29 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1x5wYH-00079F-V1
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 22:36:18 -0400
+Received: from fout-a3-smtp.messagingengine.com ([103.168.172.146])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>)
+ id 1x5wYF-0002oZ-54; Sun, 13 Sep 2026 22:36:13 -0400
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+ by mailfout.phl.internal (Postfix) with ESMTP id 51936EC05B3;
+ Sun, 13 Sep 2026 22:36:06 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-05.internal (MEProxy); Sun, 13 Sep 2026 22:36:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :cc:content-transfer-encoding:content-type:content-type:date
+ :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm3; t=1789353366;
+ x=1789439766; bh=iYLRuowLseb8Gp7zXLvOiO5XRnMoqLTrBZjOqjD4YmQ=; b=
+ Me4MwksA2XeNwgOa4TxGaV2j37xSSpwDb8MFdrQmDTFP4XIYHGYg7CfEFcpFIlQ1
+ Yk6UAssDyAiuBCm64pqHW9h56Qpo/o08UgzWn6v2gcSmckKCfs30b5nHS5/Lze7S
+ Pswz5nt1udBG82sR/CMvI/r+Hrwqto0c6UWJozRIMIeLB1cbUT/LSxsUCXlkacq7
+ Yvi7TbIB11J+mTh0c3mTgafjzzxW1nWFXhSRNWKyavW8sPhdsRC95bgbGkRRb77o
+ qQ3aKEhFd7YSX/htz1I7icqwPpn+5vKzMMV2no7PkgNZEaNyLWl5u+v7VooFzXAu
+ 9xAiUqxNadLFMMY3Jg1yfA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789353366; x=
+ 1789439766; bh=iYLRuowLseb8Gp7zXLvOiO5XRnMoqLTrBZjOqjD4YmQ=; b=Y
+ 7xDSRMHMKIjMxxgZ02cqoy08vapuVD3zlpILCFmAJd8uHkM8/wM6xQRkCkCT+EVD
+ LXLInfa8C5VeKx19FChh2iciwY09UtqY7qLBCDUsyTarsiDuTOojoAxqTRKCGWfS
+ wpN4ixvl2zgghC3YevyLa189QVhjtSSz2WmvnuJMA5ju8apugdM1cnbIgfAI4vx4
+ MQLdyVBnsqF5q3kEQW7/h6b//PbS8canL/M339kuX5Tjd2EXXhHXYG9jOMr628YK
+ DEBjMHbyqUio9FSarKXtNbP74TPLVFQMr++ghOAQi85vkCW3gz9yoQ3E8tw6Eh6Y
+ RjgxonxVuJ8P+zZXRDq0g==
+X-ME-Sender: <xms:ll2nahfAegi2XzhaiP87EvQhTUuLFHvUtbaP7V24gvBxs1mDiZGT1Q>
+ <xme:ll2najhfpIkjOItwOEifvl4JIFf7ZXgfedcnJDIqFBFmDlky4oJt169LWK2Uhtswd
+ fh3pPqK4SHeeG75SHUeF1d3Pn_z41Z-Q4i7IBB0KFI6qMgCOzQvOC-Q>
+X-ME-Received: <xmr:ll2napqNvXutkINjlmOLb7mPWsq-SPoiRIPoeXkfQJLB9z2IyjnnLW_8BI0bZNEWlkoV>
+X-ME-Proxy-Cause: dmFkZTFH896gTQnU0Ri9Nz/y34M/M8KKLtnzxG4es6WE3jmbg7FMbjQJdPXMCQ+tc7tePU
+ a6veApeBt8oCG2GycJBg6YEimND3WK8riexZzNYa9+RQmtuV49Yt56CX53jVqTXDUwlKcf
+ KHLAPMNjwXp0JcA2+DJwt8ns86yP70ZsAzf+DTyOOJNr4ZbW/aqHXCL+yU9LvFOFYTliqj
+ rkvdVmwYWH0fXHSDtOoqr7xxstn/7fWajJT+9jzsJ04kB80E+AVwpKO7PsT37qmDWS2Oo6
+ yyjremKbski8hR36ZB9BITMDs/hFhGCCEa2L7bSUaCgxVRx+PoWOegJPLPgEpxTfG6CHV9
+ PXJT6DctE8LgabfbhOF+ANIdCWlkjgZ50Nz68EatW6KrOpPShSxZ7Xqin/Qq/EC4k3JlK7
+ K3eXXc91MFMWP2kc1GCXKVYO7ehN7TIW4HmXWYy7oBIYGs0M0hvuGXMNW2UBs0UZwp9y2Y
+ F+knqVWvx6g4DwQzge68GmepyFQPNr/CAnU+nUPPXCQfSm7qLwKfvIHOCMBDoQETUVeD9R
+ 0vC1w4AA18JzixQrU40OVowh/udlLgacteaWpTnXWYZlLEdi2VBIfBhMYFa9pSuiYhjaak
+ NcvN0CkuN3pIo+avp26dIGBD0G4I/mgk0Zt3tV8n+6QxKyyXxu4oGRPhH7lQ
+X-ME-Proxy: <xmx:ll2najGet8SROjp8SlD3tOzOELJBvHqIqsLo8HiVaW0ltbXyTvEyBA>
+ <xmx:ll2najlp-EGkPVwKoh4ooa_9JWMhBwNirleSSFIhn_Im763dFMQRNA>
+ <xmx:ll2naumGpJy0ETa-B9vB4_nmnrlb9XD4KdOLBplx8l2_VZjPcuclig>
+ <xmx:ll2nastCcFpt7xIn6KOt38SUBCmmufn0SLFobdm-lQ26QFHjpEiOQA>
+ <xmx:ll2naqUAn_2Q79oGuqFXpAbd8q6yxKOhc1rIkjyGke9erDQ5IwfWNCrU>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 13 Sep 2026 22:36:04 -0400 (EDT)
+Message-ID: <f9c3305d-cf7f-4a1d-a025-7e3b177b8652@gutov.dev>
+Date: Mon, 14 Sep 2026 05:36:02 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86y0d61mjo.fsf@gnu.org>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <86y0d61mjo.fsf@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=103.168.172.146; envelope-from=dmitry@gutov.dev;
+ helo=fout-a3-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 02:36:22 -0000
+
+On 12/09/2026 19:06, Eli Zaretskii wrote:
+>>>> This is not just C, but also the knowledge of our specific macros: that
+>>>> DEFUN creates a function definition.
+>>>
+>>> Yes, but Emacs already has special support for these in more than one
+>>> place, so why not yet another?
+>>
+>> Sure we can. I just think that telling more classical categories/kinds
+>> apart would be generally useful. Regexps for fixed format of DFEFUN
+> 
+> I plan on making them a separate :kind.
+
+A 'defun' kind sounds fine. It sounds like it will need a new alist 
+translating kind->regexp, per language.
+
+Or a new field in TAGS for etags itself to write the "kind" there.
+
+>>>> But here is the language-specific decision: will "kinds" be
+>>>> functions/variables/types/macros? Or will they use a different split
+>>>> like Eglot and other LSP clients?
+>>>
+>>> What different split is that?  I just went after what the ELisp
+>>> backend offers.
+>>
+>> And I suggest trying to do what Eglot does: declarations and
+>> implementations ("split" meaning that a reguar cageroru th gnea=ral unfini)
+> 
+> Something is garbled here, but in any case, this is only doable if
+> (a) a language has such a split, and (b) if etags collects both tags.
+
+Right.
+
+>> Aside from maybe what an "xref value" is, or maybe not in detail,
+>> because there is no one specific docstring among those that fits.
+> 
+> But then the specific cl-defmethod should document that, don't you
+> agree?
+
+First, the math doesn't change for cl-defmethod (there are still four 
+methods, each with backend specific implementations).
+
+You're probably asking whether the cl-defmethod just mention the types 
+used (which is a different question than "what is an xref value" (*)). 
+I'm leaning towards "should not" because that would be documenting 
+implementation behavior, and the callers of e.g. 
+'xref-backend-definitions' would generally not find it helpful (the Help 
+buffer for 'xref-backend-definitions' will just get longer by that much).
+
+I think lower-level info like types used, when not obvious, would be 
+better placed as a developer commentary inside the definition. The 
+methods' individual docstrings might serve better to describe whatever 
+oddities the implementations have. Like for example the LSP based 
+backends struggle with the IDENTIFIER argument because of the 
+differences between protocols.
+
+Mentioning the types would not  "what is an xref" - since it's a common 
+concern, it's still the area of to cl-defgeneric docstrings, if we put 
+it into docstrings at all.
+
+Note that the corresponding part of the Commentary is 17 lines. Could we 
+reference that intro in the docstrings? Alternatively, we could compress 
+that description somehow and/or reference 'xref-make' and 
+'xref-make-match', the constructors for the common "xref item" types.
+
+>> How about this:
+>>
+>>     Each descriptor is a plist with properties `:kind', `:name' and `:key'
+>> where the kind is a symbol value the backend will be able to recognize
+>> later, name is a string suitable for messages shown to the user, and the
+>> key is a unique character that can be used to choose among them.
+>> Optionally, it can include `:prompt-format' which defaults to \"Find
+>> %s\".
+> 
+> That's a significant improvement, thanks.
+
+I've pushed a variant of that, aiming for a nicer looking paragraph, 
+commit 4e8b038cfc9.
+
+>>> To implement the support for each property of the above list, I need
+>>> to know how it will be used by the backend-independent code, or I need
+>>> to know that backend-independent code will not use it, just pass it
+>>> verbatim to this-and-that other methods of the backend.  But none of
+>>> that is in the doc string, sadly.
+>>
+>> KIND will be passed verbatim. But perhaps the proposed phrasing above
+>> implies that sufficiently?
+> 
+> Almost.  I think it would be better to say this explicitly.
+
+Not sure how it would be phrased, above that the amended docstring says 
+now. If you have a phrasing in mind, please propose.
+
+>>>       "Return the predicate for identifier completion.
+>>>     The argument KIND will be provided when the caller intends to narrow
+>>>     down the search.  The backend can use it to narrow down to only
+>>>     identifiers that have xrefs belonging to KIND."
+>>>
+>>> What is "the predicate for identifier completion"?
+>>
+>> It is the predicate that will be used with 'completing-read' (the
+>> PREDICATE argument) when an identifier is read with completion (e.g.
+>> during 'C-u M-.').
+> 
+> That helps.
+
+Added that in docstrings for -completion-table and 
+-completion-table-predicate.
+
+>>> And if I try to find the answer by looking at the
+>>> ELisp implementation, I find it having not a single human-readable
+>>> comment, not even a doc string, and :kind is used there in cl-ecase,
+>>> so I now need to learn what that does (which leads to cl-case,
+>>> etc. etc.).
+>>
+>> cl-ecase is basically an exclusive case switching expression. I would
+>> look at the docstring only for the details of the syntax.
+> 
+> Here we differ: I expect the doc strings to tell me enough about an
+> interface to be able to write code that uses the interface.  I don't
+> expect to have to read the implementation in order to understand how
+> to use the interface.
+
+This subthread started with "if I try to find the answer by looking at 
+the Elisp implementation" - and I've described how I would do so. That 
+is of course not the whole answer to the documentation issue.
+
+>> We describe that in the manual entry for xref-find-by-kind, which you
+>> changes just recently: that Elisp and Eglot use different sets of
+>> "kinds" which do not intersect.
+> 
+> Since the lists are not exhaustive, the text can be interpreted as
+> just examples, in which case the conclusion that the lists do not
+> intersect is not warranted.
+> 
+> Anyway, this aspect is clear; what's left is to document it.
+
+I though this sentence could suffice, in the current manual:
+
+   The list of supported kinds depends
+   on the backend, which are advised to use mnemonic keys and common
+   sense
+
+As a reader this would be the place where I might expect the set of 
+possible kinds to be mentioned, and would make conclusions from its 
+absence. If we want more explicit call out, it might be the place to do 
+it as well.
+
+Tangentially, if the list of possible kinds was fixed, we'd most likely 
+have a variable with names and keys corresponding to 'kind' somewhere, 
+rather than have each backend return them in a plist, and 
+xref-backend-xref-kinds would return a list of symbols.
+
+>>>> For two prompts and for an error message later.
+>>>
+>>> Again, this should be clearly documented, since it's part of the
+>>> contract of each backend.
+>>
+>> How about the short description above? Or indeed we could say "prompts
+>> and error messages".
+> 
+> Yes.
+
+Added.
+
+>>> And xref-buffer-location doesn't even have a doc string!
+>>
+>> It's a struct with fields "buffer" and "position". I think the docstring
+>> would mostly reiterate that.
+> 
+> It would be useful to say (1) what buffer is "buffer", and (2) whether
+> "position" is a position in that buffer.
+
+Hopefully the new docstring is okay.
+
+>>> All I want is a concise documentation of locations,
+>>> enough for me to start working with it in Lisp code I want to write:
+>>> call the correct constructor with the correct arguments, then pass the
+>>> result around.  You are instead suggesting me to take a "tour de
+>>> France" through much of xref.el and elisp-mode.el, just to understand
+>>> that basic bit.
+>>
+>> If I was someone just starting with the code, I would look at how the
+>> existing code in etags.el creates xref-etags-location values and
+>> basically copied that.
+> 
+> Without knowing the data structures involved, that's not easy.  I
+> eventually needed to call the relevant functions (and that required
+> creating a situation where I can call an internal function), to see
+> what xref-etags-location includes.
+
+I would suggest just edebug-instrumenting xref-backend-definitions in 
+etags.el, or etags--xref-find-definitions directly. And then M-. 
+somewhere where the etags backend is used.
+
+> For example, it took me an
+> inordinate amount of time to become sure that tag-info's TEXT is the
+> text from the TAGS table, upto the line number, and that
+> xref-item-summary returns it.  Why wasn't it documented?  The name
+> "summary" is too general, so doesn't even hint what it produces.
+
+More idiomatically, you might want to take the tag-info value 
+(accessible as xref-etags-location-tag-info). Summary is really a string 
+for the Xref's UI - so it has to look good and relevant, but is not 
+required to contain a specific piece of information.
+
+There is a fun comment near etags-snarf-tag. But as mentioned, TAG-INFO 
+is described in the docstring of etags-goto-tag-location.
+
+ From the question I'm also inferring that you want to post-filter the 
+list etags--xref-find-definitions, following the example of 
+xref-backend-xrefs-by-kind. If you make etags--xref-find-definitions 
+itself make the filtering decision, it could have tag-info already 
+available in a local variable. But either approach should be fine since 
+the list of all matching definitions is usually short (no need to save 
+on memory).
+
+>> It's similar to how the current Xref code produces the TAG-INFO values:
+>> I don't really think about what's inside even though it is documented: I
+>> just found that (funcall snarf-tag-function) returns such a value, and
+>> knows how to use it.
+> 
+> I don't expect to need to run the code to understand its interface.  I
+> expect the information for using an interface to be part of the
+> interface's documentation.  Are these expectations unreasonable?
+
+Yes in general, but we are probably talking about different things. The 
+information about how TAG-INFO looks is not part of the Xref API. A 
+hypothetical etags.el maintainer could add more and better docstrings 
+throughout the file, however.
+
+>> In particular, the latter says directly:
+>>
+>>     The result must be a list of xref values, like in
+>> `xref-backend-definitions'
+>>
+>> That should mean that a list of the same type of values that etags.el
+>> returns in "definitions" would be good for "xrefs by kind".
+> 
+> You are able to make these conclusions because you know what etags's
+> xref-backend-definitions does.
+
+I hope that this sort of a general statement can be reasoned about 
+without knowing all the details of data structures involved. But of 
+course you would need them too for the full picture.
+
+> But if I look at that for the first
+> time, I see that it performs non-trivial filtering of what
+> etags--xref-find-definitions returns.
+
+Sorting, to be more precise. It would help to document that 
+xref-find-definitions<etags> honors etags-xref-prefer-current-file, but 
+that's somewhat secondary. If etags's xref-backend-xrefs-by-kind does 
+not honor that option, that could be improved later, the result would 
+still be valuable.
+
+> So the question how to generate
+> a valid list of xref values is still unanswered at that point;
+
+In general or for the etags backend?
+
+> answering it requires, among other things, to understand what are xref
+> "location groups".  (I have since succeeded to figure this stuff out,
+> but it wasn't easy.)
+
+Again, knowledge is good, but xref-location-group is already defined for 
+xref-etags-location, so this seems secondary for the task at hand.
+
+>> A lot of concerns are totally fair, but I hope we'll be able to meet in
+>> the middle, keeping the somewhat abstract way of defining things, but
+>> adding more concrete information where necessary.
+> 
+> I will try to add the documentation bits I sorely missed as I go, and
+> we can then take it from there.
+
+Thank you.
+
+
+From MAILER-DAEMON Sun Sep 13 22:50:58 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x5wmX-0000Ei-Uv
+	for mharc-emacs-devel@gnu.org; Sun, 13 Sep 2026 22:50:58 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jared@finder.org>) id 1x5wmS-0000ES-5V
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 22:50:52 -0400
+Received: from greenhill.hpalace.com ([192.155.80.58])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jared@finder.org>) id 1x5wmQ-0004Rq-Ib
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 22:50:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=finder.org; s=2018;
+ t=1789354249; bh=yS+MWmk2K225xFsEVv88ArgkrAAbbBUuDMpYaxfZ8Cw=;
+ h=Date:From:To:Subject:From;
+ b=ZSzLLu/KmuHARe1q6dm6Jm5zuSt5ztuc/t7o77DxmyumO4coSEBsjkQ2hZplyVTPf
+ W/H/U0vcK4iy3bJMjPlQQbsh/27dm/nq11Ic8s5d2fNeVWe86hrQyuwiIKcZ1OVMeU
+ YLlRtmWL+PiaLa+YHehwBxQEZGpnP40prFYQ2u8ggKy60e94Oo1BiBxzFXEcEhBx9D
+ BMsEVUEjA1ZEn1qec9UVPQfGOtouSEm9pevt7Wds0tIcIVeAZ5xNohTb0NoF324PNJ
+ bE4qcfWgRRuA8yEWB/HNxtewdUZlmSni6+XYHGOJXpvQCx3506J0021clSPIOLR0pR
+ ewJa3XyHv75lg==
+Received: from mail.finder.org (unknown [192.155.80.58])
+ by greenhill.hpalace.com (Postfix) with ESMTPSA id 164A264B
+ for <emacs-devel@gnu.org>; Mon, 14 Sep 2026 02:50:49 +0000 (UTC)
+MIME-Version: 1.0
+Date: Sun, 13 Sep 2026 19:50:48 -0700
+From: Jared Finder <jared@finder.org>
+To: Emacs Devel <emacs-devel@gnu.org>
+Subject: Should we automatically detect terminal only sessions for pgtk build
+Message-ID: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+X-Sender: jared@finder.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=192.155.80.58; envelope-from=jared@finder.org;
+ helo=greenhill.hpalace.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 02:50:53 -0000
+
+For a while now I've been running the pgtk build of Emacs with the 
+following wrapper bash function:
+
+$ type emacs
+emacs is a function
+emacs ()
+{
+     if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+         command emacs -nw "$@";
+     else
+         command emacs "$@";
+     fi
+}
+
+With this wrapper script, pgtk Emacs builds can detect that there is no 
+windowing system available and start up in terminal mode when I'm 
+running a remote Emacs in an ssh session.  This was previously a big 
+annoyance with the pgtk build.  Would it be safe to make this check part 
+of Emacs proper?
+
+   -- MJF
+
+
+From MAILER-DAEMON Sun Sep 13 23:07:48 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x5x2p-0002gP-EO
+	for mharc-emacs-devel@gnu.org; Sun, 13 Sep 2026 23:07:48 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x5x2f-0002g1-RS
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 23:07:38 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x5x2e-0006om-Cm
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 23:07:37 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x5x2Y-0006lR-61
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 05:07:30 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Date: Sun, 13 Sep 2026 11:15:45 -0400
+Message-ID: <jwv5x09kwxm.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <86ecex1j53.fsf@gnu.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:DvMJrzFCMv+14xpsd9/MX5PtqUg=
+In-Reply-To: <86ecex1j53.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Sun, 13 Sep 2026 14:32:40 +0300)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 0
+X-Spam_score: -0.1
+X-Spam_bar: /
+X-Spam_report: (-0.1 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_06_12=1.543,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.25, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 03:07:40 -0000
+
+> A similar problem exists with
+
+[ Sorry, haven't looked at that other problem yet.  ]
+
+> xref-backend-identifier-completion-ignore-case: it doesn't receive
+> enough information to DTRT.  Evidently, the assumption is that a
+> backend supports only a single programming language, or a small set of
+> similar ones, so that they all are either case-sensitive or
+> case-insensitive.  But that assumption is not true for a backend such
+> as etags, which supports many different languages, each one with its
+> own case-sensitivity.
+
+I actually don't understand why we have
+`xref-backend-identifier-completion-ignore-case` at all.  I'd expect
+this part of the case-sensitivity to be implemented in the
+completion table.
+
+In my book, `completion-ignore-case` is mosly a user preference (except
+when it's let-bound around calls to `all-completions` where it's simply
+the way for the caller to provide this additional parameter, but the
+caller is expected to be the completion table, not the xref infrastructure).
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Sun Sep 13 23:10:17 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x5x5D-0003bj-EL
+	for mharc-emacs-devel@gnu.org; Sun, 13 Sep 2026 23:10:16 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x5x56-0003Tq-7n
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 23:10:08 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x5x52-0007N2-1b
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 23:10:07 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x5x4z-000964-UT
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 05:10:01 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Request for adding r-ts-mode to GNU ELPA
+Date: Sun, 13 Sep 2026 17:45:19 -0400
+Message-ID: <jwv8q54zv3g.fsf-monnier+emacs@gnu.org>
+References: <dxROnDylppPlfSdQhzEugwO2Xe1kWLdBpeyjuokBFNgDhmMPKlpnp7zFPu04_hjGPibKNL7LvPL9WsHlNDJkDYW9wM5C2E4xhYatQNB7JgI=@teoten.me>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:8J0sxx4tM5qLEk8RbVBD0TNcsto=
+In-Reply-To: <dxROnDylppPlfSdQhzEugwO2Xe1kWLdBpeyjuokBFNgDhmMPKlpnp7zFPu04_hjGPibKNL7LvPL9WsHlNDJkDYW9wM5C2E4xhYatQNB7JgI=@teoten.me>
+ (message from Teoten <teoten@teoten.me> on Sun, 13 Sep 2026 13:21:55 +0000)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 0
+X-Spam_score: -0.1
+X-Spam_bar: /
+X-Spam_report: (-0.1 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_03_06=1.592,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.25, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 03:10:09 -0000
+
+> Here are the latest changes reflected already in branch main:
+>
+> - Copyright changed
+> - Removed AI macro from tests
+> - Added patch proposed by Stefan on this same thread on Mon, 07 Sep 2026
+
+Looks goods.  When you're happy with
+https://elpa.gnu.org/devel/r-ts-mode.html just bump the `Version:` to
+make a release.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Sun Sep 13 23:14:54 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x5x9g-0005Mr-Ls
+	for mharc-emacs-devel@gnu.org; Sun, 13 Sep 2026 23:14:54 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1x5x9b-0005Md-VZ
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 23:14:48 -0400
+Received: from fout-a3-smtp.messagingengine.com ([103.168.172.146])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>)
+ id 1x5x9a-000883-24; Sun, 13 Sep 2026 23:14:47 -0400
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+ by mailfout.phl.internal (Postfix) with ESMTP id 66BADEC0594;
+ Sun, 13 Sep 2026 23:14:44 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-04.internal (MEProxy); Sun, 13 Sep 2026 23:14:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :cc:content-transfer-encoding:content-type:content-type:date
+ :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm3; t=1789355684;
+ x=1789442084; bh=Bbhb5p/HE5Fxp9JyWdUErwuaO06/nCle+U8Rp2nUyvQ=; b=
+ BUllWiDLRYJ30tt7gSiJBM2pJJO6wIV1qQi2rV5rVKa13TpKeRh0GkMr0WjHlpeg
+ U4WzcA11+OV+GE5ra5AbMex/B0WxLbg3t63wv+XzaXSxB1mQkWFqoqcgtxdzPxgG
+ 5ZUBuE35DnXawfXMOx18Cl5QzcpkMsZckCtoZOYpIOx45jYSPmSaqnqWqZX1DV9B
+ TuEMyBpCLfzFviocyFVaLosDPIAX+OZrQoOiMLN3SMx+onSztfHzDvg/6cq0ZIHM
+ pSPPCI69as6/LJy8doHgkQc25guJVhj06h7cCtbK3Z3X4o2fj8Ge/eH4xOdMDHaK
+ BNbBn00FK0bovB1SinGEhg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789355684; x=
+ 1789442084; bh=Bbhb5p/HE5Fxp9JyWdUErwuaO06/nCle+U8Rp2nUyvQ=; b=f
+ 1l9QsVDqBuYkhd23H2/rYI2syy2b4uLyIfifTNrbbjfv/Xpbzc1GWNcWueASYt4t
+ pxwvP33CeXP/BIjhfU7aZPqdcK8S16SN6TAo8Kmsd+PO/bcs5kOaW92bkBqjfofc
+ i3aq6Wq4bG94QKDEUnvjMJl4HLw5ecPcK5QgGYDeY1VC5vR0ae+I3X7hpKXYRKzU
+ K9sb7DFo+jJLXdstJNKHubZ2cS0LoDU0WmyPVa0/eTn3piLGUhuAkHQlzO0+GP4e
+ cjYCNfs9iVOklQFajhcPzIySDtqA6pSl/HiNiSTSruGH9y9ftUCRibTKexcP64hf
+ D+EW5B+Ufep2lbeBVItFQ==
+X-ME-Sender: <xms:pGanau-s-xE1n1hv9tT-wUt0cOI6tQCpyA2963US6vR__XpunTvl_A>
+ <xme:pGanajBHcxGM6kmkK5MaHi0DqnoXgalYDVvJmg8OAj0T_81mvEvgyDv9fl4EUuHkM
+ MCv3n4HNOd9zy7at5IZKJP_ukVXcQy93AlibGuzoHKRYoExgZCrgvTO>
+X-ME-Received: <xmr:pGanajIi3xsrV29PS2biCilon9A1LRucv7JuxTtNGNpYKkHV1YfeJ_43iJOfWRuvINfl>
+X-ME-Proxy-Cause: dmFkZTEIjP3/3v+xJt8VlYOkvHomIBGZ5zD3LUFiZ3B2/IGqExcC2hTINIfRFInlzfjHAj
+ 9rLL03KxZp+mCm2XJ8SxhebmImXrcWPeyuKVBuEDqYc/uFzFU2KWdN/yAW5UeUH5ktztoD
+ W5ZThRFFX3rsakOvf5u8Yqoqxi7Kz2yRFvtGpu6yg7jjivzRrCglR9jrIkWZ+T8Q+EnygJ
+ Pn45nkPESqt4AqWoYiWatFyCJ32TKNRD5UkUbWAXMpyoSI88YJeYeslgION9cK/J6FZ97h
+ 1S/nXshzlzxSwyp4PIyWdEAo9wodq/SflhWaUOk9nGGcpdewLtvh4i7NBXu9e/YBBqkBUz
+ FiHiM4WFf2VU9ahl/drPXTxteMfTd+VtgRbU2R60CSEIk0zzURKRsix7YygxuCXY5DB6RU
+ 1FPtkITOTP/L4Bgc3zagjEATZ36XiuVg6/SkmC73YugwJIto0YZ5Fh03md9zWrWP4D69gh
+ 2gDp2s+2eIxPSidzMIyyqfet2kKB7Vv8F55RSCKK50hm32WUAYfI1bNPfA+0AcCut48HXB
+ EkLf4DceJoUgFfNJ4xs53GegQoc/ebOJ5nDAOCvK/+g+C2PuIM1swskLIVdce4NDjkL/Jy
+ qcIiB6M1ScCz4Ci9nnCEwYqyGtjk27w1DaiTWSsTqMK8kCWHm91yt3dobb7Q
+X-ME-Proxy: <xmx:pGanaulypOrbRkdq0Vi1pxUHLbxKXWYdqNbkX_96U9E4oefWf1pJfg>
+ <xmx:pGanapFLjNganz7CGe4ctAfQ8vxHM6Tic5I9Kgz2G0ubGqUHip5lbg>
+ <xmx:pGanamH2FpDICVoCHQPPO6_4MetBESpLIciChQakazDcBppV7XRf1A>
+ <xmx:pGanauOI76TaSCnhjxrPaaxsqFRXNtAsrjFZ4sIagcMSYjXeZmVUpA>
+ <xmx:pGanat11ZSkMz8zZ62hsairvtUXQLmbz99VTdvygP7Du_jaUepOR5zZx>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 13 Sep 2026 23:14:42 -0400 (EDT)
+Message-ID: <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev>
+Date: Mon, 14 Sep 2026 06:14:39 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <86fqzd1lz8.fsf@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=103.168.172.146; envelope-from=dmitry@gutov.dev;
+ helo=fout-a3-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 03:14:49 -0000
+
+On 13/09/2026 13:31, Eli Zaretskii wrote:
+>> Date: Sat, 12 Sep 2026 15:47:34 +0300
+>> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+>> From: Dmitry Gutov <dmitry@gutov.dev>
+>>
+>>>       "Return the predicate for identifier completion.
+>>>     The argument KIND will be provided when the caller intends to narrow
+>>>     down the search.  The backend can use it to narrow down to only
+>>>     identifiers that have xrefs belonging to KIND."
+>>>
+>>> What is "the predicate for identifier completion"?
+>>
+>> It is the predicate that will be used with 'completing-read' (the
+>> PREDICATE argument) when an identifier is read with completion (e.g.
+>> during 'C-u M-.').
+> 
+> One problem with this PREDICATE business is that the completion
+> infrastructure passes only the candidates to the predicate function,
+> whereas here we need to also pass the KIND.
+
+Do you mean that 'completing-read' should support KIND explicitly? How?
+
+Kinds are introduced by xref, and don't have a meaning for completion in 
+general, so at best is would be a &rest kind of argument, passed 
+verbatim to the predicate, or something like that. Does not seem worth it.
+
+> This is very
+> inconvenient, and sounds like an omission in the design: a backend
+> that supports many KINDs is expected to gazillion separate functions,
+> one each for every KIND.
+
+It doesn't have to, it could instead return a common anonymous function 
+which would make the decision based on the lexically captured value of 
+KIND. That is what happened in elisp-mode.el before commit 2daeb3ca35.
+
+The current implementation seems more efficient to me, but performance 
+tradeoffs might not matter in your scenario, measurements needed.
+
+> It almost sounds like the design assumes
+> that a backend knows the KIND just by looking at the identifier, which
+> is correct in Lisp, but not in general.
+
+No more than it assumes that the backend knows the list of definitions 
+for that identifier "just by looking".
+
+Indeed it might be harder to do for some backends than others (so Eglot 
+does not have a predicate, and I assumed it might be a pain to do for 
+etags too), but those limitations seem natural.
+
+> There are various hacks and kludges to get around this (I used
+> apply-partially), but I hope we will be able to find a cleaner
+> approach, which will also speed up the completion as a nice
+> side-effect.
+
+I'm not sure how you see it working better. 
+xref-backend-identifier-completion-predicate designed as returning a 
+predicate function has a chance to take the value of KIND and 
+pre-populate any caches it needs and return a appropriate function.
+
+If the cache is in a local variable (e.g. hash table), the returned 
+value will need to be an anonymous function. If the cache is in a global 
+variable, then one of the named functions could be returned. Using 
+'apply-partially' does not get around it, and does not print any nicer 
+function literals in backtraces, unfortunately.
+
+> IMO, it is not an incident that Eglot doesn't provide
+> such a predicate.
+
+For Eglot it's a consequence of what the LSP protocol can and cannot do.
+
+> Another problem which surprised me a bit can be reproduced as follows:
+> 
+>    emacs -Q
+>    C-x C-f src/dispnew.c
+>    C-u M-g M-.
+> 
+> This signals an error, evidently because Emacs doesn't yet have a
+> suitable backend activated/known (and therefore etags.el is not yet
+> loaded)?  I need to visit-tags-table to get around this.  I think we
+> need a smarter initialization.
+
+We might be looking at different scenarios here, but I've pushed a fix 
+for one in commit 30cc90dcbc6 just now, thanks.
+
+Is your problem still present?
+
+
+From MAILER-DAEMON Sun Sep 13 23:15:10 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x5x9x-0005OA-Ck
+	for mharc-emacs-devel@gnu.org; Sun, 13 Sep 2026 23:15:10 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x5x9t-0005O0-D1
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 23:15:06 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x5x9r-0008JG-Uz
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 23:15:05 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x5x9q-00039H-3n
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 05:15:02 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Date: Sun, 13 Sep 2026 11:23:34 -0400
+Message-ID: <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:4Qo/F/TZ0Q1+V6vDgjbRCWG57Rc=
+In-Reply-To: <86fqzd1lz8.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Sun, 13 Sep 2026 13:31:23 +0300)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 0
+X-Spam_score: -0.1
+X-Spam_bar: /
+X-Spam_report: (-0.1 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_06_12=1.543,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.25, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 03:15:06 -0000
+
+>> It is the predicate that will be used with 'completing-read' (the 
+>> PREDICATE argument) when an identifier is read with completion (e.g. 
+>> during 'C-u M-.').
+>
+> One problem with this PREDICATE business is that the completion
+> infrastructure passes only the candidates to the predicate function,
+> whereas here we need to also pass the KIND.  This is very
+> inconvenient, and sounds like an omission in the design: a backend
+> that supports many KINDs is expected to gazillion separate functions,
+> one each for every KIND.  It almost sounds like the design assumes
+> that a backend knows the KIND just by looking at the identifier, which
+> is correct in Lisp, but not in general.
+
+I don't understand the problem.  Here I have a "single" predicate but it
+knows which kind is being completed:
+
+    (cl-defmethod xref-backend-identifier-completion-predicate
+        ((backend FOO) &optional kind)
+      (lambda (candidate)
+        ... check CANDIDATE using KIND ...))
+
+But, as for the completion-ignore-case, I tend to lean towards filtering
+for KIND in the completion-table rather than via the predicate.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Sun Sep 13 23:31:48 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x5xQ4-00081Y-Ib
+	for mharc-emacs-devel@gnu.org; Sun, 13 Sep 2026 23:31:48 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1x5xQ2-00081P-Al
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 23:31:46 -0400
+Received: from fhigh-a1-smtp.messagingengine.com ([103.168.172.152])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1x5xQ0-0002Oa-HR
+ for emacs-devel@gnu.org; Sun, 13 Sep 2026 23:31:45 -0400
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+ by mailfhigh.phl.internal (Postfix) with ESMTP id 36DD11400168;
+ Sun, 13 Sep 2026 23:31:43 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-05.internal (MEProxy); Sun, 13 Sep 2026 23:31:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :content-transfer-encoding:content-type:content-type:date:date
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm3; t=1789356703;
+ x=1789443103; bh=L9xq+IRnr458ITiCi3wwrfEnmNzyAQUTUJJdUHhaIyU=; b=
+ Vcu+ihj/sqOuF2bVVrUShA93N/ZBTnbC+PgtOf0yeoAjjXFbeJsbRBuP0+BdpfwD
+ laJ7QjPp4O/eCBmeVvZH06qpzvvdA0LsHIorWjn5wNI18HfG/7qgl1merBf5y5p5
+ NFOr5J98FMRBULtoh94NE3sw8EuMIr6XCmeVxJkmp5OwL9KqdTV2H4FIdtRqshEQ
+ HRY9Z9cEeO31lCG3Vrp6xqlrpn0i5A+LHGYPlFb9NwCpA/2gZXP8K/r2bHfjSLFa
+ OkrWbCBZwNL96/x5AZKOgop5oKRPiJrjp428FI/PGXyhmN9bl/2H3QXZJNnbKWJF
+ x0A6Pm7UXtkL+ltGCAsSYA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-transfer-encoding:content-type
+ :content-type:date:date:feedback-id:feedback-id:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+ :x-me-sender:x-sasl-enc; s=fm1; t=1789356703; x=1789443103; bh=L
+ 9xq+IRnr458ITiCi3wwrfEnmNzyAQUTUJJdUHhaIyU=; b=mxbKAWrYsgir3VLNV
+ 9T+y+NONmGrBjN+FFufxiGtejKZjEzSmYOsjpUQ4dVI1glgQ7OMqclF66BjgW20g
+ xYW6YdwmgjylE/yncBU3RR04CPPEHP9hC12R9Q4dob+2YS5WUFtGsy3RVH/0KA7S
+ hNdwQsJzPdPpiu1XBC2uGh2DiYzImdkGQEnqK6Au+l1H8RWNlyD0IwR6pZ215Hl+
+ Kmn9Gdd2DIA6s+tR4nBgcdBqEl5diQ03D/Psg/sjFGoNZseEYh85O8QnozN0Z6bw
+ 47fwQk/u4jN3moPmerYMKCA8lgqzya6qPkylm0K6qeBUzyvMiFCL1zTKEak4wo1j
+ GdIjA==
+X-ME-Sender: <xms:nmqnary7U-mEgslYJ1o7bwYbT_CkBURTAuOkFDk9GfZgYg5hvoTbdQ>
+ <xme:nmqnapR2NYUTSjqit9FTJiKpQ9iwpYHKENtp1Tmgl3-hiDIEKchAikWk9v4792s7C
+ H0ssMf10B6-A_igte7nhlAd2GPOo11oqvYfgthPSdxWy-qP24UOM0ey>
+X-ME-Received: <xmr:nmqnai9rBZ2LVJtRNMyCAf7smZEzFv0biFdigwIaxaIXhFqkA8YjRneHR_zreMZw-DnQ>
+X-ME-Proxy-Cause: dmFkZTFJkLxO/FAuRrQE/39FTbt6GcyFxcS93hJe2HYI8DNazxr8K0Oj0FmbXSqheSTVeW
+ tB49HJoNMVUulyuNjAiGB67VJwsQ5un+RN4jz2dZzGfJradQ0nIRod4csiAYKkMFViXiuk
+ jIjTMBurqqjgw9fKejSIQSKlwa6zEyDQlnhC05Mn+o5opD6wnfuHnb6s5I3Upe+XfnoGZ3
+ PdYjGg3NaSs1n5euEtqp4TKiXr2umtwee62R/lWQTfc0ur0y0bV/p4w4WEp1YNDxP+zQba
+ /ARl49QgCo/gLVX4savTGJS8pbZoju+mrYNnxEj+YRZwcMdkfttmtYIfpuYhLK9ht/tMHl
+ 2SwI1KVF7BXqUfWnLZlyLoJb3jiWuSZPABvCXo6qIXmpAIopzaWclNE1FsgrbBCCZHSa9W
+ 5/owLscGJhuKyGZ6L18hN2Oz/p8eQMRN/wOUWIGHqZAxIZ7lAEruWLTAeI/ApNbdq4wrR3
+ 8D6aoJYXj98ap0i5N9QUti4v5qA0Kj3Ts0yWsalpWpanW7tOxUyBSKtbn3v8ZQBubj4tcH
+ GynOcD31t0IvKTEnQBDjqDObHuZqQmhiBnid3XIwUuZ8TDHK/ysM4hS7rYHIiZQGFGFvh4
+ en61HjIHCYiIXm96z5fgbObNEeW8qe/Sr6zeajSFQC5NYuAaTlRry5w75x6w
+X-ME-Proxy: <xmx:nmqnagomyXKmXphmpuc5G5N5oa-DzFYk5tqOIAVDsDyqXMAgO-WpnQ>
+ <xmx:nmqnavmr0D4z5Hf5bZ6HUdy5D6H1nQmQZfRFqg0O1dn235WMK1Bi_w>
+ <xmx:nmqnanLafk7ZLrr9A97Mz_BdUV8QERVBBjpVyyigS6Tmgxo1ZXJpiQ>
+ <xmx:nmqnakwh8nw84c3AXtvbnOJD3RC1igJAZrXLoQ7jVzH89jwefo0jeQ>
+ <xmx:n2qnajCryKlfV1dcTBJSXy6I141G9TjTSxcGG_n-vdl6lyNd62_t9t1j>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 13 Sep 2026 23:31:41 -0400 (EDT)
+Message-ID: <8c05686c-d377-4159-9577-6a91165fc476@gutov.dev>
+Date: Mon, 14 Sep 2026 06:31:39 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+To: Stefan Monnier <monnier@iro.umontreal.ca>, emacs-devel@gnu.org
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=103.168.172.152; envelope-from=dmitry@gutov.dev;
+ helo=fhigh-a1-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_MSPIKE_H2=-0.01, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 03:31:46 -0000
+
+On 13/09/2026 18:23, Stefan Monnier via Emacs development discussions. 
+wrote:
+> But, as for the completion-ignore-case, I tend to lean towards filtering
+> for KIND in the completion-table rather than via the predicate.
+
+For this particular one, it was the choice between adding a new argument 
+to an existing generic function and adding a new generic function (with 
+a default implementation returning nil).
+
+
+From MAILER-DAEMON Mon Sep 14 00:29:11 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x5yJa-0006f4-GZ
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 00:29:11 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1x5yJW-0006ee-0M
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 00:29:06 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1x5yJS-0002jM-Gf; Mon, 14 Sep 2026 00:29:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=ypy7dsOrIu+4/Le80lCAkvBkXf+mYRnHYteah6zI/uA=; b=R1rbrGkBEQbs
+ s2Wt71+Utrz/wO3VKomv2q7G3jLyIIfB5IvT2XKzal3KwuVUhOyogklJJB+rHCpqYys61PglVBIYz
+ Q2wIHl0zZQMPACHQ91E2dWh4OgWtzgJGFmIaXb5BGAnek3wLuHQRjz0prpCPa1hk2MjZBdWDEORd5
+ XUpBBQGyjEkuubzLVP5Hji6RW+1ULzZZWboKSX3E3ZpIOkAh7Rjd9Hw5adchEa4xH2Iut4NC0Ns5Z
+ eNZWOvF8oQ3WQe8ADL6gQ1DOx2HJWTA/IqlkQdZpe8dCkGD+/eQ7mhC/a59wGpw0Decg4pql19tCy
+ RknXoQ4diH8OGQsgezo9MA==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1x5yJQ-00Ge2x-F2; Mon, 14 Sep 2026 00:29:00 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: Arsen =?iso-8859-1?Q?Arsenovi=C4=87?= <arsen@aarsen.me>
+Cc: arne_bab@web.de, jb@jeremybryant.net, emacs-devel@gnu.org
+In-Reply-To: <86pkyv7uxd.fsf@aarsen.me> (message from Arsen
+ =?iso-8859-1?Q?Arsenovi=C4=87?= on Wed,
+ 02 Sep 2026 13:29:50 +0200)
+Subject: Re: Discussion about why GNU/Linux system upgrades cause old
+ programs to break
+Reply-To: rms@gnu.org
+References: <m2jyroz5j7.fsf@groovy.net> <878q6ce0ka.fsf@jeremybryant.net>
+ <86zeyrdz4y.fsf@aarsen.me> <867blua82x.fsf@gnu.org>
+ <867blt699w.fsf@aarsen.me> <86v79d89z4.fsf@gnu.org>
+ <86o6f3ojrd.fsf@aarsen.me> <86v79b7e8x.fsf@gnu.org>
+ <E1wvoBs-00CWZC-RF@fencepost.gnu.org> <86cxvh3stv.fsf@gnu.org>
+ <E1wxHy4-009VsK-KU@fencepost.gnu.org> <86fr07whxj.fsf@aarsen.me>
+ <E1wyMhw-002Em7-VI@fencepost.gnu.org> <86o6erwmsg.fsf@aarsen.me>
+ <E1wzd1P-0011bw-Od@fencepost.gnu.org> <8733vvyxb0.fsf@aarsen.me>
+ <E1x1FUU-0031TJ-T2@fencepost.gnu.org> <8633vtfeou.fsf@aarsen.me>
+ <877bl56v2t.fsf@web.de> <86ld9kaazf.fsf@aarsen.me>
+ <87wlt4k123.fsf@web.de> <86pkyv7uxd.fsf@aarsen.me>
+Message-Id: <E1x5yJQ-00Ge2x-F2@fencepost.gnu.org>
+Date: Mon, 14 Sep 2026 00:29:00 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 04:29:08 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > The C99 mode was not made default until long after.  One would have to
+  > specifically opt into it until the mid-2010s.
+
+  > When you did, you'd immediately get hit with diagnostics for these
+  > cases, just as warnings rather than errors.
+
+Precisely that change is what we are complaining about!
+
+If the goal is to inform people that problems may come in the future,
+warnings are sufficient.
+
+If the goal is to nudge people who are actively developing programs
+to update them to C99 at a convenient moment, warnings are sufficient.
+
+Making them errors will cause trouble bother many other users who
+would have trouble doing anything aside from giving up.
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
+From MAILER-DAEMON Mon Sep 14 01:29:22 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x5zFo-0001Bt-Us
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 01:29:21 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x5zFk-0001Bg-Qo
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 01:29:16 -0400
+Received: from mail-qk2-x11.google.com ([2607:f8b0:4864:34::11])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x5zFi-000331-9O
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 01:29:15 -0400
+Received: by mail-qk2-x11.google.com with SMTP id
+ af79cd13be357-93a2218d7c2so15095585a.1
+ for <emacs-devel@gnu.org>; Sun, 13 Sep 2026 22:29:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789363753; cv=none;
+ d=google.com; s=arc-20260327;
+ b=Vv3ysLK4zYZosIz7zKFXHaCy+J/NyOX1MECnYQAW7rpn+N0PJrKSZ5ew4s+P4Hu36C
+ uomgAHd7UZJVJRP39483ny3PAD4wPqRDJXuMJJPMH6GmIT7RkAQ9GTcezVd9sEnnO7su
+ +8J3cpe9gLQSu5CztLQbVZXKpHXCSWUZCO9/Py8vCLsxSTRV1deuZep4LlGrWxnrw1Oj
+ pZPtFHd5SKPQbWTa/MPrT6cc0vdaCc7NlB1WlEWw2xsXUcKypnU7UWNH/f0RTfnc63bs
+ j4kbLa2gORwUvSemtW5n58X7sL4HF/9T1ZOswBjmsyAPnKjbFrzyf7RgNOmZu2vG0X5F
+ CkJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=HOGAxIv8hCue1lJ82p142jto6eziQxuMnmjkThKU/dQ=;
+ fh=4XldDdBYAjEp3VxOx8pUIjzsOzg8qlAmG4uYJvq1rtk=;
+ b=g9tdLFuOlYmX/yUWzH1892uh9voWehfflF9VVZyz0jwWbgWI0w6ZyQ2WW9jrBIzDwt
+ /sKaI0pji/sIqiFRNa+w3tYZddg679a78QWvkUtJfbNEnuLJ9x8Yw+P2iYY9q/YFtL8B
+ wrzUqmZ4zYb7kUZfpHm/Q/Piz/7cNvxz22Djar+efDe/5LnRV/vqkEFCCB2VxcLld6Mg
+ Jy/HfA+LMUEgztjNHE0gbBCVINNyTqG1AOK88boOVLldYw1Zxd1S5BdQhIGs63ZkN78Q
+ y1WlRg6tiN/J3WAZ/VUWa6q/QrZQcqVZNP7DQuWWBouOxgJl5ck4RnYfOhfst8kSKzu7
+ GTug==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789363753; x=1789968553; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=HOGAxIv8hCue1lJ82p142jto6eziQxuMnmjkThKU/dQ=;
+ b=N3d3sQr01VRI+a+1RT482Pa9izAU/fjjz23dFCDZqNixhmXPvwqyvVUcxtSOJzVtAY
+ n2VVrGsInXUZerLysg1If4VTukGz3xTcSznHkqwVO6DPYXhkVGgmnXv3lx3XmjX6HrUT
+ 95xor5LvZByVNPJtEmlhqxwpfKLM9d4gNJNBSuSDe88NG9S6S4ybnz/X2DW2RsyKUUG3
+ SipaZhbbLGiyxdsXF7HZcDnND1VGjvXhZNH0KQG/hRrtaAVy/lLo7TLRR8XUKlOYRD6D
+ GS3nbLTzxCmDa+p++oixbXTWQKKcCnb14InVMV1jqQmtLdtW06dSlRGVIZxSZydb/dLJ
+ wEPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20251104; t=1789363753; x=1789968553;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=HOGAxIv8hCue1lJ82p142jto6eziQxuMnmjkThKU/dQ=;
+ b=W/AEJkD4G6ONPy+w1M7zpm3K8Cv6/ZAL+cH0h2VvwB/unU7G8nXnAZ/cMH+4CWMRQ2
+ omZUiVztATv4Qxeemq+JDcJ+GEYD6cdWQpV0gq+OB9mhWWvBZdsy6h/ejgHAOtIgg0hr
+ 4wRKGPD+r1+F5tzqqrBWfRwZRrJ6c8zsVgsGOdz/aqCaKPgzn7lD9i9oWElx8X2iUs2g
+ t1qMXRHB/tSuuJ5n14C+ZU+uv2cgZk54FQGs6GRCH2hZr1DAE48cJTkh/zxWCfRLn5Xk
+ AJ49oEbTIB40U5YiA8ztkcUWhWRT7C1k/XHGNac4c1nEeKWsAG0c80N8Xjta66oxMwPG
+ GvHA==
+X-Gm-Message-State: AFuF++kqcTLzcRzL5jDoDcwqD+cU/vhRSsEI7Sp3ymPmEH7aK+f/rpAc
+ HzE9T44Y4zqHwhJXDOg3bQ6WclicGls7uoKOLg283eEmpDgUvEMhEn2JIz4BH7e9rmB031xLgpD
+ QJ8fAKMf6gYiHDzAPU6Yx1g0nnA7inuqTrw==
+X-Gm-Gg: AYBFou2wL163DGj7tqi9U08a/jYAlFox5zNPoFUAZgovFsSfhf8Ax3+XlC3Ia5iDW2f
+ 74+rzSpSgAVB++QXBzQCuMpva5bMY0uzatHVsGcpud2jN3r6DptYyfR3b/35H2w5JMggEsXhHbL
+ 9UQ39V/AUZLTi788nU2Pi4oa4vGHbi2q7xF6a5B1AZMtBo1yLK0yb1m944i8X+JUmyME+YKA2N2
+ 8KcIX4f37mn4VGLtk55WzRG2QFyN6AUDgBbTFHurOe/D425ecOuZ5y9noXUy3qwyi/hhUnw/Xhy
+ 9P+Ol6mCMo3cD1LGGZ5AlWmobFs9IV1lIZF2OFv5lu+N7gmdunqBIP70K2mp8NC6pOVlrXsN7oo
+ Kzo9rVbBaWQ==
+X-Received: by 2002:a05:620a:1787:b0:939:7d14:1c75 with SMTP id
+ af79cd13be357-93a2a8bf97amr88112585a.6.1789363752797; Sun, 13 Sep 2026
+ 22:29:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+In-Reply-To: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Date: Mon, 14 Sep 2026 08:28:59 +0300
+X-Gm-Features: AcwNN1WVZkunITIpED5rhHA1mYyGBa9_VoLfftxlT-HahrEHh0om7rZv5JGCbgg
+Message-ID: <CA+TD5hh2fB8m8CRwSFZ_cqnbvQ3o=K2fSMemjD_q1DD_5i5fGA@mail.gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+To: Jared Finder <jared@finder.org>
+Cc: Emacs Devel <emacs-devel@gnu.org>
+Content-Type: multipart/alternative; boundary="000000000000dc0b1e065b6ab6c5"
+Received-SPF: pass client-ip=2607:f8b0:4864:34::11;
+ envelope-from=johan.myreen@gmail.com; helo=mail-qk2-x11.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 05:29:17 -0000
+
+--000000000000dc0b1e065b6ab6c5
+Content-Type: text/plain; charset="UTF-8"
+
+On Mon, 14 Sept 2026 at 05:52, Jared Finder <jared@finder.org> wrote:
+
+> For a while now I've been running the pgtk build of Emacs with the
+> following wrapper bash function:
+>
+> $ type emacs
+> emacs is a function
+> emacs ()
+> {
+>      if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+>          command emacs -nw "$@";
+>      else
+>          command emacs "$@";
+>      fi
+> }
+>
+> With this wrapper script, pgtk Emacs builds can detect that there is no
+> windowing system available and start up in terminal mode when I'm
+> running a remote Emacs in an ssh session.  This was previously a big
+> annoyance with the pgtk build.  Would it be safe to make this check part
+> of Emacs proper?
+>
+
+This is related to the annoying behaviour of the gdk_display_get_name
+function, which too eagerly returns the fixed string "wayland-0" if no
+other information is available. This value is a pure guess. This was
+discussed in the comments to bug 53969.
+
+I would not be happy with the simple logic in your script. Basing the
+decision on just the value of XDG_SESSION_TYPE would break a use case I
+have: I connect to a remote server using the command "waypipe ssh
+remote_host". This opens a normal ssh connection to remote_host, with
+XDG_SESSION_TYPE set to "tty". Despite this I can start Emacs on the
+headless remote host and the graphical Emacs window is shown on the local
+screen. The check in Emacs proper would at least need to include a check to
+see if WAYLAND_DISPLAY or DISPLAY are set.
+
+--000000000000dc0b1e065b6ab6c5
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote gmail_quote_container"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Mon, 14 Sept 2026 at 05:52, Jared Finder &=
+lt;<a href=3D"mailto:jared@finder.org">jared@finder.org</a>&gt; wrote:<br><=
+/div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bo=
+rder-left:1px solid rgb(204,204,204);padding-left:1ex">For a while now I&#3=
+9;ve been running the pgtk build of Emacs with the <br>
+following wrapper bash function:<br>
+<br>
+$ type emacs<br>
+emacs is a function<br>
+emacs ()<br>
+{<br>
+=C2=A0 =C2=A0 =C2=A0if [ &quot;$XDG_SESSION_TYPE&quot; =3D &quot;tty&quot; =
+]; then<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0command emacs -nw &quot;$@&quot;;<br>
+=C2=A0 =C2=A0 =C2=A0else<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0command emacs &quot;$@&quot;;<br>
+=C2=A0 =C2=A0 =C2=A0fi<br>
+}<br>
+<br>
+With this wrapper script, pgtk Emacs builds can detect that there is no <br=
+>
+windowing system available and start up in terminal mode when I&#39;m <br>
+running a remote Emacs in an ssh session.=C2=A0 This was previously a big <=
+br>
+annoyance with the pgtk build.=C2=A0 Would it be safe to make this check pa=
+rt <br>
+of Emacs proper?<br></blockquote><div><br></div><div>This is related to the=
+ annoying behaviour of the gdk_display_get_name function, which too eagerly=
+ returns the fixed string &quot;wayland-0&quot; if no other information is =
+available. This value is a pure guess. This was discussed in the comments t=
+o bug 53969.</div><div><br></div><div>I would not be happy with the simple =
+logic in your script. Basing the decision on just the value of XDG_SESSION_=
+TYPE would break a use case I have: I connect to a remote server using the =
+command &quot;waypipe ssh remote_host&quot;. This opens a normal ssh connec=
+tion to remote_host, with XDG_SESSION_TYPE set to &quot;tty&quot;. Despite =
+this I can start Emacs on the headless remote host and the graphical Emacs =
+window is shown on the local screen. The check in Emacs proper would at lea=
+st need to include a check to see if WAYLAND_DISPLAY or DISPLAY are set.</d=
+iv><div><br></div><div></div></div></div>
+
+--000000000000dc0b1e065b6ab6c5--
+
+
+From MAILER-DAEMON Mon Sep 14 05:27:23 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x62yB-0005jA-IE
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 05:27:23 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1x62y8-0005is-US
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 05:27:21 -0400
+Received: from fhigh-a6-smtp.messagingengine.com ([103.168.172.157])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1x62y7-0007kP-EN
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 05:27:20 -0400
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+ by mailfhigh.phl.internal (Postfix) with ESMTP id C687B140011E;
+ Mon, 14 Sep 2026 05:27:18 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-03.internal (MEProxy); Mon, 14 Sep 2026 05:27:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm3; t=1789378038; x=1789464438; bh=h+7jffc+dc
+ 3VZITVFeuxGL6cBBB/rDtNWgrgumiLqVA=; b=X+KC4LI6NqyP02tLH31IzbITSM
+ 3bHimzFKXTKG4519kpFnv3FziP70vbBwEto58f6eHxAgUJ9/CXaztaLN/2ULFzRI
+ 9d/MfkYQqdDHDxD2OgIEew22FFHT5ie8ln1lgUb+niJC6jDahOMFFba/Dw4juIu2
+ 0c/TxoeJ6Nauc0UmlEfBrQzUvUHQqlBlNvwNmdwlZwJJeThYoyEmSVWwqaeYPlIg
+ kictXmmE+7222wc6YPVbIgDoyrmkkMBi/QuxVnHZ3JZMG0ABaMyG4N7apki3cLzP
+ ph9G55DNw3WZJKOsr3HTdNtH2B+rLprver0BndA0jBVtMdF4NAaoPNVoDiaQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+ 1789378038; x=1789464438; bh=h+7jffc+dc3VZITVFeuxGL6cBBB/rDtNWgr
+ gumiLqVA=; b=vC/EvjyI0LNMhzZS7/38CnSqv1FxZhkOsoZ0i5kLEC8e8+mghk+
+ 2vYXIwMJkvXlDceAUpuYrq5hD9OFA6HNDuJyj/nZVrxSzCEPGCFQCja9XQOkDxil
+ rnwQSRDbhawugz9y19kSx3f02qJ+huTr6Nc5rgrygeGXJ5h5S3Kp+c5dJ6UdYqnD
+ ijcwfsMJtPgQMcedp/UOCK5slPggWzqEpRECpyupG9styKlr4ZTD1DddC5RD7wdG
+ zLe9zwlXXYWuS7LwlIHQniQf6hpH7yV4e2Ko4RVnRE11d7366wAHlRvX/8NsXj1C
+ w2Apor3EofBlUshSrKHStPJcR2mL3Z+jWPw==
+X-ME-Sender: <xms:9r2nakqTupCiLb_wFBhe6oU3BCPAkHlA-VCJNhkEc3QMGNP6oSk9zA>
+ <xme:9r2nam8fqPVdO72HmA8lWh4pGJH50FOpqlTawyCb9ZtgeW3BilXVmr1Naj7QHs2zA
+ BAfof1dFBc1YRf_ygMMYedFfR7NCYwGpdkxQLGtVybqOX6wmKMV9qhOBQ>
+X-ME-Received: <xmr:9r2nar8lJvCGA-cnDD7bTbGTc92RWAzRVlqhwtJAXNN0thhps3DBZSi8llO7cdYVuwUMtRTi55x2F2Vf-U5utHTGT8Iqcl9LTA>
+X-ME-Proxy-Cause: dmFkZTEjpWVyp0jQvyedOG+Rp6pRxg5cJsIpvVi1XxRUz2o+b0Azc0IFeuDFc8wB499Nhs
+ b8xI+bwZPWNnqOe5TZc6adiigDmm5L2WZALEQISxJW1xG/2CnZmO+lurd8HFz6fBiP2cwh
+ 8o5RZlnZ2r2RCCDD6fEmr1g2thecm3NKAEn16aSaRDqSf5FyBIjdXWv8bFdT9/GmR5ETcZ
+ k69W7sHAeiGXW3Zgtrf57lOTDVDSaW+L48sUFALd8k7EsY52zytuc2xzw2A0yDAU/olahc
+ dRlPMbcKaf9wWEmMftLeomq2h3m09Nxm4LKPrIlVv6UXl6riRklRpFbr6XRYFLIGnDJqkT
+ iNxF2ycmNh7jlmztvkiwm039mrZjpfudWPp9jqRHGHewT4JXkftbEvwrvqlgQhWkQeJNk5
+ BpALpugfpAZsBVMg56EsaSZYHjMD4RoA442wfD/BN1J2VuP4Q9sfinVF4aaDGatard9xFR
+ bAEY48uJs9cizEbbFLEg/t6vKdnlckczdBmpzVaubtbsmJ4GqGmJehkFZV87QSslD5+R0h
+ SB75shY9d/G10URBXlfom6NUWqc6p5/V/gxXJ/YeiQLYHKe3WE63oGrVI550igWCLHp3VC
+ /w9pJInboW46lwTm9wtpGJmQO9BlckdIfiQqJ0PB5MRXRbRZgbvnebQvf6FQ
+X-ME-Proxy: <xmx:9r2nattLz8wnfsz-IPwqd6fDUaKLvAMfBA80ZYwq7y-LxuQzENJxXQ>
+ <xmx:9r2namoEl34kZVhlrT6z2VhTFhkkLtYFPH4ht4XH70-r57zl9ADjow>
+ <xmx:9r2nailm1rkeZ2qP05loNvmWe7GYpuYaJqAL2Dl5StNDrAEDtUqsIw>
+ <xmx:9r2naizTpGWI6HMSSsUWay_iZ3R75BzKdnkxC4ingbNxJ31cnOywNg>
+ <xmx:9r2namId4qR-xbQQbU9SU5eSDQxPoV2AIRw7wVZWIotHNgnG_F2s9iYD>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 14 Sep 2026 05:27:18 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id CCE90280C29; Mon, 14 Sep 2026 10:27:17 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Jared Finder <jared@finder.org>, Emacs Devel <emacs-devel@gnu.org>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+In-Reply-To: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+Date: Mon, 14 Sep 2026 10:27:17 +0100
+Message-ID: <874ifsnpxm.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=103.168.172.157;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-a6-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_MSPIKE_H2=-0.01, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 09:27:22 -0000
+
+Jared Finder [13/Sep  7:50pm -07] wrote:
+> For a while now I've been running the pgtk build of Emacs with the
+> following wrapper bash function:
+>
+> $ type emacs
+> emacs is a function
+> emacs ()
+> {
+>      if [ "$XDG_SESSION_TYPE" = "tty" ]; then
+>          command emacs -nw "$@";
+>      else
+>          command emacs "$@";
+>      fi
+> }
+>
+> With this wrapper script, pgtk Emacs builds can detect that there is no
+> windowing system available and start up in terminal mode when I'm
+> running a remote Emacs in an ssh session.  This was previously a big
+> annoyance with the pgtk build.  Would it be safe to make this check part
+> of Emacs proper?
+
+Hmm, I use the pgtk build, and on my headless box, it starts in terminal
+mode just fine.  I think we need to be more specific about what
+assumptions are being made, and where, that cause something annoying to
+happen.
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Mon Sep 14 05:29:04 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x62zl-0006MW-Lk
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 05:29:02 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1x62zg-0006MC-5z
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 05:28:56 -0400
+Received: from fhigh-a6-smtp.messagingengine.com ([103.168.172.157])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1x62zd-0007z0-UX
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 05:28:55 -0400
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+ by mailfhigh.phl.internal (Postfix) with ESMTP id D068E140012F;
+ Mon, 14 Sep 2026 05:28:52 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-05.internal (MEProxy); Mon, 14 Sep 2026 05:28:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm3; t=1789378132; x=1789464532; bh=huGVkhZ1wR
+ S5CNzWhVGdHeOIP1lUPLuXm+riltkDnl0=; b=P2rtIFzC68GVYIObv9M9yK+Fqs
+ 3Ps2AHRhea0teDWXZyI1Pmixwq8R4Yi4Sjtu5B0GidBB502alRiEgWrtx+ZLyv50
+ 3x4aOqA9qjTethih6ZiB5++Od43lLwsUDfrVWLFEHtYiRg7E5seK+YYyKdg3sMHm
+ LeZV2czkIH7wbQRJ75UnIdH2wXzYRCrfgB9dqqUs+5ErNWBNFPawj7Bjg9sbehU1
+ rQAGnHp5VRvMuqFuisxQ33yjaECTxAGNqrHihEGA3M3KHHisdjKT+V8HtmCy9lEU
+ gvfCALOF9YICRIr1u4D44uxS6WWv2LTdo68dsy+5oeC9jVa+lu8QnonqxVAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+ 1789378132; x=1789464532; bh=huGVkhZ1wRS5CNzWhVGdHeOIP1lUPLuXm+r
+ iltkDnl0=; b=gzEA099vedev0LrdJPG15VwFAff7Bn9sVviBpMc2lJy6jejdduz
+ j6zrypAXs6RgSJ7OLuMffwlSUnWBEOTEGsLwaAJz1yxIdXm3WOiWNJUwp6bG9j2k
+ O/xttq8nQWolr3YtZ2V9w1qBYcLg86ZF/YSwCS2O1R/JeijNBwc+ELSV7JqvChG3
+ 7ueCHlUNFZr5IYzfUfrbaCg8mfZUJTQ8QI6reKMG2+OvBnRcx1RbFBrMcKhXZnVw
+ siYtzBo2K2GVSrbs3qvWettveq6KsFq3pBWaXYjHe+Mc+hQVnI8pphIrUMvNYbIF
+ oEWMs9QT1y4mfrnQIwT60JzSNqgAaeu8pDQ==
+X-ME-Sender: <xms:VL6nauV8r8bmhePeDQvvVI5bqwswBUELqoYuVpKdf6CvxUH3w2QJnw>
+ <xme:VL6nam7YtL1s4nLsPa_ZWdUw1VsA95h4lwLj7cHdtpKm92iM9-umBQwCo456n0jVg
+ XAab5AUIpqo3CaVXmx4M7UwOpWgaSxsSA_p1c5vLuvp2VOwN8lh4btY>
+X-ME-Received: <xmr:VL6nalIE2jgllyjw3su4f0A6ItjqB9TRFjflsr---_EarsuJstw3uH7l18mStd5CIB0GSxcuhHRBd4DzBL8n_w-IGMLFO9IChA>
+X-ME-Proxy-Cause: dmFkZTGUao6uM417zAJQNC3KIBU440K/Yl7s2T8cPbLQ/GdIplo8+DLUg4+np1cS2xZFRK
+ KlvJpGcUoFaW57sgsWe3l0uIUwfamst+skOl97JFTQLAYcioQNwvQXLJdvOiZGOsIMupI4
+ 0lCMYB+cg7sCDlteiEOCHLWq7gwo/NgrNer5xvbDRAg9hQKxb4/2q4q33eN27o4PtmBX7C
+ k4IF65DJY47L3ZJR69sNCsIG6FmzzWMbYmRayLEuZcX6ExBpMpeH6k2EUranYWJMbFjSv7
+ n1M2xR4CvcipuGjaNgfluBxldoLsRFpo9pVc6AAvPcy9BdiIOAgUDFBqilY3HAZPiy36Bd
+ I0AsH15pXxAu5vl8IbQBVhvLtQ82zGBLn0/WFcoDqqxHY86PFrAr/k4+YaQxpA7cnf3j2B
+ hrgDH6rB5d55mR9lhITrl5VlCU6pWHLEp9Mjodkjt/OvXv8P79TcLgDmbVAGjts0S/4IVQ
+ M8qWBDHEHXRcIMCTsWNhRmc4oFKRjUwPjr4v9o7Ga87Y5ot2jkRI2LnewpV2nbAIVz0QBk
+ Uka6tVoj8TgEqath7eBmQVbixi7v3GDxWaYrrxXR00JzIAgIBqstYZ8GKxSp/iO9IploPg
+ 5ib5Qcp4gqQ7/cUBWXxusUvmq0a5PPiQyxmNgjA99YtoMSn337Y1Nxi0aSkA
+X-ME-Proxy: <xmx:VL6nanIi4QSqj2Q-Yi5T4QyMLnb_1L3LOdj3zvJ_4GSa6Yxry0aeSg>
+ <xmx:VL6narUMLyrionNTBisaDx1hoSOgZGao_r-AlRCrAE7FOgClXYlrxg>
+ <xmx:VL6nahhQKRC9_6TfhpuEsgq-tROW8aiy42eRH2lpmT8mZ0iRV8qAFw>
+ <xmx:VL6nau8nc4-efLLNBYdAnmI8FY0FL70eD9f6hIYOnVEpoqOBvjrRZw>
+ <xmx:VL6narqcS2Iy3caGUtZvXmKoVoRW4lYRYLLUEwBH2Rpdwq8R4I08cuwT>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 14 Sep 2026 05:28:52 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id CECF5280C29; Mon, 14 Sep 2026 10:28:51 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Teoten <teoten@teoten.me>, emacs-devel@gnu.org
+Subject: Re: Request for adding r-ts-mode to GNU ELPA
+In-Reply-To: <dxROnDylppPlfSdQhzEugwO2Xe1kWLdBpeyjuokBFNgDhmMPKlpnp7zFPu04_hjGPibKNL7LvPL9WsHlNDJkDYW9wM5C2E4xhYatQNB7JgI=@teoten.me>
+References: <dxROnDylppPlfSdQhzEugwO2Xe1kWLdBpeyjuokBFNgDhmMPKlpnp7zFPu04_hjGPibKNL7LvPL9WsHlNDJkDYW9wM5C2E4xhYatQNB7JgI=@teoten.me>
+Date: Mon, 14 Sep 2026 10:28:51 +0100
+Message-ID: <871pawnpv0.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=103.168.172.157;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-a6-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_MSPIKE_H2=-0.01, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 09:28:56 -0000
+
+Teoten [13/Sep  1:21pm GMT] wrote:
+> Teoten <teoten@teoten.me> writes:
+>
+> Thanks everybody for all the comments on r-ts-mode and its inclusion to GNU ELPA.
+>
+> Here are the latest changes reflected already in branch main:
+>
+> - Copyright changed
+> - Removed AI macro from tests
+> - Added patch proposed by Steffan on this same thread on Mon, 07 Sep 2026
+
+Many thanks!
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Mon Sep 14 05:32:40 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x633I-0008VP-BU
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 05:32:40 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1x633G-0008VF-4P
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 05:32:38 -0400
+Received: from fhigh-a6-smtp.messagingengine.com ([103.168.172.157])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1x633B-0000HJ-Sg
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 05:32:36 -0400
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+ by mailfhigh.phl.internal (Postfix) with ESMTP id 0F6D4140009E;
+ Mon, 14 Sep 2026 05:32:28 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-04.internal (MEProxy); Mon, 14 Sep 2026 05:32:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm3; t=1789378348; x=1789464748; bh=gPPg+RUv9P
+ KEBoTk9RUOYayoDP7MJO1YtUqDS7ATQMo=; b=eyFTw2QClsUejn3qWmuS5wcR/h
+ D3TBdDz191gZHahu3qeZFPaCuXzeW8wqkhID3qkp6XNuDm0yxqz1Zb3EJiwe7gqq
+ w+qLbvAVLq4igLU37Hoo4/7XrJyxxrBUzEJTTHyK+y5a3lfLqBr7OCZwN/6GdDsk
+ srxvQFM0/+KMr42hnaKx7KdueeFh6tYYI/L0Yi+LhgRg9NhDa8BYIZhh9oOc/W1Z
+ 9BlmEP29PMvZdLPtALYbrRVWOy2nrJb94Cl4ntgqbpr5p0a37GXtgbQA7Drwu2ql
+ dGFKjBccGK3IDwvjrjbn3xIbFIV9/reJ5K2Ybh4ZaxYyVyFMfLcpBHLUPdBg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+ 1789378348; x=1789464748; bh=gPPg+RUv9PKEBoTk9RUOYayoDP7MJO1YtUq
+ DS7ATQMo=; b=nmyGOT00QI7THMgGWF7KcTEZkpkZXGnTNriEFHHiHZG2la5DaUK
+ stesQwH8+OAJJv146LwELaJK4H4bqPdmQrXDVNULDzjOuwddNc++7ivzkfAMgsC5
+ iszjmZg+i0j2uSVRia4MYa/SL+97S1A82WER8hQ5WZ+//RJM8lmdNhHDq4/JJERU
+ XIPH9JZgGY1Ms91cxYevcZL5qrqEpMfkiG9d3F8XQ+DxRSnmwZeyQaklhjlCYYAi
+ HeknoVHkHLOC236OgrDYSxT85bS8rNi90D0nH4qMI6PpUwv4WjsIsrC/Zz5ED59k
+ MgRLFdqrFaa1APX3XkFxzZFeMG3TKcn0cVQ==
+X-ME-Sender: <xms:K7-naucctLa5YB3x-ClmGbhoJ9MTPZd37HJVydvmMHLpvDQ1UIpwsQ>
+ <xme:K7-nauN3L2z_oUeLI62ZN944HpQ_C_tYbjxznT15G1VhMxpq5dVTYnV_AsLqngM0K
+ fj1alEqsGyEF0ATNkaV8J3FkuVUxH7qYx-bpu6jdR_U1Ztcc3H8IBXF>
+X-ME-Received: <xmr:K7-natLzeEnTNKGdkhQLNLx8cEFM3ZxTk5P9EbtjQJ1H9pv6DoSvAFoGo-bUaZTp8n_CJBOFKADG7xel8nreTlrdDKJtUgGL1g>
+X-ME-Proxy-Cause: dmFkZTEJPn/CE1GpwXAjBLW/mNvj6aGR4Lciqxj9X4EngTX/So/yK/JnaC2dzJbXthrqAk
+ YIN+ilMUdC/92KgeNloJujKd0a99G+ASi5fVvn8mnOGi126xIRZOE7ITTcvYJppFj6/8Qd
+ NAv+kOhBx5czyEch4ca7VTjfenBfSaffJn0R6B1lZRtXOWUoy7kl4BYayR4Yi0DEJFXZWd
+ ZzwPcylJIj8E/PqlgYVF9X07iXIwJ7MBgVVIv45S6GpyI6PrNcv32+a2TJuS36v0ONUxU/
+ TEG/s5MWopJGYF2oygwJ4Pjcexx5vLLf6IVS/elo3qktIa8Swvz1b8sWa2zqdgtcJ3kZTE
+ f0Ayp6hvWt3WAhyZasXQYFSzujQoyoWes7Uf9NcEtBQzfm6JKKrkxOGtc5JoLCrL6FsMpI
+ N5W+gHqTLV47TDETv7D4VinlZ83W3OqnvHKKoWoUQidQAzMvpyjKgTzqUYrjOqZrRT0yUQ
+ SyA8KH6KgzXp7ngW4FKqGADcW1Nqe9VbX3P5IlrpBjfSmBQKVkIhp9myuWbd0ks1jx66IQ
+ pl+9NycwJ3qYgMUoerSdG9n9Id8/xSyMAYfa2Vk92xYg0wnQreUqLRPWu+tN9GBbVoO1N1
+ DA5w5rFmmTNj+I3AbVL6/5Q1BRJxKPTBaYiyS+u4PI3ebLiV68diu+dDQsOg
+X-ME-Proxy: <xmx:K7-nanHFAP3GlJTc0DhL4VUNbzSBu05V5H5agIP5T18R0E6aHvFoDg>
+ <xmx:K7-natQUqlZVZcoMGMp_4t9aGWpZur4inIOjtEeUH1oFEkFg9DHoCA>
+ <xmx:K7-narFBKV6Q8piZhWe40aaycgdXCh6FVq6UM7rA74CW71iNA7yPjA>
+ <xmx:K7-nah-xVhHiO1N3IIxm46_1nefKeIlb-MQ05krVnIXEGMEdiL3ihQ>
+ <xmx:LL-narPCVc867KL72uptjtSQ7rIdrvX061jZGJuX2Y5OuB3E8CVES3nC>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 14 Sep 2026 05:32:27 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id F40ED280C29; Mon, 14 Sep 2026 10:32:26 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Stefan Monnier <monnier@iro.umontreal.ca>, emacs-devel@gnu.org
+Subject: Re: master 4700767c9ba: use-package-tests.el: Fix bug#81863
+In-Reply-To: <20260914021507.923B7C0DEC8@vcs2.savannah.gnu.org>
+References: <178935210560.31981.10700271373317077622@vcs2.savannah.gnu.org>
+ <20260914021507.923B7C0DEC8@vcs2.savannah.gnu.org>
+Date: Mon, 14 Sep 2026 10:32:26 +0100
+Message-ID: <87y0d4mb4l.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=103.168.172.157;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-a6-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_MSPIKE_H2=-0.01, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 09:32:38 -0000
+
+Stefan Monnier via Mailing list for Emacs changes [13/Sep 10:15pm -04] wrote:
+> diff --git a/test/lisp/use-package/use-package-tests.el b/test/lisp/use-package/use-package-tests.el
+> index 57ab98e012b..8e9fbc89d97 100644
+> --- a/test/lisp/use-package/use-package-tests.el
+> +++ b/test/lisp/use-package/use-package-tests.el
+> @@ -70,6 +70,12 @@
+>    `(should (pcase (expand-minimally ,form)
+>               ,@(mapcar #'(lambda (x) (list x t)) value))))
+>
+> +(defmacro use-package-test--with-compiling-p (&rest body)
+> +  (declare (debug t) (indent 0))
+> +  `(cl-letf (((symbol-function 'use-package--macroexp-compiling-p)
+> +              (lambda () t)))
+> +     ,@body))
+
+aka #'always
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Mon Sep 14 06:20:32 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x63nb-0006qc-Ct
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 06:20:31 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x63nZ-0006qG-Uj
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 06:20:29 -0400
+Received: from mail-qk2-x11.google.com ([2607:f8b0:4864:34::11])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x63nY-0002QO-Da
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 06:20:29 -0400
+Received: by mail-qk2-x11.google.com with SMTP id
+ af79cd13be357-939109fafd7so193768185a.2
+ for <emacs-devel@gnu.org>; Mon, 14 Sep 2026 03:20:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789381227; cv=none;
+ d=google.com; s=arc-20260327;
+ b=rCrQZHHro9zAEgAwx61eMXWeZi4ZUi4JgrMiCYa9xGQ5sXoHPM9Wqj8zT1EG1TCrga
+ a5L9j5hB0SOKRipmj8sTYFeca/7zWbS0R0PTu9L6kK3yjdek15U4PvOYPX+oSy562dYJ
+ gMViT9sxG8biqnWLASFLaTAr896VCEpZNt6Ydb6FR+UcgZKB8TJ7HDRNSLZh6B18wdAL
+ hU6ZIk1aDgjeHVYz06pLvATF2ZYOgXKVqd2ldO3KkSMEfSJMFqKPgcslhjC1SZ502EvV
+ rAVcfhuX2eSJuOENZF2Et2qOg2YPhsaAidY+Z197C4KMtWRk2AHqufDr7nvYKgAXHwQI
+ FSXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=etldTxbgtJZVlKz4/5EnNxk/AQ16T0mL/IL08MQ5WuE=;
+ fh=nbqBVfO760yX2U2ap0nEni2NHX28LQtVJ7bLaxrQDdk=;
+ b=eLalA+DmDCxYderM6Zak+TYPWyqaP4NZyqST7TjTgtUg/YOkpnVu3RAJL4teBBtNKo
+ z1GLBwe3t2Iub1HgETAcYz0sPSa6zgbVS8bRG+dzGOJWf6LX6z7wCGVrjnelyamobbcn
+ eewHNWWBJd43UdisDBuSXRQMUq2ycgigRpWo6yCHwLgRbVZN2qsD9WqOvxSRvcjtFGiS
+ vYIzdsY0VPOjFXKTO8nynRmIuORoswG21Se3AxYZZGOLIQw/C6knGdbjSSrhWt/VLqg9
+ YbaUO527oanY2eIO8pjToHSm6OTwLbYI58Ld8gFa1FSJXV7OzScKNqblZ4QL2Oqkul27
+ VTyQ==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789381227; x=1789986027; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=etldTxbgtJZVlKz4/5EnNxk/AQ16T0mL/IL08MQ5WuE=;
+ b=tHPJ2MMckA1HYP+XEMR4XG+xL2gYBnQYIPRvG4+XBXyPR2dy49LQC664spLbOnYHA/
+ auX1JVqA7s8CAqE1AaFLPnPyi+f0xKI+8UER7is9Ktj103hLhraE998kHw8F2kOU2vKa
+ Aa9DQkuRMmGC/nwvCDahKkv2Xu1Ewxdbsk5LP1AeGniNR0RNu3Tslb8joZSwh8taA9t7
+ nV1jTJ3HW4xif7U+HjU2mzWdFB503CZaKLp1mLEWv/Kp1juT8bvwH9QUPybrqhRo1KyZ
+ 2O/Utw5btZNQpL5X8EMv5IdpkLz2Sy8R9FmK4rxoe8LzS9A9hAiBIAN35p6Fxy52uxQI
+ 2ncg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20251104; t=1789381227; x=1789986027;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=etldTxbgtJZVlKz4/5EnNxk/AQ16T0mL/IL08MQ5WuE=;
+ b=srJk0RwErEEf7li5AIUc/sDM8VL9wlgHuYQus1kuMQhjtb4YmiyE4Jr7yMvRV3HitX
+ +Lw7MiOSb8avQGBPFnda+8mASfZUop2h/PqxgJFD8K5MWE7GQtGRVwUkP8Vsidr5whuG
+ BfojHcOpETVPm2pRTq55ybo24ZPea4O1TPB/sHz2I2BrZpPki8LXqrRXNBMAg+SQ4cPB
+ D7gINO5UcIc04JRHre0AxHS92Lly1wqRrbwvyijOx/dSWRXxZ4f27iW+VXeg6FdFuukP
+ 6C0qAd8PgMwAk7/Hb7/ASvcD359xTUMU7lq1fyjrth5rkHOtmYLSeDjdks1v40vqTkyg
+ 9dcg==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBwwRYaPh9qU4HkCQZsrOOo86CqFyvXRImokjnwnqkzuV8w1jQBJJ6jE+fDUCGxk1vGWoQS64SJPY65qbw==@gnu.org
+X-Gm-Message-State: AFuF++klF0B8lsKQQRG09XH8Dqq0DZjlhCKtXNSoedr+CeeB1i5YsSlr
+ Zc4ZieQSnfNr8K9UilK0k0EAMJ4Q3zd5gAxj8LPxESZJWrDdndpmed1EpK6K1dPyzRnYPTTcDpW
+ s+TWKjXp03Hk6tf1hIXMQPte7aD3IUPA=
+X-Gm-Gg: AYBFou0eVhoV5WOFuTy2CFWOQ82fZhMimB/bPxQ/5Gbf1IbjBQcBWhH3n4jhMfT9KTj
+ 4EmII2iNMGl7PEdY224e/VhtoZ81Hy/XF2/GPkp1VHpncPMlRsxOKBlGEASRGYWt1h2dh234R7E
+ ENBbYxmbf5tOHKcKgcIBiKX60vK6MREaykNe33fifSq4jJMq4xOpMju/xeq8Jg6EeAJFoautYhZ
+ IflLfYbvmpLkQC8H9hfzQJPdopMX4ZqD5IOjDOseXoO+EvNFszXKTz1A7xZdYovPIPPBVTaAKOd
+ kUO4NW94l3a/kBqt44PYGECEmMqJepOO+xpjcNWOOByvXKbEhR5u+e3mwWaJOa6WB+CKxs/Z4yo
+ Ws4GMf3O2xA==
+X-Received: by 2002:a05:620a:1a29:b0:939:6ec8:6928 with SMTP id
+ af79cd13be357-93a2985d5c8mr263254485a.16.1789381227345; Mon, 14 Sep 2026
+ 03:20:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+ <874ifsnpxm.fsf@athena.silentflame.com>
+In-Reply-To: <874ifsnpxm.fsf@athena.silentflame.com>
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Date: Mon, 14 Sep 2026 13:20:16 +0300
+X-Gm-Features: AcwNN1XmwQZ2SMXY1xhQvHuLn4N-tTZDJmK20sj7nPnCd7jjftmAPufyuBuGHjE
+Message-ID: <CA+TD5hiStvRcfsftBRa8e-JB8WADEt7meZBfrdYwkTUNsnbMUw@mail.gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: Jared Finder <jared@finder.org>, Emacs Devel <emacs-devel@gnu.org>
+Content-Type: multipart/alternative; boundary="0000000000006c7a1d065b6ec813"
+Received-SPF: pass client-ip=2607:f8b0:4864:34::11;
+ envelope-from=johan.myreen@gmail.com; helo=mail-qk2-x11.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 10:20:30 -0000
+
+--0000000000006c7a1d065b6ec813
+Content-Type: text/plain; charset="UTF-8"
+
+On Mon, 14 Sept 2026 at 12:28, Sean Whitton <spwhitton@spwhitton.name>
+wrote:
+
+>
+> Hmm, I use the pgtk build, and on my headless box, it starts in terminal
+> mode just fine.  I think we need to be more specific about what
+> assumptions are being made, and where, that cause something annoying to
+> happen.
+>
+
+I can reproduce the problem by connecting normally with ssh to a headless
+server in the cloud. When I start emacs, I get the following error:
+
+(emacs:657): Gtk-WARNING **: 10:01:36.730: cannot open display:
+
+Now I am not sure if it is looking for an X11 display or a Wayland display,
+but Emacs does not start in text mode. However, "emacs -nw" does work.
+
+I also tried logging in on a virtual console on my Linux machine.
+XDG_SESSION_TYPE was set to "tty", and neither the DISPLAY nor the
+WAYLAND_DISPLAY variables were set. Somehow Emacs/Gtk/Gdk was able to
+figure out that there is a Wayland display server available on the machine
+and started a non-text mode Emacs on the virtual console with the
+graphical interface.
+
+Anyway, I object to incorporating the functionality of Jared's bash
+function into Emacs, for the reasons I stated in my earlier email.
+
+--0000000000006c7a1d065b6ec813
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote gmail_quote_container"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Mon, 14 Sept 2026 at 12:28, Sean Whitton &=
+lt;<a href=3D"mailto:spwhitton@spwhitton.name">spwhitton@spwhitton.name</a>=
+&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
+0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+<br>
+Hmm, I use the pgtk build, and on my headless box, it starts in terminal<br=
+>
+mode just fine.=C2=A0 I think we need to be more specific about what<br>
+assumptions are being made, and where, that cause something annoying to<br>
+happen.<br></blockquote><div><div><br></div><div>I can reproduce the proble=
+m by connecting normally with ssh to a headless server in the cloud. When I=
+ start emacs, I get the following=C2=A0error:</div><div><br></div>(emacs:65=
+7): Gtk-WARNING **: 10:01:36.730: cannot open display:<br></div><br></div><=
+div class=3D"gmail_quote gmail_quote_container">Now I am not sure if it is =
+looking for an X11 display or a Wayland display, but Emacs does not start i=
+n text mode. However, &quot;emacs -nw&quot; does work.</div><div class=3D"g=
+mail_quote gmail_quote_container"><br></div><div class=3D"gmail_quote gmail=
+_quote_container">I also tried logging in on a virtual console on my Linux =
+machine. XDG_SESSION_TYPE was set to &quot;tty&quot;, and neither the DISPL=
+AY nor the WAYLAND_DISPLAY variables were set. Somehow=C2=A0Emacs/Gtk/Gdk w=
+as able to figure out that there is a Wayland display server available on t=
+he machine and started a non-text mode Emacs on the virtual console with th=
+e graphical=C2=A0interface.</div><div class=3D"gmail_quote gmail_quote_cont=
+ainer"><br></div><div class=3D"gmail_quote gmail_quote_container">Anyway, I=
+ object to incorporating the functionality of Jared&#39;s bash function int=
+o Emacs, for the reasons I stated in my earlier=C2=A0email.</div><div class=
+=3D"gmail_quote gmail_quote_container"><br></div></div>
+
+--0000000000006c7a1d065b6ec813--
+
+
+From MAILER-DAEMON Mon Sep 14 06:24:08 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x63r5-0000pm-1d
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 06:24:07 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1x63r2-0000pA-Mf
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 06:24:05 -0400
+Received: from fhigh-a6-smtp.messagingengine.com ([103.168.172.157])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1x63r0-0004Xh-Fn
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 06:24:04 -0400
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+ by mailfhigh.phl.internal (Postfix) with ESMTP id 156891400116;
+ Mon, 14 Sep 2026 06:24:01 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-01.internal (MEProxy); Mon, 14 Sep 2026 06:24:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-transfer-encoding:content-type:content-type
+ :date:date:from:from:in-reply-to:in-reply-to:message-id
+ :mime-version:references:reply-to:subject:subject:to:to; s=fm3;
+ t=1789381441; x=1789467841; bh=hUJ4sX1SzcIre3Qqirz7dY/4hXuL6/W1
+ MigiSmnNifs=; b=ba4uA9hdebfaaIzh8ZDD8Mks5yAc9C2xwYh7vebekv2dx70/
+ mZqBlMHqRGQC7AOubgLeJ6xpM5t569KTLA+TdnRx2sPzsSpBgdB2oxeVT29xtcty
+ w2l48StqVL7malSWw6DLH0zrppBJCa9XO4qLk6B9+tALwH0/Yu23JZxFGIM2bKbR
+ cDYuw2ebvLJSIhpkeU7038eTCt3k+3PgvT9EFzO5OuU/QgVnB43/NlKGF8NODxpT
+ IZz4x+rmzhSo5fBx4+zjoIIwjDFUO8wpv45k+gOZVkJzkLhy8Z3A5cj/oPp+aFIL
+ nHgpY0sWC+SBT1GKHsOPfYyrea2T+xbuRTg36w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789381441; x=
+ 1789467841; bh=hUJ4sX1SzcIre3Qqirz7dY/4hXuL6/W1MigiSmnNifs=; b=E
+ yRtTAqP5dpzYFNUoU8f8CI9uSTNVQdzDP5V4AvsyaHTQkaKU0G1xgl5BOVgLhPUf
+ aSLIYYIiNYmat6tFOnB2oe6PUfwdBO8kHZRBbpj0+5ajJf+i8lmEt62R3+RwjBxP
+ DsFQ5dxuCorvIYgMYKRvbxBn54dhA+9VHyQr/qk7GhJXoauhwIy1Qs/p+K8Xk2Wz
+ Mecegxoa8PfY/SDYB6r6icD0BdDOEeV/EdhsTyAwWBBCBSCyHWlKRAOneQmEWpRO
+ ATE25Fk4XqxxBC/hwQDpaXERiSesmHXecdwqldT9AhSCLK+pL6ExZlYWIOtasiBz
+ pW3dA58gRNC25QUlfntJQ==
+X-ME-Sender: <xms:QMunavuOY5qzLex-nmyOgxxl3GyO1AvLBD8KsDFOkbC2dQ-aMDbccA>
+ <xme:QMunakxO1UX1AMABHn3XOoBk0vg6yyy3BMnGzXzMU1mTgiiuOfxIjrDKhAA0DB7F1
+ fEziAG35-EJqutsRS5NkFtz4d0sbg9etXZiAZ5hp4jhJzuTrSkHiRwu>
+X-ME-Received: <xmr:QMunah5Rz1EEuQuPsCXGtBWiOVMSNqZpnMnOO0q77F0OGOvsNZqnGaM4_sYMBsGuq2i3HOmevP-hR1HP_JkBxP5xHx5miFF35w>
+X-ME-Proxy-Cause: dmFkZTEdm+K5Bba1Rx/e76ILhgOTjq/Ox7m3F1Ow0AiNfOgowtV06MK5yHoiDIgZC88znT
+ koIfBRr0c+c33OKGon5ukzDTU+moLbtZIdbqqn+18U+aTLy1CIoaUSvIFh3UaEukv5WBbf
+ XXtK06GGNCJMl+8WBfMG8eRl6sW0/rWtMecI4JdEfP1iRK5bnbOuZoBQPR8GbTLlWAYgxd
+ jYZwKQ+/qfg5sE9Y1OyxrRJJRE5Yewv+QhrwU82VLG7vebWprkj3+2lOVYnHN68ooD6pKM
+ xPCQxlk8tgCi5ersrOHYQidYZMSV45Bqvga8gU5nd80hjX19pTsfbEOc25bSwpBon67bCg
+ mJ7C/pf30u88kOSm1fAOXhr6hc1UVkJLRy+ZPbvPUUqOev7WZZNzMHvJ9/XX10cxk4BYiF
+ WCwJyhrN7r5SerSpCpwrOgXKT2clTChRDXZNj2pRgfUE0CGTnmMky/xq6TrFiNaFd1PJhp
+ Wm2r9Sz4DM9U04Srg6n1g2/5xXppLzJX+cs6fRXhT2gtlihrhSpvx8rSWBWGpPVgzzm7SE
+ d6XNqbBomwuvEo6algF98cAXwktlzdKz+JfXImwPoui9IgFSOMxreo7YOyZD1wzkrhoQwP
+ iFIaWkVQ75kkUpLkRrnO930KB613/tn9cuXT7uNrRxlN4htOYzt1T/tr1KZg
+X-ME-Proxy: <xmx:QMunamV1oJVQg1TdWhtGu5CXD2G5qJmk-PMop7hUv1zB5hK7wrOlJw>
+ <xmx:QMunal3CZOJShFU0ErcQR2ViqyO93u3r6pmiVi1p9MLReVQ28heJlQ>
+ <xmx:QMunaj3TDKgxR_IB2ueBdRA81YT_OGHmDeiIdOOOQb5bsw5pF2uqLg>
+ <xmx:QMunao863B_OfEC_y9sL_xmb5S5srNFArQOn81fFbtu2y4obT6s83w>
+ <xmx:Qcunak0gAEIE9OFOGFC6QIikYFPoFCeYAzt6VMYJAyIUpcvYSZ1CiYeN>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 14 Sep 2026 06:24:00 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 2DBBF280C39; Mon, 14 Sep 2026 11:24:00 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Johan =?utf-8?Q?Myr=C3=A9en?= <johan.myreen@gmail.com>
+Cc: Jared Finder <jared@finder.org>, Emacs Devel <emacs-devel@gnu.org>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+In-Reply-To: <CA+TD5hiStvRcfsftBRa8e-JB8WADEt7meZBfrdYwkTUNsnbMUw@mail.gmail.com>
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+ <874ifsnpxm.fsf@athena.silentflame.com>
+ <CA+TD5hiStvRcfsftBRa8e-JB8WADEt7meZBfrdYwkTUNsnbMUw@mail.gmail.com>
+Date: Mon, 14 Sep 2026 11:24:00 +0100
+Message-ID: <87zexkku67.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=103.168.172.157;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-a6-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_MSPIKE_H2=-0.01, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 10:24:05 -0000
+
+Johan Myr=C3=A9en [14/Sep  1:20pm +03] wrote:
+> On Mon, 14 Sept 2026 at 12:28, Sean Whitton <spwhitton@spwhitton.name>
+> wrote:
+>
+>>
+>> Hmm, I use the pgtk build, and on my headless box, it starts in terminal
+>> mode just fine.  I think we need to be more specific about what
+>> assumptions are being made, and where, that cause something annoying to
+>> happen.
+>>
+>
+> I can reproduce the problem by connecting normally with ssh to a headless
+> server in the cloud. When I start emacs, I get the following error:
+>
+> (emacs:657): Gtk-WARNING **: 10:01:36.730: cannot open display:
+>
+> Now I am not sure if it is looking for an X11 display or a Wayland displa=
+y,
+> but Emacs does not start in text mode. However, "emacs -nw" does work.
+
+On my headless machine, XDG_SESSION_TYPE=3Dtty, and as I say it works.
+
+--=20
+Sean Whitton
+
+
+From MAILER-DAEMON Mon Sep 14 06:54:57 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x64Ku-00068K-9v
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 06:54:57 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x64Kq-000687-Gf
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 06:54:52 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x64Kq-0001Xa-4U; Mon, 14 Sep 2026 06:54:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=rXWh6ZGlqrScxPtEej2LcBabolzpAQoJBEKRBeA2K9U=; b=l72q/zLzAC7B
+ gDfxw4mgCRbSqO9v5+ryzEW6L1ilc2sgfjkhpjvY3i99tVnRX9rOONa5mLOnHwEEbVHuSQD67Ph7I
+ 3cbpueC6E7eLpgYAxtTBwls70aPdAxMjpPAEwTreuYFGhZuzRU6kRGzR7FJ8abFfI4pcKdGWFVulr
+ UsOKpJTnQIIe6xS50ZW5p5p6vti1T67ScHc+YzWPCSoB9TpN5XMZsYnp8c7FqZfgcQkaYSOfDOrzy
+ xw38PqoejbQpXj32EzKQxVqtQTxAKGYAyJ7aUXHQlarWY612wjkQ3vimJAG81KddLzffMQDnmaHBv
+ iBXHKkDJjFCu7YBjz65F5Q==;
+Date: Mon, 14 Sep 2026 13:54:49 +0300
+Message-Id: <86o6e0yufa.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Dmitry Gutov <dmitry@gutov.dev>
+Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+In-Reply-To: <f9c3305d-cf7f-4a1d-a025-7e3b177b8652@gutov.dev> (message from
+ Dmitry Gutov on Mon, 14 Sep 2026 05:36:02 +0300)
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86y0d61mjo.fsf@gnu.org>
+ <f9c3305d-cf7f-4a1d-a025-7e3b177b8652@gutov.dev>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 10:54:53 -0000
+
+> Date: Mon, 14 Sep 2026 05:36:02 +0300
+> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 12/09/2026 19:06, Eli Zaretskii wrote:
+> >>>> This is not just C, but also the knowledge of our specific macros: that
+> >>>> DEFUN creates a function definition.
+> >>>
+> >>> Yes, but Emacs already has special support for these in more than one
+> >>> place, so why not yet another?
+> >>
+> >> Sure we can. I just think that telling more classical categories/kinds
+> >> apart would be generally useful. Regexps for fixed format of DFEFUN
+> > 
+> > I plan on making them a separate :kind.
+> 
+> A 'defun' kind sounds fine. It sounds like it will need a new alist 
+> translating kind->regexp, per language.
+
+Emacs primitives exist only in C, so there's only one language.  Or
+what am I missing?
+
+> Or a new field in TAGS for etags itself to write the "kind" there.
+
+The tag info already includes a literal "DEFUN", which is a telltale
+sign, no?
+
+> You're probably asking whether the cl-defmethod just mention the types 
+> used (which is a different question than "what is an xref value" (*)). 
+> I'm leaning towards "should not" because that would be documenting 
+> implementation behavior, and the callers of e.g. 
+> 'xref-backend-definitions' would generally not find it helpful (the Help 
+> buffer for 'xref-backend-definitions' will just get longer by that much).
+
+So how do you expect someone who wants to enhance a specific backend
+to find out this information?
+
+> I think lower-level info like types used, when not obvious, would be 
+> better placed as a developer commentary inside the definition. The 
+> methods' individual docstrings might serve better to describe whatever 
+> oddities the implementations have. Like for example the LSP based 
+> backends struggle with the IDENTIFIER argument because of the 
+> differences between protocols.
+
+I fail to see the difference between documenting in a doc string vs a
+comment, but currently we have none...
+
+> Note that the corresponding part of the Commentary is 17 lines. Could we 
+> reference that intro in the docstrings? Alternatively, we could compress 
+> that description somehow and/or reference 'xref-make' and 
+> 'xref-make-match', the constructors for the common "xref item" types.
+
+I'd need to understand what 17 lines you have in mind and which doc
+strings to absorb them, before I could suggest the wording.
+
+> >>> To implement the support for each property of the above list, I need
+> >>> to know how it will be used by the backend-independent code, or I need
+> >>> to know that backend-independent code will not use it, just pass it
+> >>> verbatim to this-and-that other methods of the backend.  But none of
+> >>> that is in the doc string, sadly.
+> >>
+> >> KIND will be passed verbatim. But perhaps the proposed phrasing above
+> >> implies that sufficiently?
+> > 
+> > Almost.  I think it would be better to say this explicitly.
+> 
+> Not sure how it would be phrased, above that the amended docstring says 
+> now. If you have a phrasing in mind, please propose.
+
+Just what you said: :kind will be passed verbatim.
+
+> >> We describe that in the manual entry for xref-find-by-kind, which you
+> >> changes just recently: that Elisp and Eglot use different sets of
+> >> "kinds" which do not intersect.
+> > 
+> > Since the lists are not exhaustive, the text can be interpreted as
+> > just examples, in which case the conclusion that the lists do not
+> > intersect is not warranted.
+> > 
+> > Anyway, this aspect is clear; what's left is to document it.
+> 
+> I though this sentence could suffice, in the current manual:
+> 
+>    The list of supported kinds depends
+>    on the backend, which are advised to use mnemonic keys and common
+>    sense
+> 
+> As a reader this would be the place where I might expect the set of 
+> possible kinds to be mentioned, and would make conclusions from its 
+> absence. If we want more explicit call out, it might be the place to do 
+> it as well.
+
+I will do that at some point.
+
+> >> It's similar to how the current Xref code produces the TAG-INFO values:
+> >> I don't really think about what's inside even though it is documented: I
+> >> just found that (funcall snarf-tag-function) returns such a value, and
+> >> knows how to use it.
+> > 
+> > I don't expect to need to run the code to understand its interface.  I
+> > expect the information for using an interface to be part of the
+> > interface's documentation.  Are these expectations unreasonable?
+> 
+> Yes in general, but we are probably talking about different things. The 
+> information about how TAG-INFO looks is not part of the Xref API. A 
+> hypothetical etags.el maintainer could add more and better docstrings 
+> throughout the file, however.
+
+I thought that maintainer was you, at least for the xref part...
+
+> > answering it requires, among other things, to understand what are xref
+> > "location groups".  (I have since succeeded to figure this stuff out,
+> > but it wasn't easy.)
+> 
+> Again, knowledge is good, but xref-location-group is already defined for 
+> xref-etags-location, so this seems secondary for the task at hand.
+
+It wasn't secondary in my case, because I needed it to figure out
+whether what etags--xref-find-definitions does with the list of xrefs
+is or isn't relevant to what I wanted to do.
+
+Thanks for the documentation updates, they are important.
+
+
+From MAILER-DAEMON Mon Sep 14 07:45:59 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x658H-0001hO-NG
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 07:45:58 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x6588-0001gi-V0
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 07:45:54 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x6588-0002vy-CW; Mon, 14 Sep 2026 07:45:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=WG3/A14SLxSWXOFuoYkTbG+9DfLHwJ5qjHH6Az+niE0=; b=ESWrrmvRDrG8
+ diQAO/2yrgY7pJSaD975VHY4/VRe3W/5mtbdIDDyP7XZqmQ2iqHxT4VXdshHYdaaBbMphnq2ZiLfL
+ 7R9l/sdwSr8vS84IHgyZTpFFfPLvh2l3Bu1MF6GJG3b0FbAsK7R8coLJ9ud0IIyvIVzPUZb4gE1W5
+ B0Q+MJM6OyQ/PQku9IGpioktEpQTtKSjT+//nqsBYB3fRv+RunlTDLYynWor/fHo/IInqXeAK55eJ
+ TBpumch0yY7RVeLyNhZybTEJO/qfCW5Tyy0RYITt+Mkjai/iIb3yegtf45DZKc+d6651z5AYN3XMx
+ JYoZXeLQfjNIM6tWEXdYew==;
+Date: Mon, 14 Sep 2026 14:45:45 +0300
+Message-Id: <86ld94ys2e.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> (emacs-devel@gnu.org)
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 11:45:54 -0000
+
+> Date: Sun, 13 Sep 2026 11:23:34 -0400
+> From: Stefan Monnier via "Emacs development discussions." <emacs-devel@gnu.org>
+> 
+> >> It is the predicate that will be used with 'completing-read' (the 
+> >> PREDICATE argument) when an identifier is read with completion (e.g. 
+> >> during 'C-u M-.').
+> >
+> > One problem with this PREDICATE business is that the completion
+> > infrastructure passes only the candidates to the predicate function,
+> > whereas here we need to also pass the KIND.  This is very
+> > inconvenient, and sounds like an omission in the design: a backend
+> > that supports many KINDs is expected to gazillion separate functions,
+> > one each for every KIND.  It almost sounds like the design assumes
+> > that a backend knows the KIND just by looking at the identifier, which
+> > is correct in Lisp, but not in general.
+> 
+> I don't understand the problem.  Here I have a "single" predicate but it
+> knows which kind is being completed:
+> 
+>     (cl-defmethod xref-backend-identifier-completion-predicate
+>         ((backend FOO) &optional kind)
+>       (lambda (candidate)
+>         ... check CANDIDATE using KIND ...))
+
+Maybe _I_ don't understand the problem.  This method returns a
+function, and that function could be called much later with a
+completely different KIND.  Why should I rely on KIND passed to the
+method to be the one corresponding to the candidate with which the
+predicate is called, when each candidate has its own KIND?
+
+> But, as for the completion-ignore-case, I tend to lean towards filtering
+> for KIND in the completion-table rather than via the predicate.
+
+In the case in point, the completion-table is a large heap of strings,
+each one of which comes from a different file with potentially
+different case-sensitivity (as determined by the major-mode of that
+file).  How can such a completion-table know which candidate needs to
+be compared case-sensitively and which case-insensitively?
+
+
+From MAILER-DAEMON Mon Sep 14 07:54:49 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x65Gq-0003Ya-GT
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 07:54:48 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x65Go-0003YR-Nb
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 07:54:46 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x65Gn-0005JN-V8; Mon, 14 Sep 2026 07:54:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=alFG2T9JW0T/GfCSpUBchxefkodzWbygjaa+wCP5DX0=; b=MXW8jAxkHPrT
+ HWZUwFvmaqtlJumuRQW3ZATb9l1vL1ej/ItsMe9l8nRoMZ372w8IPu25OSg9kJUwNHcQZDenpFIkl
+ CYkUS8G8pyebpxDR/Ys7wPILTbgLn4AFAI6VqkOVYqRDwcyCMwjMN6GO59B8T/4obwvcW/qv7x8bJ
+ iXDVZm9LAcdmlPALEKPA4eEuJ+YYllRwNbWMMsXr29AFHBYOY15hTEpTFAOwqf8Xnql5T9Afk0PLa
+ 30x8bsx61lKZTcquAzYFWJsJJi+5agfya1/RIpu38YFNq2dTXExPSyofRNrWAvZqn0kEBvJ3i2QQC
+ nmexaoVpbLm2FWV0m+YD9A==;
+Date: Mon, 14 Sep 2026 14:54:42 +0300
+Message-Id: <86jyooyrnh.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Dmitry Gutov <dmitry@gutov.dev>
+Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+In-Reply-To: <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev> (message from
+ Dmitry Gutov on Mon, 14 Sep 2026 06:14:39 +0300)
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 11:54:47 -0000
+
+> Date: Mon, 14 Sep 2026 06:14:39 +0300
+> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 13/09/2026 13:31, Eli Zaretskii wrote:
+> >> Date: Sat, 12 Sep 2026 15:47:34 +0300
+> >> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> >> From: Dmitry Gutov <dmitry@gutov.dev>
+> >>
+> >>>       "Return the predicate for identifier completion.
+> >>>     The argument KIND will be provided when the caller intends to narrow
+> >>>     down the search.  The backend can use it to narrow down to only
+> >>>     identifiers that have xrefs belonging to KIND."
+> >>>
+> >>> What is "the predicate for identifier completion"?
+> >>
+> >> It is the predicate that will be used with 'completing-read' (the
+> >> PREDICATE argument) when an identifier is read with completion (e.g.
+> >> during 'C-u M-.').
+> > 
+> > One problem with this PREDICATE business is that the completion
+> > infrastructure passes only the candidates to the predicate function,
+> > whereas here we need to also pass the KIND.
+> 
+> Do you mean that 'completing-read' should support KIND explicitly? How?
+
+I'm asking how to write a predicate that needs to filter by KIND, when
+KIND is not passed to the predicate by completion infrastructure.
+
+> > This is very
+> > inconvenient, and sounds like an omission in the design: a backend
+> > that supports many KINDs is expected to gazillion separate functions,
+> > one each for every KIND.
+> 
+> It doesn't have to, it could instead return a common anonymous function 
+> which would make the decision based on the lexically captured value of 
+> KIND. That is what happened in elisp-mode.el before commit 2daeb3ca35.
+
+I guess you are saying what Stefan said, and I'm missing something
+here.  Will take a look when I have time.
+
+(Wouldn't producing an anonymous function for each KIND cause a lot of
+consing, just like apply-partially does?)
+
+> The current implementation seems more efficient to me, but performance 
+> tradeoffs might not matter in your scenario, measurements needed.
+
+I already made the measurements, so I know it matters.
+
+> > It almost sounds like the design assumes
+> > that a backend knows the KIND just by looking at the identifier, which
+> > is correct in Lisp, but not in general.
+> 
+> No more than it assumes that the backend knows the list of definitions 
+> for that identifier "just by looking".
+
+Backend doesn't have to understand anything about the definitions (the
+etags backend doesn't).  It only cares about the location (which it
+does understand).
+
+By contrast, to filter by KIND, the backend does need to be able to
+figure out the KIND of the candidate in order to compare it with the
+one requested.
+
+> > There are various hacks and kludges to get around this (I used
+> > apply-partially), but I hope we will be able to find a cleaner
+> > approach, which will also speed up the completion as a nice
+> > side-effect.
+> 
+> I'm not sure how you see it working better. 
+> xref-backend-identifier-completion-predicate designed as returning a 
+> predicate function has a chance to take the value of KIND and 
+> pre-populate any caches it needs and return a appropriate function.
+> 
+> If the cache is in a local variable (e.g. hash table), the returned 
+> value will need to be an anonymous function. If the cache is in a global 
+> variable, then one of the named functions could be returned. Using 
+> 'apply-partially' does not get around it, and does not print any nicer 
+> function literals in backtraces, unfortunately.
+
+Sorry, you lost me here.  "Caches"?
+
+Anyway, if the solution is as easy as what Stefan suggested, this
+issue can be put to rest.
+
+> > Another problem which surprised me a bit can be reproduced as follows:
+> > 
+> >    emacs -Q
+> >    C-x C-f src/dispnew.c
+> >    C-u M-g M-.
+> > 
+> > This signals an error, evidently because Emacs doesn't yet have a
+> > suitable backend activated/known (and therefore etags.el is not yet
+> > loaded)?  I need to visit-tags-table to get around this.  I think we
+> > need a smarter initialization.
+> 
+> We might be looking at different scenarios here, but I've pushed a fix 
+> for one in commit 30cc90dcbc6 just now, thanks.
+> 
+> Is your problem still present?
+
+Thanks, will look at that when I have time.  It isn't a hard obstacle,
+since the workaround is easy.
+
+
+From MAILER-DAEMON Mon Sep 14 08:18:04 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x65dM-0001Jl-LV
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 08:18:04 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x65dK-0001JD-9F
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 08:18:02 -0400
+Received: from mail-qt1-x82e.google.com ([2607:f8b0:4864:20::82e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x65dI-0001KY-Gf
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 08:18:02 -0400
+Received: by mail-qt1-x82e.google.com with SMTP id
+ d75a77b69052e-530e5b2cab9so11234291cf.0
+ for <emacs-devel@gnu.org>; Mon, 14 Sep 2026 05:17:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789388273; cv=none;
+ d=google.com; s=arc-20260327;
+ b=WH5b1av+1hn2PVK+W6EgAVub51QKA79gxKiydgrQzKbinQbHNk2y+NjTDatyvVgTL3
+ blNnSalmQf0Ifm/DkKpRcV6Lu2ByGWSoQt06LqzwP1wYxdlsBxJIMiaEAAwnm3Sbhs5D
+ erRRMOKW5AqoBLGElpoCWZQrL0D9lizeZ8ScEt58doJ43qqOX+IROVEgMc2eaGsiniVn
+ rkF7Bufqbl1tuNeA4PGhOgRBQycY/72SnLoTvfbECs61AQ9blUeJv66m83E1ZXS5GA5O
+ w6/jcVw5NlRZEnL4cweyU1SMkbbjZup85EM/ZQenIdfH/d7F+HfVjUWiru7Qk5LhNrrS
+ 826Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=wwAiwc5DjxxhPjzBPfxUaXYsa93gmqQRzKTymnlYAUc=;
+ fh=23BP64jwcX6x8eV9NwitP6ym3O0H8lBeFq/DM8pYr3E=;
+ b=r9Q0KSO/Fm33j3LXXXn/qnbn5pLjposmoU6SVrdBb0LXzHXAzpwnDIafPwRvB8/hMw
+ 84yf4tg/IJ8i2GEwLPFe+ExyeDTMFkPIheclAodRRpOBhcgkW6kOczoaLkuxb27lskAS
+ 8kGxnJcsFwFOtXy+tM43k3Vkv8SY0Rl9UKJonqllUO1eS6ZQVJrMx2Izo6oorH2Ks7zs
+ ilYcdcAu2X8owsjEN/td0o1f+jDnQsjpOe051t4SFb5Z+nPSvarKNaYOB2KQO/eTwnEO
+ X10wWMahlbaLebAIarVnqXPLpc3/+TPgMl2NoJ4rEl+A+XYNnocqLnWwwcemxYT/WJ2y
+ dvNQ==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789388273; x=1789993073; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=wwAiwc5DjxxhPjzBPfxUaXYsa93gmqQRzKTymnlYAUc=;
+ b=A05f7GTXNU7F8ZqtvSoLjtHwwxAvv2wwqyMvdjis05AjPyfsWZiTwlLHRK+pUNHhGR
+ CZdzWh9kfMWR80SxuUNNV2usBYOleTb68IwxXRxzsqcPYBrarqG5Porhhbuq939rSoPh
+ E5rdofVceqCqgTrLl6LsquqiiDEPEy8bLmAZvryApxzoAqjbWKhG9XNIq2KEfC1D7Wgo
+ i+nZxW15Cv5xnxxPyPUzt0z99DRXqUzUTtW7zwKBeKYkDFjK+t02WvAIQVCHZSIMz+JM
+ IF7iauSTUVGoNqyVR/rA8QTrIJj8moMdKtJmngScOAAKyND+78tnspCGZCwBlt8zaLsC
+ Mrbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20251104; t=1789388273; x=1789993073;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=wwAiwc5DjxxhPjzBPfxUaXYsa93gmqQRzKTymnlYAUc=;
+ b=jU2FWkQfEQMLRafWIZnfRuJNsme0P+ShTtMKKCIqZrAhBQsjC/2uVk9IlXXltpAnOQ
+ ZFyTIrJTptfHUOHOurACXJ+i++GHyaHMcDFwHnn9XUDf6JOPqy17kZHUjha4OPYmRuI9
+ 4lVB50nphQsS5FBMu1DBT4jvkt7xFh0cnKrs91WYeqmVLTzoxcjMNMdUhK5nP1hSKID2
+ JegXjTtog/2WuzBzSk7mUqdHprRr8nhAeux0Nau/i2FcZA9q2o6jvE1nJCEXufJWI2B2
+ ov4MeC1CXyZ19oXa/fDNCv2zbkresizcpMBopt8l2VzCMCXZPItNSnuQybZLXUNLsmTJ
+ 8qzQ==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBwLCFyaHQzeX8jVcOunrd2AxIpHhSYcsFkFEzJo6cZo3nMZFoXfWUj5Er1Vx6Y2m1n7q9qIbw3f1aq4pQ==@gnu.org
+X-Gm-Message-State: AFuF++n/yjuB+bPxTSw7tZB/p6yBLAcivFdBSTmOqFlA4ZGyOVTprWmY
+ kFksGiYiKdqjWhgESMoQxPDCfMmZzsDSTLsj/G7Ob9kOxNpw8u0RSD9qcH/ZyTpX2bqoGjuaNkV
+ whv8a+LDCPSEIuapxXGII6B9U3qg/XgfXKQ==
+X-Gm-Gg: AYBFou3kQBklWxsvYAx2GBHLcmrYmuKl4dVvS2e+87BWveuGjvnoDUwVLveIrCPqnw1
+ l8oQ5YbgIxykFfd0PKMBEYnVjnm+Q0Jo+1Z6RIXWgO7kUlEX7tiVURfLPjEGtpJIo9Psm5G1dA0
+ pVE3e5iirvfVjeOlAMj7iXnKs1QSLS+kXRJp8D7nypBnbeXCNIm1NPuV5oBa+ljvuTlLL+6Ia59
+ nBUx0A58tTBUX/nmEKxAbKi+QiPNCqjlAZgR4vbQkuQDm6E3vj5OGFroa85+Cr8oSILASN/0Cw4
+ aKYf+wLghx+lGoACC+Jg761gx3uqFPAtYAIh1KAphmOSvc8GlwwKJtqRO10Nuh4tHRdP60Xl7Ua
+ zzyIBebqwDQ==
+X-Received: by 2002:a05:622a:aa8b:20b0:531:f3a:460b with SMTP id
+ d75a77b69052e-5310f3a5135mr16326731cf.18.1789388273004; Mon, 14 Sep 2026
+ 05:17:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <b18215f4c3ab781638bdf4cc53d27fc4@finder.org>
+ <874ifsnpxm.fsf@athena.silentflame.com>
+ <CA+TD5hiStvRcfsftBRa8e-JB8WADEt7meZBfrdYwkTUNsnbMUw@mail.gmail.com>
+ <87zexkku67.fsf@athena.silentflame.com>
+In-Reply-To: <87zexkku67.fsf@athena.silentflame.com>
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Date: Mon, 14 Sep 2026 15:17:41 +0300
+X-Gm-Features: AcwNN1VM4jv3Ph9UXMGCZzhvQ4SqLxrdn2cdgIUyAiBzdnOjw1WBobrKqClnwt4
+Message-ID: <CA+TD5hijdj4d=_f2j6C=E1EnYQFXQkL1Gxo-jkVrjzYZVDaeRA@mail.gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: Jared Finder <jared@finder.org>, Emacs Devel <emacs-devel@gnu.org>
+Content-Type: multipart/alternative; boundary="00000000000060b65b065b706c5e"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::82e;
+ envelope-from=johan.myreen@gmail.com; helo=mail-qt1-x82e.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 12:18:02 -0000
+
+--00000000000060b65b065b706c5e
+Content-Type: text/plain; charset="UTF-8"
+
+On Mon, 14 Sept 2026 at 13:24, Sean Whitton <spwhitton@spwhitton.name>
+wrote:
+
+> > Now I am not sure if it is looking for an X11 display or a Wayland
+> display,
+> > but Emacs does not start in text mode. However, "emacs -nw" does work.
+>
+> On my headless machine, XDG_SESSION_TYPE=tty, and as I say it works.
+
+
+I don't think Emacs cares about the XDG_SESSION_TYPE variable. I tried the
+following:
+
+env XDG_SESSION_TYPE=tty emacs
+env XDG_SESSION_TYPE=x11 emacs
+env XDG_SESSION_TYPE=wayland emacs
+env XDG_SESSION_TYPE=oatmeal emacs
+env -u XDG_SESSION_TYPE emacs    # Unset the variable.
+
+Here Emacs is started as a Wayland app regardless of the value of the
+variable. Also, the value of XDG_SESSION_TYPE only tells what the local
+display server (if any) provides, but it should not hinder you from setting
+the DISPLAY variable to point to some display server elsewhere, as is done
+with ssh combined with X forwarding, or with Waypipe. Therefore I think the
+XDG_SESSION_TYPE is a bad choice to determine whether you want to start
+Emacs in text mode or not.
+
+A better alternative would be for Emacs to examine if both the DISPLAY and
+WAYLAND_DISPLAY variables are unset, and if that is the case, start Emacs
+in text mode. Currently, at least for me, PGTK Emacs refuses to start with
+the warning "cannot open display".
+
+If your PGTK build does not display the warning and starts in text mode
+without the -nw option, there must be something different with how your
+Emacs is built, or maybe different versions of GTK3, or something different
+about the environment where it is started. Here PGTK Emacs (configured
+simply with "--with-pgtk") does not automatically fall back to text mode.
+
+--00000000000060b65b065b706c5e
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_quot=
+e"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, 14 Sept 2026 at 13:24, Sea=
+n Whitton &lt;<a href=3D"mailto:spwhitton@spwhitton.name" target=3D"_blank"=
+>spwhitton@spwhitton.name</a>&gt; wrote:<br></div><blockquote class=3D"gmai=
+l_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,20=
+4,204);padding-left:1ex">&gt; Now I am not sure if it is looking for an X11=
+ display or a Wayland display,<br>
+&gt; but Emacs does not start in text mode. However, &quot;emacs -nw&quot; =
+does work.<br>
+<br>
+On my headless machine, XDG_SESSION_TYPE=3Dtty, and as I say it works.</blo=
+ckquote><div><br></div><div>I don&#39;t think Emacs cares about the XDG_SES=
+SION_TYPE variable. I tried the following:</div><div><br></div><div>env XDG=
+_SESSION_TYPE=3Dtty emacs</div><div>env XDG_SESSION_TYPE=3Dx11 emacs</div><=
+div>env XDG_SESSION_TYPE=3Dwayland emacs</div><div>env XDG_SESSION_TYPE=3Do=
+atmeal emacs</div><div>env -u XDG_SESSION_TYPE emacs=C2=A0 =C2=A0 # Unset t=
+he variable.</div><div><br></div><div>Here Emacs is started as a Wayland ap=
+p regardless of the value of the variable. Also, the value of XDG_SESSION_T=
+YPE only tells what the local display server=C2=A0(if any) provides, but it=
+ should not hinder you from setting the DISPLAY variable to point to some d=
+isplay server elsewhere, as is done with ssh combined with X forwarding, or=
+ with Waypipe. Therefore I think the XDG_SESSION_TYPE is a bad choice to de=
+termine whether you want to start Emacs in text mode or not.</div><div><br>=
+</div><div>A better alternative would be for Emacs to examine if both the D=
+ISPLAY and WAYLAND_DISPLAY variables are unset, and if that is the case, st=
+art Emacs in text mode. Currently, at least for me, PGTK Emacs refuses to s=
+tart with the warning &quot;cannot open display&quot;.</div><div><br></div>=
+<div>If your PGTK build does not display the warning and starts in text mod=
+e without the -nw option, there must be something different with how your E=
+macs is built, or maybe different versions of GTK3, or something different =
+about the=C2=A0environment where it is started. Here PGTK Emacs (configured=
+ simply with &quot;--with-pgtk&quot;) does not automatically fall back to t=
+ext mode.</div><div><br></div></div></div>
+</div>
+</div>
+
+--00000000000060b65b065b706c5e--
+
+
+From MAILER-DAEMON Mon Sep 14 08:19:42 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x65ev-0001kt-Kw
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 08:19:42 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x65eg-0001eJ-VT
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 08:19:38 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x65eX-0001b9-WE; Mon, 14 Sep 2026 08:19:22 -0400
+Received: from pmg2.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 70FF180899;
+ Mon, 14 Sep 2026 08:19:11 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1789388350;
+ bh=7y4YMziV97SrlyefTVlOKWe2yXRoWO25Uo8WG1u3PEI=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=JdV9vXXuxJlFsfSMnKsSFcbcmdtaG6lIkkSlMyJ92PoYj0Oe4AXgrRwCHrye9y1G7
+ LhnWW8B8D65tWvwTyh1LVuTCTMQ0C8CYNAU4DchjwER1qiPZBGZ0Edb34jW/ztqOWm
+ 4+Thv/pg16wutRCVd/tdLOhAv0aeqZNac38daX8P4xKbQblcfBypn8HmlqVxE3tDV1
+ a6ePeBl46W6UbKD2P3GBoEnSPvrWspLyIM2FqDJ4qfkq0MO3Izy/QFvJAy7qNwzp7C
+ k1kNDxa5SAVUG6AMOEryd7hpW5SzAaj/MrCEPT2s87psAlCCDnpkBjwKaOB6Nk8AQ5
+ ELCa7CwC19tcQ==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id D23C9801F6;
+ Mon, 14 Sep 2026 08:19:10 -0400 (EDT)
+Received: from pastel (104-195-203-4.cpe.teksavvy.com [104.195.203.4])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id A4891120AF5;
+ Mon, 14 Sep 2026 08:19:10 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: emacs-devel@gnu.org
+Cc: Arash Esbati <arash@gnu.org>
+Subject: Re: [gnu] externals/auctex bc4bfbde77a: ; * latex.el
+ (LaTeX-what-macro): Fix last change.
+In-Reply-To: <20260914105753.E5C35C0DEC8@vcs2.savannah.gnu.org>
+Message-ID: <jwv5x08jafo.fsf-monnier+emacs@gnu.org>
+References: <178938347343.16216.4701564708377222671@vcs2.savannah.gnu.org>
+ <20260914105753.E5C35C0DEC8@vcs2.savannah.gnu.org>
+Date: Mon, 14 Sep 2026 08:19:01 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.035 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 12:19:39 -0000
+
+> diff --git a/latex.el b/latex.el
+> index c5b0a022a9f..338c4f33c53 100644
+> --- a/latex.el
+> +++ b/latex.el
+> @@ -7752,8 +7752,9 @@ this point.  If nil, limit to the previous 15 lines."
+>                            (LaTeX-completion-macro-delimiters 'open))
+>                     ;; Deal with spaces between macro name and argument
+>                     ;; in `docTeX-mode':
+> -                   (when (derived-mode-p 'docTeX-mode)
+> -                     (skip-chars-backward "[ ]"))
+> +                   (if (derived-mode-p 'docTeX-mode)
+> +                       (skip-chars-backward "[ ]")
+> +                     t)
+
+When I read (skip-chars-backward "[ ]"), I get the impression that the
+coder confused the syntax of its argument (it skips SPC, open brackets,
+and close brackets).  Maybe it should be rewritten to "][ " (tho, the
+comment just before suggests that maybe my hunch is right and it should
+really be just " ").
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Mon Sep 14 08:34:36 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x65tM-00075s-0k
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 08:34:36 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x65tJ-00075i-T1
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 08:34:34 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x65tI-00053l-1m; Mon, 14 Sep 2026 08:34:33 -0400
+Received: from pmg3.iro.umontreal.ca (localhost [127.0.0.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id 2C90A441B28;
+ Mon, 14 Sep 2026 08:34:30 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1789389268;
+ bh=IUazjtkKrrnEaqOlrZT02E/4YccB3jMJ9x09YBS4IVA=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=PV1NtoA5TYMNOTn7xo9QLw3pMdcLoKbkzCfkwYAn6EYYW92RmPuYIaAdUMx+G+LWl
+ 1xbysayU2J/RFGPsCP9UTvspvJzLGHQY/Yj4+NeldvojuLLOnoEGNkR9GfGXQA9fYv
+ PkqTYx8084OWXVmZ0kPcxcAb9gFH8G3L8GdEAKDWtdQYsz9PLBob3FHzv3GOGJeow2
+ BJ7CEA/Wdn44SM5ql5AKCo1/uLy/iohCMOY+bhKf2h3cAqKPxGBDlE08AZZlPLMBGh
+ hYiwdRo7nJQOHhmkAqnMpX1mpfgi/JdPQPBDPgohEFPClEp9mHIQwXWobBSADLYJ7m
+ LuajOSk2Z4lNA==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id C0402441AF4;
+ Mon, 14 Sep 2026 08:34:28 -0400 (EDT)
+Received: from pastel (104-195-203-4.cpe.teksavvy.com [104.195.203.4])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 97B7D1208AB;
+ Mon, 14 Sep 2026 08:34:28 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: emacs-devel@gnu.org
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+In-Reply-To: <86ld94ys2e.fsf@gnu.org>
+Message-ID: <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org>
+Date: Mon, 14 Sep 2026 08:34:28 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.129 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 12:34:34 -0000
+
+>>     (cl-defmethod xref-backend-identifier-completion-predicate
+>>         ((backend FOO) &optional kind)
+>>       (lambda (candidate)
+>>         ... check CANDIDATE using KIND ...))
+>
+> Maybe _I_ don't understand the problem.  This method returns a
+> function, and that function could be called much later with a
+> completely different KIND.
+
+How can that happen (other than because of a bug)?
+
+> Why should I rely on KIND passed to the method to be the one
+> corresponding to the candidate with which the predicate is called,
+> when each candidate has its own KIND?
+
+The caller of the predicate function doesn't know the KIND of
+a candidate (it's infrastructure code which passes strings around
+without any idea of what they might mean), so only the predicate
+function can know it and compare it to the desired KIND (the one passed
+earlier to the generic function).
+
+>> But, as for the completion-ignore-case, I tend to lean towards filtering
+>> for KIND in the completion-table rather than via the predicate.
+> In the case in point, the completion-table is a large heap of strings,
+> each one of which comes from a different file with potentially
+> different case-sensitivity (as determined by the major-mode of that
+> file).  How can such a completion-table know which candidate needs to
+> be compared case-sensitively and which case-insensitively?
+
+If some parts of your completion table need to be matched
+case-sensitively and other parts case-*in*sensitively, then clearly the
+caller of the completion-table is not in a position to decide because
+it sees the completion table as a single object with
+table-wide operations.
+
+This said, AFAICT, in 99% of the desired case-sensitivity depends mostly
+on the major mode (and potentially also on the KIND of the desired result of
+that completion): any candidate that comes from a file that uses
+different case-sensitivity is usually a bad candidate anyway (it's very
+unusual to want to complete a C variable name from an identifier found
+in a Common Lisp file, for example).
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Mon Sep 14 08:36:19 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x65v1-00080f-6Q
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 08:36:19 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x65uy-0007wr-9O
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 08:36:16 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x65uw-0005Xe-Gz
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 08:36:16 -0400
+Received: from pmg3.iro.umontreal.ca (localhost [127.0.0.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id 7E986441B28;
+ Mon, 14 Sep 2026 08:36:13 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1789389372;
+ bh=s/+mO+wc/npRnIOIzdc1NC9vPIPpWEVLT0oK4he8Ldk=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=HvMS7UhiicxpzOJT9mpyBSOjtrH/DtwptF6XtcPP5vCDOshPpECjNLx2yzEWX9hIK
+ qS/7EjpAeX/hf91uJOSmbdVWDW+Siv8lXQeB+N6GqPSzLwVhLLxsJHV9uXog4dCJeH
+ XVGTXX/TxK5B7gZCL6IfczJkGtuvxE1cCQhtUCwbImVrAfQvJACKREIu0wMFVAXi0F
+ VuRjaraDWpmRlsk/Qg5AcsYvRV1dIDmvA3UBc1Rki9l/NTsghnDqH+2Y7mSBxV1wz6
+ YUrZqymejc0mI6soeW4ArNzONgqxIee3bk22FuogkLDGvzbfW4xruznDxZ72RpkDQM
+ 0DCFvj96oEU0g==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id 47991441B20;
+ Mon, 14 Sep 2026 08:36:12 -0400 (EDT)
+Received: from pastel (104-195-203-4.cpe.teksavvy.com [104.195.203.4])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 1F9C1120588;
+ Mon, 14 Sep 2026 08:36:12 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: emacs-devel@gnu.org
+Subject: Re: master 4700767c9ba: use-package-tests.el: Fix bug#81863
+In-Reply-To: <87y0d4mb4l.fsf@athena.silentflame.com>
+Message-ID: <jwvtsnshuzf.fsf-monnier+emacs@gnu.org>
+References: <178935210560.31981.10700271373317077622@vcs2.savannah.gnu.org>
+ <20260914021507.923B7C0DEC8@vcs2.savannah.gnu.org>
+ <87y0d4mb4l.fsf@athena.silentflame.com>
+Date: Mon, 14 Sep 2026 08:36:11 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.129 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 12:36:16 -0000
+
+>> diff --git a/test/lisp/use-package/use-package-tests.el b/test/lisp/use-package/use-package-tests.el
+>> index 57ab98e012b..8e9fbc89d97 100644
+>> --- a/test/lisp/use-package/use-package-tests.el
+>> +++ b/test/lisp/use-package/use-package-tests.el
+>> @@ -70,6 +70,12 @@
+>>    `(should (pcase (expand-minimally ,form)
+>>               ,@(mapcar #'(lambda (x) (list x t)) value))))
+>>
+>> +(defmacro use-package-test--with-compiling-p (&rest body)
+>> +  (declare (debug t) (indent 0))
+>> +  `(cl-letf (((symbol-function 'use-package--macroexp-compiling-p)
+>> +              (lambda () t)))
+>> +     ,@body))
+>
+> aka #'always
+
+I resisted the urge to use #'always because use-package.el says
+
+    ;; Package-Requires: ((emacs "24.3") (bind-key "2.4"))
+
+but now that I think about it, `use-package-tests.el` is probably not
+included in the ELPA package.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Mon Sep 14 09:10:42 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x66SI-00062s-4c
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 09:10:42 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arash@gnu.org>) id 1x66S7-0005uP-4D
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 09:10:33 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arash@gnu.org>)
+ id 1x66S5-000459-V3; Mon, 14 Sep 2026 09:10:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-Version:Date:References:In-Reply-To:Subject:To:
+ From; bh=c7nTt/i4wI+7u7ctMl4P8+e5N1gbAYegFATh4s7ihcs=; b=Rc4Peg9yPDzqtI9YNPnY
+ tMwuEgkOrLtQuWSfMY0jgQ0SrmuNLcH7GDKA2DPDkIxtaqp0a5ey2PY76cRPZkhpo1itb+vo0P5AR
+ yC8egdAM7C77jiWDkcJuU+VtjN5lAZUBTXKfbsFlt5Rh6O3aUDiU91Acsl7DP8YBjtPC+3pX0IBDg
+ JQqou0RsIzkGpgPowT3cw6CUf06a24+5UV0BWkLW4pL8n3Ilk5iv5ApbGoLYTCMlm/tw62tqR+SA8
+ INeoYY4C9SXHc1Xtn3sDE/WBWoMziBs5k4IYPCQ+gZ1QTwZt0vMNpwo5cUE22IZauJm7QTFjbpc2x
+ UgmzSpHStPIXbw==;
+From: Arash Esbati <arash@gnu.org>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+Subject: Re: [gnu] externals/auctex bc4bfbde77a: ; * latex.el
+ (LaTeX-what-macro): Fix last change.
+In-Reply-To: <jwv5x08jafo.fsf-monnier+emacs@gnu.org>
+References: <178938347343.16216.4701564708377222671@vcs2.savannah.gnu.org>
+ <20260914105753.E5C35C0DEC8@vcs2.savannah.gnu.org>
+ <jwv5x08jafo.fsf-monnier+emacs@gnu.org>
+Date: Mon, 14 Sep 2026 15:10:25 +0200
+Message-ID: <m2zexkt1vi.fsf@macmutant.fritz.box>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 13:10:35 -0000
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+> When I read (skip-chars-backward "[ ]"), I get the impression that the
+> coder confused the syntax of its argument (it skips SPC, open brackets,
+> and close brackets).  Maybe it should be rewritten to "][ " (tho, the
+> comment just before suggests that maybe my hunch is right and it should
+> really be just " ").
+
+Thanks for catching this.  I just pushed a change fixing the coders
+confusedness.
+
+Best, Arash
+
+
+From MAILER-DAEMON Mon Sep 14 09:49:57 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x674H-00064l-EV
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 09:49:57 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x674E-00060F-A7
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 09:49:54 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x674D-0006fH-UF; Mon, 14 Sep 2026 09:49:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=67EgcFj3+XE+hhR+fgYMb1L0ligo0JkU83vjr5tUqxA=; b=Vf4PXxICJpPI
+ u/IBiVFayrYKAWZT6JCOsI1cLe9zfHoI1mPhuxazEHunQRX+wfOsB+fKRNOVeJK/bWlbZCDajptBk
+ 68vZh7S3SuVdcpi5ptc0sxcsI3UQUbhxBhwS0N1iNtjUuB4laKCBR4l5LsLuX2nYix09oL+leDuXU
+ cpIPxOm61P4nihWr3t0BoSTx+0ipJxC9pHM5VSRS2/ROfe85Egv8RoAZNxhVY2CF1E2JTbMV9uTPq
+ McIzaFRuHRye9QcXp97G7wt1o2ziavklXeZw4q1jvRjAKA4EBqbsHgpeys6eKL2wdeVcOhk/YrZmT
+ Ks3EZEm90YUMOtr1b4/k0g==;
+Date: Mon, 14 Sep 2026 16:49:50 +0300
+Message-Id: <86ecewymbl.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Mon, 14 Sep 2026 08:34:28 -0400)
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 13:49:54 -0000
+
+> From: Stefan Monnier <monnier@iro.umontreal.ca>
+> Cc: emacs-devel@gnu.org
+> Date: Mon, 14 Sep 2026 08:34:28 -0400
+> 
+> >>     (cl-defmethod xref-backend-identifier-completion-predicate
+> >>         ((backend FOO) &optional kind)
+> >>       (lambda (candidate)
+> >>         ... check CANDIDATE using KIND ...))
+> >
+> > Maybe _I_ don't understand the problem.  This method returns a
+> > function, and that function could be called much later with a
+> > completely different KIND.
+> 
+> How can that happen (other than because of a bug)?
+
+Does the method have any control how its return value will be used by
+the caller?  The caller could do whatever it likes with the function
+it receives.
+
+I feel that I'm missing something very basic here...
+
+> >> But, as for the completion-ignore-case, I tend to lean towards filtering
+> >> for KIND in the completion-table rather than via the predicate.
+> > In the case in point, the completion-table is a large heap of strings,
+> > each one of which comes from a different file with potentially
+> > different case-sensitivity (as determined by the major-mode of that
+> > file).  How can such a completion-table know which candidate needs to
+> > be compared case-sensitively and which case-insensitively?
+> 
+> If some parts of your completion table need to be matched
+> case-sensitively and other parts case-*in*sensitively, then clearly the
+> caller of the completion-table is not in a position to decide because
+> it sees the completion table as a single object with
+> table-wide operations.
+> 
+> This said, AFAICT, in 99% of the desired case-sensitivity depends mostly
+> on the major mode (and potentially also on the KIND of the desired result of
+> that completion): any candidate that comes from a file that uses
+> different case-sensitivity is usually a bad candidate anyway (it's very
+> unusual to want to complete a C variable name from an identifier found
+> in a Common Lisp file, for example).
+
+The command xref-find-by-kind can be invoked from a buffer whose
+major-mode is c-mode, for example, but the user wants to look at (for
+example) the definition of a Fortran subroutine.  We are talking about
+completion of the symbol that the user types at the prompt of
+xref-find-by-kind: for symbols that come from Fortran sources the
+completion should be case-insensitive, whereas for symbols from C or
+ELisp etc. it should be case-sensitivity.
+
+Thus, "a file that uses different case-sensitivity" kind of strategy
+doesn't help here, because the question is "different from what?"
+
+This is the problem I face: the completion's case-sensitivity can be
+different for each candidate, and I wonder how to provide the
+necessary information about that to the completion infrastructure.
+The method as defined accepts no arguments at all.
+
+
+From MAILER-DAEMON Mon Sep 14 10:34:38 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x67lV-0006hx-Sj
+	for mharc-emacs-devel@gnu.org; Mon, 14 Sep 2026 10:34:37 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tom@logand.com>) id 1x67lV-0006hn-7D
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 10:34:37 -0400
+Received: from [37.48.87.44] (helo=logand.com)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tom@logand.com>) id 1x67lT-0002oq-OG
+ for emacs-devel@gnu.org; Mon, 14 Sep 2026 10:34:36 -0400
+Received: by logand.com (Postfix, from userid 1001)
+ id B2D0E19F446; Mon, 14 Sep 2026 16:27:44 +0200 (CEST)
+X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
+From: Tomas Hlavaty <tom@logand.com>
+To: Sean Whitton <spwhitton@spwhitton.name>,
+ Stefan Monnier <monnier@iro.umontreal.ca>, emacs-devel@gnu.org
+Subject: Re: master 4700767c9ba: use-package-tests.el: Fix bug#81863
+In-Reply-To: <87y0d4mb4l.fsf@athena.silentflame.com>
+References: <178935210560.31981.10700271373317077622@vcs2.savannah.gnu.org>
+ <20260914021507.923B7C0DEC8@vcs2.savannah.gnu.org>
+ <87y0d4mb4l.fsf@athena.silentflame.com>
+Date: Mon, 14 Sep 2026 16:27:42 +0200
+Message-ID: <877bkn6h7l.fsf@logand.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Host-Lookup-Failed: Reverse DNS lookup failed for 37.48.87.44 (failed)
+Received-SPF: pass client-ip=37.48.87.44; envelope-from=tom@logand.com;
+ helo=logand.com
+X-Spam_score_int: -10
+X-Spam_score: -1.1
+X-Spam_bar: -
+X-Spam_report: (-1.1 / 5.0 requ) BAYES_00=-1.9, RDNS_NONE=0.793,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 14 Sep 2026 14:34:37 -0000
+
+On Mon 14 Sep 2026 at 10:32, Sean Whitton <spwhitton@spwhitton.name> wrote:
+> Stefan Monnier via Mailing list for Emacs changes [13/Sep 10:15pm -04] wrote:
+>> +              (lambda () t)))
+> aka #'always
+
+why?
+
+(lambda () t) is clear, simple and precise.
+
+Moreover #'always does something different:
+This function accepts any number of arguments in ARGUMENTS.
+
+It is better to be as specific as possible
+to get better error messages in case something goes wrong somewhere
+rather than letting badness to proxy through quietly.
+
+
