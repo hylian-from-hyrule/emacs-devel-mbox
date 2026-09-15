@@ -1,0 +1,2103 @@
+emacs-devel messages from 2026-09-14T18:15:00+02:00 to 2026-09-15T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-14T18:36:01+02:00
+From: Pedro Andres Aranda Gutierrez <paaguti@gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <CAO48Bk_UXn6kURdsKwmLtokG28+Fxs4Z4JcNJctbR8XQYCcAXQ@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+Just to add o the discussion, I have an emacs-31 (self-built --with-pgtk)
+and
+
+env -u DISPLAY emacs
+
+does the same as
+
+emacs -nw
+
+Best, /PA
+
+
+-- 
+Fragen sind nicht da, um beantwortet zu werden,
+Fragen sind da um gestellt zu werden
+Georg Kreisler
+
+"Sagen's Paradeiser" (ORF: Als Radiohören gefährlich war) => write BE!
+Year 2 of the New Koprocracy
+
+*IA: onomatopeya del rebuznar*
+
+This was produced by a human (implied virtues and weaknesses acknowledged)
+Don't feed your ArtStup (SKA AI) with this. It won't make YOU smarter...
+
+================================================================================
+Date: 2026-09-14T19:05:59+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <jwva4pju5yh.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <8c05686c-d377-4159-9577-6a91165fc476@gutov.dev>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <8c05686c-d377-4159-9577-6a91165fc476@gutov.dev>
+
+>> But, as for the completion-ignore-case, I tend to lean towards filtering
+>> for KIND in the completion-table rather than via the predicate.
+> For this particular one, it was the choice between adding a new argument to
+> an existing generic function and adding a new generic function (with
+> a default implementation returning nil).
+
+You mean adding an `&optional kind` argument to
+`xref-backend-identifier-completion-table` vs defining a new
+`xref-backend-identifier-completion-predicate`?
+
+While the current choice works fine in many cases, I think it's
+fundamentally fairly problematic because you'd rather use very different
+completion tables when completing say some module/library/package/unit
+name (where you may want to consult the local filesystem) vs completing
+some variable name.
+
+The predicate can filter things after the fact but it can't influence
+how the completion table works, so it forces the completion table to
+collect&return the kitchen sink.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-14T19:11:57+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86ecewymbl.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org>
+
+>> >>     (cl-defmethod xref-backend-identifier-completion-predicate
+>> >>         ((backend FOO) &optional kind)
+>> >>       (lambda (candidate)
+>> >>         ... check CANDIDATE using KIND ...))
+>> >
+>> > Maybe _I_ don't understand the problem.  This method returns a
+>> > function, and that function could be called much later with a
+>> > completely different KIND.
+>> 
+>> How can that happen (other than because of a bug)?
+>
+> Does the method have any control how its return value will be used by
+> the caller?  The caller could do whatever it likes with the function
+> it receives.
+
+The caller can do whatever it wants, yes, but if it uses the result of
+(xref-backend-identifier-completion-predicate BACKEND KIND) while
+completing something of a different KIND, then it's likely going to get
+garbage and that will be its fault, not the fault of the backend.
+
+> The command xref-find-by-kind can be invoked from a buffer whose
+> major-mode is c-mode, for example, but the user wants to look at (for
+> example) the definition of a Fortran subroutine.  We are talking about
+> completion of the symbol that the user types at the prompt of
+> xref-find-by-kind: for symbols that come from Fortran sources the
+> completion should be case-insensitive, whereas for symbols from C or
+> ELisp etc. it should be case-sensitivity.
+[...]
+> This is the problem I face: the completion's case-sensitivity can be
+> different for each candidate, and I wonder how to provide the
+> necessary information about that to the completion infrastructure.
+> The method as defined accepts no arguments at all.
+
+I'd put that information inside the completion table since it's the only
+place that has information about each candidate.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-14T20:08:31+02:00
+From: =?utf-8?Q?K=C3=A9vin_Le_Gouguec?= <kevin.legouguec@gmail.com>
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+Message-ID: <87ik47d7ts.fsf@gmail.com>
+In-Reply-To: <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+
+Howdy,
+
+My GUI Emacs is failing to pick a color font for VS16 sequences: e.g.
+☺️, ☹️, 🖋️, ⚒️ are all displayed (a) correctly composed, i.e. as a single
+unit, but (b) with black-and-white fonts (DejaVu Sans Mono, Symbola)
+instead of Noto Color Emoji.
+
+'git bisect' directed me to the patch I'm following up on, i.e.
+
+  2026-08-23 "Fix Emoji composition rules for TTY frames" (80383d8e57e)
+
+And 'git revert'ing that patch lets Emacs pick Noto Color Emoji for
+these sequences again.
+
+Funnily, I had been driving the parent commit…
+
+  2026-08-23 "; * etc/NEWS: Fix wording and punctuation of last change."
+  (b33d4088a66)
+
+… for the past few weeks (was curious to check out composition
+improvements in TTYs, even if I mainly use GUI frames; kudos for that!),
+and only just today building…
+
+  2026-09-14 "xref-backend-xref-kinds: Better message when no Xref
+  backend" (30cc90dcbc6)
+
+… am I noticing regressions on the GUI from the follow-up patch.
+
+Briefly looked at emoji-zwj.awk to figure where the patch may have gone
+wrong, but no clue yet.  Fwiw diff'ing lisp/international/emoji-zwj.el
+before/after the patch shows an obvious difference, i.e. +331
+occurrences of
+
+  (#x<HEX> .
+  ,(regexp-opt
+  '(
+
+  "\N{U+<HEX>}\N{U+FE0E}"
+  "\N{U+<HEX>}\N{U+FE0F}"
+  )))
+
+in the big dolist loop, but don't know how composition-function-table
+works, so unsure if it's significant.
+
+
+Let me know if more details would help, or if this should go to the
+bugtracker; refrained from filing a report because (1) not ruling out a
+pilot error (2) there wasn't a bug number in the original commit message
+🙃 and thanks for the improvements in TTYs!
+
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> branch: master
+> commit 80383d8e57e1c2899dbcaccd42ca34ddd28ca3fc
+> Author: Kai Ma <justksqsf@gmail.com>
+> Commit: Eli Zaretskii <eliz@gnu.org>
+>
+>     Fix Emoji composition rules for TTY frames
+>     
+>     * (admin/unidata/emoji-zwj.awk): Add all TTY-eligible Emoji codepoints
+>     to composition rules, but exclude keycap sequence initials.
+> ---
+>  admin/unidata/emoji-zwj.awk | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/admin/unidata/emoji-zwj.awk b/admin/unidata/emoji-zwj.awk
+> index d383597d169..c64a48b335d 100755
+> --- a/admin/unidata/emoji-zwj.awk
+> +++ b/admin/unidata/emoji-zwj.awk
+> @@ -68,6 +68,7 @@
+>  
+>  /^[0-9A-F]+ FE0F *; *emoji style;/ {
+>      tty_trigger_codepoints[++n_tty_triggers] = $1
+> +    ch[$1] = $1
+>  }
+>  
+>  END {
+> @@ -112,6 +113,11 @@ END {
+>           print "?\\N{U+" tty_trigger_codepoints[trig] "}"
+>       }
+>       print "))"
+> +     # Exclude keycap sequence initials
+> +     delete ch["0023"]
+> +     delete ch["002A"]
+> +     for (i = 0; i <= 9; i ++)
+> +         delete ch[sprintf("003%d", i)]
+>  
+>       # Generate unqualified tail initials.
+>       print "(setq auto-composition-emoji-unqualified-tail-initials"
+
+================================================================================
+Date: 2026-09-14T23:42:47+02:00
+From: Kai Ma <justksqsf@gmail.com>
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+Message-ID: <87a4pjmrvs.fsf@gmail.com>
+In-Reply-To: <87ik47d7ts.fsf@gmail.com>
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com>
+
+Kévin Le Gouguec <kevin.legouguec@gmail.com> writes:
+
+> Howdy,
+>
+> My GUI Emacs is failing to pick a color font for VS16 sequences: e.g.
+> ☺️, ☹️, 🖋️, ⚒️ are all displayed (a) correctly composed, i.e. as a single
+> unit, but (b) with black-and-white fonts (DejaVu Sans Mono, Symbola)
+> instead of Noto Color Emoji.
+
+Thanks, I reproduced this problem on HEAD and emacs-gtk3.
+
+CC'ing Eli for comments.  I'm not very familiar with the composition
+system.  Please correct my misunderstandings.
+
+I did some investigation:
+
+- on the first bad commit (80383d8e57e) the Emoji sequence 263A FE0F
+  goes through the Emoji path in auto-compose-chars (i.e. the first
+  branch of the cond expression).  It is recognized as an automatic
+  composition as a whole.
+
+  The sequence is shaped in auto-compose-chars using either
+  compose-gstring-for-graphic (on GUI) or compose-gstring-and-emoji (on
+  TTY).
+
+- on the last good commit (b33d4088a66) the Emoji sequence 263A FE0F
+  goes through the non-Emoji path in auto-compose-chars (i.e. the third
+  branch of the cond expression).
+
+I find this quite surprising.  On both commits, the composition is
+produced by compose-gstring-for-graphic.  The only difference I can
+think of is that, on the good commit, the composition seems to be
+produced by this rule
+
+    ELISP> (char-table-range composition-function-table #xFE0F)
+    (["\\c.\\c^+" 1 compose-gstring-for-graphic]
+     [nil 0 compose-gstring-for-graphic])
+    ELISP> (string-match "\\c.\\c+" "\x263a\xfe0f")
+    nil
+
+On the bad commit, autocmp_chars is called with ch=0x263A.  But on the
+good one, autocmp_chars is called with ch=0xFE0F, and 0xFE0F is
+considered the emoji script:
+
+    ELISP> (char-table-range char-script-table #xfe0f)
+    emoji
+
+Therefore, it goes through the Emoji font selection path in font_range
+(in font.c), instead of picking the font based on the first codepoint.
+This can be confirmed with a simple change in font.c that fixes this
+problem:
+
+modified   src/font.c
+@@ -3902,7 +3902,7 @@ codepoint_is_emoji_eligible (int ch)
+     return true;
+
+   if (! NILP (Fmemq (make_fixnum (ch),
+-		     Vauto_composition_emoji_eligible_codepoints)))
++		     Vauto_composition_emoji_tty_eligible_codepoints)))
+     return true;
+
+   return false;
+
+[ What I don't understand here: if the Emoji sequence is known to be
+  composed due to a specific font (e.g. Noto Color Emoji), why would it
+  go through another round of font selection (based on the first
+  codepoint and/or heuristics around the emoji script) at all? ]
+
+Given my current understanding, I think it's OK to merge
+auto-composition-emoji-tty-eligible-codepoints and
+auto-composition-emoji-eligible-codepoints: codepoint_is_emoji_eligible
+is called on the first codepoint that resulted in the composition (which
+used to be FE0F for many Emoji sequences).  And since we added more
+rules, we should consider them here, too.
+
+I quickly tested the change above on emoji-test.txt and
+emoji-zwj-sequences.txt, and it didn't introduce regressions on both GUI
+and TUI as far as I see.
+
+Eli, what do you think?  I can prepare a patch if you agree with this
+approach.
+
+> 'git bisect' directed me to the patch I'm following up on, i.e.
+>
+>   2026-08-23 "Fix Emoji composition rules for TTY frames" (80383d8e57e)
+>
+> And 'git revert'ing that patch lets Emacs pick Noto Color Emoji for
+> these sequences again.
+>
+> Funnily, I had been driving the parent commit…
+>
+>   2026-08-23 "; * etc/NEWS: Fix wording and punctuation of last change."
+>   (b33d4088a66)
+>
+> … for the past few weeks (was curious to check out composition
+> improvements in TTYs, even if I mainly use GUI frames; kudos for that!),
+> and only just today building…
+>
+>   2026-09-14 "xref-backend-xref-kinds: Better message when no Xref
+>   backend" (30cc90dcbc6)
+>
+> … am I noticing regressions on the GUI from the follow-up patch.
+>
+> Briefly looked at emoji-zwj.awk to figure where the patch may have gone
+> wrong, but no clue yet.  Fwiw diff'ing lisp/international/emoji-zwj.el
+> before/after the patch shows an obvious difference, i.e. +331
+> occurrences of
+>
+>   (#x<HEX> .
+>   ,(regexp-opt
+>   '(
+>
+>   "\N{U+<HEX>}\N{U+FE0E}"
+>   "\N{U+<HEX>}\N{U+FE0F}"
+>   )))
+>
+> in the big dolist loop, but don't know how composition-function-table
+> works, so unsure if it's significant.
+
+They are added for correct string widths and column numbers on TUI
+frames.  The width of an Emoji sequences will be adjusted in
+compose-gstring-and-emoji to be 2.  It was done with care so that on GUI
+frames Emoji sequences are still composed by
+compose-gstring-for-graphic.  But obviously I underestimated the
+complexity.  :-D
+
+> Let me know if more details would help, or if this should go to the
+> bugtracker; refrained from filing a report because (1) not ruling out a
+> pilot error (2) there wasn't a bug number in the original commit message
+> 🙃 and thanks for the improvements in TTYs!
+
+Thanks for the report!
+
+> Eli Zaretskii <eliz@gnu.org> writes:
+>
+>> branch: master
+>> commit 80383d8e57e1c2899dbcaccd42ca34ddd28ca3fc
+>> Author: Kai Ma <justksqsf@gmail.com>
+>> Commit: Eli Zaretskii <eliz@gnu.org>
+>>
+>>     Fix Emoji composition rules for TTY frames
+>>     
+>>     * (admin/unidata/emoji-zwj.awk): Add all TTY-eligible Emoji codepoints
+>>     to composition rules, but exclude keycap sequence initials.
+>> ---
+>>  admin/unidata/emoji-zwj.awk | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/admin/unidata/emoji-zwj.awk b/admin/unidata/emoji-zwj.awk
+>> index d383597d169..c64a48b335d 100755
+>> --- a/admin/unidata/emoji-zwj.awk
+>> +++ b/admin/unidata/emoji-zwj.awk
+>> @@ -68,6 +68,7 @@
+>>  
+>>  /^[0-9A-F]+ FE0F *; *emoji style;/ {
+>>      tty_trigger_codepoints[++n_tty_triggers] = $1
+>> +    ch[$1] = $1
+>>  }
+>>  
+>>  END {
+>> @@ -112,6 +113,11 @@ END {
+>>           print "?\\N{U+" tty_trigger_codepoints[trig] "}"
+>>       }
+>>       print "))"
+>> +     # Exclude keycap sequence initials
+>> +     delete ch["0023"]
+>> +     delete ch["002A"]
+>> +     for (i = 0; i <= 9; i ++)
+>> +         delete ch[sprintf("003%d", i)]
+>>  
+>>       # Generate unqualified tail initials.
+>>       print "(setq auto-composition-emoji-unqualified-tail-initials"
+>
+>
+>
+
+-- 
+Kai Ma
+
+================================================================================
+Date: 2026-09-14T23:52:00+02:00
+From: Kai Ma <justksqsf@gmail.com>
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+Message-ID: <875x07mrgf.fsf@gmail.com>
+In-Reply-To: <87a4pjmrvs.fsf@gmail.com>
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+
+Kai Ma <justksqsf@gmail.com> writes:
+
+> Kévin Le Gouguec <kevin.legouguec@gmail.com> writes:
+>
+>> Howdy,
+>>
+>> My GUI Emacs is failing to pick a color font for VS16 sequences: e.g.
+>> ☺️, ☹️, 🖋️, ⚒️ are all displayed (a) correctly composed, i.e. as a single
+>> unit, but (b) with black-and-white fonts (DejaVu Sans Mono, Symbola)
+>> instead of Noto Color Emoji.
+>
+> Thanks, I reproduced this problem on HEAD and emacs-gtk3.
+>
+> CC'ing Eli for comments.  I'm not very familiar with the composition
+> system.  Please correct my misunderstandings.
+>
+> I did some investigation:
+>
+> - on the first bad commit (80383d8e57e) the Emoji sequence 263A FE0F
+>   goes through the Emoji path in auto-compose-chars (i.e. the first
+>   branch of the cond expression).  It is recognized as an automatic
+>   composition as a whole.
+>
+>   The sequence is shaped in auto-compose-chars using either
+>   compose-gstring-for-graphic (on GUI) or compose-gstring-and-emoji (on
+>   TTY).
+>
+> - on the last good commit (b33d4088a66) the Emoji sequence 263A FE0F
+>   goes through the non-Emoji path in auto-compose-chars (i.e. the third
+>   branch of the cond expression).
+>
+> I find this quite surprising.  On both commits, the composition is
+> produced by compose-gstring-for-graphic.  The only difference I can
+> think of is that, on the good commit, the composition seems to be
+> produced by this rule
+>
+>     ELISP> (char-table-range composition-function-table #xFE0F)
+>     (["\\c.\\c^+" 1 compose-gstring-for-graphic]
+>      [nil 0 compose-gstring-for-graphic])
+>     ELISP> (string-match "\\c.\\c+" "\x263a\xfe0f")
+>     nil
+
+Oops, I copied the wrong lines.  Should be:
+
+ELISP> (string-match "\\c.\\c^+" "\x263a\xfe0f")
+0
+
+
+>
+> On the bad commit, autocmp_chars is called with ch=0x263A.  But on the
+> good one, autocmp_chars is called with ch=0xFE0F, and 0xFE0F is
+> considered the emoji script:
+>
+>     ELISP> (char-table-range char-script-table #xfe0f)
+>     emoji
+>
+> Therefore, it goes through the Emoji font selection path in font_range
+> (in font.c), instead of picking the font based on the first codepoint.
+> This can be confirmed with a simple change in font.c that fixes this
+> problem:
+>
+> modified   src/font.c
+> @@ -3902,7 +3902,7 @@ codepoint_is_emoji_eligible (int ch)
+>      return true;
+>
+>    if (! NILP (Fmemq (make_fixnum (ch),
+> -		     Vauto_composition_emoji_eligible_codepoints)))
+> +		     Vauto_composition_emoji_tty_eligible_codepoints)))
+>      return true;
+>
+>    return false;
+>
+> [ What I don't understand here: if the Emoji sequence is known to be
+>   composed due to a specific font (e.g. Noto Color Emoji), why would it
+>   go through another round of font selection (based on the first
+>   codepoint and/or heuristics around the emoji script) at all? ]
+>
+> Given my current understanding, I think it's OK to merge
+> auto-composition-emoji-tty-eligible-codepoints and
+> auto-composition-emoji-eligible-codepoints: codepoint_is_emoji_eligible
+> is called on the first codepoint that resulted in the composition (which
+> used to be FE0F for many Emoji sequences).  And since we added more
+> rules, we should consider them here, too.
+>
+> I quickly tested the change above on emoji-test.txt and
+> emoji-zwj-sequences.txt, and it didn't introduce regressions on both GUI
+> and TUI as far as I see.
+>
+> Eli, what do you think?  I can prepare a patch if you agree with this
+> approach.
+>
+>> 'git bisect' directed me to the patch I'm following up on, i.e.
+>>
+>>   2026-08-23 "Fix Emoji composition rules for TTY frames" (80383d8e57e)
+>>
+>> And 'git revert'ing that patch lets Emacs pick Noto Color Emoji for
+>> these sequences again.
+>>
+>> Funnily, I had been driving the parent commit…
+>>
+>>   2026-08-23 "; * etc/NEWS: Fix wording and punctuation of last change."
+>>   (b33d4088a66)
+>>
+>> … for the past few weeks (was curious to check out composition
+>> improvements in TTYs, even if I mainly use GUI frames; kudos for that!),
+>> and only just today building…
+>>
+>>   2026-09-14 "xref-backend-xref-kinds: Better message when no Xref
+>>   backend" (30cc90dcbc6)
+>>
+>> … am I noticing regressions on the GUI from the follow-up patch.
+>>
+>> Briefly looked at emoji-zwj.awk to figure where the patch may have gone
+>> wrong, but no clue yet.  Fwiw diff'ing lisp/international/emoji-zwj.el
+>> before/after the patch shows an obvious difference, i.e. +331
+>> occurrences of
+>>
+>>   (#x<HEX> .
+>>   ,(regexp-opt
+>>   '(
+>>
+>>   "\N{U+<HEX>}\N{U+FE0E}"
+>>   "\N{U+<HEX>}\N{U+FE0F}"
+>>   )))
+>>
+>> in the big dolist loop, but don't know how composition-function-table
+>> works, so unsure if it's significant.
+>
+> They are added for correct string widths and column numbers on TUI
+> frames.  The width of an Emoji sequences will be adjusted in
+> compose-gstring-and-emoji to be 2.  It was done with care so that on GUI
+> frames Emoji sequences are still composed by
+> compose-gstring-for-graphic.  But obviously I underestimated the
+> complexity.  :-D
+>
+>> Let me know if more details would help, or if this should go to the
+>> bugtracker; refrained from filing a report because (1) not ruling out a
+>> pilot error (2) there wasn't a bug number in the original commit message
+>> 🙃 and thanks for the improvements in TTYs!
+>
+> Thanks for the report!
+>
+>> Eli Zaretskii <eliz@gnu.org> writes:
+>>
+>>> branch: master
+>>> commit 80383d8e57e1c2899dbcaccd42ca34ddd28ca3fc
+>>> Author: Kai Ma <justksqsf@gmail.com>
+>>> Commit: Eli Zaretskii <eliz@gnu.org>
+>>>
+>>>     Fix Emoji composition rules for TTY frames
+>>>     
+>>>     * (admin/unidata/emoji-zwj.awk): Add all TTY-eligible Emoji codepoints
+>>>     to composition rules, but exclude keycap sequence initials.
+>>> ---
+>>>  admin/unidata/emoji-zwj.awk | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/admin/unidata/emoji-zwj.awk b/admin/unidata/emoji-zwj.awk
+>>> index d383597d169..c64a48b335d 100755
+>>> --- a/admin/unidata/emoji-zwj.awk
+>>> +++ b/admin/unidata/emoji-zwj.awk
+>>> @@ -68,6 +68,7 @@
+>>>  
+>>>  /^[0-9A-F]+ FE0F *; *emoji style;/ {
+>>>      tty_trigger_codepoints[++n_tty_triggers] = $1
+>>> +    ch[$1] = $1
+>>>  }
+>>>  
+>>>  END {
+>>> @@ -112,6 +113,11 @@ END {
+>>>           print "?\\N{U+" tty_trigger_codepoints[trig] "}"
+>>>       }
+>>>       print "))"
+>>> +     # Exclude keycap sequence initials
+>>> +     delete ch["0023"]
+>>> +     delete ch["002A"]
+>>> +     for (i = 0; i <= 9; i ++)
+>>> +         delete ch[sprintf("003%d", i)]
+>>>  
+>>>       # Generate unqualified tail initials.
+>>>       print "(setq auto-composition-emoji-unqualified-tail-initials"
+>>
+>>
+>>
+
+-- 
+Kai Ma
+
+================================================================================
+Date: 2026-09-15T02:20:26+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <3c4daf2a-1143-45e8-a3d7-4206708e7abd@gutov.dev>
+In-Reply-To: <jwva4pju5yh.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <8c05686c-d377-4159-9577-6a91165fc476@gutov.dev>
+ <jwva4pju5yh.fsf-monnier+emacs@gnu.org>
+
+On 14/09/2026 20:05, Stefan Monnier wrote:
+>>> But, as for the completion-ignore-case, I tend to lean towards filtering
+>>> for KIND in the completion-table rather than via the predicate.
+>> For this particular one, it was the choice between adding a new argument to
+>> an existing generic function and adding a new generic function (with
+>> a default implementation returning nil).
+> 
+> You mean adding an `&optional kind` argument to
+> `xref-backend-identifier-completion-table` vs defining a new
+> `xref-backend-identifier-completion-predicate`?
+
+Yep.
+
+> While the current choice works fine in many cases, I think it's
+> fundamentally fairly problematic because you'd rather use very different
+> completion tables when completing say some module/library/package/unit
+> name (where you may want to consult the local filesystem) vs completing
+> some variable name.
+> 
+> The predicate can filter things after the fact but it can't influence
+> how the completion table works, so it forces the completion table to
+> collect&return the kitchen sink.
+
+That sounds accurate. But I like the current design for Elisp because if 
+seems like it will produce a "cleaner" call stack, with less nesting of 
+anonymous functions. The performance ended up good, probably because the 
+"kitchen sink" table is already available. And 
+completion-table-with-predicate which was used before, basically does 
+the same thing, I think, only with more indirection?
+
+I'm not sure how many other backends would even try to support this. 
+Eglot/LSP are probably off the table, which doesn't leave much.
+
+I didn't expect Etags to be the other one because that's non-trivial to 
+do in a performant way, and IIUC etags tables are large frequently 
+enough, when simply re-building tags-completion-table takes seconds or 
+10s of seconds. But at least then it is done and the result can be used 
+repeatedly. I guess the alternative would be to scan TAGS for symbols 
+multiple times, or in any case persist multiple completion tables, with 
+combined memory use at least 2x as large.
+
+It seems like it should always be faster than using one big table, but I 
+wouldn't be sure: Elisp is one of those languages where total memory use 
+and GC churn play important role. But changing the function signatures 
+is of course on the table, if it gives a meaningful improvement.
+
+================================================================================
+Date: 2026-09-15T03:45:42+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <46151e16-4e9b-4a8d-89e8-4163b2d3efec@gutov.dev>
+In-Reply-To: <86jyooyrnh.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev> <86jyooyrnh.fsf@gnu.org>
+
+On 14/09/2026 14:54, Eli Zaretskii wrote:
+
+>>> One problem with this PREDICATE business is that the completion
+>>> infrastructure passes only the candidates to the predicate function,
+>>> whereas here we need to also pass the KIND.
+>>
+>> Do you mean that 'completing-read' should support KIND explicitly? How?
+> 
+> I'm asking how to write a predicate that needs to filter by KIND, when
+> KIND is not passed to the predicate by completion infrastructure.
+
+KIND is already available to the predicate function because it's 
+lexically captured. In this example
+
+     (cl-defmethod xref-backend-identifier-completion-predicate
+         ((backend FOO) &optional kind)
+       (lambda (candidate)
+         ... body ...))
+
+<body> can reference KIND (the argument for the cl-defmethod) and return 
+t if CANDIDATE has at least one definition belonging to KIND.
+
+To describe the next step, here is a very naive implementation: switch 
+to the completion table's file buffer. Then loop across the buffer, 
+finding the lines that contain definitions for CANDIDATE. On each line, 
+look around to determine whether this definition is of the needed KIND 
+(using a regexp, most likely), and if it does, exit early and have the 
+predicate return t. If the search reaches the eob, return nil.
+
+This is likely slow, but if there is, for example, a way to build a 
+regexp that searches for definitions of only this KIND, that would be 
+faster (this seems feasible for e.g. DEFUNs, but not in general).
+
+A second approximation of a "fast" solution would be to do one pass 
+through the tags buffer and collect all completions of KIND into a hash 
+table. Then the predicate could do lookups in it instead, exchanging the 
+complexity for an upfront computation.
+
+It might necessarily be an improvement if the scan itself is slow enough 
+(because otherwise IIRC the predicate is used "lazily"). But it's 
+something to try anyway.
+
+>> It doesn't have to, it could instead return a common anonymous function
+>> which would make the decision based on the lexically captured value of
+>> KIND. That is what happened in elisp-mode.el before commit 2daeb3ca35.
+> 
+> I guess you are saying what Stefan said, and I'm missing something
+> here.  Will take a look when I have time.
+> 
+> (Wouldn't producing an anonymous function for each KIND cause a lot of
+> consing, just like apply-partially does?)
+
+We only produce one predicate for the duration of the user's command: 
+the one that corresponds to KIND that the user has just selected.
+
+>> The current implementation seems more efficient to me, but performance
+>> tradeoffs might not matter in your scenario, measurements needed.
+> 
+> I already made the measurements, so I know it matters.
+
+If at some point you have a working solution that is only too slow, I'm 
+happy to take the code and try to optimize it.
+
+>>> It almost sounds like the design assumes
+>>> that a backend knows the KIND just by looking at the identifier, which
+>>> is correct in Lisp, but not in general.
+>>
+>> No more than it assumes that the backend knows the list of definitions
+>> for that identifier "just by looking".
+> 
+> Backend doesn't have to understand anything about the definitions (the
+> etags backend doesn't).  It only cares about the location (which it
+> does understand).
+> 
+> By contrast, to filter by KIND, the backend does need to be able to
+> figure out the KIND of the candidate in order to compare it with the
+> one requested.
+
+Both questions can be answered using the contents of the tags file, 
+couldn't they?
+
+We don't have regexps which would sort definitions into KINDs yet, but 
+that is the meat of the task that we are discussing - how to choose 
+them, maybe keep them more easily customizable, or better extensible, 
+easier to set from dir-locals.el, etc.
+
+>>> There are various hacks and kludges to get around this (I used
+>>> apply-partially), but I hope we will be able to find a cleaner
+>>> approach, which will also speed up the completion as a nice
+>>> side-effect.
+>>
+>> I'm not sure how you see it working better.
+>> xref-backend-identifier-completion-predicate designed as returning a
+>> predicate function has a chance to take the value of KIND and
+>> pre-populate any caches it needs and return a appropriate function.
+>>
+>> If the cache is in a local variable (e.g. hash table), the returned
+>> value will need to be an anonymous function. If the cache is in a global
+>> variable, then one of the named functions could be returned. Using
+>> 'apply-partially' does not get around it, and does not print any nicer
+>> function literals in backtraces, unfortunately.
+> 
+> Sorry, you lost me here.  "Caches"?
+
+In the "faster" solution near the beginning of this email the described 
+hash table would be an example of a cache.
+
+================================================================================
+Date: 2026-09-15T04:01:08+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <18241889-3559-4082-90e1-c0f9e7ad24a9@gutov.dev>
+In-Reply-To: <jwv5x09kwxm.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <86ecex1j53.fsf@gnu.org> <jwv5x09kwxm.fsf-monnier+emacs@gnu.org>
+
+On 13/09/2026 18:15, Stefan Monnier via Emacs development discussions. 
+wrote:
+
+> I actually don't understand why we have
+> `xref-backend-identifier-completion-ignore-case` at all.  I'd expect
+> this part of the case-sensitivity to be implemented in the
+> completion table.
+
+It's possible that I cargo-culted the older implementation in a 
+suboptimal way: 'find-tag-tag' binds completion-ignore-case itself 
+rather than having the completion table apply it internally.
+
+Should we do this instead?
+
+diff --git a/lisp/progmodes/etags.el b/lisp/progmodes/etags.el
+index 395f5ed99c8..8e0a36ed76e 100644
+--- a/lisp/progmodes/etags.el
++++ b/lisp/progmodes/etags.el
+@@ -813,13 +813,14 @@ tags-lazy-completion-table
+    (let ((buf (current-buffer)))
+      (lambda (string pred action)
+        (with-current-buffer buf
+-        (save-excursion
+-          ;; If we need to ask for the tag table, allow that.
+-          (let ((enable-recursive-minibuffers t))
+-            (visit-tags-table-buffer))
+-          (complete-with-action action
+-                                (tags-completion-table buf)
+-                                string pred))))))
++        (let ((completion-ignore-case (find-tag--completion-ignore-case)))
++          (save-excursion
++            ;; If we need to ask for the tag table, allow that.
++            (let ((enable-recursive-minibuffers t))
++              (visit-tags-table-buffer))
++            (complete-with-action action
++                                  (tags-completion-table buf)
++                                  string pred)))))))
+
+  ;;;###autoload (defun tags-completion-at-point-function ()
+  ;;;###autoload   (if (or tags-table-list tags-file-name)
+@@ -846,8 +847,7 @@ tags-completion-at-point-function
+  
+  (defun find-tag-tag (string)
+    "Read a tag name, with defaulting and completion."
+-  (let* ((completion-ignore-case (find-tag--completion-ignore-case))
+-	 (default (find-tag--default))
++  (let* ((default (find-tag--default))
+  	 (spec (completing-read (format-prompt string default)
+  				(tags-lazy-completion-table)
+  				nil nil nil nil default)))
+@@ -2130,10 +2130,6 @@ xref-backend-identifier-completion-table
+                                                           (eql 'etags)))
+    (tags-lazy-completion-table))
+
+-(cl-defmethod xref-backend-identifier-completion-ignore-case ((_backend
+-                                                               (eql 
+'etags)))
+-  (find-tag--completion-ignore-case))
+-
+  (cl-defmethod xref-backend-definitions ((_backend (eql 'etags)) symbol)
+    (let ((file (and buffer-file-name (expand-file-name buffer-file-name)))
+          (definitions (etags--xref-find-definitions symbol))
+
+
+> In my book, `completion-ignore-case` is mosly a user preference (except
+> when it's let-bound around calls to `all-completions` where it's simply
+> the way for the caller to provide this additional parameter, but the
+> caller is expected to be the completion table, not the xref infrastructure).
+I guess you are saying that `completion-ignore-case' is a user 
+preference _unless_ there is another user preference that would 
+currently apply (such as read-file-name-completion-ignore-case or 
+tags-case-fold-search).
+
+================================================================================
+Date: 2026-09-15T04:24:41+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Discussing a proposed package thoroughly
+Message-ID: <E1x6Iqf-009mM3-JI@fencepost.gnu.org>
+In-Reply-To: <86ik4b3rkk.fsf@gnu.org> (message from Eli Zaretskii on Sat, 12
+ Sep 2026 09:35:23 +0300)
+References: <87ldan4juo.fsf@melete.silentflame.com>
+ <E1wrTpy-00F00e-H9@fencepost.gnu.org>
+ <87jyq43od0.fsf@melete.silentflame.com>
+ <e1f5bfb8854ea15141597a20c88a3fcb@gnu.support> <86se4r6erv.fsf@gnu.org>
+ <875x1m1mgk.fsf@web.de> <86y0ei4ejb.fsf@gnu.org> <87fr0qyv0g.fsf@web.de>
+ <86ik5m3y02.fsf@gnu.org> <87a4qxzwne.fsf@web.de>
+ <86h5l53zmm.fsf@gnu.org> <E1wt9Mr-00Gtm2-UL@fencepost.gnu.org>
+ <86ik5izp0l.fsf@gnu.org> <E1x1cEa-00DQYc-IG@fencepost.gnu.org>
+ <865x0n7rtu.fsf@gnu.org> <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+ <86ik4b3rkk.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+    > Yes, we do, on nonGNU ELPA.  But why do you think we failed to
+    > investigate the implications?  This _was_ discussed, and discussed at
+    > some length.
+
+                    Here's the beginning of that discussion:
+
+    >   https://lists.gnu.org/archive/html/emacs-devel/2026-08/msg00231.html
+
+That was a response to the message
+
+    https://lists.gnu.org/archive/html/emacs-devel/2026-08/msg00225.html
+
+which I sent to start this discussion.  It touched very briefly on
+many topics, many abstract statements using specialized terms I didn't
+know.  I wanted to respond to it by asking for more explanation
+on many of the points, but I was overloaded and put it off.
+
+Later I thoughht I should roll up my sleeves and pose the many
+questions raised.  But I saw a message indicating the Hermes package
+had already been installed in ELPA.
+
+There had been a little more discussion, but it was not the discussion
+that we needed before making a decision about adding to Emacs an
+interface to Hermes.  It did not try to investigate in depth what
+Hermes does, and what that implies, nor even what its components are
+and what else it involves using.
+
+We need to establish a clear idea of what it means to discuss
+adequately a package that raise complex issues, and a concrete plan to
+make sure we carried that all the way before deciding on that package.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-15T04:24:42+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: AGENTS.md
+Message-ID: <E1x6Iqg-009mMK-Lm@fencepost.gnu.org>
+In-Reply-To: <868q563f2h.fsf@gnu.org> (message from Eli Zaretskii on Sat, 12
+ Sep 2026 14:05:26 +0300)
+References: <87ldan4juo.fsf@melete.silentflame.com>
+ <E1wrTpy-00F00e-H9@fencepost.gnu.org>
+ <87jyq43od0.fsf@melete.silentflame.com>
+ <e1f5bfb8854ea15141597a20c88a3fcb@gnu.support> <86se4r6erv.fsf@gnu.org>
+ <875x1m1mgk.fsf@web.de> <86y0ei4ejb.fsf@gnu.org> <87fr0qyv0g.fsf@web.de>
+ <86ik5m3y02.fsf@gnu.org> <87a4qxzwne.fsf@web.de> <86h5l53zmm.fsf@gnu.org>
+ <E1wt9Mr-00Gtm2-UL@fencepost.gnu.org> <86ik5izp0l.fsf@gnu.org>
+ <E1x1cEa-00DQYc-IG@fencepost.gnu.org> <865x0n7rtu.fsf@gnu.org>
+ <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+ <37e752524a95733e724bc6d8a809ff7b@gnu.support> <868q563f2h.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Ideas that originated from such sources by themselves are not
+  > "tainted" in any sense, just because their originators are proponents
+  > of proprietary software.  We need to examine the ideas and standards
+  > themselves to make up our minds about them, not blindly reject them
+  > based on their origins.
+
+I agree completely.  We shouldn't reject an idea based on who else has
+implemented it.  All else being equal, compatibility is a good thing.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-15T07:07:28+02:00
+From: Jared Finder <jared@finder.org>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+In-Reply-To: 
+References: 
+
+On 2026-09-14 05:17, Johan Myréen wrote:
+
+> Here Emacs is started as a Wayland app regardless of the value of the 
+> variable. Also, the value of XDG_SESSION_TYPE only tells what the local 
+> display server (if any) provides, but it should not hinder you from 
+> setting the DISPLAY variable to point to some display server elsewhere, 
+> as is done with ssh combined with X forwarding, or with Waypipe. 
+> Therefore I think the XDG_SESSION_TYPE is a bad choice to determine 
+> whether you want to start Emacs in text mode or not.
+> 
+> A better alternative would be for Emacs to examine if both the DISPLAY 
+> and WAYLAND_DISPLAY variables are unset, and if that is the case, start 
+> Emacs in text mode. Currently, at least for me, PGTK Emacs refuses to 
+> start with the warning "cannot open display".
+> 
+> If your PGTK build does not display the warning and starts in text mode 
+> without the -nw option, there must be something different with how your 
+> Emacs is built, or maybe different versions of GTK3, or something 
+> different about the environment where it is started. Here PGTK Emacs 
+> (configured simply with "--with-pgtk") does not automatically fall back 
+> to text mode.
+
+Wayland apps by default do not need WAYLAND_DISPLAY set, according to 
+man pages 
+(https://manpages.debian.org/trixie/libwayland-doc/wl_display.3.en.html). 
+  I think we'd want to detect that both WAYLAND_DISPLAY be unset and 
+XDG_SESSION_TYPE is set to tty before having the pgtk build fallback to 
+text mode.
+
+   -- MJF
+
+================================================================================
+Date: 2026-09-15T07:30:43+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <87ld93qdx8.fsf@web.de>
+In-Reply-To: <87jyptp6zl.fsf@thanosapollo.org> (Thanos Apollo's message of
+ "Fri, 14 Aug 2026 09:10:38 +0300")
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+
+Thanos Apollo <public@thanosapollo.org> writes:
+
+> I don't think I am in a position to decide which models satisfy GNU's
+> criteria for a freedom-respecting LLM.
+
+I’m not either, but there’s something I can say: the Hermes page does
+not give any indication about the licensing situation of models. It has
+FREE models (which means: gratis) and models with a cost, and it lists
+daily usage:
+https://portal.nousresearch.com/models
+
+I tried to find out which data is used for training in the gratis models
+listed as top 10 usage, but couldn’t: the model info isn’t really
+straightforward with that, and searching for 5 minutes each and checking
+huggingface didn’t help either.
+
+This not only treats potentially free and definitely not free models the
+same, but on top does not give users any way to find or filter by that,
+and the default top usage criterion steers them towards freeware
+(OpenWeights, likely non-free training data) models.
+
+Given that the Munich court decided that it is a copyright violation if
+an LLM recreates substantial amounts existing copyright encumbered data
+that was part of the training corpus, this is a serious risk, even
+higher than with a disclosed corpus, because the model provider could
+mix in works for which they could sue later (their training is legal,
+your use of the outputs may not be).
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-15T07:56:27+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <875x07kqgk.fsf@thanosapollo.org>
+In-Reply-To: <87ld93qdx8.fsf@web.de>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Thanos Apollo <public@thanosapollo.org> writes:
+>
+>> I don't think I am in a position to decide which models satisfy GNU's
+>> criteria for a freedom-respecting LLM.
+>
+> I’m not either, but there’s something I can say: the Hermes page does
+> not give any indication about the licensing situation of models. It has
+> FREE models (which means: gratis) and models with a cost, and it lists
+> daily usage:
+> https://portal.nousresearch.com/models
+
+That is the Nous Portal model catalogue, not the Hermes Agent page.
+
+Neither hermes-agent nor hermes.el requires using that service, so its
+model listings are not relevant to the package that was (being?)
+discussed.
+
+You can configure hermes to use a local model or another provider, just
+as with packages already in GNU ELPA such as ellama.  What objection are
+you raising to hermes.el specifically?
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-15T09:01:05+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <779f1f2e1f5087877a52fdca2bb1c653@gnu.support>
+In-Reply-To: <875x07kqgk.fsf@thanosapollo.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+
+Dear Thanos,
+
+see my opinion below:
+
+On 2026-09-15 08:56, Thanos Apollo wrote:
+> "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+> 
+>> Thanos Apollo <public@thanosapollo.org> writes:
+>> 
+>>> I don't think I am in a position to decide which models satisfy GNU's
+>>> criteria for a freedom-respecting LLM.
+>> 
+>> I’m not either, but there’s something I can say: the Hermes page does
+>> not give any indication about the licensing situation of models. It 
+>> has
+>> FREE models (which means: gratis) and models with a cost, and it lists
+>> daily usage:
+>> https://portal.nousresearch.com/models
+> 
+> That is the Nous Portal model catalogue, not the Hermes Agent page.
+
+It is relevant in GNU as for reason described here:
+https://www.gnu.org/philosophy/who-does-that-server-really-serve.html
+
+Stallman's test is: could you, in principle, do this computing activity 
+entirely on your own computers with free software, without communicating 
+with anyone else's computers? If yes, the activity is "your own 
+computing," and doing it via someone else's server is SaaSS — an 
+injustice, because that server operator controls your computing.
+
+> Neither hermes-agent nor hermes.el requires using that service, so its
+> model listings are not relevant to the package that was (being?)
+> discussed.
+
+hermes.el probably requires Hermes agent which in turn drives people to 
+use proprietary SaaSS.
+
+> You can configure hermes to use a local model or another provider, just
+> as with packages already in GNU ELPA such as ellama.  What objection 
+> are
+> you raising to hermes.el specifically?
+
+Let me give my opinion:
+
+Thanos's implicit argument is:
+
+- hermes.el can use a local model.
+- Therefore hermes.el is not SaaSS or wish to say there is no problem to 
+users
+- Therefore there is no objection specific to hermes.el.
+
+Step 3 does not follow. A program can be free and non-SaaSS while still 
+being a vector that normalizes and routes users into SaaSS. Stallman's 
+essay anticipates exactly this move:
+
+"Some web pages install nontrivial, even large JavaScript programs into 
+your browser without informing you. When these JavaScript programs are 
+nonfree, they cause the same sort of injustice as any other nonfree 
+software."
+
+And more directly, on services with mixed features:
+
+"Some sites offer multiple services, and if one is not SaaSS, another 
+may be SaaSS."
+
+The point: the presence of a free/non-SaaSS path does not neutralize the 
+harm of the SaaSS path being the default, the advertised, or the path of 
+least resistance.
+
+The availability of a free path does not excuse a service whose normal 
+use is unjust. The same logic applies here: the fact that hermes.el can 
+be pointed at a local model does not address the fact that the Hermes 
+project's normal, documented, advertised use routes through Nous Portal 
+— a SaaSS provider with undisclosed training data.
+
+And about ellama as a precedent: it's in GNU ELPA and also supports 
+multiple providers, including proprietary ones. But this is not a 
+defense — it's an admission that the same problem already exists 
+elsewhere.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-15T09:06:47+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <87fqzbq9h4.fsf@web.de>
+In-Reply-To: <875x07kqgk.fsf@thanosapollo.org> (Thanos Apollo's message of
+ "Tue, 15 Sep 2026 08:56:27 +0300")
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+
+Thanos Apollo <public@thanosapollo.org> writes:
+
+> "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+>> I’m not either, but there’s something I can say: the Hermes page does
+>> not give any indication about the licensing situation of models. It has
+>> FREE models (which means: gratis) and models with a cost, and it lists
+>> daily usage:
+>> https://portal.nousresearch.com/models
+>
+> That is the Nous Portal model catalogue, not the Hermes Agent page.
+
+Which, if I understood Hermes correctly, is the suggested way to choose
+a model for Hermes.
+
+> Neither hermes-agent nor hermes.el requires using that service, so its
+> model listings are not relevant to the package that was (being?)
+> discussed.
+
+What’s relevant is whether it steers people into depending on
+proprietary software.
+
+For tools like retroarch, Guix explicitly removes listings of
+proprietary software, and icecat has its own (very limited) list of
+add-ons, and minigalaxy is not packaged at all, to avoid steering people
+into a dependency on proprietary software.
+
+> You can configure hermes to use a local model or another provider, just
+> as with packages already in GNU ELPA such as ellama.  What objection are
+> you raising to hermes.el specifically?
+
+Does hermes.el give more information about the models used? Is it easy
+to figure out which models are Free Software?
+
+If not: the same objection as for any other software that steers people
+into using proprietary software (like OpenWeights models, that aren’t
+really Free Software but rather freeware you can mod to some degree).
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-15T09:45:12+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <871pavklfb.fsf@thanosapollo.org>
+In-Reply-To: <87fqzbq9h4.fsf@web.de>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+
+[...]
+>> Neither hermes-agent nor hermes.el requires using that service, so its
+>> model listings are not relevant to the package that was (being?)
+>> discussed.
+>
+> What’s relevant is whether it steers people into depending on
+> proprietary software.
+
+Philip already addressed this objection in this thread:
+
+> I don't think it has ever been a rule that we require all packages to
+> only use software that acknowledges GNU principles.  I agree that it
+> would be better if it did, but our requirement is that the software is
+> fully functional on a system that only uses free software.
+
+And explicitly:
+
+> This is not deflecting, it is explaining why your objection is not a
+> valid reason to reject the package.
+
+hermes.el connects to a user-configured Hermes Agent instance.  It does
+not require Nous Portal or any proprietary provider.
+
+Determining which models satisfy GNU's still-unfinished freedom criteria
+is not something I can resolve.  That question also applies to ellama,
+gptel and the other LLM interfaces already in ELPA.
+
+Which admission requirement do you believe hermes.el fails to meet that
+gptel, ellama and llm satisfy?
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-15T09:54:48+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <87wlsnj6ev.fsf@thanosapollo.org>
+In-Reply-To: <779f1f2e1f5087877a52fdca2bb1c653@gnu.support>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <779f1f2e1f5087877a52fdca2bb1c653@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> Dear Thanos,
+
+Dear Jean,
+
+>
+> see my opinion below:
+
+This has been answered already by Eli and Philip.
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-15T10:09:58+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <87a4pjq6jt.fsf@web.de>
+In-Reply-To: <871pavklfb.fsf@thanosapollo.org> (Thanos Apollo's message of
+ "Tue, 15 Sep 2026 10:45:12 +0300")
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <871pavklfb.fsf@thanosapollo.org>
+
+Thanos Apollo <public@thanosapollo.org> writes:
+
+> "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+>> What’s relevant is whether it steers people into depending on
+>> proprietary software.
+
+> Determining which models satisfy GNU's still-unfinished freedom criteria
+> is not something I can resolve.  That question also applies to ellama,
+> gptel and the other LLM interfaces already in ELPA.
+
+The typical way of dealing with similar situations is to patch out the
+problematic parts.
+
+In the specific case that could mean: if the hermes agent has not
+already been configured by the user,¹ auto-configure it to avoid the
+proprietary platform and help the user setup a fully free environment.
+
+¹ if the user already configured it to run proprietary stuff, that’s a
+  user-decision that should be respected.
+
+> Which admission requirement do you believe hermes.el fails to meet that
+> gptel, ellama and llm satisfy?
+
+I used neither of these.
+
+I’m discussing here, because in the description of Hermes it sounded to
+me like it would provide easy options to try fully free models, and it
+now turned out that this isn’t true at all; rather the opposite.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-15T10:21:47+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <87tsnqkjqc.fsf@thanosapollo.org>
+In-Reply-To: <87a4pjq6jt.fsf@web.de>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <871pavklfb.fsf@thanosapollo.org>
+ <87a4pjq6jt.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+
+[...]
+>> Which admission requirement do you believe hermes.el fails to meet that
+>> gptel, ellama and llm satisfy?
+>
+> I used neither of these.
+>
+> I’m discussing here, because in the description of Hermes it sounded to
+> me like it would provide easy options to try fully free models, and it
+> now turned out that this isn’t true at all; rather the opposite.
+
+Please identify fully free models and explain what prevents or makes it
+difficult to use them with hermes.
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-15T12:47:53+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <874ifqrdt2.fsf@web.de>
+In-Reply-To: <87tsnqkjqc.fsf@thanosapollo.org> (Thanos Apollo's message of
+ "Tue, 15 Sep 2026 11:21:47 +0300")
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <871pavklfb.fsf@thanosapollo.org>
+ <87a4pjq6jt.fsf@web.de> <87tsnqkjqc.fsf@thanosapollo.org>
+
+Thanos Apollo <public@thanosapollo.org> writes:
+
+> Please identify fully free models and explain what prevents or makes it
+> difficult to use them with hermes.
+
+The main difficulty in hermes is: you can’t find out from the interface
+how they are licensed. Or rather: I couldn’t.
+
+Can you? If you start using hermes from scratch, is the easiest way to
+start with a fully free model? Or at least one that’s Free Software (not
+just freeware=OpenWeights)?
+
+
+There are three levels of Free for the models:
+
+
+(1) Weights licensed under a Free Software License – that’s freeware,
+    because you cannot change it efficiently: you do not have the
+    corresponding source.
+
+(2) Training setup and weights licensed under Free Software Licenses,
+    training data available – that’s free software, as long as the
+    required copyright exceptions for the training data apply to
+    everyone.
+
+(3) All training data and setup and weights licensed under compatible
+    Free Software Licenses – that’s fully free.
+
+
+Qwen fulfills (1), Apertus fulfills (2), I’m not aware of any that
+fulfill (3) – if you know some, I’d be very interested in them.
+
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-15T13:21:47+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86mrtin4j8.fsf@gnu.org>
+In-Reply-To: <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Mon, 14 Sep 2026 13:11:57 -0400)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+
+> From: Stefan Monnier <monnier@iro.umontreal.ca>
+> Cc: emacs-devel@gnu.org
+> Date: Mon, 14 Sep 2026 13:11:57 -0400
+> 
+> >> >>     (cl-defmethod xref-backend-identifier-completion-predicate
+> >> >>         ((backend FOO) &optional kind)
+> >> >>       (lambda (candidate)
+> >> >>         ... check CANDIDATE using KIND ...))
+> >> >
+> >> > Maybe _I_ don't understand the problem.  This method returns a
+> >> > function, and that function could be called much later with a
+> >> > completely different KIND.
+> >> 
+> >> How can that happen (other than because of a bug)?
+> >
+> > Does the method have any control how its return value will be used by
+> > the caller?  The caller could do whatever it likes with the function
+> > it receives.
+> 
+> The caller can do whatever it wants, yes, but if it uses the result of
+> (xref-backend-identifier-completion-predicate BACKEND KIND) while
+> completing something of a different KIND, then it's likely going to get
+> garbage and that will be its fault, not the fault of the backend.
+
+I was trying to implement this method so it would be reliable and
+could be used per the API contract.  There's nothing in the doc string
+which I can rely on to know that the situation you describe above
+could not legitimately happen.  The method is documented to return a
+function, and at least my interpretation of the doc string didn't
+allow me to assume the function will be used immediately in the
+same completing-read call.  In fact, I had some difficulty
+understanding what it says about the use of KIND.
+
+> > The command xref-find-by-kind can be invoked from a buffer whose
+> > major-mode is c-mode, for example, but the user wants to look at (for
+> > example) the definition of a Fortran subroutine.  We are talking about
+> > completion of the symbol that the user types at the prompt of
+> > xref-find-by-kind: for symbols that come from Fortran sources the
+> > completion should be case-insensitive, whereas for symbols from C or
+> > ELisp etc. it should be case-sensitivity.
+> [...]
+> > This is the problem I face: the completion's case-sensitivity can be
+> > different for each candidate, and I wonder how to provide the
+> > necessary information about that to the completion infrastructure.
+> > The method as defined accepts no arguments at all.
+> 
+> I'd put that information inside the completion table since it's the only
+> place that has information about each candidate.
+
+Can you please tell more? how can such a per-candidate information be
+stored in the completion table?  Especially given that in this case
+the completion table is constructed by some code I cannot control?
+
+================================================================================
+Date: 2026-09-15T13:49:25+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <87qziuka4a.fsf@thanosapollo.org>
+In-Reply-To: <874ifqrdt2.fsf@web.de>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <871pavklfb.fsf@thanosapollo.org>
+ <87a4pjq6jt.fsf@web.de> <87tsnqkjqc.fsf@thanosapollo.org>
+ <874ifqrdt2.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Thanos Apollo <public@thanosapollo.org> writes:
+>
+>> Please identify fully free models and explain what prevents or makes it
+>> difficult to use them with hermes.
+>
+> The main difficulty in hermes is: you can’t find out from the interface
+> how they are licensed. Or rather: I couldn’t.
+
+Yuri already pointed to the provider configuration documentation in this
+thread on August 11[1], more than a month ago.  We are going in circles.
+
+hermes.el is an Emacs interface to a user-configured agent.  It is not
+nous portal, a model catalogue, or a model-hosting service.  Please stop
+treating an optional provider's website as the package under discussion.
+
+
+[1] https://yhetil.org/emacs-devel/CAP_d_8V4d3YMAe=i6M2sNkexQ-Cr7NUY9ABL4JTTbzB4S6xCyg@mail.gmail.com/
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-15T14:38:25+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+Message-ID: <86eceun0zi.fsf@gnu.org>
+In-Reply-To: <87a4pjmrvs.fsf@gmail.com> (message from Kai Ma on Mon, 14 Sep
+ 2026 23:42:47 +0200)
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+
+> From: Kai Ma <justksqsf@gmail.com>
+> Cc: emacs-devel@gnu.org, eliz@gnu.org
+> Date: Mon, 14 Sep 2026 23:42:47 +0200
+> 
+> Kévin Le Gouguec <kevin.legouguec@gmail.com> writes:
+> 
+> > Howdy,
+> >
+> > My GUI Emacs is failing to pick a color font for VS16 sequences: e.g.
+> > ☺️, ☹️, 🖋️, ⚒️ are all displayed (a) correctly composed, i.e. as a single
+> > unit, but (b) with black-and-white fonts (DejaVu Sans Mono, Symbola)
+> > instead of Noto Color Emoji.
+> 
+> Thanks, I reproduced this problem on HEAD and emacs-gtk3.
+> 
+> CC'ing Eli for comments.  I'm not very familiar with the composition
+> system.  Please correct my misunderstandings.
+> 
+> I did some investigation:
+> 
+> - on the first bad commit (80383d8e57e) the Emoji sequence 263A FE0F
+>   goes through the Emoji path in auto-compose-chars (i.e. the first
+>   branch of the cond expression).  It is recognized as an automatic
+>   composition as a whole.
+> 
+>   The sequence is shaped in auto-compose-chars using either
+>   compose-gstring-for-graphic (on GUI) or compose-gstring-and-emoji (on
+>   TTY).
+> 
+> - on the last good commit (b33d4088a66) the Emoji sequence 263A FE0F
+>   goes through the non-Emoji path in auto-compose-chars (i.e. the third
+>   branch of the cond expression).
+> 
+> I find this quite surprising.  On both commits, the composition is
+> produced by compose-gstring-for-graphic.  The only difference I can
+> think of is that, on the good commit, the composition seems to be
+> produced by this rule
+> 
+>     ELISP> (char-table-range composition-function-table #xFE0F)
+>     (["\\c.\\c^+" 1 compose-gstring-for-graphic]
+>      [nil 0 compose-gstring-for-graphic])
+>     ELISP> (string-match "\\c.\\c+" "\x263a\xfe0f")
+>     nil
+> 
+> On the bad commit, autocmp_chars is called with ch=0x263A.  But on the
+> good one, autocmp_chars is called with ch=0xFE0F, and 0xFE0F is
+> considered the emoji script:
+> 
+>     ELISP> (char-table-range char-script-table #xfe0f)
+>     emoji
+> 
+> Therefore, it goes through the Emoji font selection path in font_range
+> (in font.c), instead of picking the font based on the first codepoint.
+
+Yes, this is correct.
+
+The reason is that we want codepoints like U+263A to be shown in their
+standard text-style appearance when they appear alone, but we want
+them shown in emoji-style when they are followed by VS-16 (U+FE0F).
+This precludes making these characters belong to the emoji script,
+especially since we usually prefer to show such symbols in their
+text-style using the default font (which usually supports quite a few
+of them).
+
+So if the above changes somehow caused the GUI display to have Emoji
+composition rules in the slots of composition-function-table that
+belong to the U+263A and similar characters, this is wrong, and should
+be undone.  The trick in font.c which uses font_range to force Emoji
+font when these codepoints are followed by VS-16 must not become
+broken, because it's there to support this dual-style display of those
+symbols.  Instead, we should do this only for TTY frames, because
+there Emacs doesn't select fonts, and thus we don't care about these
+subtleties, leaving them to the terminal emulator
+
+> This can be confirmed with a simple change in font.c that fixes this
+> problem:
+> 
+> modified   src/font.c
+> @@ -3902,7 +3902,7 @@ codepoint_is_emoji_eligible (int ch)
+>      return true;
+> 
+>    if (! NILP (Fmemq (make_fixnum (ch),
+> -		     Vauto_composition_emoji_eligible_codepoints)))
+> +		     Vauto_composition_emoji_tty_eligible_codepoints)))
+>      return true;
+> 
+>    return false;
+
+That doesn't look right to me, as it will not allow us to select the
+text-style or emoji-style appearance depending on whether the
+symbol character is followed by VS-15 or VS-16 (or nothing).
+
+I would prefer instead to fix the Awk script emoji-zwj.awk such that
+sequences starting with the likes of U+263A do NOT add composition
+rules to composition-function-table.  Instead, their special treatment
+should be implemented in some code that only affects TTY frames, for
+example in compose-gstring-and-emoji.
+
+> [ What I don't understand here: if the Emoji sequence is known to be
+>   composed due to a specific font (e.g. Noto Color Emoji), why would it
+>   go through another round of font selection (based on the first
+>   codepoint and/or heuristics around the emoji script) at all? ]
+
+Sorry, I don't understand the question.  If what I said above doesn't
+explain this to you, please elaborate.
+
+> Given my current understanding, I think it's OK to merge
+> auto-composition-emoji-tty-eligible-codepoints and
+> auto-composition-emoji-eligible-codepoints: codepoint_is_emoji_eligible
+> is called on the first codepoint that resulted in the composition (which
+> used to be FE0F for many Emoji sequences).  And since we added more
+> rules, we should consider them here, too.
+
+I don't think so, see above.
+
+> > Briefly looked at emoji-zwj.awk to figure where the patch may have gone
+> > wrong, but no clue yet.  Fwiw diff'ing lisp/international/emoji-zwj.el
+> > before/after the patch shows an obvious difference, i.e. +331
+> > occurrences of
+> >
+> >   (#x<HEX> .
+> >   ,(regexp-opt
+> >   '(
+> >
+> >   "\N{U+<HEX>}\N{U+FE0E}"
+> >   "\N{U+<HEX>}\N{U+FE0F}"
+> >   )))
+> >
+> > in the big dolist loop, but don't know how composition-function-table
+> > works, so unsure if it's significant.
+> 
+> They are added for correct string widths and column numbers on TUI
+> frames.  The width of an Emoji sequences will be adjusted in
+> compose-gstring-and-emoji to be 2.  It was done with care so that on GUI
+> frames Emoji sequences are still composed by
+> compose-gstring-for-graphic.  But obviously I underestimated the
+> complexity.  :-D
+
+We need to add those sequences in a way that only affects TTY frames,
+because there we don't care about fonts, only about the fact that a
+sequence of codepoints is expected to be composed.
+
+================================================================================
+Date: 2026-09-15T15:02:07+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86cxuemzw0.fsf@gnu.org>
+In-Reply-To: <46151e16-4e9b-4a8d-89e8-4163b2d3efec@gutov.dev> (message from
+ Dmitry Gutov on Tue, 15 Sep 2026 04:45:42 +0300)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev> <86jyooyrnh.fsf@gnu.org>
+ <46151e16-4e9b-4a8d-89e8-4163b2d3efec@gutov.dev>
+
+> Date: Tue, 15 Sep 2026 04:45:42 +0300
+> Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 14/09/2026 14:54, Eli Zaretskii wrote:
+> 
+> >>> One problem with this PREDICATE business is that the completion
+> >>> infrastructure passes only the candidates to the predicate function,
+> >>> whereas here we need to also pass the KIND.
+> >>
+> >> Do you mean that 'completing-read' should support KIND explicitly? How?
+> > 
+> > I'm asking how to write a predicate that needs to filter by KIND, when
+> > KIND is not passed to the predicate by completion infrastructure.
+> 
+> KIND is already available to the predicate function because it's 
+> lexically captured. In this example
+> 
+>      (cl-defmethod xref-backend-identifier-completion-predicate
+>          ((backend FOO) &optional kind)
+>        (lambda (candidate)
+>          ... body ...))
+> 
+> <body> can reference KIND (the argument for the cl-defmethod) and return 
+> t if CANDIDATE has at least one definition belonging to KIND.
+
+AFAIU, this works only because the function returned by this method is
+immediately called with the same KIND.  But a method that returns a
+function cannot rely on the fact that the function will be called
+immediately in the same lexical environment, not unless this is the
+documented contract, can it?
+
+> > (Wouldn't producing an anonymous function for each KIND cause a lot of
+> > consing, just like apply-partially does?)
+> 
+> We only produce one predicate for the duration of the user's command: 
+> the one that corresponds to KIND that the user has just selected.
+
+If that is the only way the predicate is used, then apply-partially is
+also okay, no?
+
+> >> The current implementation seems more efficient to me, but performance
+> >> tradeoffs might not matter in your scenario, measurements needed.
+> > 
+> > I already made the measurements, so I know it matters.
+> 
+> If at some point you have a working solution that is only too slow, I'm 
+> happy to take the code and try to optimize it.
+
+When I think the code is more-or-less ready, I will publish it.
+
+> >>> It almost sounds like the design assumes
+> >>> that a backend knows the KIND just by looking at the identifier, which
+> >>> is correct in Lisp, but not in general.
+> >>
+> >> No more than it assumes that the backend knows the list of definitions
+> >> for that identifier "just by looking".
+> > 
+> > Backend doesn't have to understand anything about the definitions (the
+> > etags backend doesn't).  It only cares about the location (which it
+> > does understand).
+> > 
+> > By contrast, to filter by KIND, the backend does need to be able to
+> > figure out the KIND of the candidate in order to compare it with the
+> > one requested.
+> 
+> Both questions can be answered using the contents of the tags file, 
+> couldn't they?
+
+That's what I ended up doing.  But having to go back to the database
+to find information about a candidate is a waste of CPU cycles.  The
+design only passes the candidate on the assumption that the candidate
+holds enough information for filtering, but that assumption is not
+true in general, although it's true for the ELisp backend.
+
+> We don't have regexps which would sort definitions into KINDs yet, but 
+> that is the meat of the task that we are discussing - how to choose 
+> them, maybe keep them more easily customizable, or better extensible, 
+> easier to set from dir-locals.el, etc.
+
+You lost me here.  (Why would this have to be done via regexps?)
+
+> >>> There are various hacks and kludges to get around this (I used
+> >>> apply-partially), but I hope we will be able to find a cleaner
+> >>> approach, which will also speed up the completion as a nice
+> >>> side-effect.
+> >>
+> >> I'm not sure how you see it working better.
+> >> xref-backend-identifier-completion-predicate designed as returning a
+> >> predicate function has a chance to take the value of KIND and
+> >> pre-populate any caches it needs and return a appropriate function.
+> >>
+> >> If the cache is in a local variable (e.g. hash table), the returned
+> >> value will need to be an anonymous function. If the cache is in a global
+> >> variable, then one of the named functions could be returned. Using
+> >> 'apply-partially' does not get around it, and does not print any nicer
+> >> function literals in backtraces, unfortunately.
+> > 
+> > Sorry, you lost me here.  "Caches"?
+> 
+> In the "faster" solution near the beginning of this email the described 
+> hash table would be an example of a cache.
+
+I know what a cache is, believe me, I just don't understand how a
+predicate function could usefully do it.  A predicate has no idea
+whether it is called the first time or the last time, so it doesn't
+know when to create a cache and when to discard it.
+
+And again, my problem is with the design.  A method that accepts just
+the candidate tells me that the design assumes it's enough to filter
+candidates.  If you are now saying that I need to have the entire xref
+item to decide whether a candidate should be filtered, then why
+doesn't the predicate receive the entire item? why does my predicate
+need to go back to the tags table and re-create the item given the
+candidate name, when the candidate came out of some xref item to begin
+with?
+
+================================================================================
+Date: 2026-09-15T15:06:43+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Discussing a proposed package thoroughly
+Message-ID: <86bj9ymzoc.fsf@gnu.org>
+In-Reply-To: <E1x6Iqf-009mM3-JI@fencepost.gnu.org> (message from Richard
+ Stallman on Mon, 14 Sep 2026 22:24:41 -0400)
+References: <87ldan4juo.fsf@melete.silentflame.com>
+ <E1wrTpy-00F00e-H9@fencepost.gnu.org>
+ <87jyq43od0.fsf@melete.silentflame.com>
+ <e1f5bfb8854ea15141597a20c88a3fcb@gnu.support> <86se4r6erv.fsf@gnu.org>
+ <875x1m1mgk.fsf@web.de> <86y0ei4ejb.fsf@gnu.org> <87fr0qyv0g.fsf@web.de>
+ <86ik5m3y02.fsf@gnu.org> <87a4qxzwne.fsf@web.de>
+ <86h5l53zmm.fsf@gnu.org> <E1wt9Mr-00Gtm2-UL@fencepost.gnu.org>
+ <86ik5izp0l.fsf@gnu.org> <E1x1cEa-00DQYc-IG@fencepost.gnu.org>
+ <865x0n7rtu.fsf@gnu.org> <E1x5Emx-00C8Bd-VX@fencepost.gnu.org>
+ <86ik4b3rkk.fsf@gnu.org> <E1x6Iqf-009mM3-JI@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: spwhitton@spwhitton.name, jporterbugs@gmail.com,
+> 	emacs-devel@gnu.org
+> Date: Mon, 14 Sep 2026 22:24:41 -0400
+> 
+>     > Yes, we do, on nonGNU ELPA.  But why do you think we failed to
+>     > investigate the implications?  This _was_ discussed, and discussed at
+>     > some length.
+> 
+>                     Here's the beginning of that discussion:
+> 
+>     >   https://lists.gnu.org/archive/html/emacs-devel/2026-08/msg00231.html
+> 
+> That was a response to the message
+> 
+>     https://lists.gnu.org/archive/html/emacs-devel/2026-08/msg00225.html
+> 
+> which I sent to start this discussion.  It touched very briefly on
+> many topics, many abstract statements using specialized terms I didn't
+> know.  I wanted to respond to it by asking for more explanation
+> on many of the points, but I was overloaded and put it off.
+> 
+> Later I thoughht I should roll up my sleeves and pose the many
+> questions raised.  But I saw a message indicating the Hermes package
+> had already been installed in ELPA.
+> 
+> There had been a little more discussion, but it was not the discussion
+> that we needed before making a decision about adding to Emacs an
+> interface to Hermes.  It did not try to investigate in depth what
+> Hermes does, and what that implies, nor even what its components are
+> and what else it involves using.
+
+Sorry, I disagree.  We investigated enough to understand all that, and
+made the decision based on those understandings.
+
+> We need to establish a clear idea of what it means to discuss
+> adequately a package that raise complex issues, and a concrete plan to
+> make sure we carried that all the way before deciding on that package.
+
+In my book, once the relevant aspects of the issue are clear, we are
+ready for making a decision in the matter.  Which is what happened in
+this case.  So I don't think I understand what worries you in that
+particular case.
+
+================================================================================
+Date: 2026-09-15T15:19:21+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <868q52mz3a.fsf@gnu.org>
+In-Reply-To: <87ld93qdx8.fsf@web.de> (arne_bab@web.de)
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: rms@gnu.org,  emacs-devel@gnu.org
+> Date: Tue, 15 Sep 2026 07:30:43 +0200
+> 
+> Thanos Apollo <public@thanosapollo.org> writes:
+> 
+> > I don't think I am in a position to decide which models satisfy GNU's
+> > criteria for a freedom-respecting LLM.
+> 
+> I’m not either, but there’s something I can say: the Hermes page does
+> not give any indication about the licensing situation of models. It has
+> FREE models (which means: gratis) and models with a cost, and it lists
+> daily usage:
+> https://portal.nousresearch.com/models
+> 
+> I tried to find out which data is used for training in the gratis models
+> listed as top 10 usage, but couldn’t: the model info isn’t really
+> straightforward with that, and searching for 5 minutes each and checking
+> huggingface didn’t help either.
+> 
+> This not only treats potentially free and definitely not free models the
+> same, but on top does not give users any way to find or filter by that,
+> and the default top usage criterion steers them towards freeware
+> (OpenWeights, likely non-free training data) models.
+
+We cannot hold other programs to the same standard we apply to our own
+project.  In particular, we cannot expect, let alone demand, that
+other programs insist on not treating free and non-free models
+equally, like we do in our project.  If a program supports both free
+and non-free models, it becomes the job of the user to find the one
+which satisfies his/her standards, and Emacs should not expect
+anything else.
+
+Now, if a program does not allow using free models, then indeed it's a
+reason for us not to support it.  But this is not that case.
+
+> Given that the Munich court decided that it is a copyright violation if
+> an LLM recreates substantial amounts existing copyright encumbered data
+> that was part of the training corpus, this is a serious risk, even
+> higher than with a disclosed corpus, because the model provider could
+> mix in works for which they could sue later (their training is legal,
+> your use of the outputs may not be).
+
+The risk is on the user who doesn't do due diligence.  It is not our
+risk and not our responsibility.  Our responsibility ends when we
+establish that users _can_ use free models if they so wish.
+
+================================================================================
+Date: 2026-09-15T15:23:40+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <867bkmmyw3.fsf@gnu.org>
+In-Reply-To: <87fqzbq9h4.fsf@web.de> (arne_bab@web.de)
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: rms@gnu.org,  emacs-devel@gnu.org
+> Date: Tue, 15 Sep 2026 09:06:47 +0200
+> 
+> Thanos Apollo <public@thanosapollo.org> writes:
+> 
+> > "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+> >> I’m not either, but there’s something I can say: the Hermes page does
+> >> not give any indication about the licensing situation of models. It has
+> >> FREE models (which means: gratis) and models with a cost, and it lists
+> >> daily usage:
+> >> https://portal.nousresearch.com/models
+> >
+> > That is the Nous Portal model catalogue, not the Hermes Agent page.
+> 
+> Which, if I understood Hermes correctly, is the suggested way to choose
+> a model for Hermes.
+> 
+> > Neither hermes-agent nor hermes.el requires using that service, so its
+> > model listings are not relevant to the package that was (being?)
+> > discussed.
+> 
+> What’s relevant is whether it steers people into depending on
+> proprietary software.
+
+Allowing both is not "steering".  And even if discovering the free
+models needs some effort from users, it is not our job to be concerned
+about that.  It's the responsibility of the users.  Exactly like using
+Emacs on MS-Windows is the responsibility of the user, not of the
+Emacs project.
+
+> Does hermes.el give more information about the models used? Is it easy
+> to figure out which models are Free Software?
+
+These are not questions that we should ask ourselves.  We are
+responsible for the first leg: the one which leads from Emacs to
+Hermes.  Is Hermes free software, and can it be used only with free
+software?  Those are our questions, and if the answer is YES, the rest
+is up to the users.
+
+> If not: the same objection as for any other software that steers people
+> into using proprietary software (like OpenWeights models, that aren’t
+> really Free Software but rather freeware you can mod to some degree).
+
+No.
+
+================================================================================
+Date: 2026-09-15T16:41:17+02:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+In-Reply-To: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+References: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+
+On Tue, 15 Sept 2026 at 08:07, Jared Finder <jared@finder.org> wrote:
+
+
+> Wayland apps by default do not need WAYLAND_DISPLAY set, according to
+> man pages
+> (https://manpages.debian.org/trixie/libwayland-doc/wl_display.3.en.html).
+>   I think we'd want to detect that both WAYLAND_DISPLAY be unset and
+> XDG_SESSION_TYPE is set to tty before having the pgtk build fallback to
+> text mode.
+
+
+Instead of relying on these environment variables, I think a better
+solution would be to first try opening a connection to the display server
+and, if that fails, fall back to text mode.
+
+Currently, the PGTK build requires a working graphical display, and exits
+if none is available. The exit(1) call happens in gtk_init(), which is
+called by pgtk_term_init(). The gtk_init code is accompanied by the
+following comment.
+
+ * This function will terminate your program if it was unable to
+ * initialize the windowing system for some reason. If you want
+ * your program to fall back to a textual interface you want to
+ * call gtk_init_check() instead.
+
+Thus changing the code to call gtk_init_check instead would avoid the exit,
+but forcing Emacs to switch to text mode requires a larger refactoring than
+that.
+
