@@ -36453,3 +36453,2172 @@ h to text mode requires a larger refactoring than that.</div><div><br></div=
 --000000000000c4856f065b868b03--
 
 
+From MAILER-DAEMON Tue Sep 15 12:25:53 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6Vyi-0004wL-RX
+	for mharc-emacs-devel@gnu.org; Tue, 15 Sep 2026 12:25:52 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1x6Vyg-0004uw-AA
+ for emacs-devel@gnu.org; Tue, 15 Sep 2026 12:25:50 -0400
+Received: from fhigh-b1-smtp.messagingengine.com ([202.12.124.152])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>)
+ id 1x6Vye-0002Ir-1c; Tue, 15 Sep 2026 12:25:50 -0400
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+ by mailfhigh.stl.internal (Postfix) with ESMTP id 841197A0267;
+ Tue, 15 Sep 2026 12:25:44 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-04.internal (MEProxy); Tue, 15 Sep 2026 12:25:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :cc:content-transfer-encoding:content-type:content-type:date
+ :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm3; t=1789489544;
+ x=1789575944; bh=Ebsb3cKxdn5tux2bTt90iVXfSodF43W2Rfe5HU5yv4k=; b=
+ ayihc2DIrviner2fPJUY3e5VTCb3c/IVyPFGIERxhXzOVmq4ATw42ra8xqVbBSPC
+ BW2D3OgZrQc1DFIt+9OA/HKQidN4agrjo0VL0fN0IKeqq8PGCGEJGnlXCovH/Ext
+ CUIF0m4FAN7mjaZ5joEBozn+wrr7zFaWuQpkoois8+dHAw/8Qnu7+PgyIdRiAv8x
+ 8BcmNl3VWLbD4uaNrhgvO9CebClVvbK6AliJkvjR6PCJK4vOG/XCqPltmipFWoja
+ ssSzhGwyuUfpcELqeQRkVEzYOXiI2ox76BXqm+0hPs9qxt8yailVAYvem9nZK+2c
+ xCVTZVRM+zoPi4Gr9MfwSQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789489544; x=
+ 1789575944; bh=Ebsb3cKxdn5tux2bTt90iVXfSodF43W2Rfe5HU5yv4k=; b=h
+ 32ydReK0zhW8zE2GoS+mkqNzGDyRU9M3MkRSj2HW5vnrzjBZY/ps2dlIKNZg5j8z
+ EAJuRGpQtpvg4oXM8hoYAsSMOqeStG/x2mFi7rQ9+DFRN7oDW6stBWINUO+3zRtZ
+ vaFlg+VPFKBt3G3KAnyHFhYPGUIKO4ojpQIu/V8HE+B98m+/vgTDnIDCuuNheUY0
+ UMW4RD1rWmcNfNIiiWnabIz4LKAnRcHkjFJ/dFIgj6H9U1JQ4MvWIGjNv7kPwigy
+ BSmVgaCeDPUjZpzp1TBIAgw+B4xVwdSXWs7+tP6OCGomyFqo6bDK30eaOcFpmaWI
+ 0whf7ixP5/Cna9puXg3kg==
+X-ME-Sender: <xms:iHGpaqN0jEB_3Z_DrToqUXepqEyc5-hRESDFxjaOo5RNeuQeFRZUYQ>
+ <xme:iHGpatQGdCpUL_zpqcp8nZWgTkmcI_-g9AzLe6VOFH6aW_LkxHgXO4_MJ_HnYmu0c
+ 6WKwlWRQW1pCaO80FpOgyVvA34iMQS_4lBHPY5o8sxSayV-tVQxpFM>
+X-ME-Received: <xmr:iHGpagYTjlBEpclW5fr98a8E46PQ2O0yGF_gGSvhRMfaqQH36zL7jSbWuuTA6eLX7tmm>
+X-ME-Proxy-Cause: dmFkZTE1DHbVGfDc18d4D9wuJtAYfazifoktzJkG12aI3LZrTCMeoO3Jaztdikdl+uRUBc
+ nV8Ay6xpNfeSuhJjGMVekiFl0pMlKvRFlhunG8WyYD08Z9FT7fT8hgMvTkEDsXwl+SgmqM
+ ycOn0hqg0RwS7M3r2qLuaDAwtLPRfBhVVnVOQQhl0a4+G5JmcbNDQDTt6/GuV+PeVHhb2i
+ za7ZXnEMQs5szji0vGBAM+lHKyK3qE1RZf11b7q4v4SMvUqx9Akx/oojj6pZdMjwMCDC99
+ wdZEJC1cHEABgq0sYH7ejVaqoOdnf729vUr3b8ShkbFY08swGj1rNBDPYcmqCn2JOtncAk
+ vN1jG0HPu9y2KFksyjRzlMctGI/zf70WTIwbczbnqYLo5wyXcc142D2OMvBHjRyCJ9qdJF
+ T8TSG2mlr7Dq8VCphdCSwpdVKp39knKwlfhHOEZ09c332Jlk75/Xo23jaixox5NgldyNlI
+ foD+FOUPq0bDo2uOseLC5IsqPdzLQDXJbTbgyzQmdNuT34eec46QkPu45JsCR47uGPVY7W
+ jr/HQzCYO1RfSK3Y2S3MIvak6mSWGiL+qx8/7rkO9fO/xO++34KFQlFWlTwrBdBqelxJ/o
+ B+oX9VKQTcq87lzl2XdNMyteiesc9xFW13JWaAf24x1+13EPTUWGmGK2+grg
+X-ME-Proxy: <xmx:iHGpai1172BiBb7834aj6iXW46yMaWQ2qJnWk1C34PIUAqs4LmYZCg>
+ <xmx:iHGpaoVaNanvWcwE4YLIMqrJTmXy5vm19SeLxMy4giufCehOoS9WiA>
+ <xmx:iHGpakWMcaztoyOfFLDln9bXFPIuz9zDlc5WE8_C4G7BmtXuEeqk5g>
+ <xmx:iHGpavcyXAByokL8nbAxN3FqkueAwcpK9ySZAyTw0sxZtUuvk8G6GQ>
+ <xmx:iHGpauHtUVZts1T5aX7Usay4kAjHQtnUjyWQFl3DJFVvgd07GY2zuKgA>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Sep 2026 12:25:43 -0400 (EDT)
+Message-ID: <8a0e04dd-9cc1-46f3-863a-a2a4bedc5c1a@gutov.dev>
+Date: Tue, 15 Sep 2026 19:25:41 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: emacs-devel@gnu.org, spwhitton@spwhitton.name
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev> <86jyooyrnh.fsf@gnu.org>
+ <46151e16-4e9b-4a8d-89e8-4163b2d3efec@gutov.dev> <86cxuemzw0.fsf@gnu.org>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <86cxuemzw0.fsf@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=202.12.124.152; envelope-from=dmitry@gutov.dev;
+ helo=fhigh-b1-smtp.messagingengine.com
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_LOW=-0.7, RCVD_IN_MSPIKE_H2=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 15 Sep 2026 16:25:50 -0000
+
+On 15/09/2026 16:02, Eli Zaretskii wrote:
+
+>> KIND is already available to the predicate function because it's
+>> lexically captured. In this example
+>>
+>>       (cl-defmethod xref-backend-identifier-completion-predicate
+>>           ((backend FOO) &optional kind)
+>>         (lambda (candidate)
+>>           ... body ...))
+>>
+>> <body> can reference KIND (the argument for the cl-defmethod) and return
+>> t if CANDIDATE has at least one definition belonging to KIND.
+> 
+> AFAIU, this works only because the function returned by this method is
+> immediately called with the same KIND.
+
+No, the function is called with CANDIDATE (completions). Completions and 
+kinds are ultimately orthogonal: each completion is allowed to have 
+several kinds.
+
+The predicate's body can use the value of KIND from the environment 
+where the anonymous function was constructed, and CANDIDATE from its 
+argument. It needs to return non-nil if the specified CANDIDATE has any 
+definitions belonging to KIND.
+
+> But a method that returns a
+> function cannot rely on the fact that the function will be called
+> immediately in the same lexical environment, not unless this is the
+> documented contract, can it?
+
+The lexical environment is retained from the place where the function 
+was defined - that's the main feature of the 'lexical-binding: t' 
+functionality that we have.
+
+>>> (Wouldn't producing an anonymous function for each KIND cause a lot of
+>>> consing, just like apply-partially does?)
+>>
+>> We only produce one predicate for the duration of the user's command:
+>> the one that corresponds to KIND that the user has just selected.
+> 
+> If that is the only way the predicate is used, then apply-partially is
+> also okay, no?
+
+apply-partially is fine to use, it just doesn't bring the 
+performance/debuggability benefits that one might expect to have.
+
+>>>> The current implementation seems more efficient to me, but performance
+>>>> tradeoffs might not matter in your scenario, measurements needed.
+>>>
+>>> I already made the measurements, so I know it matters.
+>>
+>> If at some point you have a working solution that is only too slow, I'm
+>> happy to take the code and try to optimize it.
+> 
+> When I think the code is more-or-less ready, I will publish it.
+
+Thanks.
+
+>>> Backend doesn't have to understand anything about the definitions (the
+>>> etags backend doesn't).  It only cares about the location (which it
+>>> does understand).
+>>>
+>>> By contrast, to filter by KIND, the backend does need to be able to
+>>> figure out the KIND of the candidate in order to compare it with the
+>>> one requested.
+>>
+>> Both questions can be answered using the contents of the tags file,
+>> couldn't they?
+> 
+> That's what I ended up doing.  But having to go back to the database
+> to find information about a candidate is a waste of CPU cycles.
+
+That's true, but it's the most straightforward solution we can add now, 
+to iterate on afterwards.
+
+> The
+> design only passes the candidate on the assumption that the candidate
+> holds enough information for filtering, but that assumption is not
+> true in general, although it's true for the ELisp backend.
+
+That's just how the completion API works. But it has to support 
+completion strings coming from anywhere, so the general shape of it will 
+remain, even if we make certain things more convenient in the future.
+
+>> We don't have regexps which would sort definitions into KINDs yet, but
+>> that is the meat of the task that we are discussing - how to choose
+>> them, maybe keep them more easily customizable, or better extensible,
+>> easier to set from dir-locals.el, etc.
+> 
+> You lost me here.  (Why would this have to be done via regexps?)
+
+Just faster, really. Rather than doing first a regexp search, then a 
+check via a function that it is indeed a definition, and then an 
+additional regexp lookaround to determine KIND.
+
+>>>> If the cache is in a local variable (e.g. hash table), the returned
+>>>> value will need to be an anonymous function. If the cache is in a global
+>>>> variable, then one of the named functions could be returned. Using
+>>>> 'apply-partially' does not get around it, and does not print any nicer
+>>>> function literals in backtraces, unfortunately.
+>>>
+>>> Sorry, you lost me here.  "Caches"?
+>>
+>> In the "faster" solution near the beginning of this email the described
+>> hash table would be an example of a cache.
+> 
+> I know what a cache is, believe me, I just don't understand how a
+> predicate function could usefully do it.  A predicate has no idea
+> whether it is called the first time or the last time, so it doesn't
+> know when to create a cache and when to discard it.
+
+In this proposed scenario you would pre-populate the hash table in one 
+go, not lazily (so the first time or not doesn't matter).
+
+And it will be discarded automatically after the reference to the 
+predicate function is lost (the code that created it reaches the end of 
+execution), the GC will claim it.
+
+> And again, my problem is with the design.  A method that accepts just
+> the candidate tells me that the design assumes it's enough to filter
+> candidates.  If you are now saying that I need to have the entire xref
+> item to decide whether a candidate should be filtered, then why
+> doesn't the predicate receive the entire item? why does my predicate
+> need to go back to the tags table and re-create the item given the
+> candidate name, when the candidate came out of some xref item to begin
+> with?
+
+The predicate's signature is fixed - think like with static typing. For 
+any complex data you are supposed to use these strings as keys to look 
+up in an alist or hash table saved separately.
+
+Or you could have text properties attached to all completions when the 
+completion table is created - those could carry xref items or maybe some 
+lighter data. But for this to work, you probably have to parse all lines 
+in the tags file into xref items eagerly. Not the fastest approach.
+
+
+From MAILER-DAEMON Tue Sep 15 14:19:18 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6XkU-0002pF-1q
+	for mharc-emacs-devel@gnu.org; Tue, 15 Sep 2026 14:19:18 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <justksqsf@gmail.com>)
+ id 1x6Xk7-0002mW-K8
+ for emacs-devel@gnu.org; Tue, 15 Sep 2026 14:18:59 -0400
+Received: from mail-wm1-x342.google.com ([2a00:1450:4864:20::342])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <justksqsf@gmail.com>)
+ id 1x6Xk3-0000JW-H9
+ for emacs-devel@gnu.org; Tue, 15 Sep 2026 14:18:53 -0400
+Received: by mail-wm1-x342.google.com with SMTP id
+ 5b1f17b1804b1-495437bb891so9172585e9.1
+ for <emacs-devel@gnu.org>; Tue, 15 Sep 2026 11:18:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789496327; x=1790101127; darn=gnu.org;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+ :reply-to:content-type;
+ bh=G0TnVmydiQznNA9H4jnOGtzHZb/wsL5H8ZxwgLUJM50=;
+ b=YDyQnGfTALDOAewTnaugr0UatCiTMSPCwLbNT41zk61wpUYcNXvCXbPLjRMyuOHmyG
+ G+R+4z/FLJoyYNSiKF7Ihu+ex4CgWQSmcenqq74ktwDodAxDEIKvGNwnnlTR7wRDYY2Y
+ mYQxvvFHhD1lVdlVN3VkKq7c909sumQxwHUT6zdflQNDCZ4hoECgFWjR6m+dVESkqmH9
+ pyE+YXFfSrGuh9YbSux7dZddImi/+hrpWTCBoZD5NoiyNQg78ej+6w8IuSy7FiW1jPzt
+ mvx1X7spq+e3QJXv4qhJSbXequRzm5pglbJn4b6htYJrQ5z1jvUKj7fkqF89D09aCGR7
+ 3L9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789496327; x=1790101127;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=G0TnVmydiQznNA9H4jnOGtzHZb/wsL5H8ZxwgLUJM50=;
+ b=TCvs7RvdjEH2o+uWIINf5LB/h1IunUKTFZb+hNKSksoDeg1bR1d3p4yt08DxxWNgZB
+ KPAwrZThlQNCuGVC+G9pgc+R8BKiK4PbrmyzgQx/u8+jmgDBhroUkwKry4iTkFtzByyF
+ DANHIoQyR9Rbq+ZO3GhnuKYZnNqz/IRVKagIxZOJ7Ce+2pxrM7CRriR8wbe33gtz9SaP
+ 1r/rrvSbSy+mXFiwcchtD2JvlHbLIQRJxdS5coviNc39F5Y02NpG1i4AClfsivcgV4kG
+ b0+qF+JTX3W4cnlTkpNkM7y2rI4h23szy22QvsicA60YHbOLtKh1cmJvdGuuHIp9wUsy
+ VCHg==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBzxqgQX8XohkH5LsUMOMSPkU3WHGBfFjOHjGal+s6JS7mPVKCya/OFiq4I8MCqCqEBSof7923NirFqfsw==@gnu.org
+X-Gm-Message-State: AFuF++nWnXUkg1nOdzOxQon7F3+R/Q7P+J/JDJaDBXzj1EXA53q1bspQ
+ +H5uu4zZCgDO8dyBQV/x8HpHDoND197YriK1pUafosjkaI39b0jGO8wEEkZW6RgfGhc=
+X-Gm-Gg: AYBFou1rn2pI9UQ/1WUsXpZyKwfInwlli0BySsC0lvTy1TdlRIkW5MLnh+WKVQHTNCH
+ dFbz7GGdGqcS0/xT1dhmxWKjyJ1sHRC17XV2V3B92DY9gN3Ce50lSP/wZT80q06Ckxg2inqfJm1
+ g8rzGwmI0bYEcGrP+eXPqbwIJnt4bHAFIAfzHdZ974RlCV/NNx6ReX0xLEWjH5Gzyc9Rw8AV3ql
+ BzMLAy3ox0XaEoVV1OjFyGzcYaBDPWTQUlqeqnKFyO8EjhpoEw1muiF+cGXkCyWLuU0p6DWuZXC
+ mdVzPUx6HMXW5/q0wb3pZm1Obetb0vIFFphXeix+crK9Mzo/GVxG0E3lxW8H0FiCUsWquITOLCX
+ Z/3KWF3VmDFM5BFGjKvjSJMxTVnDincNxUYRO2QXgnaNlP1nfKgYwITZxQ3P1TcjAf0zCsl3CA5
+ e54I9+fBABNmxuV/NmFpHby8SmOtd56uhA6b4UEmH+wGTfnT8jCE68FO0k0GiAvGrdOchHEONG
+X-Received: by 2002:a05:600c:6d8e:b0:49e:686e:5822 with SMTP id
+ 5b1f17b1804b1-49e7d7545femr58045905e9.13.1789496326621; 
+ Tue, 15 Sep 2026 11:18:46 -0700 (PDT)
+Received: from M2403003457HW ([77.23.250.163])
+ by smtp.gmail.com with ESMTPSA id
+ ffacd0b85a97d-4870bf344bfsm756610f8f.27.2026.09.15.11.18.45
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Tue, 15 Sep 2026 11:18:45 -0700 (PDT)
+From: Kai Ma <justksqsf@gmail.com>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: kevin.legouguec@gmail.com,  emacs-devel@gnu.org
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+In-Reply-To: <86eceun0zi.fsf@gnu.org>
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org>
+Date: Tue, 15 Sep 2026 20:18:44 +0200
+Message-ID: <87tsnql6nv.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=-=-="
+Received-SPF: pass client-ip=2a00:1450:4864:20::342;
+ envelope-from=justksqsf@gmail.com; helo=mail-wm1-x342.google.com
+X-Spam_score_int: -15
+X-Spam_score: -1.6
+X-Spam_bar: -
+X-Spam_report: (-1.6 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ FROM_LOCAL_NOVOWEL=0.5, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 15 Sep 2026 18:19:06 -0000
+
+--=-=-=
+Content-Type: text/plain
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> This can be confirmed with a simple change in font.c that fixes this
+>> problem:
+>> 
+>> modified   src/font.c
+>> @@ -3902,7 +3902,7 @@ codepoint_is_emoji_eligible (int ch)
+>>      return true;
+>> 
+>>    if (! NILP (Fmemq (make_fixnum (ch),
+>> -		     Vauto_composition_emoji_eligible_codepoints)))
+>> +		     Vauto_composition_emoji_tty_eligible_codepoints)))
+>>      return true;
+>> 
+>>    return false;
+>
+> That doesn't look right to me, as it will not allow us to select the
+> text-style or emoji-style appearance depending on whether the
+> symbol character is followed by VS-15 or VS-16 (or nothing).
+
+Ah, I see the problem.  This change would render 263A FE0E as a color
+Emoji, which is incorrect.
+
+> I would prefer instead to fix the Awk script emoji-zwj.awk such that
+> sequences starting with the likes of U+263A do NOT add composition
+> rules to composition-function-table.  Instead, their special treatment
+> should be implemented in some code that only affects TTY frames, for
+> example in compose-gstring-and-emoji.
+
+The attached patch reverted the addition of compositions, and instead
+modified the default composition rule for VS16 to be
+compose-gstring-and-emoji.
+
+I believe updating VS16's composition rule is the right fix.  Since the
+actual composition function is dispatched by auto-compose-chars, it
+selects compose-gstring-for-graphic on the graphical display, preserving
+previous behavior; and it selects compose-gstring-and-emoji on textual
+terminals.
+
+>> [ What I don't understand here: if the Emoji sequence is known to be
+>>   composed due to a specific font (e.g. Noto Color Emoji), why would it
+>>   go through another round of font selection (based on the first
+>>   codepoint and/or heuristics around the emoji script) at all? ]
+>
+> Sorry, I don't understand the question.  If what I said above doesn't
+> explain this to you, please elaborate.
+
+I was confused about the order of finding a font and using that font to
+compose.  Upon closer inspection, I believe Emacs decides on a font
+first, then uses that font for composition.  So the heuristic is indeed
+needed.
+
+
+--=-=-=
+Content-Type: text/x-diff
+Content-Disposition: attachment;
+ filename=0001-Fix-Emoji-font-selection-on-graphical-terminals.patch
+
+>From 6e3fc1a45a863eaf2268314cefc8a4d04a6d25e8 Mon Sep 17 00:00:00 2001
+From: Kai Ma <justksqsf@gmail.com>
+Date: Tue, 15 Sep 2026 19:15:59 +0200
+Subject: [PATCH] Fix Emoji font selection on graphical terminals
+
+* admin/unidata/emoji-zwj.awk: Do not generate composition rules for all
+eligible codepoints.
+* lisp/composite.el: Modify VS16's default composition rule to call
+compose-gstring-and-emoji instead of compose-gstring-for-graphic.
+---
+ admin/unidata/emoji-zwj.awk | 6 ------
+ lisp/composite.el           | 4 ++++
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/admin/unidata/emoji-zwj.awk b/admin/unidata/emoji-zwj.awk
+index c64a48b335d..d383597d169 100755
+--- a/admin/unidata/emoji-zwj.awk
++++ b/admin/unidata/emoji-zwj.awk
+@@ -68,7 +68,6 @@
+ 
+ /^[0-9A-F]+ FE0F *; *emoji style;/ {
+     tty_trigger_codepoints[++n_tty_triggers] = $1
+-    ch[$1] = $1
+ }
+ 
+ END {
+@@ -113,11 +112,6 @@ END {
+          print "?\\N{U+" tty_trigger_codepoints[trig] "}"
+      }
+      print "))"
+-     # Exclude keycap sequence initials
+-     delete ch["0023"]
+-     delete ch["002A"]
+-     for (i = 0; i <= 9; i ++)
+-         delete ch[sprintf("003%d", i)]
+ 
+      # Generate unqualified tail initials.
+      print "(setq auto-composition-emoji-unqualified-tail-initials"
+diff --git a/lisp/composite.el b/lisp/composite.el
+index 6770ba6e504..fd2454d937a 100644
+--- a/lisp/composite.el
++++ b/lisp/composite.el
+@@ -780,6 +780,10 @@ compose-gstring-for-dotted-circle
+ 	 (if (memq val '(Mn Mc Me))
+ 	     (set-char-table-range composition-function-table key elt)))
+      unicode-category-table))
++  ;; for Emoji sequences (VS16)
++  (aset composition-function-table #xFE0F
++        `(["\\c.\\c^+" 1 compose-gstring-and-emoji]
++          [nil 0 compose-gstring-and-emoji]))
+   ;; for dotted-circle
+   (aset composition-function-table #x25CC
+         `([".\\c^" 0 compose-gstring-for-dotted-circle]))
+-- 
+2.53.0
+
+
+--=-=-=--
+
+
+From MAILER-DAEMON Tue Sep 15 23:22:27 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6gE7-0003cP-IP
+	for mharc-emacs-devel@gnu.org; Tue, 15 Sep 2026 23:22:27 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1x6gE6-0003cB-7x
+ for emacs-devel@gnu.org; Tue, 15 Sep 2026 23:22:26 -0400
+Received: from fout-a2-smtp.messagingengine.com ([103.168.172.145])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>)
+ id 1x6gE4-0000Ou-6r; Tue, 15 Sep 2026 23:22:25 -0400
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+ by mailfout.phl.internal (Postfix) with ESMTP id D9F0CEC0FD3;
+ Tue, 15 Sep 2026 23:22:22 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-04.internal (MEProxy); Tue, 15 Sep 2026 23:22:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :cc:content-transfer-encoding:content-type:content-type:date
+ :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm3; t=1789528942;
+ x=1789615342; bh=i3eOkt3uTwo3Y+rmSiaX8Nvk8MSBODGnmBP3Ksi69aU=; b=
+ b22mRN9/pJa2Z3JTccIkqrGqxMr5yCEJ3OtrbRvMfhMxMACtTh0O8dWdYRIZaU0E
+ cbKf6WH5f1qnSYmDNxzQiyN/y/dqE9DE3+016UyE3mJpn8Hhz2/MUNwNARlF7zh7
+ eHC9taMzHThXgiUYkESdyi5FDm7rJplNZeqvbvvnYQBCsAtylyrNrvEQJk55j24Y
+ +p4ZIw4yiyxFr59nZ/ZcZH+I4yH4I4k7Sj3r4vycF8G6kZ+oWRXXcLUKGuoG3EfO
+ ATF72vkrF276rgx2vImv//uIuyHdeuUzxuEKqusp4GCO/69Veg7/X6Jp0jGg44NC
+ p4aR+mJ8dvGqQ4MMliunYg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789528942; x=
+ 1789615342; bh=i3eOkt3uTwo3Y+rmSiaX8Nvk8MSBODGnmBP3Ksi69aU=; b=Y
+ ZH7tMHNDL2rHCjEmbWgX31o/v/Vv80j2082X40m++eRMrG8JSbkSjnmFQz6DmoMU
+ oezULQmADp0il8LtFf7yHTzhIiNaeu6by1eDo9qPOiB9z4utwK8HeuOmR6Ypmy9l
+ AOIh+R4FaYKTeYsVbTOpE0YT9p1ijE2ygsdZtCHTOix/YXZA5mshhd3a0aXJKMiD
+ gXmDaGCS2XHmZMkDIGIZSlfG42mIH9lIYDqIuk1iA3i2QHBPZ9asV/+mMGV6IHWw
+ YwJY6d2QJNjt3hvEVLbhpHAKIex9/2fbCSg/c45bkac3NkigjCVaR04RXwHDnZah
+ KEhpnoVuHAeELkoKmgIqA==
+X-ME-Sender: <xms:bguqasJpYDUouAwCc6datYVbtfHjv5fHMIx6KAMiOmbbZIDvaKPSZw>
+ <xme:bguqajlLu8XmfM8nRXfOvCWhQDhlrTlmcoFtxl9PH5e8OmBbPvGSROIia30uJSM1E
+ SLbqKvBiDAsG7r_p9BelZ7Nh7C5bhLp6pB4Blilphe0YuYc9FnPykuI>
+X-ME-Received: <xmr:bguqaqFFXnGJ5XIifPhcluNUF_Uv6E9T05He5nDyLM3UBdGN_H_gSAGvDcdnUuZEXCuz>
+X-ME-Proxy-Cause: dmFkZTGKy8FDFQeieS20w7z7SBCjLktruxz6NNvYudP9r3fCvzpEvdRMvYyAuE1Mb6Vj/6
+ EukvjDixlPb4DNhyvQDxNdEtA7e7YYyLwvensi30ivyVsMmBXzfftpqvtLJoCrJxs7kUrO
+ fZYmlE+fikYdR9rsNzuKzrzMvpLb+P3WLyD/8giExoxwOdtM72AQkMd6GStiBZe6Dhh1HL
+ JmvNQUXRS85lNjRvibc0aQMUfMJJk+cTtC+vucfiJqSNQTUks2eSq/eWy9ZhK908bdZal+
+ YgmVeqNHyK79FCW4rH6ZT6Fefw+V4x16qlfzv9E3JJHuW7pkw3OSufGxYX0kw/F03iSrI/
+ 55BNY1ph9J/OKnsmWA+FYMgTIP6AzoLKduR1PqerjTfATZ55OFgy2EG/05S30nvYEzaadV
+ HykajNszMkZgswiDSN7RiwHhoI8dKufcMcg1Vp2MoKQDX3Bwp2jQTrROaC6rHPjAkO1LHi
+ qlOOrJWyqqRx+sm27NZ335DCJ7fuim42CFeedUzorvqG4mO49uytLs0P+AOd8vnbqD8XoL
+ yWH6fQJ0kJqpBgP6OrcMtALbQOlll+CeTeskKA2wXCNM+9/jhI2EaUpYrz7i8aigln3voR
+ fPsPNt8wcFjN/fUxlOHI2YOcgxXvxejr770QEcCZOK4pi+CtFgzL9WY6Gx0g
+X-ME-Proxy: <xmx:bguqajHP6K7NMkRgllpKF6fhqdPCSXmAWTW0hGhUlbu37WnKi9DI1g>
+ <xmx:bguqanO504yRH5wEtKSX5McZDh7hES21ah_G_1CngMQR7-lKfUX29A>
+ <xmx:bguqaiHJWOksdC31U0RzA9TzkWV1V0t6lDWSbTxgdTLSK18-KfZOGg>
+ <xmx:bguqauNSwJUsO1bV4fKMGEiD31BXMChGVkEYrsv1E57RuZehhBuZhg>
+ <xmx:bguqass_cIMUubkCSufDZtHRND7AeihiCrDX6S6s4GGzE7fKCVMME4Up>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Sep 2026 23:22:20 -0400 (EDT)
+Message-ID: <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+Date: Wed, 16 Sep 2026 06:22:18 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+To: Eli Zaretskii <eliz@gnu.org>, Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <86mrtin4j8.fsf@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=103.168.172.145; envelope-from=dmitry@gutov.dev;
+ helo=fout-a2-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 03:22:26 -0000
+
+On 15/09/2026 14:21, Eli Zaretskii wrote:
+>> The caller can do whatever it wants, yes, but if it uses the result of
+>> (xref-backend-identifier-completion-predicate BACKEND KIND) while
+>> completing something of a different KIND, then it's likely going to get
+>> garbage and that will be its fault, not the fault of the backend.
+> I was trying to implement this method so it would be reliable and
+> could be used per the API contract.  There's nothing in the doc string
+> which I can rely on to know that the situation you describe above
+> could not legitimately happen.
+
+Revisiting this paragraph: it's probably not accurate to say
+
+   while completing something of a different KIND
+
+because you are completing just strings, without any inherentl KIND. But 
+depending on which command you invoked as a user, the current completion 
+prompt might be restricting the strings to the ones that have 
+definitions belonging to KIND (using the predicate returned by the 
+method we are discussing). Or it might not be restricting. First comes 
+the choice of KIND, second comes the identifier input. Or the identifier 
+is read from e.g. the thing at point, then there is no second input.
+
+> The method is documented to return a
+> function, and at least my interpretation of the doc string didn't
+> allow me to assume the function will be used immediately in the
+> same completing-read call.  In fact, I had some difficulty
+> understanding what it says about the use of KIND.
+
+That's probably my bad: I rewrote that docstring two days ago but still 
+find it is not phrased well. It feels like the KIND being optional, but 
+also optional to obey by the backend (because that might be difficult or 
+slow), is not easy to explain. Though the idea itself is quite simple.
+
+>>> The command xref-find-by-kind can be invoked from a buffer whose
+>>> major-mode is c-mode, for example, but the user wants to look at (for
+>>> example) the definition of a Fortran subroutine.  We are talking about
+>>> completion of the symbol that the user types at the prompt of
+>>> xref-find-by-kind: for symbols that come from Fortran sources the
+>>> completion should be case-insensitive, whereas for symbols from C or
+>>> ELisp etc. it should be case-sensitivity.
+>> [...]
+>>> This is the problem I face: the completion's case-sensitivity can be
+>>> different for each candidate, and I wonder how to provide the
+>>> necessary information about that to the completion infrastructure.
+>>> The method as defined accepts no arguments at all.
+>> I'd put that information inside the completion table since it's the only
+>> place that has information about each candidate.
+> Can you please tell more? how can such a per-candidate information be
+> stored in the completion table?  Especially given that in this case
+> the completion table is constructed by some code I cannot control?
+
+I do think the completion table is constructed by code you control: it 
+is returned by xref-backend-identifier-completion-table which has 
+etags-specific definition in etags.el.
+
+The possible methods are like described previously: to use the lexical 
+environment where the completion table is constructed (because it can be 
+an anonymous function) or use some buffer-local variable with a hash table.
+
+But I would suggest leaving finer aspects like case sensitivity until 
+later, after the basics start to work.
+
+
+From MAILER-DAEMON Wed Sep 16 01:14:24 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6hyS-00042F-6O
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 01:14:24 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jared@finder.org>) id 1x6hyP-000420-JK
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 01:14:22 -0400
+Received: from greenhill.hpalace.com ([192.155.80.58])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jared@finder.org>) id 1x6hyN-0003i3-2Y
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 01:14:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=finder.org; s=2018;
+ t=1789535649; bh=s3oINvDONvt28AKf/KJB8wS8MLz7apzLVqHtfdSM+ls=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+ b=P8qVcv+fL5i9jQErT0FLuUz40KCALuBTrcPKGKUu/FuuKDeJxBgK8Z1JI56P2rAy6
+ etWRQBJgEMzCS/nZTNXswQZFdnBnMnEjpixR/MD1GNrjRWauRrhHlSh06gxu0aYbOG
+ xVo7UaqwGAwLdrC63/g+tu2dCxOp2AAYTAX0d1BFcam1HBG82ac/htbZ6O3Neimb2k
+ 084Ci66ISD9y1rjoWrxQpSYBsvez9e4kibbCMbUwt/pydeyuBW5xkOd4ztUqlax81L
+ /RW0ueLuLG7Wr4QPivB0zotrlggonKG84+1lYAWKWNO36sPBPpZaes0TJx/Zujox4c
+ SkpzDBCwUGkzw==
+Received: from mail.finder.org (unknown [192.155.80.58])
+ by greenhill.hpalace.com (Postfix) with ESMTPSA id 52A63620;
+ Wed, 16 Sep 2026 05:14:09 +0000 (UTC)
+MIME-Version: 1.0
+Date: Tue, 15 Sep 2026 22:14:09 -0700
+From: Jared Finder <jared@finder.org>
+To: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Cc: Sean Whitton <spwhitton@spwhitton.name>, Emacs Devel <emacs-devel@gnu.org>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+In-Reply-To: <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+References: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+ <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+Message-ID: <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+X-Sender: jared@finder.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: pass client-ip=192.155.80.58; envelope-from=jared@finder.org;
+ helo=greenhill.hpalace.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 05:14:23 -0000
+
+On 2026-09-15 07:41, Johan Myréen wrote:
+
+> On Tue, 15 Sept 2026 at 08:07, Jared Finder <jared@finder.org> wrote:
+> 
+>> Wayland apps by default do not need WAYLAND_DISPLAY set, according to
+>> man pages
+>> (https://manpages.debian.org/trixie/libwayland-doc/wl_display.3.en.html).
+>> I think we'd want to detect that both WAYLAND_DISPLAY be unset and
+>> XDG_SESSION_TYPE is set to tty before having the pgtk build fallback 
+>> to
+>> text mode.
+> 
+> Instead of relying on these environment variables, I think a better 
+> solution would be to first try opening a connection to the display 
+> server and, if that fails, fall back to text mode.
+> 
+> Currently, the PGTK build requires a working graphical display, and 
+> exits if none is available. The exit(1) call happens in gtk_init(), 
+> which is called by pgtk_term_init(). The gtk_init code is accompanied 
+> by the following comment.
+> 
+> * This function will terminate your program if it was unable to
+> * initialize the windowing system for some reason. If you want
+> * your program to fall back to a textual interface you want to
+> * call gtk_init_check() instead.
+> 
+> Thus changing the code to call gtk_init_check instead would avoid the 
+> exit, but forcing Emacs to switch to text mode requires a larger 
+> refactoring than that.
+
+That wouldn't work if you ssh into a machine that can also run a local 
+Wayland session.  That's my most common case -- I have a machine that I 
+split between working directly on and ssh'ing to do work on.  When ssh'd 
+to the machine, I want to get a text only Emacs because I can't see the 
+monitor the machine is plugged into.
+
+Looking at just the WAYLAND_DISPLAY and DISPLAY environment variables 
+might be enough here.  Is there a common case that this fails on?  
+Here's my understanding of all the common use cases I can think of:
+
+Running under a text-only console:
+* WAYLAND_DISPLAY, DISPLAY are both unset
+
+Running under a display manager started Wayland or X instance:
+* WAYLAND_DISPLAY or DISPLAY is set
+
+Running when SSH'd into a machine
+* WAYLAND_DISPLAY, DISPLAY are both unset
+
+Running when SSH'd into a machine with X forwarding
+* DISPLAY is set
+
+Running when SSH'd into a machine with waypipe
+* WAYLAND_DISPLAY is set
+
+
+   -- MJF
+
+
+From MAILER-DAEMON Wed Sep 16 03:43:46 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6kIw-00041l-G3
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 03:43:45 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x6kIg-0003xl-2h
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 03:43:32 -0400
+Received: from mail-qk2-x0e.google.com ([2607:f8b0:4864:34::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x6kIc-0004qj-O7
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 03:43:24 -0400
+Received: by mail-qk2-x0e.google.com with SMTP id
+ d75a77b69052e-52fb76ec395so4713171cf.2
+ for <emacs-devel@gnu.org>; Wed, 16 Sep 2026 00:43:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789544601; cv=none;
+ d=google.com; s=arc-20260327;
+ b=cFq7wKb1cQNDVB/nOWOT3LWCtIArzg1hIQjpS/k+n1JmQC3w6Ioa9bkM6zXoiMMNUX
+ iKQ1CZ9EZteI+FhazZFq5w1tLWLzdLE+bXSBy5KhEcIz19gmubR4BrVZK3j1rNQ9eqyK
+ RP8LpiSQ3gw2pvmxk2cenQ0lw8ndyb+5TJ7OfUbW6OoF9cbyP0jRUy6ciRGaIGsNGGdl
+ S20aFgXktYx7gUlZlLqNmDmaSpuhzPKTS5iEtynBgF/OoNox+3g7pvriUzx2VspRFPKW
+ HmLe9WOFUlk3doXtfrV8xMdGoIs5hHddp6Ooy3r5JcziklsQbBDKjXN+RfgsHy1PqBYr
+ ZGoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=XRmNtX3EuRYBoPllg8goofm2ZHxYtLu2ZQu6XB7V2kM=;
+ fh=57QBnPTGOuE01ZT4lmyVbWaZft3IyaIzC9GbZufv+k8=;
+ b=f299MXdaLGdV2NACpwzV+ZvIVQeNiMxeV+w86QegIaVGmgJUmBE3TBANlwssZ38zKo
+ C4uNSCQXCTyr45mkB+Tz8H8dI1CZt4/6Xop1q9rl90DrKD7pP9/f6+3+RU09tL6IoJcA
+ nTCYOmW5vKY54dPxQTxM4Af4B94cRfqXFJemKxyufRD2kUq2663OXYidgiHGW3W9+0NE
+ TCJaoKKT+4UGs2Fexwz1M6xeMD1BHuNeAd8dtciNkeD4tKfPwXIXjdnELPCVs0EgnrZx
+ j7nZvewJPthJv1GNnEfv7aue5UelGVKtBnGIMKB6kzllNvsY+ASiyroqPMxnSTPOLNwY
+ ladw==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789544601; x=1790149401; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=XRmNtX3EuRYBoPllg8goofm2ZHxYtLu2ZQu6XB7V2kM=;
+ b=QIZV+Y8ARyyMucQ/eKGdrGKi65cUb7G0MR+JNa2HdLFN/YIzA1MZHz+iBaUpJlyDKA
+ mQalVVg/3V9VPC8PdP8GN0+DG9nraUEI7LCRvx2MrdoeZqbUOCwvcBy3gsSsdsbn7K5o
+ RYJ6F8WyAvB6QpT0LGRhpUfKHfEW59Tr72LUWZqFE8yP3CCKYfXGm039gDTr5/pUOth4
+ w/8/GlOfBm2yuXmi4Iab6nHDdpMuj3RVnT2S3a9sDCSUB9R2dn9jMVSpk95G3O3GBbug
+ HZoscAk4OlvZmOuXeu5WjV5TtNgVlXRzlUxq22riG46vJVp2aRZ3QKr31wRalcgzkeKL
+ BQiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789544601; x=1790149401;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=XRmNtX3EuRYBoPllg8goofm2ZHxYtLu2ZQu6XB7V2kM=;
+ b=D2qNVv5j6QeYhrzT0DrYI5rIwZ9F686q/I7/lhnONcoxUWFZYWes2qTG7Rq8rSf0Dk
+ 68Fkq0BnZSGIraFaPhpM3JwJon4YaNm++Kd/9xqmHhdKbPsm09mZXFewJIPma6Gma9fC
+ mPEjXKfXDSrEcPCqImY0NVY7laUpg4WG3nHPD+bc0YvmuaVDJRVsU5ID6HJcGRbcgACT
+ lT3gKZX1zuDPQaq3a/C3ia/L+OceaV0g8bIbTXQtFJnETLBe2LOpa1EqzMP34ulH7FuP
+ sl9Wv50nleOoeGkVondta8vN3MIpki/jcCtX9VY13jncTLpW5LHJc+z22fXFyqZgH+zV
+ 0K7Q==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBwtaVwVywJuKstS31pG9YZhdkczj0AGPe3fG7VNPH+2J+esIDk6YBKaVQ+SKdIYdB4M9shHRoRDrGsmFQ==@gnu.org
+X-Gm-Message-State: AFuF++lqkuT3DybgBf5VuBJU9kkA26n+qaVZzyeCGIcT6wrH2V43/VFF
+ JG57F0eusP9idZ7pH58tV1hI/ClMPEQrywwSaACJu8RmnDfP+7mut2fXif91sdgAqQRA1rDHg8K
+ RFY8u+rNTWl69s4eWnG9UEGSaBkThFSY=
+X-Gm-Gg: AYBFou3m4ml+n4wvOntD3Ma/vkMkHdajPMviQh06B0ivo34ddWr5qJDhDaHTK++jPMd
+ cILbl5G4mxsxeVNQwM+BXb8jwSKwP2eU/khM2Xgz8rEQh0/7jhw+k9dqC0TZBkom/a+HlwOxht4
+ A+i77NUOC2v70lksgnwmD9s+m7h7z7pvJKuajqdGiTa1T6oNczywJNm6jnXR9xtwp/sRavZIQtL
+ xy9AxXD8t/SjznHn5P0hjMOuRGhJ6kh+H2aRGP7yLBVvm46dtvqwzegBzZ03jh76y3D6NP7tiTR
+ WD7Vw4mn+Sq+odXdLpaBMmeu7gJWdXGJzP4qDw9UDzl1wxLzDFjXEzseftuaiK9dUljgHJY9Fh1
+ CKfxVzJy2uQ==
+X-Received: by 2002:a05:622a:1388:b0:530:ff84:e426 with SMTP id
+ d75a77b69052e-5327f163084mr25098701cf.47.1789544601550; Wed, 16 Sep 2026
+ 00:43:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+ <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+ <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+In-Reply-To: <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Date: Wed, 16 Sep 2026 10:43:10 +0300
+X-Gm-Features: AcwNN1UTUfz2xBvPAJhQ8zSguX8x4KZAq_FBFaYkFCMbWubab4D5WbwxiQ58hdU
+Message-ID: <CA+TD5hgMsxKTTRyQ7sJ+-J0=fsJeFPrNDjRJHb+PebOQLvNx3g@mail.gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+To: Jared Finder <jared@finder.org>
+Cc: Sean Whitton <spwhitton@spwhitton.name>, Emacs Devel <emacs-devel@gnu.org>
+Content-Type: multipart/alternative; boundary="000000000000490292065b94d2aa"
+Received-SPF: pass client-ip=2607:f8b0:4864:34::e;
+ envelope-from=johan.myreen@gmail.com; helo=mail-qk2-x0e.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 07:43:35 -0000
+
+--000000000000490292065b94d2aa
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 16 Sept 2026 at 08:14, Jared Finder <jared@finder.org> wrote:
+
+> On 2026-09-15 07:41, Johan Myr=C3=A9en wrote:
+>
+> > Instead of relying on these environment variables, I think a better
+> > solution would be to first try opening a connection to the display
+> > server and, if that fails, fall back to text mode.
+>
+> That wouldn't work if you ssh into a machine that can also run a local
+> Wayland session.
+
+
+You are right.
+
+Looking at just the WAYLAND_DISPLAY and DISPLAY environment variables
+> might be enough here.  Is there a common case that this fails on?
+>
+
+I think this would be a workable solution, except for the minor glitch
+described below. Looking at just the variables would also be a simpler
+solution than trying and failing to connect to the display server.
+
+Here's my understanding of all the common use cases I can think of:
+
+[...]
+> Running when SSH'd into a machine with X forwarding
+> * DISPLAY is set
+>
+
+The idea here would presumably be that the Emacs would be displayed on the
+local screen as a remote X11 app. Unfortunately, if the remote host has a
+Wayland desktop that is logged in to, what happens when you start Emacs on
+the SSH command line on the remote host is that Emacs is opened on the
+remote host's desktop as a graphical Wayland app. On the other hand, if you
+are not logged in locally on the remote host, Emacs is displayed on the
+local screen as an X11 app, which was the user's intention (despite the
+fact that the "pure-GTK" Emacs is not supported on the X Window System.).
+
+I think this is just a minor problem, despite occasionally causing some
+surprising behaviour, and using the WAYLAND_DISPLAY and DISPLAY variables
+to determine when to do the fallback to text mode is a viable solution.
+
+--000000000000490292065b94d2aa
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote gmail_quote_container"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Wed, 16 Sept 2026 at 08:14, Jared Finder &=
+lt;<a href=3D"mailto:jared@finder.org">jared@finder.org</a>&gt; wrote:<br><=
+/div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bo=
+rder-left:1px solid rgb(204,204,204);padding-left:1ex">On 2026-09-15 07:41,=
+ Johan Myr=C3=A9en wrote:<br>
+<br>&gt; Instead of relying on these environment variables, I think a bette=
+r <br>
+&gt; solution would be to first try opening a connection to the display <br=
+>
+&gt; server and, if that fails, fall back to text mode.<br><br>
+That wouldn&#39;t work if you ssh into a machine that can also run a local =
+<br>
+Wayland session.</blockquote><div><br></div><div>You are right.</div><div><=
+br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
+x;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+Looking at just the WAYLAND_DISPLAY and DISPLAY environment variables <br>
+might be enough here.=C2=A0 Is there a common case that this fails on?<br><=
+/blockquote><div><br></div><div>I think this would be a workable=C2=A0solut=
+ion, except for the minor glitch described below. Looking at just the varia=
+bles would also be a simpler solution than trying and failing to connect to=
+ the display server.</div><div><br></div><blockquote class=3D"gmail_quote" =
+style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pa=
+dding-left:1ex">
+Here&#39;s my understanding of all the common use cases I can think of:=C2=
+=A0</blockquote><div></div><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
+">[...]<br>Running when SSH&#39;d into a machine with X forwarding<br>
+* DISPLAY is set<br></blockquote><div><br></div><div>The idea here would pr=
+esumably be that the Emacs would be displayed on the local screen as a remo=
+te X11 app. Unfortunately, if the remote host has a Wayland desktop that=C2=
+=A0is logged in to, what happens when you start Emacs on the SSH command li=
+ne on the remote host is that Emacs is opened on the remote host&#39;s desk=
+top as a graphical Wayland app. On the other hand, if you are not logged in=
+ locally on the remote host, Emacs is displayed on the local screen as an X=
+11 app, which was the user&#39;s intention (despite the fact that the &quot=
+;pure-GTK&quot; Emacs is not supported on the X Window System.).=C2=A0</div=
+><div><br></div><div>I think this is just a minor problem, despite occasion=
+ally causing some surprising=C2=A0behaviour, and using the WAYLAND_DISPLAY =
+and DISPLAY variables to determine when to do the fallback to text mode is =
+a viable solution.</div><div><br></div></div></div>
+
+--000000000000490292065b94d2aa--
+
+
+From MAILER-DAEMON Wed Sep 16 06:45:55 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6n9D-0001WB-NI
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 06:45:55 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <hello@sebastianpetrovski.com>)
+ id 1x6fWW-0000Kw-JD
+ for emacs-devel@gnu.org; Tue, 15 Sep 2026 22:37:24 -0400
+Received: from mail-qv2-x10.google.com ([2607:f8b0:4864:33::10])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <hello@sebastianpetrovski.com>)
+ id 1x6fWU-0004Pa-PE
+ for emacs-devel@gnu.org; Tue, 15 Sep 2026 22:37:24 -0400
+Received: by mail-qv2-x10.google.com with SMTP id
+ 6a1803df08f44-90cdfc93e00so2735506d6.3
+ for <emacs-devel@gnu.org>; Tue, 15 Sep 2026 19:37:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789526241; cv=none;
+ d=google.com; s=arc-20260327;
+ b=SM139V7VQ+GQUFcxPw4X5F5SS4q/vvtkTGd5Chymd71jmFtaSB1eogmVPk4oBaUjKV
+ ACJtXKh3GzNAfkrJnmV4juTg/A9zZdlf+DfDT2WOiOiKISqi95MBcB/SvrSxBDGuco+b
+ sh8t5wixfH5DxNfwtAGAHEvOPQFhWfMg+gKuv6mWbQI/RwhPJo6LOZkUjI104kFSearV
+ ow2thD3tGeiEXPyrprEP1l6GKcHZmX87iaK7KhXFYM+oadVFOu67fOGbyM8I8o04GBEg
+ OeHYAnvsaTeUWU5Om6NKSDWC6m6F1mnPtmiG+HmdthEqv7D2h4laIAHWB/IRaGHvvKB6
+ tqtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=to:subject:message-id:date:from:mime-version:dkim-signature;
+ bh=RirZzOtVqmqGBBQhr14CIuq9v4O8nVmvG5vcUbPFFBg=;
+ fh=cIstDLrCPI8r459/y+uU+JAMkG0v5fud2zIjuEzNmdQ=;
+ b=DY2FMjj1paxLAYXQQqdUFBTeGrY3JJwOzURcVintUpkHDCp27k9rYnFuQiEnNa02Vy
+ nJNyyJQa5wNQd8pnEfG35uS9PDBqv3tU3OW0UG0uKvh38u1rcjJBrGMK3uDFBRy1vEbw
+ SNGZi5l5SS7xCezAgfE8cp8TUGOnYxRweAk1kWNX7sTf+Nw6Vm+CvmtyKtKSK7SCEY6b
+ CUikA52DfwEzmmwqVf2ccvzM5mduq8IPzDtty8sJ8/NAQQsNvLM1R7TGdDs7idR17NEP
+ 3bq1lOojA/wTGa7Iz0Ni10xa6vX3qXDjbCr9lrCAeIt6qt6aCyI67m+nWTTUpw/uZ/YU
+ /B7Q==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sebastianpetrovski.com; s=google; t=1789526241; x=1790131041; darn=gnu.org; 
+ h=content-type:to:subject:message-id:date:from:mime-version:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=RirZzOtVqmqGBBQhr14CIuq9v4O8nVmvG5vcUbPFFBg=;
+ b=Av5a/F18d1CaPRxEKYzFh1fczFBvQcD5YuFQnjrnBLCdMQyVcdSR5MBQdRB2RoNRtv
+ 5vr9qIk3OywA3c85ysioG1Pua/t9DHMgXzpq+JDe7S9ExDj6Xu3ilMQOGJr7VKZBXDHu
+ GPDCrj/4VBXDti6x88dblKjDjJNmluavzeX9sBJk3kqI+HZZt+upEe9v2BnjQgv7G4yU
+ FkxXuTfSl7DFPLb/w9XB1AD4G11T7hoVThvigIj8ZLbMEPm8Hm+qJf4PrAe1mxMHlOK+
+ /sCPMvZpuVyXXDDSLU+KREdS3P/WkgOx+rhmAMcO9Dr4KPP++HY0ZxTLYBQ5JXSfFy8B
+ vEpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789526241; x=1790131041;
+ h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=RirZzOtVqmqGBBQhr14CIuq9v4O8nVmvG5vcUbPFFBg=;
+ b=skqYfj+shnvwE35j8c0SZ8tybohqN7VcvDRLRwGoi4VZoC1VgL8tsXbLp8c9US0xVS
+ mixE3HTeugQpwqFwp7X3l+7niCfSvEo6JBh9j4R/pb7LlG//HHlhMTRY6qJbxZNvA9Qc
+ 3VYVC6BEZgg1yg4LQziAhqfyTCGCiXy71pl8y6ATygeV87rf1XM+a/ruRR3FfqHBK7Az
+ J3GZPkFUfJEgeosAmPn1/zb/g/92jgPpTRMEwPCTRr3MCSsMNClBBcOI9+MFEWKBXeZU
+ 33EJniMF+Keti8qEjjI3cAu/PvPhFU3+BECtREz0yAM+x9unoNH+Rq0gvLPpP/4cyx1w
+ 4jYQ==
+X-Gm-Message-State: AFuF++loXDeR1DVw4kh3Qe8cgRmjfhcKV2PnSf+A3pI8YuGn6i/hznDs
+ OCg5tgBXCwsPk97bz4RgVfHojQ0NxvMucoraFdvVUKEimzUJpEQfvRxQJQekY3Z4hy5/DIRDZ1/
+ 3fLJ+7zXzVKlw6Q0TIZvO9nT2ZWqxPVA2PrWgLB8cH539OvTn9aglcsBF08y2
+X-Gm-Gg: AYBFou2vIBQ8qwNBKnkUOJUXLXKBP8gtMAXEsfq/EdMSytuZaZZjqFvcWj2gJaXcWug
+ M8yTmAwFOPnmjKhbDdajXYf13dFCyRf6QDKMkU0efcjNv6Y5c8Iut2V5X6fulM64vLm1lRZ168D
+ HuAUCjeEkChliSqdYHZtjbbxNo/G9+rgKsFMerDEPTG3r/wNgX426VNp/fdrEhpO2R0dfp3S06z
+ Cshtwz1KAQANGmiARNh0/LBBN2b1x9L4nDRllEhMh1PTs+o30UchnEK9fq+QbAyU4/4K/BT1bsD
+ 6n8IAgcAhc2shqAvBrd2kAsNM3h1m1e//ZtkOeBs/n/DlMibQg==
+X-Received: by 2002:a05:6214:449e:b0:912:33c8:80a6 with SMTP id
+ 6a1803df08f44-9123d7d417amr20109326d6.37.1789526240816; Tue, 15 Sep 2026
+ 19:37:20 -0700 (PDT)
+MIME-Version: 1.0
+From: Sebastian Petrovski <hello@sebastianpetrovski.com>
+Date: Wed, 16 Sep 2026 12:07:09 +0930
+X-Gm-Features: AcwNN1V1xZjTigUuacBxuWX6FjdIx5yr4E2fT6jAVzGvenGq0sGKBal2w2Sus8Y
+Message-ID: <CALQebVkU-QRFSHY22GVsMYRh02sjZ_cWM5cNs2ss+wVKEi5QpQ@mail.gmail.com>
+Subject: GNU ELPA connection timeouts from Vultr Sydney IPs
+To: emacs-devel@gnu.org
+Content-Type: multipart/alternative; boundary="000000000000e68623065b908b42"
+Received-SPF: pass client-ip=2607:f8b0:4864:33::10;
+ envelope-from=hello@sebastianpetrovski.com; helo=mail-qv2-x10.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, HTML_MESSAGE=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Wed, 16 Sep 2026 06:45:28 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 02:37:25 -0000
+
+--000000000000e68623065b908b42
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+I'm investigating repeated connection failures to GNU ELPA from Vultr
+instances in Sydney.
+
+Source IPs were 45.32.189.229 and 45.76.115.52, tested on 16 September
+2026, approximately 01:30=E2=80=9302:20 UTC. These were disposable build ma=
+chines
+and have since been deleted.
+
+Requests to elpa.gnu.org (209.51.188.89) time out before establishing a TCP
+connection, on both ports 80 and 443. We also observed HTTPS connection
+timeouts to www.gnu.org (209.51.188.116).
+
+The same ELPA archives download successfully from our workstation. GitHub
+and Nix=E2=80=99s cache remain reachable from the affected Vultr instances.
+
+Could you check whether these source addresses or their ranges are subject
+to filtering, abuse protection, or connection rate limits? Alternatively,
+is there a known routing issue affecting this network?
+
+We are not assuming GNU is responsible; we=E2=80=99re also asking Vultr to
+investigate. The downloads are ordinary pinned Emacs package archives used
+by our NixOS/Doom Emacs build.
+
+Thank you.
+
+--000000000000e68623065b908b42
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><p>Hello,</p>
+<p>I&#39;m investigating repeated connection failures to GNU ELPA from Vult=
+r instances in Sydney.</p>
+<p>Source IPs were <code>45.32.189.229</code> and <code>45.76.115.52</code>=
+, tested on 16 September 2026, approximately 01:30=E2=80=9302:20 UTC. These=
+ were disposable build machines and have since been deleted.</p>
+<p>Requests to <code><a href=3D"http://elpa.gnu.org">elpa.gnu.org</a></code=
+> (<code>209.51.188.89</code>) time out before establishing a TCP connectio=
+n, on both ports 80 and 443. We also observed HTTPS connection timeouts to =
+<code><a href=3D"http://www.gnu.org">www.gnu.org</a></code> (<code>209.51.1=
+88.116</code>).</p>
+<p>The same ELPA archives download successfully from our workstation. GitHu=
+b and Nix=E2=80=99s cache remain reachable from the affected Vultr instance=
+s.</p>
+<p>Could you check whether these source addresses or their ranges are subje=
+ct to filtering, abuse protection, or connection rate limits? Alternatively=
+, is there a known routing issue affecting this network?</p>
+<p>We are not assuming GNU is responsible; we=E2=80=99re also asking Vultr =
+to investigate. The downloads are ordinary pinned Emacs package archives us=
+ed by our NixOS/Doom Emacs build.</p>
+<p>Thank you.</p></div>
+
+--000000000000e68623065b908b42--
+
+
+From MAILER-DAEMON Wed Sep 16 07:15:26 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6nbq-0003NU-EG
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 07:15:26 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x6nbo-0003N8-VR
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 07:15:25 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x6nbo-0007WQ-MF; Wed, 16 Sep 2026 07:15:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=Plj/l773YtFuHqtOuYosK0NzWmPadEFF+3Qe07iUCrM=; b=Zx2nBHN9Hk2o
+ IoJAVCln+eQFTlTfYS9DHzmyPxMvW3xzWeo1iU+UwgpsTPH8Nt6GMKMJjVnOQHU8jeHOWs4AjSZz/
+ VAnJa9A1ok257vCrk8Gf47ELkcqhWeeEI5SpyK/MA7ftVZsiZbeG4pCIq+xawyuzR9DgSxvYGGAyQ
+ YGsfnvMKbwCFmIx6VglptHdC83M9q9Na6IsMX4XHuEtnSlfCs7Lpx4Y3qrHU+VqGcGIVtcDEa2bN6
+ kTojK97F7XflhsrAMnIIuN8rkQOlZQptOjSy3IUYPoHpbo9gHMa03ztogf/5rVOQ49wzeYeYoGsvN
+ LLybUy9cqH0wbKK5yKwv2Q==;
+Date: Wed, 16 Sep 2026 14:15:19 +0300
+Message-Id: <86zexhla60.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Kai Ma <justksqsf@gmail.com>
+Cc: kevin.legouguec@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <87tsnql6nv.fsf@gmail.com> (message from Kai Ma on Tue, 15 Sep
+ 2026 20:18:44 +0200)
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org> <87tsnql6nv.fsf@gmail.com>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 11:15:25 -0000
+
+> From: Kai Ma <justksqsf@gmail.com>
+> Cc: kevin.legouguec@gmail.com,  emacs-devel@gnu.org
+> Date: Tue, 15 Sep 2026 20:18:44 +0200
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> This can be confirmed with a simple change in font.c that fixes this
+> >> problem:
+> >> 
+> >> modified   src/font.c
+> >> @@ -3902,7 +3902,7 @@ codepoint_is_emoji_eligible (int ch)
+> >>      return true;
+> >> 
+> >>    if (! NILP (Fmemq (make_fixnum (ch),
+> >> -		     Vauto_composition_emoji_eligible_codepoints)))
+> >> +		     Vauto_composition_emoji_tty_eligible_codepoints)))
+> >>      return true;
+> >> 
+> >>    return false;
+> >
+> > That doesn't look right to me, as it will not allow us to select the
+> > text-style or emoji-style appearance depending on whether the
+> > symbol character is followed by VS-15 or VS-16 (or nothing).
+> 
+> Ah, I see the problem.  This change would render 263A FE0E as a color
+> Emoji, which is incorrect.
+
+Yes.
+
+> > I would prefer instead to fix the Awk script emoji-zwj.awk such that
+> > sequences starting with the likes of U+263A do NOT add composition
+> > rules to composition-function-table.  Instead, their special treatment
+> > should be implemented in some code that only affects TTY frames, for
+> > example in compose-gstring-and-emoji.
+> 
+> The attached patch reverted the addition of compositions, and instead
+> modified the default composition rule for VS16 to be
+> compose-gstring-and-emoji.
+> 
+> I believe updating VS16's composition rule is the right fix.  Since the
+> actual composition function is dispatched by auto-compose-chars, it
+> selects compose-gstring-for-graphic on the graphical display, preserving
+> previous behavior; and it selects compose-gstring-and-emoji on textual
+> terminals.
+
+This aspect is highly confusing, so it should be mentioned in comments
+to this setting of composition-function-table.  Please also update the
+commentary below that, before the part which sets up
+composition-function-table for other variation selectors, because it
+currently says that VS-16 is handled by font.c:font_range.
+
+> >> [ What I don't understand here: if the Emoji sequence is known to be
+> >>   composed due to a specific font (e.g. Noto Color Emoji), why would it
+> >>   go through another round of font selection (based on the first
+> >>   codepoint and/or heuristics around the emoji script) at all? ]
+> >
+> > Sorry, I don't understand the question.  If what I said above doesn't
+> > explain this to you, please elaborate.
+> 
+> I was confused about the order of finding a font and using that font to
+> compose.  Upon closer inspection, I believe Emacs decides on a font
+> first, then uses that font for composition.  So the heuristic is indeed
+> needed.
+
+Yes.  And this cannot be any other way, because which characters can
+be composed is determined by the font features.  So we cannot ask the
+shaping engine to tell us whether and how to compose a sequence of
+characters without also telling it which font to use.  This is also
+the reason why Emacs can only compose a sequence of characters if all
+of them have glyphs in the same font.
+
+> --- a/lisp/composite.el
+> +++ b/lisp/composite.el
+> @@ -780,6 +780,10 @@ compose-gstring-for-dotted-circle
+>  	 (if (memq val '(Mn Mc Me))
+>  	     (set-char-table-range composition-function-table key elt)))
+>       unicode-category-table))
+> +  ;; for Emoji sequences (VS16)
+> +  (aset composition-function-table #xFE0F
+> +        `(["\\c.\\c^+" 1 compose-gstring-and-emoji]
+
+Why "\\c^+"?  AFAIK, VS-16 cannot be meaningfully repeated in a
+composed sequence.  So I think "\\c.\\c^+" should be "\\c.." instead,
+since the second "." is the VS-16 itself.
+
+> +          [nil 0 compose-gstring-and-emoji]))
+
+And what does this part supposed to do?  I guess you copied it from
+the entry for composing combining characters, but will
+compose-gstring-and-emoji DTRT when the only character it gets is the
+VS-16 itself?  What happens if you use compose-gstring-for-graphic
+there, or remove this element altogether?
+
+Thanks.
+
+
+From MAILER-DAEMON Wed Sep 16 08:07:27 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6oQ9-0005ap-RV
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 08:07:26 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x6oQ1-0005YF-Al
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 08:07:19 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x6oPz-00066W-CC; Wed, 16 Sep 2026 08:07:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-version:References:Subject:In-Reply-To:To:From:
+ Date; bh=2cmtEYIXWvGk7CwEd4eU02bCAM7Kup4vIS5t7m4K2s8=; b=Cnur0g1FGpa8gHhcZm5P
+ kMe99btDs6Kf+J+CRiI6XniVyVwybeLuMWkVcSKzpuugK3EcdvvFZ4LhAIUhWt7A3fXzM4W84Y7PJ
+ NB38le6IH+73e4G2oR+aCvwSOnomDkFRHjF2CzKvmmYEvql6vE1hD2kaMsEUEOBFgSwyW1P90W5RT
+ A9n8fniOwQNsLAVwP9aE1nEbld2eIanLglxybGOSlPj3jibPpMkzKgQDqj0b28JfHbWuAjLzCh3m1
+ aqxXppyCmrqLpEs5SX8IJlAaBdyiIkXiMByYLgi29/MNJJ7/16o3TUQY06fkf7YCOEm7nDMK9ZgCS
+ CyJ0TOi5wEZEZw==;
+Date: Wed, 16 Sep 2026 15:07:06 +0300
+Message-Id: <86ld91l7rp.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Sebastian Petrovski <hello@sebastianpetrovski.com>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <CALQebVkU-QRFSHY22GVsMYRh02sjZ_cWM5cNs2ss+wVKEi5QpQ@mail.gmail.com>
+ (message from Sebastian Petrovski on Wed, 16 Sep 2026 12:07:09 +0930)
+Subject: Re: GNU ELPA connection timeouts from Vultr Sydney IPs
+References: <CALQebVkU-QRFSHY22GVsMYRh02sjZ_cWM5cNs2ss+wVKEi5QpQ@mail.gmail.com>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 12:07:20 -0000
+
+> From: Sebastian Petrovski <hello@sebastianpetrovski.com>
+> Date: Wed, 16 Sep 2026 12:07:09 +0930
+> 
+> I'm investigating repeated connection failures to GNU ELPA from Vultr instances in Sydney.
+> 
+> Source IPs were 45.32.189.229 and 45.76.115.52, tested on 16 September 2026, approximately
+> 01:30–02:20 UTC. These were disposable build machines and have since been deleted.
+> 
+> Requests to elpa.gnu.org (209.51.188.89) time out before establishing a TCP connection, on both ports 80
+> and 443. We also observed HTTPS connection timeouts to www.gnu.org (209.51.188.116).
+> 
+> The same ELPA archives download successfully from our workstation. GitHub and Nix’s cache remain reachable
+> from the affected Vultr instances.
+> 
+> Could you check whether these source addresses or their ranges are subject to filtering, abuse protection, or
+> connection rate limits? Alternatively, is there a known routing issue affecting this network?
+> 
+> We are not assuming GNU is responsible; we’re also asking Vultr to investigate. The downloads are ordinary
+> pinned Emacs package archives used by our NixOS/Doom Emacs build.
+
+Please post these questions to savannah-hackers-public@gnu.org, where
+it will be read by people who might be able to do anything with these
+problems.  We here do not manage nor control the GNU Internet
+infrastructure.
+
+
+From MAILER-DAEMON Wed Sep 16 10:42:50 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6qqY-0005VF-C9
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 10:42:50 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tyler@plantarum.ca>)
+ id 1x6qSm-000212-3l
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 10:18:16 -0400
+Received: from fhigh-a7-smtp.messagingengine.com ([103.168.172.158])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tyler@plantarum.ca>)
+ id 1x6qSj-0000Qs-SJ
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 10:18:15 -0400
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+ by mailfhigh.phl.internal (Postfix) with ESMTP id B730014000F8
+ for <emacs-devel@gnu.org>; Wed, 16 Sep 2026 10:18:09 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+ by phl-compute-06.internal (MEProxy); Wed, 16 Sep 2026 10:18:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plantarum.ca; h=
+ cc:content-transfer-encoding:content-type:content-type:date:date
+ :from:from:in-reply-to:message-id:mime-version:reply-to:subject
+ :subject:to:to; s=fm3; t=1789568289; x=1789654689; bh=EEa31giUVe
+ heIjEs/tZmUXThRJbzBolFJv9k2l5wZrQ=; b=gboZCht3i2lNHaeDMy2mWfEJFH
+ rUoDnwZinrrFNP6SYWooOz45jbwGCLi6VqIpn42hm4Fy57OydfdshRDtJcoSsYpD
+ cx2NvPnzzq2v+ie72jsDBKsPRm1Kqk/LOgww6OuPLI4pKVbGbnpHNIkWqQSO7fky
+ 2jAE8QR8rVr6z9vaKVh+jh7EivwUz8pIMqUfqJu6cwWi4dZ4BbdjB8l+fdmGgufL
+ aUlESn0knzX0uwTw3kNds2IjO4Doa4lRGw4Umf8+RuMFM0fhZn8BWpYS1sa9koRn
+ 7t0M+e6mnz0qx4Q2SyOJbMOFpL/6W5VoFBrh6QI1iVCk3CyF9fBXvAHN6KSg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-transfer-encoding:content-type
+ :content-type:date:date:feedback-id:feedback-id:from:from
+ :in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+ 1789568289; x=1789654689; bh=EEa31giUVeheIjEs/tZmUXThRJbzBolFJv9
+ k2l5wZrQ=; b=rMydi2834UIrODLJe7kE7ciR+y8dEz4EYKfTo/6OreJiiubCXhP
+ 9y3svrhixtLr636YgVA72UBOUump9DktfTL7xcAPukjEGBEG5hAve42TtlLzRnUw
+ JSCcK41G1il/dnkUDjuFKjIKXw538JTUMg8+XRQ45a0xW7ewgL8RpoAp8MX4Bocb
+ 7KCqJVhzYOe6V0iXL/SgUNxkW1z5r26UQMdeCrHJo9U0IbI+4isuLtdNjAWQhb28
+ UtDNjBG3XjpbAvUHo4neDMDJe4i30MvS7Z6aWY/gSqY56eDpf3fvfHwcn4wmsrdv
+ RNG7JU3m7vAiyoQ1juxeUzzqEkglgc+t9ww==
+X-ME-Sender: <xms:IaWqaiPnPWnqVtQVLXk08bGJktE-K5Ah7JRLmW_Cjkd6v-amG5cSwg>
+ <xme:IaWqaryv17Y83d1Jjlv9Ag6t96ZH0JEnGNO3m7k6SBNe4hdeWiy03-AsLIxdsOIrf
+ u8FZwMYzW76l2ylwABcIxh7rpiftOSTynDpNs7F85mkn4ZUy5o3P1w>
+X-ME-Proxy-Cause: dmFkZTEURbDIZw9M9wrb/q7fIxr3WykptKXpUgUjXL9BhOvVAZnC54nAQuUsS3uLQo/A/J
+ V5aN9329G0v8HCG63G4V+fV25mfUkedLch3ej7eRaRzFtxYjHMQT18fR2nqj5X9WQlEGMB
+ rQvo66wUOlQbxQ4IQ1caCNDCFLvZDQ4bQZ0KIPI2jedJw4J4KoDfbEuUvw0XsUXFNs0bA7
+ EDOMYUrmMbuKjgyHxwc7MyWNqYVxX55+FC8dXX5XYlHdI+9DzZJmmZrbMdQlEgPkiCxXbu
+ Yd3PuASrI3xE5Ph2VfNWsOLAJwYpiEQNQ6LSikJlWho3F7RPxoFv9dnxtoBQ3i705YqUbS
+ R8MOBnha9DsQ1SbaGc14KUdrb2vD2M18Ln27IX8QKEz/XzRmqKhuOHmSMTCZqq96AvZRCH
+ G6LKnUeje7XuDEYrwhQS/qjIzwuBo6pCmaxAGrC8/dYIre5B6QgeFgBBPGF+nh3BJl/rJn
+ oG74uB2NiOw8hlOpxpOo/9B1axQRmjhoXPZAT7sja4GXwOXKWpfW549duaYyFDU/st71m6
+ nAlr9Ceg58TUfGzyCq+8tJuRCMnN22ZWjeze/Y6geKkswtcacse9r3HUAljHAKkw1zsW19
+ 6F/PSjfGE4CF9C3mJcXtIIrb3CQLYbRr9fU9Wmo1u3IWC7l8iix7YMdR41SQ
+X-ME-Proxy: <xmx:IaWqapxT9hRc9SA8HVlg_8YQRI_eBYJbeuxEhE3g1DD_yoCpzWtVAA>
+ <xmx:IaWqagPWbz7avd1B3bwfvjhX5stdZloc0cEHbZWaECGuMXh-rrD0nQ>
+ <xmx:IaWqao88y3Dbf5dEXK73k5GRt4uPLSVm0sFOhkLgA31vOcdGVLgteg>
+ <xmx:IaWqagrEOt369sU_uM252cbRuspx2qlAbdYcYI_P2vEH1Oxv374BZw>
+ <xmx:IaWqaiKszsI9_7d0saCPhL37XPgZ0jNrL5rfwjrNw7LSUNlOhflkW8sY>
+Feedback-ID: i14ac40e7:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+ id 8766018C0067; Wed, 16 Sep 2026 10:18:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+MIME-Version: 1.0
+Date: Wed, 16 Sep 2026 10:17:22 -0400
+From: "Tyler Smith" <tyler@plantarum.ca>
+To: emacs-devel@gnu.org
+Message-Id: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+Subject: EWW dom filtering/editing based on site url
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=103.168.172.158; envelope-from=tyler@plantarum.ca;
+ helo=fhigh-a7-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Wed, 16 Sep 2026 10:42:48 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 14:18:17 -0000
+
+Hello,
+
+I'm using EWW more regularly, and was wondering about the feasibility of applying scripts to alter the dom of specific web pages. 
+
+For example, I'm reading "Eloquent Javascript"[1]. The navigation includes next and previous chapter links, but they don't include the `rel="next"` and `rel="previous"` attributes that EWW uses in `eww-next-url` and `eww-previous-url`. So I wrote a function to add the attributes to the appropriate links.
+
+I have three questions:
+
+1. Is there existing support for such a use? I found `eww-after-render-hook`, but I think that happens too late in the process.
+
+2. Assuming there isn't, where is the most appropriate place to do this? I have a working example by inserting a check into `eww-display-document` immediately before the call to `(shr-insert-document document)`. (code pasted below)  
+
+3. Is this something that would be useful to include in EWW as a generalized feature? I found a previous discussion [2] that suggests EWW is kept deliberately light-weight to minimize speed issues, so maybe not? If not I'm not arguing it should, speed is important! But I was thinking since this code would 'only' require checking the URL prior to display, for most pages (i.e., those that don't match a filter) the speed hit would be minimal. But I'm a novice in these matters.
+
+Thanks for your time,
+
+- tyler
+
+[1] https://eloquentjavascript.net/00_intro.html
+[2] https://lists.gnu.org/archive/html/emacs-devel/2013-12/msg00896.html
+
+Example code modification:
+```
+(defun eww-display-document (document &optional point buffer)
+  (unless (fboundp 'libxml-parse-html-region)
+    (error "This function requires Emacs to be compiled with libxml2"))
+  (setq buffer (or buffer (current-buffer)))
+  (unless (buffer-live-p buffer)
+    (error "Buffer %s doesn't exist" buffer))
+  ;; There should be a better way to abort loading images
+  ;; asynchronously.
+  (setq url-queue nil)
+  (let ((url (when (eq (car document) 'base)
+               (alist-get 'href (cadr document)))))
+    (unless url
+      (error "Document is missing base URL"))
+    (with-current-buffer buffer
+      (setq bidi-paragraph-direction nil)
+      (plist-put eww-data :dom document)
+      (let ((inhibit-read-only t)
+            ;; Possibly set by the caller, e.g., `eww-render' which
+            ;; preserves the old URL #target before chasing redirects.
+            (shr-target-id (or shr-target-id
+                               (url-target (url-generic-parse-url url))))
+            (shr-external-rendering-functions
+             (append
+              shr-external-rendering-functions
+              '((title . eww-tag-title)
+                (form . eww-tag-form)
+                (input . eww-tag-input)
+                (button . eww-form-submit)
+                (textarea . eww-tag-textarea)
+                (select . eww-tag-select)
+                (link . eww-tag-link)
+                (meta . eww-tag-meta)
+                (a . eww-tag-a)))))
+        ;; Unregister any existing change tracker while we render the
+        ;; document.
+        (when eww--change-tracker-id
+          (track-changes-unregister eww--change-tracker-id)
+          (setq eww--change-tracker-id nil))
+        (erase-buffer)
+
+        ;; TWS Check url against a list of targets; if it matches,
+        ;; apply the appropriate transformation to the DOM here:
+        ;; (code to be bundled into an external function and a list of 
+        ;; url/script pairs in actual use) 
+        (when (string-match "eloquentjavascript.net" url)
+          (let* ((NODES
+                  (dom-search
+                   document (lambda (x)
+                              (string= (dom-attr x 'title)
+                                       "next chapter"))))
+                 (NODE (pop NODES)))
+            (while NODE
+              (dom-set-attribute NODE 'rel "next")
+              (setq NODE (pop NODES))))
+          (let* ((NODES
+                  (dom-search 
+                   document (lambda (x) 
+                              (string= (dom-attr x 'title)
+                                       "previous chapter"))))
+                 (NODE (pop NODES)))
+            (while NODE
+              (dom-set-attribute NODE 'rel "previous")
+              (setq NODE (pop NODES)))))
+        ;; TWS END
+        
+        (with-delayed-message (2 "Rendering HTML...")
+          (shr-insert-document document))
+        (cond
+         (point
+          (goto-char point))
+         (shr-target-id
+          (goto-char (point-min))
+          (let ((match (text-property-search-forward
+                        'shr-target-id shr-target-id #'member)))
+            (when match
+              (goto-char (prop-match-beginning match)))))
+         (t
+          (goto-char (point-min))
+          ;; Don't leave point inside forms, because the normal eww
+          ;; commands aren't available there.
+          (while (and (not (eobp))
+      	              (get-text-property (point) 'eww-form))
+            (forward-line 1)))))
+      ;; We used to enable this in `eww-mode', but it cause tracking of
+      ;; changes while we insert the document, whereas we only care
+      ;; about changes performed afterwards.
+      (setq eww--change-tracker-id (track-changes-register
+                                    #'eww--track-changes :nobefore t))
+      (eww-size-text-inputs))))
+```
+
+
+From MAILER-DAEMON Wed Sep 16 11:08:28 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6rFM-0003Wg-5j
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 11:08:28 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <justksqsf@gmail.com>)
+ id 1x6rFL-0003VW-2K
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 11:08:27 -0400
+Received: from mail-wm2-x0b.google.com ([2a00:1450:4864:31::b])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <justksqsf@gmail.com>)
+ id 1x6rFI-0003c8-Q7
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 11:08:26 -0400
+Received: by mail-wm2-x0b.google.com with SMTP id
+ 5b1f17b1804b1-49cfcf2548aso22819395e9.0
+ for <emacs-devel@gnu.org>; Wed, 16 Sep 2026 08:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789571302; x=1790176102; darn=gnu.org;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+ :reply-to:content-type;
+ bh=mu41r9cf8SYJUYO1qWf3eXL5MvJ181fY3tkKztWEi+s=;
+ b=ZTRogybBQRnlGkN0iP0OkvK5WbxZnYugk8vZg0e78za5a6zGWcE+Ol4QWleH4/rK5O
+ ZXhH+B0ObShPtEbNRqnaZRwxuzfdM7P+KjxRvR8ioP6xJ3MNl+jUUXDdft61R17lZcSt
+ 65lG2T72NEa2KWUcGPLugKjuc/WqZlh9pFE8CLyBLnHHUROMXTZ4i1J4W2RQLzd+NuJB
+ mvhJP5j85JGKJUCa+7NrNNkBPRuC/uVNciDLlVDgNa4NDnujWVCIxpOggne4LgZq2KP1
+ KwcWJwkSq9kvHc/5ILLb4scq2Hn5tUGoFTIRVhqLrLfh18XL15d7XQM77E8KkBHljfKc
+ ftmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789571302; x=1790176102;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=mu41r9cf8SYJUYO1qWf3eXL5MvJ181fY3tkKztWEi+s=;
+ b=DruEGRhTS+vbno5XSQP+Px55X4kXwwyO4dGWmTy21HdZ96r+yFXu3o1b8PB0dZV7oN
+ 9jHEDiadDjhD91haWSTHRUA1scJTNgY/dkh3ICEfT7XUcn1iGtxQnr+ka/CbOnsyPSYU
+ lJAqOORwabfVeS7gtrmL7PPMe07t08mayNRVQ3gImrV4GPThcEYiXrzSrp0wjtRdiEBi
+ 8pbFoREO97uCtUObvk+rrFIL2KjBOfI3DpfuV9XICtCgtE/ZMbKJCtCzLK5iqEKr5yZ2
+ 3rrPxY3o2nmac967oGuo7KuCOCIRXAfU3RtDxSRYCcz3ELOBloPYhaSxbYAf4tlsq1JY
+ L9Vw==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBywGtzyIfnC4mlKzb0QhJt9lQwLjrAa+sOO7+Oo7qJ4nz9pRybFJNClqCr2xYC5Ruuyw556s5XyUmFeWQ==@gnu.org
+X-Gm-Message-State: AFuF++m9dRMus3VxLLt2PdJMcvKQfzBFoqKu76yufdVJ6BJfFaQkCG+v
+ Db9OpczlCy8PYu1zNgfqMtiydfJ2VCInArcK+JY/g89ZKH6UFa+iJAtTU5EFR5FB
+X-Gm-Gg: AYBFou25j3E6nBCZDcORrTQfPa7Zq5JRhFJiUI0LabMH3QbtoL8l6n5wUSZtSmb7jvC
+ mJNm83cOzCh/ZjBcsoIb7cggiVZ1LXlQ/K/DAJqm6tRwDZTuD4PwQ4Z0sbfarGlJeRvkInf2PeY
+ vr9IT7exSZHs+t8pB9872BlXsaTfKZHtrYB1CxpXSP9yAM+aAk+VZSzByDupWYhw6w/xJVNRB7D
+ faZHKAiB7TjseKW0R2wqcfwDnXPVpqa+EW0EQGBppf0LnX9ymVHmNJMzvPdfpToUIwhXwTYJKNU
+ XGXPIl1mtGcHEZNQrhDfeZklGuU5jwRmmbEzzD7zIgRCBA9XDtDuQ4HynEyhPzorrDF4vgXlgNR
+ ZNefLR5/I6E1vPDLz/15KK9NyZFZWSe44UfQjtTeQj1XcZDwokffdbqtLXXxp0fIMH6gHFb3JjL
+ iUK5kzYxTkXSslawnkzglr/L+cYAf3uo2Fnabo1odLb6ZZI2zypfFi6GCAQfqsMquLYL4YmX/zl
+ g==
+X-Received: by 2002:a05:600c:3585:b0:49c:fa21:1c7e with SMTP id
+ 5b1f17b1804b1-49eb7320b81mr45472085e9.19.1789571301988; 
+ Wed, 16 Sep 2026 08:08:21 -0700 (PDT)
+Received: from M2403003457HW ([119.13.72.105])
+ by smtp.gmail.com with ESMTPSA id
+ 5b1f17b1804b1-49fbd0ab61csm1142175e9.6.2026.09.16.08.08.20
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Wed, 16 Sep 2026 08:08:21 -0700 (PDT)
+From: Kai Ma <justksqsf@gmail.com>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: kevin.legouguec@gmail.com,  emacs-devel@gnu.org
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+In-Reply-To: <86zexhla60.fsf@gnu.org>
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org> <87tsnql6nv.fsf@gmail.com>
+ <86zexhla60.fsf@gnu.org>
+Date: Wed, 16 Sep 2026 17:08:18 +0200
+Message-ID: <87o6dx5j4t.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=-=-="
+Received-SPF: pass client-ip=2a00:1450:4864:31::b;
+ envelope-from=justksqsf@gmail.com; helo=mail-wm2-x0b.google.com
+X-Spam_score_int: -15
+X-Spam_score: -1.6
+X-Spam_bar: -
+X-Spam_report: (-1.6 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ FROM_LOCAL_NOVOWEL=0.5, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 15:08:27 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> > I would prefer instead to fix the Awk script emoji-zwj.awk such that
+>> > sequences starting with the likes of U+263A do NOT add composition
+>> > rules to composition-function-table.  Instead, their special treatment
+>> > should be implemented in some code that only affects TTY frames, for
+>> > example in compose-gstring-and-emoji.
+>>=20
+>> The attached patch reverted the addition of compositions, and instead
+>> modified the default composition rule for VS16 to be
+>> compose-gstring-and-emoji.
+>>=20
+>> I believe updating VS16's composition rule is the right fix.  Since the
+>> actual composition function is dispatched by auto-compose-chars, it
+>> selects compose-gstring-for-graphic on the graphical display, preserving
+>> previous behavior; and it selects compose-gstring-and-emoji on textual
+>> terminals.
+>
+> This aspect is highly confusing, so it should be mentioned in comments
+> to this setting of composition-function-table.  Please also update the
+> commentary below that, before the part which sets up
+> composition-function-table for other variation selectors, because it
+> currently says that VS-16 is handled by font.c:font_range.
+
+Done.  To make it easier to read, I also separated the actual code out
+of the placeholder symbol compose-gstring-and-emoji, and moved some code
+around in composite.el.
+
+>> >> [ What I don't understand here: if the Emoji sequence is known to be
+>> >>   composed due to a specific font (e.g. Noto Color Emoji), why would =
+it
+>> >>   go through another round of font selection (based on the first
+>> >>   codepoint and/or heuristics around the emoji script) at all? ]
+>> >
+>> > Sorry, I don't understand the question.  If what I said above doesn't
+>> > explain this to you, please elaborate.
+>>=20
+>> I was confused about the order of finding a font and using that font to
+>> compose.  Upon closer inspection, I believe Emacs decides on a font
+>> first, then uses that font for composition.  So the heuristic is indeed
+>> needed.
+>
+> Yes.  And this cannot be any other way, because which characters can
+> be composed is determined by the font features.  So we cannot ask the
+> shaping engine to tell us whether and how to compose a sequence of
+> characters without also telling it which font to use.  This is also
+> the reason why Emacs can only compose a sequence of characters if all
+> of them have glyphs in the same font.
+
+Thanks for the explanation!
+
+>> --- a/lisp/composite.el
+>> +++ b/lisp/composite.el
+>> @@ -780,6 +780,10 @@ compose-gstring-for-dotted-circle
+>>  	 (if (memq val '(Mn Mc Me))
+>>  	     (set-char-table-range composition-function-table key elt)))
+>>       unicode-category-table))
+>> +  ;; for Emoji sequences (VS16)
+>> +  (aset composition-function-table #xFE0F
+>> +        `(["\\c.\\c^+" 1 compose-gstring-and-emoji]
+>
+> Why "\\c^+"?  AFAIK, VS-16 cannot be meaningfully repeated in a
+> composed sequence.  So I think "\\c.\\c^+" should be "\\c.." instead,
+> since the second "." is the VS-16 itself.
+
+"\\c^+" is needed because of keycap sequences:
+
+0030 FE0F 20E3 # 0=EF=B8=8F=E2=83=A3 E0.6 keycap: 0
+0030 20E3      # 0=E2=83=A3 E0.6 keycap: 0
+
+If "\\c^" is used, the first line is rendered as two glyphs because it
+stops at VS-16 and does not consider 20E3 (COMBINING ENCLOSING KEYCAP).
+
+>> +          [nil 0 compose-gstring-and-emoji]))
+>
+> And what does this part supposed to do?  I guess you copied it from
+> the entry for composing combining characters, but will
+> compose-gstring-and-emoji DTRT when the only character it gets is the
+> VS-16 itself?  What happens if you use compose-gstring-for-graphic
+> there, or remove this element altogether?
+
+Currently, a standalone VS16 looks like a box, but if I remove it, it
+looks like a zero-width space.  So I keep it to preserve the old
+behavior.  On TUI I don't observe meaningful differences, though.
+
+
+--=-=-=
+Content-Type: text/x-diff
+Content-Disposition: attachment;
+ filename=0001-Fix-Emoji-font-selection-on-graphical-terminals.patch
+
+>From 08da5f6a4d3ea21d7ab79595650358ead664c95d Mon Sep 17 00:00:00 2001
+From: Kai Ma <justksqsf@gmail.com>
+Date: Tue, 15 Sep 2026 19:15:59 +0200
+Subject: [PATCH] Fix Emoji font selection on graphical terminals
+
+* admin/unidata/emoji-zwj.awk: Do not generate composition rules for all
+eligible codepoints.
+* lisp/composite.el: Modify VS16's default composition rule to call
+compose-gstring-and-emoji instead of compose-gstring-for-graphic.
+(compose-gstring-and-emoji): Actual code moved to
+compose-gstring-and-emoji-for-terminal.
+(compose-gstring-and-emoji-for-terminal): Renamed from
+compose-gstring-and-emoji.
+---
+ admin/unidata/emoji-zwj.awk |  6 ----
+ lisp/composite.el           | 63 ++++++++++++++++++++++++-------------
+ 2 files changed, 41 insertions(+), 28 deletions(-)
+
+diff --git a/admin/unidata/emoji-zwj.awk b/admin/unidata/emoji-zwj.awk
+index c64a48b335d..d383597d169 100755
+--- a/admin/unidata/emoji-zwj.awk
++++ b/admin/unidata/emoji-zwj.awk
+@@ -68,7 +68,6 @@
+ 
+ /^[0-9A-F]+ FE0F *; *emoji style;/ {
+     tty_trigger_codepoints[++n_tty_triggers] = $1
+-    ch[$1] = $1
+ }
+ 
+ END {
+@@ -113,11 +112,6 @@ END {
+          print "?\\N{U+" tty_trigger_codepoints[trig] "}"
+      }
+      print "))"
+-     # Exclude keycap sequence initials
+-     delete ch["0023"]
+-     delete ch["002A"]
+-     for (i = 0; i <= 9; i ++)
+-         delete ch[sprintf("003%d", i)]
+ 
+      # Generate unqualified tail initials.
+      print "(setq auto-composition-emoji-unqualified-tail-initials"
+diff --git a/lisp/composite.el b/lisp/composite.el
+index 6770ba6e504..8dd53ef5f3a 100644
+--- a/lisp/composite.el
++++ b/lisp/composite.el
+@@ -871,13 +871,46 @@ compose-gstring-for-variation-glyph
+ 	      (lgstring-set-glyph gstring 1 nil)
+ 	      (throw 'tag gstring)))))))
+ 
+-;; We explicitly don't handle #xFE0F (VS-16) here, because that's
+-;; taken care of by font_range in font.c, which will check for an
+-;; emoji font for codepoints used in compositions even if they're not
+-;; emoji themselves, and thus choose the Emoji presentation for them
+-;; when followed by VS-16.  VS-15 *is* handled here, because if it's
+-;; handled in font_range, we end up choosing the Emoji presentation
+-;; rather than the Text presentation.
++(defun compose-gstring-and-emoji-for-terminal (gstring _direction)
++  "Compose Emoji sequences for TTY frames.
++
++The width of the composition is adjusted to 2."
++  (let ((nglyphs (lgstring-char-len gstring)))
++    (dotimes (i nglyphs)
++      (let ((glyph (lgstring-glyph gstring i)))
++        (when glyph
++          (lglyph-set-from-to glyph 0 (1- nglyphs))
++          (lglyph-set-width glyph (if (= i 0) 2 0))))))
++  gstring)
++
++(defun compose-gstring-and-emoji (gstring _direction)
++  "Compose Emoji sequences into a grapheme cluster.
++
++This function always returns nil, but acts as a placeholder symbol in
++'composition-function-table'.  Either call 'compose-gstring-for-graphic'
++or 'compose-gstring-and-emoji-for-terminal', depending on the type of
++the display.")
++
++;; We handle #xFE0F (VS-16) specially by using a special symbol
++;; compose-gstring-and-emoji, which is eventually dispatched to either
++;; compose-gstring-for-graphic or compose-gstring-and-emoji-for-terminal
++;; based on the type of the display in auto-compose-chars, which see.
++;;
++;; On graphical frames, VS-16 is taken care of by font_range in font.c
++;; (via compose-gstring-for-graphic), which will check for an emoji font
++;; for codepoints used in compositions even if they're not emoji
++;; themselves, and thus choose the Emoji presentation for them when
++;; followed by VS-16.  VS-15 *is* handled here, because if it's handled
++;; in font_range, we end up choosing the Emoji presentation rather than
++;; the Text presentation.
++;;
++;; On terminal frames, compose-gstring-and-emoji-for-terminal will
++;; simply compose Emoji sequences and directly write them to the
++;; terminal, assuming that the terminal is capable of rendering them
++;; correctly.
++(set-char-table-range composition-function-table #xFE0F
++                      '(["\\c.\\c^+" 1 compose-gstring-and-emoji]
++                        [nil 0 compose-gstring-and-emoji]))
+ (let ((elt '([".." 1 compose-gstring-for-variation-glyph])))
+   (set-char-table-range composition-function-table '(#xFE00 . #xFE0D) elt)
+   (set-char-table-range composition-function-table '(#xE0100 . #xE01EF) elt))
+@@ -910,7 +943,7 @@ auto-compose-chars
+            (fontp font-object 'font-object))
+       (compose-gstring-for-graphic gstring direction))
+      ((eq func #'compose-gstring-and-emoji)
+-      (compose-gstring-and-emoji gstring direction))
++      (compose-gstring-and-emoji-for-terminal gstring direction))
+      ((fontp font-object 'font-object)
+       (funcall func gstring direction))
+      (t
+@@ -947,20 +980,6 @@ global-auto-composition-mode
+ 
+ (defalias 'toggle-auto-composition 'auto-composition-mode)
+ 
+-(defun compose-gstring-and-emoji (gstring _direction)
+-  "Compose Emoji sequences into a grapheme cluster.
+-This function is only called on TTY frames.  On graphical displays,
+-`auto-compose-chars' will call `compose-gstring-for-graphic' instead."
+-  ;; Emoji sequences are matched exactly.
+-  (let ((nglyphs (lgstring-char-len gstring)))
+-    (dotimes (i nglyphs)
+-      (let ((glyph (lgstring-glyph gstring i)))
+-        (when glyph
+-          (lglyph-set-from-to glyph 0 (1- nglyphs))
+-          ;; Adjust the total width of the gstring to 2.
+-          (lglyph-set-width glyph (if (= i 0) 2 0))))))
+-  gstring)
+-
+ (provide 'composite)
+ 
+ ;;; composite.el ends here
+-- 
+2.53.0
+
+
+--=-=-=--
+
+
+From MAILER-DAEMON Wed Sep 16 11:28:44 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6rYv-0001Ev-AZ
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 11:28:42 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x6rYp-0001ES-NQ
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 11:28:35 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x6rYn-0000iB-VR
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 11:28:35 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x6rYj-0003pL-Lt
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 17:28:29 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Date: Wed, 16 Sep 2026 11:00:07 -0400
+Message-ID: <jwvse39qm4c.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:fUALwWgTchk2IvFKhNuDou2Z1eg=
+In-Reply-To: <86mrtin4j8.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Tue, 15 Sep 2026 14:21:47 +0300)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: -16
+X-Spam_score: -1.7
+X-Spam_bar: -
+X-Spam_report: (-1.7 / 5.0 requ) BAYES_00=-1.9,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.249, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 15:28:35 -0000
+
+>> > This is the problem I face: the completion's case-sensitivity can be
+>> > different for each candidate, and I wonder how to provide the
+>> > necessary information about that to the completion infrastructure.
+>> > The method as defined accepts no arguments at all.
+>> I'd put that information inside the completion table since it's the only
+>> place that has information about each candidate.
+> Can you please tell more? how can such a per-candidate information be
+> stored in the completion table?  Especially given that in this case
+> the completion table is constructed by some code I cannot control?
+
+If you can't control the code which builds the completion table, then
+you probably can't know which candidate wants which case-sensitivity
+either, so I think the answer is "you can't", but not because of
+a problem in our API: because of constraints internal to your backend.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Wed Sep 16 11:52:20 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6rvn-0005nu-NY
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 11:52:20 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x6rvh-0005mj-PH
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 11:52:15 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x6rvh-0006iR-FN; Wed, 16 Sep 2026 11:52:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-version:References:Subject:In-Reply-To:To:From:
+ Date; bh=aUz+86iVhXoffCdera1COYKtfGyKNViR4KJaiQuInLo=; b=p5XgMWuwQ3pK7MyRnOOM
+ gQ7IQ9APU4G36EnADCo9nbafYwYiqs/ydxKW2INDPIE3LVSGuRH9gtFMtg3R3CAhu/8XgpNyoNCK8
+ E7B0ba9/6/CTadlFwlHGWxXxY2v+N2Uwubpm56vkVrWAJpZ+v0DrcSgIAUzOZJpmG5WOMKjp5l1ze
+ 4HS5P/zZ5kiOnL3RXLxtvz+3kUTpPUcyAZOi/orC/LSGgIIBzf1z5h3qjH5lIIxugcWG10HKo2lVT
+ xeJOICtkn3+Q+aozWJrppV4jqhSZTm1dPU5udEv1O5D3Xhz+K1OVYsswlW9V93p23dCtGAFYqzLiH
+ TptA9SEPoSAg1A==;
+Date: Wed, 16 Sep 2026 18:52:10 +0300
+Message-Id: <86fqz9kxcl.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Kai Ma <justksqsf@gmail.com>
+Cc: kevin.legouguec@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <87o6dx5j4t.fsf@gmail.com> (message from Kai Ma on Wed, 16 Sep
+ 2026 17:08:18 +0200)
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org> <87tsnql6nv.fsf@gmail.com>
+ <86zexhla60.fsf@gnu.org> <87o6dx5j4t.fsf@gmail.com>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 15:52:15 -0000
+
+> From: Kai Ma <justksqsf@gmail.com>
+> Cc: kevin.legouguec@gmail.com,  emacs-devel@gnu.org
+> Date: Wed, 16 Sep 2026 17:08:18 +0200
+> 
+> > This aspect is highly confusing, so it should be mentioned in comments
+> > to this setting of composition-function-table.  Please also update the
+> > commentary below that, before the part which sets up
+> > composition-function-table for other variation selectors, because it
+> > currently says that VS-16 is handled by font.c:font_range.
+> 
+> Done.  To make it easier to read, I also separated the actual code out
+> of the placeholder symbol compose-gstring-and-emoji, and moved some code
+> around in composite.el.
+
+Thanks, this is even better.
+
+> 
+> >> >> [ What I don't understand here: if the Emoji sequence is known to be
+> >> >>   composed due to a specific font (e.g. Noto Color Emoji), why would it
+> >> >>   go through another round of font selection (based on the first
+> >> >>   codepoint and/or heuristics around the emoji script) at all? ]
+> >> >
+> >> > Sorry, I don't understand the question.  If what I said above doesn't
+> >> > explain this to you, please elaborate.
+> >> 
+> >> I was confused about the order of finding a font and using that font to
+> >> compose.  Upon closer inspection, I believe Emacs decides on a font
+> >> first, then uses that font for composition.  So the heuristic is indeed
+> >> needed.
+> >
+> > Yes.  And this cannot be any other way, because which characters can
+> > be composed is determined by the font features.  So we cannot ask the
+> > shaping engine to tell us whether and how to compose a sequence of
+> > characters without also telling it which font to use.  This is also
+> > the reason why Emacs can only compose a sequence of characters if all
+> > of them have glyphs in the same font.
+> 
+> Thanks for the explanation!
+> 
+> >> --- a/lisp/composite.el
+> >> +++ b/lisp/composite.el
+> >> @@ -780,6 +780,10 @@ compose-gstring-for-dotted-circle
+> >>  	 (if (memq val '(Mn Mc Me))
+> >>  	     (set-char-table-range composition-function-table key elt)))
+> >>       unicode-category-table))
+> >> +  ;; for Emoji sequences (VS16)
+> >> +  (aset composition-function-table #xFE0F
+> >> +        `(["\\c.\\c^+" 1 compose-gstring-and-emoji]
+> >
+> > Why "\\c^+"?  AFAIK, VS-16 cannot be meaningfully repeated in a
+> > composed sequence.  So I think "\\c.\\c^+" should be "\\c.." instead,
+> > since the second "." is the VS-16 itself.
+> 
+> "\\c^+" is needed because of keycap sequences:
+> 
+> 0030 FE0F 20E3 # 0️⃣ E0.6 keycap: 0
+> 0030 20E3      # 0⃣ E0.6 keycap: 0
+> 
+> If "\\c^" is used, the first line is rendered as two glyphs because it
+> stops at VS-16 and does not consider 20E3 (COMBINING ENCLOSING KEYCAP).
+
+OK.
+
+> >> +          [nil 0 compose-gstring-and-emoji]))
+> >
+> > And what does this part supposed to do?  I guess you copied it from
+> > the entry for composing combining characters, but will
+> > compose-gstring-and-emoji DTRT when the only character it gets is the
+> > VS-16 itself?  What happens if you use compose-gstring-for-graphic
+> > there, or remove this element altogether?
+> 
+> Currently, a standalone VS16 looks like a box, but if I remove it, it
+> looks like a zero-width space.
+
+Not sure which one is more correct (control characters are usually
+shown as thin space in Emacs), but since the box is what we show in
+Emacs 31, I guess it's better not to change it.
+
+Kevin, please test the patch and tell if we can install, or is there's
+anything else left to be done here.
+
+
+From MAILER-DAEMON Wed Sep 16 11:57:51 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6s19-0007SD-BD
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 11:57:51 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x6s16-0007S2-PZ
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 11:57:48 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x6s16-0007eO-5R; Wed, 16 Sep 2026 11:57:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=Z1A5++ugscohAsOEF9Xby669t/7znpOb0D4/I3OsgAo=; b=dFPoh3uEa5Tc
+ XNUQO1yUNi3T2ly3+6yeBA+rHTrV3Mqpj/efOmcCyRur+3489cQ33fFqeZtFiJVLjplQsx30RcNgQ
+ cKcynieZmn1s6XASh+jmV9vHJq7hVpAGHtSIgzVFsSI4a8R80lXGADmbz40MfK/2HylnRa3cXBIdU
+ SB0LluxsDJfUHk6XNeHomaBTrdPEaidnO3C01jpPnpFv9yC7ibBvuPGe59aVbnfk6Rx5QcEmqpCR6
+ HWNJhYPoBVyRcB/0S/zsdrfsAXVf6StuWZ0IF14QIWPWg7t2IYcmiojb95a7lASli/BTa7kB6KV6g
+ hTZKq/DOgwuL26Gv17gZ1A==;
+Date: Wed, 16 Sep 2026 18:57:42 +0300
+Message-Id: <86ecetkx3d.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <jwvse39qm4c.fsf-monnier+emacs@gnu.org> (emacs-devel@gnu.org)
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org> <jwvse39qm4c.fsf-monnier+emacs@gnu.org>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 15:57:49 -0000
+
+> Date: Wed, 16 Sep 2026 11:00:07 -0400
+> From: Stefan Monnier via "Emacs development discussions." <emacs-devel@gnu.org>
+> 
+> >> > This is the problem I face: the completion's case-sensitivity can be
+> >> > different for each candidate, and I wonder how to provide the
+> >> > necessary information about that to the completion infrastructure.
+> >> > The method as defined accepts no arguments at all.
+> >> I'd put that information inside the completion table since it's the only
+> >> place that has information about each candidate.
+> > Can you please tell more? how can such a per-candidate information be
+> > stored in the completion table?  Especially given that in this case
+> > the completion table is constructed by some code I cannot control?
+> 
+> If you can't control the code which builds the completion table, then
+> you probably can't know which candidate wants which case-sensitivity
+> either
+
+I _can_ know that, because I can find out which file each candidate
+comes from.
+
+Dmitry pointed out that the completion table is also built by a
+backend-specific method, so in principle I might be able to provide
+that information.  But what facilities exist in the completion
+infrastructure to allow me to do that? is there something better than
+putting some text properties on the candidate strings?
+
+

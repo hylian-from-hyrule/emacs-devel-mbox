@@ -1,0 +1,987 @@
+emacs-devel messages from 2026-09-15T18:15:00+02:00 to 2026-09-16T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-15T18:25:41+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <8a0e04dd-9cc1-46f3-863a-a2a4bedc5c1a@gutov.dev>
+In-Reply-To: <86cxuemzw0.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <71521655-fb99-4f6b-bf2d-4f5aec75679c@gutov.dev> <86jyooyrnh.fsf@gnu.org>
+ <46151e16-4e9b-4a8d-89e8-4163b2d3efec@gutov.dev> <86cxuemzw0.fsf@gnu.org>
+
+On 15/09/2026 16:02, Eli Zaretskii wrote:
+
+>> KIND is already available to the predicate function because it's
+>> lexically captured. In this example
+>>
+>>       (cl-defmethod xref-backend-identifier-completion-predicate
+>>           ((backend FOO) &optional kind)
+>>         (lambda (candidate)
+>>           ... body ...))
+>>
+>> <body> can reference KIND (the argument for the cl-defmethod) and return
+>> t if CANDIDATE has at least one definition belonging to KIND.
+> 
+> AFAIU, this works only because the function returned by this method is
+> immediately called with the same KIND.
+
+No, the function is called with CANDIDATE (completions). Completions and 
+kinds are ultimately orthogonal: each completion is allowed to have 
+several kinds.
+
+The predicate's body can use the value of KIND from the environment 
+where the anonymous function was constructed, and CANDIDATE from its 
+argument. It needs to return non-nil if the specified CANDIDATE has any 
+definitions belonging to KIND.
+
+> But a method that returns a
+> function cannot rely on the fact that the function will be called
+> immediately in the same lexical environment, not unless this is the
+> documented contract, can it?
+
+The lexical environment is retained from the place where the function 
+was defined - that's the main feature of the 'lexical-binding: t' 
+functionality that we have.
+
+>>> (Wouldn't producing an anonymous function for each KIND cause a lot of
+>>> consing, just like apply-partially does?)
+>>
+>> We only produce one predicate for the duration of the user's command:
+>> the one that corresponds to KIND that the user has just selected.
+> 
+> If that is the only way the predicate is used, then apply-partially is
+> also okay, no?
+
+apply-partially is fine to use, it just doesn't bring the 
+performance/debuggability benefits that one might expect to have.
+
+>>>> The current implementation seems more efficient to me, but performance
+>>>> tradeoffs might not matter in your scenario, measurements needed.
+>>>
+>>> I already made the measurements, so I know it matters.
+>>
+>> If at some point you have a working solution that is only too slow, I'm
+>> happy to take the code and try to optimize it.
+> 
+> When I think the code is more-or-less ready, I will publish it.
+
+Thanks.
+
+>>> Backend doesn't have to understand anything about the definitions (the
+>>> etags backend doesn't).  It only cares about the location (which it
+>>> does understand).
+>>>
+>>> By contrast, to filter by KIND, the backend does need to be able to
+>>> figure out the KIND of the candidate in order to compare it with the
+>>> one requested.
+>>
+>> Both questions can be answered using the contents of the tags file,
+>> couldn't they?
+> 
+> That's what I ended up doing.  But having to go back to the database
+> to find information about a candidate is a waste of CPU cycles.
+
+That's true, but it's the most straightforward solution we can add now, 
+to iterate on afterwards.
+
+> The
+> design only passes the candidate on the assumption that the candidate
+> holds enough information for filtering, but that assumption is not
+> true in general, although it's true for the ELisp backend.
+
+That's just how the completion API works. But it has to support 
+completion strings coming from anywhere, so the general shape of it will 
+remain, even if we make certain things more convenient in the future.
+
+>> We don't have regexps which would sort definitions into KINDs yet, but
+>> that is the meat of the task that we are discussing - how to choose
+>> them, maybe keep them more easily customizable, or better extensible,
+>> easier to set from dir-locals.el, etc.
+> 
+> You lost me here.  (Why would this have to be done via regexps?)
+
+Just faster, really. Rather than doing first a regexp search, then a 
+check via a function that it is indeed a definition, and then an 
+additional regexp lookaround to determine KIND.
+
+>>>> If the cache is in a local variable (e.g. hash table), the returned
+>>>> value will need to be an anonymous function. If the cache is in a global
+>>>> variable, then one of the named functions could be returned. Using
+>>>> 'apply-partially' does not get around it, and does not print any nicer
+>>>> function literals in backtraces, unfortunately.
+>>>
+>>> Sorry, you lost me here.  "Caches"?
+>>
+>> In the "faster" solution near the beginning of this email the described
+>> hash table would be an example of a cache.
+> 
+> I know what a cache is, believe me, I just don't understand how a
+> predicate function could usefully do it.  A predicate has no idea
+> whether it is called the first time or the last time, so it doesn't
+> know when to create a cache and when to discard it.
+
+In this proposed scenario you would pre-populate the hash table in one 
+go, not lazily (so the first time or not doesn't matter).
+
+And it will be discarded automatically after the reference to the 
+predicate function is lost (the code that created it reaches the end of 
+execution), the GC will claim it.
+
+> And again, my problem is with the design.  A method that accepts just
+> the candidate tells me that the design assumes it's enough to filter
+> candidates.  If you are now saying that I need to have the entire xref
+> item to decide whether a candidate should be filtered, then why
+> doesn't the predicate receive the entire item? why does my predicate
+> need to go back to the tags table and re-create the item given the
+> candidate name, when the candidate came out of some xref item to begin
+> with?
+
+The predicate's signature is fixed - think like with static typing. For 
+any complex data you are supposed to use these strings as keys to look 
+up in an alist or hash table saved separately.
+
+Or you could have text properties attached to all completions when the 
+completion table is created - those could carry xref items or maybe some 
+lighter data. But for this to work, you probably have to parse all lines 
+in the tags file into xref items eagerly. Not the fastest approach.
+
+================================================================================
+Date: 2026-09-15T20:18:44+02:00
+From: Kai Ma <justksqsf@gmail.com>
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+Message-ID: <87tsnql6nv.fsf@gmail.com>
+In-Reply-To: <86eceun0zi.fsf@gnu.org>
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> This can be confirmed with a simple change in font.c that fixes this
+>> problem:
+>> 
+>> modified   src/font.c
+>> @@ -3902,7 +3902,7 @@ codepoint_is_emoji_eligible (int ch)
+>>      return true;
+>> 
+>>    if (! NILP (Fmemq (make_fixnum (ch),
+>> -		     Vauto_composition_emoji_eligible_codepoints)))
+>> +		     Vauto_composition_emoji_tty_eligible_codepoints)))
+>>      return true;
+>> 
+>>    return false;
+>
+> That doesn't look right to me, as it will not allow us to select the
+> text-style or emoji-style appearance depending on whether the
+> symbol character is followed by VS-15 or VS-16 (or nothing).
+
+Ah, I see the problem.  This change would render 263A FE0E as a color
+Emoji, which is incorrect.
+
+> I would prefer instead to fix the Awk script emoji-zwj.awk such that
+> sequences starting with the likes of U+263A do NOT add composition
+> rules to composition-function-table.  Instead, their special treatment
+> should be implemented in some code that only affects TTY frames, for
+> example in compose-gstring-and-emoji.
+
+The attached patch reverted the addition of compositions, and instead
+modified the default composition rule for VS16 to be
+compose-gstring-and-emoji.
+
+I believe updating VS16's composition rule is the right fix.  Since the
+actual composition function is dispatched by auto-compose-chars, it
+selects compose-gstring-for-graphic on the graphical display, preserving
+previous behavior; and it selects compose-gstring-and-emoji on textual
+terminals.
+
+>> [ What I don't understand here: if the Emoji sequence is known to be
+>>   composed due to a specific font (e.g. Noto Color Emoji), why would it
+>>   go through another round of font selection (based on the first
+>>   codepoint and/or heuristics around the emoji script) at all? ]
+>
+> Sorry, I don't understand the question.  If what I said above doesn't
+> explain this to you, please elaborate.
+
+I was confused about the order of finding a font and using that font to
+compose.  Upon closer inspection, I believe Emacs decides on a font
+first, then uses that font for composition.  So the heuristic is indeed
+needed.
+
+================================================================================
+Date: 2026-09-16T04:37:09+02:00
+From: Sebastian Petrovski <hello@sebastianpetrovski.com>
+Subject: GNU ELPA connection timeouts from Vultr Sydney IPs
+Message-ID: <CALQebVkU-QRFSHY22GVsMYRh02sjZ_cWM5cNs2ss+wVKEi5QpQ@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+Hello,
+
+I'm investigating repeated connection failures to GNU ELPA from Vultr
+instances in Sydney.
+
+Source IPs were 45.32.189.229 and 45.76.115.52, tested on 16 September
+2026, approximately 01:30–02:20 UTC. These were disposable build machines
+and have since been deleted.
+
+Requests to elpa.gnu.org (209.51.188.89) time out before establishing a TCP
+connection, on both ports 80 and 443. We also observed HTTPS connection
+timeouts to www.gnu.org (209.51.188.116).
+
+The same ELPA archives download successfully from our workstation. GitHub
+and Nix’s cache remain reachable from the affected Vultr instances.
+
+Could you check whether these source addresses or their ranges are subject
+to filtering, abuse protection, or connection rate limits? Alternatively,
+is there a known routing issue affecting this network?
+
+We are not assuming GNU is responsible; we’re also asking Vultr to
+investigate. The downloads are ordinary pinned Emacs package archives used
+by our NixOS/Doom Emacs build.
+
+Thank you.
+
+================================================================================
+Date: 2026-09-16T05:22:18+02:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+In-Reply-To: <86mrtin4j8.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+
+On 15/09/2026 14:21, Eli Zaretskii wrote:
+>> The caller can do whatever it wants, yes, but if it uses the result of
+>> (xref-backend-identifier-completion-predicate BACKEND KIND) while
+>> completing something of a different KIND, then it's likely going to get
+>> garbage and that will be its fault, not the fault of the backend.
+> I was trying to implement this method so it would be reliable and
+> could be used per the API contract.  There's nothing in the doc string
+> which I can rely on to know that the situation you describe above
+> could not legitimately happen.
+
+Revisiting this paragraph: it's probably not accurate to say
+
+   while completing something of a different KIND
+
+because you are completing just strings, without any inherentl KIND. But 
+depending on which command you invoked as a user, the current completion 
+prompt might be restricting the strings to the ones that have 
+definitions belonging to KIND (using the predicate returned by the 
+method we are discussing). Or it might not be restricting. First comes 
+the choice of KIND, second comes the identifier input. Or the identifier 
+is read from e.g. the thing at point, then there is no second input.
+
+> The method is documented to return a
+> function, and at least my interpretation of the doc string didn't
+> allow me to assume the function will be used immediately in the
+> same completing-read call.  In fact, I had some difficulty
+> understanding what it says about the use of KIND.
+
+That's probably my bad: I rewrote that docstring two days ago but still 
+find it is not phrased well. It feels like the KIND being optional, but 
+also optional to obey by the backend (because that might be difficult or 
+slow), is not easy to explain. Though the idea itself is quite simple.
+
+>>> The command xref-find-by-kind can be invoked from a buffer whose
+>>> major-mode is c-mode, for example, but the user wants to look at (for
+>>> example) the definition of a Fortran subroutine.  We are talking about
+>>> completion of the symbol that the user types at the prompt of
+>>> xref-find-by-kind: for symbols that come from Fortran sources the
+>>> completion should be case-insensitive, whereas for symbols from C or
+>>> ELisp etc. it should be case-sensitivity.
+>> [...]
+>>> This is the problem I face: the completion's case-sensitivity can be
+>>> different for each candidate, and I wonder how to provide the
+>>> necessary information about that to the completion infrastructure.
+>>> The method as defined accepts no arguments at all.
+>> I'd put that information inside the completion table since it's the only
+>> place that has information about each candidate.
+> Can you please tell more? how can such a per-candidate information be
+> stored in the completion table?  Especially given that in this case
+> the completion table is constructed by some code I cannot control?
+
+I do think the completion table is constructed by code you control: it 
+is returned by xref-backend-identifier-completion-table which has 
+etags-specific definition in etags.el.
+
+The possible methods are like described previously: to use the lexical 
+environment where the completion table is constructed (because it can be 
+an anonymous function) or use some buffer-local variable with a hash table.
+
+But I would suggest leaving finer aspects like case sensitivity until 
+later, after the basics start to work.
+
+================================================================================
+Date: 2026-09-16T07:14:09+02:00
+From: Jared Finder <jared@finder.org>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+In-Reply-To: <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+References: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+ <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+
+On 2026-09-15 07:41, Johan Myréen wrote:
+
+> On Tue, 15 Sept 2026 at 08:07, Jared Finder <jared@finder.org> wrote:
+> 
+>> Wayland apps by default do not need WAYLAND_DISPLAY set, according to
+>> man pages
+>> (https://manpages.debian.org/trixie/libwayland-doc/wl_display.3.en.html).
+>> I think we'd want to detect that both WAYLAND_DISPLAY be unset and
+>> XDG_SESSION_TYPE is set to tty before having the pgtk build fallback 
+>> to
+>> text mode.
+> 
+> Instead of relying on these environment variables, I think a better 
+> solution would be to first try opening a connection to the display 
+> server and, if that fails, fall back to text mode.
+> 
+> Currently, the PGTK build requires a working graphical display, and 
+> exits if none is available. The exit(1) call happens in gtk_init(), 
+> which is called by pgtk_term_init(). The gtk_init code is accompanied 
+> by the following comment.
+> 
+> * This function will terminate your program if it was unable to
+> * initialize the windowing system for some reason. If you want
+> * your program to fall back to a textual interface you want to
+> * call gtk_init_check() instead.
+> 
+> Thus changing the code to call gtk_init_check instead would avoid the 
+> exit, but forcing Emacs to switch to text mode requires a larger 
+> refactoring than that.
+
+That wouldn't work if you ssh into a machine that can also run a local 
+Wayland session.  That's my most common case -- I have a machine that I 
+split between working directly on and ssh'ing to do work on.  When ssh'd 
+to the machine, I want to get a text only Emacs because I can't see the 
+monitor the machine is plugged into.
+
+Looking at just the WAYLAND_DISPLAY and DISPLAY environment variables 
+might be enough here.  Is there a common case that this fails on?  
+Here's my understanding of all the common use cases I can think of:
+
+Running under a text-only console:
+* WAYLAND_DISPLAY, DISPLAY are both unset
+
+Running under a display manager started Wayland or X instance:
+* WAYLAND_DISPLAY or DISPLAY is set
+
+Running when SSH'd into a machine
+* WAYLAND_DISPLAY, DISPLAY are both unset
+
+Running when SSH'd into a machine with X forwarding
+* DISPLAY is set
+
+Running when SSH'd into a machine with waypipe
+* WAYLAND_DISPLAY is set
+
+
+   -- MJF
+
+================================================================================
+Date: 2026-09-16T09:43:10+02:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <CA+TD5hgMsxKTTRyQ7sJ+-J0=fsJeFPrNDjRJHb+PebOQLvNx3g@mail.gmail.com>
+In-Reply-To: <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+References: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+ <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+ <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+
+On Wed, 16 Sept 2026 at 08:14, Jared Finder <jared@finder.org> wrote:
+
+> On 2026-09-15 07:41, Johan Myréen wrote:
+>
+> > Instead of relying on these environment variables, I think a better
+> > solution would be to first try opening a connection to the display
+> > server and, if that fails, fall back to text mode.
+>
+> That wouldn't work if you ssh into a machine that can also run a local
+> Wayland session.
+
+
+You are right.
+
+Looking at just the WAYLAND_DISPLAY and DISPLAY environment variables
+> might be enough here.  Is there a common case that this fails on?
+>
+
+I think this would be a workable solution, except for the minor glitch
+described below. Looking at just the variables would also be a simpler
+solution than trying and failing to connect to the display server.
+
+Here's my understanding of all the common use cases I can think of:
+
+[...]
+> Running when SSH'd into a machine with X forwarding
+> * DISPLAY is set
+>
+
+The idea here would presumably be that the Emacs would be displayed on the
+local screen as a remote X11 app. Unfortunately, if the remote host has a
+Wayland desktop that is logged in to, what happens when you start Emacs on
+the SSH command line on the remote host is that Emacs is opened on the
+remote host's desktop as a graphical Wayland app. On the other hand, if you
+are not logged in locally on the remote host, Emacs is displayed on the
+local screen as an X11 app, which was the user's intention (despite the
+fact that the "pure-GTK" Emacs is not supported on the X Window System.).
+
+I think this is just a minor problem, despite occasionally causing some
+surprising behaviour, and using the WAYLAND_DISPLAY and DISPLAY variables
+to determine when to do the fallback to text mode is a viable solution.
+
+================================================================================
+Date: 2026-09-16T13:15:19+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+Message-ID: <86zexhla60.fsf@gnu.org>
+In-Reply-To: <87tsnql6nv.fsf@gmail.com> (message from Kai Ma on Tue, 15 Sep
+ 2026 20:18:44 +0200)
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org> <87tsnql6nv.fsf@gmail.com>
+
+> From: Kai Ma <justksqsf@gmail.com>
+> Cc: kevin.legouguec@gmail.com,  emacs-devel@gnu.org
+> Date: Tue, 15 Sep 2026 20:18:44 +0200
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> This can be confirmed with a simple change in font.c that fixes this
+> >> problem:
+> >> 
+> >> modified   src/font.c
+> >> @@ -3902,7 +3902,7 @@ codepoint_is_emoji_eligible (int ch)
+> >>      return true;
+> >> 
+> >>    if (! NILP (Fmemq (make_fixnum (ch),
+> >> -		     Vauto_composition_emoji_eligible_codepoints)))
+> >> +		     Vauto_composition_emoji_tty_eligible_codepoints)))
+> >>      return true;
+> >> 
+> >>    return false;
+> >
+> > That doesn't look right to me, as it will not allow us to select the
+> > text-style or emoji-style appearance depending on whether the
+> > symbol character is followed by VS-15 or VS-16 (or nothing).
+> 
+> Ah, I see the problem.  This change would render 263A FE0E as a color
+> Emoji, which is incorrect.
+
+Yes.
+
+> > I would prefer instead to fix the Awk script emoji-zwj.awk such that
+> > sequences starting with the likes of U+263A do NOT add composition
+> > rules to composition-function-table.  Instead, their special treatment
+> > should be implemented in some code that only affects TTY frames, for
+> > example in compose-gstring-and-emoji.
+> 
+> The attached patch reverted the addition of compositions, and instead
+> modified the default composition rule for VS16 to be
+> compose-gstring-and-emoji.
+> 
+> I believe updating VS16's composition rule is the right fix.  Since the
+> actual composition function is dispatched by auto-compose-chars, it
+> selects compose-gstring-for-graphic on the graphical display, preserving
+> previous behavior; and it selects compose-gstring-and-emoji on textual
+> terminals.
+
+This aspect is highly confusing, so it should be mentioned in comments
+to this setting of composition-function-table.  Please also update the
+commentary below that, before the part which sets up
+composition-function-table for other variation selectors, because it
+currently says that VS-16 is handled by font.c:font_range.
+
+> >> [ What I don't understand here: if the Emoji sequence is known to be
+> >>   composed due to a specific font (e.g. Noto Color Emoji), why would it
+> >>   go through another round of font selection (based on the first
+> >>   codepoint and/or heuristics around the emoji script) at all? ]
+> >
+> > Sorry, I don't understand the question.  If what I said above doesn't
+> > explain this to you, please elaborate.
+> 
+> I was confused about the order of finding a font and using that font to
+> compose.  Upon closer inspection, I believe Emacs decides on a font
+> first, then uses that font for composition.  So the heuristic is indeed
+> needed.
+
+Yes.  And this cannot be any other way, because which characters can
+be composed is determined by the font features.  So we cannot ask the
+shaping engine to tell us whether and how to compose a sequence of
+characters without also telling it which font to use.  This is also
+the reason why Emacs can only compose a sequence of characters if all
+of them have glyphs in the same font.
+
+> --- a/lisp/composite.el
+> +++ b/lisp/composite.el
+> @@ -780,6 +780,10 @@ compose-gstring-for-dotted-circle
+>  	 (if (memq val '(Mn Mc Me))
+>  	     (set-char-table-range composition-function-table key elt)))
+>       unicode-category-table))
+> +  ;; for Emoji sequences (VS16)
+> +  (aset composition-function-table #xFE0F
+> +        `(["\\c.\\c^+" 1 compose-gstring-and-emoji]
+
+Why "\\c^+"?  AFAIK, VS-16 cannot be meaningfully repeated in a
+composed sequence.  So I think "\\c.\\c^+" should be "\\c.." instead,
+since the second "." is the VS-16 itself.
+
+> +          [nil 0 compose-gstring-and-emoji]))
+
+And what does this part supposed to do?  I guess you copied it from
+the entry for composing combining characters, but will
+compose-gstring-and-emoji DTRT when the only character it gets is the
+VS-16 itself?  What happens if you use compose-gstring-for-graphic
+there, or remove this element altogether?
+
+Thanks.
+
+================================================================================
+Date: 2026-09-16T14:07:06+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: GNU ELPA connection timeouts from Vultr Sydney IPs
+Message-ID: <86ld91l7rp.fsf@gnu.org>
+In-Reply-To: <CALQebVkU-QRFSHY22GVsMYRh02sjZ_cWM5cNs2ss+wVKEi5QpQ@mail.gmail.com>
+ (message from Sebastian Petrovski on Wed, 16 Sep 2026 12:07:09 +0930)
+References: <CALQebVkU-QRFSHY22GVsMYRh02sjZ_cWM5cNs2ss+wVKEi5QpQ@mail.gmail.com>
+
+> From: Sebastian Petrovski <hello@sebastianpetrovski.com>
+> Date: Wed, 16 Sep 2026 12:07:09 +0930
+> 
+> I'm investigating repeated connection failures to GNU ELPA from Vultr instances in Sydney.
+> 
+> Source IPs were 45.32.189.229 and 45.76.115.52, tested on 16 September 2026, approximately
+> 01:30–02:20 UTC. These were disposable build machines and have since been deleted.
+> 
+> Requests to elpa.gnu.org (209.51.188.89) time out before establishing a TCP connection, on both ports 80
+> and 443. We also observed HTTPS connection timeouts to www.gnu.org (209.51.188.116).
+> 
+> The same ELPA archives download successfully from our workstation. GitHub and Nix’s cache remain reachable
+> from the affected Vultr instances.
+> 
+> Could you check whether these source addresses or their ranges are subject to filtering, abuse protection, or
+> connection rate limits? Alternatively, is there a known routing issue affecting this network?
+> 
+> We are not assuming GNU is responsible; we’re also asking Vultr to investigate. The downloads are ordinary
+> pinned Emacs package archives used by our NixOS/Doom Emacs build.
+
+Please post these questions to savannah-hackers-public@gnu.org, where
+it will be read by people who might be able to do anything with these
+problems.  We here do not manage nor control the GNU Internet
+infrastructure.
+
+================================================================================
+Date: 2026-09-16T16:17:22+02:00
+From: "Tyler Smith" <tyler@plantarum.ca>
+Subject: EWW dom filtering/editing based on site url
+Message-ID: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+In-Reply-To: 
+References: 
+
+Hello,
+
+I'm using EWW more regularly, and was wondering about the feasibility of applying scripts to alter the dom of specific web pages. 
+
+For example, I'm reading "Eloquent Javascript"[1]. The navigation includes next and previous chapter links, but they don't include the `rel="next"` and `rel="previous"` attributes that EWW uses in `eww-next-url` and `eww-previous-url`. So I wrote a function to add the attributes to the appropriate links.
+
+I have three questions:
+
+1. Is there existing support for such a use? I found `eww-after-render-hook`, but I think that happens too late in the process.
+
+2. Assuming there isn't, where is the most appropriate place to do this? I have a working example by inserting a check into `eww-display-document` immediately before the call to `(shr-insert-document document)`. (code pasted below)  
+
+3. Is this something that would be useful to include in EWW as a generalized feature? I found a previous discussion [2] that suggests EWW is kept deliberately light-weight to minimize speed issues, so maybe not? If not I'm not arguing it should, speed is important! But I was thinking since this code would 'only' require checking the URL prior to display, for most pages (i.e., those that don't match a filter) the speed hit would be minimal. But I'm a novice in these matters.
+
+Thanks for your time,
+
+- tyler
+
+[1] https://eloquentjavascript.net/00_intro.html
+[2] https://lists.gnu.org/archive/html/emacs-devel/2013-12/msg00896.html
+
+Example code modification:
+```
+(defun eww-display-document (document &optional point buffer)
+  (unless (fboundp 'libxml-parse-html-region)
+    (error "This function requires Emacs to be compiled with libxml2"))
+  (setq buffer (or buffer (current-buffer)))
+  (unless (buffer-live-p buffer)
+    (error "Buffer %s doesn't exist" buffer))
+  ;; There should be a better way to abort loading images
+  ;; asynchronously.
+  (setq url-queue nil)
+  (let ((url (when (eq (car document) 'base)
+               (alist-get 'href (cadr document)))))
+    (unless url
+      (error "Document is missing base URL"))
+    (with-current-buffer buffer
+      (setq bidi-paragraph-direction nil)
+      (plist-put eww-data :dom document)
+      (let ((inhibit-read-only t)
+            ;; Possibly set by the caller, e.g., `eww-render' which
+            ;; preserves the old URL #target before chasing redirects.
+            (shr-target-id (or shr-target-id
+                               (url-target (url-generic-parse-url url))))
+            (shr-external-rendering-functions
+             (append
+              shr-external-rendering-functions
+              '((title . eww-tag-title)
+                (form . eww-tag-form)
+                (input . eww-tag-input)
+                (button . eww-form-submit)
+                (textarea . eww-tag-textarea)
+                (select . eww-tag-select)
+                (link . eww-tag-link)
+                (meta . eww-tag-meta)
+                (a . eww-tag-a)))))
+        ;; Unregister any existing change tracker while we render the
+        ;; document.
+        (when eww--change-tracker-id
+          (track-changes-unregister eww--change-tracker-id)
+          (setq eww--change-tracker-id nil))
+        (erase-buffer)
+
+        ;; TWS Check url against a list of targets; if it matches,
+        ;; apply the appropriate transformation to the DOM here:
+        ;; (code to be bundled into an external function and a list of 
+        ;; url/script pairs in actual use) 
+        (when (string-match "eloquentjavascript.net" url)
+          (let* ((NODES
+                  (dom-search
+                   document (lambda (x)
+                              (string= (dom-attr x 'title)
+                                       "next chapter"))))
+                 (NODE (pop NODES)))
+            (while NODE
+              (dom-set-attribute NODE 'rel "next")
+              (setq NODE (pop NODES))))
+          (let* ((NODES
+                  (dom-search 
+                   document (lambda (x) 
+                              (string= (dom-attr x 'title)
+                                       "previous chapter"))))
+                 (NODE (pop NODES)))
+            (while NODE
+              (dom-set-attribute NODE 'rel "previous")
+              (setq NODE (pop NODES)))))
+        ;; TWS END
+        
+        (with-delayed-message (2 "Rendering HTML...")
+          (shr-insert-document document))
+        (cond
+         (point
+          (goto-char point))
+         (shr-target-id
+          (goto-char (point-min))
+          (let ((match (text-property-search-forward
+                        'shr-target-id shr-target-id #'member)))
+            (when match
+              (goto-char (prop-match-beginning match)))))
+         (t
+          (goto-char (point-min))
+          ;; Don't leave point inside forms, because the normal eww
+          ;; commands aren't available there.
+          (while (and (not (eobp))
+      	              (get-text-property (point) 'eww-form))
+            (forward-line 1)))))
+      ;; We used to enable this in `eww-mode', but it cause tracking of
+      ;; changes while we insert the document, whereas we only care
+      ;; about changes performed afterwards.
+      (setq eww--change-tracker-id (track-changes-register
+                                    #'eww--track-changes :nobefore t))
+      (eww-size-text-inputs))))
+```
+
+================================================================================
+Date: 2026-09-16T17:00:07+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <jwvse39qm4c.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86mrtin4j8.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Tue, 15 Sep 2026 14:21:47 +0300)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org>
+
+>> > This is the problem I face: the completion's case-sensitivity can be
+>> > different for each candidate, and I wonder how to provide the
+>> > necessary information about that to the completion infrastructure.
+>> > The method as defined accepts no arguments at all.
+>> I'd put that information inside the completion table since it's the only
+>> place that has information about each candidate.
+> Can you please tell more? how can such a per-candidate information be
+> stored in the completion table?  Especially given that in this case
+> the completion table is constructed by some code I cannot control?
+
+If you can't control the code which builds the completion table, then
+you probably can't know which candidate wants which case-sensitivity
+either, so I think the answer is "you can't", but not because of
+a problem in our API: because of constraints internal to your backend.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-16T17:08:18+02:00
+From: Kai Ma <justksqsf@gmail.com>
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+Message-ID: <87o6dx5j4t.fsf@gmail.com>
+In-Reply-To: <86zexhla60.fsf@gnu.org>
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org> <87tsnql6nv.fsf@gmail.com>
+ <86zexhla60.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> > I would prefer instead to fix the Awk script emoji-zwj.awk such that
+>> > sequences starting with the likes of U+263A do NOT add composition
+>> > rules to composition-function-table.  Instead, their special treatment
+>> > should be implemented in some code that only affects TTY frames, for
+>> > example in compose-gstring-and-emoji.
+>> 
+>> The attached patch reverted the addition of compositions, and instead
+>> modified the default composition rule for VS16 to be
+>> compose-gstring-and-emoji.
+>> 
+>> I believe updating VS16's composition rule is the right fix.  Since the
+>> actual composition function is dispatched by auto-compose-chars, it
+>> selects compose-gstring-for-graphic on the graphical display, preserving
+>> previous behavior; and it selects compose-gstring-and-emoji on textual
+>> terminals.
+>
+> This aspect is highly confusing, so it should be mentioned in comments
+> to this setting of composition-function-table.  Please also update the
+> commentary below that, before the part which sets up
+> composition-function-table for other variation selectors, because it
+> currently says that VS-16 is handled by font.c:font_range.
+
+Done.  To make it easier to read, I also separated the actual code out
+of the placeholder symbol compose-gstring-and-emoji, and moved some code
+around in composite.el.
+
+>> >> [ What I don't understand here: if the Emoji sequence is known to be
+>> >>   composed due to a specific font (e.g. Noto Color Emoji), why would it
+>> >>   go through another round of font selection (based on the first
+>> >>   codepoint and/or heuristics around the emoji script) at all? ]
+>> >
+>> > Sorry, I don't understand the question.  If what I said above doesn't
+>> > explain this to you, please elaborate.
+>> 
+>> I was confused about the order of finding a font and using that font to
+>> compose.  Upon closer inspection, I believe Emacs decides on a font
+>> first, then uses that font for composition.  So the heuristic is indeed
+>> needed.
+>
+> Yes.  And this cannot be any other way, because which characters can
+> be composed is determined by the font features.  So we cannot ask the
+> shaping engine to tell us whether and how to compose a sequence of
+> characters without also telling it which font to use.  This is also
+> the reason why Emacs can only compose a sequence of characters if all
+> of them have glyphs in the same font.
+
+Thanks for the explanation!
+
+>> --- a/lisp/composite.el
+>> +++ b/lisp/composite.el
+>> @@ -780,6 +780,10 @@ compose-gstring-for-dotted-circle
+>>  	 (if (memq val '(Mn Mc Me))
+>>  	     (set-char-table-range composition-function-table key elt)))
+>>       unicode-category-table))
+>> +  ;; for Emoji sequences (VS16)
+>> +  (aset composition-function-table #xFE0F
+>> +        `(["\\c.\\c^+" 1 compose-gstring-and-emoji]
+>
+> Why "\\c^+"?  AFAIK, VS-16 cannot be meaningfully repeated in a
+> composed sequence.  So I think "\\c.\\c^+" should be "\\c.." instead,
+> since the second "." is the VS-16 itself.
+
+"\\c^+" is needed because of keycap sequences:
+
+0030 FE0F 20E3 # 0️⃣ E0.6 keycap: 0
+0030 20E3      # 0⃣ E0.6 keycap: 0
+
+If "\\c^" is used, the first line is rendered as two glyphs because it
+stops at VS-16 and does not consider 20E3 (COMBINING ENCLOSING KEYCAP).
+
+>> +          [nil 0 compose-gstring-and-emoji]))
+>
+> And what does this part supposed to do?  I guess you copied it from
+> the entry for composing combining characters, but will
+> compose-gstring-and-emoji DTRT when the only character it gets is the
+> VS-16 itself?  What happens if you use compose-gstring-for-graphic
+> there, or remove this element altogether?
+
+Currently, a standalone VS16 looks like a box, but if I remove it, it
+looks like a zero-width space.  So I keep it to preserve the old
+behavior.  On TUI I don't observe meaningful differences, though.
+
+================================================================================
+Date: 2026-09-16T17:52:10+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+Message-ID: <86fqz9kxcl.fsf@gnu.org>
+In-Reply-To: <87o6dx5j4t.fsf@gmail.com> (message from Kai Ma on Wed, 16 Sep
+ 2026 17:08:18 +0200)
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org> <87tsnql6nv.fsf@gmail.com>
+ <86zexhla60.fsf@gnu.org> <87o6dx5j4t.fsf@gmail.com>
+
+> From: Kai Ma <justksqsf@gmail.com>
+> Cc: kevin.legouguec@gmail.com,  emacs-devel@gnu.org
+> Date: Wed, 16 Sep 2026 17:08:18 +0200
+> 
+> > This aspect is highly confusing, so it should be mentioned in comments
+> > to this setting of composition-function-table.  Please also update the
+> > commentary below that, before the part which sets up
+> > composition-function-table for other variation selectors, because it
+> > currently says that VS-16 is handled by font.c:font_range.
+> 
+> Done.  To make it easier to read, I also separated the actual code out
+> of the placeholder symbol compose-gstring-and-emoji, and moved some code
+> around in composite.el.
+
+Thanks, this is even better.
+
+> 
+> >> >> [ What I don't understand here: if the Emoji sequence is known to be
+> >> >>   composed due to a specific font (e.g. Noto Color Emoji), why would it
+> >> >>   go through another round of font selection (based on the first
+> >> >>   codepoint and/or heuristics around the emoji script) at all? ]
+> >> >
+> >> > Sorry, I don't understand the question.  If what I said above doesn't
+> >> > explain this to you, please elaborate.
+> >> 
+> >> I was confused about the order of finding a font and using that font to
+> >> compose.  Upon closer inspection, I believe Emacs decides on a font
+> >> first, then uses that font for composition.  So the heuristic is indeed
+> >> needed.
+> >
+> > Yes.  And this cannot be any other way, because which characters can
+> > be composed is determined by the font features.  So we cannot ask the
+> > shaping engine to tell us whether and how to compose a sequence of
+> > characters without also telling it which font to use.  This is also
+> > the reason why Emacs can only compose a sequence of characters if all
+> > of them have glyphs in the same font.
+> 
+> Thanks for the explanation!
+> 
+> >> --- a/lisp/composite.el
+> >> +++ b/lisp/composite.el
+> >> @@ -780,6 +780,10 @@ compose-gstring-for-dotted-circle
+> >>  	 (if (memq val '(Mn Mc Me))
+> >>  	     (set-char-table-range composition-function-table key elt)))
+> >>       unicode-category-table))
+> >> +  ;; for Emoji sequences (VS16)
+> >> +  (aset composition-function-table #xFE0F
+> >> +        `(["\\c.\\c^+" 1 compose-gstring-and-emoji]
+> >
+> > Why "\\c^+"?  AFAIK, VS-16 cannot be meaningfully repeated in a
+> > composed sequence.  So I think "\\c.\\c^+" should be "\\c.." instead,
+> > since the second "." is the VS-16 itself.
+> 
+> "\\c^+" is needed because of keycap sequences:
+> 
+> 0030 FE0F 20E3 # 0️⃣ E0.6 keycap: 0
+> 0030 20E3      # 0⃣ E0.6 keycap: 0
+> 
+> If "\\c^" is used, the first line is rendered as two glyphs because it
+> stops at VS-16 and does not consider 20E3 (COMBINING ENCLOSING KEYCAP).
+
+OK.
+
+> >> +          [nil 0 compose-gstring-and-emoji]))
+> >
+> > And what does this part supposed to do?  I guess you copied it from
+> > the entry for composing combining characters, but will
+> > compose-gstring-and-emoji DTRT when the only character it gets is the
+> > VS-16 itself?  What happens if you use compose-gstring-for-graphic
+> > there, or remove this element altogether?
+> 
+> Currently, a standalone VS16 looks like a box, but if I remove it, it
+> looks like a zero-width space.
+
+Not sure which one is more correct (control characters are usually
+shown as thin space in Emacs), but since the box is what we show in
+Emacs 31, I guess it's better not to change it.
+
+Kevin, please test the patch and tell if we can install, or is there's
+anything else left to be done here.
+
+================================================================================
+Date: 2026-09-16T17:57:42+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <86ecetkx3d.fsf@gnu.org>
+In-Reply-To: <jwvse39qm4c.fsf-monnier+emacs@gnu.org> (emacs-devel@gnu.org)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org> <jwvse39qm4c.fsf-monnier+emacs@gnu.org>
+
+> Date: Wed, 16 Sep 2026 11:00:07 -0400
+> From: Stefan Monnier via "Emacs development discussions." <emacs-devel@gnu.org>
+> 
+> >> > This is the problem I face: the completion's case-sensitivity can be
+> >> > different for each candidate, and I wonder how to provide the
+> >> > necessary information about that to the completion infrastructure.
+> >> > The method as defined accepts no arguments at all.
+> >> I'd put that information inside the completion table since it's the only
+> >> place that has information about each candidate.
+> > Can you please tell more? how can such a per-candidate information be
+> > stored in the completion table?  Especially given that in this case
+> > the completion table is constructed by some code I cannot control?
+> 
+> If you can't control the code which builds the completion table, then
+> you probably can't know which candidate wants which case-sensitivity
+> either
+
+I _can_ know that, because I can find out which file each candidate
+comes from.
+
+Dmitry pointed out that the completion table is also built by a
+backend-specific method, so in principle I might be able to provide
+that information.  But what facilities exist in the completion
+infrastructure to allow me to do that? is there something better than
+putting some text properties on the candidate strings?
+
