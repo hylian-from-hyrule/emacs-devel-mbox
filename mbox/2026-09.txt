@@ -38622,3 +38622,1728 @@ infrastructure to allow me to do that? is there something better than
 putting some text properties on the candidate strings?
 
 
+From MAILER-DAEMON Wed Sep 16 12:21:05 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6sNd-0005jy-20
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 12:21:05 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1x6sNY-0005iy-3W
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 12:21:01 -0400
+Received: from mail-pj2-x10.google.com ([2607:f8b0:4864:39::10])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1x6sNW-0004Cl-BH
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 12:20:59 -0400
+Received: by mail-pj2-x10.google.com with SMTP id
+ 98e67ed59e1d1-396ccd4f99dso939957a91.2
+ for <emacs-devel@gnu.org>; Wed, 16 Sep 2026 09:20:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789575656; x=1790180456; darn=gnu.org;
+ h=content-transfer-encoding:content-type:in-reply-to:from:references
+ :to:content-language:subject:mime-version:date:message-id:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=qdg9XjSakk09IhAqVa1mcFhm/IvCQB9IITSI7vPzZ0A=;
+ b=KSvWcYYSpP4+pQd6afM2NU0fPAmGi0CNL68S9Ta8QBjl6Isrr/TI2vRoLZxZNL3NBg
+ Gz051J79+ToQdNE3X3ybutO85fM59vkUbPrV/83g50nx079dcIxc6gPpqTdaxtd2FS7t
+ x8f3RawejFKTkaAomK/JXJrBVirQAxiLXLUAnSzhO8iLYACsHLn9od8BYdWcwp+JOzuu
+ tvnJLtnJXkD2UDVfJh3n3nyPJQHh/Vlqlqwp3ZnYxcyQ+reO17nUtkBBrdAmIstKs5iM
+ eNA8MQWpEs8eZTVpBvBzCqDDwGgWxOCs0R5v50B5KTEO8vC7kQZ/QiB6UixFH+DxiGwn
+ wb+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789575656; x=1790180456;
+ h=content-transfer-encoding:content-type:in-reply-to:from:references
+ :to:content-language:subject:mime-version:date:message-id:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=qdg9XjSakk09IhAqVa1mcFhm/IvCQB9IITSI7vPzZ0A=;
+ b=ZGKy1vCUVnWhK5/s5+9P6+9US+UfbHKLz3rC2elC4cT84lhP173CmR+/ozmAcsKIYu
+ /NoB6Y2sFuj1xXALWMrDy/yLfKWAn77vdsoqKyQp/Rnl2xZnUYIPNnD6pIqKcbg525Fo
+ rGiHMJzxywHMFZLZRNZz4ZiLoRn8CX5aw0HMXhTWQTPBEqSlOPJhWJSXLmemJ5WR7W+k
+ BGVDOSsN0WRJ2wbXmRnpUm8lJQuFL2xyp3kkb6M/dAExzvYZoXkx3tlHa+H5d7APmLYC
+ 2A78kK+NeA/ik6KJnrqi6eq5x6LlBffXkC0AdX0RRH2leR84kF0tvlqtWHW+twwd5IYn
+ ofzA==
+X-Forwarded-Encrypted: i=1;
+ AKwUvByCmLAumVj7a4rY8JttxEpu70DuvSp1FOGGyzUhHLD+ccvpXo5mGcCWx1Rk6pIF5/Dk2weLOyVJwES42A==@gnu.org
+X-Gm-Message-State: AFuF++nQ1AQwlY5VpNpIPeUAZtxsn+ynjiuZi7tO2pMXbyTDPsqy57OE
+ 4/h+XW1piXXZXaABbngxySsTruz4i/BVldnEdDz3NnCzHQWtR31i/i2lCBdAcw==
+X-Gm-Gg: AYBFou2BDY/cLdBBTlJczsVAPutZE+6jhXWpK3jXw1dbwybLvqpIL/Q/VCxxrwSzCz1
+ 4m3OxLWmNHA3A4syUDCr9HJux408FGUNhrSJEATJ9EQ2tt3WnV96Me4mPRhPQmjfhHQQsh85mDU
+ /aR3xtGNFMpSSzz7xj2BAnHFQ/cfs/05SThI4vNmZovwKeiayi+sDNPQa82/YLqFwxMv3DTUNH8
+ okHfjXdmpnQjmmBjYb6aly0TkHmZ9+QPKeaJvbmPboL5BQ3aXBvqXdxALJf+UGEGKOuKMF0it0H
+ Ldy461DgFJJvItSj97Z1CDf+tTDUvWqz2lurq+/ZEtLdYscclfcB0AFBokoNbfxDYoZUj4nKad1
+ 4U+oNtcRgryniQe+zgef/GF0uSwSrJx+3kfMOMY9CbOJjrrcuQ6dqmvprv9/o9cYPGWo6hoqrFk
+ 3uJbZR9wgH4xnRxjrt8Lx7ynRhPa2p5pL0AP1DhP4ueMX8aBh08CgrkqQqRSNUSNaJ/zFWIXfs6
+ qgufGe5ipvf0g==
+X-Received: by 2002:a17:90b:1fce:b0:39e:2faa:2e83 with SMTP id
+ 98e67ed59e1d1-39e2faa31f1mr2273503a91.10.1789575655560; 
+ Wed, 16 Sep 2026 09:20:55 -0700 (PDT)
+Received: from [192.168.1.4] ([23.240.109.248])
+ by smtp.googlemail.com with ESMTPSA id
+ 5a478bee46e88-33bf5a93f1fsm8790611eec.11.2026.09.16.09.20.54
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Wed, 16 Sep 2026 09:20:55 -0700 (PDT)
+Message-ID: <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+Date: Wed, 16 Sep 2026 09:20:56 -0700
+MIME-Version: 1.0
+Subject: Re: EWW dom filtering/editing based on site url
+Content-Language: en-US
+To: Tyler Smith <tyler@plantarum.ca>, emacs-devel@gnu.org
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+From: Jim Porter <jporterbugs@gmail.com>
+In-Reply-To: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=2607:f8b0:4864:39::10;
+ envelope-from=jporterbugs@gmail.com; helo=mail-pj2-x10.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 16:21:02 -0000
+
+On 9/16/2026 7:17 AM, Tyler Smith wrote:
+> 1. Is there existing support for such a use? I found `eww-after-render-hook`, but I think that happens too late in the process.
+
+EWW could probably use more hooks for things like this. This one would 
+probably correspond to the JS event "DOMContentLoaded"[1], which fires 
+after the DOM has been parsed, but before other content has loaded (for 
+EWW, mostly just images).
+
+[1] 
+https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
+
+> 2. Assuming there isn't, where is the most appropriate place to do this? I have a working example by inserting a check into `eww-display-document` immediately before the call to `(shr-insert-document document)`. (code pasted below)
+
+I *think* the best place to do this would be at the tail end of 
+'eww--parse-html-region'. That should cover exactly the cases where you 
+want to transform the DOM, no more and no less. Among other things, that 
+makes it easy to ensure that we call the transformation exactly once and 
+then save the result into 'eww-data' so that we don't need to recompute 
+the transformation as often.
+
+> 3. Is this something that would be useful to include in EWW as a generalized feature? I found a previous discussion [2] that suggests EWW is kept deliberately light-weight to minimize speed issues, so maybe not? If not I'm not arguing it should, speed is important! But I was thinking since this code would 'only' require checking the URL prior to display, for most pages (i.e., those that don't match a filter) the speed hit would be minimal. But I'm a novice in these matters.
+
+I think adding an EWW hook corresponding to "DOMContentLoaded" would be 
+useful, yes. I wouldn't be worried about the performance impact of that, 
+since that would just be a single call to 'run-hooks' that would do 
+nothing by default.
+
+If you're interested in writing a patch for this, I could help provide 
+advice on the best ways to go about that. Or I could write a patch for 
+this myself; I don't think it should be too complicated.
+
+
+From MAILER-DAEMON Wed Sep 16 15:07:33 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6uyj-0001wq-AN
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 15:07:33 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1x6uyd-0001u0-Hc
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 15:07:29 -0400
+Received: from mail-pl1-x62d.google.com ([2607:f8b0:4864:20::62d])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1x6uyZ-0008W7-5X
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 15:07:26 -0400
+Received: by mail-pl1-x62d.google.com with SMTP id
+ d9443c01a7336-2db710396ffso20471685ad.1
+ for <emacs-devel@gnu.org>; Wed, 16 Sep 2026 12:07:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789585640; cv=none;
+ d=google.com; s=arc-20260327;
+ b=Gm18kqaPGJF5NihrMzIFmJ87CIY57PL99aCqzjUlIr2Ad+qvnnJO+fgY7U2WJjQyrP
+ vBx8tsWZDva5lAR/EV4h90/HNiYoJ8k+sskO9s3A7mwHyGL0oCRV2lZQpcNFRMGqIfrt
+ ruW0qQq2zByB9djnxTYiW9IXTvXGDsmjNu4HlUEz62+sa1udjPlwSffP2z3paoZ39+Su
+ fx2zuRWJoOQYvcEMENG1b3Z3ARO1I1l0UiVV4m2aBCCelmYZuZQJk855ZdBlJkj9CpfP
+ UqdXc9LzBgfyv26zxEuof3qAB8lzYnsuattHLMDcYwGtKVkZyT1jqEjixi9J41g4WyYB
+ ZdzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=oqHFWNRn9m8EZUrFZ1waOxWyo3SZEYeeuV3JCVBOdyY=;
+ fh=dQaIuJb0ahHP5zV9bpETfZu4YZCm//3ti1XVYt1B8BM=;
+ b=Ai6MbX4su0J/wBOXyN9LltQFEpDAmWEiG6/6rOdRTbpmykQFcRxfcIfzROOin2kkMt
+ +08q5abvKBEIZyZsHSUA2kuAzC0Ju5MY2bmgie27HPABpuhVu7xwkSjyuvdBVLVSKJDF
+ I7d76wsvLtCB5i6FoCsW2loBSFTcZlivrUb4iK27s2YOtVUYuJfMSfRyVY/3egl8PTnu
+ LL0hFQZpdbjeXgpyAZxX6J7sQysFuZ0IVgxzzpyQyYftxCqOQxzEpFCpcR27mT9xl1Wk
+ UJ+9evxkSdmHwGKXNE+H2t664JUND5Z5AQZmvw5Mbrpk0dizjNPUBvVKhV5ldFBy9R/Z
+ PtzA==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789585640; x=1790190440; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=oqHFWNRn9m8EZUrFZ1waOxWyo3SZEYeeuV3JCVBOdyY=;
+ b=jhKRCJOm3uFwIxJYN6DNLBewAmgr9g3bbNUgnoZYeQfeaMC3br6cYxB8QrY5wBuics
+ 1HjyDlCFL4yDaVVtfQdlJgD+fO+tqVP34Fc1B8GfZSXdyg0+US7sy4EKWLsUFAWn6i0g
+ ofdt8Br29VTxdG+g6KKMNG+6Bvy1rfntJfGMiuvzDoo1EvuLcz8FiW21XnEDgLLUy3kr
+ ikHPMBtiPwGONX4/74Qtir/EsSjdkdyCfx+0ia/dlZkuhWHkgYHNvrPz9r2DhoS/hvX4
+ N4hHmcOGJneJU+WKPEyOtMtcSRQpERCoRhWQA2+CyMGvEIQ1I0O6oFH3emzNZgOaISWL
+ iyxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789585640; x=1790190440;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=oqHFWNRn9m8EZUrFZ1waOxWyo3SZEYeeuV3JCVBOdyY=;
+ b=vUDnz6jqGC0QwSvYpWZSnkwzUFvaVHEUZeAikkDIS+JHOFR8J2opRWR/K2IUEQNO89
+ DY5ZUeSauIqM9lYCZ4PJK1BHV3IKgx6V0/V+ICCgsFBYP4ybczE6h+jG4h6QGY1Vb9Ga
+ qTIAVTnwz6qz9XfRuZ5Fa1GA9faieuVkhRcKC92EfeMKFUYzT6RbEFHb5Vrswa6RiI3I
+ A16ERH5Y5WKmaTGp9Ldglt+2cM13k8Thg5xMNBqmct4riwiCtZQfQk6fZNS359GAG/Ay
+ iz0GLGSjQnWw25+TxN/gfYvNmBdc2MdPv4p77BUI3oeQv+sUmIbvVrLHD7vrWv+R3zse
+ YcXw==
+X-Gm-Message-State: AFuF++nv76GzivZOJ93xptZ1EO9cWBOQCtwbTQzhGq+YdtqlxG86TMAk
+ 5LJKuW7s4D6b9kLr8cMsJnZ9VzgrIW9NQwo9R9RFohBYuQIGIQqHj2rX+hQMTYCWkRhLmzZbAch
+ dwu7Rf9gSmmlkSd1f9MRkDgkNqwLcR+jn3lZc
+X-Gm-Gg: AYBFou3ajU8gWUUm/UA8pQTdA8mm/lHln6C6RmbI2jr2GBpV8WRTWL+BA7oJt3ztQt6
+ CafDBk1je5OnyXwXXP3sZ+5qgckjxfR/HqoZMrX4pkRxCL3935r5MpQ4zcmP4W0aHm0l7XqnFgV
+ hMHcBanUwpPQ9DNpjnv+u3V3DnNcbR/rjJf7kuUGVYudLgvgAPGxTxkXJ7ZmJoNcTdjDw4i0sss
+ kOjscCTZwRHt13IYIybxgL7WRqYX8t6WYba50fnRpBH4CiBoaeHAtvkDZmrcSv8dV3D6P/YEVIa
+ 4RUfpXuhTjyyUewig5K9oae2QdfD8MADCc3oZxB9rUNLpz9aCLlnJ5Ut
+X-Received: by 2002:a17:90a:c2cc:b0:39d:ec1f:b3fd with SMTP id
+ 98e67ed59e1d1-39e35df377fmr1114940a91.8.1789585640104; Wed, 16 Sep 2026
+ 12:07:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+In-Reply-To: <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+From: Jim Porter <jporterbugs@gmail.com>
+Date: Wed, 16 Sep 2026 12:07:11 -0700
+X-Gm-Features: AcwNN1VFGJ3toP70B94MX9NQeQxJhcmbtlcBA6bqn2WVxMLLkARbl_TK303lQ8U
+Message-ID: <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+Subject: Re: EWW dom filtering/editing based on site url
+To: Tyler Smith <tyler@plantarum.ca>
+Cc: emacs-devel@gnu.org
+Content-Type: multipart/alternative; boundary="0000000000005fa60b065b9e60a6"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::62d;
+ envelope-from=jporterbugs@gmail.com; helo=mail-pl1-x62d.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 19:07:31 -0000
+
+--0000000000005fa60b065b9e60a6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Sep 16, 2026 at 10:46=E2=80=AFAM Tyler Smith <tyler@plantarum.ca> w=
+rote:
+
+> If you can provide some guidance I would be happy to try this myself :)
+>
+> It looks like `eww--parse-html-region` doesn't save anything into
+> `eww-data`, so we'd need to apply the transformation to the value (the
+> parsed DOM) returned by '(libxml-parse-html-region (point-min)
+> (point-max))'. But hooks don't take arguments, so I'm not sure that's
+> possible. Would we need to save the DOM to 'eww-data' before the hook is
+> run, so that the hook can access it?
+>
+
+"Abnormal" hooks can take arguments, so I think we're ok here; see the
+Hooks node in the Emacs manual: <
+https://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html>.
+
+Since the changes here may be "legally-significant" (in effect, >15 lines
+of code), this may need copyright assignment on your part. The form at
+"etc/copyright-assign.txt" explains what info the FSF needs. (If this ends
+up under 15 LoC, then copyright assignment isn't strictly necessary, but
+it's best to start early. The process can take a little while.)
+
+--0000000000005fa60b065b9e60a6
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote gmail_quote_container"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Wed, Sep 16, 2026 at 10:46=E2=80=AFAM Tyle=
+r Smith &lt;<a href=3D"mailto:tyler@plantarum.ca">tyler@plantarum.ca</a>&gt=
+; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px=
+ 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+If you can provide some guidance I would be happy to try this myself :)<br>
+<br>
+It looks like `eww--parse-html-region` doesn&#39;t save anything into `eww-=
+data`, so we&#39;d need to apply the transformation to the value (the parse=
+d DOM) returned by &#39;(libxml-parse-html-region (point-min) (point-max))&=
+#39;. But hooks don&#39;t take arguments, so I&#39;m not sure that&#39;s po=
+ssible. Would we need to save the DOM to &#39;eww-data&#39; before the hook=
+ is run, so that the hook can access it?<br></blockquote><div><br></div><di=
+v>&quot;Abnormal&quot; hooks can take arguments, so I think we&#39;re ok he=
+re; see the Hooks node in the Emacs manual: &lt;<a href=3D"https://www.gnu.=
+org/software/emacs/manual/html_node/emacs/Hooks.html">https://www.gnu.org/s=
+oftware/emacs/manual/html_node/emacs/Hooks.html</a>&gt;.</div><div><br></di=
+v><div>Since the changes here may be &quot;legally-significant&quot; (in ef=
+fect, &gt;15 lines of code), this may need copyright assignment on your par=
+t. The form at &quot;etc/copyright-assign.txt&quot; explains what info the =
+FSF needs. (If this ends up under 15 LoC, then copyright assignment isn&#39=
+;t strictly necessary, but it&#39;s best to start early. The process can ta=
+ke a little while.)</div></div></div>
+
+--0000000000005fa60b065b9e60a6--
+
+
+From MAILER-DAEMON Wed Sep 16 16:30:35 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6wH5-0006pY-Ab
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 16:30:35 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <kevin.legouguec@gmail.com>)
+ id 1x6wH3-0006pN-Cx
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 16:30:33 -0400
+Received: from mail-wm2-x11.google.com ([2a00:1450:4864:31::11])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <kevin.legouguec@gmail.com>)
+ id 1x6wH1-0002Sk-RV
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 16:30:33 -0400
+Received: by mail-wm2-x11.google.com with SMTP id
+ 5b1f17b1804b1-49d1331ce1bso113975e9.3
+ for <emacs-devel@gnu.org>; Wed, 16 Sep 2026 13:30:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789590629; x=1790195429; darn=gnu.org;
+ h=content-transfer-encoding:content-type:mime-version:user-agent
+ :message-id:date:references:in-reply-to:subject:cc:to:from:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=JzUTdQq4Wj2jELlf+k5C4zGlo2wulMVETHZmcolJ0pU=;
+ b=GDGXR29ZExWluADuTRsqG3pPfhwz+0fjJEd+E4nG50tRr4LrF1yDtX29vhi+HcXcX6
+ V5juqbQy+ecTivEo/mk5HWIq0tqr5vemMrPS2N7EY0BnpSVJLa1SWNbB6qu8635QnWSX
+ k5KCb+6UmHN6NoeymPdFKkNeTS1/2ubJvDcu0JTIB91rIQp9p2e+aGOerrPWWeOwJpUl
+ mapR3UvHq/nSDGeCTnUCFYpAgZTOg2r8mp12BeB/zUx6mlSFgkNQIXak6GygqMG1J9uu
+ WDvL4Vk3wdWGQVeZwdgG/sVBorRLcWVfAajLFNDlT9dIr1IbT+/noT3cDN+wOFXLBtMh
+ Yqqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789590629; x=1790195429;
+ h=content-transfer-encoding:content-type:mime-version:user-agent
+ :message-id:date:references:in-reply-to:subject:cc:to:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=JzUTdQq4Wj2jELlf+k5C4zGlo2wulMVETHZmcolJ0pU=;
+ b=pINEukjrE8dmzW/WXxKhwjOl+iJy2kDDfOvmHEuNbxpvhpfcMLwf1Ri5Ko4S4iA84i
+ QRWU+GEqc7UrWIpGrsbxwh5UdR5rrVRWck26XgbxKw2sUMthAutcJZAfeBuU9pPlkTKG
+ 7HhZtM+fqzmfu4Eh1UFYsoUK9PQlAjMgNiinMyQ2H+5lQqsFaWWE8kF7ZO0Q0Df/opiw
+ 7pa23msF1P7TOghyXbocAqNCLIz8c1LeixwRlzWZaK0SV53W2Ajp81gPVlS9Yin2ZEBn
+ 4sJ2Zh25R0WxsSJbTVM06riIndM8ZxxhZYq8BdHVJHMFv5dj4kyle3eSQPiyzK0NXzYv
+ PSkw==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBwgZ3ryoGq+tQf8in9AEm55q1Ru4Umz9i9dBXmQ7xyOefjL/ePCaO5aR+s7nGooDDvjzDxaj8BnKR+cWA==@gnu.org
+X-Gm-Message-State: AFuF++kRo158EIKH3IVt73Z+IZV5vCZpPCLy+t07UZjR2L8dEb7OexJw
+ v5RbNAqUP6KdYsRCGW/wPkcu+QkwR+YAAUDJLlTNTYgQxWwKukmq0JJNHbAY9Q==
+X-Gm-Gg: AYBFou2VDI2ZRsT5Y+kxh7HR/w92pm51W+jBCl8NPX25gC7kBNgxRsvQJNC7sO1XhrN
+ eDgbXVTd+Frmpi6yLoqWCHtaAKXdfn8jmQg+k/zIgVMfwnxZaRh2GYaS/dKfbCnT9rFKG0GGzBW
+ 1F4fMC9g1JhMMxz3WaUxP1ynX4KvzHhDZMcbN9FvJmSz47oFoR04YKnK0rTs6VbyKRWlU8GPneo
+ arg5Q37OMZCiGE9NHSJF0s1SvGEfiADo2WmjYt2vKGwlK6ifa8xQhFlIrkjINMMt/nzj5sEdnwF
+ n78nvk6RFoGqQdNFkLDI1Ta48UoplDzYTDAcrMRwWmDxLWGG+cDYMTYfLyD7K/Y6KRjlIFYvMZb
+ 2t4dmt0sG7i/Nxpj4CFMhZojT5eBdXQwBd+TswhsStTpmxglqXcquVE4NXjYsfwzxKFqsgen6zY
+ jfqazP7U6y/91u+rePonuh1i/6zzuP1sW+u/3gostF/ZXmP21sbWHHnbNn185dwcIQGsrflutJC
+ GbkqcU8h+KAeCfVL5pTn+by86QCGmRd9yPj
+X-Received: by 2002:a05:600c:4e0a:b0:49e:479b:c13b with SMTP id
+ 5b1f17b1804b1-49eb732056fmr41285225e9.1.1789590629002; 
+ Wed, 16 Sep 2026 13:30:29 -0700 (PDT)
+Received: from amdahl30 ([2a01:e0a:e22:df80:2ef0:5dff:fed2:7b49])
+ by smtp.gmail.com with ESMTPSA id
+ 5b1f17b1804b1-49fbd262912sm17057935e9.15.2026.09.16.13.30.27
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Wed, 16 Sep 2026 13:30:28 -0700 (PDT)
+From: =?utf-8?Q?K=C3=A9vin_Le_Gouguec?= <kevin.legouguec@gmail.com>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: Kai Ma <justksqsf@gmail.com>,  emacs-devel@gnu.org
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+In-Reply-To: <86fqz9kxcl.fsf@gnu.org>
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org> <87tsnql6nv.fsf@gmail.com>
+ <86zexhla60.fsf@gnu.org> <87o6dx5j4t.fsf@gmail.com>
+ <86fqz9kxcl.fsf@gnu.org>
+Date: Wed, 16 Sep 2026 22:30:27 +0200
+Message-ID: <87ecetaqho.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=2a00:1450:4864:31::11;
+ envelope-from=kevin.legouguec@gmail.com; helo=mail-wm2-x11.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 20:30:33 -0000
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> Kevin, please test the patch and tell if we can install, or is there's
+> anything else left to be done here.
+
+As far as I could test=C2=B9, the patch brings everything back to "nominal".
+Thanks a lot! =F0=9F=99=87
+
+
+=C2=B9 Which admittedly was not all that far, but sufficient to exhibit the
+symptoms with trunk:
+
+* isearching for VS-16 in C-x 8 e l,
+* visiting my OP featuring =E2=98=BA=EF=B8=8F, =E2=98=B9=EF=B8=8F, =F0=9F=
+=96=8B=EF=B8=8F, =E2=9A=92=EF=B8=8F,
+
+building from 'git clean -fdx'=C2=B2,
+
+1. first from 2026-09-16 "Document tramp-tolerate-tilde" (82f763756c7)
+to confirm the symptoms,
+2. then applying Kai's patch; trying both GUI & -nw for good measure.
+
+
+=C2=B2 X11/GTK3 on XWayland; M-x report-emacs-bug:
+
+In GNU Emacs 32.0.50 (build 1, x86_64-pc-linux-gnu, GTK+ Version
+ 3.24.53, cairo version 1.18.4) of 2026-09-16 built on amdahl30
+Repository revision: 82f763756c71aae1f6361c7ae116a31887f8cc8d
+Repository branch: topic/emoji
+Windowing system distributor 'SUSE LINUX', version 11.0.12401013
+System Description: openSUSE Tumbleweed
+
+Configured using:
+ 'configure
+ --cache-file=3D=E2=80=A6
+ --prefix=3D=E2=80=A6 --with-cairo
+ --with-native-compilation=3Dno --with-sqlite3 --with-xinput2'
+
+Configured features:
+ACL CAIRO DBUS FREETYPE GIF GLIB GMP GNUTLS GPM GSETTINGS HARFBUZZ JPEG
+LCMS2 LIBOTF LIBSYSTEMD LIBXML2 M17N_FLT MODULES NOTIFY INOTIFY PDUMPER
+PNG RSVG SECCOMP SOUND SQLITE3 THREADS TIFF TOOLKIT_SCROLL_BARS
+TREE_SITTER WEBP X11 XDBE XIM XINERAMA XINPUT2 XPM XRANDR GTK3 ZLIB
+
+Important settings:
+  value of $LC_TIME: en_GB.UTF-8
+  value of $LANG: en_US.UTF-8
+  locale-coding-system: utf-8-unix
+
+
+From MAILER-DAEMON Wed Sep 16 17:37:02 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6xJN-0000nJ-PM
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 17:37:01 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x6xJH-0000lk-BE
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 17:36:55 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x6xJF-0007dt-S1; Wed, 16 Sep 2026 17:36:55 -0400
+Received: from pmg2.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 40CEA80881;
+ Wed, 16 Sep 2026 17:36:51 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1789594610;
+ bh=uO1fo7N7ZSrQN5lpnm8v5dRwcZVIEEGE3Ma3RKo2Ais=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=fUn4TlpCURZtub5Q1T+wBPM+7SOoeg2rTaXnmDifbsPyYlC1MyJN/wCWIX6dysM4V
+ l4mqU95KHHZpQVP1yYDQAOOCsOeyq3pqI1dgegRxlkp4ACs+8SkAdXyCSgO03xxgiI
+ qPgnhDCBxIr8M8j5xlU0KDTJ9rtbyc8Ccn6Rge4CNX2mpsl3aBoTEpl/dQOlf4N8mq
+ PfoC1/RRBU1m4NnYzKBjJjyePpFJJP817cTS1GdFouKDfejQh4fwsC+W25ZhZDGHFr
+ WhGRrm44IUBb/GPezGy1TsPgG4q+s2Jebuo5PKL3aM3370qpgp4aCXae6JMG14Zt/p
+ 9y+T57VvSGO1w==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 9A89D8008E;
+ Wed, 16 Sep 2026 17:36:50 -0400 (EDT)
+Received: from alfajor (bras-base-mtrlpq0776w-grc-29-65-94-79-42.dsl.bell.ca
+ [65.94.79.42])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 88F9E120B19;
+ Wed, 16 Sep 2026 17:36:50 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: emacs-devel@gnu.org
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+In-Reply-To: <86ecetkx3d.fsf@gnu.org>
+Message-ID: <jwvjyokyjcl.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org> <jwvse39qm4c.fsf-monnier+emacs@gnu.org>
+ <86ecetkx3d.fsf@gnu.org>
+Date: Wed, 16 Sep 2026 17:36:50 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 21:36:55 -0000
+
+> Dmitry pointed out that the completion table is also built by a
+> backend-specific method, so in principle I might be able to provide
+> that information.  But what facilities exist in the completion
+> infrastructure to allow me to do that?  Is there something better than
+> putting some text properties on the candidate strings?
+
+In general, a completion table is a function, so you can implement it as
+a function that uses internally 2 lists of identifiers: one for the
+case-sensitive identifiers and one for the case-insensitive ones.
+
+You'll probably want to use `all-completions` to filter each of the
+two lists, then concatenate the two results and pass it to
+`complete-with-action`.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Wed Sep 16 17:40:28 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x6xMh-0004XQ-To
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 17:40:28 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1x6xMf-0004W6-55
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 17:40:25 -0400
+Received: from mail-pz2-x0d.google.com ([2607:f8b0:4864:3b::d])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1x6xMd-0008MY-Ag
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 17:40:24 -0400
+Received: by mail-pz2-x0d.google.com with SMTP id
+ d2e1a72fcca58-868cfc5c244so95127b3a.3
+ for <emacs-devel@gnu.org>; Wed, 16 Sep 2026 14:40:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789594822; cv=none;
+ d=google.com; s=arc-20260327;
+ b=mZ/stPeOyXDXbxlLVq0BUYoMgHUXoLe/4Hjjiu3goecz5574vtGMXeXouMjP7d7abH
+ FT9PPCix3+WTq32fi0clTUqNEuu+xCfcpbw8y928LmVzac4OdlUDcnzdEkQop9tDldTm
+ kD62s8s6bJhMQqvkhNP+Q0eFdGaV1Ma+86ZPyO0k/hH68P0BSEh7OJaloxdsb1iAM79K
+ I20SnLkqztdTYQ//iu4DhJAGpsSHuDU4jxq+K4Ivn2uyu4mXKeIlwVGkZqmD8WjF7mhq
+ R10AZB6XJ6NHTYaS5UjJgtuXOd9U9m2glU8H39zUhQ5P2eGXqmvVo+RCULgQuUu/3maI
+ c+sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=8IbFS5dmqIWdBaw6Cfk6Bl5qRysaFicR4Y9sRXKxoK0=;
+ fh=xDqYK6458TQSUkadRnQ6NCTWc3MbKaUNBJ1P0ZCZB9c=;
+ b=S+KisphDpnOWjB6f8dZItc3Dd3/an+Ttsn9I0PCn2GnuEDbFVllEKAYMRHHUdzTfOE
+ FWjv6l7aM2wJeMQnxmVkVsVq/sBHuZPOkRv7TEg70thguWAbSST0QB3Ipz6UoMEjI/Wk
+ hw/VM+BgUJQYTS6DCLsW+zfQAmWKSJO3uN9/2UMwvZxNxqFSi1lqv+yQzDdvzV5PUfNA
+ utHFRwFFzWSttYFDgfNSr3KXQhBkyrxNakWuaKgo41wlPTlr76lE23nTRafhE+sU2Ul6
+ 3CfDbNR8vKgv2FN5hslPukFBtArtSOl5zAR2+wlpl6cDQKlYdbINcN+H2+YdhHVPJZph
+ hqMA==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789594822; x=1790199622; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=8IbFS5dmqIWdBaw6Cfk6Bl5qRysaFicR4Y9sRXKxoK0=;
+ b=fcm7BbsbPIrfn5InAephmie0CBcQ+Nb+W1nX/22F2ryWhvp0/68+E8YVhHAgXeif+0
+ JW/RNuF/ELlsI4aq0B61azZyn2wa3f/3T5fEAhhJfyx482tV/ZFc/6D2E6BXFUCW28UZ
+ 0aYCE3u6mZPcNzX8I6Xif1mAJEbLA0J6iMYtr9re8v6jx/0tD4rikUKMBxp2RCPyGVxF
+ 1U8baT62HlH2u0c3c0/KJYGF3ydj/z6MrnbOm+hp6ml5XgHMGtffLKAC9+/yKpA46xvG
+ TDXiEffV/aAvL+RDE/tfzLuFf8A4GmFHT8TabrR6Q7T6DNSL9Z73IpWiFPu+x+LRoRYI
+ ot9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789594822; x=1790199622;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=8IbFS5dmqIWdBaw6Cfk6Bl5qRysaFicR4Y9sRXKxoK0=;
+ b=aMTGg08Mrbv2EFdP+8WddlwLcTPb46r40+P3kvL0PyO1Vof0k/RLROUpBOi33USv4T
+ XJ7qk9SISMwyUnLyH+6eS3jKLDXztFlQsfJ2aSRegsrWC28nF983rYSPTapFxpo3bb/g
+ lVJdnyj1Xddcme17twFpGg/grZpgtZuMM4+K2xVWyhf8pY8LOcknIHNL/v+8MqoxhxVA
+ 2L0ZUEgMeyq5icgMQ15V5LNFxIJjjeTbbfNIoMHGqZnPi6ov5wikRwCpzWLGE3lvrVHJ
+ wTnlAwMrVL+O2o7Zm+BgU/sEhF6YhebJIPt7a43WHaQerze1+4JXASwvhZjG+THuUM5X
+ lePg==
+X-Gm-Message-State: AFuF++lSJ9LWYYuDKJ8nKImAJd1svFEq8piC+LLK5MN2LGkLXr8ifjOc
+ I5mgg+6lbHrxfcbG4KnjAYu5ooK4RC7NqzVii/6He3JRWR8Y1QpBVzJHewdn5vwUMQIr9q7Z4t4
+ wtjcyK+TgsNBzTfWBsp1d4Tj+DILky0U=
+X-Gm-Gg: AYBFou1AWo4ugMC26WHMbYr0f/r/igs+iqw9L9ncBX2tXg6+oY6VYSe3RtI+8n6x3DS
+ N73QC+IKxqgywlMueQ+6tn10Z5epXVLDWNADO5dIjrZJgEr8oTzsmAamzjQQEtPLsYrpOQkdcLK
+ femVqKHb0Zw8XbFMd6Fym5n8bJHauJPdcCfiYMVt9lbj2qk/P42h3LMDjlaJiZsU/L4QtdnCROM
+ BUnNEhVbkfhxQAf6kCUHJiykdHt2eR2Va+Yr97E3GIS0fc0jGPdREiqkzBxkm3IdYtW3Wxcn08z
+ M+zFLaaiHZHQfOhTvVUlHdW+Jn/AOxwln42PjX/BJo5OyJdZq+xQdPR5
+X-Received: by 2002:a17:90a:d16:b0:39e:3554:4d0e with SMTP id
+ 98e67ed59e1d1-39e35545939mr2888135a91.1.1789594821809; Wed, 16 Sep 2026
+ 14:40:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+ <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+In-Reply-To: <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+From: Jim Porter <jporterbugs@gmail.com>
+Date: Wed, 16 Sep 2026 14:40:10 -0700
+X-Gm-Features: AcwNN1VkrlSisxtESvrG8PmFgYioHkp0dF8Wr4J9NSeEsUZoTaBbyr8KGXNmspM
+Message-ID: <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com>
+Subject: Re: EWW dom filtering/editing based on site url
+To: Tyler Smith <tyler@plantarum.ca>
+Cc: emacs-devel@gnu.org, Eli Zaretskii <eliz@gnu.org>
+Content-Type: multipart/alternative; boundary="000000000000a55c7f065ba0830c"
+Received-SPF: pass client-ip=2607:f8b0:4864:3b::d;
+ envelope-from=jporterbugs@gmail.com; helo=mail-pz2-x0d.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 21:40:25 -0000
+
+--000000000000a55c7f065ba0830c
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Sep 16, 2026 at 1:24=E2=80=AFPM Tyler Smith <tyler@plantarum.ca> wr=
+ote:
+
+> (let ((DOM
+>            (libxml-parse-html-region (point-min) (point-max))))
+>       (setq DOM (run-hook-with-args 'eww-dom-filters
+>                                     (plist-get eww-data :url)
+>                                     DOM)))
+>
+> But: at this point 'eww-data' isn't defined, so I can't get the url this
+> way. I need both the url and the dom in the hook function, in order to
+> apply the transformation (or not) based on the url.
+>
+
+For getting the URL, the easiest way would probably be to pass it as an arg
+to 'eww--parse-html-region'. It's a private function that's only called in
+two places (both of which can get the URL easily), so changing the
+signature is fine, I think.
+
+After considering it a bit more, I think the behavior we want for the
+"hook" is to transform the DOM progressively, so that if there are three
+functions on the hook, the result is something like:
+
+  (setq DOM (third-fun (second-fun (first-fun DOM))))
+
+Looking over the rest of the Emacs source, I see two main ways to do this.
+First, using 'run-hook-wrapped'; you can see an example of this with
+'yank-transform-functions', especially this bit in 'insert-for-yank':
+
+  (run-hook-wrapped 'yank-transform-functions
+                    (lambda (f) (setq string (funcall f string)) nil))
+
+Second, using advice (e.g. 'add-function' and friends), for example with
+'kill-transform-function'. In "grep.el", there's an example of how to add a
+function to this:
+
+  (add-function :filter-return (local 'kill-transform-function)
+                (lambda (string)
+                  (string-replace "\0" ":" string)))
+
+I'm not sure off-hand which method is more-idiomatic in Emacs, so I've CCed
+Eli. Eli, what do you think? Is it better to design a hook like
+'yank-transform-functions' or like 'kill-transform-function'?
+
+By the way, I've already signed off on the FSF paperwork, I should be in
+> the system already.
+>
+
+Cool, thanks. I don't think I have access to the list and just wanted to be
+sure everything was ok on that front.
+
+--000000000000a55c7f065ba0830c
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote gmail_quote_container"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Wed, Sep 16, 2026 at 1:24=E2=80=AFPM Tyler=
+ Smith &lt;<a href=3D"mailto:tyler@plantarum.ca">tyler@plantarum.ca</a>&gt;=
+ wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px =
+0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><u></u><=
+div><div></div><div>(let ((DOM</div><div>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 (libxml-parse-html-region (point-min) (point-ma=
+x))))</div><div>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (setq DOM (run-hook-with-arg=
+s &#39;eww-dom-filters</div><div>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 (plist-get eww-data :url)</div><div>=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DOM)))</div><div><br></div><div>=
+But: at this point &#39;eww-data&#39; isn&#39;t defined, so I can&#39;t get=
+ the url this way. I need both the url and the dom in the hook function, in=
+ order to apply the transformation (or not) based on the url.</div></div></=
+blockquote><div><br></div><div>For getting the URL, the easiest way would p=
+robably be to pass it as an arg to &#39;eww--parse-html-region&#39;. It&#39=
+;s a private function that&#39;s only called in two places (both of which c=
+an get the URL easily), so changing the signature is fine, I think.</div><d=
+iv><br></div><div>After considering it a bit more, I think the behavior we =
+want for the &quot;hook&quot; is to transform the DOM progressively, so tha=
+t if there are three functions on the hook, the result is something like:</=
+div><div><br></div><div>=C2=A0 (setq DOM (third-fun (second-fun (first-fun =
+DOM))))</div><div><br></div><div>Looking over the rest of the Emacs source,=
+ I see two main ways to do this. First, using &#39;run-hook-wrapped&#39;; y=
+ou can see an example of this with &#39;yank-transform-functions&#39;, espe=
+cially this bit in &#39;insert-for-yank&#39;:</div><div><br></div><div>=C2=
+=A0 (run-hook-wrapped &#39;yank-transform-functions<br>=C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (lambda (f) (setq string =
+(funcall f string)) nil))</div><div><br></div><div>Second, using advice (e.=
+g. &#39;add-function&#39; and friends), for example with &#39;kill-transfor=
+m-function&#39;. In &quot;grep.el&quot;, there&#39;s an example of how to a=
+dd a function to this:</div><div><br></div><div>=C2=A0 (add-function :filte=
+r-return (local &#39;kill-transform-function)<br>=C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (lambda (string)<br>=C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (string-replace &quot;\0&quot; &q=
+uot;:&quot; string)))</div><div><br></div><div>I&#39;m not sure off-hand wh=
+ich method is more-idiomatic in Emacs, so I&#39;ve CCed Eli. Eli, what do y=
+ou think? Is it better to design a hook like &#39;yank-transform-functions&=
+#39; or like &#39;kill-transform-function&#39;?</div><div><br></div><blockq=
+uote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1p=
+x solid rgb(204,204,204);padding-left:1ex"><div><div>By the way, I&#39;ve a=
+lready signed off on the FSF paperwork, I should be in the system already.<=
+/div></div></blockquote><div><br></div><div>Cool, thanks. I don&#39;t think=
+ I have access to the list and just wanted to be sure everything was ok on =
+that front.</div></div></div>
+
+--000000000000a55c7f065ba0830c--
+
+
+From MAILER-DAEMON Wed Sep 16 23:41:13 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x72zp-0005gF-9U
+	for mharc-emacs-devel@gnu.org; Wed, 16 Sep 2026 23:41:13 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1x72zn-0005g4-9H
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 23:41:11 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1x72zm-00022D-Lr; Wed, 16 Sep 2026 23:41:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=30pXW3wwUrPzrFuELfPucdarVQpeHBaOBSKdEt52WCg=; b=R8ed7IzHJdat
+ ACo7G3fGlAE5nqZthjnQiXLxetw0JSq8QNlLssSf6s4MhSOUgqxv7oARklsf6l4HC2vhfzEBfa/cw
+ fUB0zN87POQmzkwMjkN9s515LaS2yt4+l+yK9Knol7Xp2Z/4ngh/NL1iQDtqKXyM9t5XqxynrB7qJ
+ 9aMletItaozFMXR+dQPfnS3PEtzLqTpDdSamo7/eW0XwxXzcX0ndQFSa7VHnaUUCmVmb2CYrb2TnM
+ rgkji+DllcbWycwLaP0aUiy97WaozQ2c2RXmcQoMl1H4qoyQAr7KUtGDngRvj1nuekeP0T3UOjjQ7
+ gkVf1zLUXpClE/4xVGlGuA==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1x72zl-000APm-J0; Wed, 16 Sep 2026 23:41:09 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: yandros@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Wed, 06 May 2026 22:50:23 -0400)
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Reply-To: rms@gnu.org
+References: <86jyu4y0oy.fsf@sdf.org> <87eck97788.fsf@posteo.net>
+ <86zf2x2eo1.fsf@sdf.org> <874il45kje.fsf@posteo.net>
+ <86mryw2ozt.fsf@sdf.org> <87zf2w3vhh.fsf@posteo.net>
+ <E1wFkpF-0002wc-1j@fencepost.gnu.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org> <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+Message-Id: <E1x72zl-000APm-J0@fencepost.gnu.org>
+Date: Wed, 16 Sep 2026 23:41:09 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 17 Sep 2026 03:41:11 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  >   Simply that IMO, what `yt-dlp`
+  > does right now seems acceptable even though it is technically running
+  > proprietary code, so it suggests we should think hard about such
+  > borderline cases and maybe refine our position to reconcile
+  > "it's running proprietary code" with "IMO it's acceptable".
+
+I have read a careful description of what `yt-dlp' is doing, and it is
+clear that it runs some JavaScript programs, and that the ones it runs
+for youtube are in fact non-free.
+
+You've suggested that it would be convenient if for some reason this
+particular case were acceptable.  I see why it would be convenient.
+But that isn't a moral argument that they are acceptable.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
+From MAILER-DAEMON Thu Sep 17 00:10:45 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x73SM-0000aQ-MP
+	for mharc-emacs-devel@gnu.org; Thu, 17 Sep 2026 00:10:43 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tyler@plantarum.ca>)
+ id 1x6ti6-0006li-UQ
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 13:46:18 -0400
+Received: from fout-a8-smtp.messagingengine.com ([103.168.172.151])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tyler@plantarum.ca>)
+ id 1x6ti5-0007jK-3T
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 13:46:18 -0400
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+ by mailfout.phl.internal (Postfix) with ESMTP id 316BCEC05B8;
+ Wed, 16 Sep 2026 13:46:16 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+ by phl-compute-06.internal (MEProxy); Wed, 16 Sep 2026 13:46:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plantarum.ca; h=
+ cc:content-transfer-encoding:content-type:content-type:date:date
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm3; t=1789580776;
+ x=1789667176; bh=jHdQnJcv/tLslpVVLhj4ix7rEwgVlu7jTezkU60Ig7U=; b=
+ Mzq98NLCI03NzmbWHlfJ6YKS9/Kgtp124rlTne/FgPu3/uslxM5/3INQxpq9whw3
+ WoJYY60XDgCmrGotAI3tAAFe9WiJn5aWF7AZ/paSGAQcf2EEz8BroRl7XC1Sgppk
+ z85CscdF29/LhAJf5o1TUKfYklbDlOUaAnMnHkxp0FM4HqdaicGYL459z4mR+ECU
+ +ocT6jceEmcHNsCFo2seuNNT6EskzFuSXLVGmZw0neqXyQ7lzlZMeiO3/C32EctL
+ zM+I0tfXtx3K+VSK+97SHkjpJ+gikyclgfL5fGA4jVx700sGeLa5a2YDNP0pkMw8
+ CdjLoV8z6vZNADLZT8ZEOA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-transfer-encoding:content-type
+ :content-type:date:date:feedback-id:feedback-id:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+ :x-me-sender:x-sasl-enc; s=fm1; t=1789580776; x=1789667176; bh=j
+ HdQnJcv/tLslpVVLhj4ix7rEwgVlu7jTezkU60Ig7U=; b=pTdAx6QXqbCPAIrUY
+ mgzpgSjv3BUHoyLDbeGV1w50CLfxW2ZMz/Ypfbae04IqW6YK6g0JkuCZ5zPfZTjP
+ 7yxyM7RFkyvMsXWvtwNOlOlflszx0cv30VI4AScGs9GvgDDm1JBr/k6PrVBzP6nN
+ +RKG04S7r/UEiZvpqagJt6SrfbS+MxNTYPAVV4k/DDlJiVDhRf5enmHMkULniw8h
+ gyfzhFl2Z8fXgqlicTO4mXNAvbg4lKCfZOmoJ8CfPgWydT1jjxnBUNRZOZhA/ZWA
+ N8vOnDbKMLK3NvBGRSRDbM/7+gTc0EFPdUORvMOjD78HfUe3jeYsAIQSiaeqhxDy
+ iOBcQ==
+X-ME-Sender: <xms:6NWqaj_umd-RB44Ykfk9Nk6Lc2gYHNHJDKWUMN5--vf61ebySK-1Ig>
+ <xme:6NWqaqjeOaAtSARbqFvi7FOAGOvOhpfjKjgQFk10Dmca3tqO_rE-IbgWsI0uHy2Sg
+ MP-Yu-koCJHIG5dP1CWGUJT4BPf2fQw49_Uj4zctg2YtQw0KYc2kA>
+X-ME-Proxy-Cause: dmFkZTGuba86yU5vL7S45uJqWu6n+sclkXQC8E/+8RkhTACGpOwYmaT/Px79tAUO0JrLK4
+ tkfnh0SW7YsjY5DEpRbzO3CmvEniB/h/yLwA6PVoG7LzE1RzbnZNhQdDlb9f395OeGaA0f
+ wweJZ3nJMj8W66G8wkTBqfNyXbS+ARZR+4OfP94jp179PkcuGPNWsE2G3g2OKWr5T0M83C
+ qTargvn8UnstXg0FIdt9VtWHqJXpYYV/VZziJ4OlrQKKVMjy4VCDXqsXC9dTrf/vo0PIS+
+ 3B9Snj2m4Or80eDDeEzvJjvE2qwLFRb8DCxft8dctTGzFD/1kr10xXHzoy1umsbbSwT0Mu
+ LibLvuuIa+vd2IAUt2pHraAMvNLqLkP6GdB/Cb6fMnVNygf2FeOeL0MDFw3uvm4DwdgU6D
+ t0B6WVvXcfgZuyE78NI3zCE4zn3Hjs3cMi64aL0bQF7ZVd5ukWmHqUL9plYHNo7xPGBX0H
+ qBEzbPnoLp84Hk1K6Nb+2xopAjx/xf6v5wnkfmt/jsUDTqEJAYevjoTx/J1oTBAYc47LQ4
+ kkqlwjM7xgP5Jja11uzyDOwM02Plt3l/lgs3A8pCZAz5B9/VzsuLnKf03gH8zvQtJhMDAk
+ 1QQv6p1JhkldSx6RrR3yC92I2goaa8DrHP5XIdxn3mUn9sL89jvP+birLxMQ
+X-ME-Proxy: <xmx:6NWqan82McCLYnNeOA9RvdZ3s8DGv3S-cD5NlAFBoJr7U-lhJMCD1Q>
+ <xmx:6NWqapvtkUNShZpNh2YgF2wp5d3eyGMjcJzi3ArS822HDwbCuogrNw>
+ <xmx:6NWqaipjyIm4D6ZPCrPft7Wa5aUD0qLGK-FZCEYIKx98rbSgKlU4vw>
+ <xmx:6NWqauk9_LGbKj2LKOXNw94mRUQEmWHNVlJdI8PV51ZtMU6vGrAQTQ>
+ <xmx:6NWqanldw1CVtphuQbJLV6zs9nqpXdbXLtcWE-KcgaZWYlf8cAxPE9G_>
+Feedback-ID: i14ac40e7:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+ id E82CB18C0067; Wed, 16 Sep 2026 13:46:15 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+MIME-Version: 1.0
+X-ThreadId: Ahd5h0D4Loi-
+Date: Wed, 16 Sep 2026 13:45:55 -0400
+From: "Tyler Smith" <tyler@plantarum.ca>
+To: "Jim Porter" <jporterbugs@gmail.com>, emacs-devel@gnu.org
+Message-Id: <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+In-Reply-To: <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+Subject: Re: EWW dom filtering/editing based on site url
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=103.168.172.151; envelope-from=tyler@plantarum.ca;
+ helo=fout-a8-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Thu, 17 Sep 2026 00:10:33 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 17:46:19 -0000
+
+On Wed, Sep 16, 2026, at 12:20 PM, Jim Porter wrote:
+>
+> I *think* the best place to do this would be at the tail end of 
+> 'eww--parse-html-region'. That should cover exactly the cases where you 
+> want to transform the DOM, no more and no less. Among other things, that 
+> makes it easy to ensure that we call the transformation exactly once and 
+> then save the result into 'eww-data' so that we don't need to recompute 
+> the transformation as often.
+>
+> ...
+>
+> If you're interested in writing a patch for this, I could help provide 
+> advice on the best ways to go about that. Or I could write a patch for 
+> this myself; I don't think it should be too complicated.
+
+If you can provide some guidance I would be happy to try this myself :)
+
+It looks like `eww--parse-html-region` doesn't save anything into `eww-data`, so we'd need to apply the transformation to the value (the parsed DOM) returned by '(libxml-parse-html-region (point-min) (point-max))'. But hooks don't take arguments, so I'm not sure that's possible. Would we need to save the DOM to 'eww-data' before the hook is run, so that the hook can access it?
+
+I think 'eww-data' is a buffer-local 'global' variable, so should be visible to the hook function. The DOM is written to 'eww-data' from 'eww-display-document', that could be the time to run the hook? I don't really understand the steps between the DOM being generated in 'eww--parse-html-region' and when it is stored in 'eww-data' in 'eww-display-document'. But between the two functions it's passed around as an argument, which I don't think we can access from the hook.  
+
+Hope my silly questions aren't making you rethink your offer of help!
+
+- tyler
+
+
+From MAILER-DAEMON Thu Sep 17 00:10:55 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x73SU-0000bG-W6
+	for mharc-emacs-devel@gnu.org; Thu, 17 Sep 2026 00:10:53 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tyler@plantarum.ca>)
+ id 1x6wAq-0005qG-WE
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 16:24:09 -0400
+Received: from fout-a3-smtp.messagingengine.com ([103.168.172.146])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tyler@plantarum.ca>)
+ id 1x6wAn-0001UN-Jc
+ for emacs-devel@gnu.org; Wed, 16 Sep 2026 16:24:08 -0400
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+ by mailfout.phl.internal (Postfix) with ESMTP id ABDFEEC05C6;
+ Wed, 16 Sep 2026 16:24:03 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+ by phl-compute-06.internal (MEProxy); Wed, 16 Sep 2026 16:24:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plantarum.ca; h=
+ cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm3; t=1789590243; x=1789676643; bh=KMsWOjg5dH
+ 2wG204Dp+T+m3a8U4ZINfAmTEDwxa4cWY=; b=LsjEeTspGCkF5DhKDNxov2W2ue
+ Sg7kUWajXLn+3CGNiq+dzdDzleOwuKglRCVARK1FFOCeuS3U+R9kdUPVmaU5aApQ
+ xg9BSSkfdpJ0G/z6ROLLfNv8Ag+Ojc9RQ8eYMftmxNGSFD+eTWN02gOz6ofiJ4Pj
+ 1fNCbrSuhAH6skrS/E1VmHtQd+UXDS1tZXu2T5Bo5t61CPBWCbeJq9quls64hPm7
+ BYGXPDRhvQFE7TayJ/bJ7InEvilN6Jfv2eaDzfJxxcaX6CXVpyxOrnE9Hp3L3DLW
+ 4Cd7yQz/M8A8M+AKqa1xF1AAezr8PO6/Ds4Rp5xJ+7k4IHsd/E5pWAjgd6bA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+ 1789590243; x=1789676643; bh=KMsWOjg5dH2wG204Dp+T+m3a8U4ZINfAmTE
+ Dwxa4cWY=; b=YvJmT248cujXqroT3rq6y1JkOVulzvdgCb1Eh+NxTAMZLt7/Aaj
+ moGdn180IVHYB3si3udNHm7AflBZ2omOUw5epZ9yAApqKQdVGHZ5R3v33iXqDeIv
+ MwRP8dNxexLbfqu4XgU5Z2r1THMRupJRN4afohgyJZjpEKmhGynFGeOG0pVWb2oO
+ Ot6wlQPhtDfnLMXFivdVDKslJcUw05VZkTG1iJGy1VvNAayCf3OWYGpxxPbu1M7C
+ cE7SZRusDGXegIa4VTtMMiO2a6/Swx3egGCB9ycmxmRqYKWsKQnwYXZSm9ILGil/
+ 2tC1/iOEbbqfrdtVszGcnanw+Eo4L28NkTg==
+X-ME-Sender: <xms:4_qqagGkwxYuMGkGQdSddx6ddgkXcwt3XKejyl-TM-PvyrivZXYzjQ>
+ <xme:4_qqakKOIGEA1FcPQ46qaHRKDYMorKrJjSCHQ472VIxvc2eyh7BdJBmOTHnFpNu7V
+ nH2RX302v-FlRZ-qodu39dvvWQ7CQAx986bHF9jjC_yXCi2V3Gb-Q>
+X-ME-Proxy-Cause: dmFkZTFF3FoL+htWvvaFr9f+JRnyj3GSbn3q18guX1zUhsXN7fmKcFQ0MZw/3PdAqOc3I4
+ sq97Q3H1PVVNLHAGZ4LzMm/w0iCCbaSrV3/iMfbHmmnCw+8dFX+wfvTjgJmarlOZmOUgVe
+ XKil1pGkeLKJ93apx8sqq5MVyQEuJ5xq0k+3jBssw9/Ic1urAFgrfexA2PtjI6Le0pOQcK
+ B95GzMgUcC9eW9F3RAfcM7KvHv34lYDP8GtnrYaz17lHoe5XDCTTAT0aaVA04TyOviC2KT
+ iw4EZiDt1t/Yk3lyyPJdUkgjM9+9mvcaiSUPJcXcVzO7v8jIRnme48nEDy07i9WZbzmDXD
+ 9XfQraJiOvnWx/y5gqyOb1/Rq8UoPlWVxbTZWn9EEXT9aqfyFesV3QBTI/m+Ky7xX0fA6f
+ Nb+5udrFW3BOQ/+ce4VNbj6OZjsYu1FnLL4wNEdA1qh0u94KXuczce9645/velbPL5Buol
+ MgnRGa+76Y1/Q1+o+nXe/KAO8p8HCAKSQdHuHFZAu3ERwwekVtpVL6oh+YK/hocAkEhNKO
+ u+5CufG9AuOyFZmYL8DbTozoxTm50hKgUHIiKvxP11usC8pJxlZZnZFExQzw3jSF0LS16m
+ C7NCYv2Falupu/opJD72mw6ZUcEY4gY2RM++kWbaclvDMNvIifts0ZYXg0NA
+X-ME-Proxy: <xmx:4_qqanESgyq2Dzs3EjcPcz8LVXng6PcsIDBZk7iEJpgH07vKq0IpTQ>
+ <xmx:4_qqaqX_H7OHVYlsBqLBUCpdXzr-F8c2towlPfDbOAvQj_n72zhUlQ>
+ <xmx:4_qqamwNs_oaSpZhEmfOca5DE0uGzVUoW3606OQJDzEDL19t562_RQ>
+ <xmx:4_qqagMItsuGgZQ6Bs5LPuG86jec6B1O9M_p1qx2hWrGWweJpBdd4w>
+ <xmx:4_qqavMjorJAu1tftmT_nXS6Uq7ATEiefht6__IoPbqs1gCOyNsfYdhK>
+Feedback-ID: i14ac40e7:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+ id 653AE18C0067; Wed, 16 Sep 2026 16:24:03 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+MIME-Version: 1.0
+X-ThreadId: Ahd5h0D4Loi-
+Date: Wed, 16 Sep 2026 16:23:43 -0400
+From: "Tyler Smith" <tyler@plantarum.ca>
+To: "Jim Porter" <jporterbugs@gmail.com>
+Cc: emacs-devel@gnu.org
+Message-Id: <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+In-Reply-To: <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+Subject: Re: EWW dom filtering/editing based on site url
+Content-Type: multipart/alternative;
+ boundary=8d6eefa21ec1946049ee50658c4c79354966c25e
+Received-SPF: pass client-ip=103.168.172.146; envelope-from=tyler@plantarum.ca;
+ helo=fout-a3-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, HTML_MESSAGE=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Thu, 17 Sep 2026 00:10:34 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 16 Sep 2026 20:24:09 -0000
+
+--8d6eefa21ec1946049ee50658c4c79354966c25e
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+
+On Wed, Sep 16, 2026, at 3:07 PM, Jim Porter wrote:
+> "Abnormal" hooks can take arguments, so I think we're ok here; see the Hooks node in the Emacs manual: <https://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html>.
+> 
+> Since the changes here may be "legally-significant" (in effect, >15 lines of code), this may need copyright assignment on your part. The form at "etc/copyright-assign.txt" explains what info the FSF needs. (If this ends up under 15 LoC, then copyright assignment isn't strictly necessary, but it's best to start early. The process can take a little while.)
+
+Ok, that works.
+
+I'm almost there by wrapping this (from eww--parse-html-region):
+
+(libxml-parse-html-region (point-min) (point-max))))
+
+in this:
+
+(let ((DOM
+           (libxml-parse-html-region (point-min) (point-max))))
+      (setq DOM (run-hook-with-args 'eww-dom-filters
+                                    (plist-get eww-data :url)
+                                    DOM)))
+
+But: at this point 'eww-data' isn't defined, so I can't get the url this way. I need both the url and the dom in the hook function, in order to apply the transformation (or not) based on the url.
+
+It seems like there ought to be a way to find the url at this stage, but I'm not sure how.
+
+By the way, I've already signed off on the FSF paperwork, I should be in the system already.
+
+- tyler
+--8d6eefa21ec1946049ee50658c4c79354966c25e
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html><head><title></title></head><body><div>On Wed, Sep =
+16, 2026, at 3:07 PM, Jim Porter wrote:<br></div><blockquote type=3D"cit=
+e" id=3D"qt" style=3D""><div dir=3D"ltr"><div class=3D"qt-gmail_quote qt=
+-gmail_quote_container"><div>"Abnormal" hooks can take arguments, so I t=
+hink we're ok here; see the Hooks node in the Emacs manual: &lt;<a href=3D=
+"https://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html">h=
+ttps://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html</a>&=
+gt;.</div><div><br></div><div>Since the changes here may be "legally-sig=
+nificant" (in effect, &gt;15 lines of code), this may need copyright ass=
+ignment on your part. The form at "etc/copyright-assign.txt" explains wh=
+at info the FSF needs. (If this ends up under 15 LoC, then copyright ass=
+ignment isn't strictly necessary, but it's best to start early. The proc=
+ess can take a little while.)</div></div></div></blockquote><div><br></d=
+iv><div>Ok, that works.</div><div><br></div><div>I'm almost there by wra=
+pping this (from eww--parse-html-region):</div><div><br></div><div>(libx=
+ml-parse-html-region (point-min) (point-max))))</div><div><br></div><div=
+>in this:</div><div><br></div><div>(let ((DOM</div><div>&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (libxml-parse-html-region (=
+point-min) (point-max))))</div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (setq=
+ DOM (run-hook-with-args 'eww-dom-filters</div><div>&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (plist-get eww-data :url)=
+</div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp; DOM)))</div><div><br></div><div>But: at this point 'eww-data' isn'=
+t defined, so I can't get the url this way. I need both the url and the =
+dom in the hook function, in order to apply the transformation (or not) =
+based on the url.</div><div><br></div><div>It seems like there ought to =
+be a way to find the url at this stage, but I'm not sure how.</div><div>=
+<br></div><div>By the way, I've already signed off on the FSF paperwork,=
+ I should be in the system already.</div><div><br></div><div>- tyler</di=
+v></body></html>
+--8d6eefa21ec1946049ee50658c4c79354966c25e--
+
+
+From MAILER-DAEMON Thu Sep 17 01:49:05 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x74zZ-000646-6m
+	for mharc-emacs-devel@gnu.org; Thu, 17 Sep 2026 01:49:05 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x74Rt-0005tp-Ss
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 01:14:18 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x74Rr-00036e-VG
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 01:14:17 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x74Rn-0004Hm-SH
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 07:14:11 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Madhu <enometh@meer.net>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Date: Thu, 17 Sep 2026 10:44:04 +0530
+Message-ID: <m3y0d04fz7.fsf@pison.robolove.meer.net>
+References: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+ <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+ <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+ <CA+TD5hgMsxKTTRyQ7sJ+-J0=fsJeFPrNDjRJHb+PebOQLvNx3g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Cancel-Lock: sha1:z7pJjtjtT9oKazp+Odmrsvof5W0=
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: -16
+X-Spam_score: -1.7
+X-Spam_bar: -
+X-Spam_report: (-1.7 / 5.0 requ) BAYES_00=-1.9,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.249, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Thu, 17 Sep 2026 01:49:04 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 17 Sep 2026 05:14:21 -0000
+
+* Johan Myréen <CA+TD5hgMsxKTTRyQ7sJ+-J0=fsJeFPrNDjRJHb+PebOQLvNx3g@mail.gmail.com> :
+Wrote on Wed, 16 Sep 2026 10:43:10 +0300:
+>
+> I think this is just a minor problem, despite occasionally causing some
+> surprising behaviour, and using the WAYLAND_DISPLAY and DISPLAY variables
+> to determine when to do the fallback to text mode is a viable solution.
+
+In the case of gtk the variable to set is GDK_BACKEND=x11 vs
+GDK_BACKEND=wayland which will then determine whether to use wayland or
+x11
+
+ftr: QT_QPA_PLATFORM=xcb does the same role.
+
+
+
+
+From MAILER-DAEMON Thu Sep 17 04:40:43 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x77ff-0004m2-G3
+	for mharc-emacs-devel@gnu.org; Thu, 17 Sep 2026 04:40:43 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x77fb-0004lp-G6
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 04:40:39 -0400
+Received: from mail-qk2-x0e.google.com ([2607:f8b0:4864:34::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1x77fZ-0004Cu-Uc
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 04:40:39 -0400
+Received: by mail-qk2-x0e.google.com with SMTP id
+ d75a77b69052e-52fb76ec504so2622321cf.3
+ for <emacs-devel@gnu.org>; Thu, 17 Sep 2026 01:40:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789634437; cv=none;
+ d=google.com; s=arc-20260327;
+ b=Liva9dAzFd4A++trJ+R8FErgK5iDfJAY56jXm45ocUZT4xe9qjS/Vo+ir58HGTV5bI
+ 6ahSXYbIZxlZIOiBIq2O5duarZjYFHxUJe4vim1GOvggA8Yvwtl6dbXaz4Wz6PE04ur4
+ YF8R8fw+M1Qi6Id37cnmrN9gpkH8HwnNF1m0ovK1qAOPALlFjHmNhMpYQhXwZjmjOcqG
+ P5tW3uhO8WHPmx0AUIfOEqsob+1WLzu0rLNkEH6s/TeZmeiBOEMxB2dhlv8JqSlZawvy
+ O1NtERC0L60unmEXNCv95AmazzkzhwMGdzHl/xY1T/ftyrTqPNre8W8IavOvWdtbpwTi
+ G/Lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=5M3PXT9WJLK7CnpSV2364Q5eutgUDB6E86Mbh+Rwzq4=;
+ fh=4+sMfXeMNui4Qub9jouHIDv80hsvPTpfZTf5xSpD1P4=;
+ b=EFvdCDRNXzoQ0BYxXXEqAdRBCrepyi0JSak9410xUGVXFlxxFjyCjb/KrMgzHCb11V
+ R5ZLIEMEPaOh9QFJG+uZP0N76oxnwMErXbEqDEUhR06DMItlLNqVmj/t4F8iwQzYqABy
+ GdBvAqD3U1vWA1fx1jNb0Ei77CaKexfx51uu294XA0ODclJYyrrzxX6K7A3z3N2luirH
+ a4S8Wtzwvb1fJjcvHd3Y9Jvy+dMfaJqjsa8IbtnSL9XD/LTPFbc+Szf6tsxOaYH/S5nR
+ LL+8Rx0FwDJa41WrNmzeTOsmTPWaAHortNPHcNORlw0LpVQlLZySIX/coye/JVRvUv0t
+ 1H4g==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789634437; x=1790239237; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=5M3PXT9WJLK7CnpSV2364Q5eutgUDB6E86Mbh+Rwzq4=;
+ b=ZrMFFB//q2NgWSPvoD2solQw9BqRPW+8PE1pyBeXo2tDY6RC82AWpajPSymiUK1xmQ
+ TnepyNjce06xRxTLJF3TPDNDD+wM08U8yA4xscYGTL2ZEJAkCvm941MqgbpI5iozecJN
+ b9vIpaaLYG92B3fWFuaZSIH7t0DlzbSAuUqYtige8FOfuF/m9x8/YPEfYjicmS+OOFtL
+ kUhMENPOJYABOu2McrMP2PP45F1WRdN20XgaQU/9PKSljRM4aYKnFL3B1c9g3PmHevsC
+ JHutvj33dgLTTCqS7F45hICBindwroQMWj20mH7DjRrIfbpsBmS7jR3YivYuPpIq6pDt
+ LmhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789634437; x=1790239237;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=5M3PXT9WJLK7CnpSV2364Q5eutgUDB6E86Mbh+Rwzq4=;
+ b=WEsbWd9+3T0oFhJYUj5xUE0vy/dv1RAI7nZYkHdF9ZvJvyoUd/LdoE5UFFk4r8UOHb
+ w6q9eyrjVgQ5buBMLV57BsqkdSFbVU2Ajbx8uRmSRTMRw/0aaeswP31gp63NlwvjyMal
+ dNkyVnakktJvTuyunDT+j7pAXa4GgaSGDOMvyDBDd5KOQGMPd4sDKSSNOS7BsJMpowv5
+ pqAaCX3QPILH1BeZmHPaQGWK9mQn60Ocn5eUCLn/CcmudTIrkPFagYAJ5bdMl3Vr+m8z
+ DI0NP+y7cukYd+Eom9MoqdXCQG8LeYBXhmXy9mQKLnPykJFXtQFJNa9GyZwUw1pjhg1Y
+ d6BQ==
+X-Gm-Message-State: AFuF++mt5u+PFxCnEH7ChzlgwT3hFDbDPPiPBAfUUdFFsKvPe9dJcPg9
+ l+QeAJiFRQxh6Hl5rqfYCiH8LsFCk7ur4FmU1VS+zKHWL5fFLXH9fWyw7YejWShK6ZVuvnmBhb8
+ NY31sEYdxVQfAERn+C8QMKCTPysU2ALbUcA==
+X-Gm-Gg: AYBFou0YmeXI65NuNoelA5zUmx/YItX4a9uiC2hh0CzAQ/IEqeru+hP4k1j360bCXEZ
+ eqKa1NvIt75kli4lqnIblYkYPEa9rI/gIDtsep+M9rdlDWRIBVt4bYFEGwX2eLp6RZFJy1ydBHV
+ YAKa9WxK2bVIEPdexwXUydHogCdBPBXIjDuQ3tP1MtzNuCRPaQgTbQ+3eVvEU67nyPH1lhiyAp6
+ 4iIuWHi6dCCWfDVNFhWzh4b50TWhgch86He6CDG0bon+lESnD6Eg31yeFjMWITErUm2me93tzVz
+ t+V90uvdYEvGgJdEWu7lsGIvPMR9/MwDHHC6SBf//0xdk/Hsoa+Yu9yB5Prrn3aM8dkwhkh5KBa
+ yuuxZHIm/RQ==
+X-Received: by 2002:a05:622a:1a83:b0:530:e84c:b78 with SMTP id
+ d75a77b69052e-5327eeb55ffmr98946951cf.31.1789634436581; Thu, 17 Sep 2026
+ 01:40:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+ <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+ <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+ <CA+TD5hgMsxKTTRyQ7sJ+-J0=fsJeFPrNDjRJHb+PebOQLvNx3g@mail.gmail.com>
+ <m3y0d04fz7.fsf@pison.robolove.meer.net>
+In-Reply-To: <m3y0d04fz7.fsf@pison.robolove.meer.net>
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Date: Thu, 17 Sep 2026 11:40:24 +0300
+X-Gm-Features: AcwNN1UZk2HpGxQ8uAMZrr0WotCW0JuqWphM9cYz3_Rlfui1qaSnYOm9Blihh0Y
+Message-ID: <CA+TD5hiYWaNXo6gKJGrinxPyW8mML_am+AcaHrHtYJ-i=jGBJA@mail.gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+To: Madhu <enometh@meer.net>
+Cc: emacs-devel@gnu.org
+Content-Type: multipart/alternative; boundary="000000000000decde9065ba9bc8c"
+Received-SPF: pass client-ip=2607:f8b0:4864:34::e;
+ envelope-from=johan.myreen@gmail.com; helo=mail-qk2-x0e.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 17 Sep 2026 08:40:39 -0000
+
+--000000000000decde9065ba9bc8c
+Content-Type: text/plain; charset="UTF-8"
+
+On Thu, 17 Sept 2026 at 08:49, Madhu via Emacs development discussions. <
+emacs-devel@gnu.org> wrote:
+
+>
+> In the case of gtk the variable to set is GDK_BACKEND=x11 vs
+> GDK_BACKEND=wayland which will then determine whether to use wayland or
+> x11
+
+
+I know. The point of this whole discussion is that you should expect Emacs
+to do the right thing automatically, without setting the GDK_BACKEND
+variable or entering -nw on the command line. If you start Emacs on the
+command line in a text-only environment (no display server), you would
+expect Emacs to start with a text user interface even without using -nw.
+This is how Emacs normally behaves, but the PGTK build does not fall back
+to text mode when it fails to connect to a display server, but exits
+instead.
+
+--000000000000decde9065ba9bc8c
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote gmail_quote_container"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Thu, 17 Sept 2026 at 08:49, Madhu via Emac=
+s development discussions. &lt;<a href=3D"mailto:emacs-devel@gnu.org">emacs=
+-devel@gnu.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" st=
+yle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padd=
+ing-left:1ex"><br>
+In the case of gtk the variable to set is GDK_BACKEND=3Dx11 vs<br>
+GDK_BACKEND=3Dwayland which will then determine whether to use wayland or<b=
+r>
+x11</blockquote><div><br></div><div>I know. The point of this whole discuss=
+ion is that you should expect Emacs to do the right thing automatically, wi=
+thout setting the GDK_BACKEND variable or entering -nw on the command line.=
+ If you start Emacs on the command line in a text-only environment (no disp=
+lay server), you would expect Emacs to start with a text user interface eve=
+n without using -nw. This is how Emacs normally=C2=A0behaves, but the PGTK =
+build does not fall back to text mode when it fails to connect to a display=
+ server, but exits instead.</div><div><br></div></div></div>
+
+--000000000000decde9065ba9bc8c--
+
+
+From MAILER-DAEMON Thu Sep 17 11:36:46 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x7EAI-0004wr-Ll
+	for mharc-emacs-devel@gnu.org; Thu, 17 Sep 2026 11:36:46 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x7EAG-0004wg-Vc
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 11:36:44 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x7EAF-00088y-EN
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 11:36:44 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x7EAB-0003kQ-VA
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 17:36:39 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Date: Thu, 17 Sep 2026 09:17:21 -0400
+Message-ID: <jwvse38f2bd.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <86ecex1j53.fsf@gnu.org>
+ <jwv5x09kwxm.fsf-monnier+emacs@gnu.org>
+ <18241889-3559-4082-90e1-c0f9e7ad24a9@gutov.dev>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:7SmuNFrYbMz0HNKt5I718KS74x4=
+In-Reply-To: <18241889-3559-4082-90e1-c0f9e7ad24a9@gutov.dev> (message from
+ Dmitry Gutov <dmitry@gutov.dev> on Tue, 15 Sep 2026 05:01:08 +0300)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: -16
+X-Spam_score: -1.7
+X-Spam_bar: -
+X-Spam_report: (-1.7 / 5.0 requ) BAYES_00=-1.9,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.249, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 17 Sep 2026 15:36:45 -0000
+
+> It's possible that I cargo-culted the older implementation in a suboptimal
+> way: 'find-tag-tag' binds completion-ignore-case itself rather than having
+> the completion table apply it internally.
+>
+> Should we do this instead?
+
+I think not, because I believe `find-tag--completion-ignore-case`
+reflects the user's preference rather than the semantics of the thing
+being completed.  But maybe it would be advantageously replaced with an
+`ignore-case` option in `completion-category-overrides` together with an
+`xref` or `xref-etags` category?
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Thu Sep 17 11:40:08 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x7EDW-0005l4-J7
+	for mharc-emacs-devel@gnu.org; Thu, 17 Sep 2026 11:40:07 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x7EDU-0005kw-QW
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 11:40:04 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x7EDT-0000M4-HN
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 11:40:04 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x7EDS-0007P0-8t
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 17:40:02 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: GNU ELPA connection timeouts from Vultr Sydney IPs
+Date: Thu, 17 Sep 2026 09:27:47 -0400
+Message-ID: <jwvld90f1wi.fsf-monnier+emacs@gnu.org>
+References: <CALQebVkU-QRFSHY22GVsMYRh02sjZ_cWM5cNs2ss+wVKEi5QpQ@mail.gmail.com>
+ <86ld91l7rp.fsf@gnu.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:7nv1mMBxGhmzAG+4MpQJqJ2cFSA=
+In-Reply-To: <86ld91l7rp.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Wed, 16 Sep 2026 15:07:06 +0300)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: -16
+X-Spam_score: -1.7
+X-Spam_bar: -
+X-Spam_report: (-1.7 / 5.0 requ) BAYES_00=-1.9,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.249, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 17 Sep 2026 15:40:05 -0000
+
+>> Could you check whether these source addresses or their ranges are
+>> subject to filtering, abuse protection, or connection rate limits?
+>> Alternatively, is there a known routing issue affecting this network?
+> Please post these questions to savannah-hackers-public@gnu.org, where
+> it will be read by people who might be able to do anything with these
+> problems.  We here do not manage nor control the GNU
+> Internet infrastructure.
+
+Indeed, speaking as one of the admins of `elpa.gnu.org`, that machine
+doesn't have any IP-specific filtering of any kind.  It's a small VM
+with very little OS-level customization applied, so any such problem is
+more likely to come from the configuration of the VM host or some other
+part of the infrastructure, and that is (at best) under the control of
+the FSF sysadmins.  Feel free to put me in Cc: of any further
+communication about this problem, OTOH, since I'm curious what might be
+the issue.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Thu Sep 17 11:50:12 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x7ENH-00009a-UP
+	for mharc-emacs-devel@gnu.org; Thu, 17 Sep 2026 11:50:11 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x7END-0008Lk-OL
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 11:50:09 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x7ENB-00036q-1Y
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 11:50:07 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x7EN7-0008yT-Ul
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 17:50:01 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Ignoring case in completion (was: master e630bc4fd72: ;
+ Fix some recently added docs)
+Date: Thu, 17 Sep 2026 09:13:26 -0400
+Message-ID: <jwv1pasghsl.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <86ecex1j53.fsf@gnu.org>
+ <jwv5x09kwxm.fsf-monnier+emacs@gnu.org>
+ <18241889-3559-4082-90e1-c0f9e7ad24a9@gutov.dev>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:97movu7v1l0ERyDevLvcfSyXEy4=
+In-Reply-To: <18241889-3559-4082-90e1-c0f9e7ad24a9@gutov.dev> (message from
+ Dmitry Gutov <dmitry@gutov.dev> on Tue, 15 Sep 2026 05:01:08 +0300)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: -16
+X-Spam_score: -1.7
+X-Spam_bar: -
+X-Spam_report: (-1.7 / 5.0 requ) BAYES_00=-1.9,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.249, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 17 Sep 2026 15:50:09 -0000
+
+> I guess you are saying that `completion-ignore-case' is a user preference
+> _unless_ there is another user preference that would currently apply (such
+> as read-file-name-completion-ignore-case or tags-case-fold-search).
+
+No, I'm saying that there are two notions of case-insensitivity for completion:
+
+- Are two choices that differ only in their case actually equal
+  according to the rules that apply to those choices (which means for
+  example that the exact casing used in the output of completion is only
+  a cosmetic detail).
+  E.g. completion of a Common Lisp identifier (case-insensitive) vs
+  completion of an ELisp identifier (case-sensitive).
+  This is not a user-preference but reflects the actual semantics of the
+  strings we're completing.
+
+- Do the users want to be able to find also those completions that have
+  a different case than what they typed.  In this case, the casing used
+  in the output is not just cosmetic.
+  This is a user-preference.  The user's preference may vary from one
+  completion to another, tho currently we don't support `ignore-case`
+  in `completion-category-overrides` (although we do have
+  `read-file-name-completion-ignore-case`).
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Thu Sep 17 11:55:17 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x7ESC-0001iR-D7
+	for mharc-emacs-devel@gnu.org; Thu, 17 Sep 2026 11:55:17 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x7ES1-0001aE-8U
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 11:55:13 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x7ERz-0004bP-Q3
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 11:55:05 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x7ERy-0004jO-0B
+ for emacs-devel@gnu.org; Thu, 17 Sep 2026 17:55:02 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: EWW dom filtering/editing based on site url
+Date: Thu, 17 Sep 2026 09:34:08 -0400
+Message-ID: <jwvecesf1i1.fsf-monnier+emacs@gnu.org>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+ <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+ <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:bXvv0vD5+IRBzJOKs2I+5eg3k4c=
+In-Reply-To: <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com> (message
+ from Jim Porter <jporterbugs@gmail.com> on Wed, 16 Sep 2026 14:40:10 -0700)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: -16
+X-Spam_score: -1.7
+X-Spam_bar: -
+X-Spam_report: (-1.7 / 5.0 requ) BAYES_00=-1.9,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.249, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 17 Sep 2026 15:55:13 -0000
+
+> Looking over the rest of the Emacs source, I see two main ways to do this.
+> First, using 'run-hook-wrapped'; you can see an example of this with
+> 'yank-transform-functions', especially this bit in 'insert-for-yank':
+>
+>   (run-hook-wrapped 'yank-transform-functions
+>                     (lambda (f) (setq string (funcall f string)) nil))
+>
+> Second, using advice (e.g. 'add-function' and friends), for example with
+> 'kill-transform-function'. In "grep.el", there's an example of how to add a
+> function to this:
+>
+>   (add-function :filter-return (local 'kill-transform-function)
+>                 (lambda (string)
+>                   (string-replace "\0" ":" string)))
+>
+> I'm not sure off-hand which method is more-idiomatic in Emacs, so I've
+> CCed Eli. Eli, what do you think?  Is it better to design a hook like
+> 'yank-transform-functions' or like 'kill-transform-function'?
+
+IME, `run-hook-wrapped` is harder to understand and less flexible.
+
+Another option is to store the DOM in a var and let the hook functions
+change it by side effect.  As a functional-programmer at heart I find
+this less elegant, but I suspect that it would lead to simpler and more
+idiomatic ELisp code.
+
+
+=== Stefan
+
+
+

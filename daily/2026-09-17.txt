@@ -1,0 +1,562 @@
+emacs-devel messages from 2026-09-16T18:15:00+02:00 to 2026-09-17T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-16T18:20:56+02:00
+From: Jim Porter <jporterbugs@gmail.com>
+Subject: Re: EWW dom filtering/editing based on site url
+Message-ID: <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+In-Reply-To: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+
+On 9/16/2026 7:17 AM, Tyler Smith wrote:
+> 1. Is there existing support for such a use? I found `eww-after-render-hook`, but I think that happens too late in the process.
+
+EWW could probably use more hooks for things like this. This one would 
+probably correspond to the JS event "DOMContentLoaded"[1], which fires 
+after the DOM has been parsed, but before other content has loaded (for 
+EWW, mostly just images).
+
+[1] 
+https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
+
+> 2. Assuming there isn't, where is the most appropriate place to do this? I have a working example by inserting a check into `eww-display-document` immediately before the call to `(shr-insert-document document)`. (code pasted below)
+
+I *think* the best place to do this would be at the tail end of 
+'eww--parse-html-region'. That should cover exactly the cases where you 
+want to transform the DOM, no more and no less. Among other things, that 
+makes it easy to ensure that we call the transformation exactly once and 
+then save the result into 'eww-data' so that we don't need to recompute 
+the transformation as often.
+
+> 3. Is this something that would be useful to include in EWW as a generalized feature? I found a previous discussion [2] that suggests EWW is kept deliberately light-weight to minimize speed issues, so maybe not? If not I'm not arguing it should, speed is important! But I was thinking since this code would 'only' require checking the URL prior to display, for most pages (i.e., those that don't match a filter) the speed hit would be minimal. But I'm a novice in these matters.
+
+I think adding an EWW hook corresponding to "DOMContentLoaded" would be 
+useful, yes. I wouldn't be worried about the performance impact of that, 
+since that would just be a single call to 'run-hooks' that would do 
+nothing by default.
+
+If you're interested in writing a patch for this, I could help provide 
+advice on the best ways to go about that. Or I could write a patch for 
+this myself; I don't think it should be too complicated.
+
+================================================================================
+Date: 2026-09-16T19:45:55+02:00
+From: "Tyler Smith" <tyler@plantarum.ca>
+Subject: Re: EWW dom filtering/editing based on site url
+Message-ID: <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+In-Reply-To: <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+
+On Wed, Sep 16, 2026, at 12:20 PM, Jim Porter wrote:
+>
+> I *think* the best place to do this would be at the tail end of 
+> 'eww--parse-html-region'. That should cover exactly the cases where you 
+> want to transform the DOM, no more and no less. Among other things, that 
+> makes it easy to ensure that we call the transformation exactly once and 
+> then save the result into 'eww-data' so that we don't need to recompute 
+> the transformation as often.
+>
+> ...
+>
+> If you're interested in writing a patch for this, I could help provide 
+> advice on the best ways to go about that. Or I could write a patch for 
+> this myself; I don't think it should be too complicated.
+
+If you can provide some guidance I would be happy to try this myself :)
+
+It looks like `eww--parse-html-region` doesn't save anything into `eww-data`, so we'd need to apply the transformation to the value (the parsed DOM) returned by '(libxml-parse-html-region (point-min) (point-max))'. But hooks don't take arguments, so I'm not sure that's possible. Would we need to save the DOM to 'eww-data' before the hook is run, so that the hook can access it?
+
+I think 'eww-data' is a buffer-local 'global' variable, so should be visible to the hook function. The DOM is written to 'eww-data' from 'eww-display-document', that could be the time to run the hook? I don't really understand the steps between the DOM being generated in 'eww--parse-html-region' and when it is stored in 'eww-data' in 'eww-display-document'. But between the two functions it's passed around as an argument, which I don't think we can access from the hook.  
+
+Hope my silly questions aren't making you rethink your offer of help!
+
+- tyler
+
+================================================================================
+Date: 2026-09-16T21:07:11+02:00
+From: Jim Porter <jporterbugs@gmail.com>
+Subject: Re: EWW dom filtering/editing based on site url
+Message-ID: <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+In-Reply-To: <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+
+On Wed, Sep 16, 2026 at 10:46 AM Tyler Smith <tyler@plantarum.ca> wrote:
+
+> If you can provide some guidance I would be happy to try this myself :)
+>
+> It looks like `eww--parse-html-region` doesn't save anything into
+> `eww-data`, so we'd need to apply the transformation to the value (the
+> parsed DOM) returned by '(libxml-parse-html-region (point-min)
+> (point-max))'. But hooks don't take arguments, so I'm not sure that's
+> possible. Would we need to save the DOM to 'eww-data' before the hook is
+> run, so that the hook can access it?
+>
+
+"Abnormal" hooks can take arguments, so I think we're ok here; see the
+Hooks node in the Emacs manual: <
+https://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html>.
+
+Since the changes here may be "legally-significant" (in effect, >15 lines
+of code), this may need copyright assignment on your part. The form at
+"etc/copyright-assign.txt" explains what info the FSF needs. (If this ends
+up under 15 LoC, then copyright assignment isn't strictly necessary, but
+it's best to start early. The process can take a little while.)
+
+================================================================================
+Date: 2026-09-16T22:23:43+02:00
+From: "Tyler Smith" <tyler@plantarum.ca>
+Subject: Re: EWW dom filtering/editing based on site url
+Message-ID: <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+In-Reply-To: <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+
+On Wed, Sep 16, 2026, at 3:07 PM, Jim Porter wrote:
+> "Abnormal" hooks can take arguments, so I think we're ok here; see the Hooks node in the Emacs manual: <https://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html>.
+> 
+> Since the changes here may be "legally-significant" (in effect, >15 lines of code), this may need copyright assignment on your part. The form at "etc/copyright-assign.txt" explains what info the FSF needs. (If this ends up under 15 LoC, then copyright assignment isn't strictly necessary, but it's best to start early. The process can take a little while.)
+
+Ok, that works.
+
+I'm almost there by wrapping this (from eww--parse-html-region):
+
+(libxml-parse-html-region (point-min) (point-max))))
+
+in this:
+
+(let ((DOM
+           (libxml-parse-html-region (point-min) (point-max))))
+      (setq DOM (run-hook-with-args 'eww-dom-filters
+                                    (plist-get eww-data :url)
+                                    DOM)))
+
+But: at this point 'eww-data' isn't defined, so I can't get the url this way. I need both the url and the dom in the hook function, in order to apply the transformation (or not) based on the url.
+
+It seems like there ought to be a way to find the url at this stage, but I'm not sure how.
+
+By the way, I've already signed off on the FSF paperwork, I should be in the system already.
+
+- tyler
+
+================================================================================
+Date: 2026-09-16T22:30:27+02:00
+From: =?utf-8?Q?K=C3=A9vin_Le_Gouguec?= <kevin.legouguec@gmail.com>
+Subject: Re: master 80383d8e57e: Fix Emoji composition rules for TTY frames
+Message-ID: <87ecetaqho.fsf@gmail.com>
+In-Reply-To: <86fqz9kxcl.fsf@gnu.org>
+References: <178749538507.933.7894803777276762930@vcs2.savannah.gnu.org>
+ <20260823142945.80FBCC0CD94@vcs2.savannah.gnu.org>
+ <87ik47d7ts.fsf@gmail.com> <87a4pjmrvs.fsf@gmail.com>
+ <86eceun0zi.fsf@gnu.org> <87tsnql6nv.fsf@gmail.com>
+ <86zexhla60.fsf@gnu.org> <87o6dx5j4t.fsf@gmail.com>
+ <86fqz9kxcl.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> Kevin, please test the patch and tell if we can install, or is there's
+> anything else left to be done here.
+
+As far as I could test¹, the patch brings everything back to "nominal".
+Thanks a lot! 🙇
+
+
+¹ Which admittedly was not all that far, but sufficient to exhibit the
+symptoms with trunk:
+
+* isearching for VS-16 in C-x 8 e l,
+* visiting my OP featuring ☺️, ☹️, 🖋️, ⚒️,
+
+building from 'git clean -fdx'²,
+
+1. first from 2026-09-16 "Document tramp-tolerate-tilde" (82f763756c7)
+to confirm the symptoms,
+2. then applying Kai's patch; trying both GUI & -nw for good measure.
+
+
+² X11/GTK3 on XWayland; M-x report-emacs-bug:
+
+In GNU Emacs 32.0.50 (build 1, x86_64-pc-linux-gnu, GTK+ Version
+ 3.24.53, cairo version 1.18.4) of 2026-09-16 built on amdahl30
+Repository revision: 82f763756c71aae1f6361c7ae116a31887f8cc8d
+Repository branch: topic/emoji
+Windowing system distributor 'SUSE LINUX', version 11.0.12401013
+System Description: openSUSE Tumbleweed
+
+Configured using:
+ 'configure
+ --cache-file=…
+ --prefix=… --with-cairo
+ --with-native-compilation=no --with-sqlite3 --with-xinput2'
+
+Configured features:
+ACL CAIRO DBUS FREETYPE GIF GLIB GMP GNUTLS GPM GSETTINGS HARFBUZZ JPEG
+LCMS2 LIBOTF LIBSYSTEMD LIBXML2 M17N_FLT MODULES NOTIFY INOTIFY PDUMPER
+PNG RSVG SECCOMP SOUND SQLITE3 THREADS TIFF TOOLKIT_SCROLL_BARS
+TREE_SITTER WEBP X11 XDBE XIM XINERAMA XINPUT2 XPM XRANDR GTK3 ZLIB
+
+Important settings:
+  value of $LC_TIME: en_GB.UTF-8
+  value of $LANG: en_US.UTF-8
+  locale-coding-system: utf-8-unix
+
+================================================================================
+Date: 2026-09-16T23:36:50+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <jwvjyokyjcl.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86ecetkx3d.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org> <jwvse39qm4c.fsf-monnier+emacs@gnu.org>
+ <86ecetkx3d.fsf@gnu.org>
+
+> Dmitry pointed out that the completion table is also built by a
+> backend-specific method, so in principle I might be able to provide
+> that information.  But what facilities exist in the completion
+> infrastructure to allow me to do that?  Is there something better than
+> putting some text properties on the candidate strings?
+
+In general, a completion table is a function, so you can implement it as
+a function that uses internally 2 lists of identifiers: one for the
+case-sensitive identifiers and one for the case-insensitive ones.
+
+You'll probably want to use `all-completions` to filter each of the
+two lists, then concatenate the two results and pass it to
+`complete-with-action`.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-16T23:40:10+02:00
+From: Jim Porter <jporterbugs@gmail.com>
+Subject: Re: EWW dom filtering/editing based on site url
+Message-ID: <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com>
+In-Reply-To: <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+ <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+
+On Wed, Sep 16, 2026 at 1:24 PM Tyler Smith <tyler@plantarum.ca> wrote:
+
+> (let ((DOM
+>            (libxml-parse-html-region (point-min) (point-max))))
+>       (setq DOM (run-hook-with-args 'eww-dom-filters
+>                                     (plist-get eww-data :url)
+>                                     DOM)))
+>
+> But: at this point 'eww-data' isn't defined, so I can't get the url this
+> way. I need both the url and the dom in the hook function, in order to
+> apply the transformation (or not) based on the url.
+>
+
+For getting the URL, the easiest way would probably be to pass it as an arg
+to 'eww--parse-html-region'. It's a private function that's only called in
+two places (both of which can get the URL easily), so changing the
+signature is fine, I think.
+
+After considering it a bit more, I think the behavior we want for the
+"hook" is to transform the DOM progressively, so that if there are three
+functions on the hook, the result is something like:
+
+  (setq DOM (third-fun (second-fun (first-fun DOM))))
+
+Looking over the rest of the Emacs source, I see two main ways to do this.
+First, using 'run-hook-wrapped'; you can see an example of this with
+'yank-transform-functions', especially this bit in 'insert-for-yank':
+
+  (run-hook-wrapped 'yank-transform-functions
+                    (lambda (f) (setq string (funcall f string)) nil))
+
+Second, using advice (e.g. 'add-function' and friends), for example with
+'kill-transform-function'. In "grep.el", there's an example of how to add a
+function to this:
+
+  (add-function :filter-return (local 'kill-transform-function)
+                (lambda (string)
+                  (string-replace "\0" ":" string)))
+
+I'm not sure off-hand which method is more-idiomatic in Emacs, so I've CCed
+Eli. Eli, what do you think? Is it better to design a hook like
+'yank-transform-functions' or like 'kill-transform-function'?
+
+By the way, I've already signed off on the FSF paperwork, I should be in
+> the system already.
+>
+
+Cool, thanks. I don't think I have access to the list and just wanted to be
+sure everything was ok on that front.
+
+================================================================================
+Date: 2026-09-17T05:41:09+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1x72zl-000APm-J0@fencepost.gnu.org>
+In-Reply-To: <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Wed, 06 May 2026 22:50:23 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <87eck97788.fsf@posteo.net>
+ <86zf2x2eo1.fsf@sdf.org> <874il45kje.fsf@posteo.net>
+ <86mryw2ozt.fsf@sdf.org> <87zf2w3vhh.fsf@posteo.net>
+ <E1wFkpF-0002wc-1j@fencepost.gnu.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org> <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  >   Simply that IMO, what `yt-dlp`
+  > does right now seems acceptable even though it is technically running
+  > proprietary code, so it suggests we should think hard about such
+  > borderline cases and maybe refine our position to reconcile
+  > "it's running proprietary code" with "IMO it's acceptable".
+
+I have read a careful description of what `yt-dlp' is doing, and it is
+clear that it runs some JavaScript programs, and that the ones it runs
+for youtube are in fact non-free.
+
+You've suggested that it would be convenient if for some reason this
+particular case were acceptable.  I see why it would be convenient.
+But that isn't a moral argument that they are acceptable.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-17T07:14:04+02:00
+From: Madhu <enometh@meer.net>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <m3y0d04fz7.fsf@pison.robolove.meer.net>
+In-Reply-To: 
+References: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+ <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+ <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+ <CA+TD5hgMsxKTTRyQ7sJ+-J0=fsJeFPrNDjRJHb+PebOQLvNx3g@mail.gmail.com>
+
+* Johan Myréen <CA+TD5hgMsxKTTRyQ7sJ+-J0=fsJeFPrNDjRJHb+PebOQLvNx3g@mail.gmail.com> :
+Wrote on Wed, 16 Sep 2026 10:43:10 +0300:
+>
+> I think this is just a minor problem, despite occasionally causing some
+> surprising behaviour, and using the WAYLAND_DISPLAY and DISPLAY variables
+> to determine when to do the fallback to text mode is a viable solution.
+
+In the case of gtk the variable to set is GDK_BACKEND=x11 vs
+GDK_BACKEND=wayland which will then determine whether to use wayland or
+x11
+
+ftr: QT_QPA_PLATFORM=xcb does the same role.
+
+================================================================================
+Date: 2026-09-17T10:40:24+02:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: Should we automatically detect terminal only sessions for pgtk
+ build
+Message-ID: <CA+TD5hiYWaNXo6gKJGrinxPyW8mML_am+AcaHrHtYJ-i=jGBJA@mail.gmail.com>
+In-Reply-To: <m3y0d04fz7.fsf@pison.robolove.meer.net>
+References: <26abd73a95ecdca123679f2a356a2e6e@finder.org>
+ <CA+TD5hhKhEcBgtFyWV4meTiJ0b8n0j09r-qrOLTxSJSu9XJRXQ@mail.gmail.com>
+ <e1208dfb5c134b9c63a189f31acc5a3a@finder.org>
+ <CA+TD5hgMsxKTTRyQ7sJ+-J0=fsJeFPrNDjRJHb+PebOQLvNx3g@mail.gmail.com>
+ <m3y0d04fz7.fsf@pison.robolove.meer.net>
+
+On Thu, 17 Sept 2026 at 08:49, Madhu via Emacs development discussions. <
+emacs-devel@gnu.org> wrote:
+
+>
+> In the case of gtk the variable to set is GDK_BACKEND=x11 vs
+> GDK_BACKEND=wayland which will then determine whether to use wayland or
+> x11
+
+
+I know. The point of this whole discussion is that you should expect Emacs
+to do the right thing automatically, without setting the GDK_BACKEND
+variable or entering -nw on the command line. If you start Emacs on the
+command line in a text-only environment (no display server), you would
+expect Emacs to start with a text user interface even without using -nw.
+This is how Emacs normally behaves, but the PGTK build does not fall back
+to text mode when it fails to connect to a display server, but exits
+instead.
+
+================================================================================
+Date: 2026-09-17T15:13:26+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Ignoring case in completion (was: master e630bc4fd72: ;
+ Fix some recently added docs)
+Message-ID: <jwv1pasghsl.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <18241889-3559-4082-90e1-c0f9e7ad24a9@gutov.dev> (message from
+ Dmitry Gutov <dmitry@gutov.dev> on Tue, 15 Sep 2026 05:01:08 +0300)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <86ecex1j53.fsf@gnu.org>
+ <jwv5x09kwxm.fsf-monnier+emacs@gnu.org>
+ <18241889-3559-4082-90e1-c0f9e7ad24a9@gutov.dev>
+
+> I guess you are saying that `completion-ignore-case' is a user preference
+> _unless_ there is another user preference that would currently apply (such
+> as read-file-name-completion-ignore-case or tags-case-fold-search).
+
+No, I'm saying that there are two notions of case-insensitivity for completion:
+
+- Are two choices that differ only in their case actually equal
+  according to the rules that apply to those choices (which means for
+  example that the exact casing used in the output of completion is only
+  a cosmetic detail).
+  E.g. completion of a Common Lisp identifier (case-insensitive) vs
+  completion of an ELisp identifier (case-sensitive).
+  This is not a user-preference but reflects the actual semantics of the
+  strings we're completing.
+
+- Do the users want to be able to find also those completions that have
+  a different case than what they typed.  In this case, the casing used
+  in the output is not just cosmetic.
+  This is a user-preference.  The user's preference may vary from one
+  completion to another, tho currently we don't support `ignore-case`
+  in `completion-category-overrides` (although we do have
+  `read-file-name-completion-ignore-case`).
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-17T15:17:21+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <jwvse38f2bd.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <18241889-3559-4082-90e1-c0f9e7ad24a9@gutov.dev> (message from
+ Dmitry Gutov <dmitry@gutov.dev> on Tue, 15 Sep 2026 05:01:08 +0300)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <86ecex1j53.fsf@gnu.org>
+ <jwv5x09kwxm.fsf-monnier+emacs@gnu.org>
+ <18241889-3559-4082-90e1-c0f9e7ad24a9@gutov.dev>
+
+> It's possible that I cargo-culted the older implementation in a suboptimal
+> way: 'find-tag-tag' binds completion-ignore-case itself rather than having
+> the completion table apply it internally.
+>
+> Should we do this instead?
+
+I think not, because I believe `find-tag--completion-ignore-case`
+reflects the user's preference rather than the semantics of the thing
+being completed.  But maybe it would be advantageously replaced with an
+`ignore-case` option in `completion-category-overrides` together with an
+`xref` or `xref-etags` category?
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-17T15:27:47+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: GNU ELPA connection timeouts from Vultr Sydney IPs
+Message-ID: <jwvld90f1wi.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86ld91l7rp.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Wed, 16 Sep 2026 15:07:06 +0300)
+References: <CALQebVkU-QRFSHY22GVsMYRh02sjZ_cWM5cNs2ss+wVKEi5QpQ@mail.gmail.com>
+ <86ld91l7rp.fsf@gnu.org>
+
+>> Could you check whether these source addresses or their ranges are
+>> subject to filtering, abuse protection, or connection rate limits?
+>> Alternatively, is there a known routing issue affecting this network?
+> Please post these questions to savannah-hackers-public@gnu.org, where
+> it will be read by people who might be able to do anything with these
+> problems.  We here do not manage nor control the GNU
+> Internet infrastructure.
+
+Indeed, speaking as one of the admins of `elpa.gnu.org`, that machine
+doesn't have any IP-specific filtering of any kind.  It's a small VM
+with very little OS-level customization applied, so any such problem is
+more likely to come from the configuration of the VM host or some other
+part of the infrastructure, and that is (at best) under the control of
+the FSF sysadmins.  Feel free to put me in Cc: of any further
+communication about this problem, OTOH, since I'm curious what might be
+the issue.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-17T15:34:08+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: EWW dom filtering/editing based on site url
+Message-ID: <jwvecesf1i1.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com> (message
+ from Jim Porter <jporterbugs@gmail.com> on Wed, 16 Sep 2026 14:40:10 -0700)
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+ <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+ <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com>
+
+> Looking over the rest of the Emacs source, I see two main ways to do this.
+> First, using 'run-hook-wrapped'; you can see an example of this with
+> 'yank-transform-functions', especially this bit in 'insert-for-yank':
+>
+>   (run-hook-wrapped 'yank-transform-functions
+>                     (lambda (f) (setq string (funcall f string)) nil))
+>
+> Second, using advice (e.g. 'add-function' and friends), for example with
+> 'kill-transform-function'. In "grep.el", there's an example of how to add a
+> function to this:
+>
+>   (add-function :filter-return (local 'kill-transform-function)
+>                 (lambda (string)
+>                   (string-replace "\0" ":" string)))
+>
+> I'm not sure off-hand which method is more-idiomatic in Emacs, so I've
+> CCed Eli. Eli, what do you think?  Is it better to design a hook like
+> 'yank-transform-functions' or like 'kill-transform-function'?
+
+IME, `run-hook-wrapped` is harder to understand and less flexible.
+
+Another option is to store the DOM in a var and let the hook functions
+change it by side effect.  As a functional-programmer at heart I find
+this less elegant, but I suspect that it would lead to simpler and more
+idiomatic ELisp code.
+
+
+=== Stefan
+
