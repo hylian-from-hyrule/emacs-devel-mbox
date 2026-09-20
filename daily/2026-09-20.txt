@@ -1,0 +1,1531 @@
+emacs-devel messages from 2026-09-19T18:15:00+02:00 to 2026-09-20T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-19T18:22:41+02:00
+From: Michael Albinus <michael.albinus@gmx.de>
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+Message-ID: <87qzipqkha.fsf@gmx.de>
+In-Reply-To: <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+
+Stefan Monnier via Mailing list for Emacs changes <emacs-diffs@gnu.org>
+writes:
+
+Hi Stefan,
+
+>     use-package-ensure.el: Don't install during compilation (bug#81710)
+>     
+>     Introduce a new var `use-package-ensure-install-during-compile`
+>     which defaults to refraining from installing the package during compilation,
+>     and arrange for the code to still behave correctly, i.e. make
+>     sure the macroexpanded code runs even if `use-package` is not yet
+>     loaded at run-time and make sure it usually does not require
+>     loading `package`.
+>     
+>     * lisp/use-package/use-package-ensure.el
+>     (use-package-ensure-install-during-compile): New var.
+>     (use-package-pin-package): Don't `package-initialize` so eagerly.
+>     (use-package-handler/:pin): Inline most of `use-package-pin-package`
+>     and separate the part that can be done at macroexpansion time to reduce
+>     what remains at run-time.  Make sure the run-time does not load `package`.
+>     Obey `use-package-ensure-install-during-compile`.
+>     (use-package-ensure-elpa): Add autoload cookie.  Load `package`
+>     less eagerly.
+>     (use-package-handler/:ensure):
+>     Obey `use-package-ensure-install-during-compile` and optimize the
+>     default case.
+>     
+>     * lisp/use-package/use-package-core.el (use-package-handler/:vc)
+>     Obey `use-package-ensure-install-during-compile`.
+
+This breaks use-package-tests.el:
+
+--8<---------------cut here---------------start------------->8---
+Ran 167 tests, 142 results as expected, 25 unexpected (2026-09-19 18:19:03+0200, 14.775899 sec)
+
+25 unexpected results:
+   FAILED  use-package-test-handler/:vc-6
+   FAILED  use-package-test/543
+   FAILED  use-package-test/545
+   FAILED  use-package-test/550
+   FAILED  use-package-test/:bind-7
+   FAILED  use-package-test/:bind-8
+   FAILED  use-package-test/:ensure-1
+   FAILED  use-package-test/:ensure-10
+   FAILED  use-package-test/:ensure-12
+   FAILED  use-package-test/:ensure-13
+   FAILED  use-package-test/:ensure-14
+   FAILED  use-package-test/:ensure-15
+   FAILED  use-package-test/:ensure-2
+   FAILED  use-package-test/:ensure-3
+   FAILED  use-package-test/:ensure-4
+   FAILED  use-package-test/:ensure-7
+   FAILED  use-package-test/:ensure-8
+   FAILED  use-package-test/:ensure-9
+   FAILED  use-package-test/:pin-1
+   FAILED  use-package-test/:pin-2
+   FAILED  use-package-test/:vc-1
+   FAILED  use-package-test/:vc-2
+   FAILED  use-package-test/:vc-3
+   FAILED  use-package-test/:vc-4
+   FAILED  use-package-test/:vc-5
+--8<---------------cut here---------------end--------------->8---
+
+Best regards, Michael.
+
+================================================================================
+Date: 2026-09-19T18:22:57+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <113dadee18451bd3b363230870610a0f@gnu.support>
+In-Reply-To: <E1x7XRP-002RVS-V0@fencepost.gnu.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org>
+
+Hello Richard,
+
+This below was my thinking, so it was me to write it, not Arne. I am 
+morally member of the GNU project, as I follow the free software 
+philosophy. My expectation is that GNU software maintainers should at 
+least publicly follow the free software philosophy and put attention to 
+detail.
+
+I have tried Hermes agent before, technically it is good software. I 
+have found over the time that it changed the strategy, clearly seeing 
+that the sole point of making that agent software was to steer people to 
+non-free SaaSS LLMs. Nothing bad inherently with their business, just 
+that it collides with the moral stance in GNU project. It is not 
+compatible.
+
+Spreading awareness for future is not more important than before, as 
+society goes virtually into controlled meat that is to serve the few.
+
+The way to go would be to sponsor or find some of developers of such 
+agents to make the fully free agent that doesn't steer users to non-free 
+SaaSS LLMs or other SaaSS.
+
+Even Hermes agent could be taken and those options disabled, and 
+distributed from other website as a solution.
+
+If my message doesn't reach the mailing list, it is because I am 
+censored for talking about GNU moral stance on the GNU mailing list.
+
+>   > Thanos's implicit argument is:
+> 
+>   > - hermes.el can use a local model.
+>   > - Therefore hermes.el is not SaaSS or wish to say there is no 
+> problem to
+>   > users
+>   > - Therefore there is no objection specific to hermes.el.
+> 
+>   > Step 3 does not follow. A program can be free and non-SaaSS while 
+> still
+>   > being a vector that normalizes and routes users into SaaSS. 
+> Stallman's
+>   > essay anticipates exactly this move:
+> 
+>   > "Some web pages install nontrivial, even large JavaScript programs 
+> into
+>   > your browser without informing you. When these JavaScript programs 
+> are
+>   > nonfree, they cause the same sort of injustice as any other nonfree
+>   > software."
+> 
+>   > And more directly, on services with mixed features:
+> 
+>   > "Some sites offer multiple services, and if one is not SaaSS, 
+> another
+>   > may be SaaSS."
+> 
+>   > The point: the presence of a free/non-SaaSS path does not 
+> neutralize the
+>   > harm of the SaaSS path being the default, the advertised, or the 
+> path of
+>   > least resistance.
+> 
+> You understand it correctly.  That is our basic moral principle: don't
+> lead users to run nonfree software or use SaaSS.
+> 
+> Most users and developers of computing are hardly aware of this issue.
+> Our mission is to spread awareness of it -- especially to our users
+> who are ignorant of the issue.  We can't tell ourselves "It is each
+> user's responsibility to check each program, because they need us to
+> teach them the idea and the goal.
+> 
+> So we have to take responsibility for making our recommendations set a
+> good example, making sure they lead users in the direction of freedom
+> and not away from it.
+
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-19T18:25:10+02:00
+From: Jim Porter <jporterbugs@gmail.com>
+Subject: Re: EWW dom filtering/editing based on site url
+Message-ID: <950a466c-1107-510e-13d4-8880af1a66c5@gmail.com>
+In-Reply-To: <87o6dtda2i.fsf@igel.home>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+ <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+ <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com>
+ <jwvecesf1i1.fsf-monnier+emacs@gnu.org>
+ <5ce3cf6e-5687-8c5d-0db2-70c54da396fd@gmail.com> <87o6dtda2i.fsf@igel.home>
+
+On 9/18/2026 11:33 PM, Andreas Schwab wrote:
+> On Sep 18 2026, Jim Porter wrote:
+> 
+>> (For
+>> context, local-reload exists to support rewrapping text if you change the
+>> window size[1], though I'd argue that if you wanted that today you should
+>> just enable 'shr-fill-text'.)
+> 
+> Re-rendering does more than just refilling text.  I also reloads
+> external resouces like images, for example.  And shr-fill-text is
+> non-nil by default.
+
+Sorry, I got that backwards. You should *disable* 'shr-fill-text' to 
+support changing the window size, since then EWW will use 
+'visual-line-mode' instead.
+
+================================================================================
+Date: 2026-09-19T18:27:05+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <7af5c4d8ce6de61b4535b3fb9b1d7a6e@gnu.support>
+In-Reply-To: <86h5jmk8sk.fsf@gnu.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org> <86h5jmk8sk.fsf@gnu.org>
+
+>> Arne wrote:
+> Arne is not an Emacs maintainer.  He knows nothing about what we do or
+> don't do, and doesn't help us doing that.  His comments are comments
+> from the side-lines, by a person who might be interested in Emacs, but
+> should have no say in what we are obliged to do, unless he volunteers
+> to do that (in which case the job could be done as long as he does
+> it).  Nothing else is fair towards us, the Emacs maintainers, who do
+> this thankless job day in and day out.
+
+It was me. Not Arne. Yet I share viewpoints with Arne and with you.
+
+I have no say in what you are obliged to do, and never asked you 
+anything, I have always expressed my opinion. I was not rude to anybody. 
+Can you now remove the block on mailing list that I can write freely as 
+before to GNU Emacs Tangents and Devel?
+
+I am very thankful for your job as maintainer, you do it well, including 
+I know that this type of discussion isn't really your priority. Times 
+will change.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-19T18:36:03+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <21c83b12c05e239d7fbeb8e579be9e70@gnu.support>
+In-Reply-To: <86tsnlh228.fsf@gnu.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <871pavklfb.fsf@thanosapollo.org>
+ <CALG+76cSBg=BaEUXAtELE6vUOsBjvbWbis3T=VAHxcwYZDCshQ@mail.gmail.com>
+ <86a4pejzjm.fsf@gnu.org>
+ <CALG+76ez_XEqBptttx2g2t5KGgb+9w3S-PCAMVtAXe45W0DKOQ@mail.gmail.com>
+ <86tsnlh228.fsf@gnu.org>
+
+Hello Eli and Björn,
+
+After some discussion with Eli (other Ely, sorry for misflyspelling it), 
+and Arne, I can just completely agree that right now there is no LLM 
+that could be say to be truly free as by GNU software freedom 
+philosophy.  We reviewed majority of them.
+
+They may be published under free licenses, yet they are using underlying 
+datasets that are often found not to be free.
+
+So their outputs can generate copyrighted text. There is no provenance.
+
+For some LLM to be free it should be probably trained on fully free 
+public domain text, which is public domain and not copyrighted in all 
+countries, as what is public domain in one country isn't necessarily in 
+the other.
+
+So no free LLMs, Björn said it already so precise.
+
+I am using LLM text generation in such a way that I can with full 
+confidence publish a website and be sure that it doesn't have 
+copyrighted output. My subjects are very specific, prompts are not 
+short, and results so unique, that I have no problems publishing such 
+outputs. Yet with different usage patterns users can easily output 
+copyrighted text. One cannot even know which license was it as there is 
+no provenance, and GNU GPL would be violated that way too. So the only 
+way would be to have public domain datasets to train some LLM, and that 
+may never be.
+
+In general, user remains responsible for copyrights, as usual. Sharing 
+the LLM is free, using it free, software free, generating LLM or 
+training it is allowed by many ways (not necessarily morally alright) -- 
+and outputs are difficult, they may never be free.
+
+On 2026-09-19 15:13, Eli Zaretskii wrote:
+>> From: Björn A. Lindqvist <bjourne@gmail.com>
+>> Date: Sat, 19 Sep 2026 11:57:54 +0200
+>> Cc: public@thanosapollo.org, arne_bab@web.de, rms@gnu.org, 
+>> emacs-devel@gnu.org
+>> 
+>> Den fre 18 sep. 2026 kl 18:27 skrev Eli Zaretskii <eliz@gnu.org>:
+>> > > From: Björn A. Lindqvist <bjourne@gmail.com>
+>> > > While having no opinion on anything else, I think this is a bit
+>> > > facetious. No way any *practical* LLM produced in the last five years
+>> > > could ever be considered free as in the GNU freedom spirit.
+>> >
+>> > That's false.  There _are_ free LLMs.  Jean Louis posted their list
+>> > here, I think.
+>> >
+>> > > No way.  Zero chance. I use premier LLMs daily and find them
+>> > > useful. If Emacs had an LLM interface I'd use it too. But it is very
+>> > > much non-free software. A free LLM is a hypothetical.
+>> >
+>> > Please check your facts, you are factually incorrect.
+>> 
+>> I must have missed that list. emacs-devel receives hundreds of 
+>> messages every
+>> week and I don't read all of them. Regardless, any LLM Jean Louis 
+>> listed may
+>> cost no money to use, but is not both GNU free and a usable LLM.
+> 
+> Maybe Jean Louis could post the list again, with the information
+> telling which are free and which aren't.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-19T18:52:11+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <fe04400bba08538783bbf2cf930493c3@gnu.support>
+In-Reply-To: <E1x7XRY-002RY6-BT@fencepost.gnu.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <779f1f2e1f5087877a52fdca2bb1c653@gnu.support>
+ <E1x7XRY-002RY6-BT@fencepost.gnu.org>
+
+On 2026-09-18 15:11, Richard Stallman wrote:
+>   > The point: the presence of a free/non-SaaSS path does not 
+> neutralize the
+>   > harm of the SaaSS path being the default, the advertised, or the 
+> path of
+>   > least resistance.
+> 
+> You have put it very clearly.  If it is possible to use hermes.el
+> in a way that doesn't mistreat you, but that is not the most natural
+> way to use it (the path of least resistance after starting Hermes),
+> then it has a moral flaw.
+
+The sole purpose of Hermes agent is to sell SaaSS LLM services. Yes, it 
+does allow users to use locally running LLM. Though, today, there are 
+maybe just 1-2 options to truly run it everything free, and it requires 
+such GPU vendors that support fully free software. Nvidia isn't such. So 
+majority of users worldwide use LLMs locally running on their computers 
+in such a way that they need to install some proprietary drivers.
+
+Virtually all LLM creators who claim that LLM is "free" are not serious 
+about it, so it doesn't really align to GNU free software philosophy.
+
+Hermes Agent, just as many other similar software, are made with that 
+purpose to steer user back to site with SaaSS as that is how company 
+earns money.
+
+hermes.el depends on "hermes" agent, and so we have now I guess so, good 
+number of ELPA packages following that pattern that are pragmatically 
+there for the sole purpose to access SaaSS.
+
+Way to go would be to make a fork of Hermes not steering users to SaaSS 
+and removing those functions, and having user to basically configure the 
+endpoints themselves. Configuring endpoints always leave it to user to 
+put the either free one or non-free one, nobody can know that, but at 
+least such fork of hermes or other software agent, would not steer 
+people to SaaSS.
+
+There are few software agents who are not there for purpose of selling 
+SaaSS, and I could find that. Unless speedy Gonzales is faster than me.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-19T18:58:09+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <fe456ddf6085060cf7f3e59af5dee889@gnu.support>
+In-Reply-To: <jwvwlsh9qvz.fsf-monnier+emacs@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <87zf2w3vhh.fsf@posteo.net>
+ <E1wFkpF-0002wc-1j@fencepost.gnu.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <87jyoi5rd1.fsf@posteo.net>
+ <jwvwlsh9qvz.fsf-monnier+emacs@gnu.org>
+
+Bonjour,
+
+I would not use the PDF/PS comparison in the GNU project as a 
+justification for adding more of the same. If PDF/PS documents do end up 
+running code whose freedom we have been ignoring, then that is a 
+separate issue that still needs to be addressed — it is not resolved, 
+and it does not make a new case acceptable by precedent. Tolerating one 
+thing quietly is not the same as deciding it is fine, and it should not 
+be turned into a green light for the next one.
+
+Jean Louis
+
+On 2026-09-19 19:11, Stefan Monnier wrote:
+> Philip Kaludercic [2026-09-18 18:47:24] wrote:
+>> To add another opinion in the mix, it is difficult for me to draw
+>> a meaningful line between executing a javascript program in an sandbox
+>> to extract some value and opening media or PDF/PS file that also
+>> encode data that has to be decoded using varying levels of
+>> computational generality.
+> 
+> Indeed, PDF/PS is a good example where we've so far tolerated running
+> code without paying much attention whether it's Free or proprietary.
+> And I think, similarly to the yt-dlp case, the crux of the matter is
+> that we expect that we are not affected by how the code is implemented
+> but only by whether "it works" or not:
+> 
+> - We expect there is no significant privacy issue because the renderer
+>   presumably can't modify arbitrary local files nor send info back to
+>   someone else.
+> - We usually don't feel the need to improve the code.  Tools like
+>   Inkscape can be used to change the result of running the code, 
+> without
+>   the user having to look at the code.
+> - I haven't heard about issues of people wanting to reuse some piece of
+>   PDF/PS code in their own PDF/PS documents (or document-generating
+>   code).  This is likely related to the fact that there aren't very 
+> many
+>   libraries for those languages.
+> 
+> Of course, this isn't quite true: "libraries" of PDF/PS code exist for
+> example in the form of fonts, and we do care about fonts being Free vs
+> proprietary, yet I can't remember seeing similar issues brought up 
+> about
+> PDF/PS documents themselves.
+> 
+> So, yes, I think I find it acceptable for yt-dlp to run YT's 
+> proprietary
+> code on my machine for basically the same reason that I find it
+> acceptable for Evince or Ghostscript to render the various documents
+> I download.
+> 
+> 
+> === Stefan
+
+================================================================================
+Date: 2026-09-19T19:32:35+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <875x012ll9.fsf@posteo.net>
+In-Reply-To: <fe456ddf6085060cf7f3e59af5dee889@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <87jyoi5rd1.fsf@posteo.net>
+ <jwvwlsh9qvz.fsf-monnier+emacs@gnu.org>
+ <fe456ddf6085060cf7f3e59af5dee889@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> Bonjour,
+>
+> I would not use the PDF/PS comparison in the GNU project as a
+> justification for adding more of the same. If PDF/PS documents do end
+> up running code whose freedom we have been ignoring, then that is a
+> separate issue that still needs to be addressed — it is not resolved,
+> and it does not make a new case acceptable by precedent. Tolerating
+> one thing quietly is not the same as deciding it is fine, and it
+> should not be turned into a green light for the next one.
+
+You seem to have misunderstood the point: A PDF or a PostScript file is
+data /encoded/ in a programming language.  It doesn't make sense to talk
+about it as if it were a program where software freedoms and user
+respect applies.  Most of the time they are so obfuscated (because they
+are just compiled down from some actual source) to the point that you
+couldn't make changes to it in a more meaningful way than you can to an
+executable file.  It is totally reasonable that we predicate the source
+code of a program to be free or not, instead of the compiled code --
+even if that code is not machine code but compiled or transpiled to some
+other language.
+
+Some quick online research has me understand that they have to extract
+the challenges from a part of this file that they have to extract, by
+parsing the relevant part out using a JavaScript runtime:
+
+  https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+
+<rant>
+
+It is worth emphasizing: The technical/reverse engineering effort that
+people are putting into this mouse and cat chase between hackers and a
+mega-corp like YouTube shouldn't be underestimated.
+
+Again, to misinterpret this as a freedom issue sounds to be to either be
+a sign of having a shallow, litigious understanding of software freedom
+or to fundamentally not understand the kind of problem we are talking
+about here.
+
+It is entirely consistent with the spirit of Emacs, hacker culture and
+the tradition of free software to support this kind of work.  Rejecting
+a package from ELPA due to these misdirected concerns would be
+enormously disappointing and a tantamount to self-sabotage.
+
+</rant>
+
+> Jean Louis
+>
+> On 2026-09-19 19:11, Stefan Monnier wrote:
+>> Philip Kaludercic [2026-09-18 18:47:24] wrote:
+>>> To add another opinion in the mix, it is difficult for me to draw
+>>> a meaningful line between executing a javascript program in an sandbox
+>>> to extract some value and opening media or PDF/PS file that also
+>>> encode data that has to be decoded using varying levels of
+>>> computational generality.
+>> Indeed, PDF/PS is a good example where we've so far tolerated
+>> running
+>> code without paying much attention whether it's Free or proprietary.
+>> And I think, similarly to the yt-dlp case, the crux of the matter is
+>> that we expect that we are not affected by how the code is implemented
+>> but only by whether "it works" or not:
+>> - We expect there is no significant privacy issue because the
+>> renderer
+>>   presumably can't modify arbitrary local files nor send info back to
+>>   someone else.
+>> - We usually don't feel the need to improve the code.  Tools like
+>>   Inkscape can be used to change the result of running the code,
+>> without
+>>   the user having to look at the code.
+>> - I haven't heard about issues of people wanting to reuse some piece of
+>>   PDF/PS code in their own PDF/PS documents (or document-generating
+>>   code).  This is likely related to the fact that there aren't very
+>> many
+>>   libraries for those languages.
+>> Of course, this isn't quite true: "libraries" of PDF/PS code exist
+>> for
+>> example in the form of fonts, and we do care about fonts being Free vs
+>> proprietary, yet I can't remember seeing similar issues brought up
+>> about
+>> PDF/PS documents themselves.
+>> So, yes, I think I find it acceptable for yt-dlp to run YT's
+>> proprietary
+>> code on my machine for basically the same reason that I find it
+>> acceptable for Evince or Ghostscript to render the various documents
+>> I download.
+>> === Stefan
+
+================================================================================
+Date: 2026-09-19T21:00:03+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87se35dq30.fsf@web.de>
+In-Reply-To: <87se35mv4g.fsf@posteo.net> (Philip Kaludercic's message of "Sat, 
+ 19 Sep 2026 09:46:23 +0000")
+References: <86jyu4y0oy.fsf@sdf.org> <87zf2w3vhh.fsf@posteo.net>
+ <E1wFkpF-0002wc-1j@fencepost.gnu.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWZof91in=GHevP-E2pY8goJYhxoWj675fMQBk7M3Ut81w@mail.gmail.com>
+ <E1x7nOj-004IYP-Dr@fencepost.gnu.org> <87se35mv4g.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> There might be a forth option: Pointing yt-dlp to use proxy websites
+…
+> videos via a proxy instead of youtube.com, thus avoiding the need to
+> solve the JavaScript puzzle.
+
+Which only works as long as those proxy websites work. And those die
+like flies (because youtube wants to break them even more than it wants
+to break yt-dlp).
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-19T21:12:50+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Being blocked (was: [NonGNU] new: hermes)
+Message-ID: <86mrtdgiml.fsf@gnu.org>
+In-Reply-To: <7af5c4d8ce6de61b4535b3fb9b1d7a6e@gnu.support> (message from Jean
+ Louis on Sat, 19 Sep 2026 19:27:05 +0300)
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org> <86h5jmk8sk.fsf@gnu.org>
+ <7af5c4d8ce6de61b4535b3fb9b1d7a6e@gnu.support>
+
+> Date: Sat, 19 Sep 2026 19:27:05 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: rms@gnu.org, arne_bab@web.de, public@thanosapollo.org,
+>  emacs-devel@gnu.org
+> 
+> Can you now remove the block on mailing list that I can write freely as 
+> before to GNU Emacs Tangents and Devel?
+
+Not until I'm sure you've completely stopped your ad-hominem attacks
+on people here.  You are not there yet, sorry.
+
+================================================================================
+Date: 2026-09-19T22:10:17+02:00
+From: chad <yandros@gmail.com>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <CAO2hHWZnmVMxc2OspLWy0yYPZ6qwLMQzERqoiZ+2iYuLAuRojA@mail.gmail.com>
+In-Reply-To: <87se35dq30.fsf@web.de>
+References: <86jyu4y0oy.fsf@sdf.org> <87zf2w3vhh.fsf@posteo.net>
+ <E1wFkpF-0002wc-1j@fencepost.gnu.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org> <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org> <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWZof91in=GHevP-E2pY8goJYhxoWj675fMQBk7M3Ut81w@mail.gmail.com>
+ <E1x7nOj-004IYP-Dr@fencepost.gnu.org> <87se35mv4g.fsf@posteo.net>
+ <87se35dq30.fsf@web.de>
+
+On Sat, Sep 19, 2026 at 3:00 PM Dr. Arne Babenhauserheide <arne_bab@web.de>
+wrote:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+> > There might be a forth option: Pointing yt-dlp to use proxy websites
+> …
+> > videos via a proxy instead of youtube.com, thus avoiding the need to
+> > solve the JavaScript puzzle.
+>
+> Which only works as long as those proxy websites work. And those die
+> like flies (because youtube wants to break them even more than it wants
+> to break yt-dlp).
+>
+
+In fact, youtube wants to break yt-dlp _because_ it can be used to make
+sites that are functionally "youtube without youtube.com".
+
+That said, I think it's a separate point, because the proxy site must do the
+same thing that yt-dlp does if it wants the same sort of results -- it runs
+the
+non-free code as a service for the user. One can debate if that's more SaaS
+or SaaSS, but in either case, the user's action results in the non-free code
+being run.
+
+~Chad
+
+================================================================================
+Date: 2026-09-19T22:20:23+02:00
+From: chad <yandros@gmail.com>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <CAO2hHWaM8TD8snS2uErep2MfPYY+xQ73oUf7WgT=f0QMYr=p6A@mail.gmail.com>
+In-Reply-To: <E1x7nOj-004IYP-Dr@fencepost.gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <87eck97788.fsf@posteo.net>
+ <86zf2x2eo1.fsf@sdf.org> <874il45kje.fsf@posteo.net> <86mryw2ozt.fsf@sdf.org>
+ <87zf2w3vhh.fsf@posteo.net> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de> <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org> <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWZof91in=GHevP-E2pY8goJYhxoWj675fMQBk7M3Ut81w@mail.gmail.com>
+ <E1x7nOj-004IYP-Dr@fencepost.gnu.org>
+
+On Sat, Sep 19, 2026 at 1:14 AM Richard Stallman <rms@gnu.org> wrote:
+
+> If we made a modified version of yt-dlp, entirely without the JS
+> "optional dependency", it would have no moral problem with our
+> distributing that.  We could call it yt-dlp-nojs.
+>
+
+That is exactly the version of the code that I have been using for many
+years. I'm not sure why there would be value to making our own, but
+even more I'm not sure why this would impact the emacs code to run
+the us-or-them-provided version of the code. From my point of view,
+this seems like saying we shouldn't approve comint because it can
+be used to run a non-free version of PowerShell.
+
+
+> But I have a feeling there must be a catch in that idea -- something
+> you didn't mention.  I need to understand the situation fully before I
+> can reach a conclusion.  What is the motive for offering the optional
+> facility to run JS code?  What doesn't work if that is disabled
+>
+
+Youtube, as a service, will "sometimes" refuse to serve the content if
+the challenge isn't met (this is the hashcash similarity). There is no
+precise definition of what "sometimes" means, because youtube wants
+it to be "always" but doesn't always implement it that way. yt-dlp (and the
+variants that preceded it) is engaged in a long-running cat-and-mouse
+game with youtube (among others) to adapt to a constantly-shifting effort
+to dis-/re-enable automated downloading of content.
+
+I hope that helps,
+~Chad
+
+================================================================================
+Date: 2026-09-19T22:30:37+02:00
+From: Sam James <sam@gentoo.org>
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+Message-ID: <87ecepkmqa.fsf@gentoo.org>
+In-Reply-To: <87qzipqkha.fsf@gmx.de>
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+ <87qzipqkha.fsf@gmx.de>
+
+Michael Albinus <michael.albinus@gmx.de> writes:
+
+> Stefan Monnier via Mailing list for Emacs changes <emacs-diffs@gnu.org>
+> writes:
+>
+> Hi Stefan,
+>
+>>     use-package-ensure.el: Don't install during compilation (bug#81710)
+>>     
+>>     Introduce a new var `use-package-ensure-install-during-compile`
+>>     which defaults to refraining from installing the package during compilation,
+>>     and arrange for the code to still behave correctly, i.e. make
+>>     sure the macroexpanded code runs even if `use-package` is not yet
+>>     loaded at run-time and make sure it usually does not require
+>>     loading `package`.
+>>     
+>>     * lisp/use-package/use-package-ensure.el
+>>     (use-package-ensure-install-during-compile): New var.
+>>     (use-package-pin-package): Don't `package-initialize` so eagerly.
+>>     (use-package-handler/:pin): Inline most of `use-package-pin-package`
+>>     and separate the part that can be done at macroexpansion time to reduce
+>>     what remains at run-time.  Make sure the run-time does not load `package`.
+>>     Obey `use-package-ensure-install-during-compile`.
+>>     (use-package-ensure-elpa): Add autoload cookie.  Load `package`
+>>     less eagerly.
+>>     (use-package-handler/:ensure):
+>>     Obey `use-package-ensure-install-during-compile` and optimize the
+>>     default case.
+>>     
+>>     * lisp/use-package/use-package-core.el (use-package-handler/:vc)
+>>     Obey `use-package-ensure-install-during-compile`.
+>
+> This breaks use-package-tests.el:
+
+I see the same, I filed https://bugs.gnu.org/81898 before seeing this report.
+
+>
+> --8<---------------cut here---------------start------------->8---
+> Ran 167 tests, 142 results as expected, 25 unexpected (2026-09-19 18:19:03+0200, 14.775899 sec)
+>
+> 25 unexpected results:
+>    FAILED  use-package-test-handler/:vc-6
+>    FAILED  use-package-test/543
+>    FAILED  use-package-test/545
+>    FAILED  use-package-test/550
+>    FAILED  use-package-test/:bind-7
+>    FAILED  use-package-test/:bind-8
+>    FAILED  use-package-test/:ensure-1
+>    FAILED  use-package-test/:ensure-10
+>    FAILED  use-package-test/:ensure-12
+>    FAILED  use-package-test/:ensure-13
+>    FAILED  use-package-test/:ensure-14
+>    FAILED  use-package-test/:ensure-15
+>    FAILED  use-package-test/:ensure-2
+>    FAILED  use-package-test/:ensure-3
+>    FAILED  use-package-test/:ensure-4
+>    FAILED  use-package-test/:ensure-7
+>    FAILED  use-package-test/:ensure-8
+>    FAILED  use-package-test/:ensure-9
+>    FAILED  use-package-test/:pin-1
+>    FAILED  use-package-test/:pin-2
+>    FAILED  use-package-test/:vc-1
+>    FAILED  use-package-test/:vc-2
+>    FAILED  use-package-test/:vc-3
+>    FAILED  use-package-test/:vc-4
+>    FAILED  use-package-test/:vc-5
+> --8<---------------cut here---------------end--------------->8---
+>
+> Best regards, Michael.
+
+================================================================================
+Date: 2026-09-20T06:44:32+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+Message-ID: <86cxu8h6q7.fsf@gnu.org>
+In-Reply-To: <87ecepkmqa.fsf@gentoo.org> (message from Sam James on Sat, 19
+ Sep 2026 21:30:37 +0100)
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+ <87qzipqkha.fsf@gmx.de> <87ecepkmqa.fsf@gentoo.org>
+
+> From: Sam James <sam@gentoo.org>
+> Cc: emacs-devel@gnu.org,  Stefan Monnier <monnier@iro.umontreal.ca>
+> Date: Sat, 19 Sep 2026 21:30:37 +0100
+> 
+> Michael Albinus <michael.albinus@gmx.de> writes:
+> 
+> > Stefan Monnier via Mailing list for Emacs changes <emacs-diffs@gnu.org>
+> > writes:
+> >
+> > Hi Stefan,
+> >
+> >>     use-package-ensure.el: Don't install during compilation (bug#81710)
+> >>     
+> >>     Introduce a new var `use-package-ensure-install-during-compile`
+> >>     which defaults to refraining from installing the package during compilation,
+> >>     and arrange for the code to still behave correctly, i.e. make
+> >>     sure the macroexpanded code runs even if `use-package` is not yet
+> >>     loaded at run-time and make sure it usually does not require
+> >>     loading `package`.
+> >>     
+> >>     * lisp/use-package/use-package-ensure.el
+> >>     (use-package-ensure-install-during-compile): New var.
+> >>     (use-package-pin-package): Don't `package-initialize` so eagerly.
+> >>     (use-package-handler/:pin): Inline most of `use-package-pin-package`
+> >>     and separate the part that can be done at macroexpansion time to reduce
+> >>     what remains at run-time.  Make sure the run-time does not load `package`.
+> >>     Obey `use-package-ensure-install-during-compile`.
+> >>     (use-package-ensure-elpa): Add autoload cookie.  Load `package`
+> >>     less eagerly.
+> >>     (use-package-handler/:ensure):
+> >>     Obey `use-package-ensure-install-during-compile` and optimize the
+> >>     default case.
+> >>     
+> >>     * lisp/use-package/use-package-core.el (use-package-handler/:vc)
+> >>     Obey `use-package-ensure-install-during-compile`.
+> >
+> > This breaks use-package-tests.el:
+> 
+> I see the same, I filed https://bugs.gnu.org/81898 before seeing this report.
+
+Stefan explicitly warned that this will happen, and that he is working
+on fixing this.  So please wait until he says he's done.
+
+================================================================================
+Date: 2026-09-20T06:57:02+02:00
+From: Sam James <sam@gentoo.org>
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+Message-ID: <87fqz4jza9.fsf@gentoo.org>
+In-Reply-To: <86cxu8h6q7.fsf@gnu.org>
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+ <87qzipqkha.fsf@gmx.de> <87ecepkmqa.fsf@gentoo.org>
+ <86cxu8h6q7.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Sam James <sam@gentoo.org>
+>> Cc: emacs-devel@gnu.org,  Stefan Monnier <monnier@iro.umontreal.ca>
+>> Date: Sat, 19 Sep 2026 21:30:37 +0100
+>> 
+>> Michael Albinus <michael.albinus@gmx.de> writes:
+>> 
+>> > Stefan Monnier via Mailing list for Emacs changes <emacs-diffs@gnu.org>
+>> > writes:
+>> >
+>> > Hi Stefan,
+>> >
+>> >>     use-package-ensure.el: Don't install during compilation (bug#81710)
+>> >>     
+>> >>     Introduce a new var `use-package-ensure-install-during-compile`
+>> >>     which defaults to refraining from installing the package during compilation,
+>> >>     and arrange for the code to still behave correctly, i.e. make
+>> >>     sure the macroexpanded code runs even if `use-package` is not yet
+>> >>     loaded at run-time and make sure it usually does not require
+>> >>     loading `package`.
+>> >>     
+>> >>     * lisp/use-package/use-package-ensure.el
+>> >>     (use-package-ensure-install-during-compile): New var.
+>> >>     (use-package-pin-package): Don't `package-initialize` so eagerly.
+>> >>     (use-package-handler/:pin): Inline most of `use-package-pin-package`
+>> >>     and separate the part that can be done at macroexpansion time to reduce
+>> >>     what remains at run-time.  Make sure the run-time does not load `package`.
+>> >>     Obey `use-package-ensure-install-during-compile`.
+>> >>     (use-package-ensure-elpa): Add autoload cookie.  Load `package`
+>> >>     less eagerly.
+>> >>     (use-package-handler/:ensure):
+>> >>     Obey `use-package-ensure-install-during-compile` and optimize the
+>> >>     default case.
+>> >>     
+>> >>     * lisp/use-package/use-package-core.el (use-package-handler/:vc)
+>> >>     Obey `use-package-ensure-install-during-compile`.
+>> >
+>> > This breaks use-package-tests.el:
+>> 
+>> I see the same, I filed https://bugs.gnu.org/81898 before seeing this report.
+>
+> Stefan explicitly warned that this will happen, and that he is working
+> on fixing this.  So please wait until he says he's done.
+
+Sure, I didn't see him say that. But it's unfortunate to often have test
+failures after changes committed on master. I can't go through and dig
+to see whether someone said it was going to be expected or not every
+time, it's easier to just not run the tests (or not test master, which
+is more likely to be what I'd do).
+
+If it's known that the tests will be broken for now, they should be
+skipped or temporarily marked as failing instead.
+
+================================================================================
+Date: 2026-09-20T07:41:47+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+In-Reply-To: <8733v6gzae.fsf@web.de> (arne_bab@web.de)
+References: <86jyu4y0oy.fsf@sdf.org> <86mryw2ozt.fsf@sdf.org>
+ <87zf2w3vhh.fsf@posteo.net> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+The GNU Project can't tell you to accept, or not accept, any
+particular nonfree program.  (Or any particular free program.)  What
+is acceptable to you is your personal decision.  We don't have any say
+about that, so we don't need to discuss that here.  You don't need
+to ask the GNU Project for permission.  You don't need to ask at all.
+
+There are many ways you can use GNU Emacs to specify a program to run.
+Generally, they will run whatever program you tell them to run,
+whether free or not.  That sort of situation doesn't raise a moral
+issue in the development of GNU Emacs, because the choice of program
+to use comes explicitly, the user.
+
+The sort of decision which we are compelled to make, in the
+development of GNU Emacs (or any other program), is whether it will
+_implicitly_ lead users such as you to run some nonfree software --
+without your making an express decision to run that program.
+
+This moral issues arises in the situations where the choice of program
+is not made at the user's own spontaneous initiative.  For instance,
+situations where Emacs itself suggests running that program, perhaps
+by including it in a menu of suggested answers to some question.
+
+So our policy is that GNU Emacs does not invite the user onto a path
+that leads the user to run a nonfree program.  The choices Emacs
+suggests to you must not lead to that result.  If a choice would lead
+to that result, Emacs must not suggest that choice.
+
+If you specify a choice that GNU Emacs didn't suggest, that's different.
+Emacs should not try to control you.
+
+Emacs can suggest loading each of the packages in GNU ELPA and NonGNU
+ELPA.  So those packages should not lead the user to run any nonfree
+software.  That must be part of the criteria for having any particular
+package in our package archives.
+
+If the user, at per own initiative, gives a command to load a package
+that Emacs did not suggest, then Emacs obeys.
+
+
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-20T08:11:23+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [nongnu] elpa/age 6b1528c9e5 1/2: Use
+ custom-initialize-after-file-load with age-encryption-mode
+Message-ID: <jwvbj9sqx1w.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20260919200224.80F70C0EFF5@vcs2.savannah.gnu.org>
+References: <178984814417.3758.7534807867886597143@vcs2.savannah.gnu.org>
+ <20260919200224.80F70C0EFF5@vcs2.savannah.gnu.org>
+
+> branch: elpa/age
+> commit 6b1528c9e5d63725c801bab783c51280bf1dd973
+> Author: Paul W. Rankin <rnkn@rnkn.xyz>
+> Commit: Paul W. Rankin <rnkn@rnkn.xyz>
+>
+>     Use custom-initialize-after-file-load with age-encryption-mode
+>     
+>     This is needed otherwise the package autoloads will defvar
+>     age-encryption-mode to nil with the default setter of
+>     custom-initialize-default, which only initializes a defcustom if the
+>     value is void (but it is nil).
+
+Hmm... I don't understand the scenario where the problem you describe
+would occur: why would you need to initialize this defcustom when it's nil.
+AFAIK not calling the function gives you the same state as calling the
+setter, when the initial value is nil.
+
+>     This approach mirrors that of the definition of auto-encryption-mode
+>     in epa-hook.el.
+
+`auto-encryption-mode` needs `custom-initialize-after-file-load` because
+its `:init-value` is non-nil (not calling the function does not give you
+the same state as calling the setter, when the initial value is t),
+which isn't the case of `age-encryption-mode`, AFAICT.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-20T08:16:14+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+Message-ID: <jwv5x00qwgz.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87qzipqkha.fsf@gmx.de>
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+ <87qzipqkha.fsf@gmx.de>
+
+> This breaks use-package-tests.el:
+
+Should be fixed now.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-20T08:26:20+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <jwvzexcphsh.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+
+These are very general statements and guidelines with which I assume we
+all agree already.  The question is how they end up applying to the case
+of:
+
+- An ELisp package that uses `yt-dlp` to view videos from the web.
+- An ELisp package that uses Ghostscript to view PDF/PS files.
+
+AFAIK, in both cases the end user is the one that tells the package what
+to view, and for some of those choices yt-dlp or Ghostscript will end up
+running proprietary code.  AFAICT the users are not less aware of the
+need to run proprietary code when they ask yt-dpl to view a YT video,
+than when they ask Ghostscript to render an arbitrary PDF/PS downloaded
+from the web.
+
+For that reason, I think the video-viewing software is just as eligible
+to be hosted in GNU ELPA as `doc-view.el` (which is not in GNU ELPA but
+is bundled with Emacs instead).
+
+
+=== Stefan
+
+
+Richard Stallman [2026-09-20 01:41:47] wrote:
+> The GNU Project can't tell you to accept, or not accept, any
+> particular nonfree program.  (Or any particular free program.)  What
+> is acceptable to you is your personal decision.  We don't have any say
+> about that, so we don't need to discuss that here.  You don't need
+> to ask the GNU Project for permission.  You don't need to ask at all.
+>
+> There are many ways you can use GNU Emacs to specify a program to run.
+> Generally, they will run whatever program you tell them to run,
+> whether free or not.  That sort of situation doesn't raise a moral
+> issue in the development of GNU Emacs, because the choice of program
+> to use comes explicitly, the user.
+>
+> The sort of decision which we are compelled to make, in the
+> development of GNU Emacs (or any other program), is whether it will
+> _implicitly_ lead users such as you to run some nonfree software --
+> without your making an express decision to run that program.
+>
+> This moral issues arises in the situations where the choice of program
+> is not made at the user's own spontaneous initiative.  For instance,
+> situations where Emacs itself suggests running that program, perhaps
+> by including it in a menu of suggested answers to some question.
+>
+> So our policy is that GNU Emacs does not invite the user onto a path
+> that leads the user to run a nonfree program.  The choices Emacs
+> suggests to you must not lead to that result.  If a choice would lead
+> to that result, Emacs must not suggest that choice.
+>
+> If you specify a choice that GNU Emacs didn't suggest, that's different.
+> Emacs should not try to control you.
+>
+> Emacs can suggest loading each of the packages in GNU ELPA and NonGNU
+> ELPA.  So those packages should not lead the user to run any nonfree
+> software.  That must be part of the criteria for having any particular
+> package in our package archives.
+>
+> If the user, at per own initiative, gives a command to load a package
+> that Emacs did not suggest, then Emacs obeys.
+
+================================================================================
+Date: 2026-09-20T09:07:15+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: TIME argument of 'run-at-time'
+Message-ID: <jwveceopfl0.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86o6dtgv09.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Sat, 19 Sep 2026 17:45:26 +0300)
+References: <178980556323.16596.17833189921511825094@vcs2.savannah.gnu.org>
+ <20260919081243.9FEB4C0EFF5@vcs2.savannah.gnu.org>
+ <jwvcxu9tl9m.fsf-monnier+emacs@gnu.org> <86o6dtgv09.fsf@gnu.org>
+
+>> Reminds me: IMO, using such strings as arguments in calls to timer
+>> functions like `run-at-time` should be deprecated.  It's a UI issue, so
+>> it may belong in the interactive spec (and the behavior documented in
+>> the Emacs manual that documents that command), but at the ELisp level it
+>> seems out of place.
+> The problem raised in the linked bug report happens in interactive
+> invocation as well, though.
+
+Yup, my comment was triggered by reading that commit but is not
+otherwise related to that commit.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-20T09:09:59+02:00
+From: "Paul W. Rankin" <rnkn@rnkn.xyz>
+Subject: Re: [nongnu] elpa/age 6b1528c9e5 1/2: Use
+ custom-initialize-after-file-load with age-encryption-mode
+Message-ID: <68798940.213123.1789888199841@app.mailbox.org>
+In-Reply-To: <jwvbj9sqx1w.fsf-monnier+emacs@gnu.org>
+References: <178984814417.3758.7534807867886597143@vcs2.savannah.gnu.org>
+ <20260919200224.80F70C0EFF5@vcs2.savannah.gnu.org>
+ <jwvbj9sqx1w.fsf-monnier+emacs@gnu.org>
+
+Hi Stefan,
+
+Could you test your hypothesis this please?
+
+Thanks,
+
+--
+Paul W. Rankin
+https://rnkn.xyz
+
+> On 20/09/2026 4:11 PM AEST Stefan Monnier <monnier@iro.umontreal.ca> wrote:
+> 
+>  
+> > branch: elpa/age
+> > commit 6b1528c9e5d63725c801bab783c51280bf1dd973
+> > Author: Paul W. Rankin <rnkn@rnkn.xyz>
+> > Commit: Paul W. Rankin <rnkn@rnkn.xyz>
+> >
+> >     Use custom-initialize-after-file-load with age-encryption-mode
+> >     
+> >     This is needed otherwise the package autoloads will defvar
+> >     age-encryption-mode to nil with the default setter of
+> >     custom-initialize-default, which only initializes a defcustom if the
+> >     value is void (but it is nil).
+> 
+> Hmm... I don't understand the scenario where the problem you describe
+> would occur: why would you need to initialize this defcustom when it's nil.
+> AFAIK not calling the function gives you the same state as calling the
+> setter, when the initial value is nil.
+> 
+> >     This approach mirrors that of the definition of auto-encryption-mode
+> >     in epa-hook.el.
+> 
+> `auto-encryption-mode` needs `custom-initialize-after-file-load` because
+> its `:init-value` is non-nil (not calling the function does not give you
+> the same state as calling the setter, when the initial value is t),
+> which isn't the case of `age-encryption-mode`, AFAICT.
+> 
+> 
+> === Stefan
+
+================================================================================
+Date: 2026-09-20T09:41:40+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <867bkggyiz.fsf@gnu.org>
+In-Reply-To: <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> (message from Richard
+ Stallman on Sun, 20 Sep 2026 01:41:47 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <86mryw2ozt.fsf@sdf.org>
+ <87zf2w3vhh.fsf@posteo.net> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: monnier@iro.umontreal.ca, bugs@gnu.support, yandros@gmail.com,
+>  emacs-devel@gnu.org
+> Date: Sun, 20 Sep 2026 01:41:47 -0400
+> 
+> The sort of decision which we are compelled to make, in the
+> development of GNU Emacs (or any other program), is whether it will
+> _implicitly_ lead users such as you to run some nonfree software --
+> without your making an express decision to run that program.
+
+Agreed.
+
+However, configuring programs and sites that Emacs runs or connects to
+constitutes an express decision of the user.  So if Emacs connects to
+a site or runs a program which are themselves free, and that site or
+program can be configured to connect or run non-free sites/programs
+(in addition to free ones), it's the user's decision how to configure,
+and should not be considered "implicitly leading" users to non-free
+sites or programs.
+
+> So our policy is that GNU Emacs does not invite the user onto a path
+> that leads the user to run a nonfree program.  The choices Emacs
+> suggests to you must not lead to that result.  If a choice would lead
+> to that result, Emacs must not suggest that choice.
+
+Right.
+
+> If the user, at per own initiative, gives a command to load a package
+> that Emacs did not suggest, then Emacs obeys.
+
+Yes.  And similarly if the user configures programs or sites which
+Emacs uses and connects to in a way that runs or connects to non-free
+software.
+
+================================================================================
+Date: 2026-09-20T10:44:26+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <8733v4e2hh.fsf@web.de>
+In-Reply-To: <E1x7XRP-002RVS-V0@fencepost.gnu.org> (Richard Stallman's message
+ of "Fri, 18 Sep 2026 08:11:43 -0400")
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> Arne wrote:
+>
+>   > Thanos's implicit argument is:
+
+Just a small correction: this is not what I wrote, but what Jean wrote.
+
+There seems to have been a mixup in the multiple levels on quoting.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-20T10:58:43+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87zexccn98.fsf@web.de>
+In-Reply-To: <867bkggyiz.fsf@gnu.org> (Eli Zaretskii's message of "Sun, 20 Sep
+ 2026 10:41:40 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> constitutes an express decision of the user.  So if Emacs connects to
+> a site or runs a program which are themselves free, and that site or
+> program can be configured to connect or run non-free sites/programs
+> (in addition to free ones), it's the user's decision how to configure,
+> and should not be considered "implicitly leading" users to non-free
+> sites or programs.
+
+Does that also apply when the suggested or easiest option is non-free?
+
+For example when it says: "fastest path: nous portal" with the special
+"in one command" option `setup --portal'?
+
+Best wishes,
+Arne
+
+PS: yes, I’m no Emacs maintainer. I only maintain five emacs packages
+    (three in melpa, two outside, none in elpa), irregularly blog Emacs
+    tipps, and use Emacs.
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-20T11:02:32+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <878q4w1ejc.fsf@posteo.net>
+In-Reply-To: <87se35dq30.fsf@web.de>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWZof91in=GHevP-E2pY8goJYhxoWj675fMQBk7M3Ut81w@mail.gmail.com>
+ <E1x7nOj-004IYP-Dr@fencepost.gnu.org> <87se35mv4g.fsf@posteo.net>
+ <87se35dq30.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>> There might be a forth option: Pointing yt-dlp to use proxy websites
+> …
+>> videos via a proxy instead of youtube.com, thus avoiding the need to
+>> solve the JavaScript puzzle.
+>
+> Which only works as long as those proxy websites work. And those die
+> like flies (because youtube wants to break them even more than it wants
+> to break yt-dlp).
+
+I don't know what YouTube's internal policy is, and why they started to
+care about this much more recently.  I wouldn't be surprised if tools
+like yt-dlp are specifically what they are targeting, because they don't
+want GenAI competitors to scrape youtube.com for trailing material, for
+instance.
+
+But relating to our discussion here, yes proxies can help users avoid
+evaluating the javascript challanges, but come at the usability cost of
+being less reliable due to the takedown orders, meaning that when a user
+wants to take this approach they would either have to be regularly
+updating the proxy they use, or have a collection of proxies that
+Emacs/yt-dlp manages to find a working instance.  Of course with yt-dlp
+pointing to yt-dlp, you also have to make sure the client is kept
+up-to-date when youtube.com changes their frontend logic.
+
+> Best wishes,
+> Arne
+
+================================================================================
+Date: 2026-09-20T12:50:59+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86zexcfb70.fsf@gnu.org>
+In-Reply-To: <87zexccn98.fsf@web.de> (arne_bab@web.de)
+References: <86jyu4y0oy.fsf@sdf.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: rms@gnu.org,  monnier@iro.umontreal.ca,  bugs@gnu.support,
+>   yandros@gmail.com,  emacs-devel@gnu.org
+> Date: Sun, 20 Sep 2026 10:58:43 +0200
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > constitutes an express decision of the user.  So if Emacs connects to
+> > a site or runs a program which are themselves free, and that site or
+> > program can be configured to connect or run non-free sites/programs
+> > (in addition to free ones), it's the user's decision how to configure,
+> > and should not be considered "implicitly leading" users to non-free
+> > sites or programs.
+> 
+> Does that also apply when the suggested or easiest option is non-free?
+
+Suggested by whom? if by us, we shouldn't do that.  But if that's by
+the other program or site, then we cannot be responsible for that, not
+directly anyway.  It's the responsibility of the users who tell Emacs
+to go to that sire or run that program, when they should configure
+those.  And "easiest" is in the eye of the beholder anyway.
+
+> For example when it says: "fastest path: nous portal" with the special
+> "in one command" option `setup --portal'?
+
+A conscientious user who cares about free software will not be duped
+by this and its ilk.  We expect our users to be adults.
+
+================================================================================
+Date: 2026-09-20T12:52:32+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87zexcdwjz.fsf@thanosapollo.org>
+In-Reply-To: <87zexccn98.fsf@web.de>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Does that also apply when the suggested or easiest option is non-free?
+>
+> For example when it says: "fastest path: nous portal" with the special
+> "in one command" option `setup --portal'?
+
+This is starting to feel more like a parody.
+
+Expecting an Emacs interface to set up a fully free environment for
+users is an extreme requirement.  Emacs does not supply the operating
+system, drivers or hardware either.  It is a free editor that can run
+on a free system; it does not make buying a Librebooted ThinkPad with
+Trisquel part of getting started.
+
+The same distinction applies here.  hermes.el connects to a
+user-configured agent.  Users bring their own setup.  Supporting a free
+setup does not mean supplying the whole thing.
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+

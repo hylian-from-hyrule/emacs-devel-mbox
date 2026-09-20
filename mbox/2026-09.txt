@@ -45676,3 +45676,3862 @@ That can be even worse, indeed, but remember bug#81445.
 
 
 
+From MAILER-DAEMON Sat Sep 19 12:11:49 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x7xfI-0004WN-7Q
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 12:11:49 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x7xfF-0004WA-DX
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:11:46 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x7xfD-0000Gs-AG; Sat, 19 Sep 2026 12:11:45 -0400
+Received: from pmg3.iro.umontreal.ca (localhost [127.0.0.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id E8DE0441286;
+ Sat, 19 Sep 2026 12:11:40 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1789834299;
+ bh=AlSmal8wM6YTCi0/YCvpMMflaqEemnSfvrxgg7bpZno=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=XdXJjFpt/c2IMERDTGoU7UObn2Q50/amgvgJm30//I4wmoxyfzx95eoI4YLpGLKXb
+ sWaHScN0Cfdgn6lv2iJrFu0AuKwdzpQGNtjAhrmsSSS3K67c7w4eflAA136+qweWlc
+ dfeuAYHktuPmRGWbBU9yn76Ta/Y2MQZ0FkxEPTQfM86nG7nZQKZ0iwT83xu5oTGaHq
+ Rx/MYSOmcTvK/xNKYn1nW9+00hhooO5lsEhmBMbQLkQfm/iV6rmEKKknN9q6qJqJ9y
+ /pkEY0jcjELS/fM3066ykkNNLk/tNRzBHJK6NOH2z24LoMYA2tgZpDLYs5IuvLYlo2
+ pzQngH2eC27HA==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id BBF494411E5;
+ Sat, 19 Sep 2026 12:11:39 -0400 (EDT)
+Received: from pastel (unknown [104.247.232.204])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 7EAAA120986;
+ Sat, 19 Sep 2026 12:11:39 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: Jean Louis <bugs@gnu.support>,  rms@gnu.org,  yandros@gmail.com,
+ emacs-devel@gnu.org
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+In-Reply-To: <87jyoi5rd1.fsf@posteo.net>
+Message-ID: <jwvwlsh9qvz.fsf-monnier+emacs@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <87zf2w3vhh.fsf@posteo.net>
+ <E1wFkpF-0002wc-1j@fencepost.gnu.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <87jyoi5rd1.fsf@posteo.net>
+Date: Sat, 19 Sep 2026 12:11:38 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.063 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 16:11:46 -0000
+
+Philip Kaludercic [2026-09-18 18:47:24] wrote:
+> To add another opinion in the mix, it is difficult for me to draw
+> a meaningful line between executing a javascript program in an sandbox
+> to extract some value and opening media or PDF/PS file that also
+> encode data that has to be decoded using varying levels of
+> computational generality.
+
+Indeed, PDF/PS is a good example where we've so far tolerated running
+code without paying much attention whether it's Free or proprietary.
+And I think, similarly to the yt-dlp case, the crux of the matter is
+that we expect that we are not affected by how the code is implemented
+but only by whether "it works" or not:
+
+- We expect there is no significant privacy issue because the renderer
+  presumably can't modify arbitrary local files nor send info back to
+  someone else.
+- We usually don't feel the need to improve the code.  Tools like
+  Inkscape can be used to change the result of running the code, without
+  the user having to look at the code.
+- I haven't heard about issues of people wanting to reuse some piece of
+  PDF/PS code in their own PDF/PS documents (or document-generating
+  code).  This is likely related to the fact that there aren't very many
+  libraries for those languages.
+
+Of course, this isn't quite true: "libraries" of PDF/PS code exist for
+example in the form of fonts, and we do care about fonts being Free vs
+proprietary, yet I can't remember seeing similar issues brought up about
+PDF/PS documents themselves.
+
+So, yes, I think I find it acceptable for yt-dlp to run YT's proprietary
+code on my machine for basically the same reason that I find it
+acceptable for Evince or Ghostscript to render the various documents
+I download.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Sat Sep 19 12:22:54 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x7xq2-0006rf-EB
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 12:22:54 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <michael.albinus@gmx.de>)
+ id 1x7xq0-0006rL-3w
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:22:52 -0400
+Received: from mout.gmx.net ([212.227.15.15])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <michael.albinus@gmx.de>)
+ id 1x7xpy-00021D-8W
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:22:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+ s=s31663417; t=1789834963; x=1790439763; i=michael.albinus@gmx.de;
+ bh=tfDolc4I60jo5HRTPrEwT630bO64kpNA4scdVMeFt6w=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+ content-transfer-encoding:content-type:date:from:message-id:
+ mime-version:reply-to:subject:to;
+ b=MsayX+k+Tf/ANtGDlyTInZhbF9ITd9JR2z9uKHQhmDKrDwX8taKSea4bbzaukHiz
+ mdEAGyJInvJahQ9rg6qmY0heeNEZVgybdPdDauRvO+F2iqAasce5b7RO7eORe4cW9
+ Yuh03ON+DlrfL1qbAbEPHLf3fuW3RQn7gq5M5FaZLTvUBnxaUZIVbYf+kU60S7SfM
+ ipFv4RHBtYNjW2+t8a2+Z57u9+9F6GTN0JANFmJwyunFg228cj8dAekVwKvKoj3wE
+ CZajqQgfT0V3i9RsWE/7j7iwvB6BP9N2X7dbHka5vY5SybxZQFatBEOc54dfQAtD4
+ pUjTBC2wLC7M+Mv5iA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M3UZ6-1x7PbV0vL8-002qFN; Sat, 19
+ Sep 2026 18:22:43 +0200
+From: Michael Albinus <michael.albinus@gmx.de>
+To: emacs-devel@gnu.org
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+In-Reply-To: <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+Date: Sat, 19 Sep 2026 18:22:41 +0200
+Message-ID: <87qzipqkha.fsf@gmx.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Provags-ID: V03:K1:4DpbTosq4KygCeRbXNaltzOfJQNvf9jFvCbXEETnu5lpwQngwUf
+ tE9uS8AvKoTGSD450rrXFdr/wcqTIIhPUh56AkQLyx1e24dEsBAOvzs8oYdCR12J5MLL9fQ
+ 5euFx9Eg1mAg6T9HykDKhLa9KriBIUBnfF9EGdtFPwWq7pTXGAmlGLyXHzfM5zugX1KeXEf
+ OkN6IAtljT2BZpPBobzbw==
+UI-OutboundReport: notjunk:1;M01:P0:4J7mgLm6D1o=;32CLNcW2Eey4xJnKAPNruConQCH
+ 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
+ k=
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=212.227.15.15;
+ envelope-from=michael.albinus@gmx.de; helo=mout.gmx.net
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_LOW=-0.7, RCVD_IN_MSPIKE_H2=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 16:22:52 -0000
+
+Stefan Monnier via Mailing list for Emacs changes <emacs-diffs@gnu.org>
+writes:
+
+Hi Stefan,
+
+>     use-package-ensure.el: Don't install during compilation (bug#81710)
+>    =20
+>     Introduce a new var `use-package-ensure-install-during-compile`
+>     which defaults to refraining from installing the package during comp=
+ilation,
+>     and arrange for the code to still behave correctly, i.e. make
+>     sure the macroexpanded code runs even if `use-package` is not yet
+>     loaded at run-time and make sure it usually does not require
+>     loading `package`.
+>    =20
+>     * lisp/use-package/use-package-ensure.el
+>     (use-package-ensure-install-during-compile): New var.
+>     (use-package-pin-package): Don't `package-initialize` so eagerly.
+>     (use-package-handler/:pin): Inline most of `use-package-pin-package`
+>     and separate the part that can be done at macroexpansion time to red=
+uce
+>     what remains at run-time.  Make sure the run-time does not load `pac=
+kage`.
+>     Obey `use-package-ensure-install-during-compile`.
+>     (use-package-ensure-elpa): Add autoload cookie.  Load `package`
+>     less eagerly.
+>     (use-package-handler/:ensure):
+>     Obey `use-package-ensure-install-during-compile` and optimize the
+>     default case.
+>    =20
+>     * lisp/use-package/use-package-core.el (use-package-handler/:vc)
+>     Obey `use-package-ensure-install-during-compile`.
+
+This breaks use-package-tests.el:
+
+=2D-8<---------------cut here---------------start------------->8---
+Ran 167 tests, 142 results as expected, 25 unexpected (2026-09-19 18:19:03=
++0200, 14.775899 sec)
+
+25 unexpected results:
+   FAILED  use-package-test-handler/:vc-6
+   FAILED  use-package-test/543
+   FAILED  use-package-test/545
+   FAILED  use-package-test/550
+   FAILED  use-package-test/:bind-7
+   FAILED  use-package-test/:bind-8
+   FAILED  use-package-test/:ensure-1
+   FAILED  use-package-test/:ensure-10
+   FAILED  use-package-test/:ensure-12
+   FAILED  use-package-test/:ensure-13
+   FAILED  use-package-test/:ensure-14
+   FAILED  use-package-test/:ensure-15
+   FAILED  use-package-test/:ensure-2
+   FAILED  use-package-test/:ensure-3
+   FAILED  use-package-test/:ensure-4
+   FAILED  use-package-test/:ensure-7
+   FAILED  use-package-test/:ensure-8
+   FAILED  use-package-test/:ensure-9
+   FAILED  use-package-test/:pin-1
+   FAILED  use-package-test/:pin-2
+   FAILED  use-package-test/:vc-1
+   FAILED  use-package-test/:vc-2
+   FAILED  use-package-test/:vc-3
+   FAILED  use-package-test/:vc-4
+   FAILED  use-package-test/:vc-5
+=2D-8<---------------cut here---------------end--------------->8---
+
+Best regards, Michael.
+
+
+From MAILER-DAEMON Sat Sep 19 12:25:45 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x7xsl-0007jx-RR
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 12:25:45 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1x7xsO-0007iy-A1
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:25:24 -0400
+Received: from mail-pz2-x0c.google.com ([2607:f8b0:4864:3b::c])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1x7xsF-0002Ia-VU
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:25:20 -0400
+Received: by mail-pz2-x0c.google.com with SMTP id
+ 41be03b00d2f7-cc52bd91929so1278937a12.2
+ for <emacs-devel@gnu.org>; Sat, 19 Sep 2026 09:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789835110; x=1790439910; darn=gnu.org;
+ h=content-transfer-encoding:content-type:in-reply-to:from:references
+ :cc:to:content-language:subject:mime-version:date:message-id:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=LMO03LJZXTW1GFntkjoAFQu7qAC9+y879cU9jspYD5M=;
+ b=qVz5EVE6bhA1GyhfdI84ZGGODXXuCIWjff91q406hg3VNGQX1LrdVqVavVJCVjV40q
+ tUBwyklC1QlsLNXASAGPi+MRe6J/yzvcBKxPczzColhFG2kI4DQtuctzfiSWo2ymO0S3
+ HuLTanv3zQyGNYqft1JGRzjW6Jyn32oOPgVNwiit7/XEXC4R17uinvzprlsQlwUUoHtt
+ L7t9FuZ7WrFRMVRuSTShqwxRGyffE+WRB0lsYlFnF+ENMQ6MtsIsukqJpCPXwiX6GC6S
+ fqiv1X2R743NqQvlV3W1+dfl8pKBpEKyPJzcmQ1CNsmqhvPAMlOMO3KlvoYpYaqi2SBb
+ F5MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789835110; x=1790439910;
+ h=content-transfer-encoding:content-type:in-reply-to:from:references
+ :cc:to:content-language:subject:mime-version:date:message-id:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=LMO03LJZXTW1GFntkjoAFQu7qAC9+y879cU9jspYD5M=;
+ b=2vZbACfqAaeqXUXm2e9PhIHx1XhwKncB/c39FLfmlUfaYCUTgGx7XN+DScNIEBr63H
+ sVKU1V1yl51tIMcN1C3K33Czz2X7fJ9zznuynGQiShPguB0QqoITpyOdgR25mEaE7/2q
+ 7PqCi5BWqAuVM0VBeYHgelWl8mbnzCQhfjhQuADfV5RynFAWhuvDzomt+qrwm8x2YKBH
+ VvQh23wm3OhSzDdy7lnUQhjhMfhJtJFTbVCXMLMB6rGsXn4hTyqFT6Ydgw9Q5pmmAJ0R
+ dZ083KKG2iGZebM2Z5eQZK0Hkqh0YejwEH0l0WZqBUlLyIRZ752TqHDxFuXr7oVUTTPi
+ xFGQ==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBySuqxGWlAP7H4Fw2poJOEP46QHL6V1IXNgZj/j4X1cnvJSYoRA3DXAtBJt80PzpEFRoUV+KWH769WPnQ==@gnu.org
+X-Gm-Message-State: AFuF++meretFseKdftXtEUTdFibvvb730OARJqe6ajxVC/bLMg5QVrQc
+ ScuXK/5EwtxwpnzWXEW/lyLI0eYMbE/JhxNMiU1mIxdn84C5CnghS8Gm
+X-Gm-Gg: AYBFou2EBjrKvwOxDZUYWfGDWbAKvhG5axRtRp2tKxDr/X67IX3mEliqY0JIbH8v5T5
+ PYYKknZa49vOcmXZBLD6aKCm6mxlonW/hBYY9yCh3HfS8TsXSznq73gLhT2nwScTUY4/pi0iUWs
+ /OEyIXy20nbzYHDXgXDOhKskqx1rMgcn4ckEsH5p+seU0xjxfoahnKggqX7Et8WeuosqXkxHNMM
+ lw5JvcMLvpBlsqGcLqsQZV/BxK/dOR+m+tIxziG1YDHgRdYCpg9DObnFS8HZv95j3QwWX2PEg69
+ N7Ye77ZosxCpwEEiw8zrTtjBkQ1DfChYeEHe0zjlvS9qtdDWX9tl/JeI7VIrcwvJ6irXnA0pSY0
+ SJs9j3YUAdpJxEM/ou1fh1e95g8M82gls5mieMMSe5CRc6BXeCzprZPMYFVB8IdgdA9eFjximhi
+ gVuYZd9RqfoL2zZ2nwnj74kyfwSado/4uZcH4MTkpROPs5x9J17/B4Nu2ZTavyXTov5JXy6jsVi
+ JTGiPAyPZL4fMm3Uvu2zguV
+X-Received: by 2002:a17:90b:5864:b0:38e:bfe:81e9 with SMTP id
+ 98e67ed59e1d1-39e54b66b61mr10698908a91.1.1789835109921; 
+ Sat, 19 Sep 2026 09:25:09 -0700 (PDT)
+Received: from [192.168.1.4] ([23.240.109.248])
+ by smtp.googlemail.com with ESMTPSA id
+ a92af1059eb24-144d55e8954sm13789868c88.14.2026.09.19.09.25.09
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Sat, 19 Sep 2026 09:25:09 -0700 (PDT)
+Message-ID: <950a466c-1107-510e-13d4-8880af1a66c5@gmail.com>
+Date: Sat, 19 Sep 2026 09:25:10 -0700
+MIME-Version: 1.0
+Subject: Re: EWW dom filtering/editing based on site url
+Content-Language: en-US
+To: Andreas Schwab <schwab@linux-m68k.org>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>, emacs-devel@gnu.org,
+ Tyler Smith <tyler@plantarum.ca>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+ <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+ <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com>
+ <jwvecesf1i1.fsf-monnier+emacs@gnu.org>
+ <5ce3cf6e-5687-8c5d-0db2-70c54da396fd@gmail.com> <87o6dtda2i.fsf@igel.home>
+From: Jim Porter <jporterbugs@gmail.com>
+In-Reply-To: <87o6dtda2i.fsf@igel.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=2607:f8b0:4864:3b::c;
+ envelope-from=jporterbugs@gmail.com; helo=mail-pz2-x0c.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 16:25:28 -0000
+
+On 9/18/2026 11:33 PM, Andreas Schwab wrote:
+> On Sep 18 2026, Jim Porter wrote:
+> 
+>> (For
+>> context, local-reload exists to support rewrapping text if you change the
+>> window size[1], though I'd argue that if you wanted that today you should
+>> just enable 'shr-fill-text'.)
+> 
+> Re-rendering does more than just refilling text.  I also reloads
+> external resouces like images, for example.  And shr-fill-text is
+> non-nil by default.
+
+Sorry, I got that backwards. You should *disable* 'shr-fill-text' to 
+support changing the window size, since then EWW will use 
+'visual-line-mode' instead.
+
+
+From MAILER-DAEMON Sat Sep 19 13:32:47 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x7yvf-0007XT-2L
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 13:32:47 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1x7yva-0007Wy-4Q
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 13:32:42 -0400
+Received: from mout02.posteo.de ([185.67.36.66])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1x7yvW-00018a-Rx
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 13:32:41 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout02.posteo.de (Postfix) with ESMTPS id 12AFA240101
+ for <emacs-devel@gnu.org>; Sat, 19 Sep 2026 19:32:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1789839156;
+ bh=pJg/5WS145FfNa8hXOcZxdAwiKr3qXLBlwkw0ukt3QY=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:Content-Transfer-Encoding:From;
+ b=PStejJv+g5V53YWHofnATXCQ6AI7Btb7xr2qnjIsIaWrk/f4MEaiJVzRbK9HKOphM
+ j7QBAhTTpuEiIlKl6DsSV6+eMYlidFthR/JWAtERkccblMF3sTHKiLBOfXaO7qLFM4
+ CjSuf7kPcqtjS3s5EbvOAR4nLgqQy09RUS4udsdPxWn4CITONGqQEi6CcsBcwMZOaC
+ Z+YQPjNjEMyLAs9aUw8xID4q4cmCpdaBwFYkZCWJoekH1dCT4qXyMoBraL2IfxjFLs
+ 1c1GhKAoPQk61/sKIY3K2wIgG44cK07X6KoiLulQVwIdcqMuN3bSaBF+icY38jv6c8
+ fMr3Q0lp66W1g==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4hnGll1nN8z6tsg;
+ Sat, 19 Sep 2026 19:32:35 +0200 (CEST)
+From: Philip Kaludercic <philipk@posteo.net>
+To: Jean Louis <bugs@gnu.support>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>,  rms@gnu.org,
+ yandros@gmail.com,  emacs-devel@gnu.org
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+In-Reply-To: <fe456ddf6085060cf7f3e59af5dee889@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <87jyoi5rd1.fsf@posteo.net>
+ <jwvwlsh9qvz.fsf-monnier+emacs@gnu.org>
+ <fe456ddf6085060cf7f3e59af5dee889@gnu.support>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Sat, 19 Sep 2026 17:32:35 +0000
+Message-ID: <875x012ll9.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=185.67.36.66; envelope-from=philipk@posteo.net;
+ helo=mout02.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 17:32:42 -0000
+
+Jean Louis <bugs@gnu.support> writes:
+
+> Bonjour,
+>
+> I would not use the PDF/PS comparison in the GNU project as a
+> justification for adding more of the same. If PDF/PS documents do end
+> up running code whose freedom we have been ignoring, then that is a
+> separate issue that still needs to be addressed =E2=80=94 it is not resol=
+ved,
+> and it does not make a new case acceptable by precedent. Tolerating
+> one thing quietly is not the same as deciding it is fine, and it
+> should not be turned into a green light for the next one.
+
+You seem to have misunderstood the point: A PDF or a PostScript file is
+data /encoded/ in a programming language.  It doesn't make sense to talk
+about it as if it were a program where software freedoms and user
+respect applies.  Most of the time they are so obfuscated (because they
+are just compiled down from some actual source) to the point that you
+couldn't make changes to it in a more meaningful way than you can to an
+executable file.  It is totally reasonable that we predicate the source
+code of a program to be free or not, instead of the compiled code --
+even if that code is not machine code but compiled or transpiled to some
+other language.
+
+Some quick online research has me understand that they have to extract
+the challenges from a part of this file that they have to extract, by
+parsing the relevant part out using a JavaScript runtime:
+
+  https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+
+<rant>
+
+It is worth emphasizing: The technical/reverse engineering effort that
+people are putting into this mouse and cat chase between hackers and a
+mega-corp like YouTube shouldn't be underestimated.
+
+Again, to misinterpret this as a freedom issue sounds to be to either be
+a sign of having a shallow, litigious understanding of software freedom
+or to fundamentally not understand the kind of problem we are talking
+about here.
+
+It is entirely consistent with the spirit of Emacs, hacker culture and
+the tradition of free software to support this kind of work.  Rejecting
+a package from ELPA due to these misdirected concerns would be
+enormously disappointing and a tantamount to self-sabotage.
+
+</rant>
+
+> Jean Louis
+>
+> On 2026-09-19 19:11, Stefan Monnier wrote:
+>> Philip Kaludercic [2026-09-18 18:47:24] wrote:
+>>> To add another opinion in the mix, it is difficult for me to draw
+>>> a meaningful line between executing a javascript program in an sandbox
+>>> to extract some value and opening media or PDF/PS file that also
+>>> encode data that has to be decoded using varying levels of
+>>> computational generality.
+>> Indeed, PDF/PS is a good example where we've so far tolerated
+>> running
+>> code without paying much attention whether it's Free or proprietary.
+>> And I think, similarly to the yt-dlp case, the crux of the matter is
+>> that we expect that we are not affected by how the code is implemented
+>> but only by whether "it works" or not:
+>> - We expect there is no significant privacy issue because the
+>> renderer
+>>   presumably can't modify arbitrary local files nor send info back to
+>>   someone else.
+>> - We usually don't feel the need to improve the code.  Tools like
+>>   Inkscape can be used to change the result of running the code,
+>> without
+>>   the user having to look at the code.
+>> - I haven't heard about issues of people wanting to reuse some piece of
+>>   PDF/PS code in their own PDF/PS documents (or document-generating
+>>   code).  This is likely related to the fact that there aren't very
+>> many
+>>   libraries for those languages.
+>> Of course, this isn't quite true: "libraries" of PDF/PS code exist
+>> for
+>> example in the form of fonts, and we do care about fonts being Free vs
+>> proprietary, yet I can't remember seeing similar issues brought up
+>> about
+>> PDF/PS documents themselves.
+>> So, yes, I think I find it acceptable for yt-dlp to run YT's
+>> proprietary
+>> code on my machine for basically the same reason that I find it
+>> acceptable for Evince or Ghostscript to render the various documents
+>> I download.
+>> =3D=3D=3D Stefan
+
+
+From MAILER-DAEMON Sat Sep 19 15:00:12 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x80IG-0003Cs-8R
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 15:00:12 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>) id 1x80IF-0003Ck-06
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 15:00:11 -0400
+Received: from mout.web.de ([212.227.17.11])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>)
+ id 1x80IC-0008Br-Oe; Sat, 19 Sep 2026 15:00:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+ s=s29768273; t=1789844405; x=1790449205; i=arne_bab@web.de;
+ bh=DZ1uEv7wpqS92fUr7XV7J21PRXANXnlyIpQHFsWCLvs=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:cc:content-transfer-encoding:
+ content-type:date:from:message-id:mime-version:reply-to:subject:
+ to;
+ b=FEgxcWZGC9wIjOUmXZ3O21KSK6KIBUpkZ6vzpN7fgB6lgnC1LZH1ICGFpw/YGsFU
+ F/3hmo3SrLJrJUJSnr6TXb+CTkyfPqJ/dl54i5UOyTpw32c98GNrfuPDdBxl89XpG
+ PmunqRH/NsRc561dtphodRB9vL9rZu3acAovrV8BT6uku4VuGV1s6q6Jh8scQWF2J
+ QbJwx/d8ML+X4CKgIjjLnwPq49u6V7RhcvDx6547NfifDO+005Gi8Rvt1CUwz5Pj8
+ 6mAduHiyBiVNu+YkC1DAA4O7odD/y8ehZLC5NC2b86fJnylzb2DNnoIDihubJUp4F
+ hVkF9iCqPONMIQbjaA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MF2gM-1x1Pdk3PGC-00D8j2; Sat, 19
+ Sep 2026 21:00:04 +0200
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: rms@gnu.org,  chad <yandros@gmail.com>,  emacs-devel@gnu.org
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+In-Reply-To: <87se35mv4g.fsf@posteo.net> (Philip Kaludercic's message of "Sat, 
+ 19 Sep 2026 09:46:23 +0000")
+References: <86jyu4y0oy.fsf@sdf.org> <87zf2w3vhh.fsf@posteo.net>
+ <E1wFkpF-0002wc-1j@fencepost.gnu.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWZof91in=GHevP-E2pY8goJYhxoWj675fMQBk7M3Ut81w@mail.gmail.com>
+ <E1x7nOj-004IYP-Dr@fencepost.gnu.org> <87se35mv4g.fsf@posteo.net>
+User-Agent: mu4e 1.14.3; emacs 30.2
+Date: Sat, 19 Sep 2026 21:00:03 +0200
+Message-ID: <87se35dq30.fsf@web.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Provags-ID: V03:K1:Rv8z2ejZv3FWd/8DrMwWBYywhkdtk2AETHkkOqax35pJD170DO1
+ AWD/a9c+2ghSUTYStIL3eNCiNHVjl+HC/HDO5GihwHymAs7UBhKQ8XZzZff2uUYKbb5eXVQ
+ CxdtGQxgonj5UV90X5hw0yyNDlSM78TrdrGP0kvWkW3OHFiWUAist/cps3nNbD7VBnaT0BZ
+ H6MfQtF+2cQfYgTFDumVQ==
+UI-OutboundReport: notjunk:1;M01:P0:FmULQOu1WEk=;oQPkKCWVJj6O5518fbg0+xMrjJh
+ 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
+Received-SPF: pass client-ip=212.227.17.11; envelope-from=arne_bab@web.de;
+ helo=mout.web.de
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_LOW=-0.7, RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 19:00:11 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> There might be a forth option: Pointing yt-dlp to use proxy websites
+=E2=80=A6
+> videos via a proxy instead of youtube.com, thus avoiding the need to
+> solve the JavaScript puzzle.
+
+Which only works as long as those proxy websites work. And those die
+like flies (because youtube wants to break them even more than it wants
+to break yt-dlp).
+
+Best wishes,
+Arne
+=2D-=20
+Unpolitisch sein
+hei=C3=9Ft politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJgBAEBCABKFiEE801qEjXQSQPNItXAE++NRSQDw+sFAmqu27QbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyEBxhcm5lX2JhYkB3ZWIuZGUACgkQE++NRSQDw+sh
+iQ//XbmJ/wRMhjRGew3/vqu0QohNF1ESn/EfCtqH24TZu5SLummHi7dQJW4D2+HO
+Zm9444lss/WhTI4+iVBeYXk5SLdTpc3ahU/7m4McuLpbsxVWKaNo6Qen56rgSggv
+8hC1gxEfcquheEYMLRwJffnlksUmWqTYFwZ0Mt/eqCN7u2Enp8xRXYOvf+hrvmoe
+S5PtKf13TJcXF3+4BNXl9DgYn4DUptOw20VwUPlsjY/dPP0Pr2obtyp0mp+OMRtv
+SGUTqwCoE/+siimUov7xkxyYWrECQuBhvZ4Uvz7kwVcdaZ5knhmTnQSL5G4T2xmE
+Q6diV7OBWyMR6m/qdtT7L3uOdBgNKJHLKTqYEaDdRQtBIgcj4Cr5Qd5r9uRkaXNm
+TXt5rWV4nrsgeZjJlv2sFdldZrEKwPC2T80G2wwKXW/DksGnVsttaj45BR1rNK2M
+2Q7cOQ976JiADJxT8VHzoSE70W5JvwfaJMyS/03kxkmdwDxwJbPRvsWKx4ssM0lb
+ebFoyFthpeJeJGvM3mk5wItmiJJIcl6T5NRLE8HrJkS7g7VCg/eT9ls5Xn3IU3O7
+gaRB7uNhAio4E3onFbEFmwKwLl208Z68aO7dn/L+X/ezOTbBEQqdlbN9VMvroQA0
+FXgMmpalRtI/uvQQqQfF/hnbAGVHkpqO1r0O8qYDFCz3SlCI4AQBAQgAShYhBN0o
+vebZh1yrzkqLHdzPDbMLwQVIBQJqrtu0GxSAAAAAAAQADm1hbnUyLDIuNSsxLjEy
+LDIsMhAcYXJuZV9iYWJAd2ViLmRlAAoJENzPDbMLwQVI97ID/11i5YekCH9gbqon
+pRajamFey2LD/vzZP/aN4CmwYjtB0XSAJScn5MBE5e5K8jKt1hIKXegs3Oznydr6
+4pQo54mdA7kKOXX9v3UidLubNyLVXGttBbf6l4hI4VNvkDimkRLxOBy/EZmQTFLm
+KKb4KNdvqxKbnWWN4BSXiSN0jpby
+=XCDz
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+From MAILER-DAEMON Sat Sep 19 15:02:20 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x80KD-00046D-FJ
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 15:02:16 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>) id 1x7xqA-0006sO-3X
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:23:02 -0400
+Received: from comm.rcdrun.com ([85.137.228.158])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>)
+ id 1x7xq7-000221-Kz; Sat, 19 Sep 2026 12:23:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnu.support; s=mail;
+ t=1789834977; bh=HvjZ2SF9HZQflPL8kPYQakwufiwoIVz26q4Sshxk9Pg=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+ b=WSFD/fTCgK7nd0Y+OEJCx9JMh/Uzy7iLOfLxoGtCNPP5csGD0Lr9UG5xd9gCJiGCP
+ c5KKZXs8XfJG4MA4ZZR95zqQGyjVNfTNY4SRcgGRNaDPsuOxyvkg6mkoXZylwIp0UG
+ oRAVKl9HG5/COuw/iUrD6tuJKjodxjNlnHN+EWTY4wP2qXSOa+4mtYSIl39y8aLV/m
+ mfEbbUFnqn72x3rn4cWoZLrdD+++ILM2fOEGOBWkUKselttLPCHcs4FAIL9U4sDBZg
+ EuoPFA0TdRlKSnYJlz7OiM7YtEjKxYr3Ae+7RhoNeXb/8vULbUUKcutdPX6rUZAkO/
+ /rx67pwpV/u/A==
+Received: from comm.rcdrun.com (localhost [IPv6:::1])
+ by comm.rcdrun.com (Postfix) with ESMTP id 0D19322012E;
+ Sat, 19 Sep 2026 16:22:57 +0000 (UTC)
+MIME-Version: 1.0
+Date: Sat, 19 Sep 2026 19:22:57 +0300
+From: Jean Louis <bugs@gnu.support>
+To: rms@gnu.org
+Cc: Eli Zaretskii <eliz@gnu.org>, arne_bab@web.de, public@thanosapollo.org,
+ emacs-devel@gnu.org
+Subject: Re: [NonGNU] new: hermes
+In-Reply-To: <E1x7XRP-002RVS-V0@fencepost.gnu.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org>
+Message-ID: <113dadee18451bd3b363230870610a0f@gnu.support>
+X-Sender: bugs@gnu.support
+Organization: GNU Support
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=85.137.228.158; envelope-from=bugs@gnu.support;
+ helo=comm.rcdrun.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Sat, 19 Sep 2026 15:02:06 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 16:23:02 -0000
+
+Hello Richard,
+
+This below was my thinking, so it was me to write it, not Arne. I am 
+morally member of the GNU project, as I follow the free software 
+philosophy. My expectation is that GNU software maintainers should at 
+least publicly follow the free software philosophy and put attention to 
+detail.
+
+I have tried Hermes agent before, technically it is good software. I 
+have found over the time that it changed the strategy, clearly seeing 
+that the sole point of making that agent software was to steer people to 
+non-free SaaSS LLMs. Nothing bad inherently with their business, just 
+that it collides with the moral stance in GNU project. It is not 
+compatible.
+
+Spreading awareness for future is not more important than before, as 
+society goes virtually into controlled meat that is to serve the few.
+
+The way to go would be to sponsor or find some of developers of such 
+agents to make the fully free agent that doesn't steer users to non-free 
+SaaSS LLMs or other SaaSS.
+
+Even Hermes agent could be taken and those options disabled, and 
+distributed from other website as a solution.
+
+If my message doesn't reach the mailing list, it is because I am 
+censored for talking about GNU moral stance on the GNU mailing list.
+
+>   > Thanos's implicit argument is:
+> 
+>   > - hermes.el can use a local model.
+>   > - Therefore hermes.el is not SaaSS or wish to say there is no 
+> problem to
+>   > users
+>   > - Therefore there is no objection specific to hermes.el.
+> 
+>   > Step 3 does not follow. A program can be free and non-SaaSS while 
+> still
+>   > being a vector that normalizes and routes users into SaaSS. 
+> Stallman's
+>   > essay anticipates exactly this move:
+> 
+>   > "Some web pages install nontrivial, even large JavaScript programs 
+> into
+>   > your browser without informing you. When these JavaScript programs 
+> are
+>   > nonfree, they cause the same sort of injustice as any other nonfree
+>   > software."
+> 
+>   > And more directly, on services with mixed features:
+> 
+>   > "Some sites offer multiple services, and if one is not SaaSS, 
+> another
+>   > may be SaaSS."
+> 
+>   > The point: the presence of a free/non-SaaSS path does not 
+> neutralize the
+>   > harm of the SaaSS path being the default, the advertised, or the 
+> path of
+>   > least resistance.
+> 
+> You understand it correctly.  That is our basic moral principle: don't
+> lead users to run nonfree software or use SaaSS.
+> 
+> Most users and developers of computing are hardly aware of this issue.
+> Our mission is to spread awareness of it -- especially to our users
+> who are ignorant of the issue.  We can't tell ourselves "It is each
+> user's responsibility to check each program, because they need us to
+> teach them the idea and the goal.
+> 
+> So we have to take responsibility for making our recommendations set a
+> good example, making sure they lead users in the direction of freedom
+> and not away from it.
+
+
+-- 
+Jean Louis
+
+
+From MAILER-DAEMON Sat Sep 19 15:02:56 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x80Kt-0004IR-J7
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 15:02:55 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>) id 1x7xu9-0000E2-GV
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:27:11 -0400
+Received: from comm.rcdrun.com ([85.137.228.158])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>)
+ id 1x7xu7-0002kc-Ec; Sat, 19 Sep 2026 12:27:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnu.support; s=mail;
+ t=1789835225; bh=KUOvPKLwgsb5QLtLClyz+lwqmAARmLciWP3fYiS8+uI=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+ b=e/Ztlt7CcATPj0EA0tVMxGFYynJWUEc+nUFt+ST4sPNLRPDnvq9ZLyyZ4EHjO8jDO
+ WANJwD7Zq5Spz0RAEh+PmMk6fOl2ZIY8Od7ZIXb+yku3IBnb1L6RxEoMOOoSPG0AzH
+ o/e7nVtYNt1GAw5szwZwC8G3gqeTlbw3e3KN8QinQsbmBETOEDvFOwHkk2PvrJFkWF
+ QdBI6zRo7ynBcLRtmal+Fn9QvDmeYfvl1Upb3VxCAAtNgGTDrKehZGFJ/uiTXO19O+
+ EWM9aReqRhVhI235wmvpGgYgL9gN0MUXPggYghikC/O+sOrCqPTAbWXDvzic02Hs1/
+ DO19001VihJ5Q==
+Received: from comm.rcdrun.com (localhost [IPv6:::1])
+ by comm.rcdrun.com (Postfix) with ESMTP id 3CC2F2200B5;
+ Sat, 19 Sep 2026 16:27:05 +0000 (UTC)
+MIME-Version: 1.0
+Date: Sat, 19 Sep 2026 19:27:05 +0300
+From: Jean Louis <bugs@gnu.support>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: rms@gnu.org, arne_bab@web.de, public@thanosapollo.org, emacs-devel@gnu.org
+Subject: Re: [NonGNU] new: hermes
+In-Reply-To: <86h5jmk8sk.fsf@gnu.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org> <86h5jmk8sk.fsf@gnu.org>
+Message-ID: <7af5c4d8ce6de61b4535b3fb9b1d7a6e@gnu.support>
+X-Sender: bugs@gnu.support
+Organization: GNU Support
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=85.137.228.158; envelope-from=bugs@gnu.support;
+ helo=comm.rcdrun.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Sat, 19 Sep 2026 15:02:41 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 16:27:11 -0000
+
+>> Arne wrote:
+> Arne is not an Emacs maintainer.  He knows nothing about what we do or
+> don't do, and doesn't help us doing that.  His comments are comments
+> from the side-lines, by a person who might be interested in Emacs, but
+> should have no say in what we are obliged to do, unless he volunteers
+> to do that (in which case the job could be done as long as he does
+> it).  Nothing else is fair towards us, the Emacs maintainers, who do
+> this thankless job day in and day out.
+
+It was me. Not Arne. Yet I share viewpoints with Arne and with you.
+
+I have no say in what you are obliged to do, and never asked you 
+anything, I have always expressed my opinion. I was not rude to anybody. 
+Can you now remove the block on mailing list that I can write freely as 
+before to GNU Emacs Tangents and Devel?
+
+I am very thankful for your job as maintainer, you do it well, including 
+I know that this type of discussion isn't really your priority. Times 
+will change.
+
+-- 
+Jean Louis
+
+
+From MAILER-DAEMON Sat Sep 19 15:03:31 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x80LR-0005Ds-EK
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 15:03:31 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>) id 1x7y2r-00019j-Je
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:36:10 -0400
+Received: from comm.rcdrun.com ([85.137.228.158])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>)
+ id 1x7y2o-0005pS-Ua; Sat, 19 Sep 2026 12:36:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnu.support; s=mail;
+ t=1789835763; bh=YWYyzcO+lxUPj3kietIaban09mjH53O65D9QZzjtWYQ=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+ b=iv3HYT7A2i2U2Lkv7VTaAq4EKfxuN9rZkBUGYor9399w5d18nYiv+d0RKS0X+//B2
+ 4NtMH1C3rgf8KxvtXFVKIehBDNedF+hXVJ3BMBxM+g4hHZUKZ49L4X3VfUQaSAn0yV
+ jQ3beClosnqs25u3f+mKkQqX9yfKkf/0dNlqmcDN2qLFIQvNcSAkD/ld/pBs8NbHox
+ 6fIf0jip/E9oYn3Lq9Y/ngycpVteK+3HqwYqLTYZz00HQE69E15faikzsa5tjZDEvn
+ o97mUd9lkXMgCvBQ0OTXR5PGD0pmEvNQYDAxy7+kctu08mKcZ98DmGJpmOXCsoUlFg
+ P8Ihd8WXGTY7w==
+Received: from comm.rcdrun.com (localhost [IPv6:::1])
+ by comm.rcdrun.com (Postfix) with ESMTP id 7312B2200B5;
+ Sat, 19 Sep 2026 16:36:03 +0000 (UTC)
+MIME-Version: 1.0
+Date: Sat, 19 Sep 2026 19:36:03 +0300
+From: Jean Louis <bugs@gnu.support>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: =?UTF-8?Q?Bj=C3=B6rn_A=2E_Lindqvist?= <bjourne@gmail.com>,
+ public@thanosapollo.org, arne_bab@web.de, rms@gnu.org, emacs-devel@gnu.org
+Subject: Re: [NonGNU] new: hermes
+In-Reply-To: <86tsnlh228.fsf@gnu.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <871pavklfb.fsf@thanosapollo.org>
+ <CALG+76cSBg=BaEUXAtELE6vUOsBjvbWbis3T=VAHxcwYZDCshQ@mail.gmail.com>
+ <86a4pejzjm.fsf@gnu.org>
+ <CALG+76ez_XEqBptttx2g2t5KGgb+9w3S-PCAMVtAXe45W0DKOQ@mail.gmail.com>
+ <86tsnlh228.fsf@gnu.org>
+Message-ID: <21c83b12c05e239d7fbeb8e579be9e70@gnu.support>
+X-Sender: bugs@gnu.support
+Organization: GNU Support
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: pass client-ip=85.137.228.158; envelope-from=bugs@gnu.support;
+ helo=comm.rcdrun.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Sat, 19 Sep 2026 15:03:27 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 16:36:11 -0000
+
+Hello Eli and Björn,
+
+After some discussion with Eli (other Ely, sorry for misflyspelling it), 
+and Arne, I can just completely agree that right now there is no LLM 
+that could be say to be truly free as by GNU software freedom 
+philosophy.  We reviewed majority of them.
+
+They may be published under free licenses, yet they are using underlying 
+datasets that are often found not to be free.
+
+So their outputs can generate copyrighted text. There is no provenance.
+
+For some LLM to be free it should be probably trained on fully free 
+public domain text, which is public domain and not copyrighted in all 
+countries, as what is public domain in one country isn't necessarily in 
+the other.
+
+So no free LLMs, Björn said it already so precise.
+
+I am using LLM text generation in such a way that I can with full 
+confidence publish a website and be sure that it doesn't have 
+copyrighted output. My subjects are very specific, prompts are not 
+short, and results so unique, that I have no problems publishing such 
+outputs. Yet with different usage patterns users can easily output 
+copyrighted text. One cannot even know which license was it as there is 
+no provenance, and GNU GPL would be violated that way too. So the only 
+way would be to have public domain datasets to train some LLM, and that 
+may never be.
+
+In general, user remains responsible for copyrights, as usual. Sharing 
+the LLM is free, using it free, software free, generating LLM or 
+training it is allowed by many ways (not necessarily morally alright) -- 
+and outputs are difficult, they may never be free.
+
+On 2026-09-19 15:13, Eli Zaretskii wrote:
+>> From: Björn A. Lindqvist <bjourne@gmail.com>
+>> Date: Sat, 19 Sep 2026 11:57:54 +0200
+>> Cc: public@thanosapollo.org, arne_bab@web.de, rms@gnu.org, 
+>> emacs-devel@gnu.org
+>> 
+>> Den fre 18 sep. 2026 kl 18:27 skrev Eli Zaretskii <eliz@gnu.org>:
+>> > > From: Björn A. Lindqvist <bjourne@gmail.com>
+>> > > While having no opinion on anything else, I think this is a bit
+>> > > facetious. No way any *practical* LLM produced in the last five years
+>> > > could ever be considered free as in the GNU freedom spirit.
+>> >
+>> > That's false.  There _are_ free LLMs.  Jean Louis posted their list
+>> > here, I think.
+>> >
+>> > > No way.  Zero chance. I use premier LLMs daily and find them
+>> > > useful. If Emacs had an LLM interface I'd use it too. But it is very
+>> > > much non-free software. A free LLM is a hypothetical.
+>> >
+>> > Please check your facts, you are factually incorrect.
+>> 
+>> I must have missed that list. emacs-devel receives hundreds of 
+>> messages every
+>> week and I don't read all of them. Regardless, any LLM Jean Louis 
+>> listed may
+>> cost no money to use, but is not both GNU free and a usable LLM.
+> 
+> Maybe Jean Louis could post the list again, with the information
+> telling which are free and which aren't.
+
+-- 
+Jean Louis
+
+
+From MAILER-DAEMON Sat Sep 19 15:05:18 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x80NC-0005x7-PE
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 15:05:18 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>) id 1x7yIX-0000rs-Vz
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:52:24 -0400
+Received: from comm.rcdrun.com ([85.137.228.158])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>)
+ id 1x7yIT-0000Uk-Uh; Sat, 19 Sep 2026 12:52:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnu.support; s=mail;
+ t=1789836731; bh=c0jYkp46pmPZG7/uy1uJLYPtQTrQvnILIWw2Yhg0NQM=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+ b=l3zzqCT+ArBNJHnBGzaX9P2C1CGanZgs9NSCdh3ylePtEHfXR9E0/BKjB5mJRFOKA
+ oEzqHQyYMi5t2Oah+ZQYc2m0mM7dQfHuSKQ8KAuo87OtAj9bOZrd7RjkO55FCyX3GT
+ ClpyuJoz80WPIaD8aB8KlPumKXq36bSd/GId2z7QGIYc2v2xk1xTI3ILRN4Y8jnH5r
+ qoBD9DbQHRT1q0nXTfvnZboiGOcYtIJ0s3CtcqrjPIXXbopqeuN9wT1wTv7sYcxowu
+ yWjNL2sko2FMTo0K2fQhN5A4thJ7sMDEazEQ1/AJpurbmij+st4dmlXXAI1qNOfemP
+ wWC5GvGDEpQng==
+Received: from comm.rcdrun.com (localhost [IPv6:::1])
+ by comm.rcdrun.com (Postfix) with ESMTP id 0AD6B220102;
+ Sat, 19 Sep 2026 16:52:11 +0000 (UTC)
+MIME-Version: 1.0
+Date: Sat, 19 Sep 2026 19:52:11 +0300
+From: Jean Louis <bugs@gnu.support>
+To: rms@gnu.org
+Cc: public@thanosapollo.org, arne_bab@web.de, emacs-devel@gnu.org, Ellie
+ <ellie@newregparts.com>
+Subject: Re: [NonGNU] new: hermes
+In-Reply-To: <E1x7XRY-002RY6-BT@fencepost.gnu.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <779f1f2e1f5087877a52fdca2bb1c653@gnu.support>
+ <E1x7XRY-002RY6-BT@fencepost.gnu.org>
+Message-ID: <fe04400bba08538783bbf2cf930493c3@gnu.support>
+X-Sender: bugs@gnu.support
+Organization: GNU Support
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=85.137.228.158; envelope-from=bugs@gnu.support;
+ helo=comm.rcdrun.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Sat, 19 Sep 2026 15:05:17 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 16:52:28 -0000
+
+On 2026-09-18 15:11, Richard Stallman wrote:
+>   > The point: the presence of a free/non-SaaSS path does not 
+> neutralize the
+>   > harm of the SaaSS path being the default, the advertised, or the 
+> path of
+>   > least resistance.
+> 
+> You have put it very clearly.  If it is possible to use hermes.el
+> in a way that doesn't mistreat you, but that is not the most natural
+> way to use it (the path of least resistance after starting Hermes),
+> then it has a moral flaw.
+
+The sole purpose of Hermes agent is to sell SaaSS LLM services. Yes, it 
+does allow users to use locally running LLM. Though, today, there are 
+maybe just 1-2 options to truly run it everything free, and it requires 
+such GPU vendors that support fully free software. Nvidia isn't such. So 
+majority of users worldwide use LLMs locally running on their computers 
+in such a way that they need to install some proprietary drivers.
+
+Virtually all LLM creators who claim that LLM is "free" are not serious 
+about it, so it doesn't really align to GNU free software philosophy.
+
+Hermes Agent, just as many other similar software, are made with that 
+purpose to steer user back to site with SaaSS as that is how company 
+earns money.
+
+hermes.el depends on "hermes" agent, and so we have now I guess so, good 
+number of ELPA packages following that pattern that are pragmatically 
+there for the sole purpose to access SaaSS.
+
+Way to go would be to make a fork of Hermes not steering users to SaaSS 
+and removing those functions, and having user to basically configure the 
+endpoints themselves. Configuring endpoints always leave it to user to 
+put the either free one or non-free one, nobody can know that, but at 
+least such fork of hermes or other software agent, would not steer 
+people to SaaSS.
+
+There are few software agents who are not there for purpose of selling 
+SaaSS, and I could find that. Unless speedy Gonzales is faster than me.
+
+-- 
+Jean Louis
+
+
+From MAILER-DAEMON Sat Sep 19 15:05:49 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x80Nh-0006Ot-RG
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 15:05:49 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>) id 1x7yOE-0001Gw-0r
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 12:58:14 -0400
+Received: from comm.rcdrun.com ([85.137.228.158])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>)
+ id 1x7yOC-0002sr-3y; Sat, 19 Sep 2026 12:58:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnu.support; s=mail;
+ t=1789837089; bh=470fOZMh6R/BYeCazZA5PB4dxfReSCuG1ItrqgPINmU=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+ b=V6+wYxfbjlC9Hr1D/AB87RaUW8Ozo5OgmEwK/oIQPTunhFGSM11QjBCTGtdlZqq2w
+ IkaFnVTapgxIg9mEdtEeAXuv3EX3uMzY6aiBzh1Z/6jKlBxdVTM4+se94WXfjAyUoe
+ KfyFmAMQynaUu40L6qEWM425VOJYtWlHuveHgix9dWuGZ5fkOqibooFcA6z9k2FKUA
+ t7xKW3shQhBKwwatjW0GHTYSkySHu564HlYt3Og7EHuDNrr1rpF60/k5ymt972DCIN
+ I1ZzodyUuZJ02icWfTV8rcqLR5u4P567zJA54ToEwNgBbbLKFnjlU94n2ERhXCrb4J
+ LzcI+k/M4nhQQ==
+Received: from comm.rcdrun.com (localhost [IPv6:::1])
+ by comm.rcdrun.com (Postfix) with ESMTP id 6B5F7221894;
+ Sat, 19 Sep 2026 16:58:09 +0000 (UTC)
+MIME-Version: 1.0
+Date: Sat, 19 Sep 2026 19:58:09 +0300
+From: Jean Louis <bugs@gnu.support>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: Philip Kaludercic <philipk@posteo.net>, rms@gnu.org, yandros@gmail.com,
+ emacs-devel@gnu.org
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+In-Reply-To: <jwvwlsh9qvz.fsf-monnier+emacs@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <87zf2w3vhh.fsf@posteo.net>
+ <E1wFkpF-0002wc-1j@fencepost.gnu.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <87jyoi5rd1.fsf@posteo.net>
+ <jwvwlsh9qvz.fsf-monnier+emacs@gnu.org>
+Message-ID: <fe456ddf6085060cf7f3e59af5dee889@gnu.support>
+X-Sender: bugs@gnu.support
+Organization: GNU Support
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: pass client-ip=85.137.228.158; envelope-from=bugs@gnu.support;
+ helo=comm.rcdrun.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Sat, 19 Sep 2026 15:05:48 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 16:58:15 -0000
+
+Bonjour,
+
+I would not use the PDF/PS comparison in the GNU project as a 
+justification for adding more of the same. If PDF/PS documents do end up 
+running code whose freedom we have been ignoring, then that is a 
+separate issue that still needs to be addressed — it is not resolved, 
+and it does not make a new case acceptable by precedent. Tolerating one 
+thing quietly is not the same as deciding it is fine, and it should not 
+be turned into a green light for the next one.
+
+Jean Louis
+
+On 2026-09-19 19:11, Stefan Monnier wrote:
+> Philip Kaludercic [2026-09-18 18:47:24] wrote:
+>> To add another opinion in the mix, it is difficult for me to draw
+>> a meaningful line between executing a javascript program in an sandbox
+>> to extract some value and opening media or PDF/PS file that also
+>> encode data that has to be decoded using varying levels of
+>> computational generality.
+> 
+> Indeed, PDF/PS is a good example where we've so far tolerated running
+> code without paying much attention whether it's Free or proprietary.
+> And I think, similarly to the yt-dlp case, the crux of the matter is
+> that we expect that we are not affected by how the code is implemented
+> but only by whether "it works" or not:
+> 
+> - We expect there is no significant privacy issue because the renderer
+>   presumably can't modify arbitrary local files nor send info back to
+>   someone else.
+> - We usually don't feel the need to improve the code.  Tools like
+>   Inkscape can be used to change the result of running the code, 
+> without
+>   the user having to look at the code.
+> - I haven't heard about issues of people wanting to reuse some piece of
+>   PDF/PS code in their own PDF/PS documents (or document-generating
+>   code).  This is likely related to the fact that there aren't very 
+> many
+>   libraries for those languages.
+> 
+> Of course, this isn't quite true: "libraries" of PDF/PS code exist for
+> example in the form of fonts, and we do care about fonts being Free vs
+> proprietary, yet I can't remember seeing similar issues brought up 
+> about
+> PDF/PS documents themselves.
+> 
+> So, yes, I think I find it acceptable for yt-dlp to run YT's 
+> proprietary
+> code on my machine for basically the same reason that I find it
+> acceptable for Evince or Ghostscript to render the various documents
+> I download.
+> 
+> 
+> === Stefan
+
+
+From MAILER-DAEMON Sat Sep 19 15:12:55 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x80UY-0007Yj-TE
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 15:12:54 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x80UW-0007Ya-SE
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 15:12:53 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x80UW-0002UV-BO; Sat, 19 Sep 2026 15:12:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=X2RkiS2fo78pUNZcWPUVPEI8ElO3hMS8He+cue/sCSI=; b=WEIsX/slxh+P
+ 7OSI3bGQK8rZwHKJjaPdgL7HiLj9KjVsbPACmCTEFTXQDHFRS32S+kpcbgk2jwNLeWLhYrFKBcozL
+ PJZGh6IjTMwj1uKPqiS4amL5cj5u2ppTvURp0BSvCHS724H1KnvCDtwz+/XCnoaI6Y0OmTgmS/83l
+ DvBJmZyu0AGzWRkZ2bHE/feZ+L0luHgwmORsWZyfCAHjBlXinp6hwB+Xi60d25Rb6fQSd7j16LdNT
+ 6DOSFxjC1OhIfpWyLXi8FVjxuFsc3/D1WESvY7lklMPymj0BrOz9DfXKiSFY6Z0yiIWZOtVvYD0Fq
+ LRaAUIy9O5iA51JipJa70A==;
+Date: Sat, 19 Sep 2026 22:12:50 +0300
+Message-Id: <86mrtdgiml.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Jean Louis <bugs@gnu.support>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <7af5c4d8ce6de61b4535b3fb9b1d7a6e@gnu.support> (message from Jean
+ Louis on Sat, 19 Sep 2026 19:27:05 +0300)
+Subject: Re: Being blocked (was: [NonGNU] new: hermes)
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org> <86h5jmk8sk.fsf@gnu.org>
+ <7af5c4d8ce6de61b4535b3fb9b1d7a6e@gnu.support>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 19:12:53 -0000
+
+> Date: Sat, 19 Sep 2026 19:27:05 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: rms@gnu.org, arne_bab@web.de, public@thanosapollo.org,
+>  emacs-devel@gnu.org
+> 
+> Can you now remove the block on mailing list that I can write freely as 
+> before to GNU Emacs Tangents and Devel?
+
+Not until I'm sure you've completely stopped your ad-hominem attacks
+on people here.  You are not there yet, sorry.
+
+
+From MAILER-DAEMON Sat Sep 19 16:10:42 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x81OT-0007FG-HX
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 16:10:42 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <yandros@gmail.com>) id 1x81OR-0007F7-1V
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 16:10:39 -0400
+Received: from mail-wr2-x10.google.com ([2a00:1450:4864:30::10])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <yandros@gmail.com>) id 1x81OP-0005R6-5m
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 16:10:38 -0400
+Received: by mail-wr2-x10.google.com with SMTP id
+ ffacd0b85a97d-482f633cd80so806923f8f.2
+ for <emacs-devel@gnu.org>; Sat, 19 Sep 2026 13:10:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789848635; cv=none;
+ d=google.com; s=arc-20260327;
+ b=r5CwGYjvRc8fij6PSmSRrActosNxWDxzRFLjSfTWCQ1niJJAh+/yYlH6QdUUjpHopT
+ F0CESthqbc8G8HIX0ss/z0YO/wmOtxF6rSud1Z1If2ATOjQ13SrABtua6SNYPEWLUIRS
+ gSIs0ClYyIovZw6UQ35szGYyS40afzrXcYk7gB4l+RQ7yaL8TAAO74TYg8ubdOL4Qot6
+ gUpOY8M8Ubbe69HJJTjrNly3kOyvfqpvqVV6ROl905GgUPM6wJZrfj8uN5SUG9gaBBzJ
+ 1c3It+UzT+yXpifnH6neFhVUeiEpmwQqG5PEVtn/3GQidikHkomfm8uQ8SZXlIfcLzGE
+ JGZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=B1qx6Hwx8R/hbVWlS+ZyH/Tumyh7bJDqMyvocQOx7gE=;
+ fh=mdXBebIw+ta72XM8ZcMazQsShF5b4NW6i4nxGd077hw=;
+ b=sqJW8aBUNzGmGasA7l3fwrm+OOxXlR5qNPgWnLmEkeLYHhKv/uALg6M1lHwOI2RehG
+ cQO2rN1juhOnGITOWxyGbPAQroipjw91gwKLMz3TlYe4A/EgPWevKsjIKUL8uiMLqD9j
+ ke3vdiFGU3zhDplyx9kd2z51xi+yA7MHk8/10PAIwQ6EFhjpV3v7SxyNxTqLk8Xdg8U4
+ TUU76znTyG7x98OETyafohFtWAZmRdO97WnpWZITd+TtHvrX0SJ2WEJLdqx5DswI4f1e
+ 91QChmmurRrKKTtQCDVgKFY5CD3tu2o33hd5PU2CrBEW/9H8CP+wlFoFneZxYPM/rw6t
+ QN7w==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789848635; x=1790453435; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=B1qx6Hwx8R/hbVWlS+ZyH/Tumyh7bJDqMyvocQOx7gE=;
+ b=Gc/2jtVAc/x4adrAUAQSZB2ptu9zsFRy7fcmXCaXUkJLpN7FMmPmz+tHES5KTJ1PcJ
+ 68GODFpVljsRniGjMxx2zndX7HG/hef6MLx7VL9je8Tazf2A6EsCnEHP0Lv+OpZF4jSF
+ NwUoiBTbs7rjaRrKw3BacbZmooxorVYW70+Ho6fkG4kU4yFc3AXkybzI8mRTyORiLwLX
+ kORPc2XcG8y9dEdeain0sIhj5qOug7Ie3tHJtokY5CMuJwVXc5BX3Rw0zb+kjz4kxG1q
+ 5poZZdiKzkWOEm2y5S0hA1HuMMiGs9Pe5vnkoNwMGspLxtC7fxHXM3TJ9CCFy3b11Rig
+ Wfbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789848635; x=1790453435;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=B1qx6Hwx8R/hbVWlS+ZyH/Tumyh7bJDqMyvocQOx7gE=;
+ b=R5IEwdgrhHmHOE3utDlPRdtDAjRClODqf3n+Svf2pTV/cmlpx8ivnWNm8PWHNRfQXS
+ OY7KEUILvUtOhunukYOoRn7W7+LgVKbDeV6oa+u0OhxMJTgov6Azcn2PPrt18eAZE+eE
+ QuJy1TcWp0QEr9mFGNju4Z9qzosmlOMsuge/d3fAkLCbGsTvGGz2hjPj7vjjzMMBbzAR
+ Q8fxeHpUYgvbi5oexF0LuhQsBmukuuxb6uuAp1qXXqxFibE52bX0TK4MVR+vCKMo3ni8
+ A/plcBi/18cJUGWM089SDIZrQoRaQDVGUC+hg8O/or8bh+YDk0CAmd8jKD4Bn4fQ3I4P
+ q3cw==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBzN+g9wWJ00m1XS1io+CkZHwzAdd5/1ISLcqPSfimS+skuL3/Jjj4he7C0x+j4D5agJ39tIP1yQ9Iza5g==@gnu.org
+X-Gm-Message-State: AFuF++mBa+Sanac3AEBhLejzQ6dmroDChpfj/3gMcrpXDwhZVCCezvJ0
+ GWwBJOH997G3tXztAXCVc2CK7wXm/9j9SfnWk+niBxxFlJuf6If7T9vjmaozINoxLvGfiCl6fII
+ NRumTp7YKe5GHb8OEyL0ZWiYjdiM8IdDivw==
+X-Gm-Gg: AYBFou3YJQg8oFYU1zgB2soV+lkuL9Nc7yiPAK6lgvN1sPeKOED0OJ9QNzshaAHbotj
+ 74ZGTRPqUJop48yilEjrtBL5L0QOc072dgPm5RKsxekk5dLT2kj8NW0tHMNtBSP0slQRC307IXy
+ x6twPe984AUJA/K1SQr4cJW5KpQMlpeNF1hhUMkJBwdpzWM6AVNAHcezwMHocl3lt/HDZfvWBkx
+ vaGOSDhOxClh1gtb6t0dFFqVzgqqhIlsgzZ+g4W0UL1RB/+os3E0kMYeDHRl2Ed2lRGVgMZD2dZ
+ qzXmz1bacy8aWR+d7D8IT6P+5wqRAjHvUxUkSY1O698xAPmE5EVC/kES
+X-Received: by 2002:a05:6000:430b:b0:45e:e1a4:c4c3 with SMTP id
+ ffacd0b85a97d-4871e226e15mr8585729f8f.15.1789848634520; Sat, 19 Sep 2026
+ 13:10:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <86jyu4y0oy.fsf@sdf.org> <87zf2w3vhh.fsf@posteo.net>
+ <E1wFkpF-0002wc-1j@fencepost.gnu.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org> <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org> <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWZof91in=GHevP-E2pY8goJYhxoWj675fMQBk7M3Ut81w@mail.gmail.com>
+ <E1x7nOj-004IYP-Dr@fencepost.gnu.org> <87se35mv4g.fsf@posteo.net>
+ <87se35dq30.fsf@web.de>
+In-Reply-To: <87se35dq30.fsf@web.de>
+From: chad <yandros@gmail.com>
+Date: Sat, 19 Sep 2026 16:10:17 -0400
+X-Gm-Features: AcwNN1VmGx-THMcgQatU6pOZWWAQw2FV1j2PzR8hHJLB1SiPWARrUaDY5AdaQvY
+Message-ID: <CAO2hHWZnmVMxc2OspLWy0yYPZ6qwLMQzERqoiZ+2iYuLAuRojA@mail.gmail.com>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+To: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Cc: Philip Kaludercic <philipk@posteo.net>, rms@gnu.org, emacs-devel@gnu.org
+Content-Type: multipart/alternative; boundary="0000000000000ffa2f065bdb9ccf"
+Received-SPF: pass client-ip=2a00:1450:4864:30::10;
+ envelope-from=yandros@gmail.com; helo=mail-wr2-x10.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 20:10:39 -0000
+
+--0000000000000ffa2f065bdb9ccf
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Sep 19, 2026 at 3:00=E2=80=AFPM Dr. Arne Babenhauserheide <arne_bab=
+@web.de>
+wrote:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+> > There might be a forth option: Pointing yt-dlp to use proxy websites
+> =E2=80=A6
+> > videos via a proxy instead of youtube.com, thus avoiding the need to
+> > solve the JavaScript puzzle.
+>
+> Which only works as long as those proxy websites work. And those die
+> like flies (because youtube wants to break them even more than it wants
+> to break yt-dlp).
+>
+
+In fact, youtube wants to break yt-dlp _because_ it can be used to make
+sites that are functionally "youtube without youtube.com".
+
+That said, I think it's a separate point, because the proxy site must do th=
+e
+same thing that yt-dlp does if it wants the same sort of results -- it runs
+the
+non-free code as a service for the user. One can debate if that's more SaaS
+or SaaSS, but in either case, the user's action results in the non-free cod=
+e
+being run.
+
+~Chad
+
+--0000000000000ffa2f065bdb9ccf
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><div class=3D"gmail_quote gmail=
+_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Sat, Sep 19, 202=
+6 at 3:00=E2=80=AFPM Dr. Arne Babenhauserheide &lt;<a href=3D"mailto:arne_b=
+ab@web.de">arne_bab@web.de</a>&gt; wrote:<br></div><blockquote class=3D"gma=
+il_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,2=
+04,204);padding-left:1ex">Philip Kaludercic &lt;<a href=3D"mailto:philipk@p=
+osteo.net" target=3D"_blank">philipk@posteo.net</a>&gt; writes:<br>
+<br>
+&gt; There might be a forth option: Pointing yt-dlp to use proxy websites<b=
+r>
+=E2=80=A6<br>
+&gt; videos via a proxy instead of <a href=3D"http://youtube.com" rel=3D"no=
+referrer" target=3D"_blank">youtube.com</a>, thus avoiding the need to<br>
+&gt; solve the JavaScript puzzle.<br>
+<br>
+Which only works as long as those proxy websites work. And those die<br>
+like flies (because youtube wants to break them even more than it wants<br>
+to break yt-dlp).<br></blockquote><div><br></div><div>In fact, youtube want=
+s to break yt-dlp _because_ it can be used to make</div><div>sites that are=
+ functionally &quot;youtube without <a href=3D"http://youtube.com">youtube.=
+com</a>&quot;.</div><div><br></div><div>That said, I think it&#39;s a separ=
+ate point, because the proxy site must do the</div><div>same thing that yt-=
+dlp does if it wants the same sort of results -- it runs the</div><div>non-=
+free code as a service for the user. One can debate if that&#39;s more SaaS=
+=C2=A0</div><div>or SaaSS, but in either case, the user&#39;s action result=
+s in the non-free code</div><div>being run.</div><div><br></div><div>~Chad<=
+/div></div></div>
+
+--0000000000000ffa2f065bdb9ccf--
+
+
+From MAILER-DAEMON Sat Sep 19 16:21:02 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x81YT-0000HT-LH
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 16:21:02 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <yandros@gmail.com>) id 1x81YR-0000HG-63
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 16:20:59 -0400
+Received: from mail-wr2-x0e.google.com ([2a00:1450:4864:30::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <yandros@gmail.com>) id 1x81YA-0006m7-Cp
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 16:20:56 -0400
+Received: by mail-wr2-x0e.google.com with SMTP id
+ ffacd0b85a97d-482f633cd78so989197f8f.1
+ for <emacs-devel@gnu.org>; Sat, 19 Sep 2026 13:20:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789849240; cv=none;
+ d=google.com; s=arc-20260327;
+ b=FbP9QwB12SRWgH6aAuizdrz8A2TUzKsIYpQlMhGK5bO5EvYQbOrsMx5bpn3iYUlne3
+ GDpA6VJW3l5XrDe8yrQ/pBxPZeccLDheCVQwGJhcPpVeLBVbNDNI6RdcJeUaaAVh52iI
+ H4/Qmv3cgcmZUT08glSEHoz7LOVwNi7XYvyH8/e7c4AWZbqCfQKfLT/vY+uTPodZlJro
+ K0gPVOsZYMix6VP/ZGSy96sMJl+8QiOmwHI0MznVFcVWgbygOEZHMEJLE8Kx/0YiDOU9
+ jdrQnTatJTTtESk5lolaNB2Rk49PeEsuFEQ1M39IR+JlDnkzTGCQcIMMpH9hSxHJts0j
+ 8wSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=NxRR7ia3wF5yiSP8mYLwHmau+KoQuofWK53XZjOtKdo=;
+ fh=ybhXYaqQ3h7ptqHAvayG+90TDkly5w2exsKnx5gDYbM=;
+ b=mYDSJELkRFBdysSo2epKKa7BFx2v8ZQQc8W7l3uW+80gHqGrQcnz6/81ZnyNXeFL88
+ 5fLJh7ysjXETBQG2ZpBy6nU3DEdUUlMes9EpyL7daS/pghOjGrzTklSL0poo3hxreJ/k
+ XjWt6NKVNV2qi9fCeYO+bg2+T6dFHVemWubFFHSsoRpSSLBWncOLQyF6mJ8dM6aG+IPI
+ tRJOy6k31tFX4i+R/H0tiHUu8qX0cugb9Dp/Mb99GL++YfeQjmp7r4YRmHZGCoOyDkcE
+ HrnTkmqT7RNrpofdmaZ+fh7SPq7n5VDub87b0WE45orIydb4Tfaie+ecQ7P7Xq714m4+
+ cQqg==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1789849240; x=1790454040; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=NxRR7ia3wF5yiSP8mYLwHmau+KoQuofWK53XZjOtKdo=;
+ b=nYAvCsqbsx8X7l5/XpwL+iw3WCe60vhvvkv2ThcujrZmUWQitWZF6M1z1aQwcbBzfL
+ 4ezV7Mok6mspNwDCcqUD/lBRqqZVp3rv7nOX3qnpZStNq7I94lwg/45Y/jbtWxGXpMky
+ PfY5kM2dVyc3kxvV/g51ykxUT1sWzAoVZO57NvYWRcDsyZHcTOgBWIUo4jTccrf4ZnWB
+ ou3ZS5lo9/Mmy7DF0znrDoETaLNp0rkxDR2Pp0zP9ddH59UkBMpAL2YnX0g0NB0Z4h+v
+ Eu5j36vQNEOOZKuGAvgKaqyKtEL0gat6TYYpuIpf+C5nxziBoY/QSIKYlzVkVJOh4lC+
+ pHwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1789849240; x=1790454040;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=NxRR7ia3wF5yiSP8mYLwHmau+KoQuofWK53XZjOtKdo=;
+ b=yTP+n3iZ39pcZUaH4jDfq+Zv9SvFHs2E+QHU7ahissFYCg0YPdqcevubEODUY2AdaA
+ E4aa7/VqYPpJHeus2cBeGNRXCes6IyP4KbCt9gSomPzgMEmx0wNdfKKBYgJ3AXeeRfCp
+ DCHvXHKo2nUGKEMa4JM3XFpBFKDKGh92caBo/DMNPgAF9yGsPcyCLAOwsPythNZELz4W
+ yKviqVGDPAEsCngnyy6krOVlwKStnVPXNP4TPOQuSD/7GiyrLiU8O6bI6UM0IclvuXWG
+ b8CIBN3OKpe42XaRe++Q3/HyyQrDWz1TX1+IPiT8ene+T5VxSvb+IYcnNz8pmrWz7V9E
+ sJlw==
+X-Gm-Message-State: AFuF++lx2m5wSgXG2Qoe7QaV8PCw3fYK3ZAh/7THtb4FLstHvbDElNH5
+ TuNsV+w/K+5tTL6GsSzRfSYjzmYElWXvEtBPd3nDSz34IkoGEzj/QOEPt241hS76hI2y5nSqBtV
+ NuIambPgmmsn3XP9Yzb9omWaYpLRAI34=
+X-Gm-Gg: AYBFou3/xdZwbqE0u6hpsBPe3puuTk80OBc7DBq0TjAaXS5iEs5I5ilktyWb/mhkNIj
+ UGiEkZiwpVs7piaKdSPnehxvrK0utFqkY7S293rmAuLE1b9pRlLhOIs+S5MThYiUbihSjfMySpq
+ Nll7WwSrOiUgQzFC6GV38FU2mxGTVUMvmE2ETI1lnikni6v6waAVJeTNuBRadTYbOeg8SJd3ZWb
+ 0qzQoUjXx9xDOC+TZg3pmU05WPs50BP4Q/6vUayorfRTWpFvJZjAh5NuzjZhB140Ct/BtNt+r5u
+ jhaY5RpPzG1vv45WbQNtY0UJSj+2Aep54hBtvB788rh1bA1hsiN8FJgreM2Z88TUIN4=
+X-Received: by 2002:a5d:5d84:0:b0:485:ac0e:6fb2 with SMTP id
+ ffacd0b85a97d-4871e2279f7mr9678143f8f.18.1789849240127; Sat, 19 Sep 2026
+ 13:20:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <86jyu4y0oy.fsf@sdf.org> <87eck97788.fsf@posteo.net>
+ <86zf2x2eo1.fsf@sdf.org> <874il45kje.fsf@posteo.net> <86mryw2ozt.fsf@sdf.org>
+ <87zf2w3vhh.fsf@posteo.net> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de> <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org> <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWZof91in=GHevP-E2pY8goJYhxoWj675fMQBk7M3Ut81w@mail.gmail.com>
+ <E1x7nOj-004IYP-Dr@fencepost.gnu.org>
+In-Reply-To: <E1x7nOj-004IYP-Dr@fencepost.gnu.org>
+From: chad <yandros@gmail.com>
+Date: Sat, 19 Sep 2026 16:20:23 -0400
+X-Gm-Features: AcwNN1U8jqiLuWse2Xw2kcJGf0abcvUbDHOgOD9ts5Kr6NP9C3bTovf7w3vZiEw
+Message-ID: <CAO2hHWaM8TD8snS2uErep2MfPYY+xQ73oUf7WgT=f0QMYr=p6A@mail.gmail.com>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+To: rms@gnu.org
+Cc: emacs-devel@gnu.org
+Content-Type: multipart/alternative; boundary="00000000000028ccb5065bdbc047"
+Received-SPF: pass client-ip=2a00:1450:4864:30::e;
+ envelope-from=yandros@gmail.com; helo=mail-wr2-x0e.google.com
+X-Spam_score_int: -10
+X-Spam_score: -1.1
+X-Spam_bar: -
+X-Spam_report: (-1.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FORGED_GMAIL_RCVD=1,
+ FREEMAIL_FROM=0.001, HTML_MESSAGE=0.001, SPF_HELO_NONE=0.001, SPF_PASS=-0.001,
+ T_KAM_HTML_FONT_INVALID=0.01 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 20:20:59 -0000
+
+--00000000000028ccb5065bdbc047
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Sep 19, 2026 at 1:14=E2=80=AFAM Richard Stallman <rms@gnu.org> wrot=
+e:
+
+> If we made a modified version of yt-dlp, entirely without the JS
+> "optional dependency", it would have no moral problem with our
+> distributing that.  We could call it yt-dlp-nojs.
+>
+
+That is exactly the version of the code that I have been using for many
+years. I'm not sure why there would be value to making our own, but
+even more I'm not sure why this would impact the emacs code to run
+the us-or-them-provided version of the code. From my point of view,
+this seems like saying we shouldn't approve comint because it can
+be used to run a non-free version of PowerShell.
+
+
+> But I have a feeling there must be a catch in that idea -- something
+> you didn't mention.  I need to understand the situation fully before I
+> can reach a conclusion.  What is the motive for offering the optional
+> facility to run JS code?  What doesn't work if that is disabled
+>
+
+Youtube, as a service, will "sometimes" refuse to serve the content if
+the challenge isn't met (this is the hashcash similarity). There is no
+precise definition of what "sometimes" means, because youtube wants
+it to be "always" but doesn't always implement it that way. yt-dlp (and the
+variants that preceded it) is engaged in a long-running cat-and-mouse
+game with youtube (among others) to adapt to a constantly-shifting effort
+to dis-/re-enable automated downloading of content.
+
+I hope that helps,
+~Chad
+
+--00000000000028ccb5065bdbc047
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote g=
+mail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Sat, Sep 19,=
+ 2026 at 1:14=E2=80=AFAM Richard Stallman &lt;<a href=3D"mailto:rms@gnu.org=
+">rms@gnu.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" sty=
+le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
+ng-left:1ex">If we made a modified version of yt-dlp, entirely without the =
+JS<br>
+&quot;optional dependency&quot;, it would have no moral problem with our<br=
+>
+distributing that.=C2=A0 We could call it yt-dlp-nojs.<br></blockquote><div=
+><br></div><div>That is exactly the version of the code that I have been us=
+ing for many</div><div>years. I&#39;m not sure why there would be value to =
+making our own, but</div><div>even more I&#39;m not sure why this would imp=
+act the emacs code to run=C2=A0</div><div>the us-or-them-provided version o=
+f the code. From my point of view,</div><div>this seems like saying we shou=
+ldn&#39;t approve comint because it can</div><div>be used to run a non-free=
+ version of PowerShell.</div><div>=C2=A0</div><blockquote class=3D"gmail_qu=
+ote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,20=
+4);padding-left:1ex">
+But I have a feeling there must be a catch in that idea -- something<br>
+you didn&#39;t mention.=C2=A0 I need to understand the situation fully befo=
+re I<br>
+can reach a conclusion.=C2=A0 What is the motive for offering the optional<=
+br>
+facility to run JS code?=C2=A0 What doesn&#39;t work if that is disabled<br=
+></blockquote><div><br></div><div>Youtube, as a service, will &quot;sometim=
+es&quot; refuse to serve the content if</div><div>the challenge isn&#39;t m=
+et (this is the hashcash similarity). There is no=C2=A0</div><div>precise d=
+efinition of what &quot;sometimes&quot; means, because youtube wants</div><=
+div>it to be &quot;always&quot; but doesn&#39;t always implement it that wa=
+y. yt-dlp (and the</div><div>variants that preceded=C2=A0it) is engaged=C2=
+=A0<span style=3D"background-color:transparent">in a long-running cat-and-m=
+ouse</span></div><div><span style=3D"background-color:transparent">game wit=
+h youtube (among others) to=C2=A0</span><span style=3D"background-color:tra=
+nsparent">adapt to a constantly-shifting effort</span></div><div>to dis-/re=
+-enable automated downloading of content.</div><div><br></div><div>I hope t=
+hat helps,</div><div>~Chad</div></div></div>
+
+--00000000000028ccb5065bdbc047--
+
+
+From MAILER-DAEMON Sat Sep 19 16:31:10 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x81iF-00025u-07
+	for mharc-emacs-devel@gnu.org; Sat, 19 Sep 2026 16:31:08 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <sam@gentoo.org>) id 1x81i1-00025I-FV
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 16:30:59 -0400
+Received: from woodpecker.gentoo.org ([140.211.166.183] helo=smtp.gentoo.org)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_CHACHA20_POLY1305:256)
+ (Exim 4.90_1) (envelope-from <sam@gentoo.org>) id 1x81hx-0000TH-5X
+ for emacs-devel@gnu.org; Sat, 19 Sep 2026 16:30:51 -0400
+Received: from mop.sam.mop
+ (c.1.a.0.0.0.0.0.0.0.0.0.0.0.0.0.a.5.c.d.c.d.9.1.0.b.8.0.1.0.0.2.ip6.arpa
+ [IPv6:2001:8b0:19dc:dc5a::a1c])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (No client certificate requested) (Authenticated sender: sam)
+ by smtp.gentoo.org (Postfix) with ESMTPSA id B8DCD340E06;
+ Sat, 19 Sep 2026 20:30:44 +0000 (UTC)
+From: Sam James <sam@gentoo.org>
+To: Michael Albinus <michael.albinus@gmx.de>
+Cc: emacs-devel@gnu.org,  Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+In-Reply-To: <87qzipqkha.fsf@gmx.de>
+Organization: Gentoo
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+ <87qzipqkha.fsf@gmx.de>
+User-Agent: mu4e 1.14.3; emacs 32.0.50
+Date: Sat, 19 Sep 2026 21:30:37 +0100
+Message-ID: <87ecepkmqa.fsf@gentoo.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Received-SPF: pass client-ip=140.211.166.183; envelope-from=sam@gentoo.org;
+ helo=smtp.gentoo.org
+X-Spam_score_int: -41
+X-Spam_score: -4.2
+X-Spam_bar: ----
+X-Spam_report: (-4.2 / 5.0 requ) BAYES_00=-1.9, RCVD_IN_DNSWL_MED=-2.3,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 19 Sep 2026 20:30:59 -0000
+
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Michael Albinus <michael.albinus@gmx.de> writes:
+
+> Stefan Monnier via Mailing list for Emacs changes <emacs-diffs@gnu.org>
+> writes:
+>
+> Hi Stefan,
+>
+>>     use-package-ensure.el: Don't install during compilation (bug#81710)
+>>=20=20=20=20=20
+>>     Introduce a new var `use-package-ensure-install-during-compile`
+>>     which defaults to refraining from installing the package during comp=
+ilation,
+>>     and arrange for the code to still behave correctly, i.e. make
+>>     sure the macroexpanded code runs even if `use-package` is not yet
+>>     loaded at run-time and make sure it usually does not require
+>>     loading `package`.
+>>=20=20=20=20=20
+>>     * lisp/use-package/use-package-ensure.el
+>>     (use-package-ensure-install-during-compile): New var.
+>>     (use-package-pin-package): Don't `package-initialize` so eagerly.
+>>     (use-package-handler/:pin): Inline most of `use-package-pin-package`
+>>     and separate the part that can be done at macroexpansion time to red=
+uce
+>>     what remains at run-time.  Make sure the run-time does not load `pac=
+kage`.
+>>     Obey `use-package-ensure-install-during-compile`.
+>>     (use-package-ensure-elpa): Add autoload cookie.  Load `package`
+>>     less eagerly.
+>>     (use-package-handler/:ensure):
+>>     Obey `use-package-ensure-install-during-compile` and optimize the
+>>     default case.
+>>=20=20=20=20=20
+>>     * lisp/use-package/use-package-core.el (use-package-handler/:vc)
+>>     Obey `use-package-ensure-install-during-compile`.
+>
+> This breaks use-package-tests.el:
+
+I see the same, I filed https://bugs.gnu.org/81898 before seeing this repor=
+t.
+
+>
+> --8<---------------cut here---------------start------------->8---
+> Ran 167 tests, 142 results as expected, 25 unexpected (2026-09-19 18:19:0=
+3+0200, 14.775899 sec)
+>
+> 25 unexpected results:
+>    FAILED  use-package-test-handler/:vc-6
+>    FAILED  use-package-test/543
+>    FAILED  use-package-test/545
+>    FAILED  use-package-test/550
+>    FAILED  use-package-test/:bind-7
+>    FAILED  use-package-test/:bind-8
+>    FAILED  use-package-test/:ensure-1
+>    FAILED  use-package-test/:ensure-10
+>    FAILED  use-package-test/:ensure-12
+>    FAILED  use-package-test/:ensure-13
+>    FAILED  use-package-test/:ensure-14
+>    FAILED  use-package-test/:ensure-15
+>    FAILED  use-package-test/:ensure-2
+>    FAILED  use-package-test/:ensure-3
+>    FAILED  use-package-test/:ensure-4
+>    FAILED  use-package-test/:ensure-7
+>    FAILED  use-package-test/:ensure-8
+>    FAILED  use-package-test/:ensure-9
+>    FAILED  use-package-test/:pin-1
+>    FAILED  use-package-test/:pin-2
+>    FAILED  use-package-test/:vc-1
+>    FAILED  use-package-test/:vc-2
+>    FAILED  use-package-test/:vc-3
+>    FAILED  use-package-test/:vc-4
+>    FAILED  use-package-test/:vc-5
+> --8<---------------cut here---------------end--------------->8---
+>
+> Best regards, Michael.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEBBAEWCgCpFiEEJaa7iN2bdkxrVUHCc4QJ9SDfkZAFAmqu8O0bFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyXxSAAAAAAC4AKGlzc3Vlci1mcHJAbm90YXRpb25z
+Lm9wZW5wZ3AuZmlmdGhob3JzZW1hbi5uZXQyNUE2QkI4OEREOUI3NjRDNkI1NTQx
+QzI3Mzg0MDlGNTIwREY5MTkwDxxzYW1AZ2VudG9vLm9yZwAKCRBzhAn1IN+RkMi4
+APoD4SIoJAKMFyIyxFHSn0dWrBmYjpxtO5Yx/pc0F7Jn7AD9FIDS6FvHcEzi/VlR
+6nmh+NldbEYA0yXl6bL4i01hYgA=
+=pVEz
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+From MAILER-DAEMON Sun Sep 20 00:44:40 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x89Pr-0002MR-Q7
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 00:44:39 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x89Po-0002MC-MB
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 00:44:36 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x89Pn-0007Q9-IN; Sun, 20 Sep 2026 00:44:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=zlaRwrgeKHmhEoct4FaTXTAl9kNvFYfz4WKQ+4n2Qqg=; b=CfT3OlJHg8s9
+ JBCi5TJe8tenBEOmepUKenEZKG8QTB9igwAljqOuusiEkfSyjZNd3jxS0rTZ1w7JGaSPi1V2ZmL8D
+ Od2tqha2visHn/8RkAzXcvOky1TaMP48yMmV0/s86lI/yBcQyEMSuYrYJuVmJZqUtn2rT0J8W5hau
+ ysvihXxsr+scBa5L4UfEDCk8I2IIWD6O1vUveeLwEzPoRQ1TwJskZHg75EWrv2tkair39MIdHYkXo
+ yyVydHpASHC9mrzjvFKc7RA2gP1GMtbHYd6tnYBF1qhE+GOKVJPU77U00WMriZVDteeZbicKCN7XM
+ 30WXXjaq57Ckp/4m0NofAQ==;
+Date: Sun, 20 Sep 2026 07:44:32 +0300
+Message-Id: <86cxu8h6q7.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Sam James <sam@gentoo.org>
+Cc: michael.albinus@gmx.de, emacs-devel@gnu.org,
+	monnier@iro.umontreal.ca
+In-Reply-To: <87ecepkmqa.fsf@gentoo.org> (message from Sam James on Sat, 19
+ Sep 2026 21:30:37 +0100)
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+ <87qzipqkha.fsf@gmx.de> <87ecepkmqa.fsf@gentoo.org>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 04:44:37 -0000
+
+> From: Sam James <sam@gentoo.org>
+> Cc: emacs-devel@gnu.org,  Stefan Monnier <monnier@iro.umontreal.ca>
+> Date: Sat, 19 Sep 2026 21:30:37 +0100
+> 
+> Michael Albinus <michael.albinus@gmx.de> writes:
+> 
+> > Stefan Monnier via Mailing list for Emacs changes <emacs-diffs@gnu.org>
+> > writes:
+> >
+> > Hi Stefan,
+> >
+> >>     use-package-ensure.el: Don't install during compilation (bug#81710)
+> >>     
+> >>     Introduce a new var `use-package-ensure-install-during-compile`
+> >>     which defaults to refraining from installing the package during compilation,
+> >>     and arrange for the code to still behave correctly, i.e. make
+> >>     sure the macroexpanded code runs even if `use-package` is not yet
+> >>     loaded at run-time and make sure it usually does not require
+> >>     loading `package`.
+> >>     
+> >>     * lisp/use-package/use-package-ensure.el
+> >>     (use-package-ensure-install-during-compile): New var.
+> >>     (use-package-pin-package): Don't `package-initialize` so eagerly.
+> >>     (use-package-handler/:pin): Inline most of `use-package-pin-package`
+> >>     and separate the part that can be done at macroexpansion time to reduce
+> >>     what remains at run-time.  Make sure the run-time does not load `package`.
+> >>     Obey `use-package-ensure-install-during-compile`.
+> >>     (use-package-ensure-elpa): Add autoload cookie.  Load `package`
+> >>     less eagerly.
+> >>     (use-package-handler/:ensure):
+> >>     Obey `use-package-ensure-install-during-compile` and optimize the
+> >>     default case.
+> >>     
+> >>     * lisp/use-package/use-package-core.el (use-package-handler/:vc)
+> >>     Obey `use-package-ensure-install-during-compile`.
+> >
+> > This breaks use-package-tests.el:
+> 
+> I see the same, I filed https://bugs.gnu.org/81898 before seeing this report.
+
+Stefan explicitly warned that this will happen, and that he is working
+on fixing this.  So please wait until he says he's done.
+
+
+From MAILER-DAEMON Sun Sep 20 00:57:21 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x89c7-0004Gv-J4
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 00:57:21 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <sam@gentoo.org>) id 1x89c2-0004ET-2l
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 00:57:14 -0400
+Received: from woodpecker.gentoo.org ([2001:470:ea4a:1:5054:ff:fec7:86e4]
+ helo=smtp.gentoo.org)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_CHACHA20_POLY1305:256)
+ (Exim 4.90_1) (envelope-from <sam@gentoo.org>)
+ id 1x89c0-0008WK-5W; Sun, 20 Sep 2026 00:57:13 -0400
+Received: from mop.sam.mop
+ (c.1.a.0.0.0.0.0.0.0.0.0.0.0.0.0.a.5.c.d.c.d.9.1.0.b.8.0.1.0.0.2.ip6.arpa
+ [IPv6:2001:8b0:19dc:dc5a::a1c])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (No client certificate requested) (Authenticated sender: sam)
+ by smtp.gentoo.org (Postfix) with ESMTPSA id 170F6341291;
+ Sun, 20 Sep 2026 04:57:07 +0000 (UTC)
+From: Sam James <sam@gentoo.org>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: michael.albinus@gmx.de,  emacs-devel@gnu.org,  monnier@iro.umontreal.ca
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+In-Reply-To: <86cxu8h6q7.fsf@gnu.org>
+Organization: Gentoo
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+ <87qzipqkha.fsf@gmx.de> <87ecepkmqa.fsf@gentoo.org>
+ <86cxu8h6q7.fsf@gnu.org>
+User-Agent: mu4e 1.14.3; emacs 32.0.50
+Date: Sun, 20 Sep 2026 05:57:02 +0100
+Message-ID: <87fqz4jza9.fsf@gentoo.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Received-SPF: pass client-ip=2001:470:ea4a:1:5054:ff:fec7:86e4;
+ envelope-from=sam@gentoo.org; helo=smtp.gentoo.org
+X-Spam_score_int: -41
+X-Spam_score: -4.2
+X-Spam_bar: ----
+X-Spam_report: (-4.2 / 5.0 requ) BAYES_00=-1.9, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 04:57:14 -0000
+
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Sam James <sam@gentoo.org>
+>> Cc: emacs-devel@gnu.org,  Stefan Monnier <monnier@iro.umontreal.ca>
+>> Date: Sat, 19 Sep 2026 21:30:37 +0100
+>>=20
+>> Michael Albinus <michael.albinus@gmx.de> writes:
+>>=20
+>> > Stefan Monnier via Mailing list for Emacs changes <emacs-diffs@gnu.org>
+>> > writes:
+>> >
+>> > Hi Stefan,
+>> >
+>> >>     use-package-ensure.el: Don't install during compilation (bug#8171=
+0)
+>> >>=20=20=20=20=20
+>> >>     Introduce a new var `use-package-ensure-install-during-compile`
+>> >>     which defaults to refraining from installing the package during c=
+ompilation,
+>> >>     and arrange for the code to still behave correctly, i.e. make
+>> >>     sure the macroexpanded code runs even if `use-package` is not yet
+>> >>     loaded at run-time and make sure it usually does not require
+>> >>     loading `package`.
+>> >>=20=20=20=20=20
+>> >>     * lisp/use-package/use-package-ensure.el
+>> >>     (use-package-ensure-install-during-compile): New var.
+>> >>     (use-package-pin-package): Don't `package-initialize` so eagerly.
+>> >>     (use-package-handler/:pin): Inline most of `use-package-pin-packa=
+ge`
+>> >>     and separate the part that can be done at macroexpansion time to =
+reduce
+>> >>     what remains at run-time.  Make sure the run-time does not load `=
+package`.
+>> >>     Obey `use-package-ensure-install-during-compile`.
+>> >>     (use-package-ensure-elpa): Add autoload cookie.  Load `package`
+>> >>     less eagerly.
+>> >>     (use-package-handler/:ensure):
+>> >>     Obey `use-package-ensure-install-during-compile` and optimize the
+>> >>     default case.
+>> >>=20=20=20=20=20
+>> >>     * lisp/use-package/use-package-core.el (use-package-handler/:vc)
+>> >>     Obey `use-package-ensure-install-during-compile`.
+>> >
+>> > This breaks use-package-tests.el:
+>>=20
+>> I see the same, I filed https://bugs.gnu.org/81898 before seeing this re=
+port.
+>
+> Stefan explicitly warned that this will happen, and that he is working
+> on fixing this.  So please wait until he says he's done.
+
+Sure, I didn't see him say that. But it's unfortunate to often have test
+failures after changes committed on master. I can't go through and dig
+to see whether someone said it was going to be expected or not every
+time, it's easier to just not run the tests (or not test master, which
+is more likely to be what I'd do).
+
+If it's known that the tests will be broken for now, they should be
+skipped or temporarily marked as failing instead.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEBBAEWCgCpFiEEJaa7iN2bdkxrVUHCc4QJ9SDfkZAFAmqvZ54bFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyXxSAAAAAAC4AKGlzc3Vlci1mcHJAbm90YXRpb25z
+Lm9wZW5wZ3AuZmlmdGhob3JzZW1hbi5uZXQyNUE2QkI4OEREOUI3NjRDNkI1NTQx
+QzI3Mzg0MDlGNTIwREY5MTkwDxxzYW1AZ2VudG9vLm9yZwAKCRBzhAn1IN+RkEzk
+AQDQYl9JtPjNlUhsNccWbcRlLd+Z4j01Frl7qaELbjUupwEA8PymYyGaa278hacK
+N9XvhDAH/IDvjHCVTCezqj31Wgc=
+=vdKc
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+From MAILER-DAEMON Sun Sep 20 01:42:01 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8AJM-000546-O7
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 01:42:00 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1x8AJG-00053o-8K
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 01:41:55 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1x8AJE-00049L-GH; Sun, 20 Sep 2026 01:41:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=wYausnurxeQs9JbMWeUEkK/5+1VMZx1OjMo6HEvaFd4=; b=cYR2BZGlG3iB
+ 0cZqUItc5LpeyZ4AUbmFAWbGWypxXoKwbeiJVnfHpfekrbLbEt3Oon8zSoZK9X7IGtw2kx12XW//g
+ IiAEMVQfdf/wXMA+oqj6ZLIl+tJMkgIB8p6S+MZT6b12aGT1F4ub/X0XPPD2bZJXutszqeuGUtTxn
+ 3IMGR58NEV5v/IWdtXRYZXtfSHm0/Pvma7Wis2y5xXUwnyQt0SQiAazyl4ZgHHk/T0yCFQDBuMTPu
+ WBnyhUgNAhHGoduPApnSJ9Y6nx3WPwW05AsUvNCNIOPimDjmrk1X7Ryett0glVUAsDnBFzXIKdyIB
+ 48pwQNeNGTHbJ6IL+3YWDA==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1x8AJ9-00G1XF-EX; Sun, 20 Sep 2026 01:41:48 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Cc: monnier@iro.umontreal.ca, bugs@gnu.support, yandros@gmail.com,
+ emacs-devel@gnu.org
+In-Reply-To: <8733v6gzae.fsf@web.de> (arne_bab@web.de)
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Reply-To: rms@gnu.org
+References: <86jyu4y0oy.fsf@sdf.org> <86mryw2ozt.fsf@sdf.org>
+ <87zf2w3vhh.fsf@posteo.net> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+Message-Id: <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+Date: Sun, 20 Sep 2026 01:41:47 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 05:41:55 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+The GNU Project can't tell you to accept, or not accept, any
+particular nonfree program.  (Or any particular free program.)  What
+is acceptable to you is your personal decision.  We don't have any say
+about that, so we don't need to discuss that here.  You don't need
+to ask the GNU Project for permission.  You don't need to ask at all.
+
+There are many ways you can use GNU Emacs to specify a program to run.
+Generally, they will run whatever program you tell them to run,
+whether free or not.  That sort of situation doesn't raise a moral
+issue in the development of GNU Emacs, because the choice of program
+to use comes explicitly, the user.
+
+The sort of decision which we are compelled to make, in the
+development of GNU Emacs (or any other program), is whether it will
+_implicitly_ lead users such as you to run some nonfree software --
+without your making an express decision to run that program.
+
+This moral issues arises in the situations where the choice of program
+is not made at the user's own spontaneous initiative.  For instance,
+situations where Emacs itself suggests running that program, perhaps
+by including it in a menu of suggested answers to some question.
+
+So our policy is that GNU Emacs does not invite the user onto a path
+that leads the user to run a nonfree program.  The choices Emacs
+suggests to you must not lead to that result.  If a choice would lead
+to that result, Emacs must not suggest that choice.
+
+If you specify a choice that GNU Emacs didn't suggest, that's different.
+Emacs should not try to control you.
+
+Emacs can suggest loading each of the packages in GNU ELPA and NonGNU
+ELPA.  So those packages should not lead the user to run any nonfree
+software.  That must be part of the criteria for having any particular
+package in our package archives.
+
+If the user, at per own initiative, gives a command to load a package
+that Emacs did not suggest, then Emacs obeys.
+
+
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
+From MAILER-DAEMON Sun Sep 20 02:11:33 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8Alx-0002Dg-Ll
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 02:11:33 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x8Alu-0002D2-Dd
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 02:11:30 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x8Als-000751-RZ
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 02:11:30 -0400
+Received: from pmg3.iro.umontreal.ca (localhost [127.0.0.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id 1D330440259;
+ Sun, 20 Sep 2026 02:11:27 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1789884685;
+ bh=XY6iGBIK5hsJAmd5VdTqM0VbmqbUAxmDxMUn58Qyz+Q=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=dLcDe5IfLAUSK5dLkgjszYX+27fe+vrrn0YJVxwho8NjHpJs1Ik/PVyjgf2TDoE9n
+ MlpipHXXT8enbCWpXzt7nVSxgBa+JarmUbCyHeqx1eiwIKcniT+sQmpNsoFHa4dRQL
+ an6WCNF9Qj03+ZPke7/lRr/JcI5USNZ/6Ccsi0aV5CTBedwGGMTeHY5xQjyKQ/CYq8
+ faQAlDA9ZHPCw8LAeTcD/bBbtCaUiuRcU1jVUdpNy5YmLbws+VGqUaiNMo9F9alUXa
+ zxPi5PL3aEdG7gyRe5sTugfqfttM59/dieFw7jBKIfGkQzNiPxwgvaALQ95bHrHe6Y
+ FMlZoh5HWchJw==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id D9811440213;
+ Sun, 20 Sep 2026 02:11:25 -0400 (EDT)
+Received: from alfajor (unknown [104.247.232.204])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 93936120B36;
+ Sun, 20 Sep 2026 02:11:25 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: "Paul W. Rankin" <rnkn@rnkn.xyz>
+Cc: emacs-devel@gnu.org
+Subject: Re: [nongnu] elpa/age 6b1528c9e5 1/2: Use
+ custom-initialize-after-file-load with age-encryption-mode
+In-Reply-To: <20260919200224.80F70C0EFF5@vcs2.savannah.gnu.org>
+Message-ID: <jwvbj9sqx1w.fsf-monnier+emacs@gnu.org>
+References: <178984814417.3758.7534807867886597143@vcs2.savannah.gnu.org>
+ <20260919200224.80F70C0EFF5@vcs2.savannah.gnu.org>
+Date: Sun, 20 Sep 2026 02:11:23 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.062 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 06:11:30 -0000
+
+> branch: elpa/age
+> commit 6b1528c9e5d63725c801bab783c51280bf1dd973
+> Author: Paul W. Rankin <rnkn@rnkn.xyz>
+> Commit: Paul W. Rankin <rnkn@rnkn.xyz>
+>
+>     Use custom-initialize-after-file-load with age-encryption-mode
+>     
+>     This is needed otherwise the package autoloads will defvar
+>     age-encryption-mode to nil with the default setter of
+>     custom-initialize-default, which only initializes a defcustom if the
+>     value is void (but it is nil).
+
+Hmm... I don't understand the scenario where the problem you describe
+would occur: why would you need to initialize this defcustom when it's nil.
+AFAIK not calling the function gives you the same state as calling the
+setter, when the initial value is nil.
+
+>     This approach mirrors that of the definition of auto-encryption-mode
+>     in epa-hook.el.
+
+`auto-encryption-mode` needs `custom-initialize-after-file-load` because
+its `:init-value` is non-nil (not calling the function does not give you
+the same state as calling the setter, when the initial value is t),
+which isn't the case of `age-encryption-mode`, AFAICT.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Sun Sep 20 02:16:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8Aqj-0004No-8z
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 02:16:29 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x8Aqf-0004MO-PX
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 02:16:27 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x8Aqc-0007Qp-Bu
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 02:16:24 -0400
+Received: from pmg1.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg1.iro.umontreal.ca (Proxmox) with ESMTP id 91C88100206;
+ Sun, 20 Sep 2026 02:16:21 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1789884976;
+ bh=pjzazDS4lCI5p+rfT9ivOPoRHQjAtGeCYWOOLfIAoBM=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=Hk+TBjUeRzggt94x7DJd8DHCJBH/4n9k6mooiZIHkrv26MZL+HA/he8IcsMash1kh
+ 531IAXlAeKXRS/rt4V13DpFr32GNYL3ZlzVPZT96UdqCLRiuW4nfmVLh5tlCMm6xnl
+ 5y6cq/bZhPJpCaKQ7Xv0Lr4NT5a2xe8RLbZO1Jnh/wZTntJJ7SqyUxx+LXLcz5vOYf
+ k43YGhrfz3s3qKcYJiBa0RDS4021STQNBEN5pArfDVz3o56gnPGWPWXSa8U264I87X
+ UK+XTpqfI+It1SXxwwAI9Lobum0trHQQv8cx9YNLWWrHZgoTayiDvkeDji+vxSZx6I
+ mEwQoimx8aO6Q==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg1.iro.umontreal.ca (Proxmox) with ESMTP id 69C3510015B;
+ Sun, 20 Sep 2026 02:16:16 -0400 (EDT)
+Received: from alfajor (unknown [104.247.232.204])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 38C2D120B31;
+ Sun, 20 Sep 2026 02:16:16 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Michael Albinus <michael.albinus@gmx.de>
+Cc: emacs-devel@gnu.org
+Subject: Re: master 0b01ea4fc22: use-package-ensure.el: Don't install during
+ compilation (bug#81710)
+In-Reply-To: <87qzipqkha.fsf@gmx.de>
+Message-ID: <jwv5x00qwgz.fsf-monnier+emacs@gnu.org>
+References: <178983093870.12054.6093745289561560991@vcs2.savannah.gnu.org>
+ <20260919151539.A6661C0EFF5@vcs2.savannah.gnu.org>
+ <87qzipqkha.fsf@gmx.de>
+Date: Sun, 20 Sep 2026 02:16:14 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.096 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 06:16:27 -0000
+
+> This breaks use-package-tests.el:
+
+Should be fixed now.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Sun Sep 20 02:26:31 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8B0R-0007aV-3p
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 02:26:31 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x8B0O-0007aI-22
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 02:26:28 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1x8B0L-0008SN-AI; Sun, 20 Sep 2026 02:26:27 -0400
+Received: from pmg2.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 44EA580976;
+ Sun, 20 Sep 2026 02:26:23 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1789885582;
+ bh=5mRSLM9hwIX0rik749l9vdi1zA90PtCqQDY10tlCD8w=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=XGoWntUz/K2WAgnBaOtceYOlWvY/tfGqg54HjYZ++kRXeWaUHt7ITIPi0rSaVZCFg
+ sWNLe/DtWD7M7rw9D6VSat3CVV/a64fEG1H6gnb04n1Ki+EQkjs5H/grIjZK6fecAA
+ pKsjZSuNs08AcQ57G+SVANb9yL9uA5SPC0yiLA51sINOvFAdjsQSmCv3xhg0uW0ATX
+ Jey+5flEsxhgORhDiS4qq9VCIemCPUNiOXkYo6CJOinhJ5vfd9GDP9/aUv+pxdELks
+ BrnVhLgtoYJrfwZbMxRKOASazMGJAq01/ggcLnX7G2xbwhck0tfp3pg1KGTZY7IQlV
+ ruTIBXXvIG9KQ==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 55BAA807C4;
+ Sun, 20 Sep 2026 02:26:22 -0400 (EDT)
+Received: from alfajor (unknown [104.247.232.204])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 1408C120372;
+ Sun, 20 Sep 2026 02:26:22 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: rms@gnu.org
+Cc: "Dr. Arne Babenhauserheide" <arne_bab@web.de>,  bugs@gnu.support,
+ yandros@gmail.com,  emacs-devel@gnu.org
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+In-Reply-To: <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+Message-ID: <jwvzexcphsh.fsf-monnier+emacs@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+Date: Sun, 20 Sep 2026 02:26:20 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.105 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 06:26:29 -0000
+
+These are very general statements and guidelines with which I assume we
+all agree already.  The question is how they end up applying to the case
+of:
+
+- An ELisp package that uses `yt-dlp` to view videos from the web.
+- An ELisp package that uses Ghostscript to view PDF/PS files.
+
+AFAIK, in both cases the end user is the one that tells the package what
+to view, and for some of those choices yt-dlp or Ghostscript will end up
+running proprietary code.  AFAICT the users are not less aware of the
+need to run proprietary code when they ask yt-dpl to view a YT video,
+than when they ask Ghostscript to render an arbitrary PDF/PS downloaded
+from the web.
+
+For that reason, I think the video-viewing software is just as eligible
+to be hosted in GNU ELPA as `doc-view.el` (which is not in GNU ELPA but
+is bundled with Emacs instead).
+
+
+=== Stefan
+
+
+Richard Stallman [2026-09-20 01:41:47] wrote:
+> The GNU Project can't tell you to accept, or not accept, any
+> particular nonfree program.  (Or any particular free program.)  What
+> is acceptable to you is your personal decision.  We don't have any say
+> about that, so we don't need to discuss that here.  You don't need
+> to ask the GNU Project for permission.  You don't need to ask at all.
+>
+> There are many ways you can use GNU Emacs to specify a program to run.
+> Generally, they will run whatever program you tell them to run,
+> whether free or not.  That sort of situation doesn't raise a moral
+> issue in the development of GNU Emacs, because the choice of program
+> to use comes explicitly, the user.
+>
+> The sort of decision which we are compelled to make, in the
+> development of GNU Emacs (or any other program), is whether it will
+> _implicitly_ lead users such as you to run some nonfree software --
+> without your making an express decision to run that program.
+>
+> This moral issues arises in the situations where the choice of program
+> is not made at the user's own spontaneous initiative.  For instance,
+> situations where Emacs itself suggests running that program, perhaps
+> by including it in a menu of suggested answers to some question.
+>
+> So our policy is that GNU Emacs does not invite the user onto a path
+> that leads the user to run a nonfree program.  The choices Emacs
+> suggests to you must not lead to that result.  If a choice would lead
+> to that result, Emacs must not suggest that choice.
+>
+> If you specify a choice that GNU Emacs didn't suggest, that's different.
+> Emacs should not try to control you.
+>
+> Emacs can suggest loading each of the packages in GNU ELPA and NonGNU
+> ELPA.  So those packages should not lead the user to run any nonfree
+> software.  That must be part of the criteria for having any particular
+> package in our package archives.
+>
+> If the user, at per own initiative, gives a command to load a package
+> that Emacs did not suggest, then Emacs obeys.
+
+
+
+From MAILER-DAEMON Sun Sep 20 03:35:01 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8C4i-0000ZK-Mu
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 03:35:00 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rnkn@rnkn.xyz>) id 1x8Bgg-000514-Fu
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 03:10:12 -0400
+Received: from mout-p-202.mailbox.org ([80.241.56.172])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rnkn@rnkn.xyz>) id 1x8Bge-0005P2-P3
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 03:10:10 -0400
+Received: from smtp102.mailbox.org (smtp102.mailbox.org
+ [IPv6:2001:67c:2050:b231:465::102])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (No client certificate requested)
+ by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4hnctx1Ny1zMlGG;
+ Sun, 20 Sep 2026 09:10:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rnkn.xyz; s=MBO0001;
+ t=1789888201;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=h03/BvMcTPdvcJdwurTJlhex9ehj/ZEkP2aPMK7iV8A=;
+ b=V2+d1ASD/nVoEsG5lb+fm1Gh6cysonk9bF2gN9D5yFy1VzmtacAqVd3vN2Sjac1UVRFaOL
+ uikexJlXEIq5VI11pdLUSRklOXagsBQThYIgurvRrtgdVi7ZgByeEIHc7kV7+svqU4h9IA
+ Jtu9s/gPGuc/C/DWRrP7ijr+wWxcKQT1D3kg11LJVi6Y1fLn3jnsoo6cojK+gFoPLABPWY
+ audYg8/9P1F304rhEsMvTSaSJnEfTOVceZ52CL/25yqsvcP3amVzHsYnvKC9JRrmprA9qn
+ ULVZgwsI/e4iU46+P+vOy4w2ckpE5kaqnSyWcMsWy3TG08J0fF3X3wg5co3FIg==
+Authentication-Results: outgoing_mbo_mout; dkim=none;
+ spf=pass (outgoing_mbo_mout: domain of rnkn@rnkn.xyz designates
+ 2001:67c:2050:b231:465::102 as permitted sender) smtp.mailfrom=rnkn@rnkn.xyz
+Date: Sun, 20 Sep 2026 17:09:59 +1000 (AEST)
+From: "Paul W. Rankin" <rnkn@rnkn.xyz>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+Message-ID: <68798940.213123.1789888199841@app.mailbox.org>
+In-Reply-To: <jwvbj9sqx1w.fsf-monnier+emacs@gnu.org>
+References: <178984814417.3758.7534807867886597143@vcs2.savannah.gnu.org>
+ <20260919200224.80F70C0EFF5@vcs2.savannah.gnu.org>
+ <jwvbj9sqx1w.fsf-monnier+emacs@gnu.org>
+Subject: Re: [nongnu] elpa/age 6b1528c9e5 1/2: Use
+ custom-initialize-after-file-load with age-encryption-mode
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Rspamd-Queue-Id: 4hnctx1Ny1zMlGG
+Received-SPF: pass client-ip=80.241.56.172; envelope-from=rnkn@rnkn.xyz;
+ helo=mout-p-202.mailbox.org
+X-Spam_score_int: -22
+X-Spam_score: -2.3
+X-Spam_bar: --
+X-Spam_report: (-2.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ FROM_SUSPICIOUS_NTLD=0.5, RCVD_IN_DNSWL_LOW=-0.7, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001, T_PDS_OTHER_BAD_TLD=0.01 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Sun, 20 Sep 2026 03:34:58 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 07:10:15 -0000
+
+Hi Stefan,
+
+Could you test your hypothesis this please?
+
+Thanks,
+
+--
+Paul W. Rankin
+https://rnkn.xyz
+
+> On 20/09/2026 4:11 PM AEST Stefan Monnier <monnier@iro.umontreal.ca> wrote:
+> 
+>  
+> > branch: elpa/age
+> > commit 6b1528c9e5d63725c801bab783c51280bf1dd973
+> > Author: Paul W. Rankin <rnkn@rnkn.xyz>
+> > Commit: Paul W. Rankin <rnkn@rnkn.xyz>
+> >
+> >     Use custom-initialize-after-file-load with age-encryption-mode
+> >     
+> >     This is needed otherwise the package autoloads will defvar
+> >     age-encryption-mode to nil with the default setter of
+> >     custom-initialize-default, which only initializes a defcustom if the
+> >     value is void (but it is nil).
+> 
+> Hmm... I don't understand the scenario where the problem you describe
+> would occur: why would you need to initialize this defcustom when it's nil.
+> AFAIK not calling the function gives you the same state as calling the
+> setter, when the initial value is nil.
+> 
+> >     This approach mirrors that of the definition of auto-encryption-mode
+> >     in epa-hook.el.
+> 
+> `auto-encryption-mode` needs `custom-initialize-after-file-load` because
+> its `:init-value` is non-nil (not calling the function does not give you
+> the same state as calling the setter, when the initial value is t),
+> which isn't the case of `age-encryption-mode`, AFAICT.
+> 
+> 
+> === Stefan
+
+
+From MAILER-DAEMON Sun Sep 20 03:42:09 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8CBV-0001hY-0c
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 03:42:05 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x8CBL-0001h9-KW
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 03:41:51 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x8CBK-0001Iw-5y; Sun, 20 Sep 2026 03:41:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=frq7hK5G8C8PCZ3O2ae31uQdXWSJrPAk0s0rVgT3Uus=; b=nuhw+jzMw7dn
+ HeLXB+8DUjXqRZPmlH6zB2B4CTgcLGeUAQHSBoSGIjCc2Rapp2ex4887Rfd+uBhuggI+XjVb1EiCX
+ YnfXa1g15sSjuqpbv8prmUrWukayxR6O/3bdiuZQgLKQFBmtPMI4LejiF6muL+Wq1Efj+9GBOx5ds
+ QUXZuabPxF/d9XlEV16WUOkISaCTwwitiD1ywCzwhZP+d3Q5W5IkU22Ngc/C1qmPAA2FN+IMW0ne/
+ KKFqGKkZon+eDhoDVrV4mK0mLB928/qZ0O2RYawCVRicgLIr3hz8NfgTERuNHmTsPJWHN6nsarPm+
+ 7sTyFwYzGwa5/5RfTnUaSA==;
+Date: Sun, 20 Sep 2026 10:41:40 +0300
+Message-Id: <867bkggyiz.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: rms@gnu.org
+Cc: arne_bab@web.de, monnier@iro.umontreal.ca, bugs@gnu.support,
+ yandros@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> (message from Richard
+ Stallman on Sun, 20 Sep 2026 01:41:47 -0400)
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+References: <86jyu4y0oy.fsf@sdf.org> <86mryw2ozt.fsf@sdf.org>
+ <87zf2w3vhh.fsf@posteo.net> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 07:41:52 -0000
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: monnier@iro.umontreal.ca, bugs@gnu.support, yandros@gmail.com,
+>  emacs-devel@gnu.org
+> Date: Sun, 20 Sep 2026 01:41:47 -0400
+> 
+> The sort of decision which we are compelled to make, in the
+> development of GNU Emacs (or any other program), is whether it will
+> _implicitly_ lead users such as you to run some nonfree software --
+> without your making an express decision to run that program.
+
+Agreed.
+
+However, configuring programs and sites that Emacs runs or connects to
+constitutes an express decision of the user.  So if Emacs connects to
+a site or runs a program which are themselves free, and that site or
+program can be configured to connect or run non-free sites/programs
+(in addition to free ones), it's the user's decision how to configure,
+and should not be considered "implicitly leading" users to non-free
+sites or programs.
+
+> So our policy is that GNU Emacs does not invite the user onto a path
+> that leads the user to run a nonfree program.  The choices Emacs
+> suggests to you must not lead to that result.  If a choice would lead
+> to that result, Emacs must not suggest that choice.
+
+Right.
+
+> If the user, at per own initiative, gives a command to load a package
+> that Emacs did not suggest, then Emacs obeys.
+
+Yes.  And similarly if the user configures programs or sites which
+Emacs uses and connects to in a way that runs or connects to non-free
+software.
+
+
+From MAILER-DAEMON Sun Sep 20 04:44:35 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8DA3-0007mH-PU
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 04:44:35 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>) id 1x8DA1-0007m8-S7
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 04:44:34 -0400
+Received: from mout.web.de ([212.227.15.14])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>)
+ id 1x8D9z-00060H-VY; Sun, 20 Sep 2026 04:44:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+ s=s29768273; t=1789893868; x=1790498668; i=arne_bab@web.de;
+ bh=yRS5f5SsJbIc1hvp5tuNyWlgrCUSOuMxm+ByTom9REI=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:cc:content-transfer-encoding:
+ content-type:date:from:message-id:mime-version:reply-to:subject:
+ to;
+ b=NsqkSBfN9j21mqErfEonGKQjxLV3yLOMOiEgsnNN0hGTq1jzwLfKjTlkP2gl4Wct
+ MImr3IHXZwgiGG6bFH/bzbSdn/d7Ux995SQLAZPLxmbCNXr1NwxVkyQv4/PR8t7PK
+ QbRfMB8I4C+qaEaq0RKX5wy7gWy//nAonTHoQblRczaQ+PuNByy/ds7P2bwKhURUV
+ aXSbQISbiJVHABfEjGig7Tt2hDbBvVNFlq2RvQ8ExoLdjB4xcYUDrBRFa9MQzDPxy
+ 0L61Evuz5c+SnUWJi85ycwUK7S8WWu1DYLDR01eJfQ6I8UKSBrI/i7nQPg5ueLMSc
+ J3o7Qm1KsTy4SQ2/GA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MDdy7-1wxWJA37sF-002mKG; Sun, 20
+ Sep 2026 10:44:27 +0200
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+To: Richard Stallman <rms@gnu.org>
+Cc: Eli Zaretskii <eliz@gnu.org>,  public@thanosapollo.org, emacs-devel@gnu.org
+Subject: Re: [NonGNU] new: hermes
+In-Reply-To: <E1x7XRP-002RVS-V0@fencepost.gnu.org> (Richard Stallman's message
+ of "Fri, 18 Sep 2026 08:11:43 -0400")
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org>
+User-Agent: mu4e 1.14.3; emacs 30.2
+Date: Sun, 20 Sep 2026 10:44:26 +0200
+Message-ID: <8733v4e2hh.fsf@web.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Provags-ID: V03:K1:cxCPdAFyzyBer6xhs2Hao43sfDLJQuFDw0pKJXsmm8r8dBr4EFE
+ ahKb9PtKpJ/w8jAXftlHmv3qQr4yQC7pT4TDs/IDR4yQgj8dX5MUpBJJEJDXaHlGlXlkLW3
+ M9E3uMD3Z1CjUeEheRv+Q7lIkGVMJeGvoxtYdu3sknUHGX2fOveuJl7qhml3r4ZGk4Jxv6o
+ x4/z9YwknCTLqSKXreI+Q==
+UI-OutboundReport: notjunk:1;M01:P0:Vc1Iihc5/6k=;i44y+4MVpOl2Z50C9T4IgfqdYe6
+ 5KGS3bprGhjAIwcEI1/OWWfeA2eJ40D+l/4jWqNoFW5AZWMjKIazJvyRy2Zp+6ynzd6pXY2W1
+ ejLORusVrOxSOChiCRmlhDhWr3eGtMnqZqzzL7bAfleDMhefHdAIVfFJkh7M53bMA4M+elFWl
+ 8csis2Pe6+pO2HbSbrMfUFcR0g5GFuxJYzbmBZcEROLj4stNiD/K5akZfwyue45lTfwtzb5Td
+ 3mjwqrwZdSIUUYGj9DTrIeA2JB5/h5wmFT21yrG7P7i2LSsrke7YD5NlI6x+UgDtHi5qoEJh5
+ sRxQAtQMZN6Vl/iSip2Eu617ZGWt50lIkDlp0crWu4vINq2eo9+nkjXf4xbcsqlyZi3ZMOumM
+ pumKHDB4uwtIBDv1b4zz0GjP3gWhrlIqAc5LZ6dFvcbYE39HUiDxUBvwSZuozrtwwK7M4Qyq8
+ bYtwaAcbhQDoiF9ujxDfT0+AP2r1n5+yzBLUQ0KZpPm57kAUA2KQ4LSKFPRBL4oK/QVR6o6TO
+ UBe8CWXxMcrjo6K21oiARi8Q4oc+mu8sr+ibD/+AP5bNiOD54MlClHu3Jo92V9XDCXj8hW+Am
+ tjNhtBwxP/0sMCX/hN7RFvnfErhOgH4JkAT6ttZ7tvvPXkmFuisPFpbR+ZHfEthUtiqnPaXWK
+ o7U0V9V1utLqSH5BSxEsm7VHYjcC84mWN9anzHeqQoAhCXd+v+rVs2T9y5JVuEi06ICusUwhl
+ MYy2nBaAC9CEexaEVYcBIkwd47b8/9wetr0rkVSoK+qzOT8yFEbi7RNWv45499mXr309G1iKe
+ 6Bow2eAMUNpR98bPdg4T6fU0ctaoPCGng32QuXT8f7SSZDtqAJQNFcW+VoRGBAr9CFxL782LQ
+ naXKRCOIPBDVJs2Ct2L5V78xI9JNLbwCUAAaEi9OVcudlUNqiQyp4HyQUgd0F16PmN5kpMI8m
+ xH5fJSDy02pzIsOkI64ORV2rWQXY+1tS+nnQsj3Jq+FqObHraQ1ZZ1i5WX2T0mQYFfYOZ7qXg
+ Oxw6N9DR9UFS3mihNPxDgXtqhjF3yVsCkNkCICG2J/7+G1K6XUSfGbf3ZRvBNIH7XPluVwHSr
+ h7VATI1BC2wDHyC8iaORpFjyXkxvKqt+EcE1oKPtV3kEuTj3nG9jqawcetqCEZNzc+hH+45mX
+ MciEBTvtc5HJMFsIE7kDUKiKtFDKAWZ1m9xAUlQb6DIGZ7Q20mrwJtnXTNW4Vde8IMN8wosiK
+ KNqbWj3WLOBRLkpUo9pPc7hcaoXKEHIfSqKt+4knSmuqjiKXMT9S2YzNT/Uqh38w9tNX3K5MF
+ 86rK7I5rxcGRn3lJ6UuIxzgN9392J9BI2gh2m6opmMr/aiVg7AXRG48M35sdXS9gNKm7m8rMo
+ cVWNjyrr1a73gkDYECBnGQ6SrslqqdrGh05J01tsU8KouqLcdl1MSsJ0VpXhoxq1NMlkvUu16
+ /ZqDo4l5opE5PjdDlfJ+z/42KLg+c+fHO9OVxFy4F8UOrNWHyB1zOdv5zS2U5YbxipGWk9SwI
+ lC9Dj3aNXCRrpKRO5/Voc+tWnBAJkoomTNMNExZk/9tuJfQjEx9YZKaS9cp4XwNuLZjvNjE3e
+ 9Qqm6h69bqzWZA+yAg//sdhXRfwe1haEcjvA6EdrmOFS7/TeTuS4tkK1U1ExplFl9541yia9V
+ RC3OeaUoUcSGFaM7JLzH0GQQzRG8CGvJfyXmyjTn9AQMczhSOUGbpqC/Xh/tE6mKR4d5TDeBO
+ b8wjYhnuvj7QBYG23rKS16gBh+K0iDU3pElOj1MvVSKoP8FJ3ekw6kuWMyWQFHKoOHGnWqcda
+ rv5hMxwN5oD3XhhAR/+aFyDk8Z8XZBtEQCiLglD46nkN5i3gV3EKKNnCNNWlOj3hCwrerdQaS
+ GBUxBJb4gNj5aX69hoH392pJvN69PKUSyHn0awSH1OHNEMy48Veyeh+B6m5ow/lO21UWEDxWA
+ 0guWt396sdwDjJaaNGdZepi23+v5JuNkWRpsibEPG5aHfvwXmHEzX/iRcjmpOdQ8Eg372R1vk
+ HWOruWaAPeGomUM/sMXSZYiLHBN2LllXt0ZgudkxZ+bAYgy9H8shcHMZq3e5ZAZnWZ7Srmi5c
+ SXY//P/nmRAIcf+paDVDY/j7cDH1VRX1gJ/Lm0sk1TrPK7rxNzIaJnNEJqCTNm3g9O0hv7moq
+ TQeG1JIL71ZRupTxsX5nZ+G1XciAQCU4KpOycmi6zmiJu3lbIpGVG0lXmkfg72pAt67zmgvHP
+ wcm9wg6hiCCjr3sPEHT/3x0BvuHMchyEjAnLM6BDwuGpaEmQl3UOFW3JbJq0OVsfR6lwp2qWQ
+ jrDcGahJYjQHGkA3AIMuEhb4rS4JgnSKBU72B3OBsKzfMcA7eGhWJU6XRabkmBBAMj/L/6dJc
+ ZUx3VCRA9Itw8Ax1wIR0/WsSUH4JGI7PDeAGHG30vViY16XbU/9aaB7hFILw246nt0+yS7iLf
+ IOo0J/SA/UsMgCzZzsvdC9Kc6KUd/M2wic5ul4j8W7Ool3L0UvJ0QMzWFH6TsT3fOY+MqFiFt
+ /eHXc9cTDK4rXStqIAwoKhgs/PIKhuIfmV69TgyubWUPYp0RGoGyz77/dy2jolDTMqt/L9J+M
+ wfewQCqydV3/AhrCSeSNhdVEtTFqfg8VVH1nLDb3ObLFYrLenU86e3BSZLCaqs9BsfCUFoCZd
+ 0gayN2/OsuV1acXuDsDwBNvMv3t8yacB1lU6erGD/XeFDEWw/xXSpK9tTPqy6EnhnBZVrF/sm
+ r9paiPyKrR1F7FN9J7lApdZEIfgS9cD7XrpFb95V8r37r5N5MMjoROs3vAuY3WTstLNQ7Xb9+
+ nJBYYb/llb7FtRgnag8V+LRqjrXWYoIk/aIRsC8D/EQUE7JtzCQ6YGYS4u6i6YBwa8tTEUtA7
+ 4aMB72TT30lJf1Z10ZZj/D0DQ9rtMavsYc09EWrqhkPGnKIYdV79snjRIRDBg5zLGMVqwLVeT
+ QZgYvbkbIzjQ3ya16C/EbhlMFF4OB3S22xOmLERPnyjVmQVCRsfzMaZ1vo2jAq8lAoyREtkhh
+ YszHRektCifk1dQwes4AZbgr2w3SdcQvzJOcuJTLUZylxJqsh7r1xNzOEhfOKit92lxLg/ZF+
+ e7nzxNQOthzmSwx3UOT2MUhCeKq77qyvqWXIAxMGO/07+ORSo0HAYhHtQsc4yXYoqOxS6Mn1k
+ 6VISknJ1mIY5pITwwHYzPWxrVTXWw1JPOFgbckQLkcHO3rueGSOOznlHb7nUAxV/7ldBTOl2d
+ aLr+X5ON6bxXKrENNr1SYxJ0G12si8k74+zIMcJA9DaEqCdvlFC1nMepZzL80R/XPVX8QJKag
+ SFgHTZxdlSLkRyCOD5XS/UsD4oPo751l0C//czbbut2DN1HmtUQPl8L8u/MM0vbjF6KOG/OJv
+ JqeE+nHGwjUUwF5WcTDkVlXhiDaZWUiF/7HwYOgcYrayHVVjSatfPnLK8aLj/XSOoo+3Q88Q1
+ mbiD3LT2kMZWprawnQDMDl+bj3LEvKItnOuEbn//uOjWvXeEaSMTem+Iz10X4cGe9f2bFHJfU
+ Zp5AfqKznlIzeJggZG16OgI//1JQ2kXYAFv/MpMtymY1nG7Nz/EFroXjUJQFukjb2GAKGsjbi
+ NwPjnxrxBM2suFhMnZy7XT10gSPNZHFfp1X4ZcYQi1uR5Zv6XH69+Drf8qyJskvCcsyAzmuLt
+ qJ5dpbNYae1dGbORtOc1nhEydI+mweQ1X/Js4f8yHDSKXzaWwTeLFguZz1gnx2wBNa9vEEOH7
+ lj3/syO0Glq+TaJIKucSC81EqzOBY+6ylLq0FbD+tMWWky2CjwGLUN8Kt8qRPNknHp5FCAC/T
+ pSt6zSNS4/A7hqFwrq1OirY1xBe5WDs5QQB68xy4im2PnT4spO1Wc1N7/TM6i2B1OSlpvdQwU
+ eQz6flLhZ1Ta90ffAAyUF1HM2f4VFvtT7YuNEIHxxDZt9Oe5NTLMjblmXtgy46FJeVcg1dfts
+ lHJBMIEC5/BgpdupY2kdjRlT+JMIHu1J+xtHtT+Oz1ZjJOoCy0XG1E1dnHsKFc96p2R8lbg1R
+ VwTYpTZQMo8daTG/uKcOANim/mIkACUAD5b+5kc0e0QMyQqMxMxG9yJzUg/z86rak5qNiYd7a
+ NhrETxzd+ZBmdI9xkw73N0S9br5Aeur37qhiLJ4BE3euNoesnejsxv9GILqARiZXwzE497J9F
+ Sns5dJAAUTqEJKAN+ZVAC2jYCFXDDC9rhaSTnlELGwSVJ51vuRrQY4A2cos97qaqQxtudScbA
+ bFwisA7RHWEOK5KyI6cWxmIx8sqwCi+IYeWiYrkIQLggaGQhcSHm2pUG73IJrtaxWsyImaDix
+ r93GCN2uMHsQtNdISN3/BA01t1kIw1xgr99TQxHIAi2NerN4zCpCD/dzq98QwpN3T88B5AsT1
+ eLsxxBrOEpFz3vGeh899zdm25zZi7R9Qmtgv4k4qmR78Kh2hEEu5YXWsXGWFFxcqWf3n0+GyS
+ MLv7Jj6f9GB8kmFlj2ezQLO6dwNV6PlXL3kQRbgLKtGNR9L9m7jgK2JTza/VWMVmVeU/oAQGk
+ iR7oDWznBKvV9MQVKcs4M6ItCptzpSEp9diymMORgUXVepKL6EHRT49UmMaUGH0TbQY96+zYj
+ Linj1cA8GXeyfpX+CAb6TOzHoJrzDvQ7Q46bZLZq/oXHLE43I4Vgjqn6N7qZX7BM71hzwgVvu
+ tKDPbfh5cTGbd1InUh/Fzj0SJinefOIpQ3HqM1CZ1FEW3RqNWoLoxnGJ2MJlELlaYNL9Oo50S
+ Udbx4lsg0m/G+pM9C+4BxRdB0ERcd6R58dcNRWtK3wsHKCRAZkn9ZoHSIWowCTe1k7XqyuZvK
+ ylJbtOS38KcmBmmaVMZvzi2E2uAL5Knh3gJTWNPzXvQhjP2SMxHEmYwP10QnTSOc5JuS+wm5q
+ BtLV3ZLs3tcElcjpiMHZUqbNzVhaRt9taWaVSCwxwXh5opXmPGFy5EWzt4gdWQbRjQWzta3gv
+ Ff6JjF9HvVYFeKku/pcBTenSEgQV7dwMFd+lh36VYB0cXH/zTmAxFFFBTl5a9Vq4y57w8Pjqh
+ L6mZ/SFBPE49u5gOtDnThB1rS+0z1k1SaX2f/9CQvi7Fx7ygcpK564EwM0wQaevr50DzAkpcU
+ jF6M7nI+UWOgzyGVOil/NfMMJH2A5VJNHUXHOLPG9ayqjMIYVrLQTZfmj0c2FsYo/q6MmWLRV
+ QFAjOAmJ7kD7wOO3RwAsDjPGa94QwQSaXkkRqxN9uit5G5HeKMRStBS5jfcQt1VnEk12nSZO0
+ wwsYGmgVz34MOBF2KmLhhh0DXohhFM5gz32na69D9S28cZF3ABIW2tb8pJ30kwDPLAFQa8oB0
+ 5k1pr3RN3qVP/XDe2Ci2JaU6hi9eoABdrcHLtZ0rL+KCGZtPn5IFgDTEpW75IX8gcZeyBoVyD
+ obdTdNfw5m54Sax2L6Je3kNDALnWOjmx7X3twpunRsRi9FSuwbh4d3UZ4wY1meXOVZS2alYS2
+ eK+mw/c2bR2UnZLQvyemG6yzvdVnBHOdbwOZBeaPCuoxXQqpWqPk6nxAk7hS6kCFH87REOqcw
+ Tem3m6I/oVrPkcqXJs8Vz4Xjf/UfP4aGe2jBMw0h25oCMHSYZAu2g7AuTmiCOiRVE+7wUPY18
+ Nl8cWf/SGooSWQRnpnlwV9Ux6HsZfY8wuhbxBnjv3iGzQ5LNKCylqp1/YXyfwChKllx2x0rtH
+ B4zVDoxuVfPkLdZbqt05k3PAetBgGa5vPfgEFXpkE2rbpKraYRjXBrrGXeDNhSI7XVJP/ehzG
+ Jt+ulW9SQYLBQ/RKvrjyNDKIrnAEc3vAGPLmLy0BfLyhycOYJHThpKjGP90sAcuwae0LOu3la
+ 3HCEsWl/rELg62E4xHCQqwC9I1+6frQQyqroh8J1pRrTDeOAPIqgBUNDvf6M7bctAL8vBidY+
+ rze+kIB5qZPFf1v1wKHRnY4eRyjEt4OvEXRBKqJYaYsBtHnqBV1hipu47zgY9gMxjm05VUaiu
+ xnWU5AaWLBxoRVqdZHQeqyXe15aTxSDjH8/k2UOCz3lhCac8UcJhMmC+J+rr/Ej1UMXAd0bAv
+ 4sAgIMaCkBieOF+Z5kn0DgzrZGEiyMJvYCKm1o/PlI5E5oWQGZIoJH+c47RWTxnXOB9Mghjmk
+ LRNRtdHIH/NlHm4AfOTCwj6mmtQLBNoB9BBojqaznaoWX5v0ITVtplddxwKNOj8fRxmKg3ZQK
+ MOJ6eKhr5eHHkugdwp5SCm8ce7WqzjbH/ZOX/ytw8uH43nPDeD8TA==
+Received-SPF: pass client-ip=212.227.15.14; envelope-from=arne_bab@web.de;
+ helo=mout.web.de
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_LOW=-0.7, RCVD_IN_MSPIKE_H4=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 08:44:34 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Richard Stallman <rms@gnu.org> writes:
+
+> Arne wrote:
+>
+>   > Thanos's implicit argument is:
+
+Just a small correction: this is not what I wrote, but what Jean wrote.
+
+There seems to have been a mixup in the multiple levels on quoting.
+
+Best wishes,
+Arne
+=2D-=20
+Unpolitisch sein
+hei=C3=9Ft politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJgBAEBCABKFiEE801qEjXQSQPNItXAE++NRSQDw+sFAmqvnOobFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyEBxhcm5lX2JhYkB3ZWIuZGUACgkQE++NRSQDw+uP
+uQ//e0BpXAU7ZPnjZ6VDshRSyXelOqnhgjOqALqmu6LnUdO/KLyitP1KJMJz+vNp
+GhKn3NiG7SF4hs24JNjvYxYK2AF+UIiDzyZ+sdFPUlhj7Fv6Bp63eoVpkGWTyaQX
+lbz/kkAExrO1y3HMMNC1ZEAlXnCThe1ZgzaSCQfTxC2nYSuCCwmciUduRUZJbbv4
+hGNTeu7osDDstLb1JjuvGn30MLnXOwCFQY8jw4eyTr4zYyOERzPmM4967t35Hb4O
+Pj+IA08iJXpoFP+SAfjF7uAgHIy4xTJNW+lcsO+nHMU6nxkQrjutgAflMju9Obtd
+twH2Haz2VcQ29xKUrBVrZ+tUq04HUyEJgj+XLqavGyi65aPwj99V9vbluSZXBy9I
+QUXRrsBIds9Cr4/n2bq6KdnKfPKDtJoSviyzqL689Gb7U4RcQxc97CQM44nxFFLE
+Y5olNWTqnj1bnoSZFtgkhY1XTcLP9B63qWTZlGGevQV4bVpQQeAcrzia+0mqMZxH
+hKnymELQVo9/Nz6o1VTQGkxmtG7zrBZSya3DrOYNIF+WO6UWXKeigUgEhyXBIM0f
+Mw78vQTiy9jtRJ2I/jwmF0u9UWV4RkPdzvld4W/J9kDz8p6slhJoE5X+P3r9y69A
+PoFuQRGhMrS+2QvhWIf+Wj2hNnobXGcQctwiZUrqJ3VWSlmI4AQBAQgAShYhBN0o
+vebZh1yrzkqLHdzPDbMLwQVIBQJqr5zqGxSAAAAAAAQADm1hbnUyLDIuNSsxLjEy
+LDIsMhAcYXJuZV9iYWJAd2ViLmRlAAoJENzPDbMLwQVIpOgD/A/nHdBiCCfAT/oX
+UgJLiFkjijC+zNhaKo6HSIbZgGEyhuTIvOFZ3uvrNW12TtAyQe08mfGICv45UVE8
+Wrc7x3UFQwuiUjtuuRCUzq8rs8bV36eXhB8vlvUwLfP+2W+NQwbD1l60F1NWqLAD
+s1cNQT4TNi0m3yff1hzKw8572Il3
+=iZfj
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+From MAILER-DAEMON Sun Sep 20 04:59:00 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8DO0-0002MI-FZ
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 04:59:00 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>) id 1x8DNz-0002M6-E2
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 04:58:59 -0400
+Received: from mout.web.de ([212.227.17.11])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>)
+ id 1x8DNx-0008UR-KS; Sun, 20 Sep 2026 04:58:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+ s=s29768273; t=1789894725; x=1790499525; i=arne_bab@web.de;
+ bh=TJNiC1KW+nc32Z8gIobPCeoIdQ7yMxXbvXQwIDYwLow=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:cc:content-transfer-encoding:
+ content-type:date:from:message-id:mime-version:reply-to:subject:
+ to;
+ b=NYf3KtP81OYBiQlVQ7cpErq7FYmIxG6FOBDMg5GCkjIx7Dz2scig4UAv2hIralE1
+ ZHZA7vCgGJXKQnTeC9Ybg+9i1HIA4zk31GNCvotmMNabkXbaS1zB5/pdMEJnX1K3W
+ LJlqy2Fz61J2cAD+QpU8EFZ9mo6sDeKiNquJHVIEKZGWn/NscRPZXYGVL955UZ6+X
+ 8+zGfOUUUOZE9cN2cWJTt+0+eLSuKt7WpMLoeXAuYsn3dY/gIkBliO8DzNaNrLjoA
+ ynj/G4OtZGDKecOiJaiXDhA4WMJL9owHYdrnJdE/n1YXxkhXfW1DBTVWMpVG5dVkz
+ tBF2kD/x/iRuP5aKwg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MAtsZ-1wwur61yTx-00HWvC; Sun, 20
+ Sep 2026 10:58:45 +0200
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: rms@gnu.org,  monnier@iro.umontreal.ca,  bugs@gnu.support,
+ yandros@gmail.com,  emacs-devel@gnu.org
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+In-Reply-To: <867bkggyiz.fsf@gnu.org> (Eli Zaretskii's message of "Sun, 20 Sep
+ 2026 10:41:40 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+User-Agent: mu4e 1.14.3; emacs 30.2
+Date: Sun, 20 Sep 2026 10:58:43 +0200
+Message-ID: <87zexccn98.fsf@web.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Provags-ID: V03:K1:3GOXuHUId+InSWrezpk/ss16zmdcj+CeaEGp+NhzmuvOd774keA
+ hcZhti1UEkpD23Fnnea2J5YKUJ7B13MonqWNawUAikDwcwuwYtrSc1zYQD2mzKDit+z9LBa
+ ynE5ff9aKgqdNNsDRz5VushrNX/Gj7jCCE95Wu2xqosGffwWiv9TovUaDzPWm4yvrYKJ8gf
+ e6uNLZac/z56NfFf/yGXQ==
+UI-OutboundReport: notjunk:1;M01:P0:bepdhh6LagE=;aFkl4H/VUM93swJ/zR4YMT8SAME
+ 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
+ HIUW7VVSjYg1Z1mltsbkDw2LnzyfeSihAIg==
+Received-SPF: pass client-ip=212.227.17.11; envelope-from=arne_bab@web.de;
+ helo=mout.web.de
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_LOW=-0.7, RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 08:58:59 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> constitutes an express decision of the user.  So if Emacs connects to
+> a site or runs a program which are themselves free, and that site or
+> program can be configured to connect or run non-free sites/programs
+> (in addition to free ones), it's the user's decision how to configure,
+> and should not be considered "implicitly leading" users to non-free
+> sites or programs.
+
+Does that also apply when the suggested or easiest option is non-free?
+
+For example when it says: "fastest path: nous portal" with the special
+"in one command" option `setup --portal'?
+
+Best wishes,
+Arne
+
+PS: yes, I=E2=80=99m no Emacs maintainer. I only maintain five emacs packag=
+es
+    (three in melpa, two outside, none in elpa), irregularly blog Emacs
+    tipps, and use Emacs.
+=2D-=20
+Unpolitisch sein
+hei=C3=9Ft politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJgBAEBCABKFiEE801qEjXQSQPNItXAE++NRSQDw+sFAmqvoEQbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyEBxhcm5lX2JhYkB3ZWIuZGUACgkQE++NRSQDw+tp
+OQ//eQxKSu3SVMqv2tGVjHO+cLYnuQq5iHdZ6DuRl3+jBq63m8zJtPjlFR9RYTFb
+N2Q/RgewN9g3krwFW7r28MAFb3EIv40jj2Na1QFoAUm73wN0/y6MmedNpaBbLi9d
+RLvTwymLMtKsEC4ghU8zuWIEXjGZTL8uEsgGvGQ4TFakYJLbumVr3rH+moT8Zw0r
+S3Rhhy0Fqzs4rUsQgfw9K1zC61KOIAS2sg1OhnEnQqkQEdzANAIbM5RNNYBOtB3B
+ru5XXWiyhMx0A/GCNkx55iubVOCPbZeLjum0QY+9IKVaisBpU1OBlqukwD1wOXuB
+x58mnJRYhI9ylGKcysyTP+PawLlJamOxaGVy9+t7v/rWURC9uPdzFkBcDVD2W5xE
+SDJ6muSVbAHwDOKxGfegLMBGGqGgkRcLeuakaB+m3eiUqkkDjWZLPhahjWHBaNX3
+O/I9EGglWpt6gjnwsk+HvXrKMmXpVm8ip8eFFbX9dckYvci8k6zhu4hZ7DCGgC+K
+HW/JOzKsL7HuLcPI89IDC4oIOiyrNR1BUwqPLiqMcHZPHRfk0fxZmxULseSG/UHE
+5e+Dsc9b5dfjFqu5ZT/ifmdnXr0uRsbZMi5JcCKu+mivRo5DGxYT1KD6UZpqAMXA
+IqW7UF0K+SPHfRezNwFqpNs8WOg/rT+5I1qIkoUEnXbU/zqI4AQBAQgAShYhBN0o
+vebZh1yrzkqLHdzPDbMLwQVIBQJqr6BEGxSAAAAAAAQADm1hbnUyLDIuNSsxLjEy
+LDIsMhAcYXJuZV9iYWJAd2ViLmRlAAoJENzPDbMLwQVIg1ID/3XnVAd2qfCF2TsY
+7ejhAE0awIZnpqOhA7TYVPmxrfT90cepT4irSD91z+SYtlfD0itPdsqybt8a8DKw
+OC+qxcC5YdnK7uO9maAzjuwjj4IjMX1ryIyZSB8w/SEgr8NNslJxVthXUxiClkGd
+D6SN4J0DR9/cFX7T3fP1IV/pCtpA
+=DM0y
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+From MAILER-DAEMON Sun Sep 20 05:02:42 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8DRa-0003No-IN
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 05:02:42 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1x8DRY-0003Ne-Gn
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 05:02:40 -0400
+Received: from mout02.posteo.de ([185.67.36.66])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1x8DRW-0000ra-TC
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 05:02:40 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout02.posteo.de (Postfix) with ESMTPS id D535E240104
+ for <emacs-devel@gnu.org>; Sun, 20 Sep 2026 11:02:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1789894954;
+ bh=XwsEE6rka9soSLyIvW7LDzmVnuWpVpfiF2V2VNS41vo=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:Content-Transfer-Encoding:From;
+ b=dj2x2p8fDnWQLAjbA1cNiMedotOpxSE4H9RR71VfPdm/WYzooNXJx1dkzAhJIPSq4
+ xDGucrmPk+/U5dZxrBm1qmB9RuvrsHHzPPPUkW62l4PlHICb0+H+0BEL+qgmmUxETG
+ r5aMtky7Ho+Ncsaxw9flo5kZHEdpxwqMmdo0D4xqz3+b+/pXqUv5VsoytDHHfmCBU9
+ ih8wuuxjIfxSOoOb/9j9HDO+Iv1UBYyW1GixOz2QzvxaoI9X3bnN7qQndKJ3NGmUTB
+ RYRiy+mXJh+zA4+QTnaJXMk0IMLnzGplR0nqriPM+bZE4a8XEIc8hV0oqutEVZwKoV
+ jflYL2Irb53xw==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4hngNm3R8hz6v2r;
+ Sun, 20 Sep 2026 11:02:32 +0200 (CEST)
+From: Philip Kaludercic <philipk@posteo.net>
+To: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Cc: rms@gnu.org,  chad <yandros@gmail.com>,  emacs-devel@gnu.org
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+In-Reply-To: <87se35dq30.fsf@web.de>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWZof91in=GHevP-E2pY8goJYhxoWj675fMQBk7M3Ut81w@mail.gmail.com>
+ <E1x7nOj-004IYP-Dr@fencepost.gnu.org> <87se35mv4g.fsf@posteo.net>
+ <87se35dq30.fsf@web.de>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Sun, 20 Sep 2026 09:02:32 +0000
+Message-ID: <878q4w1ejc.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=185.67.36.66; envelope-from=philipk@posteo.net;
+ helo=mout02.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 09:02:40 -0000
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>> There might be a forth option: Pointing yt-dlp to use proxy websites
+> =E2=80=A6
+>> videos via a proxy instead of youtube.com, thus avoiding the need to
+>> solve the JavaScript puzzle.
+>
+> Which only works as long as those proxy websites work. And those die
+> like flies (because youtube wants to break them even more than it wants
+> to break yt-dlp).
+
+I don't know what YouTube's internal policy is, and why they started to
+care about this much more recently.  I wouldn't be surprised if tools
+like yt-dlp are specifically what they are targeting, because they don't
+want GenAI competitors to scrape youtube.com for trailing material, for
+instance.
+
+But relating to our discussion here, yes proxies can help users avoid
+evaluating the javascript challanges, but come at the usability cost of
+being less reliable due to the takedown orders, meaning that when a user
+wants to take this approach they would either have to be regularly
+updating the proxy they use, or have a collection of proxies that
+Emacs/yt-dlp manages to find a working instance.  Of course with yt-dlp
+pointing to yt-dlp, you also have to make sure the client is kept
+up-to-date when youtube.com changes their frontend logic.
+
+> Best wishes,
+> Arne
+
+
+From MAILER-DAEMON Sun Sep 20 06:51:15 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8F8d-0007Dv-S8
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 06:51:15 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1x8F8c-0007Dl-3G
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 06:51:14 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1x8F8a-0008K9-7f; Sun, 20 Sep 2026 06:51:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=JVezcLiPoMOiTgghey5SXlRTtXXEuMKpPtZcfP0gYmY=; b=kU+cInXeAUYH
+ Zj+6UwHoSkISOFRiN4TeOmL8h+sBEOdZtSVoPKmZ6+NSof1KyS6nz602S1EG4qv5h66XsSCHUCklF
+ 5lrDtLeF9WzUl5IXD23mNrCs+5iik5aDJUSRz0wnlZ3waBVs/J1c1V30QAwFh09QB5TS6m56Xhc0n
+ T+B3pYl9Q8y9sLYN+EWDb56tQJCEzNicgxZBBAE94UGM4F32umoEtbUuttRLkNon3dNJHHhC51ykn
+ /B5MHwj2Knc8OcMAWzVDYHFEEZ36RqUv26D2kqWioc8ulO0G9TEy+KELMbch8uUohAcQuXQEcgnlh
+ vy+x8XFQWOB3MCjUHjX+HA==;
+Date: Sun, 20 Sep 2026 13:50:59 +0300
+Message-Id: <86zexcfb70.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Cc: rms@gnu.org, monnier@iro.umontreal.ca, bugs@gnu.support,
+ yandros@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <87zexccn98.fsf@web.de> (arne_bab@web.de)
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+References: <86jyu4y0oy.fsf@sdf.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 10:51:14 -0000
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: rms@gnu.org,  monnier@iro.umontreal.ca,  bugs@gnu.support,
+>   yandros@gmail.com,  emacs-devel@gnu.org
+> Date: Sun, 20 Sep 2026 10:58:43 +0200
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > constitutes an express decision of the user.  So if Emacs connects to
+> > a site or runs a program which are themselves free, and that site or
+> > program can be configured to connect or run non-free sites/programs
+> > (in addition to free ones), it's the user's decision how to configure,
+> > and should not be considered "implicitly leading" users to non-free
+> > sites or programs.
+> 
+> Does that also apply when the suggested or easiest option is non-free?
+
+Suggested by whom? if by us, we shouldn't do that.  But if that's by
+the other program or site, then we cannot be responsible for that, not
+directly anyway.  It's the responsibility of the users who tell Emacs
+to go to that sire or run that program, when they should configure
+those.  And "easiest" is in the eye of the beholder anyway.
+
+> For example when it says: "fastest path: nous portal" with the special
+> "in one command" option `setup --portal'?
+
+A conscientious user who cares about free software will not be duped
+by this and its ilk.  We expect our users to be adults.
+
+
+From MAILER-DAEMON Sun Sep 20 06:52:47 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8FA4-0007oS-IY
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 06:52:45 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <public@thanosapollo.org>)
+ id 1x8FA0-0007ns-7G
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 06:52:40 -0400
+Received: from sendmail.purelymail.com ([34.202.193.197])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <public@thanosapollo.org>)
+ id 1x8F9x-0008Ol-KX
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 06:52:39 -0400
+DKIM-Signature: a=rsa-sha256;
+ b=d97m6ix3cNhL69I3nsvvJpfMHu5whLmKAnf16NtcJiylO2muz+IYpT+1MqRIb8mmXokFKCW7fJbY8VfmTBNsRRPxemc3svL229vcCrbH66U2h2zTBbufQobLkm8LsM+ply/V5GKyQaxhl0nPolykp63uj9DP0REKxAV96x+JGEfPjIH5ZRtrUOP4qdaZKT3boLq+8ArUxDgw0E9A0hsBjuQqAyZfYZaS47h6Ko8v6rTFT2Oezc5GezMpUTdtWCxagE+ELmK4F63EhOVZvNKZML73TyYCCFndoN9Fq3fnqvtsRD40lfe8XYktAHs6hlo2PL21ne7F7M+D5UClD5FViQ==;
+ s=purelymail2; d=thanosapollo.org; v=1;
+ bh=LeAFiSY5Y6Aqu6AbRnugMwNyeC+Sx4FnGsu6HbbrDeE=;
+ h=Received:From:To:Subject:Date; 
+DKIM-Signature: a=rsa-sha256;
+ b=lNyT6aXFdVI7Y39qqfqBL3KWeGDK+bsCnZJ2pqG6t2PYELMU5/UjLhXnyTAWTWFJJXTnPYSKc2rvNhsSkEfydQwCvwXNFw3bHdoeJ0185gzFgnIoACrKdzmwqOWLzUU+m1wbe9YUbZGx93lUeTJOuAFz7AH4O9Y0NR2qFhZbMLxY3wmqrAqDi1HFTWdhJVLKsooGHs0l56co2o3N3mK4SXEoBhL+YTEMmw/LQR5okAyPfrI3HHlSrEuHnyuunLk8nILkKZ1I5wRnJNt/O+wX50Ll1jPeaDVeXNqUFFYO8Dnmt9ooLrHj3/yI6XEaNGUvqjiBJXXjlK0xI2QNKMMc1w==;
+ s=purelymail2; d=purelymail.com; v=1;
+ bh=LeAFiSY5Y6Aqu6AbRnugMwNyeC+Sx4FnGsu6HbbrDeE=;
+ h=Feedback-ID:Received:From:To:Subject:Date; 
+Feedback-ID: 329276:26957:null:purelymail
+X-Pm-Original-To: emacs-devel@gnu.org
+Authentication-Results: purelymail.com; auth=pass
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -1135112114; 
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Sun, 20 Sep 2026 10:52:34 +0000 (UTC)
+From: Thanos Apollo <public@thanosapollo.org>
+To: "Dr. Arne Babenhauserheide" <arne_bab@web.de>, Eli Zaretskii <eliz@gnu.org>
+Cc: rms@gnu.org, monnier@iro.umontreal.ca, bugs@gnu.support,
+ yandros@gmail.com, emacs-devel@gnu.org
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+In-Reply-To: <87zexccn98.fsf@web.de>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de>
+Date: Sun, 20 Sep 2026 13:52:32 +0300
+Message-ID: <87zexcdwjz.fsf@thanosapollo.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Received-SPF: pass client-ip=34.202.193.197;
+ envelope-from=public@thanosapollo.org; helo=sendmail.purelymail.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_MSPIKE_H3=-0.01, RCVD_IN_MSPIKE_WL=-0.01, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 10:52:41 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Does that also apply when the suggested or easiest option is non-free?
+>
+> For example when it says: "fastest path: nous portal" with the special
+> "in one command" option `setup --portal'?
+
+This is starting to feel more like a parody.
+
+Expecting an Emacs interface to set up a fully free environment for
+users is an extreme requirement.  Emacs does not supply the operating
+system, drivers or hardware either.  It is a free editor that can run
+on a free system; it does not make buying a Librebooted ThinkPad with
+Trisquel part of getting started.
+
+The same distinction applies here.  hermes.el connects to a
+user-configured agent.  Users bring their own setup.  Supporting a free
+setup does not mean supplying the whole thing.
+
+=2D-=20
+Thanos Apollo =E2=98=A7
+https://thanosapollo.org
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQT8Sfl7aimGMASg9+nHhedB4pNYHQUCaq+68AAKCRDHhedB4pNY
+HR0EAQDBhzEXFaWd4YrdIoQWswJY1DK+ua7zBpwR7rhdpC/uJQD/YYpJV2zkiT/h
+08ah3XxCPVhJuCSctYlKbxF5nN5Y3Ac=
+=6Wja
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+From MAILER-DAEMON Sun Sep 20 11:55:47 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1x8JtJ-0006FI-N5
+	for mharc-emacs-devel@gnu.org; Sun, 20 Sep 2026 11:55:47 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x8JtG-0006F1-3H
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 11:55:42 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1x8JtE-0004wi-6s
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 11:55:41 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1x8JtA-0003R0-BF
+ for emacs-devel@gnu.org; Sun, 20 Sep 2026 17:55:36 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: TIME argument of 'run-at-time'
+Date: Sun, 20 Sep 2026 03:07:15 -0400
+Message-ID: <jwveceopfl0.fsf-monnier+emacs@gnu.org>
+References: <178980556323.16596.17833189921511825094@vcs2.savannah.gnu.org>
+ <20260919081243.9FEB4C0EFF5@vcs2.savannah.gnu.org>
+ <jwvcxu9tl9m.fsf-monnier+emacs@gnu.org> <86o6dtgv09.fsf@gnu.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:p1Apldkjl8gIUpyeoTCzYNBUycU=
+In-Reply-To: <86o6dtgv09.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Sat, 19 Sep 2026 17:45:26 +0300)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 0
+X-Spam_score: -0.1
+X-Spam_bar: /
+X-Spam_report: (-0.1 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_06_12=1.543,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.249, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 20 Sep 2026 15:55:43 -0000
+
+>> Reminds me: IMO, using such strings as arguments in calls to timer
+>> functions like `run-at-time` should be deprecated.  It's a UI issue, so
+>> it may belong in the interactive spec (and the behavior documented in
+>> the Emacs manual that documents that command), but at the ELisp level it
+>> seems out of place.
+> The problem raised in the linked bug report happens in interactive
+> invocation as well, though.
+
+Yup, my comment was triggered by reading that commit but is not
+otherwise related to that commit.
+
+
+=== Stefan
+
+
+
