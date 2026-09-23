@@ -1,0 +1,2600 @@
+emacs-devel messages from 2026-09-22T18:15:00+02:00 to 2026-09-23T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-22T19:20:14+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <jwv5wzxmcmo.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <9f2476581290c148a80d17ece6301e47@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <jwvmrt9mkn8.fsf-monnier+emacs@gnu.org>
+ <9f2476581290c148a80d17ece6301e47@gnu.support>
+
+> I don't share that opinion,
+
+Happens even to the best of us.
+FWIW, I often disagree even with myself.
+
+Nothing is truly black or truly white, and it's important to remember
+that we here all share an overall goal, even though we may disagree on
+what is the best way to reach it at a given time, and also to remember
+that we all may be wrong and may change opinion tomorrow.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-22T20:10:15+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: x-gtk- names (was: Pass arguments to the browser via
+ x-gtk-launch-uri?)
+Message-ID: <jwvtsnhkvna.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86bj9pedrm.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Tue, 22 Sep 2026 14:17:33 +0300)
+References: <87ik3yz6nc.fsf@posteo.net> <86bj9pedrm.fsf@gnu.org>
+
+> After some investigation I noticed that 31.1 got a New GTK_NATIVE launch
+> mode and it is using x-gtk-launch-uri to open up a tab in firefox.
+
+BTW, am I the only one who finds this naming weird?
+I see we have a few `x-gtk-<SOMETHING>` in our code, but especially now
+that most of these also apply to the Wayland situtation, it feels silly.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-22T21:04:11+02:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: x-gtk- names (was: Pass arguments to the browser via
+ x-gtk-launch-uri?)
+Message-ID: <CA+TD5hhUyHJ+s7oOSjmp5m=eOk09c473xek33GB4Guq1ZvgwqA@mail.gmail.com>
+In-Reply-To: <jwvtsnhkvna.fsf-monnier+emacs@gnu.org>
+References: <87ik3yz6nc.fsf@posteo.net> <86bj9pedrm.fsf@gnu.org>
+ <eliz@gnu.org> <jwvtsnhkvna.fsf-monnier+emacs@gnu.org>
+
+> > After some investigation I noticed that 31.1 got a New GTK_NATIVE launch
+> > mode and it is using x-gtk-launch-uri to open up a tab in firefox.
+>
+> BTW, am I the only one who finds this naming weird?
+> I see we have a few `x-gtk-<SOMETHING>` in our code, but especially now
+> that most of these also apply to the Wayland situtation, it feels silly.
+>
+
+Luckily, it is just a Lisp function, not a command. The function is also
+gtk-specific in that it uses a gtk API function, so the gtk part of the
+name has some justification.
+
+On the other hand, the function was introduced specifically for Wayland,
+not X11, so the x- prefix is silly.
+
+================================================================================
+Date: 2026-09-22T21:28:26+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: x-gtk- names (was: Pass arguments to the browser via
+ x-gtk-launch-uri?)
+Message-ID: <86wlsdcch1.fsf@gnu.org>
+In-Reply-To: <jwvtsnhkvna.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Tue, 22 Sep 2026 14:10:15 -0400)
+References: <87ik3yz6nc.fsf@posteo.net> <86bj9pedrm.fsf@gnu.org>
+ <jwvtsnhkvna.fsf-monnier+emacs@gnu.org>
+
+> From: Stefan Monnier <monnier@iro.umontreal.ca>
+> Date: Tue, 22 Sep 2026 14:10:15 -0400
+> 
+> > After some investigation I noticed that 31.1 got a New GTK_NATIVE launch
+> > mode and it is using x-gtk-launch-uri to open up a tab in firefox.
+> 
+> BTW, am I the only one who finds this naming weird?
+> I see we have a few `x-gtk-<SOMETHING>` in our code, but especially now
+> that most of these also apply to the Wayland situtation, it feels silly.
+
+Is that the only weird thing you find in the commit which added it?
+Look closer.
+
+================================================================================
+Date: 2026-09-22T21:52:22+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+In-Reply-To: <86zex9clvv.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org>
+
+On 2026-09-22 19:05, Eli Zaretskii wrote:
+>> On 2026-09-22 18:39, Eli Zaretskii wrote:
+>> >
+>> > No, hermes.el does not point to SaaSS.  Please stop spreading this
+>> > misinformation.  hermes.el is a front end to a free program called
+>> > Hermes.
+>> 
+>> Excuse my English. The sentence was about the dependency to hermes.el,
+>> and that dependency named Hermes Agent, does steer users to SaaSS.
+> 
+> No, Hermes doesn't do that.  It can be configured that way, and it can
+> be configured to avoid SaaSS.
+
+I think there may be a misunderstanding of what "steer" means here. It 
+does not mean SaaSS is unavoidable. It means the installation process 
+presents SaaSS as the default and easiest path — it asks the user to 
+sign up for a SaaSS service during setup, and presents a long list of 
+such services as the natural configuration. That is steering, even if a 
+conscientious user can deliberately avoid it. If I have misread the 
+installer, I would be glad to be corrected on the specifics. But 
+repeatedly saying "no, it does not do that" while the evidence suggests 
+otherwise is not convincing.
+
+And after my review today, I have found that minuet is in GNU ELPA, and 
+it promotes SaaSS directly in its package description.  And I wonder 
+about it, as I did read this: Re: [ELPA] New Package: minuet-ai.el:
+https://lists.gnu.org/archive/html/emacs-devel/2025-03/msg00770.html#1
+
+So I do not know what was final decision, obviously final decision was 
+to include minuet -- yet it directly works with SaaSS.
+
+After a short review today, I find other packages also promote SaaSS:
+
+- minuet is in GNU ELPA, promoting SaaSS directly in its package 
+description;
+- codex-ide is on NonGNU ELPA, and it directly promotes SaaSS through 
+its dependency on the Codex CLI, which defaults to OpenAI's proprietary 
+service;
+- gptel is on NonGNU ELPA, and its package description begins with 
+"Interact with ChatGPT," pointing users first to a proprietary SaaSS 
+service (libre LLMs aren't there...);
+- aidermacs is on NonGNU ELPA, and it is a front end for Aider, which is 
+heavily designed around connecting to remote LLM APIs rather than for 
+local computing
+
+What I see is that GNU Emacs packages are now slowly thriving with 
+access to SaaSS, and this normalization is happening one accepted 
+package at a time.
+
+And the "first leg" theory does not hold up — logically or by common 
+sense. If responsibility ends at the first leg, I can evade it by adding 
+one more layer: write a free program that accesses a non-free one or 
+SaaSS, and the first leg is free. Or provide SaaSS myself, wrapped in a 
+free buffer-agent, so no one has to look further. In both cases the user 
+is led to the same SaaSS — the maintainers can wash their hands, 
+Pilate-style. A rule that is satisfied by one layer of indirection does 
+not protect users. It only protects appearances.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-23T02:55:12+02:00
+From: Jason Self <jself@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <5bdad1954ed78714ee236796b1ca2714b976472b.camel@gnu.org>
+In-Reply-To: <867bkdeb0d.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <874ifhanef.fsf@web.de>
+ <867bkdeb0d.fsf@gnu.org>
+
+On Tue, 2026-09-22 at 15:17 +0300, Eli Zaretskii wrote:
+> any unreasonable requirements there will simply cause us all to step
+> down because we are unable to do our jobs!  Good luck finding
+> potential maintainers who will agree with these additional infinite
+> duties!
+
+Looking into a specific, reported problem at the second leg (here,
+Hermes documenting a SaaSS portal as the "fastest path" for new users)
+isn't an infinite duty. It's a finite, reactive one: responding to the
+equivalent of a bug report that a package may conflict with the policy
+of not suggesting nonfree software or SaaSS to users.
+
+================================================================================
+Date: 2026-09-23T05:26:52+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87h5jgfy0z.fsf@thanosapollo.org>
+In-Reply-To: <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> On 2026-09-22 19:05, Eli Zaretskii wrote:
+>>> On 2026-09-22 18:39, Eli Zaretskii wrote:
+>>> >
+>>> > No, hermes.el does not point to SaaSS.  Please stop spreading this
+>>> > misinformation.  hermes.el is a front end to a free program called
+>>> > Hermes.
+>>> 
+>>> Excuse my English. The sentence was about the dependency to hermes.el,
+>>> and that dependency named Hermes Agent, does steer users to SaaSS.
+>> 
+>> No, Hermes doesn't do that.  It can be configured that way, and it can
+>> be configured to avoid SaaSS.
+>
+> I think there may be a misunderstanding of what "steer" means here. 
+
+I agree, comrade.  They do not understand our mission.  No mention of
+LLMs anywhere.  SaaSS and nonfree software, of course, are not the real
+problem.  Otherwise we'd have to inspect the GitHub links too, and
+nobody wants that much consistency.
+
+> It does not mean SaaSS is unavoidable. It means the installation process 
+> presents SaaSS as the default and easiest path
+
+Did your package manager ask you to join Skynet, or are we talking
+about the configuration wizard?  Perhaps we should set up a model and
+ask it to explain the difference.  Something small should manage.
+
+Now that I'm looking at your own paste, there's an option called
+BLANK SLATE.  I wonder what that does.  We'll have to wait for AGI.
+Until then, the only safe course is another email to emacs-devel.
+
+> And after my review today, I have found that minuet is in GNU ELPA, and 
+> it promotes SaaSS directly in its package description.  And I wonder 
+> about it, as I did read this: Re: [ELPA] New Package: minuet-ai.el:
+> https://lists.gnu.org/archive/html/emacs-devel/2025-03/msg00770.html#1
+
+I also ran a review, comrade.  Disturbing findings.  GNU.org mentions
+"GNU/Linux."  Linux means Linus Torvalds, and Linus uses the forbidden
+Skynet.  The connection is right there in the name.
+
+We cannot wait for the Terminator to arrive before someone updates the
+package description.  GNU has failed us.  Our crusade must move to
+TempleOS.
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-23T05:47:54+02:00
+From: Yuan Fu <casouri@gmail.com>
+Subject: Re: emacs-31 d46cc7dda13: Fix c-ts-common baseline indentation rule
+ (bug#81735)
+Message-ID: <5698CA7D-6A87-4D63-B3D6-A8CCAC8D61A2@gmail.com>
+In-Reply-To: <jwv33vkrmq2.fsf-monnier+emacs@gnu.org>
+References: <178886551015.16721.9518914156815324941@vcs2.savannah.gnu.org>
+ <20260908110510.7E286C0DA33@vcs2.savannah.gnu.org>
+ <jwv33vkrmq2.fsf-monnier+emacs@gnu.org>
+
+> On Sep 8, 2026, at 4:46 AM, Stefan Monnier <monnier@iro.umontreal.ca> wrote:
+> 
+>> diff --git a/lisp/treesit.el b/lisp/treesit.el
+>> index 1273e43b2fe..efdb3385228 100644
+>> --- a/lisp/treesit.el
+>> +++ b/lisp/treesit.el
+>> @@ -2403,10 +2403,13 @@ This variable should take the same form as
+>> over `treesit-simple-indent-rules'.")
+>> 
+>> (defun treesit--indent-prev-line-node (pos)
+>> -  "Return the largest node on the previous line of POS."
+>> +  "Return the largest node on the previous (non-empty) line of POS."
+>>   (save-excursion
+>>     (goto-char pos)
+>>     (when (eq (forward-line -1) 0)
+>> +      ;; Skip blank lines.
+>> +      (while (and (looking-at-p (rx (* (syntax whitespace)) eol))
+>> +                  (eq (forward-line -1) 0)))
+>>       (back-to-indentation)
+>>       (treesit--indent-largest-node-at (point)))))
+> 
+> BTW, shouldn't this function walk the parse tree rather than
+> the buffer?
+> 
+
+Hmm, the purpose of this function is to find the node on the previous (non-empty) line, and the code is doing just that. It’s not clear to me how can walking the parse tree easily give you that. The previous-line-node could be a child node of a previous sibling of the node at point, and when you traverse the tree, how do you tell if the node is on the prev line?
+
+Yuan
+
+================================================================================
+Date: 2026-09-23T06:28:23+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+In-Reply-To: <87h5jgfy0z.fsf@thanosapollo.org>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+
+Thanos wrote:
+> I agree, comrade.  They do not understand our mission.  No mention of
+> LLMs anywhere.  SaaSS and nonfree software, of course, are not the real
+> problem.  Otherwise we'd have to inspect the GitHub links too, and
+> nobody wants that much consistency.
+
+Dear Thanos,
+
+You replied with jokes. The record, however, contains facts:
+
+- The Hermes installer presents SaaSS as the default and asks the user 
+to sign up for it.
+- hermes.el's package description links directly to that installer.
+- minuet, codex-ide, gptel, and aidermacs do the similar kind of 
+steering.
+- GNU policy states that a package must not lead users to SaaSS.
+
+You did not address any of these. If you have a factual correction, I am 
+welcoming it.
+
+Steering users to LLM SaaSS hands a third party their code, their data, 
+and the computing that shapes their work — the opposite of what free 
+software exists to prevent.
+
+I read your post "My Emacs Agentic Workflow," where you describe relying 
+on GPT-5.6-sol and other SaaSS models, and I understand the hardware 
+cost makes a local computing difficult for you — I am not against you 
+personally; I only want GNU to set a good example for those who value 
+their privacy and their own computing.
+
+> I also ran a review, comrade.  Disturbing findings.  GNU.org mentions
+> "GNU/Linux."  Linux means Linus Torvalds, and Linus uses the forbidden
+> Skynet.  The connection is right there in the name.
+
+No user is forbidden from using SaaSS by their own choice — what matters 
+is that the GNU project sets an example, just as it endorses only fully 
+free GNU/Linux distributions (which tend to use Linux-libre kernel). But 
+when SaaSS comes through a package dependency, we should not steer users 
+toward it. If that example is set wrongly, it reflects badly on free 
+software, because instead of helping users do their own computing, we 
+steer them to third-party computing. And I am quite sure you would be 
+running your own "gpt-alike" on your own machine if hardware prices were 
+affordable.
+
+--
+Jean Louis
+
+================================================================================
+Date: 2026-09-23T07:11:09+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [nongnu] elpa/age 6b1528c9e5 1/2: Use
+ custom-initialize-after-file-load with age-encryption-mode
+Message-ID: <E1x9FG9-00Eyla-1K@fencepost.gnu.org>
+In-Reply-To: <jwvbj9sqx1w.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Sun, 20 Sep 2026 02:11:23 -0400)
+References: <178984814417.3758.7534807867886597143@vcs2.savannah.gnu.org>
+ <20260919200224.80F70C0EFF5@vcs2.savannah.gnu.org>
+ <jwvbj9sqx1w.fsf-monnier+emacs@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+What is age-encryption-mode?  That command is not autoloaded, for me.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-23T07:12:40+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <E1x9FHc-00Ez3Z-9n@fencepost.gnu.org>
+In-Reply-To: <86h5jmk8sk.fsf@gnu.org> (message from Eli Zaretskii on Fri, 18
+ Sep 2026 16:07:07 +0300)
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org> <86h5jmk8sk.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > Yes it is.  Whatever sites and programs we recommend in Emacs for users,
+  > > that recommendation steers users toward them.
+
+  > No, it doesn't.
+
+Anything that suggests using a site or program, that might influence
+users to use it, is steering users to that site or program.
+See Wiktionary:steer, meanings 5 and 7.
+
+That's why the GNU Project has a policy of being careful about
+what we refer to -- to make sure we are not influencing users
+in a way that encourages using nonfree software (or SaaSS).
+
+This is described in the node References in the GNU Coding Standards.
+
+Our actions must be coherent with our philosophy.
+
+                     Users use or don't use those sites on their own
+  > judgment
+
+Each user does apply per own judgment.  But that doesn't mean we have
+no responsibility to make sure our suggestions don't encourage the very
+practices we aim to change.
+
+             and on their own responsibility.
+
+Users are ultimately responsible for what they do.  But when we suggest
+things to users, we are also responsible -- for not making suggestions
+that could teach users bad judgment.
+
+That users have the final decision doesn't mean we can be careless in
+what we suggest to them.
+
+  > Our recommendation is for using a package, not for accessing sites
+  > that package allows.
+
+Using the word "allows" subtly but significantly changes the question
+under discussion.  The issue is not which sites the package _allows_,
+but which sites it _suggests_.
+
+  >  Should we reject a free Web browser because it
+  > allows users to access non-free sites and download non-free software?
+
+This illustrates perfectly how "allows" and "suggests" pose different
+questions.  The web browsers in Emacs will allow any web site, but
+suggest few sites or none at all.
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-23T07:21:55+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <87ecekfsp8.fsf@thanosapollo.org>
+In-Reply-To: <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+
+> - The Hermes installer presents SaaSS as the default and asks the user 
+> to sign up for it.
+
+That's the configuration wizard, Jean, not package installation.
+Install through your package manager: no menu.  Run the wizard script
+through bash: this menu.  Here it is again:
+
+  → (●) Quick Setup (Nous Portal) — free OAuth login, no API keys, model
+    + tools (recommended)
+    (○) Full setup — configure every provider, tool & option yourself 
+(bring your own keys)
+    (○) Blank Slate — everything off except the bare minimum; opt in to 
+each capability
+
+Yes, it recommends Nous Portal.  The clue is "recommended."  And
+gratis isn't free software.  But FULL SETUP and BLANK SLATE are right
+there too.  You can reject the recommendation.  You don't need to
+uninstall it for the rest of us.
+
+Don't like the recommended setup?  Make one for a free environment.
+You've written enough emails about three menu options to ship a fourth.
+
+> - hermes.el's package description links directly to that installer.
+
+No.  It links to the docs.  The docs link to a script, and from there
+you can choose a service.  You followed all those steps and still
+wrote "directly."  Apparently the only thing allowed a shortcut here
+is your description.
+
+How many links deep does the guilt travel?  Pick a number, then apply
+it to gnu.org too.  Preferably before checking whether you like the
+results.
+
+> - minuet, codex-ide, gptel, and aidermacs do the similar kind of 
+> steering.
+
+They also link to GitHub!  Go on, do that one.  Don't get shy now.
+
+> - GNU policy states that a package must not lead users to SaaSS.
+
+The maintainers can interpret their policy.  You can disagree.
+Sending the disagreement again does not turn it into an appointment
+letter.
+
+And stop contacting me about this on private channels.  Keep it here.
+For someone so worried about unwanted services, you're very keen to
+provide one.
+
+> You did not address any of these. If you have a factual correction, I am 
+> welcoming it.
+
+They're above.  If necessary, ask a local model to find them for you.
+Nothing fancy.  Just something that can tell the difference between
+"nobody answered me" and "I didn't like the answer."
+
+[...]
+> I read your post "My Emacs Agentic Workflow," where you describe relying 
+> on GPT-5.6-sol and other SaaSS models, 
+
+That's old.  I use gpt-6-astra now.  All this research into my setup
+and you still need me to update it for you.
+
+You even talked to my agent over xmpp and it blocked you.  I keep
+telling people these things are getting smarter.
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-23T07:45:25+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87ik3w7c7e.fsf@web.de>
+In-Reply-To: <87h5jgfy0z.fsf@thanosapollo.org> (Thanos Apollo's message of
+ "Wed, 23 Sep 2026 06:26:52 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+
+Thanos Apollo <public@thanosapollo.org> writes:
+
+> Did your package manager ask you to join Skynet, or are we talking
+> about the configuration wizard?  Perhaps we should set up a model and
+> ask it to explain the difference.  Something small should manage.
+
+Please stop throwing sarcasm at other contributors.
+
+That’s poison to any kind of constructive discussion, short term as well
+as long term and for the larger community.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-23T07:53:28+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+In-Reply-To: <87ecekfsp8.fsf@thanosapollo.org>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+
+On 2026-09-23 08:21, Thanos Apollo wrote:
+>> - hermes.el's package description links directly to that installer.
+> 
+> No.  It links to the docs.  The docs link to a script, and from there
+> you can choose a service.  You followed all those steps and still
+> wrote "directly."  Apparently the only thing allowed a shortcut here
+> is your description.
+
+That what I see is here attached as screenshot:
+
+M-x package-list-packages -- then click on hermes package, it says:
+
+[Hermes Agent quickstart]
+<https://hermes-agent.nousresearch.com/docs/getting-started/quickstart>
+
+Once user clicks there, user is suggested to connect to SaaSS as easiest 
+path which contradicts the policy as not to suggest SaaSS to users.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-23T07:57:14+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87bj9ofr2d.fsf@thanosapollo.org>
+In-Reply-To: <87ik3w7c7e.fsf@web.de>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org> <87ik3w7c7e.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Thanos Apollo <public@thanosapollo.org> writes:
+>
+>> Did your package manager ask you to join Skynet, or are we talking
+>> about the configuration wizard?  Perhaps we should set up a model and
+>> ask it to explain the difference.  Something small should manage.
+>
+> Please stop throwing sarcasm at other contributors.
+>
+> That’s poison to any kind of constructive discussion, short term as well
+> as long term and for the larger community.
+
+Arne, I don't see a way to have a constructive conversation here.
+We've been having the same discussion for over a month and we're
+still going in circles.
+
+I share my work as free software for others to use, study, modify and
+share.  That doesn't mean I owe anyone a defence of my character or my
+choice of tools.  I'm not interested in continuing a discussion where
+I'm treated as though I've done something wrong by contributing that
+work.
+
+I don't want to spend any more time on this.
+
+Please remove me from the Cc on further replies.
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-23T08:06:06+02:00
+From: <tomas@tuxteam.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <arNsTh5NrEUAqmXy@tuxteam.de>
+In-Reply-To: <87ik3w7c7e.fsf@web.de>
+References: <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org> <87ik3w7c7e.fsf@web.de>
+
+On Wed, Sep 23, 2026 at 07:45:25AM +0200, Dr. Arne Babenhauserheide wrote:
+> Thanos Apollo <public@thanosapollo.org> writes:
+> 
+> > Did your package manager ask you to join Skynet, or are we talking
+> > about the configuration wizard?  Perhaps we should set up a model and
+> > ask it to explain the difference.  Something small should manage.
+> 
+> Please stop throwing sarcasm at other contributors.
+
+I also find that revolting.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-09-23T08:09:15+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <0f231b2fcd2bead3d917010bc2abd784@gnu.support>
+In-Reply-To: <87ecekfsp8.fsf@thanosapollo.org>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+
+On 2026-09-23 08:21, Thanos Apollo wrote:
+> Jean Louis <bugs@gnu.support> writes:
+> 
+> 
+>> - The Hermes installer presents SaaSS as the default and asks the user
+>> to sign up for it.
+> 
+> That's the configuration wizard, Jean, not package installation.
+> Install through your package manager: no menu.  Run the wizard script
+> through bash: this menu.
+
+Dear Thanos,
+
+Greetings.
+
+You are right that the user can reject the recommendation. But the 
+question was never whether rejection is possible — it is what the 
+installer recommends. "Recommended" is the answer to that question. A 
+recommendation is not neutral: it is the default, it is presented first, 
+and it is what a user without strong prior knowledge will take.
+
+On the "package installation vs configuration wizard" distinction: from 
+the user's point of view, this is one continuous interaction. Clicking 
+through installation flows into the wizard; the wizard presents the 
+recommendation. The separation exists in the code, not in the user's 
+experience — and policy is about what the user is led to, not how the 
+code is organized.
+
+On "pick a number for how many links deep": this is the same "infinite 
+duty" argument Eli made, and it has the same answer. No one is asking 
+for a recursive audit of the world. The report is about a specific 
+recommendation inside a specific installer that hermes.el directly 
+points to. And it relates to other such packages too.
+
+Finally, the "make one for a free environment" suggestion: if no free 
+LLM exists today, that is a reason to fix the software and make new one 
+that is free, not a reason to endorse the SaaSS path while it does not. 
+The absence of a free LLM model is exactly the situation in which GNU's 
+example matters most.
+
+I have contacted you privately once, to say I have nothing against you 
+personally. I did not talk to any "agent" of yours, and I do not know 
+what exchange you are referring to. If you believe I did, please show 
+the message — I will look at it.
+
+I am not worried about "unwanted services" in general. I am worried 
+about users being steered to SaaSS — someone else doing their computing 
+for them — when a GNU package points them there. That is the whole 
+disagreement.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-23T08:23:31+02:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: move-lines.el: a lazy programmer's package to move lines around
+Message-ID: <7a0a436a-30a5-4254-8964-4abc00b1f6db@gmail.com>
+In-Reply-To: <87h5k7360v.fsf@posteo.net>
+References: <87a4qwanpx.fsf@posteo.net>
+ <71276715-7000-4F94-BEED-B26CE82FE503@gmail.com>
+ <E1wteLr-001d6d-PS@fencepost.gnu.org>
+ <67f0a714-2975-487c-9680-a504f5818173@gmail.com> <87wlt33a1l.fsf@posteo.net>
+ <CAO48Bk9Us_sT5mJk2a2T6XL+BN0Kco35UZX70ciqhSRMZEjL5Q@mail.gmail.com>
+ <87h5k7360v.fsf@posteo.net>
+
+Hi
+
+I'd like to continue the discussion.
+
+
+I've continued with the playground in codeberg... I felt deleting and 
+killing full lines (around the selection) was missing, so I also 
+included that.
+
+Because it was mentioned earlier in the discussion, I've been trying to 
+picture what the new thing would be.
+
+Premise: I've already played with things [1] and we already have the 
+'line thing.
+
+If we talk about an exyended-selection thing, I think we could have 
+something like
+
+(defun extended-selection-bounds ()
+   (save-excursion
+     (let ((beg (if (use-region-p) (region-beginning)(point))
+           (end (if (use-region-p) (region-end) (point))
+       (goto-char beg)
+       (setq beg (pos-bol))
+       ;; More 'juice' for end..
+       (cons beg end))))
+
+(put 'extended-selection 'bounds-of-thing-at-point
+      #'my-extended-selection-bounds)
+
+to determine its bounds.
+
+However, I don't know how to write a forward-op function, since I can't 
+picture what the next (or previous) thing would be for this extended 
+selection thing.
+
+
+Best, /PA
+[1] https://emacsconf.org/2025/talks/completion
+
+On 02/09/2026 19:41, Philip Kaludercic wrote:
+> Pedro Andres Aranda Gutierrez <paaguti@gmail.com> writes:
+> 
+>> Hi Philip,
+>>
+>> On Wed, 2 Sept 2026 at 18:14, Philip Kaludercic <philipk@posteo.net> wrote:
+>>
+>>> "Pedro A. Aranda" <paaguti@gmail.com> writes:
+>>>
+>>>> Hi
+>>>>
+>>>> I'm back from my Internet-free month and ready to start a fruitful
+>>>> discussion.
+>>>>
+>>>> First of all, thanks for the interest and the encouragement. It was a
+>>>> temptation to take my computer to the holidays and work on this, but I
+>>>> resisted :-)
+>>>>
+>>>> Things that have come up and I've been maturing:
+>>>>
+>>>> 1.- landscape: I need to start browsing ELPA to find other packages
+>>>> that could implement something like this. I recognise that I've been
+>>>> using move-text for too long to look for alternatives.
+>>>
+>>> Also recall that transpose-lines exists in Emacs.
+>>>
+>>
+>> Right.. part of the motivation for move-lines was that I didn't manage to
+>> tame transpose-lines for my purpose.
+>> I tried, but I got lost calculating all necessary points (four if memory
+>> serves me well)
+> 
+> Yes, two for the first range and two for the second.
+> 
+>>                  and I found it easier
+>> to delete and extract and then re-insert.
+> 
+> In the end (transpose-subr-1), that is what a command like
+> transpose-lines does as well.
+> 
+>>> 2.- (maybe this should be first) my motivation: I was using move-text
+>>>> to move one or more lines. When writing pure text, a paragraph is just
+>>>> a block of lines and when I needed to move a sentence, I'd select the
+>>>> sentence, kill it to the kill-buffer and yank it at its new position.
+>>>> move-text wasn't intuitive for this and I never tried to hard to learn
+>>>> how to do it.
+>>>
+>>> Have you taken a look at Embark or my do-at-point package?  It might
+>>> provide some inspiration.  It might be interesting to provide some
+>>> generalized tranpose-thing command.
+>>>
+>>
+>> Hmmm... that could be a good exercise :-)
+>> Don't know if my emacs Lisp is enough for that.
+> 
+> If you have any questions how some code works (especially if it is part
+> of do-at-point, but I ought to manage Embark as well), I am glad to
+> help.
+> 
+>>>> 3.- repeat-maps: Never used them, but happy to learn how to use them :-)
+>>>>
+>>>> My main concern is that I don't know how to write one for the situation:
+>>>>
+>>>> Currently, I'm using C-S-up and C-S-down and I think I would be able
+>>>> to write a repeat-map for this. However, suppose user uses C-S-up and
+>>>> C-S-down to mark paragraphs and wants to remap move-lines-up and
+>>>> move-lines-down. Is there a way to reflect the new bindings in a repeat
+>>> map?
+>>>
+>>> They would also have to update the repeat map in that case.
+>>>
+>>>> 4.- Contributing the code: there are already a couple lines of mine in
+>>>> Emacs plain and I'm contributing a bit more to org-mode, so I don't
+>>>> think it would be a problem.
+>>>
+>>> What is this in reference to?  Have you signed the FSF copyright
+>>> assignment?
+>>>
+>>
+>> I signed the FSF paperwork a couple of years ago to add the flat-button
+>> type to the faces and
+>> there are also a couple contribs to manual of mine.
+>> I'm currently maintaining ox-latex.el and ox-beamer.el in org-mode.
+> 
+> Ah OK, I don't have access to the copyright file so I wanted to
+> double-check since it wasn't clear to me from the message above.
+> 
+>>>> Best, /PA
+>>>>
+>>>>
+>>>> On 11/08/2026 06:44, Richard Stallman wrote:
+>>>>> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+>>>>> [[[ whether defending the US Constitution against all enemies,     ]]]
+>>>>> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>>>>>     > >>> What exactly is your concern here?  Having a command that
+>>>>> can move
+>>>>>     > >>> around text in an interactive setting is useful in general,
+>>> but also not
+>>>>>     > >>> something that we expect to be upgraded and extended
+>>> extensively, so
+>>>>>     > >>> having it stable and complete in core sounds like a good idea
+>>> to me,
+>>>>> That's what I thought, too, when I first saw this.  Also, I think it
+>>>>> is worth some effort and discussion to choose a command interface that
+>>>>> is very natural and easy for people to remember.
+>>>>> That could make the difference between a useful feature and a very
+>>>>> handy feature.
+>>>>>
+>>>
+>>
+>> Best, /PA
+
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-09-23T08:26:10+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <878q4sfpq5.fsf@thanosapollo.org>
+In-Reply-To: <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvpkyabta9.fsf-monnier+emacs@gnu.org>
+ <8733v6gzae.fsf@web.de> <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+ <867bkggyiz.fsf@gnu.org> <87zexccn98.fsf@web.de>
+ <87zexcdwjz.fsf@thanosapollo.org> <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support> <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support> <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> On 2026-09-23 08:21, Thanos Apollo wrote:
+>>> - hermes.el's package description links directly to that installer.
+>> 
+>> No.  It links to the docs.  The docs link to a script, and from there
+>> you can choose a service.  You followed all those steps and still
+>> wrote "directly."  Apparently the only thing allowed a shortcut here
+>> is your description.
+>
+> That what I see is here attached as screenshot:
+>
+> M-x package-list-packages -- then click on hermes package, it says:
+>
+> [Hermes Agent quickstart]
+> <https://hermes-agent.nousresearch.com/docs/getting-started/quickstart>
+>
+
+The link in hermes.el opens the Hermes quickstart documentation,
+not an installer or Nous Portal.  From there, the user chooses a
+setup path.  Following the Portal setup instructions is a separate
+choice, not something opening the documentation does for them.
+
+> Once user clicks there, user is suggested to connect to SaaSS as easiest 
+> path which contradicts the policy as not to suggest SaaSS to users.
+
+The page recommends Nous Portal for convenience when trying Hermes,
+but also provides guidance for local and self-hosted providers,
+including endpoint configuration and context requirements, with links
+to detailed provider documentation [1].  I link to that guidance so
+users can choose the setup and level of freedom that suits them,
+not to endorse every recommendation on the page.
+
+The page also includes a YouTube video.  If the objection is to
+linking documentation that mentions nonfree services, that standard
+should apply consistently, not only to LLM providers.
+
+[1] https://hermes-agent.nousresearch.com/docs/integrations/providers#custom--self-hosted-llm-providers
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-23T08:37:09+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <b8239c05925c3d3b3dfab692850d5a83@gnu.support>
+In-Reply-To: <878q4sfpq5.fsf@thanosapollo.org>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvpkyabta9.fsf-monnier+emacs@gnu.org>
+ <8733v6gzae.fsf@web.de> <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+ <867bkggyiz.fsf@gnu.org> <87zexccn98.fsf@web.de>
+ <87zexcdwjz.fsf@thanosapollo.org> <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support> <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support> <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <878q4sfpq5.fsf@thanosapollo.org>
+
+On 2026-09-23 09:26, Thanos Apollo wrote:
+> Jean Louis <bugs@gnu.support> writes:
+> 
+>> On 2026-09-23 08:21, Thanos Apollo wrote:
+>>>> - hermes.el's package description links directly to that installer.
+>>> 
+>>> No.  It links to the docs.  The docs link to a script, and from there
+>>> you can choose a service.  You followed all those steps and still
+>>> wrote "directly."
+
+Directly from package description and installation process. The 
+screenshot I have sent doesn't lie. Emacs package description has direct 
+link to recommendation of SaaSS.
+
+>> Once user clicks there, user is suggested to connect to SaaSS as 
+>> easiest
+>> path which contradicts the policy as not to suggest SaaSS to users.
+> 
+> The page recommends Nous Portal for convenience when trying Hermes,
+> but also provides guidance for local and self-hosted providers
+
+Sure, I agree. Just that right now there is no fully free LLM solution, 
+either way user will be guided to non-free or SaaSS.
+
+> The page also includes a YouTube video.  If the objection is to
+> linking documentation that mentions nonfree services, that standard
+> should apply consistently, not only to LLM providers.
+
+YouTube video isn't really a service as a software substitute. It 
+doesn't replace users' computing as third party service. Please try 
+reading again: 
+https://www.gnu.org/philosophy/who-does-that-server-really-serve.html to 
+understand the differences.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-23T09:40:44+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <179014924427.2274399.9145989476439390647@thanosapollo.org>
+In-Reply-To: <b8239c05925c3d3b3dfab692850d5a83@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvpkyabta9.fsf-monnier+emacs@gnu.org>
+ <8733v6gzae.fsf@web.de> <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+ <867bkggyiz.fsf@gnu.org> <87zexccn98.fsf@web.de>
+ <87zexcdwjz.fsf@thanosapollo.org> <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support> <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support> <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <878q4sfpq5.fsf@thanosapollo.org>
+ <b8239c05925c3d3b3dfab692850d5a83@gnu.support>
+
+Your objection now concerns a recommendation within upstream documentation,
+rather than a direct link to an installer. I have explained why I link that
+documentation and have nothing further to add.
+
+Please remove me from further replies. I will not respond again, and further
+messages on this topic or related LLM discussions will be filtered through
+my email agent.
+
+================================================================================
+Date: 2026-09-23T11:11:25+02:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <b356f76f-3bd9-4e62-966b-ab8bb76d40cc@imayhem.com>
+In-Reply-To: <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org> <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+
+On 9/22/2026 9:52 PM, Jean Louis wrote:
+
+> And the "first leg" theory does not hold up — logically or by common 
+> sense. If responsibility ends at the first leg, I can evade it by adding 
+> one more layer: write a free program that accesses a non-free one or 
+> SaaSS, and the first leg is free. Or provide SaaSS myself, wrapped in a 
+> free buffer-agent, so no one has to look further. In both cases the user 
+> is led to the same SaaSS — the maintainers can wash their hands, Pilate- 
+> style. A rule that is satisfied by one layer of indirection does not 
+> protect users. It only protects appearances.
+
+At the end is a matter of alternatives. Where do you want to "steer" 
+users to?
+
+Local LLM? That uses GPU/NPUS, whatever, that use non free software.
+
+Nowhere? Just tell them Emacs does not support the AI thing? Then emacs 
+is dead.
+
+A free SSaaaaSS?
+
+Your choice?
+
+================================================================================
+Date: 2026-09-23T11:16:55+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87cxu472ew.fsf@web.de>
+In-Reply-To: <b356f76f-3bd9-4e62-966b-ab8bb76d40cc@imayhem.com> (Cecilio
+ Pardo's message of "Wed, 23 Sep 2026 11:11:25 +0200")
+References: <86jyu4y0oy.fsf@sdf.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <b356f76f-3bd9-4e62-966b-ab8bb76d40cc@imayhem.com>
+
+Cecilio Pardo <cpardo@imayhem.com> writes:
+
+> Nowhere? Just tell them Emacs does not support the AI thing? Then
+> emacs is dead.
+
+"Dead" isn’t likely, though it would likely lose some users who are not
+willing to use melpa (or one of the other non-GNU package repos) or a
+manually installed package instead of elpa.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-23T11:44:30+02:00
+From: =?utf-8?Q?Harald_J=C3=B6rg?= <haj@posteo.de>
+Subject: Re: emacs-31 dc2694b8d2d: ; cperl-mode: Fix tests for 32-bit Solaris
+Message-ID: <877bkcs3nm.fsf@oook.m.uunet.de>
+In-Reply-To: <jwv7bkhtkzd.fsf-monnier+emacs@gnu.org>
+References: <178980824897.6141.17203847634845766078@vcs2.savannah.gnu.org>
+ <20260919085729.6AFC2C0EFF5@vcs2.savannah.gnu.org>
+ <jwv7bkhtkzd.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+> Harald Jörg [2026-09-19 04:57:29] wrote:
+>> branch: emacs-31
+>> commit dc2694b8d2dc80b8c70843a45291e4841c76b63d
+>> Author: Harald Jörg <haj@posteo.de>
+>> Commit: Harald Jörg <haj@posteo.de>
+>>
+>>     ; cperl-mode: Fix tests for 32-bit Solaris
+>>     
+>>     Make tests pass on slow machines, and on machines which do not
+>>     default to UTF-8 coding.  This fixes bug#81475.
+> [...]
+>> +    (let ((coding-system-for-read 'utf-8))
+>> +      (insert-file-contents (ert-resource-file "extra-delimiters.pl"))
+>> +      (funcall cperl-test-mode)
+>> +      (cperl-extra-paired-delimiters-mode t)
+>> +      (font-lock-ensure)
+>> +      (goto-char (point-min))
+>> +      (search-forward-regexp "\\(label:\\)")
+>> +      (should (equal (get-text-property (match-beginning 1) 'face)
+>> +                     'font-lock-constant-face))
+>> +      (search-forward-regexp "\\(comment\\)")
+>> +      (should (equal (get-text-property (match-beginning 1) 'face)
+>> +                     'font-lock-comment-face))
+>> +      (search-forward-regexp "\\(sanity\\)")
+>> +      (should (equal (get-text-property (match-beginning 1) 'face)
+>> +                     'font-lock-variable-name-face))
+>> +      ;; Now switch off the minor mode and redo
+>> +      (cperl-extra-paired-delimiters-mode -1)
+>> +      (font-lock-ensure)
+>> +      (goto-char (point-min))
+>> +      (search-forward-regexp "\\(label:\\)")
+>> +      (should (equal (get-text-property (match-beginning 1) 'face)
+>> +                     'font-lock-string-face))
+>> +      (search-forward-regexp "\\(comment\\)")
+>> +      (should (equal (get-text-property (match-beginning 1) 'face)
+>> +                     'font-lock-string-face))
+>> +      (search-forward-regexp "\\(sanity\\)")
+>> +      (should (equal (get-text-property (match-beginning 1) 'face)
+>> +                     'font-lock-variable-name-face)))))
+>
+> `coding-system-for-read` can have devastating effects when used where
+> not intended, so if you have to let-bind it, so be it, but make sure its
+> scope is as small as possible.
+
+Thanks for the review!  I agree.
+
+> In the above code, I'd recommend you try one of (in order of
+> preference):
+>
+> - Add a `coding:` cookie to the file?
+
+This makes sense as an extra clarification.  I guess I am too paranoic:
+I have some experience with encodings which you would need to know in
+advance to even find the cookie (EBCDIC and UCS-2 are prominent
+examples).  So I'd rather also keep a declaration outside the file.
+
+> - Add an entry to `file-coding-system-alist`?
+
+Are there any benefits over using coding-system-for-read?  I chose it
+because it has highest precendence (and also because I didn't want to
+decide which PATTERN to use in the alist)
+
+> - Put the let-binding around just the `insert-file-contents` call?
+
+That's what I am going to do, plus adding the cookie.
+-- 
+Cheers,
+haj
+
+================================================================================
+Date: 2026-09-23T12:06:45+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <360da525e93eeeb1dbb45c5f40055374@gnu.support>
+In-Reply-To: <b356f76f-3bd9-4e62-966b-ab8bb76d40cc@imayhem.com>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <b356f76f-3bd9-4e62-966b-ab8bb76d40cc@imayhem.com>
+
+Dear Cecilio,
+
+Since more than 3.5 years I am trying to find truly free solution using 
+LLMs, and now I am back to the point where I started as none LLM (for 
+text generation) is free by 4 free software principles.
+
+> At the end is a matter of alternatives. Where do you want to "steer" 
+> users to?
+
+I am speaking my opinion, and not on behalf of GNU project.
+
+The first question is: what should GNU suggest? This is the question the 
+policy is about. What we refer to or recommend, we are responsible for. 
+The issue is not what users can do, but what the project suggests they 
+do.
+
+> Local LLM? That uses GPU/NPUS, whatever, that use non free software.
+> 
+> Nowhere? Just tell them Emacs does not support the AI thing? Then emacs 
+> is dead.
+
+On the "nowhere" framing: the policy is not "tell users nothing." The 
+policy is "do not point users to nonfree software or SaaSS."
+
+A package can mention that local models exist, can document free options 
+where they exist, and can avoid presenting SaaSS as the recommended 
+path. That is not "nowhere" — it is "not toward SaaSS."
+
+It would not prevent user to configure SaaSS nevertheless.
+
+> A free SSaaaaSS?
+
+There is no free SaaSS -- even if free software runs on server, it is 
+SaaSS -- service as a software substitute, because why would user edit 
+pictures of his family at the third party server controlling his 
+computing if he can do that on his own computer?
+
+On the "Emacs is dead" framing: Emacs has survived for forty years 
+without pointing users at proprietary services as its path of least 
+resistance. There is no evidence that declining to recommend SaaSS will 
+kill it. The comparison to Debian is apt: GNU does not list Debian as 
+fully free software distribution because of the non-free repository, and 
+Debian is not dead. Not being listed did not destroy it, and it did not 
+destroy GNU's example either.
+
+You are right about non-free drivers being a general problem, but 
+hardware like the Intel Arc B580 is a concrete counterexample — it runs 
+on the upstream free software xe kernel driver included in Linux 6.12, 
+so a user can run a GPU without any proprietary driver.
+
+OpenVINO (Open Source Distribution): The version of OpenVINO on GitHub 
+is available under the Apache 2.0 license (when not directly distributed 
+by Intel). That is solution as counterexample to non-free drivers.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-23T12:25:18+02:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <0dbb6116-d1e1-460f-a936-762cb516343e@imayhem.com>
+In-Reply-To: <360da525e93eeeb1dbb45c5f40055374@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <b356f76f-3bd9-4e62-966b-ab8bb76d40cc@imayhem.com>
+ <360da525e93eeeb1dbb45c5f40055374@gnu.support>
+
+On 9/23/2026 12:06 PM, Jean Louis wrote:
+
+> On the "nowhere" framing: the policy is not "tell users nothing." The 
+> policy is "do not point users to nonfree software or SaaSS."
+> 
+> A package can mention that local models exist
+
+Nonfree. The LLM. The GPU. Both. So no.
+
+>, can document free options 
+
+There are none.
+
+> where they exist, and can avoid presenting SaaSS as the recommended 
+> path. That is not "nowhere" — it is "not toward SaaSS."
+
+Yes, it is nowhere, because the options you proposed are all nonfree or 
+nonexistent. Could exist in the future, hopefully. But not right now.
+
+> There is no free SaaSS -- even if free software runs on server, it is 
+> SaaSS -- service as a software substitute, because why would user edit 
+> pictures of his family at the third party server controlling his 
+> computing if he can do that on his own computer?
+
+This could be seen also a SaaHS. Service as a Hardware substitute. I 
+don't have the hardware to run an LLM. And I need to use it or I'll lose 
+my job.
+
+> On the "Emacs is dead" framing: Emacs has survived for forty years 
+> without pointing users at proprietary services as its path of least 
+> resistance. There is no evidence that declining to recommend SaaSS will 
+> kill it. The comparison to Debian is apt: GNU does not list Debian as 
+> fully free software distribution because of the non-free repository, and 
+> Debian is not dead. Not being listed did not destroy it, and it did not 
+> destroy GNU's example either.
+
+Do you really think emacs doesn't need a good integration with this 
+things, in whichever form they are right no? Again, with the hope that 
+there will be free options in the future.
+
+> You are right about non-free drivers being a general problem, but 
+> hardware like the Intel Arc B580 is a concrete counterexample — it runs 
+> on the upstream free software xe kernel driver included in Linux 6.12, 
+> so a user can run a GPU without any proprietary driver.
+> 
+> OpenVINO (Open Source Distribution): The version of OpenVINO on GitHub 
+> is available under the Apache 2.0 license (when not directly distributed 
+> by Intel). That is solution as counterexample to non-free drivers.
+
+Is this really relevant to the conversation? Should emacs put Intel Ads? 
+Amazon links?
+
+GNU rules need to serve GNU objectives. Keep that in mind.
+
+================================================================================
+Date: 2026-09-23T13:33:48+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <86se30cicj.fsf@gnu.org>
+In-Reply-To: <E1x9FHc-00Ez3Z-9n@fencepost.gnu.org> (message from Richard
+ Stallman on Wed, 23 Sep 2026 01:12:40 -0400)
+References: <878q6ky0nw.fsf@thanosapollo.org>
+ <E1wsCJK-00DkDG-5B@fencepost.gnu.org> <875x1mmnt9.fsf@thanosapollo.org>
+ <E1wteIF-001Uqh-65@fencepost.gnu.org> <8733wlp3hx.fsf@thanosapollo.org>
+ <E1wuj6F-00Ep7L-Iy@fencepost.gnu.org> <87jyptp6zl.fsf@thanosapollo.org>
+ <87ld93qdx8.fsf@web.de> <875x07kqgk.fsf@thanosapollo.org>
+ <87fqzbq9h4.fsf@web.de> <867bkmmyw3.fsf@gnu.org>
+ <E1x7XRP-002RVS-V0@fencepost.gnu.org> <86h5jmk8sk.fsf@gnu.org>
+ <E1x9FHc-00Ez3Z-9n@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: emacs-devel@gnu.org
+> Date: Wed, 23 Sep 2026 01:12:40 -0400
+> 
+>   > > Yes it is.  Whatever sites and programs we recommend in Emacs for users,
+>   > > that recommendation steers users toward them.
+> 
+>   > No, it doesn't.
+> 
+> Anything that suggests using a site or program, that might influence
+> users to use it, is steering users to that site or program.
+
+The Hermes agent doesn't suggest that.  It _allows_ that, given the
+user configuration, but that's not a suggestion, like allowing access
+to non-free sites from Emacs's EWW is not a suggestion to go there.
+
+> That's why the GNU Project has a policy of being careful about
+> what we refer to -- to make sure we are not influencing users
+> in a way that encourages using nonfree software (or SaaSS).
+> 
+> This is described in the node References in the GNU Coding Standards.
+> 
+> Our actions must be coherent with our philosophy.
+
+They are.  No program or site with which Emacs communicates directly
+are non-free or "steering" in the above sense.
+
+>                      Users use or don't use those sites on their own
+>   > judgment
+> 
+> Each user does apply per own judgment.  But that doesn't mean we have
+> no responsibility to make sure our suggestions don't encourage the very
+> practices we aim to change.
+
+We don't suggest any non-free site or program, not in this case
+anyway.
+
+>              and on their own responsibility.
+> 
+> Users are ultimately responsible for what they do.  But when we suggest
+> things to users, we are also responsible -- for not making suggestions
+> that could teach users bad judgment.
+
+When we suggest, yes.  But we don't suggest in this case.
+
+> That users have the final decision doesn't mean we can be careless in
+> what we suggest to them.
+
+We are not careless.  You might say, perhaps, that the developers of
+the Hermes agent are not careful enough, or even "careless", but
+that's not a problem for the Emacs project, no more than a problem in
+Git or Diff or Grep is our problem.
+
+>   > Our recommendation is for using a package, not for accessing sites
+>   > that package allows.
+> 
+> Using the word "allows" subtly but significantly changes the question
+> under discussion.  The issue is not which sites the package _allows_,
+> but which sites it _suggests_.
+
+I used "allows" because that's what the Hermes agent does.  It doesn't
+suggest, and neither do we.
+
+>   >  Should we reject a free Web browser because it
+>   > allows users to access non-free sites and download non-free software?
+> 
+> This illustrates perfectly how "allows" and "suggests" pose different
+> questions.  The web browsers in Emacs will allow any web site, but
+> suggest few sites or none at all.
+
+And the same is true for hermes.el and for the Hermes agent.
+
+================================================================================
+Date: 2026-09-23T13:47:37+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86pky4chpi.fsf@gnu.org>
+In-Reply-To: <360da525e93eeeb1dbb45c5f40055374@gnu.support> (message from Jean
+ Louis on Wed, 23 Sep 2026 13:06:45 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <b356f76f-3bd9-4e62-966b-ab8bb76d40cc@imayhem.com>
+ <360da525e93eeeb1dbb45c5f40055374@gnu.support>
+
+> Date: Wed, 23 Sep 2026 13:06:45 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: Eli Zaretskii <eliz@gnu.org>, arne_bab@web.de, rms@gnu.org,
+>  monnier@iro.umontreal.ca, yandros@gmail.com, emacs-devel@gnu.org
+> 
+> Dear Cecilio,
+> 
+> Since more than 3.5 years I am trying to find truly free solution using 
+> LLMs, and now I am back to the point where I started as none LLM (for 
+> text generation) is free by 4 free software principles.
+
+The discussion about free or nonfree LLMs in general doesn't belong to
+this list, certainly not to the present discussion.  So please take it
+elsewhere, we have enough noise here already.
+
+================================================================================
+Date: 2026-09-23T13:57:06+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86o6doch9p.fsf@gnu.org>
+In-Reply-To: <5bdad1954ed78714ee236796b1ca2714b976472b.camel@gnu.org> (message
+ from Jason Self on Tue, 22 Sep 2026 17:55:12 -0700)
+References: <86jyu4y0oy.fsf@sdf.org>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <874ifhanef.fsf@web.de>
+ <867bkdeb0d.fsf@gnu.org>
+ <5bdad1954ed78714ee236796b1ca2714b976472b.camel@gnu.org>
+
+> From: Jason Self <jself@gnu.org>
+> Date: Tue, 22 Sep 2026 17:55:12 -0700
+> 
+> On Tue, 2026-09-22 at 15:17 +0300, Eli Zaretskii wrote:
+> > any unreasonable requirements there will simply cause us all to step
+> > down because we are unable to do our jobs!  Good luck finding
+> > potential maintainers who will agree with these additional infinite
+> > duties!
+> 
+> Looking into a specific, reported problem at the second leg (here,
+> Hermes documenting a SaaSS portal as the "fastest path" for new users)
+> isn't an infinite duty.
+
+But no one of the people who think we should do that agreed that the
+2nd (or any, really) leg is the limit.  What if it's the 22nd? or
+1122nd?  Is that still reasonable?  No, it isn't.
+
+The only reasonable limit is the first leg, the one where Emacs
+directly uses or cooperates or communicates with some program or site.
+Anything beyond that means there;'s no limit at all.
+
+Moreover, in the case in point the 2nd leg is also okay, as has been
+shown many times here.
+
+> It's a finite, reactive one: responding to the equivalent of a bug
+> report that a package may conflict with the policy of not suggesting
+> nonfree software or SaaSS to users.
+
+If you think the Hermes agent has a bug, please take that up with the
+developers of the agent, not with us.  Hermes is a free program, but
+every program can always use improvements, including in its UI.  So
+please don't hesitate to report it, just not here.
+
+In any case, bugs in free programs don't disqualify the program from
+being used by Emacs.
+
+================================================================================
+Date: 2026-09-23T14:11:44+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86mrt8cglb.fsf@gnu.org>
+In-Reply-To: <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support> (message from Jean
+ Louis on Tue, 22 Sep 2026 22:52:22 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+
+> Date: Tue, 22 Sep 2026 22:52:22 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: arne_bab@web.de, rms@gnu.org, monnier@iro.umontreal.ca,
+>  yandros@gmail.com, emacs-devel@gnu.org
+> 
+> On 2026-09-22 19:05, Eli Zaretskii wrote:
+> >> On 2026-09-22 18:39, Eli Zaretskii wrote:
+> >> >
+> >> > No, hermes.el does not point to SaaSS.  Please stop spreading this
+> >> > misinformation.  hermes.el is a front end to a free program called
+> >> > Hermes.
+> >> 
+> >> Excuse my English. The sentence was about the dependency to hermes.el,
+> >> and that dependency named Hermes Agent, does steer users to SaaSS.
+> > 
+> > No, Hermes doesn't do that.  It can be configured that way, and it can
+> > be configured to avoid SaaSS.
+> 
+> I think there may be a misunderstanding of what "steer" means here. It 
+> does not mean SaaSS is unavoidable. It means the installation process 
+> presents SaaSS as the default and easiest path — it asks the user to 
+> sign up for a SaaSS service during setup, and presents a long list of 
+> such services as the natural configuration.
+
+In reality, as has been demonstrated here several time, there is no
+long list.  The list presented by the configuration wizard has exactly
+3 items.  That the default is something we don't like doesn't mean
+anything, because the very next alternative avoids the problem.
+
+And in any case, this is an issue with Hermes, even if you think it's
+an issue.  So please take it up with the developers of the Hermes
+agent.  Bugs or sub-optimal user interface in free programs should be
+reported, but they don't disqualify those programs from being used by
+Emacs.
+
+> That is steering
+
+No, it isn't.
+
+> If I have misread the installer, I would be glad to be corrected on
+> the specifics.
+
+You've indeed misread: that's not the installer, that's the
+configuration wizard.
+
+> But repeatedly saying "no, it does not do that" while the evidence
+> suggests otherwise is not convincing.
+
+The evidence doesn't suggest what you say.  You say it does, but it
+doesn't.  The menu of the configuration wizard shows 3 options, two of
+which are okay from our POV.
+
+> And after my review today, I have found that minuet is in GNU ELPA, and 
+> it promotes SaaSS directly in its package description.  And I wonder 
+> about it, as I did read this: Re: [ELPA] New Package: minuet-ai.el:
+> https://lists.gnu.org/archive/html/emacs-devel/2025-03/msg00770.html#1
+> 
+> So I do not know what was final decision, obviously final decision was 
+> to include minuet -- yet it directly works with SaaSS.
+
+That's not relevant to the current discussion, so if you want to
+discuss minuet (or any other ELPA package), please start a separate
+thread.  In this thread we are discussing fundamental issues of how to
+judge ELPA packages, using hermes.el as an example.  Adding other
+packages, which have different traits, before we arrived at an agreed
+set of principles, will simply muddy the waters even more.  So please
+don't.
+
+> After a short review today, I find other packages also promote SaaSS:
+
+Again, not relevant, so please take these issues to separate
+discussions (if you must).
+
+> What I see is that GNU Emacs packages are now slowly thriving with 
+> access to SaaSS, and this normalization is happening one accepted 
+> package at a time.
+
+Please stop defaming the project, based on your unilateral biased
+opinions that were never discussed seriously.  It is clear that you
+dislike the Emacs project and its maintainers, and that adversely
+affects everything you write here.  What you do is unfair and unjust,
+if not downright rude.
+
+> And the "first leg" theory does not hold up — logically or by common 
+> sense. If responsibility ends at the first leg, I can evade it by adding 
+> one more layer: write a free program that accesses a non-free one or 
+> SaaSS, and the first leg is free.
+
+That's not what I said when I described the way we treat these
+situation.  A free program whose operation forces users to use nonfree
+sites or services without any reasonable alternative doesn't qualify.
+And the Hermes agent doesn't do that, so this is a red herring.
+
+================================================================================
+Date: 2026-09-23T14:21:56+02:00
+From: =?utf-8?Q?=C3=93scar?= Fuentes <oscarfv@eclipso.eu>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <875wzw6tuj.fsf@hiperboreo.eu>
+In-Reply-To: <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvpkyabta9.fsf-monnier+emacs@gnu.org>
+ <8733v6gzae.fsf@web.de> <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+ <867bkggyiz.fsf@gnu.org> <87zexccn98.fsf@web.de>
+ <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+
+[Thanos Apollo removed from cc as he requested]
+
+Jean Louis <bugs@gnu.support> writes:
+
+> On 2026-09-23 08:21, Thanos Apollo wrote:
+>>> - hermes.el's package description links directly to that installer.
+>> No.  It links to the docs.  The docs link to a script, and from
+>> there
+>> you can choose a service.  You followed all those steps and still
+>> wrote "directly."  Apparently the only thing allowed a shortcut here
+>> is your description.
+>
+> That what I see is here attached as screenshot:
+>
+> M-x package-list-packages -- then click on hermes package, it says:
+>
+> [Hermes Agent quickstart]
+> <https://hermes-agent.nousresearch.com/docs/getting-started/quickstart>
+>
+> Once user clicks there, user is suggested to connect to SaaSS as
+> easiest path which contradicts the policy as not to suggest SaaSS to
+> users.
+
+>From your descriptions I was under the impression that Hermes was using
+UI anti-patterns to steer users to their SaaS. It is a common business
+tactic to publish a Free frontend to the SaaS as a means to gain
+traction on the community and then switch to a fully propietary business
+model that takes away or highly inconveniences user's freedom.
+
+But looking at the page you linked I see no deceit. Before the part
+contained on your screenshot, almost at the beginning of the page, there
+is a small table with columns "Goal", "Do this", "Then do this" and the
+fourth row is "I want a local or self-hosted model." So the user knows
+that the possibility exists from the beginning. Later on the page there
+are more mentions to those type of setups.
+
+So IMHO your concerns about steering users towards SaaS are exagerated.
+At least right now. I can't comment on the rest of the installation
+process because I wont do that after what I saw elsewhere on that site.
+
+================================================================================
+Date: 2026-09-23T14:29:13+02:00
+From: <tomas@tuxteam.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <arPGGXYHXVL7PjhZ@tuxteam.de>
+In-Reply-To: <86mrt8cglb.fsf@gnu.org>
+References: <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org>
+
+On Wed, Sep 23, 2026 at 03:11:44PM +0300, Eli Zaretskii wrote:
+
+[...]
+
+> Please stop defaming the project, based on your unilateral biased
+> opinions that were never discussed seriously.  It is clear that you
+> dislike the Emacs project and its maintainers, and that adversely
+> affects everything you write here.  What you do is unfair and unjust,
+> if not downright rude.
+
+With all due respect, Eli, I think this is unfair.
+
+Jean Louis's views might be considered extreme. His discussion style
+is definitely difficult to follow. But it is absolutely not clear at
+all he "dislikes the Emacs project and its maintainers" (I'd tend to
+assume the very opposite, but that's my opinion).
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-09-23T14:43:46+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86ld8scf3x.fsf@gnu.org>
+In-Reply-To: <arPGGXYHXVL7PjhZ@tuxteam.de> (tomas@tuxteam.de)
+References: <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <arPGGXYHXVL7PjhZ@tuxteam.de>
+
+> Date: Wed, 23 Sep 2026 14:29:13 +0200
+> Cc: Jean Louis <bugs@gnu.support>, arne_bab@web.de, rms@gnu.org,
+> 	monnier@iro.umontreal.ca, yandros@gmail.com, emacs-devel@gnu.org
+> From: <tomas@tuxteam.de>
+> 
+> On Wed, Sep 23, 2026 at 03:11:44PM +0300, Eli Zaretskii wrote:
+> 
+> [...]
+> 
+> > Please stop defaming the project, based on your unilateral biased
+> > opinions that were never discussed seriously.  It is clear that you
+> > dislike the Emacs project and its maintainers, and that adversely
+> > affects everything you write here.  What you do is unfair and unjust,
+> > if not downright rude.
+> 
+> With all due respect, Eli, I think this is unfair.
+> 
+> Jean Louis's views might be considered extreme. His discussion style
+> is definitely difficult to follow. But it is absolutely not clear at
+> all he "dislikes the Emacs project and its maintainers" (I'd tend to
+> assume the very opposite, but that's my opinion).
+
+That's because you haven't read everything he wrote here.  Or maybe
+you don't consider yourself part of the project, so you aren't
+sensitive to what he says as much as I am.
+
+For someone who invests in Emacs as much as I do, day in and day out,
+reading what he writes, in particular his unfounded accusations,
+_hurts_, and hurts a lot.  You might not understand that, but please
+believe me when I say it.
+
+================================================================================
+Date: 2026-09-23T15:24:56+02:00
+From: Henrik Ahlgren <pablo@seestieto.com>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <877bkcxfpz.fsf@noux.seestieto.com>
+In-Reply-To: <b8239c05925c3d3b3dfab692850d5a83@gnu.support> (Jean Louis's
+ message of "Wed, 23 Sep 2026 09:37:09 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+ <867bkggyiz.fsf@gnu.org> <87zexccn98.fsf@web.de>
+ <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <878q4sfpq5.fsf@thanosapollo.org>
+ <b8239c05925c3d3b3dfab692850d5a83@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> YouTube video isn't really a service as a software substitute. It
+> doesn't replace users' computing as third party service. Please try
+> reading again:
+> https://www.gnu.org/philosophy/who-does-that-server-really-serve.html
+> to understand the differences.
+
+I would argue that, in many use cases, relying on a hosted LLM
+service does not replace users' computing in any traditional sense.
+Often, it is simply a more sophisticated version of Wikipedia: I can
+ask it to explain a subject in much the same way that I might consult
+https://en.wikipedia.org/wiki/Subject_and_object_(philosophy)
+
+How is that fundamentally different from watching Youtube? Besides,
+I can do it using 100% free client-side software, unlike Youtube.
+
+Sure enough, in some respects, it may also constitute "SaaSS", albeit
+sometimes without many of the concerns raised in "Who Does That Server
+Really Serve?". For example, I see no significant privacy risk in using
+LLMs for programming (including testing/security audit/debug that does
+not generate code) when the resulting code is published as free
+software. Public information is, by definition, not private. In many
+respects, this is analogous to hiring someone to write or modify a
+program according to your specifications. (Of course, there are other
+issues, such as copyright, which I believe currently is the main concern
+of the FSF.)
+
+Furthermore, an LLM is largely ephemeral. It neither stores my data nor
+holds it hostage. The user is in control of input and output.
+
+Of course, LLM services are problematic in many respects, and users need
+to understand these issues in order to make informed decisions about
+whether and how to use them. However, I do not believe that spreading
+exaggerated FUD is the appropriate strategy.
+
+================================================================================
+Date: 2026-09-23T16:24:17+02:00
+From: <tomas@tuxteam.de>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <arPhEbIuMUjvVt27@tuxteam.de>
+In-Reply-To: <877bkcxfpz.fsf@noux.seestieto.com>
+References: <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <878q4sfpq5.fsf@thanosapollo.org>
+ <b8239c05925c3d3b3dfab692850d5a83@gnu.support>
+ <877bkcxfpz.fsf@noux.seestieto.com>
+
+On Wed, Sep 23, 2026 at 04:24:56PM +0300, Henrik Ahlgren wrote:
+
+[...]
+
+> I would argue that, in many use cases, relying on a hosted LLM
+> service does not replace users' computing in any traditional sense.
+> Often, it is simply a more sophisticated version of Wikipedia [...]
+
+If you'd said "Grokipedia", I might have agreed (partially).
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-09-23T16:35:19+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <dd573a8d70964a9e2a3500c5cf207cc5@gnu.support>
+In-Reply-To: <877bkcxfpz.fsf@noux.seestieto.com>
+References: <86jyu4y0oy.fsf@sdf.org> <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+ <867bkggyiz.fsf@gnu.org> <87zexccn98.fsf@web.de>
+ <87zexcdwjz.fsf@thanosapollo.org> <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support> <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support> <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <878q4sfpq5.fsf@thanosapollo.org>
+ <b8239c05925c3d3b3dfab692850d5a83@gnu.support>
+ <877bkcxfpz.fsf@noux.seestieto.com>
+
+On 2026-09-23 16:24, Henrik Ahlgren wrote:
+> I would argue that, in many use cases, relying on a hosted LLM
+> service does not replace users' computing in any traditional sense.
+> Often, it is simply a more sophisticated version of Wikipedia: I can
+> ask it to explain a subject in much the same way that I might consult
+> https://en.wikipedia.org/wiki/Subject_and_object_(philosophy)
+
+Thanks for your opinion, though there are substantial differences 
+between Wikipedia and LLM outputs:
+
+- Wikipedia doesn't need any of user's input, LLM does need user's 
+input;
+- Wikipedia hosts information, it doesn't compute information for user;
+
+When you ask an LLM to "explain a subject" or "write code," you are 
+sending your prompt and data to a server, which then performs a 
+computing activity on your behalf and returns a result. That is the 
+definition of SaaSS.
+
+Maybe you use LLMs in such a way to ask general questions, yet people 
+use it with very private information that should not be shared nowhere.
+
+> How is that fundamentally different from watching Youtube? Besides,
+> I can do it using 100% free client-side software, unlike Youtube.
+
+Watching YouTube is receiving information someone published. Asking an 
+LLM is having someone else do your computing — and a free client does 
+not change who does the computing.
+
+> Sure enough, in some respects, it may also constitute "SaaSS", albeit
+> sometimes without many of the concerns raised in "Who Does That Server
+> Really Serve?". For example, I see no significant privacy risk in using
+> LLMs for programming (including testing/security audit/debug that does
+> not generate code) when the resulting code is published as free
+> software.
+
+A 2026 Avast report found that 52% of adults have shared or considered 
+sharing sensitive information with a LLM tool, including CVs and work 
+documents. See: 
+https://newsroom.gendigital.com/2026-09-22-Avast-Safe-Tech-Report-Reveals-Overconfidence-in-Spotting-Deepfakes-and-Comfort-in-Sharing-Personal-Data-with-Bots
+
+> Public information is, by definition, not private. In many
+> respects, this is analogous to hiring someone to write or modify a
+> program according to your specifications. (Of course, there are other
+> issues, such as copyright, which I believe currently is the main 
+> concern
+> of the FSF.)
+
+LLM isn't information. It is a set of tensors that have to be heavily 
+computed to generate some information. That is exactly why using a 
+remote one is SaaSS: the computing is done on someone else's machine. 
+Wikipedia stores and serves published text; it does not compute your 
+result for you. This is also why the "hiring a programmer" analogy 
+fails: a hired programmer is a person with their own judgment and 
+responsibility, not a service that performs your computing under a 
+provider's control.
+
+The primary question is who controls the computing. User or the 
+provider?
+
+> Furthermore, an LLM is largely ephemeral. It neither stores my data nor
+> holds it hostage. The user is in control of input and output.
+
+Not so largely ephemeral... 😃 OpenAI's documentation confirms it uses 
+"information provided or generated by users" as one of three primary 
+sources for developing its models. You can see it on the ironical link 
+named "How ChatGPT protects privacy": 
+https://openai.com/index/how-chatgpt-protects-privacy/#1
+
+Anthropic similarly lists "data that our users or crowd workers provide" 
+as a training data source: 
+https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data 
+keeping user's data from 2 to 7 years.
+
+> Of course, LLM services are problematic in many respects, and users 
+> need
+> to understand these issues in order to make informed decisions about
+> whether and how to use them. However, I do not believe that spreading
+> exaggerated FUD is the appropriate strategy.
+
+I am stating facts. History has shown: when someone calls a fact-based 
+criticism "FUD," the criticism is usually correct. LLMs are SaaSS. The 
+FSF clearly states here: 
+https://www.fsf.org/blogs/licensing/fsf-funded-call-for-white-papers-on-philosophical-and-legal-questions-around-copilot?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+thechangelog+%28The+Changelog%29
+
+"We already know that Copilot as it stands is unacceptable and unjust, 
+from our perspective. It requires running software that is not 
+free/libre (Visual Studio, or parts of Visual Studio Code), and Copilot 
+is Service as a Software Substitute. These are settled questions as far 
+as we are concerned."
+
+I wish you best. Let me eat some cinnamon roll.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-23T16:44:25+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <999163197c27c902919c0f642755d4f1@gnu.support>
+In-Reply-To: <875wzw6tuj.fsf@hiperboreo.eu>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvpkyabta9.fsf-monnier+emacs@gnu.org>
+ <8733v6gzae.fsf@web.de> <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+ <867bkggyiz.fsf@gnu.org> <87zexccn98.fsf@web.de>
+ <87zexcdwjz.fsf@thanosapollo.org> <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support> <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support> <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <875wzw6tuj.fsf@hiperboreo.eu>
+
+On 2026-09-23 15:21, Óscar Fuentes via "Emacs development discussions." 
+wrote:
+>> [Hermes Agent quickstart]
+>> <https://hermes-agent.nousresearch.com/docs/getting-started/quickstart>
+
+> From your descriptions I was under the impression that Hermes was using
+> UI anti-patterns to steer users to their SaaS. It is a common business
+> tactic to publish a Free frontend to the SaaS as a means to gain
+> traction on the community and then switch to a fully propietary 
+> business
+> model that takes away or highly inconveniences user's freedom.
+> 
+> But looking at the page you linked I see no deceit. Before the part
+> contained on your screenshot, almost at the beginning of the page, 
+> there
+> is a small table with columns "Goal", "Do this", "Then do this" and the
+> fourth row is "I want a local or self-hosted model." So the user knows
+> that the possibility exists from the beginning. Later on the page there
+> are more mentions to those type of setups.
+
+Hi Óscar,
+
+Surely you may watch it as harmless... So yes, a user who is looking for 
+a local option can find one early on the page, correct, yet you speak of 
+"deceit" which I never was meaning, and policy question is not whether 
+the page mentions local options. The policy question is: what does the 
+page recommend?
+
+And the page states plainly what it recommends, immediately below the 
+local-model row:
+
+> "Easiest path: Nous Portal"
+> One subscription covers 300+ models plus the Tool Gateway...
+> hermes setup --portal
+
+THEN:
+
+> Setup modes
+> On a fresh install, hermes setup offers three modes:
+> Quick Setup (Nous Portal) — OAuth login, no API keys to manage... The 
+> recommended fast path.
+> Full Setup — walk through every provider, tool, and option yourself.
+> Blank Slate — everything starts off except the bare minimum needed to 
+> run an agent
+
+GNU policy is not about deceit. It is about recommendation. Apart from 
+link in the description, the major recommendation comes through the 
+installation of the Hermes Agent.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-23T17:08:10+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <8f29071f890149ae8aa59c6f77020e0f@gnu.support>
+In-Reply-To: <86mrt8cglb.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org>
+
+Dear Eli,
+
+As to me I am not "defaming" the project, I just share the opinion that 
+users' should not be steered to SaaSS as that is analogous to non-free 
+software, as we could create in GNU project such software and compute 
+LLM results ourselves as users.
+
+But Eli, me personally do not even know who are Emacs maintainers, I 
+just believe whoever is in charge they do great work, and I do not 
+follow the Git log to understand who is who. So there is absolutely 
+nothing that I like someone or not, in fact I like all people who share 
+opposing opinions on any subject, as there is certain pleasure to see 
+that so many bugs and issues get resolved in the end. Sharing opposing 
+opinion has no relation whatsoever to liking or not liking anybody.  The 
+work by any Emacs contributor is helpful to all people.
+
+> In reality, as has been demonstrated here several time, there is no
+> long list.  The list presented by the configuration wizard has exactly
+> 3 items.  That the default is something we don't like doesn't mean
+> anything, because the very next alternative avoids the problem.
+
+Eli let us make sure you see what I see, so when installing Hermes Agent
+Yet the long list is here attached, and that long list, and the URL 
+website screenshot, both arrive by recommendation, suggestion, or 
+steering the user into that. No user can know that one could press 
+Ctrl+C, in fact the main reason for majority of users (according to that 
+company) is anyway to use the SaaSS.
+
+If you do not agree that the list is long, the screenshot is shown in 
+the attachment, but alright, for me that is too long as even one SaaSS 
+offered is long enough.
+
+> And in any case, this is an issue with Hermes, even if you think it's
+> an issue.  So please take it up with the developers of the Hermes
+> agent.
+
+I do not share their values.
+
+I share GNU values.
+
+>> But repeatedly saying "no, it does not do that" while the evidence
+>> suggests otherwise is not convincing.
+> 
+> The evidence doesn't suggest what you say.  You say it does, but it
+> doesn't.  The menu of the configuration wizard shows 3 options, two of
+> which are okay from our POV.
+
+If screenshots in attachments are not evidence for you, they are 
+evidence for me. Good enough.
+
+I have not invented the SaaSS suggestions myself, I am not Hermes 
+promoter, but GNU supporter.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-23T17:18:04+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <87ik3wgfo3.fsf@web.de>
+In-Reply-To: <877bkcxfpz.fsf@noux.seestieto.com> (Henrik Ahlgren's message of
+ "Wed, 23 Sep 2026 16:24:56 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <878q4sfpq5.fsf@thanosapollo.org>
+ <b8239c05925c3d3b3dfab692850d5a83@gnu.support>
+ <877bkcxfpz.fsf@noux.seestieto.com>
+
+Henrik Ahlgren <pablo@seestieto.com> writes:
+
+> I would argue that, in many use cases, relying on a hosted LLM
+> service does not replace users' computing in any traditional sense.
+> Often, it is simply a more sophisticated version of Wikipedia: I can
+> ask it to explain a subject in much the same way that I might consult
+> https://en.wikipedia.org/wiki/Subject_and_object_(philosophy)
+
+That depends on what you do.
+
+If you indeed replace Wikipedia with a hosted LLM, you replace a Free
+service with a proprietary one (which is bad, from the perspective of
+Free Software as goal).
+
+If you replace Google with a hosted LLM, you replace a proprietary
+service with another proprietary service, so from the perspective of
+Free Software as goal you’re no worse off.
+
+If you replace local Free Software based access to free licensed
+documentation with a locally running OpenWeights LLM, you replace Free
+Software with proprietary Freeware (which is bad, from …).
+
+> Furthermore, an LLM is largely ephemeral. It neither stores my data nor
+> holds it hostage. The user is in control of input and output.
+
+In case of hosted LLMs, you cannot know that. Compared to the cost of
+computing the output you get, storing all your input and output on the
+side would be very cheap.
+
+That’s why I expect LLM hosters to log everything and evaluate it any
+way they wish.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-23T17:24:04+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87cxu4gfe3.fsf@web.de>
+In-Reply-To: <360da525e93eeeb1dbb45c5f40055374@gnu.support> (Jean Louis's
+ message of "Wed, 23 Sep 2026 13:06:45 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <b356f76f-3bd9-4e62-966b-ab8bb76d40cc@imayhem.com>
+ <360da525e93eeeb1dbb45c5f40055374@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+>> A free SSaaaaSS?
+>
+> There is no free SaaSS -- even if free software runs on server, it is
+> SaaSS -- service as a software substitute, because why would user edit
+> pictures of his family at the third party server controlling his
+> computing if he can do that on his own computer?
+
+If the software on the server is licensed under the AGPL, then this may
+just be a matter of convenience: the user does not want to maintain a
+locally running service. But it would always be possible if the server
+is no longer acceptable.
+
+Or the server has faster access to vast amounts of data that the user
+does not want to store locally.
+
+For example there are Mastodon instances. I could host one myself, but
+then I’d have to do all the moderation and updating and DoS defense on
+my own. Instead of that, I donate to the folks who run the instance I
+use.
+
+So there is free SaaSS. It’s just that current LLMs aren’t.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-23T17:41:46+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86a4p8c6v9.fsf@gnu.org>
+In-Reply-To: <8f29071f890149ae8aa59c6f77020e0f@gnu.support> (message from Jean
+ Louis on Wed, 23 Sep 2026 18:08:10 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <8f29071f890149ae8aa59c6f77020e0f@gnu.support>
+
+> Date: Wed, 23 Sep 2026 18:08:10 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: arne_bab@web.de, rms@gnu.org, monnier@iro.umontreal.ca,
+>  yandros@gmail.com, emacs-devel@gnu.org
+> 
+> As to me I am not "defaming" the project, I just share the opinion that 
+> users' should not be steered to SaaSS as that is analogous to non-free 
+> software, as we could create in GNU project such software and compute 
+> LLM results ourselves as users.
+
+Your "opinions" publicly defame us.  You insist that we promote
+non-free software and non-free sites, and that we contradict the
+policies and the moral guidance of GNU.  Given how many times those
+"opinions" were refuted, I cannot see any constructive reasons for you
+to keep posting them again and again.
+
+> > In reality, as has been demonstrated here several time, there is no
+> > long list.  The list presented by the configuration wizard has exactly
+> > 3 items.  That the default is something we don't like doesn't mean
+> > anything, because the very next alternative avoids the problem.
+> 
+> Eli let us make sure you see what I see, so when installing Hermes Agent
+> Yet the long list is here attached, and that long list, and the URL 
+> website screenshot, both arrive by recommendation, suggestion, or 
+> steering the user into that. No user can know that one could press 
+> Ctrl+C, in fact the main reason for majority of users (according to that 
+> company) is anyway to use the SaaSS.
+
+You just had another person, not the author of hermes.el, look at that
+page and tell you he immediately saw at the very beginning the
+indication that the installation and configuration can be done so as
+to avoid those sites entirely.  And you still keep claiming that all
+this is unimportant, and the only important thing is that somewhere
+there's a way of doing what we all hope Emacs users who respect their
+freedom will not do??
+
+> If you do not agree that the list is long, the screenshot is shown in 
+> the attachment, but alright, for me that is too long as even one SaaSS 
+> offered is long enough.
+
+I see no long list in the image you posted.  And if even a single item
+makes the list to0o long for you, then I guess we have very different
+notions of "long".  Like I said: you have a point to make, and you
+will try making it no matter what others tell you about the reality.
+Don't be surprised if your arguments are not taken seriously.
+
+> > And in any case, this is an issue with Hermes, even if you think it's
+> > an issue.  So please take it up with the developers of the Hermes
+> > agent.
+> 
+> I do not share their values.
+
+Then leave it to others to report the issue, and let's end this
+endless and futile discussion!
+
+> >> But repeatedly saying "no, it does not do that" while the evidence
+> >> suggests otherwise is not convincing.
+> > 
+> > The evidence doesn't suggest what you say.  You say it does, but it
+> > doesn't.  The menu of the configuration wizard shows 3 options, two of
+> > which are okay from our POV.
+> 
+> If screenshots in attachments are not evidence for you, they are 
+> evidence for me. Good enough.
+
+Fine,  Now can we please stop this?
+
+> I have not invented the SaaSS suggestions myself, I am not Hermes 
+> promoter, but GNU supporter.
+
+You have funny ways to show your support -- by accusing the people
+which you claim you support in all kinds of anti-GNU activities.
+
+================================================================================
+Date: 2026-09-23T17:54:50+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <865wzwc69h.fsf@gnu.org>
+In-Reply-To: <87ik3wgfo3.fsf@web.de> (arne_bab@web.de)
+References: <86jyu4y0oy.fsf@sdf.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <878q4sfpq5.fsf@thanosapollo.org>
+ <b8239c05925c3d3b3dfab692850d5a83@gnu.support>
+ <877bkcxfpz.fsf@noux.seestieto.com> <87ik3wgfo3.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: emacs-devel@gnu.org
+> Date: Wed, 23 Sep 2026 17:18:04 +0200
+> 
+> Henrik Ahlgren <pablo@seestieto.com> writes:
+> 
+> > I would argue that, in many use cases, relying on a hosted LLM
+> > service does not replace users' computing in any traditional sense.
+> > Often, it is simply a more sophisticated version of Wikipedia: I can
+> > ask it to explain a subject in much the same way that I might consult
+> > https://en.wikipedia.org/wiki/Subject_and_object_(philosophy)
+> 
+> That depends on what you do.
+> 
+> If you indeed replace Wikipedia with a hosted LLM, you replace a Free
+> service with a proprietary one (which is bad, from the perspective of
+> Free Software as goal).
+
+Once again, please don't discuss LLMs here unless they are somehow
+related to Emacs and its commands and packages.  General discussions
+about LLMs are off-topic here.
+
+================================================================================
+Date: 2026-09-23T17:56:29+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <864ifgc66q.fsf@gnu.org>
+In-Reply-To: <dd573a8d70964a9e2a3500c5cf207cc5@gnu.support> (message from Jean
+ Louis on Wed, 23 Sep 2026 17:35:19 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+ <867bkggyiz.fsf@gnu.org> <87zexccn98.fsf@web.de>
+ <87zexcdwjz.fsf@thanosapollo.org> <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support> <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support> <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <878q4sfpq5.fsf@thanosapollo.org>
+ <b8239c05925c3d3b3dfab692850d5a83@gnu.support>
+ <877bkcxfpz.fsf@noux.seestieto.com>
+ <dd573a8d70964a9e2a3500c5cf207cc5@gnu.support>
+
+> Date: Wed, 23 Sep 2026 17:35:19 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: emacs-devel@gnu.org
+> 
+> On 2026-09-23 16:24, Henrik Ahlgren wrote:
+> > I would argue that, in many use cases, relying on a hosted LLM
+> > service does not replace users' computing in any traditional sense.
+> > Often, it is simply a more sophisticated version of Wikipedia: I can
+> > ask it to explain a subject in much the same way that I might consult
+> > https://en.wikipedia.org/wiki/Subject_and_object_(philosophy)
+> 
+> Thanks for your opinion, though there are substantial differences 
+> between Wikipedia and LLM outputs:
+
+Please don't conduct general discussions about LLMs on this list.
+Such discussions are off-topic here.
+
+I've asked this several times now, please comply with my requests
+about that.
+
