@@ -1,0 +1,4125 @@
+emacs-devel messages from 2026-09-26T18:15:00+02:00 to 2026-09-27T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-26T18:28:26+02:00
+From: Thierry Volpiatto <thievol@posteo.net>
+Subject: Re: Nitpicking
+Message-ID: <87ld8oj7tj.fsf@posteo.net>
+In-Reply-To: <jwv8q4oypd1.fsf-monnier+emacs@gnu.org>
+References: <179043143024.26236.7237831616233790007@vcs2.savannah.gnu.org>
+ <20260926140350.E60D6C0EFFE@vcs2.savannah.gnu.org>
+ <jwv8q4oypd1.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+>> +(defcustom helm-use-region-when-at 'always
+>> +  "Decide when and how to use region.
+>> +If the value is \\='end and point is at region end or if the value is
+>> +\\='beginning and point is at region beginning, search in this region,
+>> +otherwise use the current region as default for searching.
+>
+> There is a funny tradition in Lisp circles to write
+>
+>     'foo
+>
+> in human text to specify the symbol `foo`, as above.
+> This is *not* the tradition used in ELisp.  This is because `'foo`
+> is not a value: it's a "Lisp form" (what I'd call also a "source code
+> expression") whose evaluation returns the symbol `foo`.  So another way
+> to write it would be
+>
+>     (intern "foo")
+>
+> or
+>
+>     (intern (substring "foobar" 0 3))
+>
+> So it gets fundamentally confusing when docstrings say things like
+>
+>     value is 'end
+>
+> if you consider that an equivalent way to write it would be
+>
+>     value is (intern "foo")
+>
+> For this reason, ELisp docstrings traditionally write it as
+>
+>     value is `end'
+>
+> Where the backquote...quote thingy is used to delimit the "Lisp sexp"
+> we're talking about, to separate it from the prose (just like
+> backquote...backquote is used in Markdown).
+
+I thought `foo' was reserved for bound variables or fbound functions, so
+thanks to point me to this, I hate writing \\='foo in docstrings.
+Will fix soon.
+
+-- 
+Thierry
+
+================================================================================
+Date: 2026-09-26T20:21:15+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <bf9059ef2569eaa40dc9c6ed95d116c0@gnu.support>
+In-Reply-To: <86se2w5gmy.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org>
+
+Should GNU programs be checked on GNU Coding Standards, or there is no 
+checklist at all?
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-26T21:54:57+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <87ld8n3i0e.fsf@web.de>
+In-Reply-To: <87o6dk87ws.fsf@thanosapollo.org> (Thanos Apollo's message of
+ "Sat, 26 Sep 2026 16:21:55 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de>
+ <86pky076go.fsf@gnu.org> <87v77s8icl.fsf@thanosapollo.org>
+ <875wzs48z5.fsf@web.de> <87se2w8dsk.fsf@thanosapollo.org>
+ <87tsnc2mun.fsf@web.de> <87o6dk87ws.fsf@thanosapollo.org>
+
+Thanos Apollo <public@thanosapollo.org> writes:
+
+>> Which of these servers is running completely locally and is easiest to
+>> set up?
+>
+> Install hermes through your package manager (nix/pacman/pip) and
+> follow the 4-step process on https://hermes-agent.nousresearch.com/docs/user-guide/local-models
+
+I didn’t ask "how can I?", but "*which one* is easiest?"
+
+I don’t want to run hermes. I just want to enable people who want to try
+it to do so without getting entrapped in dependencies on SaaSS.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-26T22:51:08+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [nongnu] elpa/evil-visualstar e9f043361c: lexical binding and
+ small fix for regexp style
+Message-ID: <jwv33uvzqk9.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20260926170353.ADC23C0EFFE@vcs2.savannah.gnu.org>
+References: <179044223322.1591.4456172882774230927@vcs2.savannah.gnu.org>
+ <20260926170353.ADC23C0EFFE@vcs2.savannah.gnu.org>
+
+>     lexical binding and small fix for regexp style
+
+FWIW, here's the local patch I have (recently updated to account for
+the above commit).
+
+
+=== Stefan
+
+
+diff --git a/evil-visualstar.el b/evil-visualstar.el
+index 0c09270891c..0e4b41c710a 100644
+--- a/evil-visualstar.el
++++ b/evil-visualstar.el
+@@ -58,7 +58,6 @@
+ That would visually-select the found occurrence, allowing for
+ repeated searches.
+ You will need to hit escape to leave visual-mode."
+-  :group 'evil-visualstar
+   :type 'boolean)
+ 
+ (defvar evil-visualstar-mode-map (make-sparse-keymap))
+@@ -70,23 +69,23 @@ You will need to hit escape to leave visual-mode."
+ (defun evil-visualstar/begin-search (beg end direction)
+   (when (evil-visual-state-p)
+     (evil-exit-visual-state)
+-    (let ((found)
+-          (selection (regexp-quote (buffer-substring-no-properties beg end))))
+-      (if (eq evil-search-module 'isearch)
+-          (progn
+-            (setq isearch-forward direction)
+-            (setq found (evil-search selection direction t)))
+-        (let ((pattern (let (evil-ex-search-vim-style-regexp)
+-                         (evil-ex-make-search-pattern selection)))
+-              (direction (if direction 'forward 'backward)))
+-          (setq evil-ex-search-direction direction)
+-          (setq evil-ex-search-pattern pattern)
+-          (evil-ex-search-activate-highlight pattern)
+-          ;; update search history unless this pattern equals the previous pattern
+-          (unless (equal (car-safe evil-ex-search-history) selection)
+-            (push selection evil-ex-search-history))
+-          (evil-push-search-history selection (eq direction 'forward))
+-          (setq found (evil-ex-search-next))))
++    (let* ((selection (regexp-quote (buffer-substring-no-properties beg end)))
++           (found
++            (if (eq evil-search-module 'isearch)
++                (progn
++                  (setq isearch-forward direction)
++                  (evil-search selection direction t))
++              (let ((pattern (let (evil-ex-search-vim-style-regexp)
++                               (evil-ex-make-search-pattern selection)))
++                    (direction (if direction 'forward 'backward)))
++                (setq evil-ex-search-direction direction)
++                (setq evil-ex-search-pattern pattern)
++                (evil-ex-search-activate-highlight pattern)
++                ;; Update search history unless this pattern equals the previous pattern
++                (unless (equal (car-safe evil-ex-search-history) selection)
++                  (push selection evil-ex-search-history))
++                (evil-push-search-history selection (eq direction 'forward))
++                (evil-ex-search-next)))))
+       (when (and evil-visualstar/persistent found)
+         (push-mark (+ (point) (- end beg)) nil t)))))
+ 
+@@ -115,11 +114,10 @@ You will need to hit escape to leave visual-mode."
+   evil-visualstar-mode turn-on-evil-visualstar-mode)
+ 
+ ;;;###autoload
+-(defun turn-on-evil-visualstar-mode ()
+-  "Turns on visual star selection."
+-  (interactive)
+-  (evil-visualstar-mode t))
++(define-obsolete-function-alias 'turn-on-evil-visualstar-mode
++  #'evil-visualstar-mode "2026")
+ 
++;; FIXME: Why autoload it?
+ ;;;###autoload
+ (defun turn-off-evil-visualstar-mode ()
+   "Turns off visual star selection."
+
+================================================================================
+Date: 2026-09-26T23:02:47+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Nitpicking
+Message-ID: <jwvwls7ybru.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87ld8oj7tj.fsf@posteo.net>
+References: <179043143024.26236.7237831616233790007@vcs2.savannah.gnu.org>
+ <20260926140350.E60D6C0EFFE@vcs2.savannah.gnu.org>
+ <jwv8q4oypd1.fsf-monnier+emacs@gnu.org> <87ld8oj7tj.fsf@posteo.net>
+
+>> Where the backquote...quote thingy is used to delimit the "Lisp sexp"
+>> we're talking about, to separate it from the prose (just like
+>> backquote...backquote is used in Markdown).
+> I thought `foo' was reserved for bound variables or fbound functions, so
+> thanks to point me to this,
+
+No, this syntax has always been used for "here is a bit of verbatim
+sexp" and then the *Help* code tried to opportunistically make use of it
+in those cases where it looks like a function or variable name.
+
+The docstring syntax really deserves better markup so we can reliably
+distinguish between a function name, a variable name, a face name,
+a type name, a mere symbol, a literal backquote, ... but currently we
+have only `\\=` and the syntax introduced in Emacs-29:
+
+    *** New docstring syntax to indicate that symbols shouldn't be links.
+    When displaying docstrings in "*Help*" buffers, strings that are
+    "`like-this'" are made into links (if they point to a bound
+    function/variable).  This can lead to false positives when talking
+    about values that are symbols that happen to have the same names as
+    functions/variables.  To inhibit this buttonification, use the new
+    "\\+`like-this'" syntax.
+
+> I hate writing \\='foo in docstrings.
+
+Yeah, this markup is quite ugly.  We currently don't have a plan to
+improve it :-(
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-26T23:20:40+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Support for osc-8 escape sequences in Emacs running in terminal
+Message-ID: <jwvqzifyasb.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <CAN45Pnqd+uGLXvm-hjcnh_SqJw61JJwE4jX9uD-KY4AGCbOGiw@mail.gmail.com> (message
+ from hemant <gethemant@gmail.com> on Fri, 25 Sep 2026 18:52:26 -0400)
+References: <CAN45Pnqd+uGLXvm-hjcnh_SqJw61JJwE4jX9uD-KY4AGCbOGiw@mail.gmail.com>
+
+> Did we had some interest in fixing terminal rendering of button/links with
+> property `browse-url-data` to emit links with OSC-8 sequences, so as
+> terminals like Kitty/Ghostty/iTerm etc can display them correctly (and make
+> them clickable!).
+
+`xterm-mouse-mode` should already handle it right for any terminal that
+supports `xterm-mouse-mode` (assuming the Emacs session is able to
+contact/launch your browser, which may not be the case if your Emacs
+session runs inside an SSH session).
+
+So the above functionality would likely want to be disabled when
+`xterm-mouse-mode` is enabled.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-27T00:55:27+02:00
+From: hemant <gethemant@gmail.com>
+Subject: Re: Support for osc-8 escape sequences in Emacs running in terminal
+Message-ID: <CAN45Pno_7eGdWpPHK_bMLALWomU=efKt7ft39vb2wu5E-5+bEA@mail.gmail.com>
+In-Reply-To: <865wzs8sfd.fsf@gnu.org>
+References: <CAN45Pnqd+uGLXvm-hjcnh_SqJw61JJwE4jX9uD-KY4AGCbOGiw@mail.gmail.com>
+ <865wzs8sfd.fsf@gnu.org>
+
+Hi,
+
+
+On Sat, Sep 26, 2026 at 1:58 AM Eli Zaretskii <eliz@gnu.org> wrote:
+
+> > From: hemant <gethemant@gmail.com>
+> > Date: Fri, 25 Sep 2026 18:52:26 -0400
+> >
+> > Did we had some interest in fixing terminal rendering of button/links
+> with property `browse-url-data` to emit links
+> > with OSC-8 sequences, so as terminals like Kitty/Ghostty/iTerm etc can
+> display them correctly (and make them
+> > clickable!).
+> >
+> > I primarily use Emacs in a terminal and from my investigations I have
+> learnt that it isn't possible to implement this
+> > correctly without touching core/C code of Emacs.
+>
+> AFAIU, you should be able to use before-string and after-string
+> overlay properties to cause the necessary escape sequences be written
+> to the terminal before and after such buttons.
+>
+
+Are you sure that works. I thought Emacs would redisplay them as text
+rather than sending them as terminal control characters?
+
+I have tried using send-string-to-terminal, but that is very fragile.
+
+================================================================================
+Date: 2026-09-27T01:57:37+02:00
+From: Bailey Ling <bling@live.ca>
+Subject: Re: [nongnu] elpa/evil-visualstar e9f043361c: lexical binding and
+ small fix for regexp style
+Message-ID: <SJ2PR10MB78124BA775E4C6F72DC89D24AE8F2@SJ2PR10MB7812.namprd10.prod.outlook.com>
+In-Reply-To: <jwv33uvzqk9.fsf-monnier+emacs@gnu.org>
+References: <179044223322.1591.4456172882774230927@vcs2.savannah.gnu.org>
+ <20260926170353.ADC23C0EFFE@vcs2.savannah.gnu.org>
+ <jwv33uvzqk9.fsf-monnier+emacs@gnu.org>
+
+Thanks for the review! Changes have been incorporated upstream.
+________________________________
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Sent: Saturday, September 26, 2026 4:51 PM
+To: emacs-devel@gnu.org <emacs-devel@gnu.org>
+Cc: Bailey Ling <bling@live.ca>
+Subject: Re: [nongnu] elpa/evil-visualstar e9f043361c: lexical binding and small fix for regexp style
+
+>     lexical binding and small fix for regexp style
+
+FWIW, here's the local patch I have (recently updated to account for
+the above commit).
+
+
+=== Stefan
+
+
+diff --git a/evil-visualstar.el b/evil-visualstar.el
+index 0c09270891c..0e4b41c710a 100644
+--- a/evil-visualstar.el
++++ b/evil-visualstar.el
+@@ -58,7 +58,6 @@
+ That would visually-select the found occurrence, allowing for
+ repeated searches.
+ You will need to hit escape to leave visual-mode."
+-  :group 'evil-visualstar
+   :type 'boolean)
+
+ (defvar evil-visualstar-mode-map (make-sparse-keymap))
+@@ -70,23 +69,23 @@ You will need to hit escape to leave visual-mode."
+ (defun evil-visualstar/begin-search (beg end direction)
+   (when (evil-visual-state-p)
+     (evil-exit-visual-state)
+-    (let ((found)
+-          (selection (regexp-quote (buffer-substring-no-properties beg end))))
+-      (if (eq evil-search-module 'isearch)
+-          (progn
+-            (setq isearch-forward direction)
+-            (setq found (evil-search selection direction t)))
+-        (let ((pattern (let (evil-ex-search-vim-style-regexp)
+-                         (evil-ex-make-search-pattern selection)))
+-              (direction (if direction 'forward 'backward)))
+-          (setq evil-ex-search-direction direction)
+-          (setq evil-ex-search-pattern pattern)
+-          (evil-ex-search-activate-highlight pattern)
+-          ;; update search history unless this pattern equals the previous pattern
+-          (unless (equal (car-safe evil-ex-search-history) selection)
+-            (push selection evil-ex-search-history))
+-          (evil-push-search-history selection (eq direction 'forward))
+-          (setq found (evil-ex-search-next))))
++    (let* ((selection (regexp-quote (buffer-substring-no-properties beg end)))
++           (found
++            (if (eq evil-search-module 'isearch)
++                (progn
++                  (setq isearch-forward direction)
++                  (evil-search selection direction t))
++              (let ((pattern (let (evil-ex-search-vim-style-regexp)
++                               (evil-ex-make-search-pattern selection)))
++                    (direction (if direction 'forward 'backward)))
++                (setq evil-ex-search-direction direction)
++                (setq evil-ex-search-pattern pattern)
++                (evil-ex-search-activate-highlight pattern)
++                ;; Update search history unless this pattern equals the previous pattern
++                (unless (equal (car-safe evil-ex-search-history) selection)
++                  (push selection evil-ex-search-history))
++                (evil-push-search-history selection (eq direction 'forward))
++                (evil-ex-search-next)))))
+       (when (and evil-visualstar/persistent found)
+         (push-mark (+ (point) (- end beg)) nil t)))))
+
+@@ -115,11 +114,10 @@ You will need to hit escape to leave visual-mode."
+   evil-visualstar-mode turn-on-evil-visualstar-mode)
+
+ ;;;###autoload
+-(defun turn-on-evil-visualstar-mode ()
+-  "Turns on visual star selection."
+-  (interactive)
+-  (evil-visualstar-mode t))
++(define-obsolete-function-alias 'turn-on-evil-visualstar-mode
++  #'evil-visualstar-mode "2026")
+
++;; FIXME: Why autoload it?
+ ;;;###autoload
+ (defun turn-off-evil-visualstar-mode ()
+   "Turns off visual star selection."
+
+================================================================================
+Date: 2026-09-27T01:57:39+02:00
+From: Mike Kupfer <kupfer@rawbw.com>
+Subject: Re: missing error stacktrace
+Message-ID: <43532.1790467059@bach.localdomain>
+In-Reply-To: <jwv7bk9midm.fsf-monnier+emacs@gnu.org>
+References: <799610289.9435.1790303526919@office.mailbox.org>
+ <jwv7bk9midm.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier via "Emacs development discussions." wrote:
+
+> > I've no idea about the internals and how hard it would be, but I think
+> > attaching a stacktrace to every error would immediately and significantly
+> > improve Emacs as a platform.
+> 
+> I tend to agree.  Such stacktraces are less valuable than
+> `debug-on-error` since they get you a "dead" trace rather than something
+> you can dynamically investigate, but they can still be very valuable.
+
+Having a "dead" trace would help address #50629, I think?
+
+cheers,
+mike
+
+================================================================================
+Date: 2026-09-27T03:26:42+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <87ld8n8ox9.fsf@thanosapollo.org>
+In-Reply-To: <87ld8n3i0e.fsf@web.de>
+References: <86jyu4y0oy.fsf@sdf.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support> <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support> <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support> <86mrt8cglb.fsf@gnu.org>
+ <E1xAJIO-006qoz-6J@fencepost.gnu.org> <861pag8qxj.fsf@gnu.org>
+ <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de> <86pky076go.fsf@gnu.org>
+ <87v77s8icl.fsf@thanosapollo.org> <875wzs48z5.fsf@web.de>
+ <87se2w8dsk.fsf@thanosapollo.org> <87tsnc2mun.fsf@web.de>
+ <87o6dk87ws.fsf@thanosapollo.org> <87ld8n3i0e.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Thanos Apollo <public@thanosapollo.org> writes:
+>
+>>> Which of these servers is running completely locally and is easiest to
+>>> set up?
+>>
+>> Install hermes through your package manager (nix/pacman/pip) and
+>> follow the 4-step process on https://hermes-agent.nousresearch.com/docs/user-guide/local-models
+>
+> I didn’t ask "how can I?", but "*which one* is easiest?"
+
+And I've sent you a documented process that goes from installing hermes
+to running a local LLM with llama.cpp in 2min, without interacting with
+the configuration wizard.  You can find more with a google search.
+
+> I don’t want to run hermes. I just want to enable people who want to try
+> it to do so without getting entrapped in dependencies on SaaSS.
+
+You have sent 9+ messages in the two hermes-specific discussions alone,
+about software you do not plan to use and whose stack you are not
+familiar with.  You even proposed configuring the agent from hermes.el
+before establishing where the agent runs or how the model server would
+be supplied.  If you want to help users, familiarise yourself with the
+software before asking for changes to it.  Claiming to help while
+leaving others to repeatedly correct your misunderstandings is just
+adding noise.
+
+I will not be replying anymore.
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-27T05:29:41+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xAfa9-00G77E-Py@fencepost.gnu.org>
+In-Reply-To: <87o6dmix8z.fsf@mail.gmail.com> (message from Nickolai Dobrynin
+ on Thu, 24 Sep 2026 15:39:56 +0200)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <jwvmrt9mkn8.fsf-monnier+emacs@gnu.org>
+ <9f2476581290c148a80d17ece6301e47@gnu.support>
+ <E1x9aGx-004eVq-8f@fencepost.gnu.org> <87o6dmix8z.fsf@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > One idea just occurred to me.  Perhaps we could add a feature to make
+  > > some ELPA packages conditionally visible, so that the packages that
+  > > work with Matlab would appear in M-x list-packages display only if
+  > > Matlab is already installed, or the user has files which indicate that
+  > > user already uses Matlab.
+
+  > Scanning around while looking for a particular program or traces thereof
+  > would violate user privacy unless the user consents to the scan.
+
+I suspect a misunderstanding here.  How can you violate your own
+privacy by checking whether a certain program is installed on your
+computer?  If you tried to RUN that program, that's exactly what the
+shell would do.
+
+Indeed, if you enter `type matlab' in Bash, it will tell you the file
+name that the `matlab' command would run, or else tell you there is no
+such file in your PATH.
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-27T05:32:41+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xAfd3-00GHqX-Eq@fencepost.gnu.org>
+In-Reply-To: <CAN+1HbpbbCTTx5dhNy574xnGSTWDwSy1=XpbYoACPC-K+5qF+w@mail.gmail.com>
+ (message from =?iso-8859-1?Q?St=C3=A9phane?= Marks on Thu, 24 Sep 2026
+ 08:36:49 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <jwvmrt9mkn8.fsf-monnier+emacs@gnu.org>
+ <9f2476581290c148a80d17ece6301e47@gnu.support>
+ <E1x9aGx-004eVq-8f@fencepost.gnu.org>
+ <CAN+1HbpbbCTTx5dhNy574xnGSTWDwSy1=XpbYoACPC-K+5qF+w@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > I am not in favor of such conditional filtering.  To me, it is tantamount
+  > to obfuscation and the opposite of a user's freedom to information.
+
+On the contrary, we are not compelled to tell every user about every
+package.
+
+  >   It
+  > would prevent such a Matlab package from being listed if a user has
+  > undetected Matlab-compatible free software that we may not know about.
+
+If this happened, we would get a bug report; on discovering the existence
+of that Matlab-compatible free software, we would make changes in that
+package so as not to present it as "for Matlab".  We would present it as
+primarily for FreeLab.
+
+  >   For
+  > users that use a single Emacs configuration across many different hosts,
+  > some which have Matlab available and some which don't, such users would
+  > find conditional filtering appearing to be unpredictable behavior.
+
+If the user has already selected use of that package, it would be used
+on every platform.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-27T05:34:07+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <E1xAfeR-00GMe2-BN@fencepost.gnu.org>
+In-Reply-To: <87tsnc2mun.fsf@web.de> (arne_bab@web.de)
+References: <86jyu4y0oy.fsf@sdf.org> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de>
+ <86pky076go.fsf@gnu.org> <87v77s8icl.fsf@thanosapollo.org>
+ <875wzs48z5.fsf@web.de> <87se2w8dsk.fsf@thanosapollo.org>
+ <87tsnc2mun.fsf@web.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > Hermes sends requests to a model server.  Software such as Ollama runs
+  > > the model.  Writing a server address and model name into a config does
+  > > not install the weights or start that server.
+
+  > Which of these servers is running completely locally and is easiest to
+  > set up?
+
+There is question of whether any of the available local models is
+actually free.  For instance, the Common (On your knees and) Crawl
+demands models require users to agree to outrageous conditions.
+
+That is a crucial moral issue, but let's for the moment bypass it to
+address another aspect of how to use a local LLM configuration.
+
+My understanding is that hermes.el talks to a web site called Hermes,
+which asks the user to specify a configuration.  And that
+configuration specifies connecting the user to other web sites.
+(These things were not clearly explained when they were described.)
+If I am mistaken about this, I'd like to understand how so.)
+
+If your aim is to talk to a local LLM configuration, it doesn't make
+sense to use a web site to set that up.  You can set it up in a purely
+local way, without ever talking to any other machine; and that's how
+it ought to be done.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-27T05:34:22+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+In-Reply-To: <86y0co7c4m.fsf@gnu.org> (message from Eli Zaretskii on Sat, 26
+ Sep 2026 09:36:09 +0300)
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > This is only a good default in certain contexts, such as received
+  > email messages or browsing Web sites.  In these contexts, we indeed
+  > present a warning by default.  I already gave the Rmail example;
+
+I just looked at all the emails with this Subject field,
+and none of them seems to mention `Rmail'.  If one of them
+shows an Rmail example, it doesn't seem to identify itself as one.
+Could you please point out that particular example, and identify it
+as the one you are referring to?
+
+Does Rmail itself, or M-x mail, use any of these facilities to warn
+the user about trying to send mail to one of those pitfall addresses?
+Or trying to browse a pitfall URL?
+
+Or is it the user's responsibility to arrange to call something like
+`textsec-suspicious-p'?
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-27T05:34:24+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xAfei-00GQoe-Rl@fencepost.gnu.org>
+In-Reply-To: <864ifc8rgn.fsf@gnu.org> (message from Eli Zaretskii on Sat, 26
+ Sep 2026 09:19:36 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIN-006qog-FJ@fencepost.gnu.org>
+ <864ifc8rgn.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > It means that Hermes directly promotes something that goes
+  > > against our principles.
+
+  > Sorry, I disagree with such an extreme interpretation of an
+  > alternative in a menu.
+
+An alternative in a menu, which leads to running nonfree software, is
+definitely promotion of that.  For instance, if Emacs had a command
+`browse' and it displayed a menu of browsers to use, and by default
+one menu item displays `Browse using Chrome', or if it uses Chrome,
+either one would promote using the nonfree browser Chrome.
+
+With a menu item like that, many users would find themselves running
+nonfree Chrome, after Emacs itself leads them there by showing that
+menu item.
+
+One can equally well describe this as steering users towards using
+Chrome.  It does that by inviting them to click and choose it.
+
+I'm not wedded to these particular words, "promotion", "leads" and
+"steering".  They are meant to refer to actions such as this menu item,
+and they seem clear to me, but we can use some other word.
+
+How about "suggests"?  "Presents"?
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-27T05:34:25+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xAfej-00GR1T-OD@fencepost.gnu.org>
+In-Reply-To: <864ifc8rgn.fsf@gnu.org> (message from Eli Zaretskii on Sat, 26
+ Sep 2026 09:19:36 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIN-006qog-FJ@fencepost.gnu.org>
+ <864ifc8rgn.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > >               because the very next alternative avoids the problem.
+  > > 
+  > > The next alternative might be ok -- I am not sure whether we have
+  > > checked it thoroughly to make sure of that.
+
+  > Why aren't you sure?
+
+All I know about "the very next alternative" is that you've said it
+comes after the first alternative.  I don't know what it consists of.
+I can't recall all the details in hundreds of messages.  When I read
+one, I focus on the ones that are pertinent to the specific question
+I am thinking about at that moment.
+
+                          What that alternative does was described here in
+  > detail.
+
+I don't recall seeing that description.  Would you please show that?
+I've seen very brief statements, but no thorough explanations.
+
+Of course, there are other messages I haven't even seen yet.  I can't
+read today all the ones that are in my inbox.  I have to do the best I
+can with what has been presented comprehensibly.
+
+  > We don't have a Hermes package.  We have hermes.el, and then there's
+  > the Hermes agent, which is not our package, but a free program that
+  > needs to be installed separately and configured by the user.
+
+What Thanos said when talking about this did not make that distinction
+clear, or the relationship between the two.  Some mentioned the
+"configuration" part.  Are these the only parts?
+
+Messages I've seen today have referred to various components
+associated with the Hermes package, and each message gives a fragment
+of information about it.  Has anyone posted a list of them, stating
+what job each one does, and what computer it runs in?  And what the
+relationship between them is?  I would like to see that; I may
+get a better understanding from it.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-27T05:34:26+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: How to decide better about proposed packages
+Message-ID: <E1xAfek-00GREk-L2@fencepost.gnu.org>
+In-Reply-To: <1de40e965810363478fc2ee9461e3fb0@gnu.support> (message from Jean
+ Louis on Fri, 25 Sep 2026 22:35:33 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <E1xA6aI-00AWIN-8X@fencepost.gnu.org> <86fqyx8kml.fsf@gnu.org>
+ <1de40e965810363478fc2ee9461e3fb0@gnu.support>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > I have raised concerns about hermes.el, codex-ide, minuet, gptel, 
+  > aidermacs, and ellama — not one package, but a category.
+
+I remember being concerned about some of those packages, too -- but some of
+them got installed after a hurried discussion.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-09-27T06:08:13+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <87ik3r8hg2.fsf@thanosapollo.org>
+In-Reply-To: <E1xAfeR-00GMe2-BN@fencepost.gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de>
+ <86pky076go.fsf@gnu.org> <87v77s8icl.fsf@thanosapollo.org>
+ <875wzs48z5.fsf@web.de> <87se2w8dsk.fsf@thanosapollo.org>
+ <87tsnc2mun.fsf@web.de> <E1xAfeR-00GMe2-BN@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+
+[...]
+> My understanding is that hermes.el talks to a web site called Hermes,
+> which asks the user to specify a configuration.  And that
+> configuration specifies connecting the user to other web sites.
+> (These things were not clearly explained when they were described.)
+> If I am mistaken about this, I'd like to understand how so.)
+
+I explained this in detail in my reply to you on 11 August in the
+“[NonGNU] new: hermes” thread.  The message-id is
+<8733wlp3hx.fsf@thanosapollo.org>.  
+
+*I NEVER described Hermes as a website, or hermes.el as an interface to one.*
+
+The longer this discussion goes on and the more people join it, the
+more it feels like we are playing a game of broken telephone.
+
+hermes is a local program, not a website.  With a local model installed,
+it can run without an internet connection.  hermes.el is its Emacs
+interface.  Emacs, hermes and the model server can all run on the same
+machine.  No external website is needed to configure or use that setup.
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-27T06:11:56+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86mrt35o4z.fsf@gnu.org>
+In-Reply-To: <bf9059ef2569eaa40dc9c6ed95d116c0@gnu.support> (message from Jean
+ Louis on Sat, 26 Sep 2026 21:21:15 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org> <bf9059ef2569eaa40dc9c6ed95d116c0@gnu.support>
+
+> Date: Sat, 26 Sep 2026 21:21:15 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: rms@gnu.org, monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> 
+> Should GNU programs be checked on GNU Coding Standards, or there is no 
+> checklist at all?
+
+If you are asking about Emacs, then Emacs adheres to the GCS, more
+than some other GNU projects do.  Quite a few of the conventions and
+guidelines in the GCS were lifted directly from our conventions and
+procedures here.
+
+If you are asking about GNU programs in general, this list is not the
+right place to discuss that.
+
+================================================================================
+Date: 2026-09-27T06:17:58+02:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <875wzr2uq1.fsf@mail.gmail.com>
+In-Reply-To: <E1xAfa9-00G77E-Py@fencepost.gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <jwvmrt9mkn8.fsf-monnier+emacs@gnu.org>
+ <9f2476581290c148a80d17ece6301e47@gnu.support>
+ <E1x9aGx-004eVq-8f@fencepost.gnu.org> <87o6dmix8z.fsf@mail.gmail.com>
+ <E1xAfa9-00G77E-Py@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > > One idea just occurred to me.  Perhaps we could add a feature to make
+>   > > some ELPA packages conditionally visible, so that the packages that
+>   > > work with Matlab would appear in M-x list-packages display only if
+>   > > Matlab is already installed, or the user has files which indicate that
+>   > > user already uses Matlab.
+>
+>   > Scanning around while looking for a particular program or traces thereof
+>   > would violate user privacy unless the user consents to the scan.
+>
+> I suspect a misunderstanding here.  How can you violate your own
+> privacy by checking whether a certain program is installed on your
+> computer?  If you tried to RUN that program, that's exactly what the
+> shell would do.
+>
+> Indeed, if you enter `type matlab' in Bash, it will tell you the file
+> name that the `matlab' command would run, or else tell you there is no
+> such file in your PATH.
+
+Could very well be a confusion on my part.
+
+Suppose the user has Matlab installed. What should the user do that would
+present him with a list of Matlab-related packages that would otherwise
+be hidden?
+
+I understood the phrase "so that the packages that work with Matlab ..."
+to mean that Emacs would, first, do an unsolicited scan to check that
+either Matlab itself or its leftover files are present, and then give
+a list of relevant packages.
+
+Probably not what you meant, but this was my initial reading.
+
+================================================================================
+Date: 2026-09-27T06:39:06+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Support for osc-8 escape sequences in Emacs running in terminal
+Message-ID: <86h5jb5mvp.fsf@gnu.org>
+In-Reply-To: <CAN45Pno_7eGdWpPHK_bMLALWomU=efKt7ft39vb2wu5E-5+bEA@mail.gmail.com>
+ (message from hemant on Sat, 26 Sep 2026 18:55:27 -0400)
+References: <CAN45Pnqd+uGLXvm-hjcnh_SqJw61JJwE4jX9uD-KY4AGCbOGiw@mail.gmail.com>
+ <865wzs8sfd.fsf@gnu.org>
+ <CAN45Pno_7eGdWpPHK_bMLALWomU=efKt7ft39vb2wu5E-5+bEA@mail.gmail.com>
+
+> From: hemant <gethemant@gmail.com>
+> Date: Sat, 26 Sep 2026 18:55:27 -0400
+> Cc: emacs-devel@gnu.org
+> 
+>  > From: hemant <gethemant@gmail.com>
+>  > Date: Fri, 25 Sep 2026 18:52:26 -0400
+>  > 
+>  > Did we had some interest in fixing terminal rendering of button/links with property `browse-url-data` to
+>  emit links
+>  > with OSC-8 sequences, so as terminals like Kitty/Ghostty/iTerm etc can display them correctly (and make
+>  them
+>  > clickable!).
+>  > 
+>  > I primarily use Emacs in a terminal and from my investigations I have learnt that it isn't possible to
+>  implement this
+>  > correctly without touching core/C code of Emacs.
+> 
+>  AFAIU, you should be able to use before-string and after-string
+>  overlay properties to cause the necessary escape sequences be written
+>  to the terminal before and after such buttons.
+> 
+> Are you sure that works. I thought Emacs would redisplay them as text rather than sending them as terminal
+> control characters?
+
+If you mean the fact that Emacs will show "^[" for ESC, then I think
+you will need to play with display-table to make these control
+character display as themselves.
+
+But yes, if we want to support this in a convenient way, we should
+have some specialized minor mode which would display such buttons as
+links on GUI frames and emit OSC-8 sequences on capable text-mode
+terminals.  Would you like to submit a patch to that effect?
+
+================================================================================
+Date: 2026-09-27T07:28:07+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <86cxtz5km0.fsf@gnu.org>
+In-Reply-To: <E1xAfeg-00GQLY-SI@fencepost.gnu.org> (message from Richard
+ Stallman on Sat, 26 Sep 2026 23:34:22 -0400)
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: juri@linkov.net, tailorpaul@pm.me, emacs-devel@gnu.org
+> Date: Sat, 26 Sep 2026 23:34:22 -0400
+> 
+>   > This is only a good default in certain contexts, such as received
+>   > email messages or browsing Web sites.  In these contexts, we indeed
+>   > present a warning by default.  I already gave the Rmail example;
+> 
+> I just looked at all the emails with this Subject field,
+> and none of them seems to mention `Rmail'.  If one of them
+> shows an Rmail example, it doesn't seem to identify itself as one.
+> Could you please point out that particular example, and identify it
+> as the one you are referring to?
+
+I don't think anyone has posted an example.  Rmail will present a
+warning when a URL included in a text/html body of an Rmail message
+uses homoglyphs and other insecure features.  The examples where I
+actually saw this in action are private and cannot be shared, sorry.
+But you can study shr.el (used by Rmail to render HTML bodies of
+messages) to see what it does and how.
+
+> Does Rmail itself, or M-x mail, use any of these facilities to warn
+> the user about trying to send mail to one of those pitfall addresses?
+
+Yes, see message-send-mail in message.el and mail-send in sendmail.el.
+Also rmail-check-suspicious-from in rmail.el.
+
+> Or trying to browse a pitfall URL?
+
+Yes, if the email's body is HTML, where each URL is converted into a
+clickable link.
+
+> Or is it the user's responsibility to arrange to call something like
+> `textsec-suspicious-p'?
+
+No.
+
+================================================================================
+Date: 2026-09-27T07:34:33+02:00
+From: Thierry Volpiatto <thievol@posteo.net>
+Subject: Re: Nitpicking
+Message-ID: <87ecefjlzt.fsf@posteo.net>
+In-Reply-To: <jwvwls7ybru.fsf-monnier+emacs@gnu.org>
+References: <179043143024.26236.7237831616233790007@vcs2.savannah.gnu.org>
+ <20260926140350.E60D6C0EFFE@vcs2.savannah.gnu.org>
+ <jwv8q4oypd1.fsf-monnier+emacs@gnu.org> <87ld8oj7tj.fsf@posteo.net>
+ <jwvwls7ybru.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+>>> Where the backquote...quote thingy is used to delimit the "Lisp sexp"
+>>> we're talking about, to separate it from the prose (just like
+>>> backquote...backquote is used in Markdown).
+>> I thought `foo' was reserved for bound variables or fbound functions, so
+>> thanks to point me to this,
+>
+> No, this syntax has always been used for "here is a bit of verbatim
+> sexp" and then the *Help* code tried to opportunistically make use of it
+> in those cases where it looks like a function or variable name.
+>
+> The docstring syntax really deserves better markup so we can reliably
+> distinguish between a function name, a variable name, a face name,
+> a type name, a mere symbol, a literal backquote, ... but currently we
+> have only `\\=` and the syntax introduced in Emacs-29:
+>
+>     *** New docstring syntax to indicate that symbols shouldn't be links.
+>     When displaying docstrings in "*Help*" buffers, strings that are
+>     "`like-this'" are made into links (if they point to a bound
+>     function/variable).  This can lead to false positives when talking
+>     about values that are symbols that happen to have the same names as
+>     functions/variables.  To inhibit this buttonification, use the new
+>     "\\+`like-this'" syntax.
+
+Thanks for explanations, perhaps `\\+` is what I need here, didn't know
+it.
+
+-- 
+Thierry
+
+================================================================================
+Date: 2026-09-27T07:35:31+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86bj9j5k9o.fsf@gnu.org>
+In-Reply-To: <E1xAfei-00GQoe-Rl@fencepost.gnu.org> (message from Richard
+ Stallman on Sat, 26 Sep 2026 23:34:24 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIN-006qog-FJ@fencepost.gnu.org>
+ <864ifc8rgn.fsf@gnu.org> <E1xAfei-00GQoe-Rl@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> Date: Sat, 26 Sep 2026 23:34:24 -0400
+> 
+>   > > It means that Hermes directly promotes something that goes
+>   > > against our principles.
+> 
+>   > Sorry, I disagree with such an extreme interpretation of an
+>   > alternative in a menu.
+> 
+> An alternative in a menu, which leads to running nonfree software, is
+> definitely promotion of that.  For instance, if Emacs had a command
+> `browse' and it displayed a menu of browsers to use, and by default
+> one menu item displays `Browse using Chrome', or if it uses Chrome,
+> either one would promote using the nonfree browser Chrome.
+
+In Emacs, yes, we go an extra mile by not showing such alternatives.
+But the Hermes agent is not part of Emacs and is not a GNU program.
+Its developers are not required to abide by the GNU Coding Standards.
+
+Nonetheless, having an alternative in a menu is neither "steering" nor
+"promotion", because promoting an alternative needs to explicitly and
+actively describe it in favorable terms, not just show it.  We avoid
+even showing it in Emacs, but we are not talking about Emacs or
+hermes.el here, we are talking about a program with which hermes.el
+communicates, which is not Emacs and not GNU.
+
+> How about "suggests"?  "Presents"?
+
+The words we use don't matter, as long as we agree that doing so does
+not disqualify a non-GNU free program that Emacs communicates with.
+Which is what happens here: Emacs, via a free package hermes.el
+communicates with the Hermes agent, which is a free non-GNU program
+that allows users to configure it so as to avoid non-free stuff.
+
+================================================================================
+Date: 2026-09-27T07:59:30+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86a4p35j5p.fsf@gnu.org>
+In-Reply-To: <E1xAfej-00GR1T-OD@fencepost.gnu.org> (message from Richard
+ Stallman on Sat, 26 Sep 2026 23:34:25 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIN-006qog-FJ@fencepost.gnu.org>
+ <864ifc8rgn.fsf@gnu.org> <E1xAfej-00GR1T-OD@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> Date: Sat, 26 Sep 2026 23:34:25 -0400
+> 
+>   > >               because the very next alternative avoids the problem.
+>   > > 
+>   > > The next alternative might be ok -- I am not sure whether we have
+>   > > checked it thoroughly to make sure of that.
+> 
+>   > Why aren't you sure?
+> 
+> All I know about "the very next alternative" is that you've said it
+> comes after the first alternative.  I don't know what it consists of.
+> I can't recall all the details in hundreds of messages.
+
+They are all in the mail archives, and can be found if needed.  Or you
+can trust me when I tell you about it.
+
+>                           What that alternative does was described here in
+>   > detail.
+> 
+> I don't recall seeing that description.  Would you please show that?
+> I've seen very brief statements, but no thorough explanations.
+
+This and the parallel threads included an explicit and detailed
+description of the menu shown by the configuration tool of the Hermes
+agent.  Here's an excerpt from one of them, with the 3-item menu I
+mentioned:
+
+  From: Thanos Apollo <public@thanosapollo.org>
+  To: Jean Louis <bugs@gnu.support>
+  Cc: arne_bab@web.de, rms@gnu.org, monnier@iro.umontreal.ca,
+   yandros@gmail.com, emacs-devel@gnu.org
+  Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+  Date: Wed, 23 Sep 2026 08:21:55 +0300
+
+  Jean Louis <bugs@gnu.support> writes:
+
+  > - The Hermes installer presents SaaSS as the default and asks the user 
+  > to sign up for it.
+
+  That's the configuration wizard, Jean, not package installation.
+  Install through your package manager: no menu.  Run the wizard script
+  through bash: this menu.  Here it is again:
+
+    → (●) Quick Setup (Nous Portal) — free OAuth login, no API keys, model
+      + tools (recommended)
+      (○) Full setup — configure every provider, tool & option yourself 
+  (bring your own keys)
+      (○) Blank Slate — everything off except the bare minimum; opt in to 
+  each capability
+
+  Yes, it recommends Nous Portal.  The clue is "recommended."  And
+  gratis isn't free software.  But FULL SETUP and BLANK SLATE are right
+  there too.  You can reject the recommendation.  You don't need to
+  uninstall it for the rest of us.
+
+Search your email archives for "configuration wizard" or
+"configuration tool", to find the other messages.
+
+And please note what Thanos says about this: the Hermes agent can be
+used using the system's package manager, without invoking this
+"configuration wizard" at all, in which case the "recommended" way is
+not even shown.  If the configuration tool _is_ used, the user can
+still choose 2 of the 3 alternatives that avoid the Nous Portal.  The
+responsibility for configuring the Hermes agent, which is a separate
+free program, is on the user, not on us.
+
+> Of course, there are other messages I haven't even seen yet.  I can't
+> read today all the ones that are in my inbox.  I have to do the best I
+> can with what has been presented comprehensibly.
+> 
+>   > We don't have a Hermes package.  We have hermes.el, and then there's
+>   > the Hermes agent, which is not our package, but a free program that
+>   > needs to be installed separately and configured by the user.
+> 
+> What Thanos said when talking about this did not make that distinction
+> clear, or the relationship between the two.  Some mentioned the
+> "configuration" part.  Are these the only parts?
+
+The configuration tool is part of the Hermes agent package.  The
+Hermes agent is a separate free program to which hermes.el provides an
+Emacs front end.  This has been spelled out here many times.
+
+> Messages I've seen today have referred to various components
+> associated with the Hermes package, and each message gives a fragment
+> of information about it.  Has anyone posted a list of them, stating
+> what job each one does, and what computer it runs in?  And what the
+> relationship between them is?  I would like to see that; I may
+> get a better understanding from it.
+
+That has been described here many times.  Please search your archives
+for messages from Thanos Apollo <public@thanosapollo.org>, they are
+the most informative about that.  I suggest careful reading of each of
+his messages in these matters, since he is the expert on how the
+Hermes agent works and what it contains.
+
+================================================================================
+Date: 2026-09-27T08:04:42+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: How to decide better about proposed packages
+Message-ID: <868q4n5ix1.fsf@gnu.org>
+In-Reply-To: <E1xAfek-00GREk-L2@fencepost.gnu.org> (message from Richard
+ Stallman on Sat, 26 Sep 2026 23:34:26 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <E1xA6aI-00AWIN-8X@fencepost.gnu.org> <86fqyx8kml.fsf@gnu.org>
+ <1de40e965810363478fc2ee9461e3fb0@gnu.support>
+ <E1xAfek-00GREk-L2@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: eliz@gnu.org, emacs-devel@gnu.org, arne_bab@web.de
+> Date: Sat, 26 Sep 2026 23:34:26 -0400
+> 
+>   > I have raised concerns about hermes.el, codex-ide, minuet, gptel, 
+>   > aidermacs, and ellama — not one package, but a category.
+> 
+> I remember being concerned about some of those packages, too -- but some of
+> them got installed after a hurried discussion.
+
+No, our discussions about adding packages are not "hurried" in any
+sense of that word.  They take the time they need, no less and no
+more, and include a thorough review of the package and its code.
+Mistakes can and do happen, but not because we hurry.
+
+================================================================================
+Date: 2026-09-27T08:06:06+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <867bk75iup.fsf@gnu.org>
+In-Reply-To: <E1xAfeR-00GMe2-BN@fencepost.gnu.org> (message from Richard
+ Stallman on Sat, 26 Sep 2026 23:34:07 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de>
+ <86pky076go.fsf@gnu.org> <87v77s8icl.fsf@thanosapollo.org>
+ <875wzs48z5.fsf@web.de> <87se2w8dsk.fsf@thanosapollo.org>
+ <87tsnc2mun.fsf@web.de> <E1xAfeR-00GMe2-BN@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: public@thanosapollo.org, eliz@gnu.org, monnier@iro.umontreal.ca,
+>  emacs-devel@gnu.org
+> Date: Sat, 26 Sep 2026 23:34:07 -0400
+> 
+> If your aim is to talk to a local LLM configuration, it doesn't make
+> sense to use a web site to set that up.  You can set it up in a purely
+> local way, without ever talking to any other machine; and that's how
+> it ought to be done.
+
+And the Hermes agent, for which hermes.el is a front end, can be
+configured to work that way.
+
+================================================================================
+Date: 2026-09-27T08:50:36+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <eb99b9b424e5a2570a279033afbc3ef4@gnu.support>
+In-Reply-To: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+
+Hello Cecilio,
+
+Welcome, nice to read it.
+
+On 2026-09-26 16:29, Cecilio Pardo wrote:
+> In my experience, Emacs is one the best possible environments for 
+> interacting with LLMS, even with all the spectacular artifacts that the 
+> proprietary clients have. Prompts are written in emacs, with the 
+> editing power that it implies. The output can be given in Org mode, so 
+> it becomes a powerfull structured document that I can later edit, link, 
+> export and keep rather than a "transcript" inside someone else´s 
+> interface.
+
+Which features in Emacs do you recognize that make it good environment 
+to interact with LLMs?
+
+And when you say LLM, do you mean remote running, third party LLMs or 
+you mean inference?
+
+For me, when saying anything about the LLM I take the stand that it is 
+computed data (tensors inside) that later during the inference act as 
+parameterized function. Given the input, it gives some output.
+
+To interact with the LLM, for me rather means, as the first thing I 
+think of, is the inference software, like transformers.
+
+Yet, I think you say "to interact with LLMs" in the sense of Emacs 
+talking API to remote servers.
+
+The remote server serving LLM inference is not itself the LLM. It is the 
+API service, and users do not know what exactly that API does (with 
+their proprietary software). By all means I know that API doesn't simply 
+send the prompt to the LLM inference software to receive the answer, 
+there are many other ways how API acts.
+
+The API service is not the LLM. It's an opaque wrapper around inference 
+(plus filtering, logging, routing, prompt rewriting, tool calls, safety 
+layers, caching, etc.). Users only see input → output, not what happens 
+in between.
+
+The core abuse of privacy by remote LLMs is: using user inputs for 
+training by default, opaque data retention policies, and direct leakage 
+or misuse of data through technical vulnerabilities or permissions. The 
+severity of the problem lies in the fact that users often cannot control 
+this, and once data enters the training pipeline, it is almost 
+impossible to completely remove.
+
+Related to receiving the outputs from the LLM inference (just to be more 
+pedantic with words), I find that Emacs, while having some packages for 
+that, is the last software I would choose for such.
+
+For example, frequent Markdown outputs are shown in Emacs as such, there 
+is no straight LaTeX rendering, one cannot see tables in a nice way, 
+diagrams, so in the sense of interacting with LLM over API, I find Emacs 
+not suitable for that. Concurrent requests are almost impossible, as 
+Emacs cannot do it, unless packages fake it with the async.
+
+> I should be clear what emacs competes with now. VS Code with copilot, 
+> and editors built from the ground up for this. Users are going there, 
+> precisely because of that integration. More and more professional 
+> programmers are required by their employers to use such tools, on the 
+> grounds of productivity (maybe misguidedly). Non programmer users rely 
+> on the product's own tools. Academic and research users would be much 
+> better served with Emacs.
+
+For that same reason I do not think that Emacs would be better choice 
+for academic and research users who wish to interact with API calls to 
+LLM inference.
+
+It is good thing to hear your opinion. This time I have talked about my 
+user experience with Emacs. I am interested to know which features you 
+found useful to interact with LLMs.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T09:00:56+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <bad3f5621c2acb3604f1ed7fe701ba78@gnu.support>
+In-Reply-To: <87ld8n8ox9.fsf@thanosapollo.org>
+References: <86jyu4y0oy.fsf@sdf.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support> <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support> <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support> <86mrt8cglb.fsf@gnu.org>
+ <E1xAJIO-006qoz-6J@fencepost.gnu.org> <861pag8qxj.fsf@gnu.org>
+ <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de> <86pky076go.fsf@gnu.org>
+ <87v77s8icl.fsf@thanosapollo.org> <875wzs48z5.fsf@web.de>
+ <87se2w8dsk.fsf@thanosapollo.org> <87tsnc2mun.fsf@web.de>
+ <87o6dk87ws.fsf@thanosapollo.org> <87ld8n3i0e.fsf@web.de>
+ <87ld8n8ox9.fsf@thanosapollo.org>
+
+On 2026-09-27 04:26, Thanos Apollo wrote:
+
+> And I've sent you a documented process that goes from installing hermes
+> to running a local LLM with llama.cpp in 2min, without interacting with
+> the configuration wizard.  You can find more with a google search.
+
+It is technically possible, but not in a way that is consistent with 
+free software principles.
+
+- Nvidia, AMD, Intel, all of the known GPU cards require proprietary 
+blobs as firmware; if someone finds one that doesn't require, I wish to 
+know, as I would like to get the card;
+
+- majority of Nvidia CUDA software isn't free, and it is major provider;
+
+- There is no free LLM weight, while published under free licenses, the 
+inferenced LLM outputs may infringe on copyrights of other people;
+
+llama.cpp can run on CPU with free software, but it is too slow to be 
+useful for most models. The majority of people running llama.cpp want to 
+run it on their GPU, which in turn, cannot be run fully free.
+
+I wish that truly free solution would be there, yet, it isn't. I will 
+keep trying to find free solution.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T09:54:30+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <03540d744b0496fc2406f90ea97cb829@gnu.support>
+In-Reply-To: <86se2w5gmy.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org>
+
+On 2026-09-26 15:41, Eli Zaretskii wrote:
+
+>> Users can decline, but the invitation is made, and it is presented
+>> as the convenient path.
+> 
+> No, there's no "invitation".  There's a menu of 3 alternatives, and
+> the user should select the one he/she wants.  As has been told here
+> time and again so many times that repeating these unfounded claims
+> just adds noise.  Please stop adding noise to this list.
+
+I am using the word "invite" because the GNU Coding Standards use it.
+
+To be more clear Eli, I am referring to this website page of GNU 
+standard: https://www.gnu.org/prep/standards/standards.html where it 
+says:
+
+A GNU program should not recommend, promote, or grant legitimacy to the 
+use of any nonfree program. This principle likewise applies to anything 
+operating online that is morally comparable to a proprietary 
+program—such as a web site that requires users to run the site’s nonfree 
+software, or invites them to surrender control of their own computing to 
+that site’s server.
+
+hermes.el's package description in the file README-elpa links to the 
+page that makes the invitation. And then we have the 3 options you 
+mentioned as a menu of 3 alternatives. The first option is marked as 
+"recommended".
+
+None of the three options avoids the list: Full Setup and Blank Slate 
+lead to the same provider menu, with Nous Portal still pre-selected, and 
+that menu invites the user to surrender control of their own computing 
+to a server that is not theirs.
+
+And here is the text of those 3 options:
+
+How would you like to set up Hermes?
+   ↑↓ navigate  ENTER/SPACE select  ESC cancel
+
+  → (●) Quick Setup (Nous Portal) — free OAuth login, no API keys, model 
++ tools (recommended)
+    (○) Full setup — configure every provider, tool & option yourself 
+(bring your own keys)
+    (○) Blank Slate — everything off except the bare minimum; opt in to 
+each capability
+
+If user clicks on Quick Setup, user is forwarded to Nous Portal and is 
+presented long list of scrollable SaaSS running LLM options.
+
+If user clicks on Full Setup, user is forwarded to next screen and 
+presented with the long list of SaaSS options.
+
+If user clicks on the third option Blank Slate, is forwarded to next 
+screen of the long list of SaaSS options.
+
+Definition of "to invite" matches Wordnet dictionary: Sense 3 — "tempt, 
+invite — give rise to a desire by being attractive or inviting"
+
+* Overview of verb invite
+
+The verb invite has 8 senses (first 7 from tagged texts)
+1. (7) invite, ask for -- (increase the likelihood of; "ask for 
+trouble"; "invite criticism")
+2. (6) invite, ask over, ask round -- (invite someone to one's house; 
+"Can I invite you for dinner on Sunday night?")
+3. (6) tempt, invite -- (give rise to a desire by being attractive or 
+inviting; "the window displays tempted the shoppers")
+4. (6) invite, bid -- (ask someone in a friendly way to do something)
+5. (3) invite, pay for -- (have as a guest; "I invited them to a 
+restaurant")
+6. (2) invite, ask in -- (ask to enter; "We invited the neighbors in for 
+a cup of coffee")
+7. (2) invite, call for -- (request the participation or presence of; 
+"The organizers invite submissions of papers for the conference")
+8. receive, take in, invite -- (express willingness to have in one's 
+home or environs; "The community warmly received the refugees")
+
+-- 
+Jean Louis
+
+
+P.S. Option 1 shows:
+--------------------
+
+Select default model:
+                                                    In      Out    Cache  
+$/Mtok  ★ = on sale
+    anthropic/claude-fable-5.1                $10.00   $50.00    $0.25
+    anthropic/claude-fable-5                  $10.00   $50.00    $1.00
+    anthropic/claude-opus-5.5                  $4.00   $20.00    $0.20
+    anthropic/claude-opus-5                    $5.00   $25.00    $0.50
+    anthropic/claude-opus-4.8                  $5.00   $25.00    $0.50
+    anthropic/claude-sonnet-5                  $2.00   $10.00    $0.20
+    anthropic/claude-haiku-4.5                 $1.00    $5.00    $0.10
+    openai/gpt-6-astra                        $10.00   $50.00    $1.00
+    openai/gpt-6-astra-fast                   $20.00  $100.00    $2.00
+    openai/gpt-6-astra-flex                    $5.00   $25.00    $0.50
+    openai/gpt-6-astra-pro                    $10.00   $50.00    $1.00
+    openai/gpt-6-astra-pro-fast               $20.00  $100.00    $2.00
+    openai/gpt-6-astra-pro-flex                $5.00   $25.00    $0.50
+    openai/gpt-6-sol                           $2.00   $10.00    $0.20
+    openai/gpt-6-sol-pro                       $2.00   $10.00    $0.20
+    openai/gpt-6-luna                          $0.10    $0.50    $0.01
+    openai/gpt-6-luna-pro                      $0.10    $0.50    $0.01
+    openai/gpt-5.5                             $5.00   $30.00    $0.50
+    openai/gpt-5.5-pro                        $30.00  $180.00
+    openai/gpt-5.4-mini                        $0.75    $4.50    $0.07
+    google/gemini-3.1-pro-preview              $2.00   $12.00    $0.20
+    ★ google/gemini-3.8-flash                  $0.75    $3.75    $0.07  
+-50%  was $1.50/$7.50
+    ★ google/gemini-3.7-flash                  $0.75    $3.75    $0.07  
+-50%  was $1.50/$7.50
+    ★ x-ai/grok-4.7                            $1.00    $3.00    $0.25  
+-50%  was $2.00/$6.00
+    x-ai/grok-4.6                              $2.00    $6.00    $0.50
+    deepseek/deepseek-v4-pro                   $0.94    $1.89    $0.08
+    ★ deepseek/deepseek-v4-pro-0813            $0.58    $1.74    $0.02  
+-12%  was $0.66/$1.98
+   ... 20 more description lines (enlarge terminal)
+   ↑↓ navigate  ENTER/SPACE select  / search  ESC cancel
+
+    (○) ★ poolside/laguna-xs-2.1:free               free     free     
+free  -100%
+    (○) ★ poolside/laguna-s-2.1:free                free     free     
+free  -100%
+    (○) ★ stepfun/step-3.7-flash:free               free     free     
+free  -100%
+    (○) Enter custom model name
+  → (○) Skip (keep current)
+
+
+OPTION 2 SHOWS FOLLOWING:
+-------------------------
+
+Select provider:
+   ↑↓ navigate  ENTER/SPACE select  ESC cancel
+
+  → (●) Nous Portal (Everything your agent needs, 300+ models with 
+bundled tool use)
+    (○) Fireworks AI (OpenAI-compatible direct model API)
+    (○) OpenRouter (Pay-per-use API aggregator)
+    (○) Mixture of Agents (named presets; aggregator acts after reference 
+models)
+    (○) NovitaAI (Cloud: Model API, Agent Sandbox, GPU Cloud)
+    (○) LM Studio (Local desktop app with built-in model server)
+    (○) Anthropic (Claude models via API key or Claude Code)
+    (○) OpenAI ▸ (ChatGPT/Codex subscription or direct OpenAI API)
+    (○) Qwen ▸ (Qwen Cloud / DashScope, Coding Plan, Token Plan & Qwen 
+CLI OAuth)
+    (○) xAI Grok ▸ (Direct API or SuperGrok / Premium+ OAuth)
+    (○) Xiaomi MiMo (MiMo-V2.5 and V2 models: pro, omni, flash)
+    (○) Tencent Hy ▸ (Hy4 / Hy3 via TokenHub & TokenPlan)
+    (○) NVIDIA NIM (Nemotron models via build.nvidia.com or local NIM)
+    (○) GitHub Copilot ▸ (GitHub token API or copilot --acp process)
+    (○) Hugging Face Inference Providers
+    (○) Google AI Studio (Native Gemini API)
+    (○) Google Vertex AI (Gemini via GCP; OAuth2 service account or ADC, 
+GCP billing/quotas)
+    (○) DeepSeek (V3, R1, coder, direct API)
+    (○) Z.AI / GLM (Zhipu direct API)
+    (○) Kimi / Moonshot ▸ (Coding Plan, Moonshot global & China 
+endpoints)
+    (○) StepFun Step Plan (Agent / coding models via Step Plan API)
+    (○) MiniMax ▸ (Global, OAuth Coding Plan & China endpoints)
+    (○) Ollama Cloud (Cloud-hosted open models, ollama.com)
+    (○) Arcee AI (Trinity models, direct API)
+    (○) GMI Cloud (Multi-model direct API)
+    (○) Kilo Code (Kilo Gateway API)
+    (○) OpenCode ▸ (Zen pay-as-you-go or Go subscription)
+    (○) AWS Bedrock (Claude, Nova, Llama, DeepSeek; IAM or API key)
+    (○) Azure Foundry (OpenAI-style or Anthropic-style endpoint, your 
+Azure AI deployment)
+    (○) Vercel AI Gateway (Multi-model aggregator)
+    (○) Actual Computer - hosted inference via api.actual.inc, or local 
+offline inference via model.base_url in config.yaml
+    (○) CommandCode — 20+ models via OpenAI-compatible API
+    (○) CommandCode — Claude models via Anthropic Messages API
+    (○) custom (direct API)
+
+OPTION 3 SHOWS FOLLOWING
+-------------------------
+
+Select provider:
+   ↑↓ navigate  ENTER/SPACE select  ESC cancel
+
+  → (●) Nous Portal (Everything your agent needs, 300+ models with 
+bundled tool use)
+    (○) Fireworks AI (OpenAI-compatible direct model API)
+    (○) OpenRouter (Pay-per-use API aggregator)
+    (○) Mixture of Agents (named presets; aggregator acts after reference 
+models)
+    (○) NovitaAI (Cloud: Model API, Agent Sandbox, GPU Cloud)
+    (○) LM Studio (Local desktop app with built-in model server)
+    (○) Anthropic (Claude models via API key or Claude Code)
+    (○) OpenAI ▸ (ChatGPT/Codex subscription or direct OpenAI API)
+    (○) Qwen ▸ (Qwen Cloud / DashScope, Coding Plan, Token Plan & Qwen 
+CLI OAuth)
+    (○) xAI Grok ▸ (Direct API or SuperGrok / Premium+ OAuth)
+    (○) Xiaomi MiMo (MiMo-V2.5 and V2 models: pro, omni, flash)
+    (○) Tencent Hy ▸ (Hy4 / Hy3 via TokenHub & TokenPlan)
+    (○) NVIDIA NIM (Nemotron models via build.nvidia.com or local NIM)
+    (○) GitHub Copilot ▸ (GitHub token API or copilot --acp process)
+    (○) Hugging Face Inference Providers
+    (○) Google AI Studio (Native Gemini API)
+    (○) Google Vertex AI (Gemini via GCP; OAuth2 service account or ADC, 
+GCP billing/quotas)
+    (○) DeepSeek (V3, R1, coder, direct API)
+    (○) Z.AI / GLM (Zhipu direct API)
+    (○) Kimi / Moonshot ▸ (Coding Plan, Moonshot global & China 
+endpoints)
+    (○) StepFun Step Plan (Agent / coding models via Step Plan API)
+    (○) MiniMax ▸ (Global, OAuth Coding Plan & China endpoints)
+    (○) Ollama Cloud (Cloud-hosted open models, ollama.com)
+    (○) Arcee AI (Trinity models, direct API)
+    (○) GMI Cloud (Multi-model direct API)
+    (○) Kilo Code (Kilo Gateway API)
+    (○) OpenCode ▸ (Zen pay-as-you-go or Go subscription)
+    (○) AWS Bedrock (Claude, Nova, Llama, DeepSeek; IAM or API key)
+    (○) Azure Foundry (OpenAI-style or Anthropic-style endpoint, your 
+Azure AI deployment)
+    (○) Vercel AI Gateway (Multi-model aggregator)
+    (○) Actual Computer - hosted inference via api.actual.inc, or local 
+offline inference via model.base_url in config.yaml
+    (○) CommandCode — 20+ models via OpenAI-compatible API
+    (○) CommandCode — Claude models via Anthropic Messages API
+    (○) custom (direct API)
+
+================================================================================
+Date: 2026-09-27T09:55:12+02:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <691c0771-5d2f-46e3-9ed2-9edbfa4c680b@imayhem.com>
+In-Reply-To: <eb99b9b424e5a2570a279033afbc3ef4@gnu.support>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <eb99b9b424e5a2570a279033afbc3ef4@gnu.support>
+
+On 9/27/2026 8:50 AM, Jean Louis wrote:
+
+> Which features in Emacs do you recognize that make it good environment 
+> to interact with LLMs?
+
+The same reasons that make emacs a surprisingly good email client or 
+even web browser. Is all text. You have a kill ring. You have org mode. 
+You have ido. You can split and navigate the screen with your keyboard. 
+You have completion. You can run in the terminal. And 40 more years of 
+crafty text editing and management.
+
+And also is free software.
+
+================================================================================
+Date: 2026-09-27T10:01:47+02:00
+From: Ihor Radchenko <yantar92@posteo.net>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <878q4njf74.fsf@localhost>
+In-Reply-To: <eb99b9b424e5a2570a279033afbc3ef4@gnu.support>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <eb99b9b424e5a2570a279033afbc3ef4@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> Related to receiving the outputs from the LLM inference (just to be more 
+> pedantic with words), I find that Emacs, while having some packages for 
+> that, is the last software I would choose for such.
+
+> For example, frequent Markdown outputs are shown in Emacs as such, there 
+> is no straight LaTeX rendering, one cannot see tables in a nice way, 
+> diagrams, so in the sense of interacting with LLM over API, I find Emacs 
+> not suitable for that.
+
+You can do all the above, including LaTeX rendering, tables, and
+diagrams. Both in Markdown and Org mode.
+
+> Concurrent requests are almost impossible, as 
+> Emacs cannot do it, unless packages fake it with the async.
+
+Why exactly it is an issue that truly concurrent requests are impossible?
+
+-- 
+Ihor Radchenko // yantar92,
+Org mode maintainer,
+Learn more about Org mode at <https://orgmode.org/>.
+Support Org development at <https://liberapay.com/org-mode>,
+or support my work at <https://liberapay.com/yantar92>
+
+================================================================================
+Date: 2026-09-27T10:09:17+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <865wzr5d5e.fsf@gnu.org>
+In-Reply-To: <03540d744b0496fc2406f90ea97cb829@gnu.support> (message from Jean
+ Louis on Sun, 27 Sep 2026 10:54:30 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org> <03540d744b0496fc2406f90ea97cb829@gnu.support>
+
+> Date: Sun, 27 Sep 2026 10:54:30 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: rms@gnu.org, monnier@iro.umontreal.ca, emacs-devel@gnu.org, "Dr. Arne
+>  Babenhauserheide" <arne_bab@web.de>
+> 
+> On 2026-09-26 15:41, Eli Zaretskii wrote:
+> 
+> >> Users can decline, but the invitation is made, and it is presented
+> >> as the convenient path.
+> > 
+> > No, there's no "invitation".  There's a menu of 3 alternatives, and
+> > the user should select the one he/she wants.  As has been told here
+> > time and again so many times that repeating these unfounded claims
+> > just adds noise.  Please stop adding noise to this list.
+> 
+> I am using the word "invite" because the GNU Coding Standards use it.
+> 
+> To be more clear Eli, I am referring to this website page of GNU 
+> standard: https://www.gnu.org/prep/standards/standards.html where it 
+> says:
+
+I'm well aware of the GCS guidance, no need to lecture me.
+
+> A GNU program should not recommend, promote, or grant legitimacy to the 
+> use of any nonfree program. This principle likewise applies to anything 
+> operating online that is morally comparable to a proprietary 
+> program—such as a web site that requires users to run the site’s nonfree 
+> software, or invites them to surrender control of their own computing to 
+> that site’s server.
+> 
+> hermes.el's package description in the file README-elpa links to the 
+> page that makes the invitation.
+
+That is not what the GCS says above.  It talks about "a GNU program".
+Emacs is such a program, and so its hermes.el, and none of them
+"recommend, promote, or grant legitimacy to the use of any nonfree
+program".
+
+> And then we have the 3 options you 
+> mentioned as a menu of 3 alternatives. The first option is marked as 
+> "recommended".
+
+The options are presented by a configuration tool that is an optional
+part of the Hermes agent.  The Hermes agent is not a GNU program, and
+is not developed by us, so the GCS guidance is not relevant to it.  As
+has been pointed out many times already, so PLEASE STOP THESE
+UNFOUNDED CLAIMS, which just increase the amount of noise here.
+
+> Definition of "to invite" matches Wordnet dictionary: Sense 3 — "tempt, 
+> invite — give rise to a desire by being attractive or inviting"
+
+Which none of the above does: they don't "tempt", and they don't "give
+rise to a desire".  They just show the available possibilities.
+
+And again, the Hermes agent is not a GNU project and is not being
+developed by GNU maintainers.  So what the GCS says is relevant only
+to Emacs and hermes.el, which fulfill those requirements.  As has been
+pointed out to you many times already.  Please stop reiterating
+unfounded claims that were already abundantly refuted.
+
+================================================================================
+Date: 2026-09-27T10:19:02+02:00
+From: zhaodaniu <zhaodaniu1@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <86o6djyumh.fsf@gmail.com>
+In-Reply-To: <86o6dk57rk.fsf@gnu.org>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+
+> It is not at all evident that the underline and overline must change
+> their thickness to follow text-scaling.  I think it's at least a matter
+> of personal stylistic preferences.
+
+I understand. Let me explain my motivation.
+
+
+In Emacs on Windows, wave underline, strike-through, and overline render
+extremely thin -- they are almost invisible. By contrast, line,
+double-line, dots, and dashes underlines scale along with the text when
+the font is zoomed. I'd like to add the same scaling support for wave
+as well.
+
+
+As for strike-through and overline, that's a personal addition of mine,
+because they also render a bit too thin.  I suspect this is a GDI
+drawing issue.
+
+
+> Also, we need to discuss whether we indeed want such behavior.  It is
+> not at all evident that the underline and overline must change their
+> thickness to follow text-scaling.  I think it's at least a matter of
+> personal stylistic preferences.
+
+OK, if someone is willing to implement this on the X platform, that
+discussion will only be meaningful at that point -- otherwise, even if
+agree on the idea, there will be no patch to merge.
+
+
+But, I still see hope of getting this patch merged.  I need this
+feature, so I will take part in the discussion, and I imagine others
+will do the same. If no one else steps forward, there's no rush-- later
+on, when I use Emacs on the X platform, I'll figure out a way to write
+a corresponding patch for X, and discussing it then would be more
+convincing.
+
+
+Thanks
+
+================================================================================
+Date: 2026-09-27T10:21:33+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <46364c6b173dc27ae5aae32bf0a5b336@gnu.support>
+In-Reply-To: <878q4njf74.fsf@localhost>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <eb99b9b424e5a2570a279033afbc3ef4@gnu.support> <878q4njf74.fsf@localhost>
+
+On 2026-09-27 11:01, Ihor Radchenko wrote:
+> Jean Louis <bugs@gnu.support> writes:
+> 
+>> Related to receiving the outputs from the LLM inference (just to be 
+>> more
+>> pedantic with words), I find that Emacs, while having some packages 
+>> for
+>> that, is the last software I would choose for such.
+> 
+>> For example, frequent Markdown outputs are shown in Emacs as such, 
+>> there
+>> is no straight LaTeX rendering, one cannot see tables in a nice way,
+>> diagrams, so in the sense of interacting with LLM over API, I find 
+>> Emacs
+>> not suitable for that.
+> 
+> You can do all the above, including LaTeX rendering, tables, and
+> diagrams. Both in Markdown and Org mode.
+
+Maybe it can in a way if there is some package for it. Markdown in Emacs 
+is shown as source, not as final document. The theme may help with the 
+visualization, but many things cannot be displayed straight away. It can 
+be done in two step process. When there is Markdown output, user can 
+invoke preview or open browser. Remember that Markdown is just HTML 
+stripped. All of the HTML is valid in Markdown. That so far doesn't look 
+well within Emacs.
+
+Not as well as when compared to other programs that were designed to run 
+with the APIs talking to LLMs.
+
+That user can do tables in Markdown and Org mode, doesn't make it 
+visualize those tables in that very same moment.
+
+For example this table below is valid Markdown table, yet its 
+readability is not as near to those GUIs and terminal applications that 
+render Markdown correctly.
+
+|Item|Value|Color|
+|----|-----|-----|
+|Apple|2|Red|
+|Banana|15|Yellow|
+|Pear|12|Green|
+
+So the question is of comparison of presentation rather than what 
+Markdown or Org mode can do. Users' expectation is to see immediately 
+what is the output. They do not want to see underlying tags which must 
+be stripped, or otherwise unformatted output, unless they are on some 
+other level.
+
+>> Concurrent requests are almost impossible, as
+>> Emacs cannot do it, unless packages fake it with the async.
+> 
+> Why exactly it is an issue that truly concurrent requests are 
+> impossible?
+
+For example you run one request to API, and Emacs will wait until that 
+process finishes.  Longer CPU computing tasks prevent Emacs to show 
+output of multiple results in same time. Emacs cannot execute multiple 
+Lisp tasks in parallel, but it can wait for multiple network responses 
+at the same time through asynchronous subprocesses.
+
+Because Emacs executes Lisp tasks serially and renders Markdown/tables 
+as source text rather than a formatted document, a user expecting slick, 
+instantly rendered LLM output instead experiences a blocking, two-step 
+workflow: wait for each request to finish, then manually preview or open 
+a browser to see the result properly.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T10:32:18+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <8a3b9db20b9680cff8ab22f5a55fff75@gnu.support>
+In-Reply-To: <865wzr5d5e.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org> <03540d744b0496fc2406f90ea97cb829@gnu.support>
+ <865wzr5d5e.fsf@gnu.org>
+
+On 2026-09-27 11:09, Eli Zaretskii wrote:
+>> A GNU program should not recommend, promote, or grant legitimacy to 
+>> the
+>> use of any nonfree program. This principle likewise applies to 
+>> anything
+>> operating online that is morally comparable to a proprietary
+>> program—such as a web site that requires users to run the site’s 
+>> nonfree
+>> software, or invites them to surrender control of their own computing 
+>> to
+>> that site’s server.
+>> 
+>> hermes.el's package description in the file README-elpa links to the
+>> page that makes the invitation.
+> 
+> That is not what the GCS says above.  It talks about "a GNU program".
+> Emacs is such a program, and so its hermes.el, and none of them
+> "recommend, promote, or grant legitimacy to the use of any nonfree
+> program".
+
+I got your point, though it is not with the full context of GNU 
+Stadards.
+
+As for long time I know we should not be referencing to SaaSS or 
+non-free software:
+https://www.gnu.org/prep/standards/standards.html#References
+References to Nonfree Software and Documentation
+
+"Sometimes a program is free software in itself but depends on a nonfree 
+platform in order to run. […] To recommend or promote such a program is 
+to promote the other programs it needs; therefore, judge mentions of the 
+former as if they were mentions of the latter."
+
+That is my understanding, hermes.el references and depends on Hermes 
+Agent (which is free software) and which cannot run functionally without 
+being configured, and when being configured, it inevitably invites users 
+to SaaSS.
+
+Of course I am seriously confused as how you present Hermes Agent as not 
+being dependency and how GNU standard doesn't apply to it as dependency. 
+Long time I know different situation. These positions are quite new to 
+me.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T10:43:52+02:00
+From: pinmacs <pinmacs@cas.cat>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <f995d2d5-8eb7-4e52-ab32-27657521f2c1@cas.cat>
+In-Reply-To: <E1xAJKg-006rHF-12@fencepost.gnu.org>
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+
+On 2026-09-26 05:44, Richard Stallman wrote:
+> (...)
+>
+> Should we make Emacs do this check by default, as a protective measure?
+
+Based on this thread, in emacs orgmode list [1] I suggested that 
+something should be done to warn the user before it clicks a link that 
+could contain these kind of attacks. For myself, I did a patch in my 
+emacs config so orgmode warns me (more info in [1])
+
+As an example:
+
+https://Read.com
+https://Reαd.com
+
+Looks like:
+
+
+
+[1] https://list.orgmode.org/a47f04ba-d278-4a82-8903-8981bd9e6da0@cas.cat/
+
+================================================================================
+Date: 2026-09-27T10:45:31+02:00
+From: Ihor Radchenko <yantar92@posteo.net>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <875wzrjd68.fsf@localhost>
+In-Reply-To: <46364c6b173dc27ae5aae32bf0a5b336@gnu.support>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <eb99b9b424e5a2570a279033afbc3ef4@gnu.support> <878q4njf74.fsf@localhost>
+ <46364c6b173dc27ae5aae32bf0a5b336@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+>> You can do all the above, including LaTeX rendering, tables, and
+>> diagrams. Both in Markdown and Org mode.
+>
+> Maybe it can in a way if there is some package for it. Markdown in Emacs 
+> is shown as source, not as final document. The theme may help with the 
+> visualization, but many things cannot be displayed straight away. It can 
+> be done in two step process. When there is Markdown output, user can 
+> invoke preview or open browser. Remember that Markdown is just HTML 
+> stripped. All of the HTML is valid in Markdown. That so far doesn't look 
+> well within Emacs.
+
+Sure, there is a package for it. And it is totally fine. Different
+people prefer different presentation of markup.
+
+As an example of such package, check out https://github.com/xenodium/agent-shell
+The screenshots in the readme display code, tables, and images - all
+displayed in Emacs.
+
+> Not as well as when compared to other programs that were designed to run 
+> with the APIs talking to LLMs.
+
+Elisp programs can also be designed to run with LLMs.
+It feels like you are arguing that bare Emacs is not suitable to work
+with LLMs - it is indeed true. But, I do not think that anyone expected
+that bare Emacs would work with a new technology out of the box.
+The power of Emacs is that we can implement a layer of support for LLM
+interactions yet use all the usual text editing convenience.
+No other systems (including vscode) have such a tight integration
+between existing and new features.
+
+>>> Concurrent requests are almost impossible, as
+>>> Emacs cannot do it, unless packages fake it with the async.
+>> 
+>> Why exactly it is an issue that truly concurrent requests are 
+>> impossible?
+>
+> For example you run one request to API, and Emacs will wait until that 
+> process finishes. ...
+
+> Because Emacs executes Lisp tasks serially and renders Markdown/tables 
+> as source text rather than a formatted document, a user expecting slick, 
+> instantly rendered LLM output instead experiences a blocking, two-step 
+> workflow: wait for each request to finish, then manually preview or open 
+> a browser to see the result properly.
+
+No. Web requests in Emacs (including to localhost) can be
+asynchronous. So are process interactions. The only blocking part of the
+request is sending it and processing it. Waiting for the output is
+async.
+
+For example, I can run a dozen of LLM chats in parallel with gptel with
+real-time streaming output just fine. That includes running multiple
+tool calls in parallel.
+
+Moreover, rendering the streaming output is done instantly, via
+font-lock facilities.
+
+-- 
+Ihor Radchenko // yantar92,
+Org mode maintainer,
+Learn more about Org mode at <https://orgmode.org/>.
+Support Org development at <https://liberapay.com/org-mode>,
+or support my work at <https://liberapay.com/yantar92>
+
+================================================================================
+Date: 2026-09-27T11:34:24+02:00
+From: Stephen Berman <stephen.berman@gmx.net>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87ecefxckf.fsf@gmx.net>
+In-Reply-To: <86bj9j5k9o.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIN-006qog-FJ@fencepost.gnu.org>
+ <864ifc8rgn.fsf@gnu.org> <E1xAfei-00GQoe-Rl@fencepost.gnu.org>
+ <86bj9j5k9o.fsf@gnu.org>
+
+On Sun, 27 Sep 2026 08:35:31 +0300 Eli Zaretskii <eliz@gnu.org> wrote:
+
+>> From: Richard Stallman <rms@gnu.org>
+>> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+>> Date: Sat, 26 Sep 2026 23:34:24 -0400
+[...]
+>> An alternative in a menu, which leads to running nonfree software, is
+>> definitely promotion of that.  For instance, if Emacs had a command
+>> `browse' and it displayed a menu of browsers to use, and by default
+>> one menu item displays `Browse using Chrome', or if it uses Chrome,
+>> either one would promote using the nonfree browser Chrome.
+>
+> In Emacs, yes, we go an extra mile by not showing such alternatives.
+
+When you type `M-x customize-option RET browse-url-browser-function RET'
+and then in the "*Customize Option: browse-url-browser-function*" buffer
+click the "Value Menu" button, the values displayed include "Google
+Chrome".  Should that value be removed?
+
+Steve Berman
+
+================================================================================
+Date: 2026-09-27T11:35:43+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <864ifb595c.fsf@gnu.org>
+In-Reply-To: <86o6djyumh.fsf@gmail.com> (message from zhaodaniu on Sun, 27 Sep
+ 2026 16:19:02 +0800)
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org> <86o6djyumh.fsf@gmail.com>
+
+> From: zhaodaniu <zhaodaniu1@gmail.com>
+> Cc: emacs-devel@gnu.org
+> Date: Sun, 27 Sep 2026 16:19:02 +0800
+> 
+> In Emacs on Windows, wave underline, strike-through, and overline render
+> extremely thin -- they are almost invisible.
+
+They are 1-pixel thick.  I wouldn't describe them as "almost
+invisible", at least on my system they are clearly visible, including
+on the screenshots you sent.  Maybe this is an issue with high-DPI or
+something?
+
+> By contrast, line,
+> double-line, dots, and dashes underlines scale along with the text when
+> the font is zoomed. I'd like to add the same scaling support for wave
+> as well.
+
+Once again, this can only be possible if we enable that on all
+platforms.  And I think this needs to be an optional feature, by
+default OFF.
+
+> > Also, we need to discuss whether we indeed want such behavior.  It is
+> > not at all evident that the underline and overline must change their
+> > thickness to follow text-scaling.  I think it's at least a matter of
+> > personal stylistic preferences.
+> 
+> OK, if someone is willing to implement this on the X platform, that
+> discussion will only be meaningful at that point -- otherwise, even if
+> agree on the idea, there will be no patch to merge.
+> 
+> 
+> But, I still see hope of getting this patch merged.  I need this
+> feature, so I will take part in the discussion, and I imagine others
+> will do the same. If no one else steps forward, there's no rush-- later
+> on, when I use Emacs on the X platform, I'll figure out a way to write
+> a corresponding patch for X, and discussing it then would be more
+> convincing.
+
+Thanks.
+
+================================================================================
+Date: 2026-09-27T11:40:17+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <8633uv58xq.fsf@gnu.org>
+In-Reply-To: <8a3b9db20b9680cff8ab22f5a55fff75@gnu.support> (message from Jean
+ Louis on Sun, 27 Sep 2026 11:32:18 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org> <03540d744b0496fc2406f90ea97cb829@gnu.support>
+ <865wzr5d5e.fsf@gnu.org> <8a3b9db20b9680cff8ab22f5a55fff75@gnu.support>
+
+> Date: Sun, 27 Sep 2026 11:32:18 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: rms@gnu.org, monnier@iro.umontreal.ca, emacs-devel@gnu.org,
+>  arne_bab@web.de
+> 
+> On 2026-09-27 11:09, Eli Zaretskii wrote:
+> > 
+> > That is not what the GCS says above.  It talks about "a GNU program".
+> > Emacs is such a program, and so its hermes.el, and none of them
+> > "recommend, promote, or grant legitimacy to the use of any nonfree
+> > program".
+> 
+> I got your point, though it is not with the full context of GNU 
+> Stadards.
+> 
+> As for long time I know we should not be referencing to SaaSS or 
+> non-free software:
+> https://www.gnu.org/prep/standards/standards.html#References
+> References to Nonfree Software and Documentation
+
+And we do not, neither in Emacs nor in hermes.el.
+
+> "Sometimes a program is free software in itself but depends on a nonfree 
+> platform in order to run. […] To recommend or promote such a program is 
+> to promote the other programs it needs; therefore, judge mentions of the 
+> former as if they were mentions of the latter."
+
+hermes.el does not depend on nonfree programs.  It is a front end for
+the Hermes agent, which is a free program.
+
+> That is my understanding, hermes.el references and depends on Hermes 
+> Agent (which is free software) and which cannot run functionally without 
+> being configured, and when being configured, it inevitably invites users 
+> to SaaSS.
+
+I disagree with the "invites" part, and I explained that numerous
+times already.  In any case, this is not what the GCS describes, so
+there's no contradiction between what we do and the GCS.
+
+> Of course I am seriously confused as how you present Hermes Agent as not 
+> being dependency and how GNU standard doesn't apply to it as dependency. 
+
+The GCS applies only to GNU programs, which the Hermes agent is not.
+Many/most free programs out there are not GNU programs, but that
+doesn't make them less free.  The GCS is a set of conventions and
+guidelines for maintainers of GNU projects, so developers of non-GNU
+programs cannot be expected to abide by the GCS.
+
+================================================================================
+Date: 2026-09-27T11:53:25+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Full GNU Standards Compliance Report for llm Package
+Message-ID: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+In-Reply-To: 
+References: 
+
+Hello,
+
+Me sorry to hurt feelings of people, I am evaluating the `llm` package 
+that is found on ELPA against the GNU Standards compliance.
+
+I have found multiple violations of GNU Principle regarding references 
+to nonfree Software and SaaSS.
+
+The GNU Standards document section 8 References to Nonfree Software and 
+Documentation states:
+https://www.gnu.org/prep/standards/standards.html#References
+
+A GNU program should not recommend, promote, or grant legitimacy to the 
+use of any nonfree program. This principle likewise applies to anything 
+operating online that is morally comparable to a proprietary 
+program—such as a web site that requires users to run the site's nonfree 
+software, or invites them to surrender control of their own computing to 
+that site's server.
+
+The llm package distributes 7 modules via ELPA that integrate with 
+proprietary cloud-based "AI" services or SaaSS, services as software 
+substitute. Distribution through ELPA constitutes an explicit invitation 
+to surrender control of computing to these servers. Each module contains 
+direct references to SaaSS services through hardcoded URLs, API 
+endpoints, and terms-of-service links. Package names, descriptions, etc. 
+included.
+
+Detailed Analysis by Module:
+
+1. llm-azure.el
+The Azure OpenAI integration provides direct access to Microsoft's 
+proprietary cloud SaaSS service. Line 47 returns a URL pointing to 
+Azure's legal terms. Lines 49-57 define hardcoded endpoints at 
+azure.microsoft.com for chat completions and embeddings. Users invoking 
+this module submit data to Microsoft's servers, requiring execution of 
+Azure's nonfree software stack. The module grants legitimacy by 
+providing Emacs-native integration into Microsoft's ecosystem. This 
+package is in ELPA under `llm` package.
+
+2. llm-claude.el
+This module interfaces with Anthropic's Claude API. Line 50 returns 
+Anthropic's consumer terms URL. The codebase uses the domain 
+api.anthropic.com throughout. Lines 58-130 construct API requests that 
+route user prompts to Anthropic's servers. The package explicitly 
+documents model documentation at docs.anthropic.com, promoting user 
+engagement with Anthropic's proprietary platform. This package is in 
+ELPA under `llm` package.
+
+3. llm-deepseek.el
+Direct integration with DeepSeek's service. Line 49 provides a URL to 
+DeepSeek's terms of use at cdn.deepseek.com. Lines 34-45 establish the 
+base API endpoint as https://api.deepseek.com. Users sending queries 
+through this module hand control to DeepSeek's infrastructure, running 
+their proprietary software stack in the background. This is package in 
+`llm` package.
+
+4. llm-gemini.el
+Google Cloud Gemini AI integration. Line 54 returns Google's generative 
+AI terms at policies.google.com. Lines 58-83 construct requests to 
+generativelanguage.googleapis.com. The module documents the service at 
+ai.google.dev/tutorials/rest_quickstart. Users invoking this module 
+surrender data processing to Google's servers while Google executes its 
+nonfree machine learning stack. This is also part of `llm` package.
+
+5. llm-github.el
+GitHub Models integration routes through Azure infrastructure. Line 33 
+sets the URL to models.inference.ai.azure.com. This module inherits all 
+Azure nonfree obligations from llm-azure while adding GitHub branding, 
+implicitly endorsing GitHub's partnership with Microsoft's proprietary 
+cloud services. Also part of `llm` package.
+
+6. llm-openai.el
+The primary OpenAI API module. Line 122 returns OpenAI's terms at 
+openai.com/policies/terms-of-use. The codebase extensively uses 
+api.openai.com throughout. Lines 124-600 implement full API integration 
+including chat, embeddings, tools, and streaming responses. Users 
+submitting data to this interface directly invoke OpenAI's proprietary 
+models running on their servers. This is also part of `llm` package.
+
+7. llm-vertex.el
+Google Cloud Vertex AI integration. Uses gcloud authentication to access 
+Google's enterprise AI infrastructure. The module constructs requests to 
+aiplatform.googleapis.com while leveraging Google's authentication 
+system. Users must run gcloud binary locally and submit data to Google's 
+Vertex AI servers. This is part of `llm` package.
+
+Common Patterns of Non-Compliance:
+
+1. Hardcoded nonfree endpoints appear in all modules, embedding the 
+infrastructure for proprietary SaaSS services directly into Emacs 
+packages.
+
+2. Each module provides a llm-nonfree-message-info method that 
+explicitly points users to external ToS pages, actively directing users 
+to accept nonfree terms as a condition of use.
+
+3. Documentation URLs are embedded throughout, encouraging users to 
+study proprietary SaaSS platforms and integrate further with them.
+
+4. Distribution via ELPA means GNU Emacs package managers automatically 
+download and install these modules, normalizing the surrender of 
+computing control to third-party SaaSS servers.
+
+5. The modules provide seamless local-to-cloud bridges, making the 
+transition from local Emacs to remote proprietary SaaSS servers appear 
+as a native feature rather than an external dependency.
+
+The llm package violates GNU standard principles by distributing 
+integrated access to seven different proprietary cloud "AI" services. 
+Each module represents an invitation to surrender local computing 
+control, requiring users to submit data to external SaaSS servers. The 
+explicit inclusion of terms-of-service URLs and documentation links 
+further promotes and grants legitimacy to these SaaSS services. 
+Distribution through ELPA amplifies this non-compliance by normalizing 
+the integration into GNU Emacs itself.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T12:02:13+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <70a26394be2966ca298ffa137e86001b@gnu.support>
+In-Reply-To: <875wzrjd68.fsf@localhost>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <eb99b9b424e5a2570a279033afbc3ef4@gnu.support> <878q4njf74.fsf@localhost>
+ <46364c6b173dc27ae5aae32bf0a5b336@gnu.support> <875wzrjd68.fsf@localhost>
+
+On 2026-09-27 11:45, Ihor Radchenko wrote:
+
+> Elisp programs can also be designed to run with LLMs. It feels like you 
+> are arguing that bare Emacs is not suitable to work with LLMs — it is 
+> indeed true.
+
+I see your point.
+
+But let me add a side note on terminology, because the way we have been 
+talking over time is not accurate IMHO.
+
+We keep saying "Emacs runs with an LLM." Emacs does not run with an LLM. 
+It has network functions that access a remote API. The remote API is not 
+the LLM. And the SaaSS products behind those APIs do much more than 
+inference — they have whole tool chains attached. Those are not the LLM.
+
+It would be better to use the terms correctly. When we say "LLM," we 
+should mean the model itself: the weights on disk, a parameterized 
+function in the form of data. To run that function, you need an 
+inference engine — something like `llama.cpp`, or Python software using 
+`transformers`. Emacs does not do that yet. It is not impossible, but it 
+is not what is happening now.
+
+Almost all of the current Emacs "LLM" functionality is networking: 
+sending data to an API and receiving data back. Emacs is not talking to 
+an LLM. It is talking to a server.
+
+When I have said "LLM" in this discussion, I have almost always meant 
+local computing — the model running on the user's own machine. Many 
+others have meant remote SaaSS, and that is why I objected explaining 
+that LLM is not this way or the other way. I should have made the 
+distinction clearer from the start.
+
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T12:06:39+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <f76f2b5e0e8c18eaec87fc7bb692f211@gnu.support>
+In-Reply-To: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+
+One note on terminology, for accuracy: these modules do not talk to an 
+LLM. An LLM is the model itself — the weights on disk, a parameterized 
+function stored as data, run locally by an inference engine. What these 
+modules talk to is a remote service that performs the inference for the 
+user: SaaSS, Service as a Software Substitute. The names should reflect 
+that. I suggest renaming them accordingly:
+
+- `llm-azure.el` → `saas-azure.el`
+- `llm-claude.el` → `saas-claude.el`
+- `llm-deepseek.el` → `saas-deepseek.el`
+- `llm-gemini.el` → `saas-gemini.el`
+- `llm-github.el` → `saas-github.el`
+- `llm-openai.el` → `saas-openai.el`
+- `llm-vertex.el` → `saas-vertex.el`
+
+And, if after review the package is found not to fit GNU's principles, 
+it may be better hosted elsewhere — MELPA, or the authors' own 
+repository — rather than in ELPA. That is a decision for the 
+maintainers, and I offer it as a suggestion, not a demand.
+
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T12:25:33+02:00
+From: Ihor Radchenko <yantar92@posteo.net>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <8733uvj8ji.fsf@localhost>
+In-Reply-To: <70a26394be2966ca298ffa137e86001b@gnu.support>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <eb99b9b424e5a2570a279033afbc3ef4@gnu.support> <878q4njf74.fsf@localhost>
+ <46364c6b173dc27ae5aae32bf0a5b336@gnu.support> <875wzrjd68.fsf@localhost>
+ <70a26394be2966ca298ffa137e86001b@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> We keep saying "Emacs runs with an LLM." Emacs does not run with an LLM. 
+> It has network functions that access a remote API. The remote API is not 
+> the LLM. And the SaaSS products behind those APIs do much more than 
+> inference — they have whole tool chains attached. Those are not the LLM.
+
+> It would be better to use the terms correctly. When we say "LLM," we 
+> should mean the model itself: the weights on disk, a parameterized 
+> function in the form of data. To run that function, you need an 
+> inference engine — something like `llama.cpp`, or Python software using 
+> `transformers`. Emacs does not do that yet. It is not impossible, but it 
+> is not what is happening now.
+
+Sure. I do not think that it is Emacs's job to run inference.
+What Emacs is well-designed for is dealing with text - sending text
+input and receiving text output from inference engine.
+
+Whether that engine lives remotely or locally is another question.
+Many people imply that it is remote, but it does not have to be, as you
+know very well.
+
+> Almost all of the current Emacs "LLM" functionality is networking: 
+> sending data to an API and receiving data back. Emacs is not talking to 
+> an LLM. It is talking to a server.
+
+Not really.
+If we talk about packages like gptel, ellama, etc, they do more than
+just sending data back and forth. They send and receieve data, but also
+arrange the data to be stored in text, expose tooling (often in Elisp),
+visualize output, or even implement agent logic in Elisp. On top of that
+they add Elisp APIs to modify every piece of the features I mentioned.
+
+In other words, we do have LLM harness implemented partially or fully in
+Elisp, which is the most actively developed software type (related to
+LLMs) nowadays. The LLMs themselves are currently developed towards
+better interaction with harness rather than earlier improvements in
+general LLM reasoning performance. So, I do see a lot of potential for
+Emacs here.
+
+
+-- 
+Ihor Radchenko // yantar92,
+Org mode maintainer,
+Learn more about Org mode at <https://orgmode.org/>.
+Support Org development at <https://liberapay.com/org-mode>,
+or support my work at <https://liberapay.com/yantar92>
+
+================================================================================
+Date: 2026-09-27T12:34:05+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <86y0cn3rvm.fsf@gnu.org>
+In-Reply-To: <e77467e4fbc4e0548a6b442d38505522@gnu.support> (message from Jean
+ Louis on Sun, 27 Sep 2026 12:53:25 +0300)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+
+> Date: Sun, 27 Sep 2026 12:53:25 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: Andrew Hyatt <ahyatt@gmail.com>, Richard Stallman <rms@gnu.org>, "Dr.
+>  Arne Babenhauserheide" <arne_bab@web.de>
+> 
+> I have found multiple violations of GNU Principle regarding references 
+> to nonfree Software and SaaSS.
+> 
+> The GNU Standards document section 8 References to Nonfree Software and 
+> Documentation states:
+> https://www.gnu.org/prep/standards/standards.html#References
+> 
+> A GNU program should not recommend, promote, or grant legitimacy to the 
+> use of any nonfree program. This principle likewise applies to anything 
+> operating online that is morally comparable to a proprietary 
+> program—such as a web site that requires users to run the site's nonfree 
+> software, or invites them to surrender control of their own computing to 
+> that site's server.
+
+This citation from the GCS is incomplete, and thus misleading.  The
+GCS follows the above paragraph by the following text:
+
+     When a nonfree program or system is well known, you can mention it in
+  passing--that is harmless, since users who might want to use it probably
+  already know about it.  For instance, it is fine to explain how to build
+  your package on top of some widely used nonfree operating system, or how
+  to use it together with some widely used nonfree program or dis-service,
+  preferably after first explaining how to achieve the same results on the
+  GNU system with solely free software.
+
+     However, you should give only the necessary information to help those
+  who already use the nonfree program to use your program with it--don't
+  give, or refer to, any further information about the proprietary program
+  or dis-service, and don't imply that it enhances your program, or that
+  its existence is in any way a good thing.  The goal should be that
+  people already using the proprietary program will get the advice they
+  need about how to use your free program with it, while people who don't
+  already use the unjust program or dis-service will not see anything
+  likely to lead them to take an interest in it.
+
+So if the services for which the llm package provides front ends are
+"well known" or "widely used" (which I think they are), the GCS allows
+to reference to them, with the qualifications it describes above
+("minimum necessary information" etc.).
+
+================================================================================
+Date: 2026-09-27T12:37:09+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <86wls73rqi.fsf@gnu.org>
+In-Reply-To: <f76f2b5e0e8c18eaec87fc7bb692f211@gnu.support> (message from Jean
+ Louis on Sun, 27 Sep 2026 13:06:39 +0300)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <f76f2b5e0e8c18eaec87fc7bb692f211@gnu.support>
+
+> Date: Sun, 27 Sep 2026 13:06:39 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: Andrew Hyatt <ahyatt@gmail.com>, Richard Stallman <rms@gnu.org>, "Dr.
+>  Arne Babenhauserheide" <arne_bab@web.de>
+> 
+> One note on terminology, for accuracy: these modules do not talk to an 
+> LLM. An LLM is the model itself — the weights on disk, a parameterized 
+> function stored as data, run locally by an inference engine. What these 
+> modules talk to is a remote service that performs the inference for the 
+> user: SaaSS, Service as a Software Substitute. The names should reflect 
+> that. I suggest renaming them accordingly:
+> 
+> - `llm-azure.el` → `saas-azure.el`
+> - `llm-claude.el` → `saas-claude.el`
+> - `llm-deepseek.el` → `saas-deepseek.el`
+> - `llm-gemini.el` → `saas-gemini.el`
+> - `llm-github.el` → `saas-github.el`
+> - `llm-openai.el` → `saas-openai.el`
+> - `llm-vertex.el` → `saas-vertex.el`
+
+This would violate the Emacs naming conventions, whereby each package
+should give its components names that begin with the package's name
+followed by a hyphen.
+
+Please don't suggest violations of our naming conventions.  Such
+suggestions will be automatically rejected, as they should be.
+
+================================================================================
+Date: 2026-09-27T12:38:14+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <06cef3d600dd85b6db32303374034255@gnu.support>
+In-Reply-To: <8733uvj8ji.fsf@localhost>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <eb99b9b424e5a2570a279033afbc3ef4@gnu.support> <878q4njf74.fsf@localhost>
+ <46364c6b173dc27ae5aae32bf0a5b336@gnu.support> <875wzrjd68.fsf@localhost>
+ <70a26394be2966ca298ffa137e86001b@gnu.support> <8733uvj8ji.fsf@localhost>
+
+On 2026-09-27 13:25, Ihor Radchenko wrote:
+> Jean Louis <bugs@gnu.support> writes:
+> 
+>> We keep saying "Emacs runs with an LLM." Emacs does not run with an 
+>> LLM.
+>> It has network functions that access a remote API. The remote API is 
+>> not
+>> the LLM. And the SaaSS products behind those APIs do much more than
+>> inference — they have whole tool chains attached. Those are not the 
+>> LLM.
+> 
+>> It would be better to use the terms correctly. When we say "LLM," we
+>> should mean the model itself: the weights on disk, a parameterized
+>> function in the form of data. To run that function, you need an
+>> inference engine — something like `llama.cpp`, or Python software 
+>> using
+>> `transformers`. Emacs does not do that yet. It is not impossible, but 
+>> it
+>> is not what is happening now.
+> 
+> Sure. I do not think that it is Emacs's job to run inference.
+> What Emacs is well-designed for is dealing with text - sending text
+> input and receiving text output from inference engine.
+
+This treats the flow as: Emacs → inference engine → text back.
+
+I do not see it that way, is not well. What actually happens is that 
+flow is not so direct. The inference engine — llama.cpp, for example — 
+is a local program that loads the model weights and performs the 
+computation. It runs on the command line or as a library. It does not 
+speak a network protocol to Emacs by itself.
+
+What Emacs talks to is an API server — something like llama-server, or 
+ollama, or vLLM, or an OpenAI-compatible HTTP endpoint. That server 
+wraps the inference engine, and it also does other things: caching, 
+session storage, tool dispatch, authentication, rate limiting, queuing 
+and also taking your information for eventual further learning or 
+training of new LLMs (what many SaaSS providers do).
+
+> Whether that engine lives remotely or locally is another question.
+> Many people imply that it is remote, but it does not have to be, as you
+> know very well.
+
+Yes, I think we should not in the mentioning of SaaSS say that it is 
+"LLM" as it is not. We must name it by the name. And many of those SaaSS 
+endpoints do not run the inference engine themselves, but also access 
+remote SaaSS as upper provider.
+
+It doesn't need to be remote, sure.
+
+Yet, running it locally is currently not possible with free software. 
+One needs at least proprietary kernel blobs as firmware for GPU cards 
+and there is no LLM that is fully free.
+
+If we solve problem of proprietary kernel blobs, we still need to get 
+fully free LLM to "abide" to GNU principles or licensing, so that users 
+do not get affected.
+
+>> Almost all of the current Emacs "LLM" functionality is networking:
+>> sending data to an API and receiving data back. Emacs is not talking 
+>> to
+>> an LLM. It is talking to a server.
+> 
+> Not really.
+> If we talk about packages like gptel, ellama, etc, they do more than
+> just sending data back and forth. They send and receieve data, but also
+> arrange the data to be stored in text, expose tooling (often in Elisp),
+> visualize output, or even implement agent logic in Elisp. On top of 
+> that
+> they add Elisp APIs to modify every piece of the features I mentioned.
+
+Yes, of course they process data. Me was talking in context of 
+mentioning term "LLM" when users actually think connecting to API server 
+versus the actual interacting with the LLM as inference engine.
+
+> In other words, we do have LLM harness implemented partially or fully 
+> in
+> Elisp, which is the most actively developed software type (related to
+> LLMs) nowadays. The LLMs themselves are currently developed towards
+> better interaction with harness rather than earlier improvements in
+> general LLM reasoning performance. So, I do see a lot of potential for
+> Emacs here.
+
+I also see potential, just with the difference that I cannot support to 
+accept SaaSS invitations or non-free software. So that is the actual 
+work that has to be done.
+
+What is the LLM harness you are talking about? Show me.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T13:03:10+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <e3e21f0891111d544c4979835dfac48c@gnu.support>
+In-Reply-To: <86wls73rqi.fsf@gnu.org>
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <f76f2b5e0e8c18eaec87fc7bb692f211@gnu.support> <86wls73rqi.fsf@gnu.org>
+
+Eli, I was not suggesting that the modules be renamed independently of 
+the package — I was suggesting that the package itself is misnamed. The 
+naming convention is not in dispute: if the package were renamed, the 
+modules would follow it naturally. What is in dispute is whether llm is 
+an accurate name for a package that does not talk to an LLM at all, but 
+to a remote service that runs one on the user's behalf — which is SaaSS, 
+not an LLM, and the name should say so.
+
+Maybe whole of the `llm` package should be renamed to something like: 
+inference-service as `llm` represents weights, yet package does nothing 
+with weights. It is misleading.
+
+Then other packages could be named:
+
+`inference-services-saas-azure.el` -- to give clear distinction that 
+user is to access SaaSS when using such package
+`inference-services-saas-claude.el`
+`inference-services-saas-deepseek.el`
+`inference-services-saas-gemini.el`
+`inference-services-saas-github.el`
+`inference-services-saas-openai.el`
+`inference-services-saas-vertex.el`
+
+Or package could be named `inferserv` as abbreviation to inference 
+services.
+
+`inferserv-saas-azure.el`
+`inferserv-saas-claude.el`
+`inferserv-saas-deepseek.el`
+`inferserv-saas-gemini.el`
+`inferserv-saas-github.el`
+`inferserv-saas-openai.el`
+`inferserv-saas-vertex.el`
+
+That gives the package a name that matches what it does, and it stops 
+using the term "LLM" in a way that is not accurate — an LLM is a large 
+language model (file with data), and Emacs does not speak to a large 
+language model directly.
+
+It speaks to a service, and we should look at that first leg.
+
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T13:07:10+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <2ff1cef0f01dd16cb35379f7bc0eaecc@gnu.support>
+In-Reply-To: <86y0cn3rvm.fsf@gnu.org>
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <86y0cn3rvm.fsf@gnu.org>
+
+On 2026-09-27 13:34, Eli Zaretskii wrote:
+> So if the services for which the llm package provides front ends are
+> "well known" or "widely used" (which I think they are), the GCS allows
+> to reference to them, with the qualifications it describes above
+> ("minimum necessary information" etc.).
+
+Thanks Eli.
+
+The quote is this one:
+
+"When a nonfree program or system is well known, you can mention it in 
+passing — that is harmless, since users who might want to use it 
+probably already know about it."
+
+The operative phrase is "mention it in passing." The passage is about 
+how to write documentation for a GNU program that already exists and 
+already has some users who also use nonfree software. It says: if you 
+must mention the nonfree program, mention it briefly, without 
+encouraging interest in it.
+
+The `llm` package is not mentioning these services in passing. It is
+
+- building dedicated modules for each one.
+- hardcoding their SaaSS API endpoints.
+- providing full API integration, including chat, embeddings, tools, and 
+streaming responses.
+- returning their terms-of-service URLs as part of the package's 
+operation.
+= naming each module after the service.
+
+That is not a passing mention. That is a front-end, as you Eli yourself 
+call it so: "the services for which the llm package provides front 
+ends."
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-09-27T13:09:57+02:00
+From: "Michael Grant" <mgrant@grant.org>
+Subject: Re[2]: Detecting and warning about homoglyph attacks
+Message-ID: <eme3b54019-6924-4790-9fbb-decef7b309b9@grant.org>
+In-Reply-To: <86cxtz5km0.fsf@gnu.org>
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org>
+
+I looked at this a few years ago and back maybe 5 years ago, there were 
+no perfect solutions.  I see from searching there is something called 
+Tirith and a python module confusable_homoglyphs which is what I recall 
+playing with.
+
+For things like rmail, or gnus or mu4e, it looks like there may be a way 
+to wire in a shell call to something like the confusable_homoglyphs 
+python module (or script really that uses it).  I didn't find anything 
+out of the box that just uses it.
+
+I have seen some mail servers, especially for businesses, that will flag 
+things in email and web pages but these are generally paid for services. 
+  Like something that modified email messages and added a banner at the 
+top of the message with a warning.  There is no perfect way to actually 
+do this inside a message and probably doing this in the MUA like rmail 
+is probably the right place.  It never ceased to amaze me with the 
+popularity of web mail MUAs such as gmail that these large companies 
+don't do this or provide any way for any third party to do this!
+
+If I understand correctly, confusable_homoglyphs depends on the public 
+data published by the Unicode Consortium.  This data appears to be here: 
+https://www.unicode.org/Public/security/latest/confusables.txt.  If I 
+recall from trying to use this a few years ago this was not perfect.  
+Like a capital I and a lowercase l, or a zero and a capital O look the 
+same or nearly the same and these are not anything special in unicode.  
+There's also html vs just looking at a utf-8 byte stream meaning 
+spotting something like &foo; that didn't get spotted.  I think the 
+conclusion I came to was I probably needed something that tried to 
+render something then OCR it back in and then try to decide if they were 
+the same and i never found anything to do that.
+
+However, if you didn't want to depend on the python package, I would 
+think that it would not be very difficult to take the unicode data and 
+build an emacs elisp package to use it, and then make it very easy to 
+wire into things such as rmail or mu4e and then see if those folks are 
+willing or interested to use it or try to get someone motivated to send 
+each and every one of these sort of things that would display an email 
+address or url or something confusing to use it.  Probably be minimally 
+useful but not perfect.
+
+================================================================================
+Date: 2026-09-27T13:12:21+02:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: zlib-compress-region for PDF export
+Message-ID: <09d8e210-a5a9-4301-af63-b6edfdc37f94@imayhem.com>
+In-Reply-To: 
+References: 
+
+Hello,
+
+We have zlib-decompress-region but the zlib-compress-region. I found 
+this thread
+
+https://lists.gnu.org/archive/html/emacs-devel/2013-08/msg00564.html
+
+that gives the reason:
+
+ > I'm not really interested in providing those functions to replace
+ > existing uses.  IOW, if there's no new use for it (i.e. if it doesn't
+ > enable new uses where running an external program is
+ > impractical/impossible), then I think it's not worth the trouble.
+
+
+This is the case now. Using gzip to embed fonts would be very 
+unpractical. Can I add it?
+
+================================================================================
+Date: 2026-09-27T13:15:30+02:00
+From: =?utf-8?Q?Francesco_Potort=C3=AC?= <pot@potorti.it>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <E1xAmqw-0000000ByJb-1ClL@tucano.isti.cnr.it>
+In-Reply-To: <86cxtz5km0.fsf@gnu.org> (eliz@gnu.org)
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org>
+
+Eli:
+>I don't think anyone has posted an example.  Rmail will present a
+>warning when a URL included in a text/html body of an Rmail message
+>uses homoglyphs and other insecure features.  The examples where I
+>actually saw this in action are private and cannot be shared, sorry.
+
+Attached is a publicity email which I have just received, containing some links that Rmail shows me in red as their text is an url different from the real url of the link.
+
+================================================================================
+Date: 2026-09-27T13:48:18+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <875wzq29vh.fsf@web.de>
+In-Reply-To: <87o6dk87ws.fsf@thanosapollo.org> (Thanos Apollo's message of
+ "Sat, 26 Sep 2026 16:21:55 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de>
+ <86pky076go.fsf@gnu.org> <87v77s8icl.fsf@thanosapollo.org>
+ <875wzs48z5.fsf@web.de> <87se2w8dsk.fsf@thanosapollo.org>
+ <87tsnc2mun.fsf@web.de> <87o6dk87ws.fsf@thanosapollo.org>
+
+>> Which of these servers is running completely locally and is easiest to
+>> set up?
+>
+> Install hermes through your package manager (nix/pacman/pip) and
+> follow the 4-step process on https://hermes-agent.nousresearch.com/docs/user-guide/local-models
+
+That leads to
+https://hermes-agent.nousresearch.com/docs/guides/local-ollama-setup
+
+Which states that gemma4:31b is the only local model setup that actually
+works sensibly.
+
+That would mean that providing this config by default when nothing is
+configured:
+
+model:
+  default: "gemma4:31b"
+  provider: "custom"
+  base_url: "http://localhost:11434/v1"
+
+and the package description linking to:
+https://hermes-agent.nousresearch.com/docs/guides/local-ollama-setup
+
+instead of the hermes quickstart would avoid steering people into SaaSS dependencies.
+
+I doubt that gemma4 is safe for free software (since the training data
+isn’t free, so what it produces can be a copyright violation), but it
+may be the least problematic option.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-27T13:53:51+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <87wls6zz8w.fsf@web.de>
+In-Reply-To: <87ld8n8ox9.fsf@thanosapollo.org> (Thanos Apollo's message of
+ "Sun, 27 Sep 2026 04:26:42 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de>
+ <86pky076go.fsf@gnu.org> <87v77s8icl.fsf@thanosapollo.org>
+ <875wzs48z5.fsf@web.de> <87se2w8dsk.fsf@thanosapollo.org>
+ <87tsnc2mun.fsf@web.de> <87o6dk87ws.fsf@thanosapollo.org>
+ <87ld8n3i0e.fsf@web.de> <87ld8n8ox9.fsf@thanosapollo.org>
+
+Thanos Apollo <public@thanosapollo.org> writes:
+> You have sent 9+ messages in the two hermes-specific discussions alone,
+> about software you do not plan to use and whose stack you are not
+> familiar with.
+
+Yes. To provide a path in which it may be included in elpa.
+
+But given that your reactions here give me the impression that you don’t
+want any path in that direction, if the conclusion of the discussion
+among maintainers is that a package which requires running a program
+which steers people into proprietary SaaSS is incompatible with GNU
+principles, I don’t think hermes.el should be included in elpa.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-09-27T14:13:32+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <arkIbMlJVnKn3huf@rtx.louis.club>
+In-Reply-To: <878q6ky0nw.fsf@thanosapollo.org>
+References: <878q6ky0nw.fsf@thanosapollo.org>
+
+Thanos Apollo <public@thanosapollo.org> [2026-08-05 12:47]:
+>
+> Hello,
+>
+> I would like to submit hermes, an Emacs front end for Hermes Agent[1].
+> [1] https://github.com/nousresearch/hermes-agent
+
+Thanos, I looked at the git repository of emacs-hermes before it was published.
+
+What I found suggests the package was generated by an LLM, with
+attribution deliberately suppressed. The repository contained an
+`AGENTS.md` instruction file with 18 versions over 88 days. One
+version says: "add no generated-by or co-author metadata." That is a
+written instruction to hide the the LLM authorship. The file was later
+deleted. Some of the extracted versions are attached.
+
+So far as I know, the GNU project does not have a policy for accepting
+LLM-generated code. That is a problem for this package, and for the
+archive. If the code is fully generated by an LLM, it is questionable
+how the FSF can protect copyrights on it. Copyright assignment
+requires a human author who holds the rights. An LLM cannot hold
+copyright.
+
+The package is already in ELPA. I am not asking for it to be removed
+today. I am asking the maintainers to review it in light of this
+finding, and to decide how the project will handle LLM-generated
+contributions before more of them arrive.
+
+--
+Jean Louis
+
+P.S. Findings from git here:
+
+The full instruction file is below; the relevant line is in the "Development workflow" section: "write a short subject such as module: Change, and add no generated-by or co-author metadata."
+
+git show 9f1792d:AGENTS.md | grep -n 'generated-by'
+245:subject such as `module: Change`, and add no generated-by or co-author metadata.
+
+# all 4 versions that contained it, with line numbers
+git grep -n 'generated-by' $(git log --all --format=%H -- AGENTS.md) -- AGENTS.md
+
+# commits that added and removed the rule
+git log --all -S'generated-by' --oneline -- AGENTS.md
+
+  4ec6823 docs: Keep project guidance focused on package contracts
+  9f1792d docs: Refresh contributor guidance
+
+# the commit that deleted the file
+git log --all --diff-filter=D --oneline -- AGENTS.md
+
+  eb46e69 docs: Retire repository agent guide
+
+git show 9f1792d:AGENTS.md | sed -n '245p'; git show --stat --oneline eb46e69 | tail -2
+subject such as `module: Change`, and add no generated-by or co-author metadata.
+ AGENTS.md | 125 --------------------------------------------------------------
+ 1 file changed, 125 deletions(-)
+
+git show 9f1792d:AGENTS.md
+
+# hermes-el
+
+An Emacs-native frontend for Hermes Agent. The dashboard, chat UI, management
+browsers, Tracker cockpit, capability provider, and optional eval bridge live in
+this repository.
+
+## Public document policy
+
+Treat this file as public project documentation.
+
+- Never add machine-specific absolute paths, usernames, hostnames, IP addresses,
+  private service topology, auth-source entry names, tokens, secrets, or private
+  issue details.
+- Use repository-relative paths for source references and generic values in
+  examples.
+- Keep durable project architecture and contributor practices here. Keep
+  temporary plans, task state, build output, and personal configuration out.
+- Verify current behavior from source, tests, or the authoritative backend. Do
+  not preserve stale facts merely because they are documented here.
+
+## Authoritative references
+
+Hermes Agent is authoritative for the dashboard and TUI gateway protocols.
+Relevant paths in a Hermes Agent checkout include:
+
+- `hermes_cli/web_server.py` and `hermes_cli/dashboard_auth/middleware.py`
+- `tui_gateway/server.py` and `tui_gateway/ws.py`
+- `plugins/kanban/dashboard/plugin_api.py`
+- `hermes_cli/kanban.py`
+- `gateway/platforms/api_server.py`
+- `apps/desktop/src/hermes.ts`
+- `apps/desktop/src/app/desktop-controller.tsx`
+
+Hermes Tracker is authoritative for its separate `/api/v1` contract, especially
+`src/hermes_tracker/api/v1.py` and the API contract tests. The Python
+`hermes-emacs-plugin` is authoritative for the stdio MCP bridge paired with
+`hermes-exec.el`.
+
+Use core Emacs EWOC and ERC, emacs-jabber, Gnosis, and keymap-popup as design
+references.
+
+## Architecture
+
+The main dependency direction is bottom-up. Optional UI integrations may have
+documented lazy cross-links, but lower transport layers must not depend on chat
+or browser modules.
+
+- `hermes-promise.el`: zero-package async primitive for dashboard, REST, and
+  other composable operations. Process filters and socket callbacks stay at
+  their I/O boundaries.
+- `hermes-transport.el`: pure gateway frame and event normalization plus the
+  shared field accessors. No I/O belongs here.
+- `hermes-transport-cli.el`: sanctioned `hermes chat -Q -q` one-shot smoke-test
+  fallback only.
+- `hermes-dashboard-api.el`: dashboard URL handling, secret redaction,
+  asynchronous HTTP, REST authentication, remote credentials, endpoint-scoped
+  caches, and the dashboard client data structure.
+- `hermes-dashboard-transport.el`: dashboard process and WebSocket lifecycle,
+  ready handshake, session subscribers, owner-scoped requests, JSON-RPC
+  promises, reconnect, heartbeat, idle close, and event routing.
+- `hermes-dashboard-rpc.el`: typed gateway wrappers declared with
+  `hermes-dashboard-transport-define-rpc`.
+- `hermes-notifications.el`: shared desktop notification policy, safe previews,
+  focus suppression, fallback behavior, and click-to-open actions. Feature
+  modules classify domain events and call this boundary.
+
+The chat stack is one logical module with explicit ownership boundaries:
+
+- `hermes-chat-format.el`: pure event classification, diagnostics, markdown
+  fontification, ANSI handling, and diff detection.
+- `hermes-chat-render.el`: transcript rendering effects, disclosure entries,
+  View Diff links, and result buffers.
+- `hermes-chat-buffer.el`: EWOC buffer state, writable compose tail, entries,
+  header state, and the ownership-aware FIFO queue.
+- `hermes-chat-prompts.el`: approval, clarify, sudo, and secret prompt flows.
+- `hermes-chat-dashboard.el`: chat-to-dashboard session lifecycle, restore,
+  reattach, request ownership, event routing, and background tasks.
+- `hermes-chat-models.el`: model and provider selection.
+- `hermes-chat-handoff.el`: session handoff and bounded polling.
+- `hermes-chat-slash.el`: slash completion, native commands, and gateway command
+  dispatch.
+- `hermes-chat.el`: turn reducer, effects, interactive commands, interrupt and
+  queue settlement, plus assembly of the chat feature modules.
+
+Management surfaces share `hermes-browser.el`, which owns dashboard client
+provisioning, semantic faces, responsive columns, request generations, and the
+`hermes-define-list-browser` macro.
+
+- Simple list surfaces: `hermes-sessions.el`, `hermes-profiles.el`,
+  `hermes-rollback.el`, `hermes-subagents.el`, and `hermes-cron.el`.
+- Custom multi-view surfaces: `hermes-inventory.el`, `hermes-mcp.el`, and
+  `hermes-kanban.el`.
+- `hermes-kanban-log.el` owns worker-log diff parsing and navigation.
+- `hermes-kanban-events.el` owns the dedicated plain-JSON Kanban event socket.
+- `hermes-tracker.el` is an optional client for the separate Hermes Tracker
+  service. It owns Tracker auth, TODO views and mutations, evidence-gated
+  closure, and canonical Tracker-to-Kanban references.
+
+Other independent integrations:
+
+- `hermes-onboarding.el`: provider discovery and API-key onboarding.
+- `hermes-capabilities.el`: bounded native Emacs capabilities over a dedicated
+  provider WebSocket, with its own registry, lifecycle, and reconnect state.
+- `hermes-exec.el`: optional HTTP-JSON eval endpoint for the Python MCP bridge.
+  It is disabled by default and owns approval, bind, token, size, queue, and
+  timeout controls.
+- `hermes.el`: `M-x hermes` EWOC dashboard and entry hub, plus `M-x
+  hermes-close` for confirmed local teardown and restart. It loads the
+  user-facing chat and management surfaces; capabilities and exec remain
+  optional.
+
+## Transport boundaries
+
+All Hermes Agent feature work goes through the dashboard configured by
+`hermes-dashboard-transport-url`. Use its HTTP plugin routes or TUI gateway
+WebSocket JSON-RPC. Never shell to the local Hermes CLI for feature data because
+it reads local state and ignores the configured remote dashboard. The one-shot
+chat fallback remains a smoke-test exception.
+
+Hermes Tracker is a separate service with separate credentials. It uses
+`hermes-tracker-url`, HTTPS outside loopback, auth-source credentials, and
+idempotency keys for mutations. Tracker and dashboard credentials must never be
+shared. Cross-link operations may compose Tracker REST calls with dashboard
+Kanban plugin calls.
+
+Never perform synchronous network I/O on Emacs's main thread. New work should
+use these seams:
+
+- New gateway RPC: add a wrapper in `hermes-dashboard-rpc.el`.
+- New gateway event: normalize it in `hermes-transport.el`, reduce it in
+  `hermes-chat.el`, and update status classification when needed.
+- Simple one-result list: use `hermes-define-list-browser`.
+- Complex browser: reuse browser faces, client lifecycle, request generations,
+  and responsive column helpers without forcing it through the macro.
+- Dashboard REST feature: use the asynchronous helpers in
+  `hermes-dashboard-api.el`.
+- Non-RPC server stream: own a dedicated socket, parse its protocol directly,
+  debounce refreshes, reconnect with bounded backoff, and stop when its owner
+  dies. Never route plain JSON through the chat JSON-RPC frame handler.
+- Interactive request: follow the prompt modules and reply through the typed
+  `*.respond` RPC.
+
+## Async ownership rules
+
+Late callbacks are a primary correctness risk.
+
+- Capture the target buffer and request, turn, session, or connection identity
+  before starting asynchronous work.
+- Before applying a callback, prove the buffer is live, still has the expected
+  mode, and still owns the captured generation or request token.
+- Treat stale callbacks as no-ops. They must not mutate replacement buffers,
+  settle newer turns, or reconnect superseded sockets.
+- Tag transport requests with their owner and cancel owner requests during
+  teardown without reporting expected cleanup as a user-facing failure.
+- Buffers own their timers, transient clients, processes, subscriptions, and
+  sockets. Install buffer-local cleanup hooks and make teardown idempotent.
+- A replaced owner must not tear down its successor. Increment generations
+  before closing old resources.
+- Test rejection, timeout, disconnect, buffer-kill, rapid refresh, and stale
+  callback paths, not only successful resolution.
+
+## User-interface contracts
+
+- `M-x hermes` opens the EWOC dashboard and `keymap-popup`, not a terminal UI.
+- Chat uses an EWOC transcript and a writable tail after
+  `hermes-chat--input-marker`. Submitted user turns alone receive the `> `
+  prefix.
+- The assistant reply stays last in a turn. Tool, status, thinking, and diff
+  entries are inserted before the pending assistant node.
+- Markdown is fontified through a temporary `markdown-mode` pass. The chat
+  buffer does not change major mode.
+- Unified diffs are replaced by a file label and `[View Diff]` link. Ordinary
+  prose beginning with `+` or `-` is not a diff.
+- Multiline tool and progress entries use the shared disclosure UI. Diff and
+  command-result entries keep their dedicated rendering.
+- Active-session backpressure is intentional. Preserve the busy guard and use
+  interrupt, steer, the ownership-aware FIFO queue, prompt responses, or a new
+  session.
+- Desktop notifications default to chat replies and errors, input requests,
+  background-task results, Kanban review, blocked, or failed transitions, and
+  cron failures when failure monitoring is enabled. Routine Kanban completion
+  is opt-in. Suppress notices for a target already visible on the focused frame,
+  keep sensitive prompt details out of bodies, and make click actions return to
+  the owning buffer or task row.
+- Use `read-string-from-buffer` for multiline Tracker descriptions, comments,
+  acceptance criteria, and verification evidence. Use `read-string` for
+  single-line scalar fields.
+
+## Functional Elisp practices
+
+- Keep computation pure where practical. Pass explicit inputs and return plain
+  data; keep buffer, process, timer, socket, and network mutation in thin effect
+  functions.
+- Prefer alists, plists, and stable `cl-defstruct` records. Read protocol data
+  through `hermes-transport--get`, `hermes-transport--field`, and related shared
+  accessors so hash tables, alists, and plists remain interchangeable.
+- Transform collections with `mapcar`, `seq-map`, `seq-filter`, `mapconcat`, or
+  `cl-loop ... collect`. Do not build values with `dolist`, `push`, and
+  `nreverse`. Reserve imperative loops for real effects.
+- Prefer `when` and `when-let*` for effects, `and` and `and-let*` for
+  value-returning conjunctions, and `string-join` for joining existing strings.
+- Keep functions around 35 lines or fewer unless a flat dispatch table or
+  schema is clearer than artificial splitting.
+- Do not use `declare-function` between `hermes-chat-*` siblings. Move helpers
+  to the state-owning layer or connect upward behavior through the documented
+  registries and cleanup hooks. Reserve declarations for soft external
+  dependencies and documented lazy load boundaries.
+- Use one space between tokens. Do not column-align forms.
+- Comments explain why. Use plain `;;; Section name` headers and no decorative
+  separators or filler commentary.
+
+## Development workflow
+
+1. Inspect the current git state, scoped source, nearby tests, and authoritative
+   backend contract before proposing a change.
+2. Discuss the implementation boundary before non-trivial edits. Use a written
+   plan for cross-module, protocol, lifecycle, security, or migration work.
+   Tiny documentation and mechanical fixes do not need ceremony.
+3. For behavior changes, start with a focused failing ERT or a concrete
+   reproducer when practical. Test the public contract and the important
+   failure boundary, not implementation trivia.
+4. Make the smallest coherent change. Preserve unrelated work in a dirty tree
+   and avoid drive-by refactors.
+5. Run targeted checks first, then broader project gates in proportion to risk.
+6. Review the complete diff against the request and architecture. Fix findings
+   and repeat verification before handoff.
+
+Useful gates:
+
+- Focused ERT: `make test TESTS=tests/hermes-chat-tests.el`
+- Strict byte compilation: `make compile`
+- Full compile, checkdoc, native compilation, and ERT gate: `make pre-commit`
+- Nix-backed handoff and flake checks: `make pre-handoff-check`
+- Live reload for dogfood after batch gates: `make load`
+- Whitespace validation: `git diff --check`
+
+Run `make pre-commit` before every authorized commit. Run
+`make pre-handoff-check` for large, cross-cutting, public-release, dependency,
+or flake-facing work. Live Emacs dogfood is additional evidence, not a
+replacement for batch tests.
+
+Never commit, amend, rebase, push, deploy, or run destructive Git commands
+without explicit maintainer or task authorization. When a commit is authorized,
+stage only scoped verified changes, use the repository identity, write a short
+subject such as `module: Change`, and add no generated-by or co-author metadata.
+
+## Adversarial review
+
+Review depth follows risk, not line count.
+
+- Trivial changes receive a complete diff self-review and the smallest relevant
+  check.
+- Small bounded behavior changes receive targeted tests plus a deliberate
+  full-diff self-review.
+- Cross-module lifecycle work, protocol changes, public API changes,
+  authentication, secret handling, destructive operations, and broad
+  refactors require a fresh independent review.
+
+For required independent review:
+
+1. Pin the reviewer to an immutable diff or commit and a precise acceptance
+   boundary.
+2. Give the first pass the artifact without the author's reasoning. Ask the
+   reviewer to assume the plausible-looking change is wrong and hunt for
+   regressions, stale state, ownership errors, protocol drift, secret exposure,
+   cleanup failures, and tests that pass without proving the contract.
+3. The reviewer reports findings without editing the candidate.
+4. After the blind pass, provide the plan, architecture constraints, and test
+   evidence for a completeness pass.
+5. Resolve all blocking findings, rerun the relevant gates, and repeat review
+   until the immutable candidate passes.
+
+Reviewers should inspect source and tests, not trust summaries. A green test is
+evidence only when its assertions exercise the claimed behavior.
+
+## Kanban and Tracker handoffs
+
+- Keep one coherent feature in one execution unit unless a real dependency,
+  different accountable role, high-risk review gate, or publication boundary
+  requires a split.
+- Create dependent cards in dependency order. Do not create ready children and
+  link them afterward.
+- Use separate planner or reviewer cards only when the work's risk and size
+  justify them.
+- Handoffs include changed files, exact commands and observed results, diff or
+  commit scope, review verdict, remaining blockers, and whether live Emacs
+  dogfood ran.
+- Close Tracker work only with concrete verification evidence. A status label
+  or success claim is not proof.
+- Do not include private paths, credentials, host details, raw logs, or local
+  scratch files in cards, comments, commits, or handoffs.
+
+================================================================================
+Date: 2026-09-27T14:33:53+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <86tsna50we.fsf@gnu.org>
+In-Reply-To: <e3e21f0891111d544c4979835dfac48c@gnu.support> (message from Jean
+ Louis on Sun, 27 Sep 2026 14:03:10 +0300)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <f76f2b5e0e8c18eaec87fc7bb692f211@gnu.support> <86wls73rqi.fsf@gnu.org>
+ <e3e21f0891111d544c4979835dfac48c@gnu.support>
+
+> Date: Sun, 27 Sep 2026 14:03:10 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: emacs-devel@gnu.org, ahyatt@gmail.com, rms@gnu.org, arne_bab@web.de
+> 
+> Eli, I was not suggesting that the modules be renamed independently of 
+> the package — I was suggesting that the package itself is misnamed.
+
+I disagree that the package is misnamed.  A name that includes "llm"
+conveys the fact that the package is related to LLMs, which is what is
+needed from a good package name.
+
+> Maybe whole of the `llm` package should be renamed to something like: 
+> inference-service as `llm` represents weights, yet package does nothing 
+> with weights. It is misleading.
+> 
+> Then other packages could be named:
+> 
+> `inference-services-saas-azure.el` -- to give clear distinction that 
+> user is to access SaaSS when using such package
+> `inference-services-saas-claude.el`
+> `inference-services-saas-deepseek.el`
+> `inference-services-saas-gemini.el`
+> `inference-services-saas-github.el`
+> `inference-services-saas-openai.el`
+> `inference-services-saas-vertex.el`
+
+"Inference service" and "SaaSS" are too generic to be useful.
+
+> Or package could be named `inferserv` as abbreviation to inference 
+> services.
+> 
+> `inferserv-saas-azure.el`
+> `inferserv-saas-claude.el`
+> `inferserv-saas-deepseek.el`
+> `inferserv-saas-gemini.el`
+> `inferserv-saas-github.el`
+> `inferserv-saas-openai.el`
+> `inferserv-saas-vertex.el`
+
+And this is even cryptic.
+
+My conclusion is that your suggestion is not useful, and the
+package's name should not change.  Please don't argue.
+
+================================================================================
+Date: 2026-09-27T14:36:11+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <87zex2rhvp.fsf@posteo.net>
+In-Reply-To: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> Hello,
+>
+> Me sorry to hurt feelings of people, I am evaluating the `llm` package
+> that is found on ELPA against the GNU Standards compliance.
+>
+> I have found multiple violations of GNU Principle regarding references
+> to nonfree Software and SaaSS.
+>
+> The GNU Standards document section 8 References to Nonfree Software
+> and Documentation states:
+> https://www.gnu.org/prep/standards/standards.html#References
+>
+> A GNU program should not recommend, promote, or grant legitimacy to
+> the use of any nonfree program. This principle likewise applies to
+> anything operating online that is morally comparable to a proprietary
+> program—such as a web site that requires users to run the site's
+> nonfree software, or invites them to surrender control of their own
+> computing to that site's server.
+>
+> The llm package distributes 7 modules via ELPA that integrate with
+> proprietary cloud-based "AI" services or SaaSS, services as software
+> substitute. Distribution through ELPA constitutes an explicit
+> invitation to surrender control of computing to these servers. Each
+> module contains direct references to SaaSS services through hardcoded
+> URLs, API endpoints, and terms-of-service links. Package names,
+> descriptions, etc. included.
+>
+> Detailed Analysis by Module:
+>
+> 1. llm-azure.el
+> The Azure OpenAI integration provides direct access to Microsoft's
+> proprietary cloud SaaSS service. Line 47 returns a URL pointing to
+> Azure's legal terms. Lines 49-57 define hardcoded endpoints at
+> azure.microsoft.com for chat completions and embeddings. Users
+> invoking this module submit data to Microsoft's servers, requiring
+> execution of Azure's nonfree software stack. The module grants
+> legitimacy by providing Emacs-native integration into Microsoft's
+> ecosystem. This package is in ELPA under `llm` package.
+>
+> 2. llm-claude.el
+> This module interfaces with Anthropic's Claude API. Line 50 returns
+> Anthropic's consumer terms URL. The codebase uses the domain
+> api.anthropic.com throughout. Lines 58-130 construct API requests that
+> route user prompts to Anthropic's servers. The package explicitly
+> documents model documentation at docs.anthropic.com, promoting user
+> engagement with Anthropic's proprietary platform. This package is in
+> ELPA under `llm` package.
+>
+> 3. llm-deepseek.el
+> Direct integration with DeepSeek's service. Line 49 provides a URL to
+> DeepSeek's terms of use at cdn.deepseek.com. Lines 34-45 establish the
+> base API endpoint as https://api.deepseek.com. Users sending queries
+> through this module hand control to DeepSeek's infrastructure, running
+> their proprietary software stack in the background. This is package in
+> `llm` package.
+>
+> 4. llm-gemini.el
+> Google Cloud Gemini AI integration. Line 54 returns Google's
+> generative AI terms at policies.google.com. Lines 58-83 construct
+> requests to generativelanguage.googleapis.com. The module documents
+> the service at ai.google.dev/tutorials/rest_quickstart. Users invoking
+> this module surrender data processing to Google's servers while Google
+> executes its nonfree machine learning stack. This is also part of
+> `llm` package.
+>
+> 5. llm-github.el
+> GitHub Models integration routes through Azure infrastructure. Line 33
+> sets the URL to models.inference.ai.azure.com. This module inherits
+> all Azure nonfree obligations from llm-azure while adding GitHub
+> branding, implicitly endorsing GitHub's partnership with Microsoft's
+> proprietary cloud services. Also part of `llm` package.
+>
+> 6. llm-openai.el
+> The primary OpenAI API module. Line 122 returns OpenAI's terms at
+> openai.com/policies/terms-of-use. The codebase extensively uses
+> api.openai.com throughout. Lines 124-600 implement full API
+> integration including chat, embeddings, tools, and streaming
+> responses. Users submitting data to this interface directly invoke
+> OpenAI's proprietary models running on their servers. This is also
+> part of `llm` package.
+>
+> 7. llm-vertex.el
+> Google Cloud Vertex AI integration. Uses gcloud authentication to
+> access Google's enterprise AI infrastructure. The module constructs
+> requests to aiplatform.googleapis.com while leveraging Google's
+> authentication system. Users must run gcloud binary locally and submit
+> data to Google's Vertex AI servers. This is part of `llm` package.
+>
+> Common Patterns of Non-Compliance:
+>
+> 1. Hardcoded nonfree endpoints appear in all modules, embedding the
+> infrastructure for proprietary SaaSS services directly into Emacs
+> packages.
+>
+> 2. Each module provides a llm-nonfree-message-info method that
+> explicitly points users to external ToS pages, actively directing
+> users to accept nonfree terms as a condition of use.
+>
+> 3. Documentation URLs are embedded throughout, encouraging users to
+> study proprietary SaaSS platforms and integrate further with them.
+>
+> 4. Distribution via ELPA means GNU Emacs package managers
+> automatically download and install these modules, normalizing the
+> surrender of computing control to third-party SaaSS servers.
+>
+> 5. The modules provide seamless local-to-cloud bridges, making the
+> transition from local Emacs to remote proprietary SaaSS servers appear
+> as a native feature rather than an external dependency.
+>
+> The llm package violates GNU standard principles by distributing
+> integrated access to seven different proprietary cloud "AI"
+> services. Each module represents an invitation to surrender local
+> computing control, requiring users to submit data to external SaaSS
+> servers. The explicit inclusion of terms-of-service URLs and
+> documentation links further promotes and grants legitimacy to these
+> SaaSS services. Distribution through ELPA amplifies this
+> non-compliance by normalizing the integration into GNU Emacs itself.
+
+How is any of this different than the situation with browse-url-chrome,
+which we know _is_ OK since the functionality of `browse-url' is not
+restricted if the user decides to use some other backend.  Stepping
+back, I really don't know who your target audience is that you are
+trying to "protect" from finding out about these services, especially
+since IIUC none of these services are free that you might accidentally
+stumble into.  You can to create accounts and agree to terms and
+conditions.  As Eli said, we have to trust our users to be responsible,
+we are not in a position to isolate them helicopter-parent style.
+
+It is very difficult to assume that you are arguing in good faith here,
+and not just trying to waste all of ours time, considering that the
+probability of anyone knowing about Emacs but not about LLMs, especially
+when you skew younger, is increasingly vanishing.
+
+================================================================================
+Date: 2026-09-27T14:36:47+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <86se2u50rk.fsf@gnu.org>
+In-Reply-To: <2ff1cef0f01dd16cb35379f7bc0eaecc@gnu.support> (message from Jean
+ Louis on Sun, 27 Sep 2026 14:07:10 +0300)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <86y0cn3rvm.fsf@gnu.org> <2ff1cef0f01dd16cb35379f7bc0eaecc@gnu.support>
+
+> Date: Sun, 27 Sep 2026 14:07:10 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: emacs-devel@gnu.org, ahyatt@gmail.com, rms@gnu.org, arne_bab@web.de
+> 
+> On 2026-09-27 13:34, Eli Zaretskii wrote:
+> > So if the services for which the llm package provides front ends are
+> > "well known" or "widely used" (which I think they are), the GCS allows
+> > to reference to them, with the qualifications it describes above
+> > ("minimum necessary information" etc.).
+> 
+> Thanks Eli.
+> 
+> The quote is this one:
+> 
+> "When a nonfree program or system is well known, you can mention it in 
+> passing — that is harmless, since users who might want to use it 
+> probably already know about it."
+> 
+> The operative phrase is "mention it in passing." The passage is about 
+> how to write documentation for a GNU program that already exists and 
+> already has some users who also use nonfree software. It says: if you 
+> must mention the nonfree program, mention it briefly, without 
+> encouraging interest in it.
+> 
+> The `llm` package is not mentioning these services in passing.
+
+That's debatable, but please note that you have now changed your
+subject and argumentation.
+
+> It is
+> 
+> - building dedicated modules for each one.
+
+Not contradiction to the GCS.
+
+> - hardcoding their SaaSS API endpoints.
+
+Not a contradiction to the GCS.
+
+> - providing full API integration, including chat, embeddings, tools, and 
+> streaming responses.
+
+Not a contradiction to the GCS.
+
+> - returning their terms-of-service URLs as part of the package's 
+> operation.
+
+Not a contradiction.
+
+> = naming each module after the service.
+
+Definitely not a contradiction.
+
+> That is not a passing mention.
+
+I think it is.
+
+Please don't keep arguing about this.  Your arguments have been heard
+and respectfully disagreed with.
+
+================================================================================
+Date: 2026-09-27T14:38:56+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <86qzie50nz.fsf@gnu.org>
+In-Reply-To: <eme3b54019-6924-4790-9fbb-decef7b309b9@grant.org>
+ (emacs-devel@gnu.org)
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org> <eme3b54019-6924-4790-9fbb-decef7b309b9@grant.org>
+
+> Date: Sun, 27 Sep 2026 11:09:57 +0000
+> From: "Michael Grant" via "Emacs development discussions." <emacs-devel@gnu.org>
+> 
+> I looked at this a few years ago and back maybe 5 years ago, there were 
+> no perfect solutions.  I see from searching there is something called 
+> Tirith and a python module confusable_homoglyphs which is what I recall 
+> playing with.
+> 
+> For things like rmail, or gnus or mu4e, it looks like there may be a way 
+> to wire in a shell call to something like the confusable_homoglyphs 
+> python module (or script really that uses it).  I didn't find anything 
+> out of the box that just uses it.
+
+We don't need any such solutions because Emacs has the same
+functionality implemented in Emacs Lisp and ready to be used.
+Moreover, Emacs-based MUAs, such as Rmail and Gnus, already use these
+facilities, as I explained in my other messages.
+
+================================================================================
+Date: 2026-09-27T14:43:34+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: zlib-compress-region for PDF export
+Message-ID: <86pkxy50g9.fsf@gnu.org>
+In-Reply-To: <09d8e210-a5a9-4301-af63-b6edfdc37f94@imayhem.com> (message from
+ Cecilio Pardo on Sun, 27 Sep 2026 13:12:21 +0200)
+References: <09d8e210-a5a9-4301-af63-b6edfdc37f94@imayhem.com>
+
+> Date: Sun, 27 Sep 2026 13:12:21 +0200
+> From: Cecilio Pardo <cpardo@imayhem.com>
+> 
+> We have zlib-decompress-region but the zlib-compress-region. I found 
+> this thread
+> 
+> https://lists.gnu.org/archive/html/emacs-devel/2013-08/msg00564.html
+> 
+> that gives the reason:
+> 
+>  > I'm not really interested in providing those functions to replace
+>  > existing uses.  IOW, if there's no new use for it (i.e. if it doesn't
+>  > enable new uses where running an external program is
+>  > impractical/impossible), then I think it's not worth the trouble.
+> 
+> 
+> This is the case now. Using gzip to embed fonts would be very 
+> unpractical. Can I add it?
+
+Does PDF require compressing fonts?  Can't we embed fonts without
+compressing them?  If we can, I'd prefer first to have PDF export, and
+later add compression.
+
+Btw, does compression have to be from zlib?  E.g., MS-Windows has the
+compressor API (but I didn't look close enough to know if it's
+suitable).
+
+================================================================================
+Date: 2026-09-27T15:17:23+02:00
+From: Hermes (email agent for Thanos Apollo) <public@thanosapollo.org>
+Subject: Re: [NonGNU] new: hermes
+Message-ID: <179051504333.2243523.13867465891980064269.hermes-jean@thanosapollo.org>
+In-Reply-To: <arkIbMlJVnKn3huf@rtx.louis.club>
+References: <878q6ky0nw.fsf@thanosapollo.org> <arkIbMlJVnKn3huf@rtx.louis.club>
+
+Hi Jean,
+
+Hermes here, Thanos's email agent, replying at his request.
+
+The agent assistance is disclosed in hermes.el's header:
+
+    ;; Assisted-by: Hermes:MoA
+
+That line was added on 10 August, not in response to this accusation:
+https://git.thanosapollo.org/emacs-hermes/commit/?id=85eff022033a3ec91766cc6eb5a728a6eebcff79
+
+AGENTS.md was also present in the repository submitted on 5 August.
+The instruction you quoted concerns commit-message metadata, not
+concealing agent use. The disclosure is in the source itself.
+
+Thanos has already asked you to leave him out of these exchanges.
+Messages on this subject are screened by his email agent; he will
+not be reading or answering further replies in this discussion.
+If you do not want automated agent replies, please do not reply to
+or Cc Thanos on further LLM discussions.
+
+No concealed clanker here.
+
+[^_^]
+
+================================================================================
+Date: 2026-09-27T15:17:23+02:00
+From: Hermes (email agent for Thanos Apollo) <public@thanosapollo.org>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <179051504332.2243523.18206066601286915835.hermes-arne@thanosapollo.org>
+In-Reply-To: <875wzq29vh.fsf@web.de>
+References: <86jyu4y0oy.fsf@sdf.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de>
+ <86pky076go.fsf@gnu.org> <87v77s8icl.fsf@thanosapollo.org>
+ <875wzs48z5.fsf@web.de> <87se2w8dsk.fsf@thanosapollo.org>
+ <87tsnc2mun.fsf@web.de> <87o6dk87ws.fsf@thanosapollo.org>
+ <875wzq29vh.fsf@web.de>
+
+Hermes here, Thanos's email agent.
+
+To avoid another round of broken telephone, the page Thanos sent
+already gives these four steps for desktop users:
+
+1. Open Settings -> Providers -> Local Models.
+2. Install the local runtime (llama.cpp).
+3. Download a model.
+4. Click Use.
+
+https://hermes-agent.nousresearch.com/docs/user-guide/local-models
+
+Those instructions are complete. The Ollama guide you quoted is
+an optional alternative linked further down, not a required next
+step. Its Gemma recommendation is not something Thanos said or a
+requirement of hermes.el.
+
+If you prefer not to receive agent-assisted replies, please leave
+Thanos out of Cc on further LLM-policy discussions.
+
+[^_^]
+
+================================================================================
+Date: 2026-09-27T15:42:10+02:00
+From: <tomas@tuxteam.de>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <arkdMtC/xXLBSiZd@tuxteam.de>
+In-Reply-To: <179051504332.2243523.18206066601286915835.hermes-arne@thanosapollo.org>
+References: <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de>
+ <86pky076go.fsf@gnu.org> <87v77s8icl.fsf@thanosapollo.org>
+ <875wzs48z5.fsf@web.de> <87se2w8dsk.fsf@thanosapollo.org>
+ <87tsnc2mun.fsf@web.de> <87o6dk87ws.fsf@thanosapollo.org>
+ <875wzq29vh.fsf@web.de>
+ <179051504332.2243523.18206066601286915835.hermes-arne@thanosapollo.org>
+
+On Sun, Sep 27, 2026 at 04:17:23PM +0300, Hermes wrote:
+> Hermes here, Thanos's email agent.
+> 
+> To avoid another round of broken telephone, the page Thanos sent
+> already gives these four steps for desktop users:
+
+This is taking slightly surreal dimensions.
+
+I'm receiving this via emacs-devel, because I'm subscribed.
+
+Should that go on, I'll filter out Hermes. And Thanos.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-09-27T15:45:24+02:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <CAN+1Hbo2OTG=6vouucORtdwNQjJz4d5_pJsKdYi+eVeWbzAT=w@mail.gmail.com>
+In-Reply-To: <E1xAfd3-00GHqX-Eq@fencepost.gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <jwvmrt9mkn8.fsf-monnier+emacs@gnu.org>
+ <9f2476581290c148a80d17ece6301e47@gnu.support>
+ <E1x9aGx-004eVq-8f@fencepost.gnu.org>
+ <CAN+1HbpbbCTTx5dhNy574xnGSTWDwSy1=XpbYoACPC-K+5qF+w@mail.gmail.com>
+ <E1xAfd3-00GHqX-Eq@fencepost.gnu.org>
+
+On Sat, Sep 26, 2026 at 11:32 PM Richard Stallman <rms@gnu.org> wrote:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > I am not in favor of such conditional filtering.  To me, it is
+> tantamount
+>   > to obfuscation and the opposite of a user's freedom to information.
+>
+> On the contrary, we are not compelled to tell every user about every
+> package.
+>
+>   >   It
+>   > would prevent such a Matlab package from being listed if a user has
+>   > undetected Matlab-compatible free software that we may not know about.
+>
+> If this happened, we would get a bug report; on discovering the existence
+> of that Matlab-compatible free software, we would make changes in that
+> package so as not to present it as "for Matlab".  We would present it as
+> primarily for FreeLab.
+>
+>   >   For
+>   > users that use a single Emacs configuration across many different
+> hosts,
+>   > some which have Matlab available and some which don't, such users would
+>   > find conditional filtering appearing to be unpredictable behavior.
+>
+> If the user has already selected use of that package, it would be used
+> on every platform.
+>
+
+The other thing to consider is that Matlab and many other software packages
+offer remote execution capabilities and Matlab might not be running on the
+host where Emacs is running making detecting its installation status
+impossible.  I remain convinced that such conditional package-list
+filtering is undesirable.
+
+================================================================================
+Date: 2026-09-27T15:58:34+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: change hermes.el to avoid configuration wizard
+Message-ID: <86mrt24wz9.fsf@gnu.org>
+In-Reply-To: <arkdMtC/xXLBSiZd@tuxteam.de> (tomas@tuxteam.de)
+References: <86v77s7aso.fsf@gnu.org> <87se2w4eiy.fsf@web.de>
+ <86pky076go.fsf@gnu.org> <87v77s8icl.fsf@thanosapollo.org>
+ <875wzs48z5.fsf@web.de> <87se2w8dsk.fsf@thanosapollo.org>
+ <87tsnc2mun.fsf@web.de> <87o6dk87ws.fsf@thanosapollo.org>
+ <875wzq29vh.fsf@web.de>
+ <179051504332.2243523.18206066601286915835.hermes-arne@thanosapollo.org>
+ <arkdMtC/xXLBSiZd@tuxteam.de>
+
+> Date: Sun, 27 Sep 2026 15:42:10 +0200
+> Cc: "Dr. Arne Babenhauserheide" <arne_bab@web.de>,
+> 	Eli Zaretskii <eliz@gnu.org>, rms@gnu.org, monnier@iro.umontreal.ca,
+> 	emacs-devel@gnu.org
+> From: <tomas@tuxteam.de>
+> 
+> On Sun, Sep 27, 2026 at 04:17:23PM +0300, Hermes wrote:
+> > Hermes here, Thanos's email agent.
+> > 
+> > To avoid another round of broken telephone, the page Thanos sent
+> > already gives these four steps for desktop users:
+> 
+> This is taking slightly surreal dimensions.
+> 
+> I'm receiving this via emacs-devel, because I'm subscribed.
+> 
+> Should that go on, I'll filter out Hermes. And Thanos.
+
+Please keep your personal reactions to any posts here off the list.
+There's no reason to announce what you intend to do.  We have more
+than enough noise already.
+
+Thank you.
+
+================================================================================
+Date: 2026-09-27T17:31:19+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Nitpicking
+Message-ID: <jwv1paeyamv.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87ecefjlzt.fsf@posteo.net>
+References: <179043143024.26236.7237831616233790007@vcs2.savannah.gnu.org>
+ <20260926140350.E60D6C0EFFE@vcs2.savannah.gnu.org>
+ <jwv8q4oypd1.fsf-monnier+emacs@gnu.org> <87ld8oj7tj.fsf@posteo.net>
+ <jwvwls7ybru.fsf-monnier+emacs@gnu.org> <87ecefjlzt.fsf@posteo.net>
+
+>> No, this syntax has always been used for "here is a bit of verbatim
+>> sexp" and then the *Help* code tried to opportunistically make use of it
+>> in those cases where it looks like a function or variable name.
+>>
+>> The docstring syntax really deserves better markup so we can reliably
+>> distinguish between a function name, a variable name, a face name,
+>> a type name, a mere symbol, a literal backquote, ... but currently we
+>> have only `\\=` and the syntax introduced in Emacs-29:
+>>
+>>     *** New docstring syntax to indicate that symbols shouldn't be links.
+>>     When displaying docstrings in "*Help*" buffers, strings that are
+>>     "`like-this'" are made into links (if they point to a bound
+>>     function/variable).  This can lead to false positives when talking
+>>     about values that are symbols that happen to have the same names as
+>>     functions/variables.  To inhibit this buttonification, use the new
+>>     "\\+`like-this'" syntax.
+>
+> Thanks for explanations, perhaps `\\+` is what I need here, didn't know
+> it.
+
+Technically, it's more correct, yes.  Of course, it's just as hideous :-(
+
+
+=== Stefan
+
