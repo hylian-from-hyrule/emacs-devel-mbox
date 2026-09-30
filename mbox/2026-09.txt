@@ -135404,3 +135404,1434 @@ to use a given package according to his/her needs.
 That's far from being the same,so the analogy doesn't hold.
 
 
+From MAILER-DAEMON Tue Sep 29 12:10:57 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBaPx-0007op-Eq
+	for mharc-emacs-devel@gnu.org; Tue, 29 Sep 2026 12:10:57 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jacob.as.gordon@gmail.com>)
+ id 1xBaPv-0007og-3J
+ for emacs-devel@gnu.org; Tue, 29 Sep 2026 12:10:55 -0400
+Received: from mail-yx2-x1f.google.com ([2607:f8b0:4864:41::1f])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <jacob.as.gordon@gmail.com>)
+ id 1xBaPt-0003oF-Cn
+ for emacs-devel@gnu.org; Tue, 29 Sep 2026 12:10:54 -0400
+Received: by mail-yx2-x1f.google.com with SMTP id
+ 00721157ae682-895fd505832so38790587b3.3
+ for <emacs-devel@gnu.org>; Tue, 29 Sep 2026 09:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1790698251; x=1791303051; darn=gnu.org;
+ h=content-transfer-encoding:content-type:in-reply-to:content-language
+ :references:cc:to:subject:from:user-agent:mime-version:date
+ :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+ bh=lbu5xAjTXw9YjYk+Ne/T3NCr26tpp00zfAitV13vOO4=;
+ b=hxhLtmlTUvA7FQkpixAVG6lGJT9QCqppkmuaBMrsgKehyjUU9oLNODzF1RIyu8MlPw
+ x0CdszDwVZbJvUO1iIp/iv9369XsODbKVJugwdDPisd9y5gmcfj1TClRt+cXU50cP9bm
+ JVWxj4wQPD6BzELXUvkKlk01FVwl1TXaXVpGFXNZ0GhKzQ1tzeV0awE+WeBiG96ihmt/
+ Ky0Hl8BjXyOXetdw45pbMZ/6FH8TJdVo8+55sNxab8N986xEX78NUdZuhiSqjrCgBg3H
+ GBGxqj73T73auLdxH4jpEMEaQFiVtxvaIoFAUpAsra9bdz96A/fAfKbOg14groZwT7Cj
+ cXYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1790698251; x=1791303051;
+ h=content-transfer-encoding:content-type:in-reply-to:content-language
+ :references:cc:to:subject:from:user-agent:mime-version:date
+ :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+ :message-id:reply-to:content-type;
+ bh=lbu5xAjTXw9YjYk+Ne/T3NCr26tpp00zfAitV13vOO4=;
+ b=sJTqaxMpUiPQXlmK77/GvM+hV144UC9LO793ss0WDLSxSLFNZJ3Eb1bYyDZhOGOewp
+ 3wyarozBWh83U1KJcWR/1PZO4LHZhU5juBAUeD6dwOyfM9IJLyvwj0FsrCveggOQGTdk
+ Iz+E3kxp24eUTwIk/JTKpykg38CZ9KKet0e+5MZbIOPdBCGeezUXLUuaFBnXBoAHEF/0
+ 0AMzPAjqGdLbn9oTduuL49jFoIBSjG1+pVcNhzTB1fmcOQlWC9c801S3THZMG36zhjma
+ m7HYaqZm+b529X7XsLy7N+dcOiuWIoVkaBwrCJE0uEJfMelrYG28B60+wq1f0daW57gw
+ P1yQ==
+X-Forwarded-Encrypted: i=1;
+ AKwUvByfvVifq59ePjJSrCaZCPfJvzmNZuTKG7fV8ctqED8PNPPucE0LONWWgoT/rb28ORLhq757J/OCzhvUCw==@gnu.org
+X-Gm-Message-State: AFq9FYKvLkhX63G3ZFaYum5a8XJmzOdfqo9IdJfxM6SBw1Ks/raLcETj
+ 38axU1GAWi2uu8fKpiczSezO1FV5SA1nE/tV8pbMeZp6DVh58obSN0Kb
+X-Gm-Gg: AYBFou0OtFSRnC9GMh1hJIvxn4h8PqkagVVHkZRV7c2F9C4BWmhVyyU2y+LudZno7aG
+ rwo4rW/iEEJAb+g72KF3gK1lPz4QK6JW/bJfzwIpi7OlWN0O53Xno27j3ZsEn0SG+hppKXwjyz2
+ EX4e+ukbmE51V06ih4epeBHd8JRLz6+RKsDk6l+ktqVGy1FGbZben31frXV8jollz0dPT4fUqcN
+ SDZkCuR4IW5IrT6fV0H7S/SrDSES/a9hNVauWthHIwEQdyGHYtt5Mes7bKQvUOYesdcSXn9/qAP
+ JxBlz0k82PDFTZVa1fGbSvLwU53gHNWlznIscjPhh1uUOofudrUBiytg7alSXUd73AoT/XYp/P9
+ l2pH9Inu2uJjDUaW9jLTCg2aa1bNxDnDbWU8+jdXvLdZsfECqvuFEoT3Kn3BcNR8/LZ3tR/RQbl
+ /mY3/pTnsa3Ll+p15uaoV699wvQCjXxdX+kpHLP954Qyggcos2ALjrdGMZt3JdhO5Uvs1XqqQBv
+ 4DHzV/m+BHR5+mfb5oBzGNLdHomxU70wPT63Q==
+X-Received: by 2002:a05:690c:6603:b0:870:47a0:6fce with SMTP id
+ 00721157ae682-8a64af412b3mr89344567b3.4.1790698251262; 
+ Tue, 29 Sep 2026 09:10:51 -0700 (PDT)
+Received: from [192.168.1.10] (135-23-138-165.cpe.pppoe.ca. [135.23.138.165])
+ by smtp.gmail.com with ESMTPSA id
+ 00721157ae682-8abc87aa68esm496507b3.4.2026.09.29.09.10.50
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Tue, 29 Sep 2026 09:10:50 -0700 (PDT)
+Message-ID: <82f50a28-8afc-4944-ad90-5c5b44331889@gmail.com>
+Date: Tue, 29 Sep 2026 12:10:49 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: "Jacob S. Gordon" <jacob.as.gordon@gmail.com>
+Subject: Re: [NonGNU] new: hermes
+To: rms@gnu.org
+Cc: bugs@gnu.support, emacs-devel@gnu.org
+References: <878q6ky0nw.fsf@thanosapollo.org> <arkIbMlJVnKn3huf@rtx.louis.club>
+ <179051504333.2243523.13867465891980064269.hermes-jean@thanosapollo.org>
+ <ebbaddf4-e169-4dd4-8056-e29952745118@gmail.com>
+ <E1xBOow-004Jmv-R9@fencepost.gnu.org>
+Content-Language: en-CA
+In-Reply-To: <E1xBOow-004Jmv-R9@fencepost.gnu.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Received-SPF: pass client-ip=2607:f8b0:4864:41::1f;
+ envelope-from=jacob.as.gordon@gmail.com; helo=mail-yx2-x1f.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 29 Sep 2026 16:10:55 -0000
+
+(I’ll refrain from commenting on the ongoing discussion since I don’t
+have anything of value to add. I trust that you, Eli, and other
+experienced community members will form a consensus that respects user
+freedoms and streamlines this process going forward.)
+
+On 2026-09-28 23:47, Richard Stallman wrote:
+> His explanations did start to answer the questions that were asked.
+> But the answers were fragmentary and incomplete, partly because they
+> were terse. To find out the full answer to the crucial question --
+> what does including hermes.el in ELPA lead to in references to
+> various other programs and sites? -- was a daunting task of study
+> and cross-correlation.
+> 
+> I got the feeling that he did not try to set forth a clear and
+> complete answer because he resented the insistence on that. Maybe a
+> hostile outcome was inevitable. But we had to insist on that because
+> that the crucial question was the basis for our decision.
+
+Those are important questions, but I do sympathize with Thanos’
+frustration. It isn’t nice to feel that your submission invites this
+intense level of scrutiny and discussion, even if it’s the first of
+its kind (which AFAICT it isn’t).
+
+However, I feel like a line was crossed in the latest LLM-automated
+exchange, and that our community would be worse off if that were
+normalized. That’s all I wanted to communicate.
+
+Best,
+
+-- 
+Jacob S. Gordon
+jacob.as.gordon@gmail.com
+Please don’t send me HTML emails, MS Office/Apple iWork documents, or
+messages composed with LLMs.
+https://useplaintext.email/#etiquette
+https://www.fsf.org/campaigns/opendocument
+
+
+From MAILER-DAEMON Tue Sep 29 16:08:31 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBe7r-0003r9-Da
+	for mharc-emacs-devel@gnu.org; Tue, 29 Sep 2026 16:08:31 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <basil@contovou.net>)
+ id 1xBe7n-0003qu-5q
+ for emacs-devel@gnu.org; Tue, 29 Sep 2026 16:08:27 -0400
+Received: from smtp-42ae.mail.infomaniak.ch ([84.16.66.174])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <basil@contovou.net>)
+ id 1xBe7l-00023U-Ij
+ for emacs-devel@gnu.org; Tue, 29 Sep 2026 16:08:26 -0400
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown
+ [IPv6:2001:1600:4:17::246b])
+ by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hvTkm2Yfhzc4m;
+ Tue, 29 Sep 2026 22:08:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=contovou.net;
+ s=20260812; t=1790712496;
+ bh=3UvPglp7CzYaHzf4ucPLsPmYmEdnthWJl3hkmtZa4UI=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=pmpADL7HLZv1OYcnxngJJof9vIEYyAkaqcpLy3NeO43eFw6d0baOxP8zRPGnoNwZx
+ /DyEcGTU73635FAqOWhqXwzPkOX1x02GfZnMvev7FDWtgyGV5ava6xzLoES7zuJNT0
+ ZxlV2+eduQwEbGBk3AwtwX1lfQbi9kGhVmJYCNXdusLP1nYe402KQtmP/C9ceIcMxk
+ Zr7dfvGRSJ/cyYDgwgIAcvPROGdhjmGPgHaN2cYft+2wdItMweKuMJQ+tzRS9tvGBg
+ fwVK3EviL0po7jOGPbUIYP1CDvZm1w0aQvBY887apwBa4eI9tFoRzT8nPGAaAoc6tU
+ hEone0/Awcd1w==
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA
+ id 4hvTkf0xrgzRH6; Tue, 29 Sep 2026 22:08:08 +0200 (CEST)
+From: "Basil L. Contovounesios" <basil@contovou.net>
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: Eli Zaretskii <eliz@gnu.org>,  emacs-devel@gnu.org,  philipk@posteo.net,
+ Stefan Monnier <monnier@iro.umontreal.ca>,  Michael Albinus
+ <michael.albinus@gmx.de>,  80915@debbugs.gnu.org
+Subject: Re: master cc7a4dfbf17 1/2: Improve directory-files-recursively
+In-Reply-To: <87h5j85sbs.fsf@athena.silentflame.com>
+References: <179051612280.10415.12945189822585522893@vcs2.savannah.gnu.org>
+ <20260927133523.DFC5DC0EFFD@vcs2.savannah.gnu.org>
+ <87cxtx7gio.fsf@athena.silentflame.com> <86bj9h36hk.fsf@gnu.org>
+ <87h5j85sbs.fsf@athena.silentflame.com>
+Date: Tue, 29 Sep 2026 22:08:06 +0200
+Message-ID: <87ik3n3jo9.fsf@contovou.net>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Infomaniak-Routing: alpha
+Received-SPF: pass client-ip=84.16.66.174; envelope-from=basil@contovou.net;
+ helo=smtp-42ae.mail.infomaniak.ch
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_LOW=-0.7, RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 29 Sep 2026 20:08:27 -0000
+
+Sean Whitton [2026-09-29 10:18 +0100] wrote:
+> Eli Zaretskii [28/Sep  3:28pm +03] wrote:
+>> It was, see bug#80915, referenced in the commit log message.  It's
+>> just that it was several months ago, and Basil is now back in
+>> business.
+>
+> Whoops.  Apologies for missing the bug annotation, Basil.
+
+No worries.
+
+> I would still like to raise my questions about this:
+>
+>> For example, should we consider using a &key argument?  Perhaps not
+>> because there are already so many optional arguments -- but all those
+>> optional arguments isn't a great situation.
+
+Can't say I love the long arglist either (and it wasn't my original plan
+to extend it), but I'm also in no hurry to change the function's calling
+convention (it has a whopping 25% fewer parameters than completing-read!).
+
+OTOH, the current refactor should make it slightly less painful to add
+keyword arguments given sufficient demand.
+
+>> I'd also like to hear the motivating use cases for sorting where it's
+>> important to be able to pass a parameter, instead of just calling sort
+>> on the resulting list.  The latter would avoid us adding yet another
+>> optional argument.
+
+Sorting the final list is not equivalent to sorting each individual
+subdir, at least not without relatively expensive post-processing.
+
+The whole bug report was due to the old code sorting a little too
+coarsely: it didn't strip trailing directory separators, so could place
+"foo-bar/" before "foo/" where "foo" would otherwise precede "foo-bar".
+
+Adding a means to control this (as a compatibility escape hatch and/or
+as a new feature) seemed like only a small compromise / price to pay.
+
+-- 
+Basil
+
+
+From MAILER-DAEMON Tue Sep 29 21:09:24 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBip2-0007Pn-5m
+	for mharc-emacs-devel@gnu.org; Tue, 29 Sep 2026 21:09:24 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eg642616@gmail.com>)
+ id 1xBioz-0007PO-8i
+ for emacs-devel@gnu.org; Tue, 29 Sep 2026 21:09:21 -0400
+Received: from mail-oa1-x43.google.com ([2001:4860:4864:20::43])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <eg642616@gmail.com>)
+ id 1xBiox-0006gZ-RU
+ for emacs-devel@gnu.org; Tue, 29 Sep 2026 21:09:21 -0400
+Received: by mail-oa1-x43.google.com with SMTP id
+ 586e51a60fabf-48f69d8f72aso951479fac.0
+ for <emacs-devel@gnu.org>; Tue, 29 Sep 2026 18:09:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1790730558; x=1791335358; darn=gnu.org;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+ :reply-to:content-type;
+ bh=9JQ+ParNmSZL48jFYnuC+5lnUup251JE14evOXgI8Vw=;
+ b=UJWdnt6+Tj4kCku7kO1pgpv66eWgutROMcNbazfpDF3x8pavfeGxrig8CpwboegjzE
+ h9CozqbshVd5IapHYQ+eGKpJLxb/ter1CddwSAoTcxh5cbeaEMJSbPLxDgnY4GILHTQI
+ F0ae2XGmFNlEMiC8zEUJbYTdmyosj1vhnh+AFNl6fdNnZalezEB7907E44gzxNg0kTe6
+ 2dI7d7r1YDzyokBQE1vqCpCDNsuhH2Nk5Al8TQPwept5o4KTgj2dyMLdvuSxG6tkgaXa
+ WixyvDP8rKupBB6Vd8iZcpvNL7GKHeMf1gowOknK5WF1TYAKmxum6DrHdNQynMYsyMXC
+ 29nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1790730558; x=1791335358;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=9JQ+ParNmSZL48jFYnuC+5lnUup251JE14evOXgI8Vw=;
+ b=NSxCp+e85nA8H/grJPdCTZW6jfAbUq8Eq68w9B98arWdnXHUPejTjQgvOaK5RtDazl
+ fmn7jdgXNlEX892X2FbqwJ+uJg3f6f+FDJYPUbC5ZZrTrbl2VuBLk2710H96uy8b3VLN
+ wg1g2tyUJreIgcvoqUBOYaQjMQ4dVfwrSLkBuHFu8BWvO5WTFogeefPZhpWHhAJpnElb
+ vg6yLlsbVo7yJ/vMqfx+bfktnHLIPzUOpxp5FFyPuz66clcR7YabiXHtddG4eM/ciXg3
+ tnelBrX9epwRTieN11NkC8o+sqDsRV8cVcQ0tNOjPuBEtaD62fSQVUQhvFEZA1I6NUI3
+ 3lYQ==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBzxwmm/P9Mr8vEamsLnXHrWyuSROQAgGstWmMiZBPowRyIPv+cIwx3C3l1hpq9xb2LTtL9huZw/8bxd7Q==@gnu.org
+X-Gm-Message-State: AFq9FYIcrCXhCxjU3c5kY4XvT7r7j9Ff7XZ6LYdS4V9bht3mu9z46FoH
+ j8XikWcwP1+jHlGG7sLpHVHYC4U8mKyEhslAAebdRpT4doryrcBamUxLeRDs5v/dqds=
+X-Gm-Gg: AYBFou3KEoUEsN3I1fhH0KYfjnBlFpmLTyqq2XKXtszSHJa+8Azs5xUx3AclBLvzHi4
+ C28TMS6kUCbqPwAOlMddAvBP2hG+imsDZmc4DhkrSbecD6Rwz0UxhG9ZmYXO6MQxoMLxKkCWLnW
+ pfASJoPTCJGHs1bMoVDP1gFwUnJr8fFfaNc5/s6cUfEWWfplK0avUu/KMkO6r0Nxrg33wP9Pj12
+ wmkv30atQ9QY9aA7lKBqTrdaNZhcZUjVGbUzVZv6gG1jG+OlO+7bmneBMtCSfaBL/YhZ6EfqAEu
+ T0xoiK6dBLVoVdssxQJ21ceXZarPd4DIe4o4+DjKClGbmBCCYkNbX4hHq2DF6mkWsvbumkvmQMX
+ CnoHK4AMfIWFrsbmirZwxSK3nD9shAJE9TIWqSEpT2H5fCTMlevT77jc9tSZxJ5Uisvf6ir74sM
+ KFydmk/lHyGpZWsMSO9xKHGgw39UrKPn8OQgw6SDoUfeVY92/vOYMe/es=
+X-Received: by 2002:a05:6870:9691:b0:470:e97e:8f8d with SMTP id
+ 586e51a60fabf-499710d6f9bmr2830785fac.29.1790730558129; 
+ Tue, 29 Sep 2026 18:09:18 -0700 (PDT)
+Received: from PC ([200.77.20.101]) by smtp.gmail.com with ESMTPSA id
+ 586e51a60fabf-49dd137bc68sm1029399fac.4.2026.09.29.18.09.15
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Tue, 29 Sep 2026 18:09:17 -0700 (PDT)
+From: =?utf-8?Q?Elijah_Gabe_P=C3=A9rez?= <eg642616@gmail.com>
+To: zhaodaniu <zhaodaniu1@gmail.com>
+Cc: Eli Zaretskii <eliz@gnu.org>,  emacs-devel@gnu.org
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+In-Reply-To: <861pacg010.fsf@gmail.com>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com>
+Date: Tue, 29 Sep 2026 19:09:12 -0600
+Message-ID: <8733ur4kav.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/32.0.50
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=-=-="
+Received-SPF: pass client-ip=2001:4860:4864:20::43;
+ envelope-from=eg642616@gmail.com; helo=mail-oa1-x43.google.com
+X-Spam_score_int: -17
+X-Spam_score: -1.8
+X-Spam_bar: -
+X-Spam_report: (-1.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ FREEMAIL_ENVFROM_END_DIGIT=0.25, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 01:09:21 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+
+> The latest patch removes this feature for overline and strike-through,
+> since it still needs further discussion.  Overline, strik-ethrough,
+> and underlines are different, so for now I=E2=80=99ve implemented this fe=
+ature
+> only for underline.  Reverting it would only require changing two
+> lines of code, but it would be better to discuss this first. Since the
+> flag is called underline-text-scaling-p, I wonder if it should affect
+> only underline rendering rather than overline and strike-through. If it
+> should affect them as well, I can quickly send an updated patch.
+
+I'd have liked it to support overline and strike-through too, because on
+HiDPI both are not perceptible (notable on the Android build), but i
+agree this should be separated.
+
+
+> -  int wave_height =3D 3 * scale_y, wave_length =3D 2 * scale_x, thicknes=
+s =3D scale_y;
+> +  int wave_height =3D 2 * scale_y * thickness, wave_length =3D 3 * scale=
+_x * thickness;
+                       ^                                      ^
+I don't know why you changed the default wave appearance here, because this
+makes the underwave look like this when the text is small:
+
+
+--=-=-=
+Content-Type: image/png
+Content-Disposition: inline;
+ filename="Captura de pantalla_20260929_184304-1.png"
+Content-Transfer-Encoding: base64
+
+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
+--=-=-=
+Content-Type: text/plain
+
+
+Which makes it hard to distinguish from underline (at least for me)
+
+That line should be changed to this instead:
+
+int wave_height = 3 * scale_y * thickness, wave_length = 2 * scale_x * thickness;
+
+-- 
+- E.G.
+
+--=-=-=--
+
+
+From MAILER-DAEMON Tue Sep 29 22:02:47 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBjee-0008Us-GW
+	for mharc-emacs-devel@gnu.org; Tue, 29 Sep 2026 22:02:46 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <zhaodaniu1@gmail.com>)
+ id 1xBjeT-0008Ef-AB
+ for emacs-devel@gnu.org; Tue, 29 Sep 2026 22:02:34 -0400
+Received: from mail-pz2-x10.google.com ([2607:f8b0:4864:3b::10])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <zhaodaniu1@gmail.com>)
+ id 1xBjeR-00038p-Pr
+ for emacs-devel@gnu.org; Tue, 29 Sep 2026 22:02:33 -0400
+Received: by mail-pz2-x10.google.com with SMTP id
+ 41be03b00d2f7-cc4c08393b0so2112725a12.0
+ for <emacs-devel@gnu.org>; Tue, 29 Sep 2026 19:02:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1790733750; x=1791338550; darn=gnu.org;
+ h=content-transfer-encoding:content-type:mime-version:user-agent
+ :message-id:date:references:in-reply-to:subject:cc:to:from:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=t4yWdZGkOuwnFs3aQzspcrR9p8iZe6W5cRv0IqbZ11U=;
+ b=o/4A67z2G9JaQvgqRVapV+6rg3Es4dyIw7uabiQMNp0R9xzHsavUd34lKf3+RnuRZw
+ ps+pRXTaLV6E0SoeGgWL0B4mkav91C2gNkG/KqskZQ0j3kw9hM124oXGVrGVTlUBRfZQ
+ oZsFxx1NZe81a+tK+Q187NZZZO+Fsp94ucsdravNOL7wr5wfTF7Bjmi/6xWtWsDskjk6
+ v0K9pHr3YFWkS01FtuOpfnXSSBG0LagRhBaQXRA3LP/jsh99H3IXgnDE6xg7D6Uy2BYo
+ W162Ir6fSkT5OwlIcNXdzaQmJRtSrhKOicYKfbpb5fZy3oDJLOFsO/GcyWwB8r6egQ7J
+ aJ2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1790733750; x=1791338550;
+ h=content-transfer-encoding:content-type:mime-version:user-agent
+ :message-id:date:references:in-reply-to:subject:cc:to:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=t4yWdZGkOuwnFs3aQzspcrR9p8iZe6W5cRv0IqbZ11U=;
+ b=zx3Rn2Ud7Gh/qnsoqFDigGtUG7eKk8GL5nsJnUf/9+vaR/5VAW3zFEIsA4oUlu7AwG
+ 88QgO8JKuuhWUXC/EhPe3jnTSgFZlRva0YkmtIZt/Jfu2ip2Apsy/Nju3u2QTybkQ/RO
+ xowlGSiK0vuThbaewTPGkTLTE+fTgy5n02EhDJhziHKb/Qo2W8Hpb6WUAgMSiAJk2fz0
+ q+buKXVcQRzX7/53mlsGBja7CtrOCJGh8kSwlKL5aqex0/DJRO6bLrItbFPtLn3iHf/q
+ l9EukStcmuQ1d67RaLLKI1rGQFwaq7t+SCFHl4Dlx1Z+HOMB1WmKk7+PBqO8337gQ75r
+ 4pIA==
+X-Forwarded-Encrypted: i=1;
+ AKwUvByTCWLgV6Ylrp+ytLHXtKYn8u+6qZDpEJF5wZ4OFuRkxuSTF/jKykAetwHmaph9W+KzOlzMyVtZqHz9dg==@gnu.org
+X-Gm-Message-State: AFq9FYIYn/xLRzB86BZVNJ4IXY5FfLtBf8IHbSYy3pL6p3p4JOm2FiU1
+ aommvnZN3jZDDDCAyA1/w82nbqG9d7Tfe/mDhSI3R24b0tZVrCaUQwDTIqao3boz+bgznQ==
+X-Gm-Gg: AYBFou0E/MCNlX8T1z69hOeMGPvJxeS3xOtnCaW43PQ/slEOIwv6vTvVA1RQLHJO75D
+ 9jB3XfMailMSHqRa949PZtS9bikmuXjvDAUfZYTjWe50WrYrdNuhzdVDZDz2Csq008rCHtAD5C5
+ m27/cohYsr5TK9rkXpFa2xLszKGi73UAeZ/TO7ZQlGCih5IREdHYVLAiUPtz0ywDT26nSmS0REr
+ BSxk47OANPyDmy2woMtUAkkicHiNkGrDTvUqJJGoNNiMXIII26UG8ELXvac8YDXehuzW3ez75ob
+ Jh6fbdTpCT+QaMwhN+yDf9jTT0DF67WWQnqlkB4CkS4s9nfrJsyYy+GWlfE6KJB6/vVCAFpy0me
+ mtUg+XMKoMSoO3BmfhoB1eZjwv284qmYoIRkkA4wYIhOf7h/McMlYVfOpHfEuChl/KziueViXOC
+ Qgbo8tW+DPtbHz4iqDn++4vxsgpVE0JwaP6TzlDfyaPLAZfcScmGAs2OZn34rNGhYA/U+bf3RXi
+ YuJPX3ii4qtxHiexlyRD99Dhwz54DdklUGgTOsGWT+/9/UKgRwubLAuNN8CpMoP
+X-Received: by 2002:a17:90b:57e5:b0:39e:2192:97dc with SMTP id
+ 98e67ed59e1d1-3a4bfae4c57mr1054492a91.6.1790733749373; 
+ Tue, 29 Sep 2026 19:02:29 -0700 (PDT)
+Received: from DESKTOP-Q827EJC ([45.192.200.235])
+ by smtp.gmail.com with ESMTPSA id
+ 98e67ed59e1d1-3a4ca9c6453sm669931a91.7.2026.09.29.19.02.27
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Tue, 29 Sep 2026 19:02:28 -0700 (PDT)
+From: zhaodaniu <zhaodaniu1@gmail.com>
+To: Elijah Gabe =?utf-8?Q?P=C3=A9rez?= <eg642616@gmail.com>
+Cc: Eli Zaretskii <eliz@gnu.org>,  emacs-devel@gnu.org
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+In-Reply-To: <8733ur4kav.fsf@gmail.com>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+Date: Wed, 30 Sep 2026 10:02:25 +0800
+Message-ID: <86fqyrlcni.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=2607:f8b0:4864:3b::10;
+ envelope-from=zhaodaniu1@gmail.com; helo=mail-pz2-x10.google.com
+X-Spam_score_int: 15
+X-Spam_score: 1.5
+X-Spam_bar: +
+X-Spam_report: (1.5 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1, DKIM_VALID=-0.1,
+ DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_ENVFROM_END_DIGIT=0.25,
+ FREEMAIL_FROM=0.001, RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_SBL_CSS=3.335,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 02:02:35 -0000
+
+> I'd have liked it to support overline and strike-through too, because on
+> HiDPI both are not perceptible (notable on the Android build), but i
+> agree this should be separated.
+
+Yes, so I think we still need a flag to control this behavior. However,
+naming it is difficult.  The xxx-text-scaling-p template would be:
+
+- overline-text-scaling-p
+- strike-through-text-scaling-p
+- overline-and-strike-through-text-scaling-p
+
+It=E2=80=99s also worth discussing whether strike-through and overline shou=
+ld be
+controlled separately or together, since separating them would give the
+Elisp side more control.
+
+
+> Which makes it hard to distinguish from underline (at least for me)
+
+> That line should be changed to this instead:
+
+> int wave_height =3D 3 * scale_y * thickness, wave_length =3D 2 * scale_x *
+> thickness;
+
+You=E2=80=99re right.  The reason is that during testing, I found that the =
+wave
+ratio of 2:3:1 looked smoother than 3:2:1 when highly zoomed in.  I
+didn=E2=80=99t take the lower zoom levels into consideration. I=E2=80=99ll =
+change it
+back later and test how it performs at different lower zoom levels.
+Previously, I only tested it at high zoom levels, Was my mistake.
+--=20
+zhaodaniu
+
+
+From MAILER-DAEMON Wed Sep 30 03:07:58 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBoQ2-0004Rv-J2
+	for mharc-emacs-devel@gnu.org; Wed, 30 Sep 2026 03:07:58 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xBoPz-0004RR-Lb
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 03:07:55 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xBoPz-0007o4-Cr; Wed, 30 Sep 2026 03:07:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-version:References:Subject:In-Reply-To:To:From:
+ Date; bh=Ek77vnpc1lOBhK45IBP2LwUvoymIsbjfyGyHaL9BB/M=; b=KedtLv2vtcfs3n9qjzNb
+ mwZw0CiwfR8Q4ZLqBbueTYpm/XW8g1TaH8XZRTjaY/QHou+3k/bwTit6PF17dS8A6jj9AdKmID3fM
+ ifUFwhIhl0VIIX23tSnHVqV6sAZLZioI8vrZTib4KMXAgydaDxZ5aDjvYbFTwI557whRLDzXW0yr3
+ NBQXlNTU718oJVE6Sv1qVBc5XgsA/4fOAK/kYHP3bF3XHrhKHYQnY0JMs3HLJw+u9bMRfvCCCrMFr
+ 4QJeJlixVC1hrjeMmhaeRaF9TVeD/5xcdvQIp1K+hZtOvKKa7WV6KqgCnh2pxzBAWQU8rcmdoRsKY
+ /TwaH9uc1Ret3Q==;
+Date: Wed, 30 Sep 2026 10:07:52 +0300
+Message-Id: <86cxtvz06v.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: zhaodaniu <zhaodaniu1@gmail.com>
+Cc: eg642616@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <86fqyrlcni.fsf@gmail.com> (message from zhaodaniu on Wed, 30 Sep
+ 2026 10:02:25 +0800)
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 07:07:56 -0000
+
+> From: zhaodaniu <zhaodaniu1@gmail.com>
+> Cc: Eli Zaretskii <eliz@gnu.org>,  emacs-devel@gnu.org
+> Date: Wed, 30 Sep 2026 10:02:25 +0800
+> 
+> > I'd have liked it to support overline and strike-through too, because on
+> > HiDPI both are not perceptible (notable on the Android build), but i
+> > agree this should be separated.
+> 
+> Yes, so I think we still need a flag to control this behavior. However,
+> naming it is difficult.  The xxx-text-scaling-p template would be:
+> 
+> - overline-text-scaling-p
+> - strike-through-text-scaling-p
+> - overline-and-strike-through-text-scaling-p
+> 
+> It’s also worth discussing whether strike-through and overline should be
+> controlled separately or together, since separating them would give the
+> Elisp side more control.
+
+Separate variables are fine, I think.
+
+
+From MAILER-DAEMON Wed Sep 30 04:59:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBq9w-0004ar-Vp
+	for mharc-emacs-devel@gnu.org; Wed, 30 Sep 2026 04:59:28 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <da_vid@orange.fr>) id 1xBq9u-0004aT-Va
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 04:59:27 -0400
+Received: from smtp-20.smtpout.orange.fr ([80.12.242.20]
+ helo=smtp.smtpout.orange.fr)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <da_vid@orange.fr>)
+ id 1xBq9s-0003Be-UT; Wed, 30 Sep 2026 04:59:26 -0400
+Received: from ehlo.thunderbird.net
+ ([IPv6:2a01:cb15:8909:5500:9:b085:bf19:eded])
+ by smtp.orange.fr with ESMTPSA
+ id Bq9nxzO2hyu88Bq9nxaxjk; Wed, 30 Sep 2026 10:59:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orange.fr;
+ s=t20230301; t=1790758760;
+ bh=4k0gDsgttQjmlWPXGWIFvS3vlVfVYA27GnVZZmg2dsE=;
+ h=Date:From:To:Subject:Message-ID:MIME-Version;
+ b=oSEV/LVdac8o7OxVVlHcBnoClNPE9VcFNHAOEr0PNXXtKqOd3prFYUbnAploDtUk1
+ 3J+9SmyHe8BMEV5QVoCXniR4Tl90XsnJcnR6B1MQd+z477j1Jc7UO6X92i+mQ4GIY/
+ Hh7abkYmbSK5qn5fNPExnpiedrovR1uNmxOk9kh0BN4jcfLr4+ljfUZPny2GPpZMam
+ xqwB71AkbBqmI+TcZrhphlicZ3RJhM0e3ieFGLCt5e7fKOTEwG/duPCpptolwX/wrh
+ /VfIrqZuEasl50E1Xx1Mup6kp+y4ocM+vQJUtxHc/YlJz9eXEDZatNTR0ekhPgSWkh
+ NkluIOCHIHBgg==
+X-ME-Helo: ehlo.thunderbird.net
+X-ME-Auth: ZGFfdmlkQG9yYW5nZS5mcg==
+X-ME-Date: Wed, 30 Sep 2026 10:59:20 +0200
+X-ME-IP: 2a01:cb15:8909:5500:9:b085:bf19:eded
+Date: Wed, 30 Sep 2026 10:59:19 +0200
+From: David Ponce <da_vid@orange.fr>
+To: emacs-devel@gnu.org, Eli Zaretskii <eliz@gnu.org>,
+ zhaodaniu <zhaodaniu1@gmail.com>
+CC: eg642616@gmail.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_Support_strike-through=2C?=
+ =?US-ASCII?Q?_overline=2C_and_wave_underline_scale?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <86cxtvz06v.fsf@gnu.org>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+Message-ID: <592E30CA-78E2-49B0-A6EB-BCBECFFB49D9@orange.fr>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=80.12.242.20; envelope-from=da_vid@orange.fr;
+ helo=smtp.smtpout.orange.fr
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 08:59:27 -0000
+
+Le 30 septembre 2026 09:07:52 GMT+02:00, Eli Zaretskii <eliz@gnu=2Eorg> a =
+=C3=A9crit :
+>> From: zhaodaniu <zhaodaniu1@gmail=2Ecom>
+>> Cc: Eli Zaretskii <eliz@gnu=2Eorg>,  emacs-devel@gnu=2Eorg
+>> Date: Wed, 30 Sep 2026 10:02:25 +0800
+>>=20
+>> > I'd have liked it to support overline and strike-through too, because=
+ on
+>> > HiDPI both are not perceptible (notable on the Android build), but i
+>> > agree this should be separated=2E
+>>=20
+>> Yes, so I think we still need a flag to control this behavior=2E Howeve=
+r,
+>> naming it is difficult=2E  The xxx-text-scaling-p template would be:
+>>=20
+>> - overline-text-scaling-p
+>> - strike-through-text-scaling-p
+>> - overline-and-strike-through-text-scaling-p
+>>=20
+>> It=E2=80=99s also worth discussing whether strike-through and overline =
+should be
+>> controlled separately or together, since separating them would give the
+>> Elisp side more control=2E
+>
+>Separate variables are fine, I think=2E
+>
+
+If I undertand correctly the Elisp coding conventions say:
+
+"We recommend to avoid using this -p suffix in boolean variable names, unl=
+ess the variable is bound to a predicate function; instead, use a -flag suf=
+fix or names like is-foo=2E"
+
+Maybe in this case just xxxx-text-scaling is enough?
+
+Please ignore me, if it does not make sense ;-)
+
+Thanks for working on this=2E
+
+
+
+From MAILER-DAEMON Wed Sep 30 05:29:48 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBqdH-0001RX-RA
+	for mharc-emacs-devel@gnu.org; Wed, 30 Sep 2026 05:29:47 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xBqdG-0001RO-G8
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 05:29:46 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xBqdF-0006rI-UK; Wed, 30 Sep 2026 05:29:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-version:References:Subject:In-Reply-To:To:From:
+ Date; bh=buQNO7YrNTGhH7tYmlEhP60ca9tySpcXgGyyRt4n9tc=; b=At0ST+6vmNy9Q2/SuDv+
+ zrEkj2Ivm4yILGOHNeL/j92uvL6U34EbMemDsXB4Q0XqNWFvB33gD0L+agiOTux4OYIOuCGlCWshZ
+ /+KbG0dGqbWq7l3GHcFn+V2bdfDZ8n7ZY3TErYGABoDVMMLX93eiG3xLNgHW4Rij9n8oo25xS7551
+ gYbjH4QREOFTDoJ4oil1Up+1OaD9NiWQ9f2v+VXy9q8OoOVm9Bz8b8THXs1oI3ou0/poxjg5c089k
+ 1U3+MqpGY8AAs3Je+k7g1tUte8v75mdTd5fDSBf/144chJKqhSMZpGJbl/YqkCrQANDCk8jBhTR4S
+ 4vUrDM6I8zzpcg==;
+Date: Wed, 30 Sep 2026 12:29:42 +0300
+Message-Id: <867bk3ytmh.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: David Ponce <da_vid@orange.fr>
+Cc: emacs-devel@gnu.org, zhaodaniu1@gmail.com, eg642616@gmail.com
+In-Reply-To: <592E30CA-78E2-49B0-A6EB-BCBECFFB49D9@orange.fr> (message from
+ David Ponce on Wed, 30 Sep 2026 10:59:19 +0200)
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <592E30CA-78E2-49B0-A6EB-BCBECFFB49D9@orange.fr>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 09:29:46 -0000
+
+> Date: Wed, 30 Sep 2026 10:59:19 +0200
+> From: David Ponce <da_vid@orange.fr>
+> CC: eg642616@gmail.com
+> 
+> Le 30 septembre 2026 09:07:52 GMT+02:00, Eli Zaretskii <eliz@gnu.org> a écrit :
+> >> Yes, so I think we still need a flag to control this behavior. However,
+> >> naming it is difficult.  The xxx-text-scaling-p template would be:
+> >> 
+> >> - overline-text-scaling-p
+> >> - strike-through-text-scaling-p
+> >> - overline-and-strike-through-text-scaling-p
+> >> 
+> >> It’s also worth discussing whether strike-through and overline should be
+> >> controlled separately or together, since separating them would give the
+> >> Elisp side more control.
+> >
+> >Separate variables are fine, I think.
+> >
+> 
+> If I undertand correctly the Elisp coding conventions say:
+> 
+> "We recommend to avoid using this -p suffix in boolean variable names, unless the variable is bound to a predicate function; instead, use a -flag suffix or names like is-foo."
+> 
+> Maybe in this case just xxxx-text-scaling is enough?
+
+I considered that possibility, but rejected it: such a name does not
+convey clearly enough that the variable is a boolean.
+
+I know about the recommendation, of course, but the important part
+about following recommendations is to know when not to follow them.
+
+
+From MAILER-DAEMON Wed Sep 30 08:50:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBtlV-0006J7-1Y
+	for mharc-emacs-devel@gnu.org; Wed, 30 Sep 2026 08:50:29 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xBtl9-000696-Bi
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 08:50:09 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xBtl7-0006O0-Q9
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 08:50:07 -0400
+Received: from pmg2.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id E2AA380971;
+ Wed, 30 Sep 2026 08:50:02 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1790772602;
+ bh=isAZBBwtS/al4ZuY8MgIsDAkUPeInTP29lNZeA2wtPI=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=ODBj2zdwKfxXUSRIuc7KCnYEp93YMFxu8dZZ+s2MYVwhCkRewQOvfvGfNNgz0/4d2
+ 1/KdN+P+8p9w4HsXseDdapNAzxRUCZwLjDhKVutpjeM2lMvC1xrwZXXfnHH+T10Mz+
+ 3JbN6sqV8viJqsVeQsEEspoDg05+dP7WygndPahsBmlC+WUgtIyLlZW37+FY33QSou
+ FSLOVNf022toQ1zmc0KrFYmUfHaQZy/Rl/DzZkjuSKN82j41n5QIBlENIdc5zaBf44
+ 9vV7kqnSSLvudjmq5OeUCpdEp9gWam2mNdVEU/BC/iyI0nU8CYeoNRNOOEtYF6acmG
+ bWNrPxJ88MDPA==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 4B03E808FA;
+ Wed, 30 Sep 2026 08:50:02 -0400 (EDT)
+Received: from pastel (104-195-214-184.cpe.teksavvy.com [104.195.214.184])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 20DB912023B;
+ Wed, 30 Sep 2026 08:50:02 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Thanos Apollo <public@thanosapollo.org>
+Cc: emacs-devel@gnu.org
+Subject: Re: [nongnu] elpa/jabber d00b790cf2: omemo: Preserve literal
+ attachment bytes on disk
+In-Reply-To: <20260930080304.63F29C0EFF6@vcs2.savannah.gnu.org>
+Message-ID: <jwv5wzmsy6p.fsf-monnier+emacs@gnu.org>
+References: <179075538403.25008.9702800796053629369@vcs2.savannah.gnu.org>
+ <20260930080304.63F29C0EFF6@vcs2.savannah.gnu.org>
+Date: Wed, 30 Sep 2026 08:50:00 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.083 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 12:50:17 -0000
+
+> +               (with-temp-file dest-file
+> +                 (set-buffer-multibyte nil)
+> +                 (insert plaintext)))
+
+Is there a reason you're not using
+
+    (write-region plaintext nil dest-file ...)
+
+?
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Wed Sep 30 09:18:15 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBuCL-0005FG-Ji
+	for mharc-emacs-devel@gnu.org; Wed, 30 Sep 2026 09:18:15 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <martianh@disroot.org>)
+ id 1xBtnY-0006xO-Cb
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 08:52:37 -0400
+Received: from layka.disroot.org ([178.21.23.139])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <martianh@disroot.org>)
+ id 1xBtnV-0007CZ-Gt
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 08:52:35 -0400
+Received: from mail01.layka.lan (localhost [127.0.0.1])
+ by disroot.org (Postfix) with ESMTP id CB72782C30
+ for <emacs-devel@gnu.org>; Wed, 30 Sep 2026 14:52:28 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id DYohQtPNhkJA for <emacs-devel@gnu.org>;
+ Wed, 30 Sep 2026 14:52:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+ t=1790772748; bh=cXoi1DbCGqP3eW3gicu12AgRGr+ivenDEDft0y6x5pI=;
+ h=From:To:Subject:Date;
+ b=fe9cmKzP+j8IW6TiPf7KsefA+vI2BV02V4jInh6LMNfzJXzbjdGNkHK/b6rdaNkg7
+ YQvB7/YZK1pictpcb9FUfcp2DKlLZTu/EzCD9aejZ0nZ/xwCWubyB82OdwOG9BhSox
+ jaXsqycSZAH4Hc57H8b7kmrxLFxtcS97TE5XtzK8KU7peFKfT4ve2wTvWLw8I6rlml
+ jovK/6ZrkCvsw7Um0DM80FtuVYWeeNFKQ/ce77Bmp2eYEWoYrbInGgpbkm8xXVRtYR
+ I+lgwUOBTTRs+gZhba+DhTrXyUOC1V+Q2nyvPMZg8/K9YZ1Hl+MdrnN5mVxE8NhJmi
+ +9RDbOw5/0G+g==
+From: martianh <martianh@disroot.org>
+To: emacs-devel@gnu.org
+Subject: oauth2.el questions
+User-Agent: mu4e 1.12.9; emacs 31.1
+Date: Wed, 30 Sep 2026 14:52:27 +0200
+Message-ID: <878q4ihpf8.fsf@disroot.org>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
+Received-SPF: pass client-ip=178.21.23.139; envelope-from=martianh@disroot.org;
+ helo=layka.disroot.org
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_MSPIKE_H2=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Wed, 30 Sep 2026 09:18:00 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 12:52:40 -0000
+
+
+hi emacs,
+
+pls CC me in replies, i'm a non-subscriber.
+
+i am considering using oauth2.el to reduce/simplify the 
+authentication code in mastodon.el, which gives me headaches, but 
+i'm having trouble understanding some basics.
+
+i have successfully obtained and stored a token with a registered 
+app, but i'm unclear on how to fetch the token from the store as 
+needed.
+
+the main entrypoint has client-secret and client-id as mandatory 
+parameters, which seems to mean that i have to store them 
+somewhere else (presumably in a second encrypted plstore, causing 
+more headaches: client-id and client-secret should be treated like 
+passwords) in order to be able to fetch the auth token. is this 
+correct, or is a package expected to handle tokens in some other 
+way?
+
+mastodon.el also supports multiple accounts, at least for saving 
+auth credentials. you set username and host to a different value, 
+reauthenticate, and mastodon.el keeps two sets of credentials, so 
+if you switch back to the first account you don't have to do the 
+auth flow again. i didn't manage to try this out due to the 
+previous hurdle, but i'm curious if this would be (easily) 
+supported by oath2.el, or does it assume 1 account per service 
+somehow?
+
+finally, mastodon.el also supports storing auth tokens (but not 
+client/app data) in auth-sources. i take it oauth2.el doesn't have 
+support for storing in auth-sources?
+
+-- 
+- Marty
+
+
+From MAILER-DAEMON Wed Sep 30 10:41:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBvUr-0006mq-Md
+	for mharc-emacs-devel@gnu.org; Wed, 30 Sep 2026 10:41:27 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xBvUn-0006mY-Vj
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 10:41:23 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xBvUl-0005Mt-Rk; Wed, 30 Sep 2026 10:41:21 -0400
+Received: from pmg3.iro.umontreal.ca (localhost [127.0.0.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id 14AC1440CB7;
+ Wed, 30 Sep 2026 10:41:18 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1790779272;
+ bh=Itslvz4tuOLHv59fL7Xdm7bJ0bj6PKaMen1etf7LdTo=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=Tr8cack35owA83hTJgv0+iCsCGE/+pFqy+qZnpGCKF8+Y2iH6Lczm9VfddATVC7wi
+ ceTuhaWk7U3atHv29kUCJZ9luqZJUzys22RACHB70Cj4b33U75YesZCoxavjfLkfgc
+ ZTiSB8CktOH4lb2PKvfmCohQHJkNaiNYRShtoSd5vs+J28I5nYdCeca3mPsfCj0Qe8
+ QLiKAoAWFiG3++KnnwbHEe4c8wgG2wVe9jfvrnokacGAKqO2W+PL/bw0IgvQJcnvlQ
+ 3qoPWCjHefFp5m3ggi47Qu/jSzvyTePdETJngyzJ37tjbDhrTEqEqguDoZwdxSevJs
+ JrQEX6lTbTRiw==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id D1763440386;
+ Wed, 30 Sep 2026 10:41:12 -0400 (EDT)
+Received: from alfajor (modemcable209.196-177-173.mc.videotron.ca
+ [173.177.196.209])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id AFDBD12099C;
+ Wed, 30 Sep 2026 10:41:12 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: emacs-devel@gnu.org
+Cc: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master cac27d1c795: Fix scroll_run_hook on several platforms
+In-Reply-To: <20260930134153.E37B5C0EFF6@vcs2.savannah.gnu.org>
+Message-ID: <jwv7bk2ls4a.fsf-monnier+emacs@gnu.org>
+References: <179077571338.14906.16226153371992544124@vcs2.savannah.gnu.org>
+ <20260930134153.E37B5C0EFF6@vcs2.savannah.gnu.org>
+Date: Wed, 30 Sep 2026 10:41:11 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.050 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 14:41:23 -0000
+
+>     Fix scroll_run_hook on several platforms
+>     
+>     * src/haikuterm.c (haiku_scroll_run):
+>     * src/androidterm.c (android_scroll_run):
+>     * src/pgtkterm.c (pgtk_scroll_run):
+>     * src/xterm.c (x_scroll_run):
+>     * src/w32term.c (w32_scroll_run): Don't copy pixels on screen
+>     outside of the window's text area.  (Bug#81585)
+
+I wish we had a plan to consolidate that duplicated code.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Wed Sep 30 11:41:43 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBwRD-0002NR-L0
+	for mharc-emacs-devel@gnu.org; Wed, 30 Sep 2026 11:41:43 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xBwRA-0002NG-5n
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 11:41:40 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xBwR9-00048l-Fr; Wed, 30 Sep 2026 11:41:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=SguAyvSjlFLholb2wsSFxmR5BtJfQupgsP12Nj3NSBM=; b=j5InOJBRPESv
+ VGOcaJCPihTgWM3PTj9Ldr6XZxwPUfxschKKKOKZG3CmJlFwMuw3CM9wzb9MxIj/1eAyWvTI+zwaz
+ 6IEFZ3v47ygWetlh+SAyXvwIKk2b9FB4g5kBpVYaj+IciY7lpLcvm2MTPEmxWIiAcGjS4QWSpHRdv
+ X1nM5JxaS1ZFexLXc8oAcrk1iF7ji0949gItH6qi+fyI8rCHgAC8PI0rQlAn7tPnpaSnJ36zctKFg
+ i4uKklo3E4d2ScVI9MIByAtoTJTSev5U4VuwfSjmJKadf6935RC8PehDIQosVIp3x3PxtUVhF0aoL
+ Xvn7m+jWn/GPjA4F/XoKRg==;
+Date: Wed, 30 Sep 2026 18:41:35 +0300
+Message-Id: <86v77myceo.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <jwv7bk2ls4a.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Wed, 30 Sep 2026 10:41:11 -0400)
+Subject: Re: master cac27d1c795: Fix scroll_run_hook on several platforms
+References: <179077571338.14906.16226153371992544124@vcs2.savannah.gnu.org>
+ <20260930134153.E37B5C0EFF6@vcs2.savannah.gnu.org>
+ <jwv7bk2ls4a.fsf-monnier+emacs@gnu.org>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 15:41:41 -0000
+
+> From: Stefan Monnier <monnier@iro.umontreal.ca>
+> Cc: Eli Zaretskii <eliz@gnu.org>
+> Date: Wed, 30 Sep 2026 10:41:11 -0400
+> 
+> >     Fix scroll_run_hook on several platforms
+> >     
+> >     * src/haikuterm.c (haiku_scroll_run):
+> >     * src/androidterm.c (android_scroll_run):
+> >     * src/pgtkterm.c (pgtk_scroll_run):
+> >     * src/xterm.c (x_scroll_run):
+> >     * src/w32term.c (w32_scroll_run): Don't copy pixels on screen
+> >     outside of the window's text area.  (Bug#81585)
+> 
+> I wish we had a plan to consolidate that duplicated code.
+
+Plan is never the problem in Emacs (and not in this case).  The
+problem is with who will carry out the plan...
+
+
+From MAILER-DAEMON Wed Sep 30 12:01:53 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBwkh-0006Be-VJ
+	for mharc-emacs-devel@gnu.org; Wed, 30 Sep 2026 12:01:52 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xBwkH-00061j-Su
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 12:01:37 -0400
+Received: from mout01.posteo.de ([185.67.36.65])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xBwkG-0006B5-2E
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 12:01:25 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout01.posteo.de (Postfix) with ESMTPS id ECE5D240027
+ for <emacs-devel@gnu.org>; Wed, 30 Sep 2026 18:01:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1790784077;
+ bh=u1G52IspUL8ehHW8+z9ZnL7JpGh/mNq8hEfOvkd8Uuw=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:From;
+ b=FmukePPfw01oXubCJ9r62tyadUCWLWYLPewyU3/1hW1lMrCOxuxQ9wRSBbrxHAQIj
+ 10C2Z3CYARglt6oGqtqy8/3haMdDJowGZX9yuTxVlEcEaBfJkXWEGXIGi5bQk8pSI6
+ ksM4vKh3STK2BUhyTKsbHLeFWMzcqvBq39hy94E3qy15YxbFtvc+7EaDPJchY7MQQ8
+ Gdzm7QKowrx31IMtjI/YPOgXYxaGScxb26s6cy4WdpRLluFVY0C5yLCl4zBbK4jUh2
+ wNgDw1yG2g6MAAutoXnXFYImlGq9W1smfjYZAGNrbAN8tV8dlQroMcEQFsmxi56knh
+ jCJL3RyTOEF1Q==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4hw0CK2LYrz6txl;
+ Wed, 30 Sep 2026 18:01:17 +0200 (CEST)
+From: Philip Kaludercic <philipk@posteo.net>
+To: martianh <martianh@disroot.org>
+Cc: emacs-devel@gnu.org, Xiyue Deng <manphiz@gmail.com>
+Subject: Re: oauth2.el questions
+In-Reply-To: <878q4ihpf8.fsf@disroot.org>
+References: <878q4ihpf8.fsf@disroot.org>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Wed, 30 Sep 2026 16:01:17 +0000
+Message-ID: <87tsn6pw37.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=185.67.36.65; envelope-from=philipk@posteo.net;
+ helo=mout01.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 16:01:40 -0000
+
+martianh <martianh@disroot.org> writes:
+
+> hi emacs,
+>
+> pls CC me in replies, i'm a non-subscriber.
+
+CC'ing the maintainer.  Also, it might make sense to move this thread to
+help-gnu-emacs@gnu.org?
+
+> i am considering using oauth2.el to reduce/simplify the authentication
+> code in mastodon.el, which gives me headaches, but i'm having trouble
+> understanding some basics.
+>
+> i have successfully obtained and stored a token with a registered app,
+> but i'm unclear on how to fetch the token from the store as needed.
+>
+> the main entrypoint has client-secret and client-id as mandatory
+> parameters, which seems to mean that i have to store them somewhere
+> else (presumably in a second encrypted plstore, causing more
+> headaches: client-id and client-secret should be treated like
+> passwords) in order to be able to fetch the auth token. is this
+> correct, or is a package expected to handle tokens in some other way?
+>
+> mastodon.el also supports multiple accounts, at least for saving auth
+> credentials. you set username and host to a different value,
+> reauthenticate, and mastodon.el keeps two sets of credentials, so if
+> you switch back to the first account you don't have to do the auth
+> flow again. i didn't manage to try this out due to the previous
+> hurdle, but i'm curious if this would be (easily) supported by
+> oath2.el, or does it assume 1 account per service somehow?
+>
+> finally, mastodon.el also supports storing auth tokens (but not
+> client/app data) in auth-sources. i take it oauth2.el doesn't have
+> support for storing in auth-sources?
+
+
+From MAILER-DAEMON Wed Sep 30 12:03:27 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xBwmD-0007k2-DV
+	for mharc-emacs-devel@gnu.org; Wed, 30 Sep 2026 12:03:27 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <public@thanosapollo.org>)
+ id 1xBwiv-0005Nv-Tj
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 12:00:01 -0400
+Received: from sendmail.purelymail.com ([34.202.193.197])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <public@thanosapollo.org>)
+ id 1xBwit-0005v1-Q3
+ for emacs-devel@gnu.org; Wed, 30 Sep 2026 12:00:01 -0400
+DKIM-Signature: a=rsa-sha256;
+ b=NY/8jEXcj/izm5sC+67Fkno49clDDS4jd/EjryuEB6To8/5vlRCXc+WKfQZuKpSmrsFmcjBE1xsi68ZKg9LyevmfaWnopXQ2zEt9c73lYSOSwGuG2synJBqzamDGD0l4z7AWknIfQU7fqSRHPYdXVxPABRJ3i+bqZxdoEOgFDk9PKni79Y+Sn+Eq55D+CNcTNir31Fdur788C5/u/2othPtQUQSkukeduhRUIJbup6j/iWYC9+1wRZdeMYhmvdK9u1YmGvbFqiO3zSc6g7UdsrNNiquAJ8I0FBczrtXOZEuJpqyHurs5zrNGHNF47+ydw4jOFVkY1EV71zMtG0izjw==;
+ s=purelymail3; d=thanosapollo.org; v=1;
+ bh=eK32hAy3dXBRgAr1qA3AKFHdaH5W0MUgetHoRDvQhjk=;
+ h=Received:From:To:Subject:Date; 
+DKIM-Signature: a=rsa-sha256;
+ b=yfiq9+yWoLfnFeyVOpYb80nQmyfWB7LFWCvfhZ9DAf4Y4w3yfiTrRfra4KJ+ueLI0dHOL7fJ193n0GIztHJl9LSC+Zv1dynRQrRNdQwNi8B3lA24gbxxbK6wN+TPqjNfJl03HVS1gVxbxyxM20seHxMLikB+4wJPr3eaM+5W/LOg9kHmIWefAoEnJOaUBxZO0oXOD0QPWUBKg264S/hgTpgG+cS/VEqMeDUv8+zn4cqPy/ZI04VILCe8GhybOkjkf0h47jP8TspOEcMv32KAo62HtNuGdNCeWljUIX7sfVcmD+hyKdfTwNzSS5CudHklwA9b7BQcQpISTtlKUjPz/w==;
+ s=purelymail3; d=purelymail.com; v=1;
+ bh=eK32hAy3dXBRgAr1qA3AKFHdaH5W0MUgetHoRDvQhjk=;
+ h=Feedback-ID:Received:From:To:Subject:Date; 
+Feedback-ID: 329276:26957:null:purelymail
+X-Pm-Original-To: emacs-devel@gnu.org
+Authentication-Results: purelymail.com; auth=pass
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -1502473305; 
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 30 Sep 2026 15:59:55 +0000 (UTC)
+From: Thanos Apollo <public@thanosapollo.org>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+Subject: Re: [nongnu] elpa/jabber d00b790cf2: omemo: Preserve literal
+ attachment bytes on disk
+In-Reply-To: <jwv5wzmsy6p.fsf-monnier+emacs@gnu.org>
+References: <179075538403.25008.9702800796053629369@vcs2.savannah.gnu.org>
+ <20260930080304.63F29C0EFF6@vcs2.savannah.gnu.org>
+ <jwv5wzmsy6p.fsf-monnier+emacs@gnu.org>
+Date: Wed, 30 Sep 2026 18:59:53 +0300
+Message-ID: <8733uqpw5i.fsf@thanosapollo.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Received-SPF: pass client-ip=34.202.193.197;
+ envelope-from=public@thanosapollo.org; helo=sendmail.purelymail.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Wed, 30 Sep 2026 12:03:23 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 30 Sep 2026 16:00:02 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+>> +               (with-temp-file dest-file
+>> +                 (set-buffer-multibyte nil)
+>> +                 (insert plaintext)))
+>
+> Is there a reason you're not using
+>
+>     (write-region plaintext nil dest-file ...)
+>
+> ?
+
+No good reason, that's cleaner.
+
+
+Thanks Stefan!
+
+=2D-=20
+Thanos Apollo =E2=98=A7
+https://thanosapollo.org
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQT8Sfl7aimGMASg9+nHhedB4pNYHQUCar0x+QAKCRDHhedB4pNY
+HaFtAQCY15U8/w7RLpdqi8g9pHssrXeNdkCxiT5ugUQwCdQXZQEAt/JeNwjrwfTg
+n4Au27St/sKHX6R480+cXGd+CQOf6g8=
+=lA8J
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+

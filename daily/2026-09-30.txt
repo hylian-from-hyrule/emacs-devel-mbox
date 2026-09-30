@@ -1,0 +1,456 @@
+emacs-devel messages from 2026-09-29T18:15:00+02:00 to 2026-09-30T18:15:00+02:00
+
+================================================================================
+Date: 2026-09-29T22:08:06+02:00
+From: "Basil L. Contovounesios" <basil@contovou.net>
+Subject: Re: master cc7a4dfbf17 1/2: Improve directory-files-recursively
+Message-ID: <87ik3n3jo9.fsf@contovou.net>
+In-Reply-To: <87h5j85sbs.fsf@athena.silentflame.com>
+References: <179051612280.10415.12945189822585522893@vcs2.savannah.gnu.org>
+ <20260927133523.DFC5DC0EFFD@vcs2.savannah.gnu.org>
+ <87cxtx7gio.fsf@athena.silentflame.com> <86bj9h36hk.fsf@gnu.org>
+ <87h5j85sbs.fsf@athena.silentflame.com>
+
+Sean Whitton [2026-09-29 10:18 +0100] wrote:
+> Eli Zaretskii [28/Sep  3:28pm +03] wrote:
+>> It was, see bug#80915, referenced in the commit log message.  It's
+>> just that it was several months ago, and Basil is now back in
+>> business.
+>
+> Whoops.  Apologies for missing the bug annotation, Basil.
+
+No worries.
+
+> I would still like to raise my questions about this:
+>
+>> For example, should we consider using a &key argument?  Perhaps not
+>> because there are already so many optional arguments -- but all those
+>> optional arguments isn't a great situation.
+
+Can't say I love the long arglist either (and it wasn't my original plan
+to extend it), but I'm also in no hurry to change the function's calling
+convention (it has a whopping 25% fewer parameters than completing-read!).
+
+OTOH, the current refactor should make it slightly less painful to add
+keyword arguments given sufficient demand.
+
+>> I'd also like to hear the motivating use cases for sorting where it's
+>> important to be able to pass a parameter, instead of just calling sort
+>> on the resulting list.  The latter would avoid us adding yet another
+>> optional argument.
+
+Sorting the final list is not equivalent to sorting each individual
+subdir, at least not without relatively expensive post-processing.
+
+The whole bug report was due to the old code sorting a little too
+coarsely: it didn't strip trailing directory separators, so could place
+"foo-bar/" before "foo/" where "foo" would otherwise precede "foo-bar".
+
+Adding a means to control this (as a compatibility escape hatch and/or
+as a new feature) seemed like only a small compromise / price to pay.
+
+-- 
+Basil
+
+================================================================================
+Date: 2026-09-30T03:09:12+02:00
+From: =?utf-8?Q?Elijah_Gabe_P=C3=A9rez?= <eg642616@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <8733ur4kav.fsf@gmail.com>
+In-Reply-To: <861pacg010.fsf@gmail.com>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com>
+
+> The latest patch removes this feature for overline and strike-through,
+> since it still needs further discussion.  Overline, strik-ethrough,
+> and underlines are different, so for now I’ve implemented this feature
+> only for underline.  Reverting it would only require changing two
+> lines of code, but it would be better to discuss this first. Since the
+> flag is called underline-text-scaling-p, I wonder if it should affect
+> only underline rendering rather than overline and strike-through. If it
+> should affect them as well, I can quickly send an updated patch.
+
+I'd have liked it to support overline and strike-through too, because on
+HiDPI both are not perceptible (notable on the Android build), but i
+agree this should be separated.
+
+
+> -  int wave_height = 3 * scale_y, wave_length = 2 * scale_x, thickness = scale_y;
+> +  int wave_height = 2 * scale_y * thickness, wave_length = 3 * scale_x * thickness;
+                       ^                                      ^
+I don't know why you changed the default wave appearance here, because this
+makes the underwave look like this when the text is small:
+
+================================================================================
+Date: 2026-09-30T04:02:25+02:00
+From: zhaodaniu <zhaodaniu1@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <86fqyrlcni.fsf@gmail.com>
+In-Reply-To: <8733ur4kav.fsf@gmail.com>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+
+> I'd have liked it to support overline and strike-through too, because on
+> HiDPI both are not perceptible (notable on the Android build), but i
+> agree this should be separated.
+
+Yes, so I think we still need a flag to control this behavior. However,
+naming it is difficult.  The xxx-text-scaling-p template would be:
+
+- overline-text-scaling-p
+- strike-through-text-scaling-p
+- overline-and-strike-through-text-scaling-p
+
+It’s also worth discussing whether strike-through and overline should be
+controlled separately or together, since separating them would give the
+Elisp side more control.
+
+
+> Which makes it hard to distinguish from underline (at least for me)
+
+> That line should be changed to this instead:
+
+> int wave_height = 3 * scale_y * thickness, wave_length = 2 * scale_x *
+> thickness;
+
+You’re right.  The reason is that during testing, I found that the wave
+ratio of 2:3:1 looked smoother than 3:2:1 when highly zoomed in.  I
+didn’t take the lower zoom levels into consideration. I’ll change it
+back later and test how it performs at different lower zoom levels.
+Previously, I only tested it at high zoom levels, Was my mistake.
+-- 
+zhaodaniu
+
+================================================================================
+Date: 2026-09-30T09:07:52+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <86cxtvz06v.fsf@gnu.org>
+In-Reply-To: <86fqyrlcni.fsf@gmail.com> (message from zhaodaniu on Wed, 30 Sep
+ 2026 10:02:25 +0800)
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com>
+
+> From: zhaodaniu <zhaodaniu1@gmail.com>
+> Cc: Eli Zaretskii <eliz@gnu.org>,  emacs-devel@gnu.org
+> Date: Wed, 30 Sep 2026 10:02:25 +0800
+> 
+> > I'd have liked it to support overline and strike-through too, because on
+> > HiDPI both are not perceptible (notable on the Android build), but i
+> > agree this should be separated.
+> 
+> Yes, so I think we still need a flag to control this behavior. However,
+> naming it is difficult.  The xxx-text-scaling-p template would be:
+> 
+> - overline-text-scaling-p
+> - strike-through-text-scaling-p
+> - overline-and-strike-through-text-scaling-p
+> 
+> It’s also worth discussing whether strike-through and overline should be
+> controlled separately or together, since separating them would give the
+> Elisp side more control.
+
+Separate variables are fine, I think.
+
+================================================================================
+Date: 2026-09-30T10:59:19+02:00
+From: David Ponce <da_vid@orange.fr>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_Support_strike-through=2C?=
+ =?US-ASCII?Q?_overline=2C_and_wave_underline_scale?=
+Message-ID: <592E30CA-78E2-49B0-A6EB-BCBECFFB49D9@orange.fr>
+In-Reply-To: <86cxtvz06v.fsf@gnu.org>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+
+Le 30 septembre 2026 09:07:52 GMT+02:00, Eli Zaretskii <eliz@gnu.org> a écrit :
+>> From: zhaodaniu <zhaodaniu1@gmail.com>
+>> Cc: Eli Zaretskii <eliz@gnu.org>,  emacs-devel@gnu.org
+>> Date: Wed, 30 Sep 2026 10:02:25 +0800
+>> 
+>> > I'd have liked it to support overline and strike-through too, because on
+>> > HiDPI both are not perceptible (notable on the Android build), but i
+>> > agree this should be separated.
+>> 
+>> Yes, so I think we still need a flag to control this behavior. However,
+>> naming it is difficult.  The xxx-text-scaling-p template would be:
+>> 
+>> - overline-text-scaling-p
+>> - strike-through-text-scaling-p
+>> - overline-and-strike-through-text-scaling-p
+>> 
+>> It’s also worth discussing whether strike-through and overline should be
+>> controlled separately or together, since separating them would give the
+>> Elisp side more control.
+>
+>Separate variables are fine, I think.
+>
+
+If I undertand correctly the Elisp coding conventions say:
+
+"We recommend to avoid using this -p suffix in boolean variable names, unless the variable is bound to a predicate function; instead, use a -flag suffix or names like is-foo."
+
+Maybe in this case just xxxx-text-scaling is enough?
+
+Please ignore me, if it does not make sense ;-)
+
+Thanks for working on this.
+
+================================================================================
+Date: 2026-09-30T11:29:42+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <867bk3ytmh.fsf@gnu.org>
+In-Reply-To: <592E30CA-78E2-49B0-A6EB-BCBECFFB49D9@orange.fr> (message from
+ David Ponce on Wed, 30 Sep 2026 10:59:19 +0200)
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <592E30CA-78E2-49B0-A6EB-BCBECFFB49D9@orange.fr>
+
+> Date: Wed, 30 Sep 2026 10:59:19 +0200
+> From: David Ponce <da_vid@orange.fr>
+> CC: eg642616@gmail.com
+> 
+> Le 30 septembre 2026 09:07:52 GMT+02:00, Eli Zaretskii <eliz@gnu.org> a écrit :
+> >> Yes, so I think we still need a flag to control this behavior. However,
+> >> naming it is difficult.  The xxx-text-scaling-p template would be:
+> >> 
+> >> - overline-text-scaling-p
+> >> - strike-through-text-scaling-p
+> >> - overline-and-strike-through-text-scaling-p
+> >> 
+> >> It’s also worth discussing whether strike-through and overline should be
+> >> controlled separately or together, since separating them would give the
+> >> Elisp side more control.
+> >
+> >Separate variables are fine, I think.
+> >
+> 
+> If I undertand correctly the Elisp coding conventions say:
+> 
+> "We recommend to avoid using this -p suffix in boolean variable names, unless the variable is bound to a predicate function; instead, use a -flag suffix or names like is-foo."
+> 
+> Maybe in this case just xxxx-text-scaling is enough?
+
+I considered that possibility, but rejected it: such a name does not
+convey clearly enough that the variable is a boolean.
+
+I know about the recommendation, of course, but the important part
+about following recommendations is to know when not to follow them.
+
+================================================================================
+Date: 2026-09-30T14:50:00+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [nongnu] elpa/jabber d00b790cf2: omemo: Preserve literal
+ attachment bytes on disk
+Message-ID: <jwv5wzmsy6p.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20260930080304.63F29C0EFF6@vcs2.savannah.gnu.org>
+References: <179075538403.25008.9702800796053629369@vcs2.savannah.gnu.org>
+ <20260930080304.63F29C0EFF6@vcs2.savannah.gnu.org>
+
+> +               (with-temp-file dest-file
+> +                 (set-buffer-multibyte nil)
+> +                 (insert plaintext)))
+
+Is there a reason you're not using
+
+    (write-region plaintext nil dest-file ...)
+
+?
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-30T14:52:27+02:00
+From: martianh <martianh@disroot.org>
+Subject: oauth2.el questions
+Message-ID: <878q4ihpf8.fsf@disroot.org>
+In-Reply-To: 
+References: 
+
+hi emacs,
+
+pls CC me in replies, i'm a non-subscriber.
+
+i am considering using oauth2.el to reduce/simplify the 
+authentication code in mastodon.el, which gives me headaches, but 
+i'm having trouble understanding some basics.
+
+i have successfully obtained and stored a token with a registered 
+app, but i'm unclear on how to fetch the token from the store as 
+needed.
+
+the main entrypoint has client-secret and client-id as mandatory 
+parameters, which seems to mean that i have to store them 
+somewhere else (presumably in a second encrypted plstore, causing 
+more headaches: client-id and client-secret should be treated like 
+passwords) in order to be able to fetch the auth token. is this 
+correct, or is a package expected to handle tokens in some other 
+way?
+
+mastodon.el also supports multiple accounts, at least for saving 
+auth credentials. you set username and host to a different value, 
+reauthenticate, and mastodon.el keeps two sets of credentials, so 
+if you switch back to the first account you don't have to do the 
+auth flow again. i didn't manage to try this out due to the 
+previous hurdle, but i'm curious if this would be (easily) 
+supported by oath2.el, or does it assume 1 account per service 
+somehow?
+
+finally, mastodon.el also supports storing auth tokens (but not 
+client/app data) in auth-sources. i take it oauth2.el doesn't have 
+support for storing in auth-sources?
+
+-- 
+- Marty
+
+================================================================================
+Date: 2026-09-30T16:41:11+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master cac27d1c795: Fix scroll_run_hook on several platforms
+Message-ID: <jwv7bk2ls4a.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20260930134153.E37B5C0EFF6@vcs2.savannah.gnu.org>
+References: <179077571338.14906.16226153371992544124@vcs2.savannah.gnu.org>
+ <20260930134153.E37B5C0EFF6@vcs2.savannah.gnu.org>
+
+>     Fix scroll_run_hook on several platforms
+>     
+>     * src/haikuterm.c (haiku_scroll_run):
+>     * src/androidterm.c (android_scroll_run):
+>     * src/pgtkterm.c (pgtk_scroll_run):
+>     * src/xterm.c (x_scroll_run):
+>     * src/w32term.c (w32_scroll_run): Don't copy pixels on screen
+>     outside of the window's text area.  (Bug#81585)
+
+I wish we had a plan to consolidate that duplicated code.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-09-30T17:41:35+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master cac27d1c795: Fix scroll_run_hook on several platforms
+Message-ID: <86v77myceo.fsf@gnu.org>
+In-Reply-To: <jwv7bk2ls4a.fsf-monnier+emacs@gnu.org> (message from Stefan
+ Monnier on Wed, 30 Sep 2026 10:41:11 -0400)
+References: <179077571338.14906.16226153371992544124@vcs2.savannah.gnu.org>
+ <20260930134153.E37B5C0EFF6@vcs2.savannah.gnu.org>
+ <jwv7bk2ls4a.fsf-monnier+emacs@gnu.org>
+
+> From: Stefan Monnier <monnier@iro.umontreal.ca>
+> Cc: Eli Zaretskii <eliz@gnu.org>
+> Date: Wed, 30 Sep 2026 10:41:11 -0400
+> 
+> >     Fix scroll_run_hook on several platforms
+> >     
+> >     * src/haikuterm.c (haiku_scroll_run):
+> >     * src/androidterm.c (android_scroll_run):
+> >     * src/pgtkterm.c (pgtk_scroll_run):
+> >     * src/xterm.c (x_scroll_run):
+> >     * src/w32term.c (w32_scroll_run): Don't copy pixels on screen
+> >     outside of the window's text area.  (Bug#81585)
+> 
+> I wish we had a plan to consolidate that duplicated code.
+
+Plan is never the problem in Emacs (and not in this case).  The
+problem is with who will carry out the plan...
+
+================================================================================
+Date: 2026-09-30T17:59:53+02:00
+From: Thanos Apollo <public@thanosapollo.org>
+Subject: Re: [nongnu] elpa/jabber d00b790cf2: omemo: Preserve literal
+ attachment bytes on disk
+Message-ID: <8733uqpw5i.fsf@thanosapollo.org>
+In-Reply-To: <jwv5wzmsy6p.fsf-monnier+emacs@gnu.org>
+References: <179075538403.25008.9702800796053629369@vcs2.savannah.gnu.org>
+ <20260930080304.63F29C0EFF6@vcs2.savannah.gnu.org>
+ <jwv5wzmsy6p.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+>> +               (with-temp-file dest-file
+>> +                 (set-buffer-multibyte nil)
+>> +                 (insert plaintext)))
+>
+> Is there a reason you're not using
+>
+>     (write-region plaintext nil dest-file ...)
+>
+> ?
+
+No good reason, that's cleaner.
+
+
+Thanks Stefan!
+
+-- 
+Thanos Apollo ☧
+https://thanosapollo.org
+
+================================================================================
+Date: 2026-09-30T18:01:17+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: oauth2.el questions
+Message-ID: <87tsn6pw37.fsf@posteo.net>
+In-Reply-To: <878q4ihpf8.fsf@disroot.org>
+References: <878q4ihpf8.fsf@disroot.org>
+
+martianh <martianh@disroot.org> writes:
+
+> hi emacs,
+>
+> pls CC me in replies, i'm a non-subscriber.
+
+CC'ing the maintainer.  Also, it might make sense to move this thread to
+help-gnu-emacs@gnu.org?
+
+> i am considering using oauth2.el to reduce/simplify the authentication
+> code in mastodon.el, which gives me headaches, but i'm having trouble
+> understanding some basics.
+>
+> i have successfully obtained and stored a token with a registered app,
+> but i'm unclear on how to fetch the token from the store as needed.
+>
+> the main entrypoint has client-secret and client-id as mandatory
+> parameters, which seems to mean that i have to store them somewhere
+> else (presumably in a second encrypted plstore, causing more
+> headaches: client-id and client-secret should be treated like
+> passwords) in order to be able to fetch the auth token. is this
+> correct, or is a package expected to handle tokens in some other way?
+>
+> mastodon.el also supports multiple accounts, at least for saving auth
+> credentials. you set username and host to a different value,
+> reauthenticate, and mastodon.el keeps two sets of credentials, so if
+> you switch back to the first account you don't have to do the auth
+> flow again. i didn't manage to try this out due to the previous
+> hurdle, but i'm curious if this would be (easily) supported by
+> oath2.el, or does it assume 1 account per service somehow?
+>
+> finally, mastodon.el also supports storing auth tokens (but not
+> client/app data) in auth-sources. i take it oauth2.el doesn't have
+> support for storing in auth-sources?
+
