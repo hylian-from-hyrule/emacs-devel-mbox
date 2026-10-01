@@ -1,0 +1,2018 @@
+emacs-devel messages from 2026-09-30T18:15:00+02:00 to 2026-10-01T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-01T04:17:17+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <jwvpkxui2vj.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86fqyrlcni.fsf@gmail.com> (message from zhaodaniu
+ <zhaodaniu1@gmail.com> on Wed, 30 Sep 2026 10:02:25 +0800)
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com>
+
+> Yes, so I think we still need a flag to control this behavior. However,
+> naming it is difficult.  The xxx-text-scaling-p template would be:
+>
+> - overline-text-scaling-p
+> - strike-through-text-scaling-p
+> - overline-and-strike-through-text-scaling-p
+
+"-p" stands for "predicate", i.e. a function that returns a boolean, not
+a boolean variable.  We have such mistakes already, but it's not
+a reason to make it worse.
+
+The ELisp manual recommends the "-flag" suffix for boolean variables.
+I personally prefer no suffix at all since it's common enough for
+boolean variables to be later extended to support more than 2 values.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-01T06:45:53+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xC8g5-008O5C-Hc@fencepost.gnu.org>
+In-Reply-To: <d3484528-9a53-4cab-86b1-0f0a0fbf1049@gutov.dev> (message from
+ Dmitry Gutov on Mon, 28 Sep 2026 17:49:58 +0300)
+References: <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org> <03540d744b0496fc2406f90ea97cb829@gnu.support>
+ <357746ab-b7c8-483e-b06b-e435b29e9f3e@gutov.dev>
+ <aroEydWo7LtZGLJI@tuxteam.de> <d3484528-9a53-4cab-86b1-0f0a0fbf1049@gutov.dev>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > The problem is -- Jean does have a point. He may not be the most
+  > > pleasant or effective at arguing it, but he still has.
+
+  > It is obviously a tradeoff. Pushing again and again for your own opinion 
+  > on how it should be resolved without compromise is not polite or 
+  > respectful of other people's time.
+
+This is not a matter of people's opinions.  This is a matter of
+what the GNU Project policies mean.  Jean is mostly correct about them;
+others here are much less so.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:46:54+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xC8h4-008ODx-PN@fencepost.gnu.org>
+In-Reply-To: <875wzr2uq1.fsf@mail.gmail.com> (message from Nickolai Dobrynin
+ on Sun, 27 Sep 2026 06:17:58 +0200)
+References: <86jyu4y0oy.fsf@sdf.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <jwvmrt9mkn8.fsf-monnier+emacs@gnu.org>
+ <9f2476581290c148a80d17ece6301e47@gnu.support>
+ <E1x9aGx-004eVq-8f@fencepost.gnu.org> <87o6dmix8z.fsf@mail.gmail.com>
+ <E1xAfa9-00G77E-Py@fencepost.gnu.org> <875wzr2uq1.fsf@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Suppose the user has Matlab installed. What should the user do that would
+  > present him with a list of Matlab-related packages that would otherwise
+  > be hidden?
+
+If the user does anything to list or search the set of available packages,
+packages that are specifically for Matlab would appear if Matlab
+is installed on the machine.  Otherwise they would not appear.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:46:55+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xC8h5-008OEB-Dq@fencepost.gnu.org>
+In-Reply-To: <86bj9j5k9o.fsf@gnu.org> (message from Eli Zaretskii on Sun, 27
+ Sep 2026 08:35:31 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIN-006qog-FJ@fencepost.gnu.org>
+ <864ifc8rgn.fsf@gnu.org> <E1xAfei-00GQoe-Rl@fencepost.gnu.org>
+ <86bj9j5k9o.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Nonetheless, having an alternative in a menu is neither "steering" nor
+  > "promotion", because promoting an alternative needs to explicitly and
+  > actively describe it in favorable terms, not just show it.
+
+Marketing promotion typically does try to present an alternative in
+terms of praise, but not necessarily.  Some promotional activities aim
+only to make people aware that something exists, or lead them to dwell
+on its name for a moment.  Either way, the effect is to promote the
+uptake of that product, as marketers know.
+
+What I mean by "promoting" a program or service is doing anything that
+suggests (even implicitly) that we encourage people to use it -- that
+it is a good thing to use.  That includes making users aware that it
+exists.  If we do something that promotes an unjust program or
+service, we encourage it to be used by (and to mistreat) more users
+and we associate ourselves with that promotion.
+
+We could also describe this as "mentioning to the users" that program
+or service.
+
+  > The words we use don't matter, as long as we agree that doing so does
+  > not disqualify a non-GNU free program that Emacs communicates with.
+
+You and the GNU Project very much disagree about this point.  Whether
+hermes.el references the Hermes agent is out of our hands.  However,
+whether GNU Emacs refers to hermes.el is the GNU Project's decision.
+
+Including hermes.el in ELPA means Emacs refers to / promotes /
+recommends / mentions hermes.el in a very strong manner.  That can't
+avoid encouraging Emacs users to use the Hermes Agent and its
+configuration program, because using hermes.el leads almost inevitably
+to using the other two.
+
+Given those circumstances, the GNU Coding Standards say that a
+reference to something nonfree from the Hermes Agent counts as a
+reference from hermes.el.
+
+Hermes Agent refers to / promotes / recommends / mentions Nous in a
+very strong manner, and Nous implies use of various nonfree and SaaSS
+LLMs; I think all of them are non-free.  (Shall we call it "Noose", as
+in "Not recommended to put it around your neck"?)  Anyone who starts
+using hermes.el will probably be led to one of those LLMs.
+
+The message of that chain of reference contradicts our principle
+message to the public, so we should break that chain of promotion.
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:46:59+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+ (llm-vertex.el)
+Message-ID: <E1xC8h9-008OGd-RB@fencepost.gnu.org>
+In-Reply-To: <CAN+1HbohTWhLgv1k+6=eRMk6nJFu-gym6sOyZh20hZRF2j=kmw@mail.gmail.com>
+ (message from =?iso-8859-1?Q?St=C3=A9phane?= Marks on Mon, 28 Sep 2026
+ 13:26:03 -0400)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <87zex2rhvp.fsf@posteo.net>
+ <fb5475e64bb9b14237df505506831f7e@gnu.support> <87v77qr7v9.fsf@posteo.net>
+ <ea681cf191e08c6344992a9f07a33752@gnu.support> <86tsn93jqe.fsf@gnu.org>
+ <dd4a8dbd52cea52bf24cdd9717418e21@gnu.support> <864if92v4j.fsf@gnu.org>
+ <CAN+1HbohTWhLgv1k+6=eRMk6nJFu-gym6sOyZh20hZRF2j=kmw@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > JL, Andrew's llm package supports locally run LLMs via, for example,
+  > llm-ollama and llm-llamacpp, making it easy to satisfy non-SaSS
+  > deployment.
+
+Recommending/mentioning alternatives that are non-SaaSS is not enough
+to satisfy the GNU Coding Standards.  The problem is
+recommending/mentioning alternatives that ARE SaaSS.
+
+  > It is up to the user to decide which models to use
+
+That is true, but it is neither here nor there.  This issue is about
+what GNU Emacs should say, not about what users do.
+
+                                                      and to
+  > determine for themselves if such models are "rms Free"
+
+What counts for this GNU Project decision is whether it is free as
+understood by the GNU Project.
+
+We don't yet have a published criterion for that, but we should have
+one soon.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:47:05+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+ (llm-vertex.el)
+Message-ID: <E1xC8hF-008OIJ-JL@fencepost.gnu.org>
+In-Reply-To: <CAN+1HbohTWhLgv1k+6=eRMk6nJFu-gym6sOyZh20hZRF2j=kmw@mail.gmail.com>
+ (message from =?iso-8859-1?Q?St=C3=A9phane?= Marks on Mon, 28 Sep 2026
+ 13:26:03 -0400)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <87zex2rhvp.fsf@posteo.net>
+ <fb5475e64bb9b14237df505506831f7e@gnu.support> <87v77qr7v9.fsf@posteo.net>
+ <ea681cf191e08c6344992a9f07a33752@gnu.support> <86tsn93jqe.fsf@gnu.org>
+ <dd4a8dbd52cea52bf24cdd9717418e21@gnu.support> <864if92v4j.fsf@gnu.org>
+ <CAN+1HbohTWhLgv1k+6=eRMk6nJFu-gym6sOyZh20hZRF2j=kmw@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  >   If you have an issue with the llm package, engage Andrew here
+  > https://github.com/ahyatt/llm/issues
+
+I just tested that myself.  I visited that page and clicked on New
+Issue.  It did nothing.
+
+Then I clicked on Sign Up and it said "Please enable JS and disable
+any ad blocker."  (JS was in fact enabled, but LibreJS was blocking JS
+that lacks a free license.)
+
+This confirms that referring to GitHub for communicating with a
+developer is a way of saying, "Go jump in the nonfree software lake."
+
+For full analysis of this issue, see
+https://www.gnu.org/philosophy/whats-wrong-with-github.html.
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:47:06+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <E1xC8hG-008OIc-Bq@fencepost.gnu.org>
+In-Reply-To: <8633ut2u8r.fsf@gnu.org> (message from Eli Zaretskii on Mon, 28
+ Sep 2026 19:52:52 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <875wzw6tuj.fsf@hiperboreo.eu>
+ <999163197c27c902919c0f642755d4f1@gnu.support> <86zex8arct.fsf@gnu.org>
+ <E1xA6de-00Acpi-6L@fencepost.gnu.org> <86eceh8hj1.fsf@gnu.org>
+ <87zex1wsen.fsf@web.de> <86eced36v6.fsf@gnu.org> <877bk5wk66.fsf@web.de>
+ <865wzp30r2.fsf@gnu.org> <87bj9huzxl.fsf@web.de> <8633ut2u8r.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > How much choice would I have to add to get accepted?
+
+  > Just one free alternative is IMO enough, if selecting and using it
+  > doesn't require any jumping through hoops.
+
+The GNU Project's stance is that this is NOT enough.
+
+  > That is true, but since the Hermes agent is not part of Emacs and is
+  > not a GNU program, we cannot be held responsible for what it does.
+
+Indeed, we are not responsible for what it does.
+
+We are responsible for deciding properly whether to reference /
+promote / recommend / mention hermes.el, and what the Hermes agent
+does is part of the basis for that decision.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:47:40+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <E1xC8ho-008OU0-NQ@fencepost.gnu.org>
+In-Reply-To: <d17b2507-08bd-410d-8256-c39f322adf07@imayhem.com> (message from
+ Cecilio Pardo on Mon, 28 Sep 2026 09:39:31 +0200)
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <d17b2507-08bd-410d-8256-c39f322adf07@imayhem.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > To adopt a philosophy of partly surrendering so that people who don't
+  > > care about GNU or freedom will choose GNU for their own purely
+  > > practical reasons will not inspire anyone.  It would be the sort of
+  > > competition that tech businesses do.  We would not morally be better
+  > > than them.
+
+In addition, making "bets" on the future consequences of current and
+likely future technology is the usual practice of venture capital.
+A look at that world shows how risky these bets are.
+
+We hear often about the few that won their bets on the future.  But
+most of them bet wrong and then failed.
+
+The entrepreneurs that do this sort of betting usually have plausible
+arguments that the future will develop as they forecast.  They need
+those to attract investment.  But looking back, we know most of them
+failed.
+
+For this reason, I am skeptical of pitches to sacrifice something
+important for a _chance_ of winning more success and support.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:47:51+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xC8hz-008OXV-60@fencepost.gnu.org>
+In-Reply-To: <864if952he.fsf@gnu.org> (message from Eli Zaretskii on Mon, 28
+ Sep 2026 09:11:57 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <E1xB0Sl-00B290-KY@fencepost.gnu.org> <864if952he.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Once again, the Hermes agent is a separate program, not part of the
+  > ELPA package.
+
+Yes, the overall description, when I saw it this morning, made that
+clear.
+
+                   The Hermes agent is installed and configured separately
+  > by the user.
+
+Thank you.  But I don't think this affects the conclusion.  The significant
+point is that using hermes.el requires using the Hermes agent -- so
+those two programs are morally linked.
+
+                  The choice of 3 possible ways to configure it is
+  > presented by the configuration tool that is part of the Hermes agent,
+
+Ok.
+
+  > and if it is invoked (it doesn't have too, because that's an optional
+  > step),
+
+I am finding that strange.  If configuring the Hermes agent is optional,
+what does the Hermes agent DO if you try to use it without configuring it?
+
+           it is done when the Hermes agent (NOT hermes.el the ELPA
+  > package!) is first run by the user who installed it.  At that time,
+  > the user should decide how to configure the Hermes agent (again: NOT
+  > hermes.el the ELPA package).
+
+This suggests (but I'm not sure) that invoking the Hermes agent
+will tell you you must configure it to proceed.
+
+If those are the facts, I would say that the Hermes agent _requires_
+that the user configure it.  Configuring it is not optional.
+(I am not sure that detail makes a difference -- either way, configuring
+it makes a crucial decision between alternatives, and the Hermes agent
+recommends each of the alternatives.)
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:47:52+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <E1xC8i0-008OXj-Ey@fencepost.gnu.org>
+In-Reply-To: <865wzp52wd.fsf@gnu.org> (message from Eli Zaretskii on Mon, 28
+ Sep 2026 09:02:58 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <jwvpkyabta9.fsf-monnier+emacs@gnu.org>
+ <8733v6gzae.fsf@web.de> <E1x8AJ9-00G1XF-EX@fencepost.gnu.org>
+ <867bkggyiz.fsf@gnu.org> <87zexccn98.fsf@web.de>
+ <87zexcdwjz.fsf@thanosapollo.org> <E1x8qdu-000GBU-Io@fencepost.gnu.org>
+ <87qzimey1c.fsf@thanosapollo.org> <87y0ct97p3.fsf@web.de>
+ <87mrt9g79l.fsf@thanosapollo.org> <865wzxeaxj.fsf@gnu.org>
+ <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support> <8633v1e1n2.fsf@gnu.org>
+ <f1742cec1455b8fb54416757f6484589@gnu.support> <86zex9clvv.fsf@gnu.org>
+ <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <875wzw6tuj.fsf@hiperboreo.eu> <999163197c27c902919c0f642755d4f1@gnu.support>
+ <86zex8arct.fsf@gnu.org> <E1xA6de-00Acpi-6L@fencepost.gnu.org>
+ <86eceh8hj1.fsf@gnu.org> <E1xB0QM-00AzCx-IV@fencepost.gnu.org>
+ <865wzp52wd.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > You've got an excessively narrow picture of that word.  "Recommend" in
+  > > English can be used with more than one alternative.  For instance, "I
+  > > recommend the salmon and the lamb chops" means I consider each of
+  > > those dishes a good choice.
+
+  > And I think you use "recommend" too broadly,
+
+I wanted to base the statement on more than my own sense of diction.
+So I called a professional editor and a professional writer, and both
+agreed with me about the usage of "recommend".
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:48:02+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xC8iA-008OcX-Ea@fencepost.gnu.org>
+In-Reply-To: <357746ab-b7c8-483e-b06b-e435b29e9f3e@gutov.dev> (message from
+ Dmitry Gutov on Mon, 28 Sep 2026 01:16:04 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org> <03540d744b0496fc2406f90ea97cb829@gnu.support>
+ <357746ab-b7c8-483e-b06b-e435b29e9f3e@gutov.dev>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > There is no reason for you to assume you understand GNU Coding Standards 
+  > than the maintainers of Emacs.
+
+My observation is that he understands certain crucial parts
+that many others have misunderstood.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:48:05+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xC8iD-008Oe0-Qh@fencepost.gnu.org>
+In-Reply-To: <875x012ll9.fsf@posteo.net> (message from Philip Kaludercic on
+ Sat, 19 Sep 2026 17:32:35 +0000)
+References: <86jyu4y0oy.fsf@sdf.org> <aem0rKYxtsDAYggA@tuxteam.de>
+ <E1wGqjR-0004B6-NO@fencepost.gnu.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <87jyoi5rd1.fsf@posteo.net>
+ <jwvwlsh9qvz.fsf-monnier+emacs@gnu.org>
+ <fe456ddf6085060cf7f3e59af5dee889@gnu.support> <875x012ll9.fsf@posteo.net>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+I agree that PDF and PS formats don't raise a serious freedom issue,
+because people don't generally develop programs in those languages.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:48:13+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xC8iL-008OgH-Ko@fencepost.gnu.org>
+In-Reply-To: <867bkggyiz.fsf@gnu.org> (message from Eli Zaretskii on Sun, 20
+ Sep 2026 10:41:40 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <86mryw2ozt.fsf@sdf.org>
+ <87zf2w3vhh.fsf@posteo.net> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > If the user, at per own initiative, gives a command to load a package
+  > > that Emacs did not suggest, then Emacs obeys.
+
+  > Yes.  And similarly if the user configures programs or sites which
+  > Emacs uses and connects to in a way that runs or connects to non-free
+  > software.
+
+You left out "at per own initiative", and that makes the crucial difference.
+
+If the user _at per own initiative_ configures programs or sites which
+Emacs uses and connects to in a way that runs or connects to non-free
+software, that is the user's responsibility and not Emacs's
+responsibility.
+
+But if Emacs (or programs Emacs recommends / promotes / suggests)
+makes a suggestion to configure programs or sites in that way, and the
+user accepts that suggestion, making that suggestion makes Emacs
+responsible.  So Emacs should not suggest that.
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:49:25+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xC8jV-008Oyq-Fl@fencepost.gnu.org>
+In-Reply-To: <861panf0to.fsf@gnu.org> (message from Eli Zaretskii on Mon, 21
+ Sep 2026 11:47:15 +0300)
+References: <86jyu4y0oy.fsf@sdf.org>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > While Hermes Agent is free software, from the viewpoint of GNU free 
+  > > software philosophy it is effectively shackled to a SaaSS business 
+  > > model.
+
+  > I disagree with this harsh characterization, and in any case, that's
+  > not our concern here, as long as Hermes is a free program.
+
+Eli, this is the crucial point where you have misunderstood the
+GNU Project standards about referring to nonfree programs.
+The misunderstanding is not about the Hermes agent in particular,
+but about the standards themselves.
+
+Given a free program P1, whether it is ok for a GNU package to
+reference / recommend / promote / mention the program P1 _depends_ on
+whether P1 itself references / recommends / promotes / mentions
+nonfree programs in a significant way.
+
+A few months ago I looked at contribution.html and pointed out a
+paragraph about this.  I was sure it did not match the actual GNU
+Project policy, but I couldn't make sense of what it did say.
+
+I could not understand what condition it was trying to state.
+
+Now I think I know what it was trying to say.  It was trying to state
+a condition for accepting packages, something like, "As long as foo.el
+offers to use at least one free alternative, it is ok, regardless of
+what nonfree alternatives it may also offer."  The same thing you
+were saying just now.
+
+That crucially disagrees with the GNU Project's actual policy on
+references to nonfree programs.  Our policy is stricter than that.
+This misstatement needs to be clarified.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-01T06:49:34+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <86ik3mxbxd.fsf@gnu.org>
+In-Reply-To: <87v77mmeb6.fsf@gmail.com> (message from Elijah Gabe
+ =?utf-8?Q?P=C3=A9rez?= on Wed, 30 Sep 2026 18:53:33 -0600)
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com>
+ <5cff4691-6d25-4649-9b63-5bdb7c0a4df4@orange.fr>
+ <87v77mmeb6.fsf@gmail.com>
+
+> From: Elijah Gabe Pérez <eg642616@gmail.com>
+> Cc: zhaodaniu <zhaodaniu1@gmail.com>,  Eli Zaretskii <eliz@gnu.org>,
+>   emacs-devel@gnu.org
+> Date: Wed, 30 Sep 2026 18:53:33 -0600
+> 
+> David Ponce <da_vid@orange.fr> writes:
+> 
+> > I don't know if that would be too difficult to implement, but I wonder
+> > if it could make more sense to add a `:thickness' property to the
+> > `:underline', `overline', and `:strike-through' attributes, to specify
+> > the decoration thickness.  An integer value would mean a number of
+> > pixels, while a float would mean a fraction of the font size.  The
+> > default value (t) would mean the same as currently.
+> >
+> > Something like:
+> >
+> > :underline (:style S :color C :thickness 1.2)
+> > :underline [C or t] would mean :underline (:color [C or foreground] :thickness t)
+> 
+> [...]
+> 
+> I was thinking the same thing, but I realized it wouldn't work, because
+> I don't think most package maintainers want to support this property,
+> and it would be tedious to change the :thickness of each face, so they
+> look properly in HiDPI.
+> 
+> Maybe that idea can be properly discussed separately after this patch.
+
+Are there other GUI editors which offer such customizations?  If not,
+it isn't urgent for us to consider such complications.
+
+================================================================================
+Date: 2026-10-01T07:51:31+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <86a4oyx924.fsf@gnu.org>
+In-Reply-To: <86ik3mwva7.fsf@gmail.com> (message from zhaodaniu on Thu, 01 Oct
+ 2026 00:36:48 +0800)
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com>
+
+> From: zhaodaniu <zhaodaniu1@gmail.com>
+> Cc: eg642616@gmail.com,  emacs-devel@gnu.org
+> Date: Thu, 01 Oct 2026 00:36:48 +0800
+> 
+> I quickly implemented the relevant patch, and it passed my local tests.
+> Emacs Lisp can fully control the scaling of these.
+> 
+> test code:
+> ```
+> (progn
+>   (setq test-flag nil
+>         underline-text-scaling-p test-flag
+>         overline-text-scaling-p test-flag
+>         strike-through-text-scaling-p test-flag)
+>   (insert
+>    "\n\n"
+>    (propertize
+>     "HELLO GNU EMACS"
+>     'font-lock-face
+>     ;; wave line dots double-line dashes
+>     `(:underline (:style wave :color "red")
+>       :strike-through t
+>       :overline t))))
+> ```
+
+Thanks, we now need the implementation for X, and then we can install.
+
+================================================================================
+Date: 2026-10-01T08:03:33+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <jwvcxtuq7sw.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <E1xC8iD-008Oe0-Qh@fencepost.gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <87jyoi5rd1.fsf@posteo.net>
+ <jwvwlsh9qvz.fsf-monnier+emacs@gnu.org>
+ <fe456ddf6085060cf7f3e59af5dee889@gnu.support>
+ <875x012ll9.fsf@posteo.net> <E1xC8iD-008Oe0-Qh@fencepost.gnu.org>
+
+Richard Stallman [2026-10-01 00:48:05] wrote:
+> I agree that PDF and PS formats don't raise a serious freedom issue,
+> because people don't generally develop programs in those languages.
+
+I can't see what the language has to do with it.
+
+Are you saying that you'd consider `yt-dlp` perfectly fine if Google sent
+its non-free challenge code in Postscript rather than in Javascript?
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-01T08:04:50+02:00
+From: tomas@tuxteam.de
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <ar34AiJcvYnmkAhD@tuxteam.de>
+In-Reply-To: <E1xC8g5-008O5C-Hc@fencepost.gnu.org>
+References: <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org>
+ <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org>
+ <03540d744b0496fc2406f90ea97cb829@gnu.support>
+ <357746ab-b7c8-483e-b06b-e435b29e9f3e@gutov.dev>
+ <aroEydWo7LtZGLJI@tuxteam.de>
+ <d3484528-9a53-4cab-86b1-0f0a0fbf1049@gutov.dev>
+ <E1xC8g5-008O5C-Hc@fencepost.gnu.org>
+
+On Thu, Oct 01, 2026 at 12:45:53AM -0400, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+>   > > The problem is -- Jean does have a point. He may not be the most
+>   > > pleasant or effective at arguing it, but he still has.
+> 
+>   > It is obviously a tradeoff. Pushing again and again for your own opinion 
+>   > on how it should be resolved without compromise is not polite or 
+>   > respectful of other people's time.
+> 
+> This is not a matter of people's opinions.  This is a matter of
+> what the GNU Project policies mean.  Jean is mostly correct about them;
+> others here are much less so.
+
+That's the way I see it too -- with all due respect to Eli, (and you
+know I appreciate you a lot: not just for the gargantuan work you are
+doing, but also for the patience you always show in engaging with
+discussions with anyone here, newbie or not).
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-10-01T08:14:26+02:00
+From: Thierry Volpiatto <thievol@posteo.net>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <87se2qj6bk.fsf@posteo.net>
+In-Reply-To: <86jyo2y5jl.fsf@gnu.org>
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org> <E1xAmqw-0000000ByJb-1ClL@tucano.isti.cnr.it>
+ <8733uqljpf.fsf@posteo.net> <86jyo2y5jl.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Thierry Volpiatto <thievol@posteo.net>
+>> Cc: Eli Zaretskii <eliz@gnu.org>,  emacs-devel@gnu.org,  tailorpaul@pm.me,
+>>   juri@linkov.net,  rms@gnu.org
+>> Date: Wed, 30 Sep 2026 17:42:23 +0000
+>> 
+>> Here in Gnus.
+>> The urls below are mentioned as unsafe, but the next url
+>> "www.rendo-shrimp.de" is not, however it looks unsafe as well, it point
+>> to "https://kqnc-zcmp.maillist-manage.eu/click/12bc5c541e85ca1f/12bc5c541e849f2a".
+>> 
+>>     (textsec-suspicious-p (cons "https://kqnc-zcmp.maillist-manage.eu/click/12bc5c541e85ca1f/12bc5c541e849f2a"
+>>                                 "https://www.rendo-shrimp.de"))
+>> 
+>> returns this as unsafe.
+>> Did I miss or misunderstood something or is it indeed unsafe?
+>
+> I don't know.  How about if you step with a debugger through the code
+> and see why it doesn't mark that?
+
+I didn't step through emacs code exactly but tried this in my own code:
+
+    (textsec-suspicious-p "https://kqnc-zcmp.maillist-manage.eu/click/12bc5c541e85ca1f/12bc5c541e849f2a" 'url)
+
+is returning nil, then
+
+    (textsec-suspicious-p (cons "https://kqnc-zcmp.maillist-manage.eu/click/12bc5c541e85ca1f/12bc5c541e849f2a"
+                                "www.rendo-shrimp.de") 'link)
+
+is returning nil as well unless prefixing "www.rendo-shrimp.de" with "https://".
+
+> My guess is that it isn't showing a full URL, like the "unsubscribe"
+> button later on.
+
+Yes, but "unsubscribe" is not an url whereas "www.rendo-shrimp.de" is an
+url (even if abbreviated), so in such case why is the link (very) different? I mean if
+"www.rendo-shrimp.de" is a valid (and safe) url why using something else?
+
+Thanks.
+
+-- 
+Thierry
+
+================================================================================
+Date: 2026-10-01T08:24:09+02:00
+From: Xiyue Deng <manphiz@gmail.com>
+Subject: Re: oauth2.el questions
+Message-ID: <87eceac512.fsf@debian-hx90.lan>
+In-Reply-To: <87tsn6pw37.fsf@posteo.net>
+References: <878q4ihpf8.fsf@disroot.org> <87tsn6pw37.fsf@posteo.net>
+
+Hi martianh, Philip,
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> martianh <martianh@disroot.org> writes:
+>
+>> hi emacs,
+>>
+>> pls CC me in replies, i'm a non-subscriber.
+>
+> CC'ing the maintainer.
+
+Thanks Philip!
+
+>                         Also, it might make sense to move this thread to
+> help-gnu-emacs@gnu.org?
+>
+
+Added to CC, but keeping emacs-devel@ for now.
+
+>> i am considering using oauth2.el to reduce/simplify the authentication
+>> code in mastodon.el, which gives me headaches, but i'm having trouble
+>> understanding some basics.
+>>
+>> i have successfully obtained and stored a token with a registered app,
+>> but i'm unclear on how to fetch the token from the store as needed.
+>>
+>> the main entrypoint has client-secret and client-id as mandatory
+>> parameters, which seems to mean that i have to store them somewhere
+>> else (presumably in a second encrypted plstore, causing more
+>> headaches: client-id and client-secret should be treated like
+>> passwords) in order to be able to fetch the auth token. is this
+>> correct, or is a package expected to handle tokens in some other way?
+>>
+>> mastodon.el also supports multiple accounts, at least for saving auth
+>> credentials. you set username and host to a different value,
+>> reauthenticate, and mastodon.el keeps two sets of credentials, so if
+>> you switch back to the first account you don't have to do the auth
+>> flow again. i didn't manage to try this out due to the previous
+>> hurdle, but i'm curious if this would be (easily) supported by
+>> oath2.el, or does it assume 1 account per service somehow?
+>>
+>> finally, mastodon.el also supports storing auth tokens (but not
+>> client/app data) in auth-sources. i take it oauth2.el doesn't have
+>> support for storing in auth-sources?
+>
+
+I also maintain auth-source-xoauth2-plugin[1] which advices auth-source
+to make use of xoauth2 handling using oauth2.el to handle low-level
+details. It also requires customization to enable xoauth2 in Gnus
+(documented in README.org) but smtpmail should work once the plugin is
+enabled. Some users reported success on using this plugin.
+
+So yes, oauth2.el is a low-level library that focus on the xoauth2
+handling. I hope auth-source-xoauth2-plugin should work for your use
+cases, but do let me know if anything is missing and I'll try to see
+what I can do.
+
+(Also thank you for maintaining mastodon.el!)
+
+[1] https://elpa.gnu.org/packages/auth-source-xoauth2-plugin.html
+
+-- 
+Regards,
+Xiyue Deng
+
+================================================================================
+Date: 2026-10-01T09:18:32+02:00
+From: =?utf-8?Q?Francesco_Potort=C3=AC?= <pot@potorti.it>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <E1xCB3o-00000003TeB-3ZqH@tucano.isti.cnr.it>
+In-Reply-To: <87se2qj6bk.fsf@posteo.net> (thievol@posteo.net)
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org> <E1xAmqw-0000000ByJb-1ClL@tucano.isti.cnr.it>
+ <8733uqljpf.fsf@posteo.net> <86jyo2y5jl.fsf@gnu.org>
+ <87se2qj6bk.fsf@posteo.net>
+
+>[...] "www.rendo-shrimp.de" is an
+>url (even if abbreviated), so in such case why is the link (very) different? I mean if
+>"www.rendo-shrimp.de" is a valid (and safe) url why using something else?
+
+If I understand your question correctly, I have observed two cases when people do that.
+
+One, common in publicity email, newsletters and so on, is gathering user statistics: the real url is unique per user, pointing to a tracking system which provides user statistics.  This means that the user is individually and reliably identified and tracked.
+
+Anopther one, common in istitutional email systems, is security: when I write to some university colleague, for examples, and they reply in html to me while citing my text-only email, I  see that in the cited email all plain text links have been converted to links where the text of the link is the plain text link that I had written, while the url of the link points to a shielding service intended to prevent users from following dangerous links.
+
+================================================================================
+Date: 2026-10-01T09:30:23+02:00
+From: David Ponce <da_vid@orange.fr>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <2c8ba899-2583-4fa9-81f5-dbe36da987af@orange.fr>
+In-Reply-To: <86ik3mxbxd.fsf@gnu.org>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <5cff4691-6d25-4649-9b63-5bdb7c0a4df4@orange.fr>
+ <87v77mmeb6.fsf@gmail.com> <86ik3mxbxd.fsf@gnu.org>
+
+Le 2026-10-01 à 06:49, Eli Zaretskii a écrit :
+>> From: Elijah Gabe Pérez <eg642616@gmail.com>
+>> Cc: zhaodaniu <zhaodaniu1@gmail.com>,  Eli Zaretskii <eliz@gnu.org>,
+>>    emacs-devel@gnu.org
+>> Date: Wed, 30 Sep 2026 18:53:33 -0600
+>>
+>> David Ponce <da_vid@orange.fr> writes:
+>>
+>>> I don't know if that would be too difficult to implement, but I wonder
+>>> if it could make more sense to add a `:thickness' property to the
+>>> `:underline', `overline', and `:strike-through' attributes, to specify
+>>> the decoration thickness.  An integer value would mean a number of
+>>> pixels, while a float would mean a fraction of the font size.  The
+>>> default value (t) would mean the same as currently.
+>>>
+>>> Something like:
+>>>
+>>> :underline (:style S :color C :thickness 1.2)
+>>> :underline [C or t] would mean :underline (:color [C or foreground] :thickness t)
+>>
+>> [...]
+>>
+>> I was thinking the same thing, but I realized it wouldn't work, because
+>> I don't think most package maintainers want to support this property,
+>> and it would be tedious to change the :thickness of each face, so they
+>> look properly in HiDPI.
+>>
+>> Maybe that idea can be properly discussed separately after this patch.
+> 
+> Are there other GUI editors which offer such customizations?  If not,
+> it isn't urgent for us to consider such complications.
+
+I don't use any other editor ;-)
+
+I took a look at KWrite, the KDE editor, but found nothing regarding
+text decorations.  In LibreOffice, it is possible to choose a style
+(simple, double, wave, bold, ...) and a color as character attributes.
+
+However, I found this in the CSS specification:
+<https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-decoration-thickness>
+
+The 'text-decoration-thickness' CSS property sets the stroke thickness
+of the decoration line that is used on text in an element, such as a
+line-through, underline, or overline.
+
+/* Single keyword */
+text-decoration-thickness: auto;
+text-decoration-thickness: from-font;
+
+/* length */
+text-decoration-thickness: 0.1em;
+text-decoration-thickness: 3px;
+
+/* percentage */
+text-decoration-thickness: 10%;
+
+auto
+     The browser chooses an appropriate width for the text decoration
+     line.
+
+from-font
+     If the font file includes information about a preferred thickness,
+     use that value. If the font file doesn't include this information,
+     behave as if auto was set, with the browser choosing an
+     appropriate thickness.
+
+<length>
+     Specifies the thickness of the text decoration line as a <length>,
+     overriding the font file suggestion or the browser default.
+
+<percentage>
+     Specifies the thickness of the text decoration line as a
+     <percentage> of 1em in the current font. A percentage inherits as
+     a relative value, and so therefore scales with changes in the
+     font. The browser must use a minimum of 1 device pixel. For a
+     given application of this property, the thickness is constant
+     across the whole box it is applied to, even if there are child
+     elements with a different font size.
+
+Scaling, as far as I have observed elsewhere applies to the entire
+text, including decorations (this is the case in LibreOffice, for
+example).
+
+================================================================================
+Date: 2026-10-01T09:55:15+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <861pa9yhwc.fsf@gnu.org>
+In-Reply-To: <E1xC8hG-008OIc-Bq@fencepost.gnu.org> (message from Richard
+ Stallman on Thu, 01 Oct 2026 00:47:06 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <875wzw6tuj.fsf@hiperboreo.eu>
+ <999163197c27c902919c0f642755d4f1@gnu.support> <86zex8arct.fsf@gnu.org>
+ <E1xA6de-00Acpi-6L@fencepost.gnu.org> <86eceh8hj1.fsf@gnu.org>
+ <87zex1wsen.fsf@web.de> <86eced36v6.fsf@gnu.org> <877bk5wk66.fsf@web.de>
+ <865wzp30r2.fsf@gnu.org> <87bj9huzxl.fsf@web.de> <8633ut2u8r.fsf@gnu.org>
+ <E1xC8hG-008OIc-Bq@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: arne_bab@web.de, monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> Date: Thu, 01 Oct 2026 00:47:06 -0400
+> 
+>   > > How much choice would I have to add to get accepted?
+> 
+>   > Just one free alternative is IMO enough, if selecting and using it
+>   > doesn't require any jumping through hoops.
+> 
+> The GNU Project's stance is that this is NOT enough.
+
+In that case, the GNU Project's stance is at least not clear, if not
+downright unpublished.  Please make sure it is published and in
+unequivocally clear words in standards.texi, and then we can see what
+it means for Emacs in general and for GNU and nonGNU ELPA in
+particular.  Until the guidance is clearly spelled out in a way that
+cannot be misinterpreted, this discussion is a waste of everyone's
+time.  (It was worth some of its while to find out that there's a gap
+in the current guidance and/or its understanding, but once we
+established that, any further discussions should be delayed until
+standards.texi us updated.)
+
+>   > That is true, but since the Hermes agent is not part of Emacs and is
+>   > not a GNU program, we cannot be held responsible for what it does.
+> 
+> Indeed, we are not responsible for what it does.
+> 
+> We are responsible for deciding properly whether to reference /
+> promote / recommend / mention hermes.el, and what the Hermes agent
+> does is part of the basis for that decision.
+
+Which we did -- based on the existing guidance in standards.texi the
+way we understood and interpreted it.
+
+================================================================================
+Date: 2026-10-01T10:04:00+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86zewxx2xb.fsf@gnu.org>
+In-Reply-To: <E1xC8hz-008OXV-60@fencepost.gnu.org> (message from Richard
+ Stallman on Thu, 01 Oct 2026 00:47:51 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <E1xB0Sl-00B290-KY@fencepost.gnu.org> <864if952he.fsf@gnu.org>
+ <E1xC8hz-008OXV-60@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: emacs-devel@gnu.org
+> Date: Thu, 01 Oct 2026 00:47:51 -0400
+> 
+>                    The Hermes agent is installed and configured separately
+>   > by the user.
+> 
+> Thank you.  But I don't think this affects the conclusion.  The significant
+> point is that using hermes.el requires using the Hermes agent
+
+No, it's the other way around: hermes.el is useful only to people who
+already have the Hermes agent installed.  hermes.el is useless without
+the Hermes agent, but the Hermes agent can be used without hermes.el.
+
+>                   The choice of 3 possible ways to configure it is
+>   > presented by the configuration tool that is part of the Hermes agent,
+> 
+> Ok.
+> 
+>   > and if it is invoked (it doesn't have too, because that's an optional
+>   > step),
+> 
+> I am finding that strange.  If configuring the Hermes agent is optional,
+> what does the Hermes agent DO if you try to use it without configuring it?
+
+I didn't say "without configuring", I said "without invoking the
+configuration tool".  The Hermes agent can be configured by other
+means, bypassing the configuration "wizard".  For example, manually.
+It's similar to Emacs: you can use Customize and have it update your
+init files, or you can edit your init files manually (or by any other
+means).
+
+>            it is done when the Hermes agent (NOT hermes.el the ELPA
+>   > package!) is first run by the user who installed it.  At that time,
+>   > the user should decide how to configure the Hermes agent (again: NOT
+>   > hermes.el the ELPA package).
+> 
+> This suggests (but I'm not sure) that invoking the Hermes agent
+> will tell you you must configure it to proceed.
+
+You should configure it, but there''s more than one way to do so.
+
+> If those are the facts, I would say that the Hermes agent _requires_
+> that the user configure it.  Configuring it is not optional.
+
+It _is_ optional.  But if the Hermes agent is not configured to use
+some LLM, it will not be useful, because the Hermes agent is a
+"harness" for LLMs, a mediator between a model and the user.  It must
+be told which model(s) to use, or it will not be capable of doing
+anything useful.
+
+> (I am not sure that detail makes a difference -- either way, configuring
+> it makes a crucial decision between alternatives, and the Hermes agent
+> recommends each of the alternatives.)
+
+It isn't the Hermes agent that recommends alternatives, it's the
+optional configuration tool.
+
+================================================================================
+Date: 2026-10-01T10:21:28+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86wls1x247.fsf@gnu.org>
+In-Reply-To: <E1xC8iL-008OgH-Ko@fencepost.gnu.org> (message from Richard
+ Stallman on Thu, 01 Oct 2026 00:48:13 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <86mryw2ozt.fsf@sdf.org>
+ <87zf2w3vhh.fsf@posteo.net> <E1wFkpF-0002wc-1j@fencepost.gnu.org>
+ <aem0rKYxtsDAYggA@tuxteam.de> <E1wGqjR-0004B6-NO@fencepost.gnu.org>
+ <ae3aS8qWrhxfsQ34@tuxteam.de>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <E1xC8iL-008OgH-Ko@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: arne_bab@web.de, monnier@iro.umontreal.ca, bugs@gnu.support,
+> 	yandros@gmail.com, emacs-devel@gnu.org
+> Date: Thu, 01 Oct 2026 00:48:13 -0400
+> 
+>   > > If the user, at per own initiative, gives a command to load a package
+>   > > that Emacs did not suggest, then Emacs obeys.
+> 
+>   > Yes.  And similarly if the user configures programs or sites which
+>   > Emacs uses and connects to in a way that runs or connects to non-free
+>   > software.
+> 
+> You left out "at per own initiative", and that makes the crucial difference.
+
+No, I didn't.  Configuring a program is by definition a user's "own
+initiative", because the user decides how to do that and which
+alternatives to choose.
+
+> If the user _at per own initiative_ configures programs or sites which
+> Emacs uses and connects to in a way that runs or connects to non-free
+> software, that is the user's responsibility and not Emacs's
+> responsibility.
+
+That's what happens in the case of hermes.el.
+
+> But if Emacs (or programs Emacs recommends / promotes / suggests)
+> makes a suggestion to configure programs or sites in that way, and the
+> user accepts that suggestion, making that suggestion makes Emacs
+> responsible.  So Emacs should not suggest that.
+
+Neither Emacs nor hermes.el do that.  Not even the Hermes agent does,
+although it is not a GNU program.  It is the user who configures the
+Hermes agent, and at that time the user needs to decide which model(s)
+to use.  Thus, the user is responsible for this configuration.
+
+As another example, consider most modern Web browsers, both free and
+nonfree.  When the user starts typing a site in the URL input box, a
+typical browser will drop down a menu of suggested sites, some based
+on trhe user input history, others based on popular sites.  If this
+menu is also to be considered as recommendations / promotion /
+suggestions, as AFAIU you are saying, then the concept of user's
+choice of a site to go to should change accordingly, and this choice
+can no longer be considered to be user's responsibility.  Then
+invoking any such Web browser from Emacs should also be considered
+problematic at best, if not downright forbidden.  If you disagree with
+this logic, please explain how to distinguish between these
+suggestions by Web browsers and the list of LLMs and list of sites
+shown by the Hermes agent's configuration tool.  Because I don't see
+the difference.
+
+================================================================================
+Date: 2026-10-01T10:23:20+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86v77lx213.fsf@gnu.org>
+In-Reply-To: <E1xC8iA-008OcX-Ea@fencepost.gnu.org> (message from Richard
+ Stallman on Thu, 01 Oct 2026 00:48:02 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <E1x8qdu-000GBU-Io@fencepost.gnu.org> <87qzimey1c.fsf@thanosapollo.org>
+ <87y0ct97p3.fsf@web.de> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <86mrt8cglb.fsf@gnu.org> <E1xAJIO-006qoz-6J@fencepost.gnu.org>
+ <861pag8qxj.fsf@gnu.org> <ef13b95e634e70b51cb22f210f0d7edd@gnu.support>
+ <86se2w5gmy.fsf@gnu.org> <03540d744b0496fc2406f90ea97cb829@gnu.support>
+ <357746ab-b7c8-483e-b06b-e435b29e9f3e@gutov.dev>
+ <E1xC8iA-008OcX-Ea@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: bugs@gnu.support, emacs-devel@gnu.org
+> Date: Thu, 01 Oct 2026 00:48:02 -0400
+> 
+>   > There is no reason for you to assume you understand GNU Coding Standards 
+>   > than the maintainers of Emacs.
+> 
+> My observation is that he understands certain crucial parts
+> that many others have misunderstood.
+
+Our understanding is based on careful reading of standards.texi, and
+interpreting and applying what it says to the current situation.
+
+================================================================================
+Date: 2026-10-01T10:26:08+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <86tsn5x1wf.fsf@gnu.org>
+In-Reply-To: <jwvpkxui2vj.fsf-monnier+emacs@gnu.org> (emacs-devel@gnu.org)
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <jwvpkxui2vj.fsf-monnier+emacs@gnu.org>
+
+> Date: Wed, 30 Sep 2026 22:17:17 -0400
+> From: Stefan Monnier via "Emacs development discussions." <emacs-devel@gnu.org>
+> 
+> > Yes, so I think we still need a flag to control this behavior. However,
+> > naming it is difficult.  The xxx-text-scaling-p template would be:
+> >
+> > - overline-text-scaling-p
+> > - strike-through-text-scaling-p
+> > - overline-and-strike-through-text-scaling-p
+> 
+> "-p" stands for "predicate", i.e. a function that returns a boolean, not
+> a boolean variable.  We have such mistakes already, but it's not
+> a reason to make it worse.
+> 
+> The ELisp manual recommends the "-flag" suffix for boolean variables.
+> I personally prefer no suffix at all since it's common enough for
+> boolean variables to be later extended to support more than 2 values.
+
+I'm okay with -flag, but removing a suffix is IMO a move for the
+worse, for the reasons I explained.
+
+================================================================================
+Date: 2026-10-01T10:33:34+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <86qzi9x1k1.fsf@gnu.org>
+In-Reply-To: <87se2qj6bk.fsf@posteo.net> (message from Thierry Volpiatto on
+ Thu, 01 Oct 2026 06:14:26 +0000)
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org> <E1xAmqw-0000000ByJb-1ClL@tucano.isti.cnr.it>
+ <8733uqljpf.fsf@posteo.net> <86jyo2y5jl.fsf@gnu.org>
+ <87se2qj6bk.fsf@posteo.net>
+
+> From: Thierry Volpiatto <thievol@posteo.net>
+> Cc: Thierry Volpiatto <thievol@posteo.net>,  pot@potorti.it,
+>   emacs-devel@gnu.org,  tailorpaul@pm.me,  juri@linkov.net,  rms@gnu.org
+> Date: Thu, 01 Oct 2026 06:14:26 +0000
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > I don't know.  How about if you step with a debugger through the code
+> > and see why it doesn't mark that?
+> 
+> I didn't step through emacs code exactly but tried this in my own code:
+> 
+>     (textsec-suspicious-p "https://kqnc-zcmp.maillist-manage.eu/click/12bc5c541e85ca1f/12bc5c541e849f2a" 'url)
+> 
+> is returning nil, then
+> 
+>     (textsec-suspicious-p (cons "https://kqnc-zcmp.maillist-manage.eu/click/12bc5c541e85ca1f/12bc5c541e849f2a"
+>                                 "www.rendo-shrimp.de") 'link)
+> 
+> is returning nil as well unless prefixing "www.rendo-shrimp.de" with "https://".
+> 
+> > My guess is that it isn't showing a full URL, like the "unsubscribe"
+> > button later on.
+> 
+> Yes, but "unsubscribe" is not an url whereas "www.rendo-shrimp.de" is an
+> url (even if abbreviated), so in such case why is the link (very) different? I mean if
+> "www.rendo-shrimp.de" is a valid (and safe) url why using something else?
+
+How do we tell that "www.rendo-shrimp.de" is a URL whereas "foobar" is
+not? is "rendo-shrimp.de" also a URL, and if so, why? what about
+"google" or "Wikipedia"?
+
+textsec.el currently decides whether it's a URL by looking at the
+return value of url-generic-parse-url.  If you can suggest some
+heuristics to improve that which will not run a significant risk of
+false positives, please do, and we can then consider installing it.
+Features like this must not produce too many false positives, or else
+users will disable them or stop paying attention to them.
+
+================================================================================
+Date: 2026-10-01T10:43:58+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <86mrsxx12p.fsf@gnu.org>
+In-Reply-To: <E1xCB3o-00000003TeB-3ZqH@tucano.isti.cnr.it> (message from
+ Francesco =?utf-8?Q?Potort=C3=AC?= on Thu, 01 Oct 2026 09:18:32 +0200)
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org> <E1xAmqw-0000000ByJb-1ClL@tucano.isti.cnr.it>
+ <8733uqljpf.fsf@posteo.net> <86jyo2y5jl.fsf@gnu.org>
+ <87se2qj6bk.fsf@posteo.net> <E1xCB3o-00000003TeB-3ZqH@tucano.isti.cnr.it>
+
+> From: Francesco Potortì <pot@potorti.it>
+> Date: Thu, 01 Oct 2026 09:18:32 +0200
+> Cc: rms@gnu.org,
+> 	juri@linkov.net,
+> 	tailorpaul@pm.me,
+> 	emacs-devel@gnu.org,
+> 	Thierry Volpiatto <thievol@posteo.net>,
+> 	Eli Zaretskii <eliz@gnu.org>
+> 
+> >[...] "www.rendo-shrimp.de" is an
+> >url (even if abbreviated), so in such case why is the link (very) different? I mean if
+> >"www.rendo-shrimp.de" is a valid (and safe) url why using something else?
+> 
+> If I understand your question correctly, I have observed two cases when people do that.
+> 
+> One, common in publicity email, newsletters and so on, is gathering user statistics: the real url is unique per user, pointing to a tracking system which provides user statistics.  This means that the user is individually and reliably identified and tracked.
+
+If we want to flag such cases, it should be a user option (and that's
+besides the need to have code which detects them, see my other
+message).
+
+> Anopther one, common in istitutional email systems, is security: when I write to some university colleague, for examples, and they reply in html to me while citing my text-only email, I  see that in the cited email all plain text links have been converted to links where the text of the link is the plain text link that I had written, while the url of the link points to a shielding service intended to prevent users from following dangerous links.
+
+Likewise here.  (And I expect these cases to be much harder to process
+correctly, i.e. without too many false positives.)
+
+================================================================================
+Date: 2026-10-01T11:24:14+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86jyo1wz7l.fsf@gnu.org>
+In-Reply-To: <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> (message from Richard
+ Stallman on Thu, 01 Oct 2026 00:49:25 -0400)
+References: <86jyu4y0oy.fsf@sdf.org>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support> <87se8ij90y.fsf@posteo.net>
+ <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org>
+ <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org>
+ <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: emacs-devel@gnu.org
+> Date: Thu, 01 Oct 2026 00:49:25 -0400
+> 
+>   > > While Hermes Agent is free software, from the viewpoint of GNU free 
+>   > > software philosophy it is effectively shackled to a SaaSS business 
+>   > > model.
+> 
+>   > I disagree with this harsh characterization, and in any case, that's
+>   > not our concern here, as long as Hermes is a free program.
+> 
+> Eli, this is the crucial point where you have misunderstood the
+> GNU Project standards about referring to nonfree programs.
+> The misunderstanding is not about the Hermes agent in particular,
+> but about the standards themselves.
+
+If I misunderstood the GNU standards, the standards need to be
+clarified for such misunderstanding not to be possible.  My
+understanding or misunderstanding is based on careful reading of
+standards.texi and interpreting what it says in the context of this
+and similar issues and decisions.
+
+> Given a free program P1, whether it is ok for a GNU package to
+> reference / recommend / promote / mention the program P1 _depends_ on
+> whether P1 itself references / recommends / promotes / mentions
+> nonfree programs in a significant way.
+
+What if P1 communicates with or invokes or depends on a free program
+P2, which in turn communicates with or invokes or depends on a free
+program P3, etc. etc.?  Does this potentially unlimited chain of
+dependencies also affect a GNU package that references / recommends /
+promotes / mentions the program P1?  If it does, then I cannot find
+any clear guidance for such cases.  All I see in the node "References"
+is (1) a description if the immediate dependency on P1 (which in the
+case of the Hermes agent is a free program), and (2) the following
+text:
+
+     Sometimes a program is free software in itself but depends on a
+  nonfree platform in order to run.  For instance, it used to be the case
+  that many Java programs depended on some nonfree Java libraries.  (See
+  <https://www.gnu.org/philosophy/java-trap.html>.)  To recommend or
+  promote such a program is to promote the other programs it needs;
+  therefore, judge mentions of the former as if they were mentions of the
+  latter.  For this reason, we were careful about listing Java programs in
+  the Free Software Directory: we wanted to avoid promoting the nonfree
+  Java libraries.
+
+     Java no longer has this problem, but the general principle will
+  remain the same: don't recommend, promote or legitimize programs or
+  services whose use depends on running some nonfree software or
+  dis-service.
+
+This specifically talks about nonfree platforms or programs or
+services, which is not the case in point: the Hermes agent is a free
+program.  It also fails to mention the strict criteria for "recommend
+or promote", about which you are now saying that a simple mentioning
+is enough to be considered as "promotion"; the single example in the
+text above says "depends", which is much stronger (the Hermes agent
+does not "depend" on any of the nonfree sites or LLMs).  If the
+situation with the chain of dependencies in the case of Hermes, and
+any longer chain of dependencies, must be treated as forbidden, please
+make sure standards.texi says that explicitly.  That is, for example,
+if the case of dependencies like this:
+
+  GNU package -> P1 -> P2 -> P3 -> P4 -> P5 -> P6 -> P7 -> nonfree
+
+where each Pn is a free program, means such a GNU package violates the
+GNU standards, please augment the text in standards.texi to make it
+unequivocally clear.  Please also make very clear there that "->" in
+the above diagram means _any_ reference in any part of the
+corresponding program Pn or its documentation, even if there are
+user-selectable alternatives which avoid ending up with "nonfree" at
+the end.  Currently, such cases are left vaguely defined at best, so I
+used my own understanding of the user's responsibility to configure
+the dependencies so as to avoid nonfree stuff.  If this is incorrect,
+it is not my fault, it's the fault of standards.texi's ambiguous and
+incomplete wording.  It must be fixed ASAP.
+
+After standards.texi is fixed, we can see what its updated guidance
+means for GNU and nonGNU ELPA and for Emacs in general.
+
+> Now I think I know what it was trying to say.  It was trying to state
+> a condition for accepting packages, something like, "As long as foo.el
+> offers to use at least one free alternative, it is ok, regardless of
+> what nonfree alternatives it may also offer."  The same thing you
+> were saying just now.
+
+Yes, because in the absence of a specific clear guidance, this is how
+we understood the policies.
+
+> That crucially disagrees with the GNU Project's actual policy on
+> references to nonfree programs.  Our policy is stricter than that.
+> This misstatement needs to be clarified.
+
+Please do, and let's take it from there.
+
+================================================================================
+Date: 2026-10-01T11:34:49+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: master cc7a4dfbf17 1/2: Improve directory-files-recursively
+Message-ID: <87ece93gsm.fsf@athena.silentflame.com>
+In-Reply-To: <87ik3n3jo9.fsf@contovou.net>
+References: <179051612280.10415.12945189822585522893@vcs2.savannah.gnu.org>
+ <20260927133523.DFC5DC0EFFD@vcs2.savannah.gnu.org>
+ <87cxtx7gio.fsf@athena.silentflame.com> <86bj9h36hk.fsf@gnu.org>
+ <87h5j85sbs.fsf@athena.silentflame.com> <87ik3n3jo9.fsf@contovou.net>
+
+Basil L. Contovounesios [29/Sep 10:08pm +02] wrote:
+> Sean Whitton [2026-09-29 10:18 +0100] wrote:
+>> Eli Zaretskii [28/Sep  3:28pm +03] wrote:
+>>> It was, see bug#80915, referenced in the commit log message.  It's
+>>> just that it was several months ago, and Basil is now back in
+>>> business.
+>>
+>> Whoops.  Apologies for missing the bug annotation, Basil.
+>
+> No worries.
+>
+>> I would still like to raise my questions about this:
+>>
+>>> For example, should we consider using a &key argument?  Perhaps not
+>>> because there are already so many optional arguments -- but all those
+>>> optional arguments isn't a great situation.
+>
+> Can't say I love the long arglist either (and it wasn't my original plan
+> to extend it), but I'm also in no hurry to change the function's calling
+> convention (it has a whopping 25% fewer parameters than completing-read!).
+>
+> OTOH, the current refactor should make it slightly less painful to add
+> keyword arguments given sufficient demand.
+
+Well, let's consider it a follow-up change proposal.
+
+I think that this function has reached the point, like sort, where it
+should switch to keyword arguments.
+
+I'm up for doing the work, any strong objections?
+
+>>> I'd also like to hear the motivating use cases for sorting where it's
+>>> important to be able to pass a parameter, instead of just calling sort
+>>> on the resulting list.  The latter would avoid us adding yet another
+>>> optional argument.
+>
+> Sorting the final list is not equivalent to sorting each individual
+> subdir, at least not without relatively expensive post-processing.
+>
+> The whole bug report was due to the old code sorting a little too
+> coarsely: it didn't strip trailing directory separators, so could place
+> "foo-bar/" before "foo/" where "foo" would otherwise precede "foo-bar".
+>
+> Adding a means to control this (as a compatibility escape hatch and/or
+> as a new feature) seemed like only a small compromise / price to pay.
+
+Got it, thanks.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-01T12:16:35+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: master cac27d1c795: Fix scroll_run_hook on several platforms
+Message-ID: <87qzi920ak.fsf@athena.silentflame.com>
+In-Reply-To: <jwv7bk2ls4a.fsf-monnier+emacs@gnu.org>
+References: <179077571338.14906.16226153371992544124@vcs2.savannah.gnu.org>
+ <20260930134153.E37B5C0EFF6@vcs2.savannah.gnu.org>
+ <jwv7bk2ls4a.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier [30/Sep 10:41am -04] wrote:
+>>     Fix scroll_run_hook on several platforms
+>>
+>>     * src/haikuterm.c (haiku_scroll_run):
+>>     * src/androidterm.c (android_scroll_run):
+>>     * src/pgtkterm.c (pgtk_scroll_run):
+>>     * src/xterm.c (x_scroll_run):
+>>     * src/w32term.c (w32_scroll_run): Don't copy pixels on screen
+>>     outside of the window's text area.  (Bug#81585)
+>
+> I wish we had a plan to consolidate that duplicated code.
+
+In this case I am inclined to blame C.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-01T12:19:49+02:00
+From: david <davidimagid@gmail.com>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <CAL6FEzy7MtEfh_Mg72jhhdOnt52RKcXypuZ+M3G9-yYoE=YW3g@mail.gmail.com>
+In-Reply-To: <861pa9yhwc.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <875wzw6tuj.fsf@hiperboreo.eu> <999163197c27c902919c0f642755d4f1@gnu.support>
+ <86zex8arct.fsf@gnu.org> <E1xA6de-00Acpi-6L@fencepost.gnu.org>
+ <86eceh8hj1.fsf@gnu.org> <87zex1wsen.fsf@web.de> <86eced36v6.fsf@gnu.org>
+ <877bk5wk66.fsf@web.de> <865wzp30r2.fsf@gnu.org> <87bj9huzxl.fsf@web.de>
+ <8633ut2u8r.fsf@gnu.org> <E1xC8hG-008OIc-Bq@fencepost.gnu.org>
+ <861pa9yhwc.fsf@gnu.org>
+
+Eli, you and the other maintainers and any circumstantial maintainer of
+emacs should ask when something can be morally questionable or go against
+the policies of the GNU project.
+
+I know that sometimes your work overwhelms you and you're even capable of
+changing a comma in another maintainer's package without consulting them
+even though the package is tremendously active and willing to collaborate,
+but as for moral issues and project policies, the most recommendable thing
+is to ask, and I hope you share with me what I want to mean here with
+"recommend." Cheers.
+
+David
+
+On Thu, Oct 1, 2026, 3:56 AM Eli Zaretskii <eliz@gnu.org> wrote:
+
+> > From: Richard Stallman <rms@gnu.org>
+> > Cc: arne_bab@web.de, monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> > Date: Thu, 01 Oct 2026 00:47:06 -0400
+> >
+> >   > > How much choice would I have to add to get accepted?
+> >
+> >   > Just one free alternative is IMO enough, if selecting and using it
+> >   > doesn't require any jumping through hoops.
+> >
+> > The GNU Project's stance is that this is NOT enough.
+>
+> In that case, the GNU Project's stance is at least not clear, if not
+> downright unpublished.  Please make sure it is published and in
+> unequivocally clear words in standards.texi, and then we can see what
+> it means for Emacs in general and for GNU and nonGNU ELPA in
+> particular.  Until the guidance is clearly spelled out in a way that
+> cannot be misinterpreted, this discussion is a waste of everyone's
+> time.  (It was worth some of its while to find out that there's a gap
+> in the current guidance and/or its understanding, but once we
+> established that, any further discussions should be delayed until
+> standards.texi us updated.)
+>
+> >   > That is true, but since the Hermes agent is not part of Emacs and is
+> >   > not a GNU program, we cannot be held responsible for what it does.
+> >
+> > Indeed, we are not responsible for what it does.
+> >
+> > We are responsible for deciding properly whether to reference /
+> > promote / recommend / mention hermes.el, and what the Hermes agent
+> > does is part of the basis for that decision.
+>
+> Which we did -- based on the existing guidance in standards.texi the
+> way we understood and interpreted it.
+>
+>
+
+================================================================================
+Date: 2026-10-01T12:45:33+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master cac27d1c795: Fix scroll_run_hook on several platforms
+Message-ID: <86a4oxwvg2.fsf@gnu.org>
+In-Reply-To: <87qzi920ak.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Thu, 01 Oct 2026 11:16:35 +0100)
+References: <179077571338.14906.16226153371992544124@vcs2.savannah.gnu.org>
+ <20260930134153.E37B5C0EFF6@vcs2.savannah.gnu.org>
+ <jwv7bk2ls4a.fsf-monnier+emacs@gnu.org>
+ <87qzi920ak.fsf@athena.silentflame.com>
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Cc: Eli Zaretskii <eliz@gnu.org>
+> Date: Thu, 01 Oct 2026 11:16:35 +0100
+> 
+> Stefan Monnier [30/Sep 10:41am -04] wrote:
+> >>     Fix scroll_run_hook on several platforms
+> >>
+> >>     * src/haikuterm.c (haiku_scroll_run):
+> >>     * src/androidterm.c (android_scroll_run):
+> >>     * src/pgtkterm.c (pgtk_scroll_run):
+> >>     * src/xterm.c (x_scroll_run):
+> >>     * src/w32term.c (w32_scroll_run): Don't copy pixels on screen
+> >>     outside of the window's text area.  (Bug#81585)
+> >
+> > I wish we had a plan to consolidate that duplicated code.
+> 
+> In this case I am inclined to blame C.
+
+Not all the blame is on C.  Part of the blame is on us: the job of
+separating this and other similar code into the common and
+backend-specific parts is not always easy and is extremely boring.  So
+I'm not surprised that we didn't yet have a volunteer for this.
+
+================================================================================
+Date: 2026-10-01T12:50:01+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <868q4hwv8m.fsf@gnu.org>
+In-Reply-To: <CAL6FEzy7MtEfh_Mg72jhhdOnt52RKcXypuZ+M3G9-yYoE=YW3g@mail.gmail.com>
+ (message from david on Thu, 1 Oct 2026 06:19:49 -0400)
+References: <86jyu4y0oy.fsf@sdf.org> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <875wzw6tuj.fsf@hiperboreo.eu> <999163197c27c902919c0f642755d4f1@gnu.support>
+ <86zex8arct.fsf@gnu.org> <E1xA6de-00Acpi-6L@fencepost.gnu.org>
+ <86eceh8hj1.fsf@gnu.org> <87zex1wsen.fsf@web.de> <86eced36v6.fsf@gnu.org>
+ <877bk5wk66.fsf@web.de> <865wzp30r2.fsf@gnu.org> <87bj9huzxl.fsf@web.de>
+ <8633ut2u8r.fsf@gnu.org> <E1xC8hG-008OIc-Bq@fencepost.gnu.org>
+ <861pa9yhwc.fsf@gnu.org>
+ <CAL6FEzy7MtEfh_Mg72jhhdOnt52RKcXypuZ+M3G9-yYoE=YW3g@mail.gmail.com>
+
+> From: david <davidimagid@gmail.com>
+> Date: Thu, 1 Oct 2026 06:19:49 -0400
+> Cc: Richard Stallman <rms@gnu.org>, Stefan Monnier <monnier@iro.umontreal.ca>, 
+> 	"Emacs-devel@gnu.org" <emacs-devel@gnu.org>
+> 
+> Eli, you and the other maintainers and any circumstantial maintainer of emacs should ask when something can
+> be morally questionable or go against the policies of the GNU project.
+
+We cannot base our work in Emacs development and maintenance on asking
+about every decision.  RMS appoints maintainers so that projects could
+be developed without being critically dependent on asking for his
+guidance in each and every case.  We do ask when unsure, but in the
+case in point there was no such doubt.  When there's no doubt, asking
+is redundant and serves no useful purpose.
+
+================================================================================
+Date: 2026-10-01T13:20:10+02:00
+From: david <davidimagid@gmail.com>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <CAL6FEzzUw_hHS3_aBanUUtv+XJ7aYrG3vwxchbKwmHswhFcKHQ@mail.gmail.com>
+In-Reply-To: <868q4hwv8m.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <875wzw6tuj.fsf@hiperboreo.eu> <999163197c27c902919c0f642755d4f1@gnu.support>
+ <86zex8arct.fsf@gnu.org> <E1xA6de-00Acpi-6L@fencepost.gnu.org>
+ <86eceh8hj1.fsf@gnu.org> <87zex1wsen.fsf@web.de> <86eced36v6.fsf@gnu.org>
+ <877bk5wk66.fsf@web.de> <865wzp30r2.fsf@gnu.org> <87bj9huzxl.fsf@web.de>
+ <8633ut2u8r.fsf@gnu.org> <E1xC8hG-008OIc-Bq@fencepost.gnu.org>
+ <861pa9yhwc.fsf@gnu.org>
+ <CAL6FEzy7MtEfh_Mg72jhhdOnt52RKcXypuZ+M3G9-yYoE=YW3g@mail.gmail.com>
+ <868q4hwv8m.fsf@gnu.org>
+
+Arguing when you don't see any problem is, of course, a waste of time.
+
+David
+
+On Thu, Oct 1, 2026, 6:50 AM Eli Zaretskii <eliz@gnu.org> wrote:
+
+> > From: david <davidimagid@gmail.com>
+> > Date: Thu, 1 Oct 2026 06:19:49 -0400
+> > Cc: Richard Stallman <rms@gnu.org>, Stefan Monnier <
+> monnier@iro.umontreal.ca>,
+> >       "Emacs-devel@gnu.org" <emacs-devel@gnu.org>
+> >
+> > Eli, you and the other maintainers and any circumstantial maintainer of
+> emacs should ask when something can
+> > be morally questionable or go against the policies of the GNU project.
+>
+> We cannot base our work in Emacs development and maintenance on asking
+> about every decision.  RMS appoints maintainers so that projects could
+> be developed without being critically dependent on asking for his
+> guidance in each and every case.  We do ask when unsure, but in the
+> case in point there was no such doubt.  When there's no doubt, asking
+> is redundant and serves no useful purpose.
+>
+
+================================================================================
+Date: 2026-10-01T14:35:06+02:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+In-Reply-To: <86jyo1wz7l.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org>
+ <b790167d00f5a6c7a65d773cabfa4720@gnu.support>
+ <87se8ij90y.fsf@posteo.net> <E1wHwQU-0005Pt-6w@fencepost.gnu.org>
+ <jwvse8d6tfe.fsf-monnier+emacs@gnu.org> <E1wJ16P-0002x2-Ts@fencepost.gnu.org>
+ <jwvik9529sk.fsf-monnier+emacs@gnu.org>
+ <CAO2hHWYJrVfcTf7aBH2gjz0QJr0EF_ydMQ0AMZ5SgXennq9tXQ@mail.gmail.com>
+ <jwvy0i0y4rm.fsf-monnier+emacs@gnu.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support>
+ <865wzzf7ba.fsf@gnu.org> <f9317a4974acb2df2dbcd248de549639@gnu.support>
+ <861panf0to.fsf@gnu.org> <E1xC8jV-008Oyq-Fl@fencepost.gnu.org>
+ <86jyo1wz7l.fsf@gnu.org>
+
+On Thu, Oct 1, 2026 at 5:24 AM Eli Zaretskii <eliz@gnu.org> wrote:
+
+> > From: Richard Stallman <rms@gnu.org>
+> > Cc: emacs-devel@gnu.org
+> > Date: Thu, 01 Oct 2026 00:49:25 -0400
+> >
+>   If the
+> situation with the chain of dependencies in the case of Hermes, and
+> any longer chain of dependencies, must be treated as forbidden, please
+> make sure standards.texi says that explicitly.  That is, for example,
+> if the case of dependencies like this:
+>
+>   GNU package -> P1 -> P2 -> P3 -> P4 -> P5 -> P6 -> P7 -> nonfree
+>
+
+This also begs this hypothetical: if Hermes (not hermes.el) currently was
+compliant, recommending/steering only to LLMs currently GNU acceptable (I'm
+not arguing ATM that is is or isn't), and then someone on the Hermes team
+changed it to recommending something unacceptable (or merely
+objectionable?), is the Emacs team responsible for such ongoing accounting
+of downstream dependencies?
+
+================================================================================
+Date: 2026-10-01T16:02:03+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Getting rid of pathologically slow regexp matches
+Message-ID: <jwv1pa9r14c.fsf-monnier+emacs@gnu.org>
+In-Reply-To: 
+References: 
+
+Our regexp engine is using a backtracking approach, which has all kinds
+of benefits but means that it does not enjoy the nice linear-time
+complexity that theoretical CS says should apply to the problem of
+regexp matching.
+
+In practice this is usually not a problem: the time is almost always
+linear anyway, and the backtracking approach has a fairly nice constant
+factor, so all is well.  *Except* when it isn't: for those regexps that
+can match the same string in many different ways (e.g. "a*a*a*" or
+"(a*)*"), we hit the non-linear part of our algorithm which is typically
+experienced by the end user as "Emacs froze" (because some font-lock
+regexp bumped into a somewhat unusual line that hit that pathological
+spot so the match takes minutes instead of a fraction of a second).
+
+I have pushed to `scratch/regex-memoize` a patch which purports to fix
+this problem by memoizing the failures during backtracking, so we get
+back the linear-time complexity even for those nasty regexps.
+
+I've been using a similar patch for a few years locally but it had
+a fairly high cost in the "normal" case, so it seemed inappropriate for
+`master`, but I have now refined the patch with enough "fastpath" that
+the normal case is almost as fast as before in my tests:
+
+I have found one test where I still see a 26% slowdown when running on
+an ARM Cortex-A55 (a low-power in-order CPU), but in x86 CPUs the
+slowdown is below 10% on all my tests (and for most tests there is
+simply no measurable performance difference or a slight speed up,
+except of course for those tests that bump into the pathological
+behavior where the new code trounces the old one).
+
+I'd be interested to hear feedback from people out there who may have
+benchmarks of their own.  For the curious I attached the current patch.
+
+
+=== Stefan
+
