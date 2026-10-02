@@ -1,0 +1,1818 @@
+emacs-devel messages from 2026-10-01T18:15:00+02:00 to 2026-10-02T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-01T18:50:07+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+ (llm-vertex.el)
+Message-ID: <878q4hpdq9.fsf@posteo.net>
+In-Reply-To: <CAM6wYYJshTz2oFucZKSbhEEPX244QzQDr+mq2-nC8hs0wgg11w@mail.gmail.com>
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <87zex2rhvp.fsf@posteo.net>
+ <fb5475e64bb9b14237df505506831f7e@gnu.support>
+ <87v77qr7v9.fsf@posteo.net>
+ <ea681cf191e08c6344992a9f07a33752@gnu.support>
+ <86tsn93jqe.fsf@gnu.org>
+ <dd4a8dbd52cea52bf24cdd9717418e21@gnu.support>
+ <864if92v4j.fsf@gnu.org>
+ <CAN+1HbohTWhLgv1k+6=eRMk6nJFu-gym6sOyZh20hZRF2j=kmw@mail.gmail.com>
+ <E1xC8hF-008OIJ-JL@fencepost.gnu.org>
+ <CAM6wYYJshTz2oFucZKSbhEEPX244QzQDr+mq2-nC8hs0wgg11w@mail.gmail.com>
+
+Andrew Hyatt <ahyatt@gmail.com> writes:
+
+> On Thu, Oct 1, 2026 at 12:47 AM Richard Stallman <rms@gnu.org> wrote:
+>
+>> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+>> [[[ whether defending the US Constitution against all enemies,     ]]]
+>> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>>
+>>   >   If you have an issue with the llm package, engage Andrew here
+>>   > https://github.com/ahyatt/llm/issues
+>>
+>> I just tested that myself.  I visited that page and clicked on New
+>> Issue.  It did nothing.
+>>
+>> Then I clicked on Sign Up and it said "Please enable JS and disable
+>> any ad blocker."  (JS was in fact enabled, but LibreJS was blocking JS
+>> that lacks a free license.)
+>>
+>> This confirms that referring to GitHub for communicating with a
+>> developer is a way of saying, "Go jump in the nonfree software lake."
+>
+>
+> It should be just an additional step. My email is included in my Github
+> profile, linked from the llm repository, and getting to that requires no
+> javascript. I’m happy to communicate about any issue through email.
+
+And, as is conventional with all packages, included in the metadata
+listed in describe-package.
+
+================================================================================
+Date: 2026-10-01T19:00:47+02:00
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+Subject: [NonGNU ELPA] New package: ebuild-mode
+Message-ID: <uld8hgxts@gentoo.org>
+In-Reply-To: 
+References: 
+
+I'd like to propose ebuild-mode for inclusion in NonGNU ELPA.
+
+This collection of modes will help the user to efficiently write and
+edit ebuilds, eclasses and other files that are specific to Gentoo,
+a meta-distribution with various targets (GNU/Linux distribution,
+prefixed environments in other operating systems, and integration
+of other kernels and userlands like the BSDs or the GNU Hurd).
+
+Ebuilds describe the build process and dependencies of a software
+package to compile and install it automatically under the control of
+a package manager.  They are simple text files based on Bash scripts.
+Eclasses are comparable to libraries providing generic functions that
+ebuilds can use by sourcing the eclass on request.
+
+The package provides:
+- ebuild-mode and ebuild-eclass-mode: major modes to edit the above
+  two file types, with font-lock syntax highlighting, completion of
+  package manager and eclass function names, KEYWORDS manipulation,
+  creation of new ebuilds from a skeleton, and interfaces to Portage,
+  pkgdev and pkgcheck.
+- ebuild-repo-mode: minor mode for files in an ebuild repository;
+  sets up some editing conventions like tab-width, fixes whitespace
+  and updates copyright years on save.
+- devbook-mode: editing the Gentoo Devmanual (DevBook XML).
+- gentoo-newsitem-mode: editing GLEP 42 news items.
+- glep-mode: editing Gentoo Linux Enhancement Proposals (GLEPs).
+- ebuild-mode.texi: Texinfo manual.
+
+Repository:
+- Git clone: https://anongit.gentoo.org/git/proj/ebuild-mode.git
+- Gitweb: https://gitweb.gentoo.org/proj/ebuild-mode.git/
+
+Authors: Matthew Kennedy, Diego Pettenò, Christian Faulhammer, Ulrich Müller
+Maintainer: <emacs@gentoo.org>
+Contents: multiple files
+Version: 1.87 (tagged as ebuild-mode-1.87 in Git)
+License: GNU General Public License, version 2 or any later version
+
+Dependencies:
+- GNU Emacs 26.3 or XEmacs 21.5.35
+- no other dependencies on Emacs Lisp packages
+- optionally uses tty-format (https://user42.tuxfamily.org/tty-format/)
+
+The package byte-compiles without any errors or warnings and passes
+all its tests on Emacs 26 to 31, Emacs from Git, and XEmacs 21.5.
+
+ebuild-mode was first released in 2006 and is widely used by Gentoo
+developers.  It is distributed in Gentoo as app-emacs/ebuild-mode
+(and app-xemacs/ebuild-mode), and I have maintained it since 2007.
+
+Any feedback about the package is welcome, in particular about any
+changes necessary before inclusion in NonGNU ELPA.
+
+Thanks in advance,
+Ulrich
+
+================================================================================
+Date: 2026-10-01T19:58:51+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <jwvpkxtpanp.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <E1xCB3o-00000003TeB-3ZqH@tucano.isti.cnr.it> (message from
+ Francesco =?windows-1252?Q?Potort=EC?= <pot@potorti.it> on Thu, 01 Oct 2026
+ 09:18:32 +0200)
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org> <E1xAmqw-0000000ByJb-1ClL@tucano.isti.cnr.it>
+ <8733uqljpf.fsf@posteo.net> <86jyo2y5jl.fsf@gnu.org>
+ <87se2qj6bk.fsf@posteo.net>
+ <E1xCB3o-00000003TeB-3ZqH@tucano.isti.cnr.it>
+
+> Anopther one, common in istitutional email systems, is security: when
+> I write to some university colleague, for examples, and they reply in html
+> to me while citing my text-only email, I  see that in the cited email all
+> plain text links have been converted to links where the text of the link is
+> the plain text link that I had written, while the url of the link points to
+> a shielding service intended to prevent users from following
+> dangerous links.
+
+Yeah, that's a terrible practice.  It makes *all* links look like the
+dangerous links so you can't tell any more and have no other recourse
+than to click on the link.  Sometimes you get lucky and the original
+link can still be extracted from the mangled link without contacting the
+"claimed to be secure" man-in-middle.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-01T19:59:30+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: ebuild-mode
+Message-ID: <87mrsxqp33.fsf@posteo.net>
+In-Reply-To: <uld8hgxts@gentoo.org>
+References: <uld8hgxts@gentoo.org>
+
+Hi,
+
+Ulrich Müller <ulm@gentoo.org> writes:
+
+> I'd like to propose ebuild-mode for inclusion in NonGNU ELPA.
+>
+> This collection of modes will help the user to efficiently write and
+> edit ebuilds, eclasses and other files that are specific to Gentoo,
+> a meta-distribution with various targets (GNU/Linux distribution,
+> prefixed environments in other operating systems, and integration
+> of other kernels and userlands like the BSDs or the GNU Hurd).
+>
+> Ebuilds describe the build process and dependencies of a software
+> package to compile and install it automatically under the control of
+> a package manager.  They are simple text files based on Bash scripts.
+> Eclasses are comparable to libraries providing generic functions that
+> ebuilds can use by sourcing the eclass on request.
+>
+> The package provides:
+> - ebuild-mode and ebuild-eclass-mode: major modes to edit the above
+>   two file types, with font-lock syntax highlighting, completion of
+>   package manager and eclass function names, KEYWORDS manipulation,
+>   creation of new ebuilds from a skeleton, and interfaces to Portage,
+>   pkgdev and pkgcheck.
+> - ebuild-repo-mode: minor mode for files in an ebuild repository;
+>   sets up some editing conventions like tab-width, fixes whitespace
+>   and updates copyright years on save.
+> - devbook-mode: editing the Gentoo Devmanual (DevBook XML).
+> - gentoo-newsitem-mode: editing GLEP 42 news items.
+> - glep-mode: editing Gentoo Linux Enhancement Proposals (GLEPs).
+> - ebuild-mode.texi: Texinfo manual.
+
+To be clear, this is supposed to be a single package including all of
+these files?  I think that would be the right approach, but I just want
+to be sure.
+
+> Repository:
+> - Git clone: https://anongit.gentoo.org/git/proj/ebuild-mode.git
+> - Gitweb: https://gitweb.gentoo.org/proj/ebuild-mode.git/
+
+The code looks good, my main points would be:
+
+- In ebuild-mode.el to add an explicit an
+
+  ;; Package-Requires: ((emacs "26.3"))
+
+  pseudo header, so that package.el can pick up on the minimum version.
+
+- You can drop all the :group annotations for the user options, since
+  they follow a defgroup declaration.
+
+- Some of the regular expressions seem fairly involved, I think it would
+  be more readable in rx notation.  You can use the "xr" package to
+  translate existing regular expressions to rx btw.
+
+- If you don't want to write compatibility code for `static-if', you
+  can also add a dependency on (compat "30").  This will only install
+  the dependency if is actually necessary to do so.
+
+- You have some trailing parentheses, like after the static-if
+  definition.
+
+- Using (kbd "C-e") instead of "\C-e" would be more conventional and
+  what I think most users are used to if they read the source code.
+
+- You have some instances where you build commands using something like
+
+    (format "ebuild %s %s" file command)
+
+  Shouldn't you wrap file in `shell-quote-argument', in case it includes
+  spaces or some meta-charachters?
+
+- If you want to exclude any files from the tarball, add an .elpaignore
+  file that describes what files to exclude.
+
+Other than that, I don't think there are any issues.  The package builds
+cleanly (I've attached a tarball I managed to build locally), so I'll
+add it to nongnu.git as soon as I am sure that you want everything in a
+single package.
+
+================================================================================
+Date: 2026-10-01T21:07:28+02:00
+From: chad <yandros@gmail.com>
+Subject: Re: LLM packages in ELPA and SaaSS: a consistency question
+Message-ID: <CAO2hHWbnFXA2nZ2DwhCgMGkH6wBo-T7=e=-ks8Mo0XLdH9-gVw@mail.gmail.com>
+In-Reply-To: <E1xC8hG-008OIc-Bq@fencepost.gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <87mrt9g79l.fsf@thanosapollo.org>
+ <865wzxeaxj.fsf@gnu.org> <40343bf47e58d88d1ee6c78fbe3a421c@gnu.support>
+ <8633v1e1n2.fsf@gnu.org> <f1742cec1455b8fb54416757f6484589@gnu.support>
+ <86zex9clvv.fsf@gnu.org> <9cc1bc81b0eb5c09f04baad4b829dd4c@gnu.support>
+ <87h5jgfy0z.fsf@thanosapollo.org>
+ <43700ea74f609a8e9b0e1617adc90d69@gnu.support>
+ <87ecekfsp8.fsf@thanosapollo.org>
+ <a2356f52319b4d9e81a1ce50e17de49d@gnu.support>
+ <875wzw6tuj.fsf@hiperboreo.eu> <999163197c27c902919c0f642755d4f1@gnu.support>
+ <86zex8arct.fsf@gnu.org> <E1xA6de-00Acpi-6L@fencepost.gnu.org>
+ <86eceh8hj1.fsf@gnu.org> <87zex1wsen.fsf@web.de> <86eced36v6.fsf@gnu.org>
+ <877bk5wk66.fsf@web.de> <865wzp30r2.fsf@gnu.org> <87bj9huzxl.fsf@web.de>
+ <8633ut2u8r.fsf@gnu.org> <E1xC8hG-008OIc-Bq@fencepost.gnu.org>
+
+On Thu, Oct 1, 2026 at 12:48 AM Richard Stallman <rms@gnu.org> wrote:
+
+>   > That is true, but since the Hermes agent is not part of Emacs and is
+>   > not a GNU program, we cannot be held responsible for what it does.
+>
+> Indeed, we are not responsible for what it does.
+>
+> We are responsible for deciding properly whether to reference /
+> promote / recommend / mention hermes.el, and what the Hermes agent
+> does is part of the basis for that decision.
+>
+
+In this world, who is responsible for checking how the (non-GNU)
+software package Hermes (and its documentation, which seems especially
+relevant here) doesn't change over time, on any platform?
+
+As a concrete example, it seems readily apparent that Hermes (slogan:
+'The Agent That Grows With You') doesn't _today_ support every
+platform Emacs does, but easily could (and probably will) support some
+platforms that Emacs does (such as Android or Haiku). Taking Android
+as an example, it's overwhelmingly likely that Hermes could quickly
+add support for the platform without support for local models, while
+support for local models on Android is being very actively pursued,
+and is highly likely in the next couple years.
+
+This example is *perhaps* a little extreme, but there are a large
+variety of packages with a huge swath of such "potential transitive
+responsibility' concerns. Would hermes.el become acceptible for
+listing on ELPA only on some platforms? Would that change back and
+forth as the capacity of Hermes itself changed? Or if the documentation
+of Hermes (not hermes.el) changed? Would the creation of a fully-libre
+remote-accessible LLM *somewhere* retroactively make hermes.el more
+palatable to ELPA?
+
+I suspect that I'm misunderstanding what is being proposed, but it seems
+to me like I'm not the only one here with that interpretation. What am I
+missing?
+
+Thanks,
+~Chad
+
+================================================================================
+Date: 2026-10-01T21:08:57+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+ (llm-vertex.el)
+Message-ID: <86pkxtutkm.fsf@gnu.org>
+In-Reply-To: <CAM6wYYJshTz2oFucZKSbhEEPX244QzQDr+mq2-nC8hs0wgg11w@mail.gmail.com>
+ (message from Andrew Hyatt on Thu, 1 Oct 2026 09:31:35 -0400)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <87zex2rhvp.fsf@posteo.net>
+ <fb5475e64bb9b14237df505506831f7e@gnu.support> <87v77qr7v9.fsf@posteo.net>
+ <ea681cf191e08c6344992a9f07a33752@gnu.support> <86tsn93jqe.fsf@gnu.org>
+ <dd4a8dbd52cea52bf24cdd9717418e21@gnu.support> <864if92v4j.fsf@gnu.org>
+ <CAN+1HbohTWhLgv1k+6=eRMk6nJFu-gym6sOyZh20hZRF2j=kmw@mail.gmail.com>
+ <E1xC8hF-008OIJ-JL@fencepost.gnu.org>
+ <CAM6wYYJshTz2oFucZKSbhEEPX244QzQDr+mq2-nC8hs0wgg11w@mail.gmail.com>
+
+> From: Andrew Hyatt <ahyatt@gmail.com>
+> Date: Thu, 1 Oct 2026 09:31:35 -0400
+> Cc: Stéphane Marks <shipmints@gmail.com>, eliz@gnu.org, 
+> 	bugs@gnu.support, philipk@posteo.net, emacs-devel@gnu.org, arne_bab@web.de
+> 
+> On Thu, Oct 1, 2026 at 12:47 AM Richard Stallman <rms@gnu.org> wrote:
+> 
+>    >   If you have an issue with the llm package, engage Andrew here
+>    > https://github.com/ahyatt/llm/issues
+> 
+>  I just tested that myself.  I visited that page and clicked on New
+>  Issue.  It did nothing.
+> 
+>  Then I clicked on Sign Up and it said "Please enable JS and disable
+>  any ad blocker."  (JS was in fact enabled, but LibreJS was blocking JS
+>  that lacks a free license.)
+> 
+>  This confirms that referring to GitHub for communicating with a
+>  developer is a way of saying, "Go jump in the nonfree software lake."
+> 
+> It should be just an additional step. My email is included in my Github profile, linked from the llm repository, and
+> getting to that requires no javascript. I’m happy to communicate about any issue through email.
+
+The email address of a package maintainer should be spelled out in the
+package itself near the beginning.  As it is in this case.
+
+So all this talk about GitHub should not be relevant if someone wants
+to report a bug.  I don't understand why Stéphane mentioned it in the
+first place.
+
+================================================================================
+Date: 2026-10-01T21:16:00+02:00
+From: "Basil L. Contovounesios" <basil@contovou.net>
+Subject: Re: master cc7a4dfbf17 1/2: Improve directory-files-recursively
+Message-ID: <877bk16xlb.fsf@contovou.net>
+In-Reply-To: <87ece93gsm.fsf@athena.silentflame.com>
+References: <179051612280.10415.12945189822585522893@vcs2.savannah.gnu.org>
+ <20260927133523.DFC5DC0EFFD@vcs2.savannah.gnu.org>
+ <87cxtx7gio.fsf@athena.silentflame.com> <86bj9h36hk.fsf@gnu.org>
+ <87h5j85sbs.fsf@athena.silentflame.com> <87ik3n3jo9.fsf@contovou.net>
+ <87ece93gsm.fsf@athena.silentflame.com>
+
+Sean Whitton [2026-10-01 10:34 +0100] wrote:
+> Basil L. Contovounesios [29/Sep 10:08pm +02] wrote:
+>> Sean Whitton [2026-09-29 10:18 +0100] wrote:
+>>>> For example, should we consider using a &key argument?  Perhaps not
+>>>> because there are already so many optional arguments -- but all those
+>>>> optional arguments isn't a great situation.
+>> Can't say I love the long arglist either (and it wasn't my original plan
+>> to extend it), but I'm also in no hurry to change the function's calling
+>> convention (it has a whopping 25% fewer parameters than completing-read!).
+>>
+>> OTOH, the current refactor should make it slightly less painful to add
+>> keyword arguments given sufficient demand.
+>
+> Well, let's consider it a follow-up change proposal.
+>
+> I think that this function has reached the point, like sort, where it
+> should switch to keyword arguments.
+>
+> I'm up for doing the work, any strong objections?
+
+Not even a weak objection from me.
+
+Thanks,
+-- 
+Basil
+
+================================================================================
+Date: 2026-10-01T21:20:59+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [NonGNU ELPA] New package: ebuild-mode
+Message-ID: <jwvik3lp6sz.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <uld8hgxts@gentoo.org> (message from Ulrich
+ =?windows-1252?Q?M=FCller?= <ulm@gentoo.org> on Thu, 01 Oct 2026 19:00:47
+ +0200)
+References: <uld8hgxts@gentoo.org>
+
+> I'd like to propose ebuild-mode for inclusion in NonGNU ELPA.
+
+I just pushed it to `nongnu.git` so it should appear soonish.
+
+> Any feedback about the package is welcome, in particular about any
+> changes necessary before inclusion in NonGNU ELPA.
+
+See attached the patch resulting from my perusing the code.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-01T21:22:36+02:00
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+Subject: Re: [NonGNU ELPA] New package: ebuild-mode
+Message-ID: <uh5j5gr9f@gentoo.org>
+In-Reply-To: <87mrsxqp33.fsf@posteo.net>
+References: <uld8hgxts@gentoo.org> <87mrsxqp33.fsf@posteo.net>
+
+>>>>> On Thu, 01 Oct 2026, Philip Kaludercic wrote:
+
+> To be clear, this is supposed to be a single package including all of
+> these files?  I think that would be the right approach, but I just want
+> to be sure.
+
+Thanks for the quick response and for the feedback.
+
+Yes, this is meant to be added as a single package. It is maintained
+as one package, and the Texinfo manual covers all.
+
+> The code looks good, my main points would be:
+
+> - In ebuild-mode.el to add an explicit an
+
+>   ;; Package-Requires: ((emacs "26.3"))
+
+>   pseudo header, so that package.el can pick up on the minimum version.
+
+Done.
+
+For easier review, I've created a pull request on Codeberg for this and
+all other fixes below:
+https://codeberg.org/ulm/ebuild-mode/pulls/1
+
+> - You can drop all the :group annotations for the user options, since
+>   they follow a defgroup declaration.
+
+Done.
+
+> - Some of the regular expressions seem fairly involved, I think it would
+>   be more readable in rx notation.  You can use the "xr" package to
+>   translate existing regular expressions to rx btw.
+
+I'll look into this later.
+
+> - If you don't want to write compatibility code for `static-if', you
+>   can also add a dependency on (compat "30").  This will only install
+>   the dependency if is actually necessary to do so.
+
+Most static-if conditionals are for XEmacs compatibility, so I think
+this is not an option.
+
+> - You have some trailing parentheses, like after the static-if
+>   definition.
+
+Done.
+
+> - Using (kbd "C-e") instead of "\C-e" would be more conventional and
+>   what I think most users are used to if they read the source code.
+
+Done.
+
+> - You have some instances where you build commands using something like
+
+>     (format "ebuild %s %s" file command)
+
+>   Shouldn't you wrap file in `shell-quote-argument', in case it includes
+>   spaces or some meta-charachters?
+
+Done. (At least I hope I've caught all instances.)
+
+> - If you want to exclude any files from the tarball, add an .elpaignore
+>   file that describes what files to exclude.
+
+*Should* any files be excluded? I guess some aren't strictly needed
+for the ELPA package. (Then again, no large files like screenshots, so
+why not provide the complete package to users?)
+
+> Other than that, I don't think there are any issues.  The package builds
+> cleanly (I've attached a tarball I managed to build locally), so I'll
+> add it to nongnu.git as soon as I am sure that you want everything in a
+> single package.
+
+Would that be for 1.87, or should I make a new 1.88 release with the
+fixes first?
+
+================================================================================
+Date: 2026-10-01T22:42:44+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: ebuild-mode
+Message-ID: <878q4hqhj1.fsf@posteo.net>
+In-Reply-To: <uh5j5gr9f@gentoo.org>
+References: <uld8hgxts@gentoo.org> <87mrsxqp33.fsf@posteo.net>
+ <uh5j5gr9f@gentoo.org>
+
+Ulrich Müller <ulm@gentoo.org> writes:
+
+>>>>>> On Thu, 01 Oct 2026, Philip Kaludercic wrote:
+>
+>> To be clear, this is supposed to be a single package including all of
+>> these files?  I think that would be the right approach, but I just want
+>> to be sure.
+>
+> Thanks for the quick response and for the feedback.
+>
+> Yes, this is meant to be added as a single package. It is maintained
+> as one package, and the Texinfo manual covers all.
+
+1+  I see that Stefan has already pushed the package to the repo, so it
+should appear soon.
+
+[...]
+
+>> - Some of the regular expressions seem fairly involved, I think it would
+>>   be more readable in rx notation.  You can use the "xr" package to
+>>   translate existing regular expressions to rx btw.
+>
+> I'll look into this later.
+>
+>> - If you don't want to write compatibility code for `static-if', you
+>>   can also add a dependency on (compat "30").  This will only install
+>>   the dependency if is actually necessary to do so.
+>
+> Most static-if conditionals are for XEmacs compatibility, so I think
+> this is not an option.
+
+Right, my bad.
+
+>> - You have some trailing parentheses, like after the static-if
+>>   definition.
+>
+> Done.
+>
+>> - Using (kbd "C-e") instead of "\C-e" would be more conventional and
+>>   what I think most users are used to if they read the source code.
+>
+> Done.
+>
+>> - You have some instances where you build commands using something like
+>
+>>     (format "ebuild %s %s" file command)
+>
+>>   Shouldn't you wrap file in `shell-quote-argument', in case it includes
+>>   spaces or some meta-charachters?
+>
+> Done. (At least I hope I've caught all instances.)
+
+I think I caught the two instances that you also included in the PR on
+Codeberg.
+
+>> - If you want to exclude any files from the tarball, add an .elpaignore
+>>   file that describes what files to exclude.
+>
+> *Should* any files be excluded? I guess some aren't strictly needed
+> for the ELPA package. (Then again, no large files like screenshots, so
+> why not provide the complete package to users?)
+
+It is really up to you and your preferences.  Some people like to reduce
+the noise and only have what is strictly necessary for the finished
+package to work, others prefer to include everything even test and build
+scripts.
+
+>> Other than that, I don't think there are any issues.  The package builds
+>> cleanly (I've attached a tarball I managed to build locally), so I'll
+>> add it to nongnu.git as soon as I am sure that you want everything in a
+>> single package.
+>
+> Would that be for 1.87, or should I make a new 1.88 release with the
+> fixes first?
+
+The ELPA build server will look back in the history for the last commit
+if can find that bumps the ";; Version:" header in the main file.  So if
+you don't bump the version after pushing the changes, ELPA will not
+include them in the release tarball until you do eventually cut a new
+release.
+
+================================================================================
+Date: 2026-10-01T23:14:37+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <875wzlruma.fsf@web.de>
+In-Reply-To: <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+ (=?utf-8?Q?=22St=C3=A9phane?= Marks"'s message of "Thu, 1 Oct 2026 08:35:06
+ -0400")
+References: <86jyu4y0oy.fsf@sdf.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> <86jyo1wz7l.fsf@gnu.org>
+ <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+
+Stéphane Marks <shipmints@gmail.com> writes:
+
+> This also begs this hypothetical: if Hermes (not hermes.el) currently was compliant, recommending/steering only
+> to LLMs currently GNU acceptable (I'm not arguing ATM that is is or isn't), and then someone on the Hermes team
+> changed it to recommending something unacceptable (or merely objectionable?), is the Emacs team responsible
+> for such ongoing accounting of downstream dependencies?
+
+As alternative: does it suffice to act if someone actively brings the
+problem to their attention?
+
+In that case there could be at least four actions to react to a report:
+
+- investigate the report and find that the problem isn’t as bad as it seems
+- get in contact with Hermes and ask them not to do what’s unacceptable
+- change hermes.el or patch Hermes Agent such that it stops doing it
+- remove hermes.el from elpa
+
+Best wishes,
+Arne
+
+================================================================================
+Date: 2026-10-01T23:16:48+02:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <0cff1048-a27b-47de-9bdd-512b2f426563@imayhem.com>
+In-Reply-To: <E1xC8ho-008OU0-NQ@fencepost.gnu.org>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <d17b2507-08bd-410d-8256-c39f322adf07@imayhem.com>
+ <E1xC8ho-008OU0-NQ@fencepost.gnu.org>
+
+On 10/1/2026 6:47 AM, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+>    > > To adopt a philosophy of partly surrendering so that people who don't
+>    > > care about GNU or freedom will choose GNU for their own purely
+>    > > practical reasons will not inspire anyone.  It would be the sort of
+>    > > competition that tech businesses do.  We would not morally be better
+>    > > than them.
+> 
+> In addition, making "bets" on the future consequences of current and
+> likely future technology is the usual practice of venture capital.
+> A look at that world shows how risky these bets are.
+> 
+> We hear often about the few that won their bets on the future.  But
+> most of them bet wrong and then failed.
+> 
+> The entrepreneurs that do this sort of betting usually have plausible
+> arguments that the future will develop as they forecast.  They need
+> those to attract investment.  But looking back, we know most of them
+> failed.
+> 
+> For this reason, I am skeptical of pitches to sacrifice something
+> important for a _chance_ of winning more success and support.
+> 
+
+
+Pardon my english.
+
+I see your point, but I don't appreciate your characterization of what
+I wrote as a "pitch". Even more after you first reduced it to a simple
+"convenience vs freedom" argument. I'm not an english native speaker,
+and I may be not getting all the information, but my feeling is real.
+
+Also, I think we owe computers to generals and salesmen, who made
+those bets and won and changed the world.
+
+And maybe we should start to say "Software Freedom" or something like
+that, now that "Unqualified Freedom" is in retreat in the whole world,
+and we should avoid confusing both, because one is more important than
+the other.
+
+I've seen Firefox, one of the most important assets of Software
+Freedom, go into the trash can while you watched. It has infinitesimal
+presence in the biggest computer park in the hands of users:
+phones. But it seems to be more important if a busy father makes his
+shopping with nonfree JS to save some time.
+
+Now AI will be the zillionth transfer of wealth from the poor to the
+rich, and it will be EVEN BIGGER if the poor don't use it. Because for
+$20 a month to an USA based company, you get a translator to most
+languages of the world. It can of course code like a monster. It can
+fix your computer (the software side) faster and better than anyone,
+which is great if you don't really know how to. It can guide you to
+learn about anything, at your pace, at your level. Is not just the
+"programmer productivity" or the homework for the kids. All the other
+things account for much more, specially for poor people. Not bad for a
+bullshit generator. Now that's a pitch.
+
+I'm sorry if this was harsh, but the fact is I feel harsh. And I will
+be taking my quite small activism and contributions elsewhere, where I
+see it caters to the needs of the needy.
+
+I wrote each letter by hand in emacs, and pasted to thunderbird,
+though i felt tempted to write them with Claude.
+
+================================================================================
+Date: 2026-10-02T00:53:38+02:00
+From: =?utf-8?Q?Elijah_Gabe_P=C3=A9rez?= <eg642616@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <875wzl3udp.fsf@gmail.com>
+In-Reply-To: <86a4oyx924.fsf@gnu.org>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <86a4oyx924.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+[...]
+
+> Thanks, we now need the implementation for X, and then we can install.
+
+Here are my implementations for both X and PGTK builds.
+
+================================================================================
+Date: 2026-10-02T05:30:40+02:00
+From: Jim Porter <jporterbugs@gmail.com>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+In-Reply-To: <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+
+On 9/27/2026 6:47 PM, Richard Stallman wrote:
+> Making our software better than "competitors" in a practical sense is
+> a secondary goal for us.  Sure, we want to do that -- but that is not
+> the purpose of developing GNU.
+
+I agree wholeheartedly with this. If practicality and keeping up with 
+the Joneses were my goal, I'd be using VS Code already. It too is a 
+highly-extensible programming text editor available for no cost on 
+multiple platforms, and it has the added benefit of its development 
+being funded by one of the richest corporations in the world.
+
+The Emacs community, and the larger GNU/FSF communities, are important. 
+I credit my time as maintainer of one small corner of Emacs for showing 
+me proof that a better world is possible. Even aside from the debates 
+about copyright, plagiarism, and SaaSS, I'm concerned about the damage 
+we could cause to the Emacs *community* by embracing LLMs. If nothing 
+else, I hope Emacs, GNU, and the FSF will move carefully here to protect 
+the community we've built.
+
+Of course, since GNU Emacs is built to give users freedom to use, 
+modify, and extend it as they see fit, there's nothing we could do to 
+prevent someone from integrating LLMs into their Emacs. However, that 
+doesn't mean we need to embrace it ourselves.
+
+================================================================================
+Date: 2026-10-02T06:32:31+02:00
+From: zhaodaniu <zhaodaniu1@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <86bj9cvi1s.fsf@gmail.com>
+In-Reply-To: <875wzl3udp.fsf@gmail.com>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <86a4oyx924.fsf@gnu.org>
+ <875wzl3udp.fsf@gmail.com>
+
+> Here are my implementations for both X and PGTK builds.
+
+Thanks.
+
+> /* Strike-through width and offset from the glyph string's
+>    top edge.  */
+> unsigned long h = 1;
+> unsigned long h = overline_text_scaling_p ? scaled_thickness : 1;
+> unsigned long dy = (glyph_height - h) / 2;
+
+The h value at the end of the PGTK patch incorrectly uses
+overline_text_scaling_p.  It should use strike_through_text_scaling_p.
+
+-- 
+zhaodaniu
+
+================================================================================
+Date: 2026-10-02T06:33:05+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <E1xCUxF-00Gr3A-Fx@fencepost.gnu.org>
+In-Reply-To: <86ik3o1rvd.fsf@gnu.org> (message from Eli Zaretskii on Tue, 29
+ Sep 2026 09:41:42 +0300)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <87zex2rhvp.fsf@posteo.net>
+ <fb5475e64bb9b14237df505506831f7e@gnu.support> <87v77qr7v9.fsf@posteo.net>
+ <E1xBOpf-004JtE-NW@fencepost.gnu.org> <86ik3o1rvd.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > It is also pertinent that `browse-url' doesn't require or insist
+  > > on using Chrome, or even prefer Chrome.  It has the ability to work
+  > > with Chrome, that's all.
+
+  > On a system where Chrome is the default browser, we will use Chrome by
+  > default.  So it is not just an ability, it is the default on some
+  > systems for some users.
+
+Is the "default browser" a setting that the user specifies?
+Following the user's choice is legitimate.
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-02T06:47:35+02:00
+From: Jim Porter <jporterbugs@gmail.com>
+Subject: Re: EWW dom filtering/editing based on site url
+Message-ID: <c0fbd929-8d2b-88b5-624f-da7ccf8fe27e@gmail.com>
+In-Reply-To: <624e8b3c-d1de-4950-8180-8c52505105ac@app.fastmail.com>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+ <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+ <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com>
+ <jwvecesf1i1.fsf-monnier+emacs@gnu.org>
+ <5ce3cf6e-5687-8c5d-0db2-70c54da396fd@gmail.com> <87o6dtda2i.fsf@igel.home>
+ <950a466c-1107-510e-13d4-8880af1a66c5@gmail.com>
+ <624e8b3c-d1de-4950-8180-8c52505105ac@app.fastmail.com>
+
+On 9/23/2026 12:54 PM, Tyler Smith wrote:
+> On Sat, Sep 19, 2026, at 12:25 PM, Jim Porter wrote:
+>>
+>> Sorry, I got that backwards. You should *disable* 'shr-fill-text' to
+>> support changing the window size, since then EWW will use
+>> 'visual-line-mode' instead.
+> 
+> Just a quick note to let you know that I'm still interested in helping with this if I can. But I don't know enough to weigh in on best approaches for the actual solution :)
+
+Since no one else seems to have an opinion on this, I guess I'll make a 
+decision. :)
+
+There are two things to decide on: first, how should the hook work? I 
+think Stefan's suggestion is reasonable:
+
+> Another option is to store the DOM in a var and let the hook functions
+> change it by side effect.
+
+As he mentions in his message, it's not the most pure-functionally 
+elegant, but it's probably simpler. EWW already stores the DOM in the 
+:dom property of 'eww-data'. Another benefit I see with this is that the 
+hook can be used to do other things as well.
+
+The second question is when the hook should run. If we go with modifying 
+the DOM by overwriting :dom in 'eww-data', then we probably want to run 
+the hook shortly after we parse the HTML, and (I think) also after we 
+call 'eww-readable-dom'. I'd recommend doing this in 'eww-display-html' 
+and 'eww-readable', since those are the places we parse the HTML. (You'd 
+have to move the '(plist-put eww-data :dom document)' call in 
+'eww-display-document' to those functions too, but I think that's a good 
+idea because it consolidates where we write to 'eww-data'.)
+
+It'd also be nice to call this before we display other content types. I 
+think the relevant functions are 'eww-display-pdf', 'eww-display-image', 
+and 'eww-display-raw'.
+
+As for the name of the hook, I'd go with 'eww-before-render-hook' for 
+symmetry with the existing 'eww-after-render-hook'.
+
+Of course, if you or anyone else have different ideas, I'm all ears. I 
+don't have a strong preference here, and am really just making a 
+decision so a decision gets made. :)
+
+================================================================================
+Date: 2026-10-02T07:51:38+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <86zewwtzth.fsf@gnu.org>
+In-Reply-To: <E1xCUxF-00Gr3A-Fx@fencepost.gnu.org> (message from Richard
+ Stallman on Fri, 02 Oct 2026 00:33:05 -0400)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <87zex2rhvp.fsf@posteo.net>
+ <fb5475e64bb9b14237df505506831f7e@gnu.support> <87v77qr7v9.fsf@posteo.net>
+ <E1xBOpf-004JtE-NW@fencepost.gnu.org> <86ik3o1rvd.fsf@gnu.org>
+ <E1xCUxF-00Gr3A-Fx@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: philipk@posteo.net, bugs@gnu.support, emacs-devel@gnu.org,
+> 	ahyatt@gmail.com, arne_bab@web.de
+> Date: Fri, 02 Oct 2026 00:33:05 -0400
+> 
+>   > > It is also pertinent that `browse-url' doesn't require or insist
+>   > > on using Chrome, or even prefer Chrome.  It has the ability to work
+>   > > with Chrome, that's all.
+> 
+>   > On a system where Chrome is the default browser, we will use Chrome by
+>   > default.  So it is not just an ability, it is the default on some
+>   > systems for some users.
+> 
+> Is the "default browser" a setting that the user specifies?
+
+It can be the system default, in which case it is imposed on the user.
+
+Also, the above seems to contradict the requirement not to recommend
+Chrome by mentioning it in our documentation and user options.
+
+================================================================================
+Date: 2026-10-02T07:58:55+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <86y0cgtzhc.fsf@gnu.org>
+In-Reply-To: <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com> (message from
+ Jim Porter on Thu, 1 Oct 2026 20:30:40 -0700)
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+
+> Date: Thu, 1 Oct 2026 20:30:40 -0700
+> Cc: emacs-devel@gnu.org
+> From: Jim Porter <jporterbugs@gmail.com>
+> 
+> The Emacs community, and the larger GNU/FSF communities, are important. 
+> I credit my time as maintainer of one small corner of Emacs for showing 
+> me proof that a better world is possible. Even aside from the debates 
+> about copyright, plagiarism, and SaaSS, I'm concerned about the damage 
+> we could cause to the Emacs *community* by embracing LLMs. If nothing 
+> else, I hope Emacs, GNU, and the FSF will move carefully here to protect 
+> the community we've built.
+
+Those are your opinions, and we should respect them.  Other members of
+the community have other opinions, and we must respect them as well.
+But we cannot possibly change our actions based on what this or that
+member of the community feels or believes.  We must have a policy that
+is defined explicitly and unequivocally to guide our actions in cases
+such as this one.  This is what this and related discussions are
+about.  They are not about personal feelings of anyone.
+
+> Of course, since GNU Emacs is built to give users freedom to use, 
+> modify, and extend it as they see fit, there's nothing we could do to 
+> prevent someone from integrating LLMs into their Emacs. However, that 
+> doesn't mean we need to embrace it ourselves.
+
+The issue at hand is not whether to embrace some software, it is
+whether it is legitimate for an Emacs or ELPA package to allow users
+to integrate LLMs into their Emacs.  That has nothing to do with
+embracing, it has to do with the limits of what can be on ELPA.  Let's
+not replace practical goals of these discussions with emotional ones.
+
+================================================================================
+Date: 2026-10-02T08:10:37+02:00
+From: <tomas@tuxteam.de>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <ar9K3eO0qEttWzqa@tuxteam.de>
+In-Reply-To: <0cff1048-a27b-47de-9bdd-512b2f426563@imayhem.com>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <d17b2507-08bd-410d-8256-c39f322adf07@imayhem.com>
+ <E1xC8ho-008OU0-NQ@fencepost.gnu.org>
+ <0cff1048-a27b-47de-9bdd-512b2f426563@imayhem.com>
+
+On Thu, Oct 01, 2026 at 11:16:48PM +0200, Cecilio Pardo wrote:
+
+[...]
+
+> I've seen Firefox, one of the most important assets of Software
+> Freedom, go into the trash can while you watched [...]
+
+Google (a multibillion monster by then) did it. It was pure
+strategy. They were Firefox's main financier, first to keep
+Micorosoft as a distance, then to have a fig leaf to cover
+their market domination.
+
+At some point, Google de facto set the standards and Firefox
+"had to" follow.
+
+I don't think there was anything the Mozilla Foundation could
+have "done" to get a different outcome.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-10-02T08:32:03+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86qzi8txy4.fsf@gnu.org>
+In-Reply-To: <875wzlruma.fsf@web.de> (arne_bab@web.de)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> <86jyo1wz7l.fsf@gnu.org>
+ <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+ <875wzlruma.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: Eli Zaretskii <eliz@gnu.org>,  rms@gnu.org,  emacs-devel@gnu.org
+> Date: Thu, 01 Oct 2026 23:14:37 +0200
+> 
+> Stéphane Marks <shipmints@gmail.com> writes:
+> 
+> > This also begs this hypothetical: if Hermes (not hermes.el) currently was compliant, recommending/steering only
+> > to LLMs currently GNU acceptable (I'm not arguing ATM that is is or isn't), and then someone on the Hermes team
+> > changed it to recommending something unacceptable (or merely objectionable?), is the Emacs team responsible
+> > for such ongoing accounting of downstream dependencies?
+> 
+> As alternative: does it suffice to act if someone actively brings the
+> problem to their attention?
+> 
+> In that case there could be at least four actions to react to a report:
+> 
+> - investigate the report and find that the problem isn’t as bad as it seems
+> - get in contact with Hermes and ask them not to do what’s unacceptable
+> - change hermes.el or patch Hermes Agent such that it stops doing it
+> - remove hermes.el from elpa
+
+The 2nd and the 3rd alternatives are basically tong-in-cheek: they
+will rarely if ever materialize.
+
+Removing a package after it has been on ELPA is IMNSHO out of
+question: it leaves such a bad taste with the author that there's a
+real risk for that author (and others, perhaps) never again coming to
+us.
+
+We really should think some more about the authors of the packages
+when we bring up such proposals.  They are not bots, they are real
+people with real feelings.  Put yourself in their shoes, then talk.
+
+================================================================================
+Date: 2026-10-02T09:02:35+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <87jyo0r3ec.fsf@web.de>
+In-Reply-To: <86qzi8txy4.fsf@gnu.org> (Eli Zaretskii's message of "Fri, 02 Oct
+ 2026 09:32:03 +0300")
+References: <86jyu4y0oy.fsf@sdf.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> <86jyo1wz7l.fsf@gnu.org>
+ <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+ <875wzlruma.fsf@web.de> <86qzi8txy4.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> The 2nd and the 3rd alternatives are basically tong-in-cheek: they
+> will rarely if ever materialize.
+
+They are common practice in fully free distros.
+
+Those may not be Emacs, but they show that patching out problematic
+stuff is a real option.
+
+> Removing a package after it has been on ELPA is IMNSHO out of
+> question: it leaves such a bad taste with the author that there's a
+> real risk for that author (and others, perhaps) never again coming to
+> us.
+
+If we cannot remove packages from elpa, we must be much more careful
+which packages are accepted in elpa, than when we can remove packages
+when their situation changes.
+
+And if elpa includes packages that violate the GNU principles, other
+people may leave, because that also leaves a bad taste.
+
+> They are not bots, they are real people with real feelings. Put
+> yourself in their shoes, then talk.
+
+I am a package author myself. I’ve also experienced packages being
+removed, though not from elpa, but from distros and from melpa.
+
+And I know the consequences of never being able to remove a package.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-10-02T09:14:48+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86o6dctvyv.fsf@gnu.org>
+In-Reply-To: <87jyo0r3ec.fsf@web.de> (arne_bab@web.de)
+References: <86jyu4y0oy.fsf@sdf.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> <86jyo1wz7l.fsf@gnu.org>
+ <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+ <875wzlruma.fsf@web.de> <86qzi8txy4.fsf@gnu.org> <87jyo0r3ec.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: shipmints@gmail.com,  rms@gnu.org,  emacs-devel@gnu.org
+> Date: Fri, 02 Oct 2026 09:02:35 +0200
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > The 2nd and the 3rd alternatives are basically tong-in-cheek: they
+> > will rarely if ever materialize.
+> 
+> They are common practice in fully free distros.
+
+Maybe because they provide both the package and its dependencies.  We
+don't, and never intended to become anything like a distro.  You are
+again using a wrong analogy here.
+
+> > Removing a package after it has been on ELPA is IMNSHO out of
+> > question: it leaves such a bad taste with the author that there's a
+> > real risk for that author (and others, perhaps) never again coming to
+> > us.
+> 
+> If we cannot remove packages from elpa, we must be much more careful
+> which packages are accepted in elpa, than when we can remove packages
+> when their situation changes.
+
+Yes, and that's my main point.  We must test all those conditions up
+front, and if the conditions can change thereafter, we are screwed.
+
+> > They are not bots, they are real people with real feelings. Put
+> > yourself in their shoes, then talk.
+> 
+> I am a package author myself. I’ve also experienced packages being
+> removed, though not from elpa, but from distros and from melpa.
+> 
+> And I know the consequences of never being able to remove a package.
+
+Well, then I guess our sensitivity levels differ.
+
+================================================================================
+Date: 2026-10-02T09:37:45+02:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <CA+TD5hiSCUTH453ZbFTm8uOo3qrSjcRm4pZp+1ZQNmscnOJXxg@mail.gmail.com>
+In-Reply-To: <875wzl3udp.fsf@gmail.com>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org> <86o6djyumh.fsf@gmail.com>
+ <864ifb595c.fsf@gnu.org> <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org> <861pacg010.fsf@gmail.com>
+ <8733ur4kav.fsf@gmail.com> <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <86a4oyx924.fsf@gnu.org> <875wzl3udp.fsf@gmail.com>
+
+On Fri, 2 Oct 2026 at 01:54, Elijah Gabe Pérez <eg642616@gmail.com> wrote:
+
+> Eli Zaretskii <eliz@gnu.org> writes:
+>
+> [...]
+>
+> > Thanks, we now need the implementation for X, and then we can install.
+>
+> Here are my implementations for both X and PGTK builds.
+
+
+I'm not sure if the PGTK version of this patch is necessary. In my tests on
+KDE Plasma the font struct returned by this call in pgtkterm.c
+
+      struct font *font = font_for_underline_metrics (s);
+
+always has font->underline_thickness == 1. The underline is scaled nicely,
+i.e. it is not too thin on my 185 DPI screen. I'm using a system scaling of
+150%; I also tried 200%.
+
+I tested on Wayland, XWayland (by setting GDK_BACKEND=x11), and on an X11
+session. No difference.
+
+By the way, it would be helpful if the patches you post were complete, i.e.
+based on the Git version of the code, and not on top of code including
+patches posted earlier in this thread.
+
+================================================================================
+Date: 2026-10-02T10:02:10+02:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <871pa8r0n1.fsf@web.de>
+In-Reply-To: <86o6dctvyv.fsf@gnu.org> (Eli Zaretskii's message of "Fri, 02 Oct
+ 2026 10:14:48 +0300")
+References: <86jyu4y0oy.fsf@sdf.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> <86jyo1wz7l.fsf@gnu.org>
+ <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+ <875wzlruma.fsf@web.de> <86qzi8txy4.fsf@gnu.org> <87jyo0r3ec.fsf@web.de>
+ <86o6dctvyv.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> > The 2nd and the 3rd alternatives are basically tong-in-cheek: they
+>> > will rarely if ever materialize.
+>> 
+>> They are common practice in fully free distros.
+>
+> Maybe because they provide both the package and its dependencies.
+
+They also patch out unfree online resources which provide access to
+stuff outside the distro.
+
+>> If we cannot remove packages from elpa, we must be much more careful
+>> which packages are accepted in elpa, than when we can remove packages
+>> when their situation changes.
+>
+> Yes, and that's my main point.  We must test all those conditions up
+> front, and if the conditions can change thereafter, we are screwed.
+
+That then excludes any package that uses an online service whose license
+may change.
+
+That’s why I do not think that it’s viable to promise that every package
+that got into elpa once will stay there forever.
+
+Though I think removing a package should be a measure of last resort. In
+the vast majority of cases changes to the package should enable curing
+the problem, just like they can if the URL of a service it uses changes.
+
+>> I am a package author myself. I’ve also experienced packages being
+>> removed, though not from elpa, but from distros and from melpa.
+>> 
+>> And I know the consequences of never being able to remove a package.
+>
+> Well, then I guess our sensitivity levels differ.
+
+Or our view of consequences. I am still annoyed that Debian pushed the
+Hurd out of the official debian ports while I was contributing. So it’s
+not like I don’t know that having a package removed hurts.
+
+I just consider it worse to not be able to trust elpa not to steer me
+into dependency on proprietary software.
+
+Which is not just theoretical: I stumbled over that because I looked for
+free (as in freedom) LLMs to try their performance, and hermes looked
+like it would enable this (the name sounding like it’s independent from
+the big LLM companies and being mentioned in the emacs lists that it is
+compatible with GNU principles). If I hadn’t clicked the website first
+and then checked the licensing, I would have started to depend on
+Hermes’ proprietary platform for trying to find free LLMs.
+
+And that was just from seeing the name in the list here. Seeing it via
+elpa (named "gnu" in package-list-packages) would have misled me into
+thinking that it’s been vetted by GNU as preserving Software Freedom.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-10-02T10:10:58+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <6132077639f928ff8dbe8a5f99e896b0@gnu.support>
+In-Reply-To: <86qzi8txy4.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> <86jyo1wz7l.fsf@gnu.org>
+ <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+ <875wzlruma.fsf@web.de> <86qzi8txy4.fsf@gnu.org>
+
+Dear Eli,
+
+I heard you will wait for standards.texi to updated. Maybe it is not 
+part of this thread. Yet I was thinking you will first understand what 
+should be the policy in order to act.
+
+On 2026-10-02 09:32, Eli Zaretskii wrote:
+> Removing a package after it has been on ELPA is IMNSHO out of
+> question: it leaves such a bad taste with the author that there's a
+> real risk for that author (and others, perhaps) never again coming to
+> us.
+
+That author get pissed off is human and understandable. However, it 
+would not happen in the first place if author would be reminded of GNU 
+coding standards and package evaluated against it.
+
+So it is responsibility of managers of ELPA to do that.
+
+In addition GNU doesn't have policy on accepting LLM generated packages, 
+and hermes.el is LLM generated package. And that has not been resolved. 
+Together with the other author's package codex-ide as well that is also 
+purposefully made for SaaSS.
+
+> We really should think some more about the authors of the packages
+> when we bring up such proposals.  They are not bots, they are real
+> people with real feelings.  Put yourself in their shoes, then talk.
+
+I agree that people have feelings. That is why I am raising the question 
+early, before more packages are accepted, rather than after. The 
+question is not whether the author has feelings; it is whether the 
+project will apply its own standards. If the standards are applied from 
+the beginning, the difficult conversation happens before the package is 
+accepted, not after.
+
+Author wish to contributes to GNU and that is commendable. And first 
+thing to establish is if such package conforms to GNU standards. GNU did 
+not come to author, author came to GNU. That means all contributors are 
+welcome within boundaries of GNU standards.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-10-02T11:05:57+02:00
+From: Michael Albinus <michael.albinus@gmx.de>
+Subject: Re: master e96d33e5841: Improve handling of
+ 'shr-block-indentation-width'
+Message-ID: <87h5j4lbey.fsf@gmx.de>
+In-Reply-To: <20261001052520.284C3C0F006@vcs2.savannah.gnu.org>
+References: <179083231975.22869.3202341260947528507@vcs2.savannah.gnu.org>
+ <20261001052520.284C3C0F006@vcs2.savannah.gnu.org>
+
+Jim Porter <jporterbugs@gmail.com> writes:
+
+Hi Jim,
+
+> branch: master
+> commit e96d33e5841b038e0b295be46c9045e46a69309f
+> Author: Jim Porter <jporterbugs@gmail.com>
+> Commit: Jim Porter <jporterbugs@gmail.com>
+>
+>     Improve handling of 'shr-block-indentation-width'
+
+This (or a previous) commit breaks shr-tests.el:
+
+--8<---------------cut here---------------start------------->8---
+make -C test shr-tests
+Test shr-rendering/li-div backtrace:
+  signal(ert-test-failed (("(default)" "*   \n\n    This is the first 
+  ert-fail(("(default)" "*   \n\n    This is the first paragraph of a 
+  (if (equal result expected) nil (ert-fail (list description result e
+  (let ((result (buffer-substring-no-properties (point-min) (point-max
+  (let ((dom (libxml-parse-html-region (point-min) (point-max))) (shr-
+  (progn (insert-file-contents html-file) (let ((dom (libxml-parse-htm
+  (unwind-protect (progn (insert-file-contents html-file) (let ((dom (
+  (save-current-buffer (set-buffer temp-buffer) (unwind-protect (progn
+  (let ((temp-buffer (generate-new-buffer " *temp*" t))) (save-current
+  (let ((description (or context "(default)")) (coding-system-for-read
+  shr-test--rendering-check("/home/albinus/src/emacs/test/lisp/net/shr
+  (let ((txt-file (file-name-with-extension test-file ".txt")) (extra-
+  (let ((test-file "/home/albinus/src/emacs/test/lisp/net/shr-resource
+  #f(lambda () [t] (let ((test-file "/home/albinus/src/emacs/test/lisp
+  #f(compiled-function () #<bytecode -0x4c0cb034a0eeecf>)()
+  handler-bind-1(#f(compiled-function () #<bytecode -0x4c0cb034a0eeecf
+  ert--run-test-internal(#s(ert--test-execution-info :test #s(ert-test
+  ert-run-test(#s(ert-test :name shr-rendering/li-div :documentation n
+  ert-run-or-rerun-test(#s(ert--stats :selector ... :tests ... :test-m
+  ert-run-tests((not (tag :unstable)) #f(compiled-function (event-type
+  ert-run-tests-batch((not (tag :unstable)))
+  ert-run-tests-batch-and-exit((not (tag :unstable)))
+  eval((ert-run-tests-batch-and-exit '(not (tag :unstable))) t)
+  command-line-1(("-L" ":." "-l" "ert" "--eval" "(setq treesit-extra-l
+  command-line()
+  normal-top-level()
+Test shr-rendering/li-div condition:
+    (ert-test-failed
+     ("(default)"
+      "*   \n\n    This is the first paragraph of a list item.\n\n    This is the second paragraph of a list item.\n\n*   \n    This is the first paragraph of a list item.\n    This is the second paragraph of a list item.\n"
+      "*   This is the first paragraph of a list item.\n\n    This is the second paragraph of a list item.\n\n*   This is the first paragraph of a list item.\n    This is the second paragraph of a list item.\n"))
+   FAILED   5/13  shr-rendering/li-div (0.017125 sec) at lisp/net/shr-tests.el:1
+--8<---------------cut here---------------end--------------->8---
+
+Best regards, Michael.
+
+================================================================================
+Date: 2026-10-02T11:08:07+02:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <1ed26ddd-8717-4c47-a937-a24596b3d0bb@imayhem.com>
+In-Reply-To: <ar9K3eO0qEttWzqa@tuxteam.de>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <d17b2507-08bd-410d-8256-c39f322adf07@imayhem.com>
+ <E1xC8ho-008OU0-NQ@fencepost.gnu.org>
+ <0cff1048-a27b-47de-9bdd-512b2f426563@imayhem.com>
+ <ar9K3eO0qEttWzqa@tuxteam.de>
+
+On 10/2/2026 8:10 AM, tomas@tuxteam.de wrote:
+> On Thu, Oct 01, 2026 at 11:16:48PM +0200, Cecilio Pardo wrote:
+> 
+> [...]
+> 
+>> I've seen Firefox, one of the most important assets of Software
+>> Freedom, go into the trash can while you watched [...]
+> 
+> Google (a multibillion monster by then) did it. It was pure
+> strategy. They were Firefox's main financier, first to keep
+> Micorosoft as a distance, then to have a fig leaf to cover
+> their market domination.
+> 
+> At some point, Google de facto set the standards and Firefox
+> "had to" follow.
+> 
+> I don't think there was anything the Mozilla Foundation could
+> have "done" to get a different outcome.
+> 
+> Cheers
+
+Yes, there was something Mozilla could have done. Make Firefox better
+than Chrome all around. And where was the FSF call to arms to defend
+an ally, to fight the chromium monoculture as an existential
+threat to user freedom?
+
+It was here:
+
+https://www.fsf.org/news/fsf-condemns-partnership-between-mozilla-and-adobe-to-support-digital-restrictions-management
+
+"The decision compromises important principles in order to alleviate
+misguided fears about loss of browser marketshare."
+
+Focus on misguided.
+
+But no, it was here:
+
+https://directory.fsf.org/wiki/firefox (which redirects to
+/wiki/Gnuzilla, who knows why).
+
+"Why not recommend Firefox? As explained in our Free Software
+Definition, all four freedoms must be available on both a commercial
+and non-commercial basis. Mozilla's trademark policy serves to limit
+Freedom 2 to gratis distribution only, making the software nonfree."
+
+Focus on nonfree, in case anyone is tempted to use Firefox.
+
+But you may be right, and maybe it was just impossible. But it sounds
+odd said here, among the people that thought it was possible, and
+turned Unix, Xenix and AIX to dust.
+
+I've made hundreds of Firefox installs over the years. I've explained to
+hundreds why Firefox matters. Mattered. The FSF never did even that.
+
+================================================================================
+Date: 2026-10-02T12:40:36+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <86ik3ktmfv.fsf@gnu.org>
+In-Reply-To: <6132077639f928ff8dbe8a5f99e896b0@gnu.support> (message from Jean
+ Louis on Fri, 02 Oct 2026 11:10:58 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> <86jyo1wz7l.fsf@gnu.org>
+ <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+ <875wzlruma.fsf@web.de> <86qzi8txy4.fsf@gnu.org>
+ <6132077639f928ff8dbe8a5f99e896b0@gnu.support>
+
+> Date: Fri, 02 Oct 2026 11:10:58 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: "Dr. Arne Babenhauserheide" <arne_bab@web.de>, shipmints@gmail.com,
+>  rms@gnu.org, emacs-devel@gnu.org
+> 
+> Dear Eli,
+> 
+> I heard you will wait for standards.texi to updated. Maybe it is not 
+> part of this thread. Yet I was thinking you will first understand what 
+> should be the policy in order to act.
+
+No, please wait some more until RMS clarifies the requirements.
+There's no reason to start arguing before we know what are we arguing
+about.
+
+================================================================================
+Date: 2026-10-02T12:45:57+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <86fqyotm6y.fsf@gnu.org>
+In-Reply-To: <1ed26ddd-8717-4c47-a937-a24596b3d0bb@imayhem.com> (message from
+ Cecilio Pardo on Fri, 2 Oct 2026 11:08:07 +0200)
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <d17b2507-08bd-410d-8256-c39f322adf07@imayhem.com>
+ <E1xC8ho-008OU0-NQ@fencepost.gnu.org>
+ <0cff1048-a27b-47de-9bdd-512b2f426563@imayhem.com>
+ <ar9K3eO0qEttWzqa@tuxteam.de>
+ <1ed26ddd-8717-4c47-a937-a24596b3d0bb@imayhem.com>
+
+> Date: Fri, 2 Oct 2026 11:08:07 +0200
+> Cc: rms@gnu.org, emacs-devel@gnu.org
+> From: Cecilio Pardo <cpardo@imayhem.com>
+> 
+> 
+> 
+> On 10/2/2026 8:10 AM, tomas@tuxteam.de wrote:
+> > On Thu, Oct 01, 2026 at 11:16:48PM +0200, Cecilio Pardo wrote:
+> > 
+> > [...]
+> > 
+> >> I've seen Firefox, one of the most important assets of Software
+> >> Freedom, go into the trash can while you watched [...]
+> > 
+> > Google (a multibillion monster by then) did it. It was pure
+> > strategy. They were Firefox's main financier, first to keep
+> > Micorosoft as a distance, then to have a fig leaf to cover
+> > their market domination.
+> > 
+> > At some point, Google de facto set the standards and Firefox
+> > "had to" follow.
+> > 
+> > I don't think there was anything the Mozilla Foundation could
+> > have "done" to get a different outcome.
+> > 
+> > Cheers
+> 
+> Yes, there was something Mozilla could have done. Make Firefox better
+> than Chrome all around. And where was the FSF call to arms to defend
+> an ally, to fight the chromium monoculture as an existential
+> threat to user freedom?
+
+Guys, this is waaaay out of scope and off topic for this list.  It's
+no longer related to Emacs at all.  So please, take this to some other
+place,l like emacs-tangents or gnu-misc-discuss.
+
+Okay?
+
+================================================================================
+Date: 2026-10-02T12:59:57+02:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <b0b27c81-db3a-4542-8ebd-40e836aafc54@imayhem.com>
+In-Reply-To: <86fqyotm6y.fsf@gnu.org>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <d17b2507-08bd-410d-8256-c39f322adf07@imayhem.com>
+ <E1xC8ho-008OU0-NQ@fencepost.gnu.org>
+ <0cff1048-a27b-47de-9bdd-512b2f426563@imayhem.com>
+ <ar9K3eO0qEttWzqa@tuxteam.de>
+ <1ed26ddd-8717-4c47-a937-a24596b3d0bb@imayhem.com> <86fqyotm6y.fsf@gnu.org>
+
+> Guys, this is waaaay out of scope and off topic for this list.  It's
+> no longer related to Emacs at all.  So please, take this to some other
+> place,l like emacs-tangents or gnu-misc-discuss.
+> 
+> Okay?
+
+Of course.
+
+================================================================================
+Date: 2026-10-02T13:01:39+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <a488cc7aba41383238c362cd131356a8@gnu.support>
+In-Reply-To: <86ik3ktmfv.fsf@gnu.org>
+References: <86jyu4y0oy.fsf@sdf.org> <E1wKkWs-0008LH-9p@fencepost.gnu.org>
+ <jwvbjesq6ud.fsf-monnier+emacs@gnu.org>
+ <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> <86jyo1wz7l.fsf@gnu.org>
+ <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+ <875wzlruma.fsf@web.de> <86qzi8txy4.fsf@gnu.org>
+ <6132077639f928ff8dbe8a5f99e896b0@gnu.support> <86ik3ktmfv.fsf@gnu.org>
+
+On 2026-10-02 13:40, Eli Zaretskii wrote:
+> No, please wait some more until RMS clarifies the requirements.
+> There's no reason to start arguing before we know what are we arguing
+> about.
+
+👍 I will keep reviewing other "allegedly" non-conformant packages... 🤫
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-10-02T16:50:25+02:00
+From: Thierry Volpiatto <thievol@posteo.net>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <8733uo17io.fsf@posteo.net>
+In-Reply-To: <86qzi9x1k1.fsf@gnu.org>
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org> <E1xAmqw-0000000ByJb-1ClL@tucano.isti.cnr.it>
+ <8733uqljpf.fsf@posteo.net> <86jyo2y5jl.fsf@gnu.org>
+ <87se2qj6bk.fsf@posteo.net> <86qzi9x1k1.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Thierry Volpiatto <thievol@posteo.net>
+>> Cc: Thierry Volpiatto <thievol@posteo.net>,  pot@potorti.it,
+>>   emacs-devel@gnu.org,  tailorpaul@pm.me,  juri@linkov.net,  rms@gnu.org
+>> Date: Thu, 01 Oct 2026 06:14:26 +0000
+>> 
+>> Eli Zaretskii <eliz@gnu.org> writes:
+>> 
+>> > I don't know.  How about if you step with a debugger through the code
+>> > and see why it doesn't mark that?
+>> 
+>> I didn't step through emacs code exactly but tried this in my own code:
+>> 
+>>     (textsec-suspicious-p "https://kqnc-zcmp.maillist-manage.eu/click/12bc5c541e85ca1f/12bc5c541e849f2a" 'url)
+>> 
+>> is returning nil, then
+>> 
+>>     (textsec-suspicious-p (cons "https://kqnc-zcmp.maillist-manage.eu/click/12bc5c541e85ca1f/12bc5c541e849f2a"
+>>                                 "www.rendo-shrimp.de") 'link)
+>> 
+>> is returning nil as well unless prefixing "www.rendo-shrimp.de" with "https://".
+>> 
+>> > My guess is that it isn't showing a full URL, like the "unsubscribe"
+>> > button later on.
+>> 
+>> Yes, but "unsubscribe" is not an url whereas "www.rendo-shrimp.de" is an
+>> url (even if abbreviated), so in such case why is the link (very) different? I mean if
+>> "www.rendo-shrimp.de" is a valid (and safe) url why using something else?
+>
+> How do we tell that "www.rendo-shrimp.de" is a URL whereas "foobar" is
+> not? is "rendo-shrimp.de" also a URL, and if so, why? what about
+> "google" or "Wikipedia"?
+>
+> textsec.el currently decides whether it's a URL by looking at the
+> return value of url-generic-parse-url.
+
+I use here thing-at-point which also returns nil on such urls, but it
+can be tweaked to return such urls with 
+
+    (let ((thing-at-point-beginning-of-url-regexp "www\\."))
+        (thing-at-point 'url))
+
+But I am not sure it is the right thing to do (I have reverted this
+change for now)
+
+See https://github.com/emacs-helm/helm/blob/master/helm-files.el#L6027
+
+-- 
+Thierry
+
+================================================================================
+Date: 2026-10-02T17:02:18+02:00
+From: Thierry Volpiatto <thievol@posteo.net>
+Subject: Re: Detecting and warning about homoglyph attacks
+Message-ID: <87y0cgywlj.fsf@posteo.net>
+In-Reply-To: <E1xCB3o-00000003TeB-3ZqH@tucano.isti.cnr.it>
+References: <E1x9aGc-004dkV-Ce@fencepost.gnu.org>
+ <A_heAsrMkY9u1eg8ncJOerbZoxQZbdgoYbMeaaDCDhoaazcfd5cC6nYWL7UwSuxl7qYhupupkl3tYn1HhS6u39KscW5j51oZTVki-n5uJ2w=@pm.me>
+ <87ld8qu0kn.fsf@mail.linkov.net> <E1xAJKg-006rHF-12@fencepost.gnu.org>
+ <86y0co7c4m.fsf@gnu.org> <E1xAfeg-00GQLY-SI@fencepost.gnu.org>
+ <86cxtz5km0.fsf@gnu.org> <E1xAmqw-0000000ByJb-1ClL@tucano.isti.cnr.it>
+ <8733uqljpf.fsf@posteo.net> <86jyo2y5jl.fsf@gnu.org>
+ <87se2qj6bk.fsf@posteo.net>
+ <E1xCB3o-00000003TeB-3ZqH@tucano.isti.cnr.it>
+
+Francesco Potortì <pot@potorti.it> writes:
+
+>>[...] "www.rendo-shrimp.de" is an
+>>url (even if abbreviated), so in such case why is the link (very) different? I mean if
+>>"www.rendo-shrimp.de" is a valid (and safe) url why using something else?
+>
+> If I understand your question correctly, I have observed two cases when people do that.
+>
+> One, common in publicity email, newsletters and so on, is gathering
+> user statistics: the real url is unique per user, pointing to a
+> tracking system which provides user statistics.  This means that the
+> user is individually and reliably identified and tracked.
+>
+> Anopther one, common in istitutional email systems, is security: when
+> I write to some university colleague, for examples, and they reply in
+> html to me while citing my text-only email, I see that in the cited
+> email all plain text links have been converted to links where the text
+> of the link is the plain text link that I had written, while the url
+> of the link points to a shielding service intended to prevent users
+> from following dangerous links.
+
+Thanks for these infos, this reinforce the idea of not clicking blindly
+on urls in emails, this is why I want to present the underlying url to
+helm users when they C-x C-f on such urls with a textsec warning or not,
+see attached screenshot.
+
+-- 
+Thierry
+
+================================================================================
+Date: 2026-10-02T17:03:42+02:00
+From: =?utf-8?Q?Elijah_Gabe_P=C3=A9rez?= <eg642616@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <87qzi887qp.fsf@gmail.com>
+In-Reply-To: <86bj9cvi1s.fsf@gmail.com>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <86a4oyx924.fsf@gnu.org>
+ <875wzl3udp.fsf@gmail.com> <86bj9cvi1s.fsf@gmail.com>
+
+zhaodaniu <zhaodaniu1@gmail.com> writes:
+
+>> Here are my implementations for both X and PGTK builds.
+>
+> Thanks.
+>
+>> /* Strike-through width and offset from the glyph string's
+>>    top edge.  */
+>> unsigned long h = 1;
+>> unsigned long h = overline_text_scaling_p ? scaled_thickness : 1;
+>> unsigned long dy = (glyph_height - h) / 2;
+>
+> The h value at the end of the PGTK patch incorrectly uses
+> overline_text_scaling_p.  It should use strike_through_text_scaling_p.
+
+Thanks, i forgot to change the variable.
+
+-- 
+- E.G.
+
+================================================================================
+Date: 2026-10-02T17:20:35+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: emacs-31 4fed2e86064 2/2: ; Improve text about buffer points
+ and window points.
+Message-ID: <jwv1pa8i14t.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261002132742.E0CD2C0F009@vcs2.savannah.gnu.org>
+References: <179094766217.374.18057917565826942612@vcs2.savannah.gnu.org>
+ <20261002132742.E0CD2C0F009@vcs2.savannah.gnu.org>
+
+> +  There is only ever one point in a running Emacs.@footnote{This is not
+> +strictly true anymore because each thread has its own current buffer.
+> +@xref{Threads}.  For some historical background, see
+> +@url{https://lists.gnu.org/archive/html/emacs-devel/2026-01/msg00229.html}.}
+
+Hmm... two nitpicks:
+
+- Given that only a single thread can be running at any given time, it
+  *is* as strictly true as it was before threads were added.
+- I think "There is only ever one point" is too strong a statement for
+  our good.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-02T17:24:11+02:00
+From: Jim Porter <jporterbugs@gmail.com>
+Subject: Re: master e96d33e5841: Improve handling of
+ 'shr-block-indentation-width'
+Message-ID: <193fc98e-00ad-ea60-04ec-f700bc8fe9a9@gmail.com>
+In-Reply-To: <87h5j4lbey.fsf@gmx.de>
+References: <179083231975.22869.3202341260947528507@vcs2.savannah.gnu.org>
+ <20261001052520.284C3C0F006@vcs2.savannah.gnu.org> <87h5j4lbey.fsf@gmx.de>
+
+On 10/2/2026 2:05 AM, Michael Albinus wrote:
+> Jim Porter <jporterbugs@gmail.com> writes:
+> 
+>> branch: master
+>> commit e96d33e5841b038e0b295be46c9045e46a69309f
+>> Author: Jim Porter <jporterbugs@gmail.com>
+>> Commit: Jim Porter <jporterbugs@gmail.com>
+>>
+>>      Improve handling of 'shr-block-indentation-width'
+> 
+> This (or a previous) commit breaks shr-tests.el:
+
+Sorry about that. Should be fixed now as of d06da98df97.
+
