@@ -1,0 +1,419 @@
+emacs-devel messages from 2026-10-04T18:15:00+02:00 to 2026-10-05T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-04T20:06:11+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Block Emacs server running under system users w/ systemd
+Message-ID: <87v77hnxwt.fsf@posteo.net>
+In-Reply-To: <ab3a181a5eccd381e0bf48d55de57195c516aa80.camel@gmail.com>
+References: <e4bffa076f697572476981ce7bfad4d2be8c51ed.camel@gmail.com>
+ <878q4epoa3.fsf@posteo.net>
+ <8f1020d5d307a868b0a79b6a81d6d18419177e12.camel@gmail.com>
+ <2898128d5149f77c4a8fda2eed66ffbd3baf4e76.camel@gmail.com>
+ <ab3a181a5eccd381e0bf48d55de57195c516aa80.camel@gmail.com>
+
+Jindrich Makovicka <makovick@gmail.com> writes:
+
+> On Sun, 2026-10-04 at 11:10 +0200, Jindrich Makovicka wrote:
+>> On Sun, 2026-10-04 at 10:56 +0200, Jindrich Makovicka wrote:
+>> > On Sat, 2026-10-03 at 19:39 +0000, Philip Kaludercic wrote:
+>> > > Jindrich Makovicka <makovick@gmail.com> writes:
+>> > > 
+>> > > > Hello,
+>> > > 
+>> > > Hi,
+>> > > 
+>> > > > the systemd unit for emacs server (etc/emacs.service) is
+>> > > > launched
+>> > > > under
+>> > > > any user, including the system users. This means when the
+>> > > > emacs.service
+>> > > > is enabled, under the GNOME login screen, there is a running
+>> > > > Emacs,
+>> > > > compiling the elisp into native code and storing the objects to
+>> > > > /var/lib/gdm3/.emacs.d .
+>> > > 
+>> > > Can you explain why this would occur?  Isn't that a system
+>> > > configuration
+>> > > mistake if you enable the Emacs deamon for a system service?
+>> > 
+>> > It is a feature of systemd - it treats the gdm user (under which
+>> > the
+>> > login screen is running) the same way as regular users, if
+>> > emacs.service is enabled system-wide.
+>> 
+>> Actually, there is a ConditionUser option exactly for that purpose.
+>> Updated patch attached.
+>
+> Unfortunately this does not cover ephemeral UIDs created by systemd. So
+> the check for /run is still needed.
+
+Do you expect this could run into issues if you have a system with a
+bespoke and unconventional home directory setup?  I recall for instance
+that my university had /home/cip/[year]/[username]/ for their home
+directories, which might have just as well been placed under /var if
+someone had decided to do so.
+
+Ulrich Müller <ulm@gentoo.org> writes:
+
+>>>>>> On Sun, 04 Oct 2026, Jindrich Makovicka wrote:
+>
+>> It is a feature of systemd - it treats the gdm user (under which the
+>> login screen is running) the same way as regular users, if
+>> emacs.service is enabled system-wide.
+>
+> Normally, emacs.service should be enabled per user. What is the use
+> case for enabling it system-wide?
+
+I am do not understand why this is a feature.
+
+================================================================================
+Date: 2026-10-04T20:12:24+02:00
+From: Jindrich Makovicka <makovick@gmail.com>
+Subject: Re: Block Emacs server running under system users w/ systemd
+Message-ID: <9f624c1fe0a6e9e946509892f7f1d5f31f0422d1.camel@gmail.com>
+In-Reply-To: <u8q4dfqay@gentoo.org>
+References: <e4bffa076f697572476981ce7bfad4d2be8c51ed.camel@gmail.com>
+ <878q4epoa3.fsf@posteo.net>
+ <8f1020d5d307a868b0a79b6a81d6d18419177e12.camel@gmail.com>
+ <u8q4dfqay@gentoo.org>
+
+On Sun, 2026-10-04 at 17:17 +0200, Ulrich Müller wrote:
+> > > > > > On Sun, 04 Oct 2026, Jindrich Makovicka wrote:
+> 
+> > It is a feature of systemd - it treats the gdm user (under which
+> > the
+> > login screen is running) the same way as regular users, if
+> > emacs.service is enabled system-wide.
+> 
+> Normally, emacs.service should be enabled per user. What is the use
+> case for enabling it system-wide?
+
+Sorry for the noise, I encountered this on Debian unstable; after
+purge/install, emacs is disabled by default, so this was likely enabled
+by an older emacs package.
+
+I think ConditionUser=!@system (without the ExecCondition hack) still
+won't hurt though.
+
+-- 
+Jindrich Makovicka
+
+================================================================================
+Date: 2026-10-05T05:51:21+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+In-Reply-To: <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com> (message from
+ Jim Porter on Thu, 1 Oct 2026 20:30:40 -0700)
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Of course, since GNU Emacs is built to give users freedom to use, 
+  > modify, and extend it as they see fit, there's nothing we could do to 
+  > prevent someone from integrating LLMs into their Emacs. However, that 
+  > doesn't mean we need to embrace it ourselves.
+
+That is true, of course -- but it slightly mis-states the issue at
+hand.  To correct slightly the point Stefan made in his reply, this
+text quoted above changes the issue from "stand against nonfree
+software" to "stand against LLMs."
+
+We don't reject LLMs on principle.  We do reject freedom-denying LLMs
+on principle, along with other freedom-denying computing technology.
+Given a useful, free LLM, we would have no a priori objection to it.
+
+We are temporarily rejecting code made by LLMs, but that is not a
+moral judgment.  It is because we do not know how that affects
+copylefting the code.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-05T07:01:51+02:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Compilation error (pdumper.c:2727:3)
+Message-ID: <87se2kagg0.fsf@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+I just did
+
+git pull
+make extraclean
+./autogen.sh
+make configure="--prefix=/build/path --enable-checking=all --with-gif=ifavailable CFLAGS='-O0 -g3'"
+
+and got
+
+  CC       pdumper.o
+pdumper.c: In function ‘dump_obarray’:
+pdumper.c:2727:3: error: #error "Lisp_Obarray changed. See CHECK_STRUCTS comment in config.h."
+ 2727 | # error "Lisp_Obarray changed. See CHECK_STRUCTS comment in config.h."
+      |   ^~~~~
+pdumper.c: In function ‘dump_buffer’:
+pdumper.c:2749:3: error: #error "buffer changed. See CHECK_STRUCTS comment in config.h."
+ 2749 | # error "buffer changed. See CHECK_STRUCTS comment in config.h."
+
+Never happened before.
+
+================================================================================
+Date: 2026-10-05T12:44:25+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Block Emacs server running under system users w/ systemd
+Message-ID: <87cxtowho6.fsf@athena.silentflame.com>
+In-Reply-To: <9f624c1fe0a6e9e946509892f7f1d5f31f0422d1.camel@gmail.com>
+References: <e4bffa076f697572476981ce7bfad4d2be8c51ed.camel@gmail.com>
+ <878q4epoa3.fsf@posteo.net>
+ <8f1020d5d307a868b0a79b6a81d6d18419177e12.camel@gmail.com>
+ <u8q4dfqay@gentoo.org>
+ <9f624c1fe0a6e9e946509892f7f1d5f31f0422d1.camel@gmail.com>
+
+Jindrich Makovicka [04/Oct  8:12pm +02] wrote:
+> On Sun, 2026-10-04 at 17:17 +0200, Ulrich Müller wrote:
+>> > > > > > On Sun, 04 Oct 2026, Jindrich Makovicka wrote:
+>>
+>> > It is a feature of systemd - it treats the gdm user (under which
+>> > the
+>> > login screen is running) the same way as regular users, if
+>> > emacs.service is enabled system-wide.
+>>
+>> Normally, emacs.service should be enabled per user. What is the use
+>> case for enabling it system-wide?
+>
+> Sorry for the noise, I encountered this on Debian unstable; after
+> purge/install, emacs is disabled by default, so this was likely enabled
+> by an older emacs package.
+>
+> I think ConditionUser=!@system (without the ExecCondition hack) still
+> won't hurt though.
+
+I agree, and have installed that change on master.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-05T12:59:11+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Compilation error (pdumper.c:2727:3)
+Message-ID: <8733ukwgzk.fsf@athena.silentflame.com>
+In-Reply-To: <87se2kagg0.fsf@mail.gmail.com>
+References: <87se2kagg0.fsf@mail.gmail.com>
+
+Nickolai Dobrynin [05/Oct  7:01am +02] wrote:
+> I just did
+>
+> git pull
+> make extraclean
+> ./autogen.sh
+> make configure="--prefix=/build/path --enable-checking=all --with-gif=ifavailable CFLAGS='-O0 -g3'"
+>
+> and got
+>
+>   CC       pdumper.o
+> pdumper.c: In function ‘dump_obarray’:
+> pdumper.c:2727:3: error: #error "Lisp_Obarray changed. See CHECK_STRUCTS comment in config.h."
+>  2727 | # error "Lisp_Obarray changed. See CHECK_STRUCTS comment in config.h."
+>       |   ^~~~~
+> pdumper.c: In function ‘dump_buffer’:
+> pdumper.c:2749:3: error: #error "buffer changed. See CHECK_STRUCTS comment in config.h."
+>  2749 | # error "buffer changed. See CHECK_STRUCTS comment in config.h."
+
+Paul, might your recent changes be involved here?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-05T13:03:27+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: emacs-31 4fed2e86064 2/2: ; Improve text about buffer points
+ and window points.
+Message-ID: <87wlrwv280.fsf@athena.silentflame.com>
+In-Reply-To: <jwv33ummch4.fsf-monnier+emacs@gnu.org>
+References: <179094766217.374.18057917565826942612@vcs2.savannah.gnu.org>
+ <20261002132742.E0CD2C0F009@vcs2.savannah.gnu.org>
+ <jwv1pa8i14t.fsf-monnier+emacs@gnu.org>
+ <87o6daersy.fsf@melete.silentflame.com>
+ <jwv33ummch4.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier via "Emacs development discussions." [03/Oct 10:30pm -04] wrote:
+>>     A running Emacs session has a single, privileged point.
+>
+> I think we're trying too hard: "session" here just gives the wrong
+> impression (as if that point was the same for the whole session).
+> IMO, there's nothing really special about point being more unique than the
+> value of any variable or the current buffer or the selected window,
+> ...
+>
+> AFAIK "the" point is just the buffer point of the current buffer.
+>
+> But your change explicitly introduced this "There is only ever one
+> point" idea, so I assume you had a good reason to insist on it being
+> unique.  Not knowing that reason, my suggestions probably wouldn't be
+> very helpful.
+
+It's now
+
+    A running Emacs session has a single instance of point.
+
+at Eli's suggestion.
+
+I think that the perspective in the e-mail from Richard would be helpful
+to new Lisp programmers.  The idea of saying "point" not "the point"
+clicked more firmly into place in my own head upon reading it -- it had
+seemed like an arbitrary style rule, but now it doesn't.
+I wanted to try to capture this somehow.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-05T14:10:39+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Compilation error (pdumper.c:2727:3)
+Message-ID: <86mrssqreo.fsf@gnu.org>
+In-Reply-To: <8733ukwgzk.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Mon, 05 Oct 2026 11:59:11 +0100)
+References: <87se2kagg0.fsf@mail.gmail.com>
+ <8733ukwgzk.fsf@athena.silentflame.com>
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Cc: Nickolai Dobrynin <ndobrynin@gmail.com>, emacs-devel@gnu.org
+> Date: Mon, 05 Oct 2026 11:59:11 +0100
+> 
+> Nickolai Dobrynin [05/Oct  7:01am +02] wrote:
+> > I just did
+> >
+> > git pull
+> > make extraclean
+> > ./autogen.sh
+> > make configure="--prefix=/build/path --enable-checking=all --with-gif=ifavailable CFLAGS='-O0 -g3'"
+> >
+> > and got
+> >
+> >   CC       pdumper.o
+> > pdumper.c: In function ‘dump_obarray’:
+> > pdumper.c:2727:3: error: #error "Lisp_Obarray changed. See CHECK_STRUCTS comment in config.h."
+> >  2727 | # error "Lisp_Obarray changed. See CHECK_STRUCTS comment in config.h."
+> >       |   ^~~~~
+> > pdumper.c: In function ‘dump_buffer’:
+> > pdumper.c:2749:3: error: #error "buffer changed. See CHECK_STRUCTS comment in config.h."
+> >  2749 | # error "buffer changed. See CHECK_STRUCTS comment in config.h."
+> 
+> Paul, might your recent changes be involved here?
+
+There's no reason to discuss these problems, they should be fixed by
+mechanically applying what config.h says about that.
+
+Should be fixed now.
+
+================================================================================
+Date: 2026-10-05T16:00:51+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 1324e366010: Add a 'syntax-propertize-function' to
+ 'lisp-mode'
+Message-ID: <jwvv77gjlnt.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261005101156.07571C0F00D@vcs2.savannah.gnu.org>
+References: <179119511421.28524.12364422970517372970@vcs2.savannah.gnu.org>
+ <20261005101156.07571C0F00D@vcs2.savannah.gnu.org>
+
+> +(eval-and-compile
+> +  (defconst lisp-mode-syntax-propertize-rules
+> +    (syntax-propertize-precompile-rules
+> +     ;; Give entire |multiple escape| sections symbol syntax.
+> +     ((rx "|" (+ (or (seq (syntax escape) "|") (not "|"))) "|")
+> +      (0 (and (not (ppss-comment-or-string-start (syntax-ppss)))
+> +              (string-to-syntax "_"))))
+
+I think this deserves a more complete comment.  IIUC we do this (as
+opposed to using something like a "string fence") because
+
+    this| is a |symbol
+
+is supposed to be a single symbol rather than 3, but it is not obvious.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-05T16:04:54+02:00
+From: zhaodaniu <zhaodaniu1@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <861pa4dz09.fsf@gmail.com>
+In-Reply-To: <86a4oyx924.fsf@gnu.org>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <86a4oyx924.fsf@gnu.org>
+
+> Thanks, we now need the implementation for X, and then we can install.
+
+Thank Elias Gabriel Perez implementation for X and PGTK.  So we can
+install it for now,
+
+I merged the patches for pgtk and X and fixed a few minor issues. If
+you encounter any problems, please contact me.
+
+================================================================================
+Date: 2026-10-05T17:33:01+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: EWW dom filtering/editing based on site url
+Message-ID: <jwvo6d8f9vl.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <fccf2af1-333b-9943-e48d-ff0b0af35572@gmail.com>
+References: <f8b33758-1907-41fe-8c79-499639d80347@app.fastmail.com>
+ <c1979b62-9127-5de9-1d5a-d354681da165@gmail.com>
+ <b7972d13-bd44-4710-b589-daaf987b5392@app.fastmail.com>
+ <CANh=_JH4oMRkfHj33BbonoPdUJRiFQ9LaORMGosf0dY9KE2iLQ@mail.gmail.com>
+ <29508f5b-8ea8-4117-8eb7-09aaace168d5@app.fastmail.com>
+ <CANh=_JGyukSsF25yA4Li=jw-zSo5m8fms7Abs58rDUEWv-qHJw@mail.gmail.com>
+ <jwvecesf1i1.fsf-monnier+emacs@gnu.org>
+ <5ce3cf6e-5687-8c5d-0db2-70c54da396fd@gmail.com>
+ <87o6dtda2i.fsf@igel.home>
+ <950a466c-1107-510e-13d4-8880af1a66c5@gmail.com>
+ <624e8b3c-d1de-4950-8180-8c52505105ac@app.fastmail.com>
+ <c0fbd929-8d2b-88b5-624f-da7ccf8fe27e@gmail.com>
+ <jwva4ovo30r.fsf-monnier+emacs@gnu.org>
+ <fccf2af1-333b-9943-e48d-ff0b0af35572@gmail.com>
+
+>> Also, AFAICT, when `eww-readable` is called, we've already rendered with
+>> `eww-display-html`, so it doesn't seem right.
+> 'eww-readable' reloads the page, re-parsing the cached HTML into a s-expr
+> and (by default) adds a new entry in the history (for the back/forward
+> commands).  The only thing it *doesn't* do is re-fetch the document over
+> HTTP.  I think we'd need to call the hook in this case, unless we make more
+> sweeping changes to how 'eww-readable' works.
+
+I see.  Then we need to be more careful about how we define and document
+the hook so it's clear when it should(n't) be run and what data it can
+expect to find in which variables.
+
+> Right.  I'm thinking about how we can add a new hook called at the right time
+> that can do more than *just* transform the DOM.  That way we don't
+> proliferate many special-purpose hooks in EWW.
+
+I get the vague impression that these are two conflicting requirements.
+
+> Like I mentioned though, I don't feel that strongly about this and was
+> just trying to pick an option so we could move forward.
+
+FWIW, I don't feel strongly about it either, nor have enough experience
+with EWW to have a good intuition for which options would be most useful.
+
+
+=== Stefan
+
