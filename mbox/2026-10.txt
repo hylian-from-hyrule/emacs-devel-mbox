@@ -23034,3 +23034,1910 @@ with EWW to have a good intuition for which options would be most useful.
 
 
 
+From MAILER-DAEMON Mon Oct 05 12:46:04 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xDlpE-0007Rn-1i
+	for mharc-emacs-devel@gnu.org; Mon, 05 Oct 2026 12:46:04 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xDlpB-0007NY-BR
+ for emacs-devel@gnu.org; Mon, 05 Oct 2026 12:46:01 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xDlpA-0001j6-T0; Mon, 05 Oct 2026 12:46:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=d095jHaTcpIWY3WiteV0shrf4v7eUBW/b/2aFLlMik4=; b=Fr8wnchqRFN1
+ eNPJocb7XHCp2pxLJptKhWaPg7v/gspX0F+DB6oaIgpIdzShKf6IJaLvWiCAvGfY6bua5e/OSE32S
+ liMNV6JfQZWio0Bv8evGb8bbLs16zcEteumhbCA5xjupuZ4DqffCzoWPNEQtmuewTjG4DFsHPxsFZ
+ F8THSQB4hPQRcAK5bQbDMgVOI8qCy5hYjQuA9/Lhn94HtV1R2ljLk3qm3MGdFo2HQH8v91IkI1KM9
+ leypsOgmRdMomJc3kYNGy9qGWeMXQ2k7SoQkMTyBrSHwmFHuRCwxoo4rzVdl8VJ6dVNikhwouFG7C
+ 7AVq6D780SpGC+fMAixTUw==;
+Date: Mon, 05 Oct 2026 19:45:58 +0300
+Message-Id: <868q4cqent.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: zhaodaniu <zhaodaniu1@gmail.com>
+Cc: eg642616@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <861pa4dz09.fsf@gmail.com> (message from zhaodaniu on Mon, 05 Oct
+ 2026 22:04:54 +0800)
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <86a4oyx924.fsf@gnu.org>
+ <861pa4dz09.fsf@gmail.com>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 05 Oct 2026 16:46:02 -0000
+
+> From: zhaodaniu <zhaodaniu1@gmail.com>
+> Cc: eg642616@gmail.com,  emacs-devel@gnu.org
+> Date: Mon, 05 Oct 2026 22:04:54 +0800
+> 
+> > Thanks, we now need the implementation for X, and then we can install.
+> 
+> Thank Elias Gabriel Perez implementation for X and PGTK.  So we can
+> install it for now,
+> 
+> I merged the patches for pgtk and X and fixed a few minor issues. If
+> you encounter any problems, please contact me.
+
+Thanks, I need someone to apply this on X and see if it compiles okay
+wand works as expected.  Then I can install.
+
+P.S. Btw, let's in the future post patches to the bug list, so that
+they and the following discussions could be tracked by the
+bug-tracker.  This list is not supposed to be used for routine posting
+of patches and their discussion.
+
+
+From MAILER-DAEMON Mon Oct 05 18:40:51 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xDrMU-0000Xg-F1
+	for mharc-emacs-devel@gnu.org; Mon, 05 Oct 2026 18:40:46 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1)
+ (envelope-from <SRS0=50f4=H4=shaf.tel=zach@fe-bounces.shaf.tel>)
+ id 1xDrML-0000XC-NJ
+ for emacs-devel@gnu.org; Mon, 05 Oct 2026 18:40:38 -0400
+Received: from smtp.forwardemail.net ([149.28.215.223])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1)
+ (envelope-from <SRS0=50f4=H4=shaf.tel=zach@fe-bounces.shaf.tel>)
+ id 1xDrMJ-0002kK-JS
+ for emacs-devel@gnu.org; Mon, 05 Oct 2026 18:40:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shaf.tel;
+ h=Content-Type: MIME-Version: Message-ID: Date: References: In-Reply-To:
+ Subject: Cc: To: From; q=dns/txt; s=fe-acc5b42812; t=1791240034;
+ bh=At28h54fL7Lbb/XLiSg9XxKDhU4nGHsn7j8qHIpIKC0=;
+ b=Ogm7gd5O26vA+g2QE9ivts16zJTO4yexd2T7febwn+xldj8QoAWc8eE4uknPlp9gemf6JCtzY
+ sP6g62QAhG1fu26RBMAUfIW7muBzXThTRauyj1UwSLCtu84BL718NPv0zOYkziYBqnF8JD1OZyK
+ Yx9/2xH+EzPB37pVg2H2llQ=
+X-Forward-Email-ID: 6ac4275e2dbdb6c815f432ff
+X-Forward-Email-Sender: rfc822; zach@shaf.tel, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 2.18.1
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+From: zach shaftel <zach@shaf.tel>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+Subject: Re: master 1324e366010: Add a 'syntax-propertize-function' to
+ 'lisp-mode'
+In-Reply-To: <jwvv77gjlnt.fsf-monnier+emacs@gnu.org>
+References: <179119511421.28524.12364422970517372970@vcs2.savannah.gnu.org>
+ <20261005101156.07571C0F00D@vcs2.savannah.gnu.org>
+ <jwvv77gjlnt.fsf-monnier+emacs@gnu.org>
+User-Agent: mu4e 1.14.1; emacs 32.0.50
+Date: Mon, 05 Oct 2026 18:40:27 -0400
+Message-ID: <875wzf7ov8.fsf@shaf.tel>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=-=-="
+Received-SPF: pass client-ip=149.28.215.223;
+ envelope-from=SRS0=50f4=H4=shaf.tel=zach@fe-bounces.shaf.tel;
+ helo=smtp.forwardemail.net
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 05 Oct 2026 22:40:41 -0000
+
+--=-=-=
+Content-Type: text/plain
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+>> +(eval-and-compile
+>> +  (defconst lisp-mode-syntax-propertize-rules
+>> +    (syntax-propertize-precompile-rules
+>> +     ;; Give entire |multiple escape| sections symbol syntax.
+>> +     ((rx "|" (+ (or (seq (syntax escape) "|") (not "|"))) "|")
+>> +      (0 (and (not (ppss-comment-or-string-start (syntax-ppss)))
+>> +              (string-to-syntax "_"))))
+>
+> I think this deserves a more complete comment.  IIUC we do this (as
+> opposed to using something like a "string fence") because
+>
+>     this| is a |symbol
+>
+> is supposed to be a single symbol rather than 3,
+
+Exactly
+
+> but it is not obvious.
+
+I attached a patch with a more detailed comment, see if that seems
+sufficient.
+
+-Zach
+
+
+--=-=-=
+Content-Type: text/x-patch
+Content-Disposition: attachment;
+ filename=0001-Improve-comment-in-lisp-mode-syntax-propertize-rules.patch
+
+>From 2d6dc2083dcad3603afe8d5f3010a3d5486b13e2 Mon Sep 17 00:00:00 2001
+From: Zach Shaftel <zach@shaf.tel>
+Date: Mon, 5 Oct 2026 18:18:59 -0400
+Subject: [PATCH] Improve comment in lisp-mode-syntax-propertize-rules
+
+* lisp/emacs-lisp/lisp-mode.el
+(lisp-mode-syntax-propertize-rules): Describe the purpose of
+the first rule.
+---
+ lisp/emacs-lisp/lisp-mode.el | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lisp/emacs-lisp/lisp-mode.el b/lisp/emacs-lisp/lisp-mode.el
+index 2778b7f53cf..8a559c718f6 100644
+--- a/lisp/emacs-lisp/lisp-mode.el
++++ b/lisp/emacs-lisp/lisp-mode.el
+@@ -87,7 +87,10 @@ lisp-mode-syntax-table
+ (eval-and-compile
+   (defconst lisp-mode-syntax-propertize-rules
+     (syntax-propertize-precompile-rules
+-     ;; Give entire |multiple escape| sections symbol syntax.
++     ;; Give entire multiple escape sections symbol syntax.  Without
++     ;; this, `forward-sexp' and co. treat symbols| like |this as three
++     ;; expressions, and `lisp-mode-symbol-regexp' won't capture escape
++     ;; sections at all.
+      ((rx "|" (+ (or (seq (syntax escape) "|") (not "|"))) "|")
+       (0 (and (not (ppss-comment-or-string-start (syntax-ppss)))
+               (string-to-syntax "_"))))
+-- 
+2.55.0
+
+
+--=-=-=--
+
+
+From MAILER-DAEMON Tue Oct 06 22:43:04 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEHbm-0005Ed-Fs
+	for mharc-emacs-devel@gnu.org; Tue, 06 Oct 2026 22:42:39 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1)
+ (envelope-from <SRS0=790d=H5=shaf.tel=zach@fe-bounces.shaf.tel>)
+ id 1xEGlA-0006aR-TA
+ for emacs-devel@gnu.org; Tue, 06 Oct 2026 21:48:25 -0400
+Received: from smtp.forwardemail.net ([149.28.215.223])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1)
+ (envelope-from <SRS0=790d=H5=shaf.tel=zach@fe-bounces.shaf.tel>)
+ id 1xEGl2-0002Ha-VD
+ for emacs-devel@gnu.org; Tue, 06 Oct 2026 21:47:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shaf.tel;
+ h=Content-Type: MIME-Version: Message-ID: Date: References: In-Reply-To:
+ Subject: Cc: To: From; q=dns/txt; s=fe-acc5b42812; t=1791337629;
+ bh=+ZEFGa6k4g7HMgTrqPCZ8emkBNcA2shK7v2wNmITK9o=;
+ b=jVBIOZp4u59nUVqWgMriZev74PhWtLCwUykIPf9MGJ7yYA0bKgDpORqBP/bJrkjRfn7sBPZS5
+ 1vtYeqFYrEjHkzLBxBOyEWvKzZAksZ6DyOpW0OH5FOtvtJDfMYicnpnO5LP0vemiEXwp9nKzLZ1
+ 8ZR3hIRa8gaVj1IUXYh+Jtc=
+X-Forward-Email-ID: 6ac53f9b4de5bcf72b823e0a
+X-Forward-Email-Sender: rfc822; zach@shaf.tel, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 2.18.3
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+From: zach shaftel <zach@shaf.tel>
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>,  emacs-devel@gnu.org
+Subject: Re: master 1324e366010: Add a 'syntax-propertize-function' to
+ 'lisp-mode'
+In-Reply-To: <87v77fthiz.fsf@athena.silentflame.com>
+References: <179119511421.28524.12364422970517372970@vcs2.savannah.gnu.org>
+ <20261005101156.07571C0F00D@vcs2.savannah.gnu.org>
+ <jwvv77gjlnt.fsf-monnier+emacs@gnu.org> <875wzf7ov8.fsf@shaf.tel>
+ <87v77fthiz.fsf@athena.silentflame.com>
+User-Agent: mu4e 1.14.1; emacs 32.0.50
+Date: Tue, 06 Oct 2026 14:36:07 -0400
+Message-ID: <87zewq65ig.fsf@shaf.tel>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=-=-="
+Received-SPF: pass client-ip=149.28.215.223;
+ envelope-from=SRS0=790d=H5=shaf.tel=zach@fe-bounces.shaf.tel;
+ helo=smtp.forwardemail.net
+X-Spam_score_int: -5
+X-Spam_score: -0.6
+X-Spam_bar: /
+X-Spam_report: (-0.6 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_06_12=1.543,
+ DKIM_SIGNED=0.1, DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 01:48:45 -0000
+
+--=-=-=
+Content-Type: text/plain
+
+Sean Whitton <spwhitton@spwhitton.name> writes:
+
+> zach shaftel [05/Oct  6:40pm -04] wrote:
+>> diff --git a/lisp/emacs-lisp/lisp-mode.el b/lisp/emacs-lisp/lisp-mode.el
+>> index 2778b7f53cf..8a559c718f6 100644
+>> --- a/lisp/emacs-lisp/lisp-mode.el
+>> +++ b/lisp/emacs-lisp/lisp-mode.el
+>> @@ -87,7 +87,10 @@ lisp-mode-syntax-table
+>>  (eval-and-compile
+>>    (defconst lisp-mode-syntax-propertize-rules
+>>      (syntax-propertize-precompile-rules
+>> -     ;; Give entire |multiple escape| sections symbol syntax.
+>> +     ;; Give entire multiple escape sections symbol syntax.  Without
+>> +     ;; this, `forward-sexp' and co. treat symbols| like |this as three
+>> +     ;; expressions, and `lisp-mode-symbol-regexp' won't capture escape
+>> +     ;; sections at all.
+>>       ((rx "|" (+ (or (seq (syntax escape) "|") (not "|"))) "|")
+>>        (0 (and (not (ppss-comment-or-string-start (syntax-ppss)))
+>>                (string-to-syntax "_"))))
+>
+> How about putting ` and ' around the strange symbol?
+
+Done
+
+
+--=-=-=
+Content-Type: text/x-patch
+Content-Disposition: attachment;
+ filename=0001-Improve-comment-in-lisp-mode-syntax-propertize-rules.patch
+
+>From 5958a6964a99be704819450e927455ea36b09228 Mon Sep 17 00:00:00 2001
+From: Zach Shaftel <zach@shaf.tel>
+Date: Mon, 5 Oct 2026 18:18:59 -0400
+Subject: [PATCH] Improve comment in lisp-mode-syntax-propertize-rules
+
+* lisp/emacs-lisp/lisp-mode.el
+(lisp-mode-syntax-propertize-rules): Describe the purpose of
+the first rule.
+---
+ lisp/emacs-lisp/lisp-mode.el | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lisp/emacs-lisp/lisp-mode.el b/lisp/emacs-lisp/lisp-mode.el
+index 2778b7f53cf..76b7abd1399 100644
+--- a/lisp/emacs-lisp/lisp-mode.el
++++ b/lisp/emacs-lisp/lisp-mode.el
+@@ -87,7 +87,10 @@ lisp-mode-syntax-table
+ (eval-and-compile
+   (defconst lisp-mode-syntax-propertize-rules
+     (syntax-propertize-precompile-rules
+-     ;; Give entire |multiple escape| sections symbol syntax.
++     ;; Give entire multiple escape sections symbol syntax.  Without
++     ;; this, `forward-sexp' and co. treat `symbols| like |this' as
++     ;; three expressions, and `lisp-mode-symbol-regexp' won't capture
++     ;; escape sections at all.
+      ((rx "|" (+ (or (seq (syntax escape) "|") (not "|"))) "|")
+       (0 (and (not (ppss-comment-or-string-start (syntax-ppss)))
+               (string-to-syntax "_"))))
+-- 
+2.55.0
+
+
+--=-=-=--
+
+
+From MAILER-DAEMON Tue Oct 06 23:12:11 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEI4W-0001C5-60
+	for mharc-emacs-devel@gnu.org; Tue, 06 Oct 2026 23:12:01 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xEHdn-0005Zl-Rz
+ for emacs-devel@gnu.org; Tue, 06 Oct 2026 22:44:35 -0400
+Received: from fout-b8-smtp.messagingengine.com ([202.12.124.151])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xEHdj-0002zK-3t
+ for emacs-devel@gnu.org; Tue, 06 Oct 2026 22:44:22 -0400
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+ by mailfout.stl.internal (Postfix) with ESMTP id EC58C1D0014B
+ for <emacs-devel@gnu.org>; Tue,  6 Oct 2026 03:28:05 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-04.internal (MEProxy); Tue, 06 Oct 2026 03:28:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-type:content-type:date:date:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:subject:subject:to:to; s=fm1; t=1791271685; x=
+ 1791358085; bh=Y5YDSEHjA8G5owompuPEuNxM04W+5+0O6h39q+8CwYk=; b=M
+ U3Tm3ei2sCVLDnxUyGYTFTEmd17Haw7aIXD6liNTWHtSoFwmXhW+77r1TrpkNrsT
+ ju6E9Q2ZEjxzs/r85C4MAw0kwGesGmWI8fBQwXoCeooVqj+QunE4TZAiPEOrgMpQ
+ 8Aw4FRe/DfdEF8NkkKA7Q7ANwwbwil43ixMgMiyh8gRRYScU5RuQzKvhW1LevktU
+ 6TgkkIQjGOnuHb9YL5ratYVTbIDSkqE+cybeMO6b+jEUR4x6d8vwk96ROiJQ0f9D
+ 6eACeNKUCmIGymgeVzSsfXNQESlkYhaJ/YJAcoqdlmqdoi0XLT8n4qQcEwzRIdwR
+ rB7igBPcv9KZnIBTYcFyw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1791271685; x=1791358085; bh=Y5YDSEHjA8G5owompuPEuNxM04W+5+0O6h3
+ 9q+8CwYk=; b=L/XNqeYTUhEE8JN4ay+Pr8LhQSEfe75PdZXOeTffhflmeT+ae71
+ NEuVKP7uh4L533vj1Dv/08jIqnUB3KUK809VRUQt8amAEEBRcb6esR3Ke08+dHKs
+ QA03zqyACwNGyPc8vcXydnZJLncfDtMqA3q75XkaTS633I9j/pnuBD4hn4+QBiTX
+ 0t0YIVatw8qpaZrB2TzZhTeJW4wJN1lKilXseChWMzV4Y3kgaNJLrBwysp7TQfLe
+ TruiJCp9UBapvdo5N4kE27PeK9pwF7uqL+nTO1h8iycmQPj6TtJYHX1/21kaxA9Y
+ 2GFXQjSq7WRYG52SQ9Uvv/omzg0SekwUilw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1791271685; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:X9PbDqro4p+rYGAF/2JNFICJlf8r3tVP4tgExTW11VliVud
+ gTgRaLoxYzzZhqlnXyK7BJpiIUHhKaiM5ZnyAtoSdAtSFv3AOmgvtip+NE3VyeBr
+ xYSrwAsZtFRUDMtaIIHoeuHNZPtfsfOAFgdUUCTcGTb63ZYG4+4LX9uD+8GBerdg
+ U1Jd0tJPM/mPIDrvUlO1cVvRpko7RQmeY0x3g8eltJEfgbym0LZAsWMk3k1HraRx
+ 2id5xxhP5FPccimcnQ1KLvIHrAZvkmDBlmS4KbSlXqAIn99IUHfSVExlMa1P97zq
+ zAfKNV2XiANKrWAZx87hHQM8Fk7RhIJgXvH57SQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=mi-m=1; hc=11;
+ hn=cc,content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:T1XKQWGEn4CQzyBgdW7y5tKr+Lrm1AuDb+nTio5BjSM=:EIJ+FydJIKEk6UmtQ7OnOCerboF9sV4sLaS6YIe1ipI=;
+X-ME-Sender: <xms:BaPEanDXGddy4J6wkyHmfdVrqYQTsyu5jhcYsPm-g7xlft9a2labtg>
+ <xme:BaPEak9SoTpsyKxEO0izKCsSAHe_X_hOSfV_DwfNvVFWxknjvuHPNHHqw61z9kR5i
+ UsA9fI7XD7M3nm5ZNvEjIBK8rppgSIOvSl1kwuyCcrhrrMuwCIOo_YO>
+X-ME-Received: <xmr:BaPEav8N9X1z0EBIqGpdDefEnFq6uQDefhQGqUaL9HkT9udz7xbUOMTZInQ_6FEqzb5cXAB3IEI_RKsAY1fpifYR7rrkdNgptg>
+X-ME-Proxy-Cause: dmFkZTGOFeQ/0+I8V6FrV6Ov+dJIN2DvbXK3YKtmT0yZnhqvK7oahI1cteLBy8RS3T3utX
+ qr7H8WgPfACEapyq5J9loQSSsMG5stDEYGxA1/P3g1EdMeaJub9hFh2F+QI43RdQka+NJ3
+ STrJwLdhbQduvJ2yA4CvtvILfTyg7ArUfOz+GT9lirYOmhm4CRbEIylKII2bS8obWZVJ6t
+ SMd9k+xKO0cRoajKJ/qU4C87SiGUVmPI962Cwhu51/WPbqEb8Tg1NCTKl8j/J5u4EPXioH
+ +KqDxZhjbJ2f6g7Wqspv7Q34w1GHsOfUXFlNvQ2XtRtiy84ETdPlO5+t3V92Wuvorh75Fo
+ CR2v5jS9qMzPIaFX6kS+hP4tQOGJ9/MyQV2+J/BB4/sW/KVyXbZeEVOpR5p/B68aLlMw36
+ JDE8uHhv86JImFtjlSFTlWGGoN3MB7L+1/p3j6DjVjm2khkhk6bSilpEQ8ZsVSpycqj8Fw
+ YhAKJthCXC3mMAee4BRgGSsY10fSXXEQGeL9PnilLVuVM/dCqQst+tifuhlOcA9FQNfPMn
+ qhjOEE38HL+WtMu+Vs2rncEp9hXfDbg/t2jtciq08Dw4CHHU0VW1dEqxh9BoWcuOuWMawq
+ 3u+SyOVxEQ/2tMgMqieZVwCJb8ZVthurwYbXniRvHMaef2XF0KOR/Aah2+fg
+X-ME-Proxy: <xmx:BaPEajeTyL1BdGQ_HD0mEvdOLKD9MssP2XX5gjHNh_nvCzUwG7hLRA>
+ <xmx:BaPEagGUv9WdPxAnVl9CvPgQgT44Sb1XiS44cHrJOtp3ysE_i5UtUQ>
+ <xmx:BaPEapdrCHtBWdPCtJPVdiDzT0EyAJKOcvh6qUGGyQCP7PBVMvKMKQ>
+ <xmx:BaPEaiGDRoK9a6xqKy6DSjHSqAkqzt4xNkA1EfnCOaXJUfeuLcE1JQ>
+ <xmx:BaPEai9b7DFP8CexUQQMbx0FKFYnsc4mfFBMXLgEADm8sg-4Laa0qk4K>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 6 Oct 2026 03:28:05 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id A94A327D96F; Tue, 06 Oct 2026 08:28:04 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: zach shaftel <zach@shaf.tel>, Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+Subject: Re: master 1324e366010: Add a 'syntax-propertize-function' to
+ 'lisp-mode'
+In-Reply-To: <875wzf7ov8.fsf@shaf.tel>
+References: <179119511421.28524.12364422970517372970@vcs2.savannah.gnu.org>
+ <20261005101156.07571C0F00D@vcs2.savannah.gnu.org>
+ <jwvv77gjlnt.fsf-monnier+emacs@gnu.org> <875wzf7ov8.fsf@shaf.tel>
+Date: Tue, 06 Oct 2026 08:28:04 +0100
+Message-ID: <87v77fthiz.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=202.12.124.151;
+ envelope-from=spwhitton@spwhitton.name; helo=fout-b8-smtp.messagingengine.com
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_LOW=-0.7, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 02:44:54 -0000
+
+zach shaftel [05/Oct  6:40pm -04] wrote:
+> diff --git a/lisp/emacs-lisp/lisp-mode.el b/lisp/emacs-lisp/lisp-mode.el
+> index 2778b7f53cf..8a559c718f6 100644
+> --- a/lisp/emacs-lisp/lisp-mode.el
+> +++ b/lisp/emacs-lisp/lisp-mode.el
+> @@ -87,7 +87,10 @@ lisp-mode-syntax-table
+>  (eval-and-compile
+>    (defconst lisp-mode-syntax-propertize-rules
+>      (syntax-propertize-precompile-rules
+> -     ;; Give entire |multiple escape| sections symbol syntax.
+> +     ;; Give entire multiple escape sections symbol syntax.  Without
+> +     ;; this, `forward-sexp' and co. treat symbols| like |this as three
+> +     ;; expressions, and `lisp-mode-symbol-regexp' won't capture escape
+> +     ;; sections at all.
+>       ((rx "|" (+ (or (seq (syntax escape) "|") (not "|"))) "|")
+>        (0 (and (not (ppss-comment-or-string-start (syntax-ppss)))
+>                (string-to-syntax "_"))))
+
+How about putting ` and ' around the strange symbol?
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Wed Oct 07 00:57:12 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEJhr-0008FJ-HR
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 00:56:49 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <peter.mao@gmail.com>)
+ id 1xEIyi-0001OM-Ja
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 00:10:09 -0400
+Received: from mail-dl1-x122e.google.com ([2607:f8b0:4864:20::122e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <peter.mao@gmail.com>)
+ id 1xEIyg-0006Ge-2m
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 00:10:03 -0400
+Received: by mail-dl1-x122e.google.com with SMTP id
+ a92af1059eb24-16079d54c17so178531c88.0
+ for <emacs-devel@gnu.org>; Tue, 06 Oct 2026 21:09:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791346199; cv=none;
+ d=google.com; s=arc-20260327;
+ b=d3niL+w0c4uqfVZBXJ34chGCk7Gw0AYlgrDQ4MRq+sjymRuJmSMw8Q1TeNKmj8SgD5
+ T84fIMZqjbmlxTpg/aFFvHAAhpc0MHIFlIV/mUjXSMRWGf/2OsKXvO0uH53Z5IWfCyfs
+ fv/EILiWBRDJ/Yu5voKMR6mqUpRUpAEQvWMbtTVqjRmC0vvNaOLfuJWTxzHxq19m84fp
+ S+6UkiFYZ/zatJgWgC10vTQGyyxNaHHap1e2u+GDjRf8IdOuV1Slf20watzkjU46TNcW
+ Dd+UvfP1DTRYKCohuGHulArthFQ210kNckbTrLbqkTfS5EeNWOf9Gc+m5M4YKVo10K8J
+ zqMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=to:subject:message-id:date:from:mime-version:dkim-signature;
+ bh=BI0GsBWhe5C+c9LSGBV4brppLh03zm8RAGtDGoDOzA0=;
+ fh=cIstDLrCPI8r459/y+uU+JAMkG0v5fud2zIjuEzNmdQ=;
+ b=hk5cmErZ9urel4V73ITVUxFRrmlmyALDdhUDkShMtbV2XruGN7FHNgigpU6aJers15
+ HPKvGExPuDuAOJoxkryh2GC0SHvJbWCJglFBjcfFfhBUMkeypYnQrrLT3pQxj3VyPubu
+ cjUM5KBLyK45mzPMgARGkjr007l5x7WtxGE4xuZNChxVxmt8NSsZaCk4dlrJMQurYgHc
+ nqs6nEeqLUGGYinRojFROyR1HwEC+y7k7k4KqzyW2G981cl1eifttAEAYic8+vvsgWLw
+ C3+nyq2DLFUalzJ2n3yFyiAHiA+TwbK7v4ngaCcpczCvxrqYPKpNe7W/lIFBNuCc8zwn
+ ewmA==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1791346199; x=1791950999; darn=gnu.org;
+ h=content-type:to:subject:message-id:date:from:mime-version:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=BI0GsBWhe5C+c9LSGBV4brppLh03zm8RAGtDGoDOzA0=;
+ b=rqsK1FvuPVLuiBogsVeE8nJ33F85Auj2IQf5njjGtA1CY8EXffG7Cq3t1U1N29Cri6
+ 0f74E1czx3a/N3NJHNjswOYJCWRrAxXw8XjBhPLpVSO6AXLp7VM4yoFggV1dTY0KIdSZ
+ ntkPw6jg38JwEpdMMJzSIQyEZe8hh81UWzEGBlo/BUKOoNDhKz+hSKGbzTQnM8Pz7quz
+ Agwp8WgMp3Jmxkd5Uwr9Jy1obA9wrZAHeSZ4LViLGCk1vYCRNv/EToBJNrBC9IMP0Sq8
+ hz3MSc7ceq9Yqi7rttBDeexVrEA8/65U+ZyeHffU9eGPwkUrAvOYqUw7wek9sTzJ/GkF
+ ztOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1791346199; x=1791950999;
+ h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=BI0GsBWhe5C+c9LSGBV4brppLh03zm8RAGtDGoDOzA0=;
+ b=FT0HYo+fAhs3ReEBdG8KQraWuGaMqIzHezKKcAgQN4LR4zA5eVfV5llq8cAs3gNS6q
+ 6SFgOebbq5f6EnYJOuto9LnFa2usdwEpF93tNyRiiSJbkc1B2RhmB6Cuq3HroueS+xtu
+ EAwoCa8Yy0WFflk5KwHRILPXZ/0sNteOAf04J/76FHw2ga+Z6Kn1a0OqSoYBxKU9zn0W
+ cpd1AJ8CoyEzHXFEK6fST0ILMJUIvNnKbym6sa+JJnG3QR1An402hwLQBnG6dRS/PYbr
+ ae3KH3f8yhNhmLh8ENEbXUCrI2Z0i7jhRbfVsrszqJXaulc5ap8mJ3U2lKrtf8Q6aMmU
+ XkcQ==
+X-Gm-Message-State: AFuF++niXtjtkXFtwb4Y1GnTlom/d/PJM0ylvUTt4cdw7FTdVBGArY4I
+ tVKZW+tzSKEW0vhSDFyu74q0mA2+rbicpctJb+vU+HE70/kCeibbq2SyzpZmep125ERe0ZfD5TG
+ 7uJF0xjB+ta9E/w3YXZ9SZ3h1nf1qkWrVpjHd
+X-Gm-Gg: AYBFou2qoPikyRz1dJJxFlm6fKGy+MitTolkXmGQ+dDjWeIK/RtjM0o8vcBxvfFnk4D
+ h8wDVThHwWg8gpsa/rh7XajcWDK+VjJc2VotDMIO3WIvvRotIA6zSHGOdsghSBVcMlsxKWqCFL+
+ rRTP8Bblp63E4G/EyEtY79+QwQPOAgks8RRgNUS96Av2Bm0Dkk6ghw0VqcXosdoo8IMEk5rfBGj
+ jRtQ1QXPnWcOYtRcviu9jE0WSPIbE+y+oTY3g8sCnlZztzcR7nxigCbxQT7N/U4mDB3z9/oCO9q
+ tTFrZeCV4mau2jEQFsI3D10X1NiZaRG1JH2Amxdn4P6KRXRIvCsl+EA+Y37dmNxvVSvcGe44Qjs
+ 9MXMGmHMTztGhJV0D8HrbAnyFgu4p5JwNexeLlriSeA==
+X-Received: by 2002:a05:690e:b8e:b0:676:e85e:5ef with SMTP id
+ 956f58d0204a3-678fce230b0mr138050d50.30.1791265782326; Mon, 05 Oct 2026
+ 22:49:42 -0700 (PDT)
+MIME-Version: 1.0
+From: Peter Mao <peter.mao@gmail.com>
+Date: Mon, 5 Oct 2026 22:49:31 -0700
+X-Gm-Features: AclHuK_43-24fxLtvvwxycnE5J8ZrdZUBkJWTqZIicD72m_Rd9OgCvr7VDA-qW8
+Message-ID: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+Subject: vc-annotate enhancement
+To: emacs-devel@gnu.org
+Content-Type: multipart/mixed; boundary="000000000000a7a4f3065d259083"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::122e;
+ envelope-from=peter.mao@gmail.com; helo=mail-dl1-x122e.google.com
+X-Spam_score_int: -9
+X-Spam_score: -1.0
+X-Spam_bar: -
+X-Spam_report: (-1.0 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_12_24=1.049,
+ DKIM_SIGNED=0.1, DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ FREEMAIL_FROM=0.001, HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 04:10:13 -0000
+
+--000000000000a7a4f3065d259083
+Content-Type: multipart/alternative; boundary="000000000000a7a4ee065d259081"
+
+--000000000000a7a4ee065d259081
+Content-Type: text/plain; charset="UTF-8"
+
+I use vc-annotate a lot to dig into the history of code I'm working on,
+typically with vc-annotate-revision-previous-to-line and
+vc-annotate-revision-at-line, but often, I go too far and would like to
+back up a few jumps.
+
+The patch attached adds to vc-annotate.el:
+1. vc-annotate-revision-history -- a buffer local variable holding the
+revspecs of the revisions visited.
+2. vc-annotate-undo-warp-revision, bound to "C-/", which warps to the car
+of the above list
+3. vc-annotate-update-history, a function to maintain the above list.
+
+vc-annotate-warp revision is modified to call vc-annotate-update-history
+just before the warp happens.
+
+Properly, vc-annotate-revision-history should be cleared when vc-annotate
+is invoked on a file, but I haven't dealt with that yet -- I figure there's
+time to do that while I get comments from the community.
+
+--Peter
+
+--000000000000a7a4ee065d259081
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>I use vc-annotate a lot to dig into the history of co=
+de I&#39;m working on, typically with=C2=A0vc-annotate-revision-previous-to=
+-line and vc-annotate-revision-at-line, but often, I go too far and would l=
+ike to back up a few jumps.</div><div><br></div><div>The patch attached add=
+s to vc-annotate.el:</div><div>1. vc-annotate-revision-history -- a buffer =
+local variable holding the revspecs=C2=A0of the revisions visited.</div><di=
+v>2. vc-annotate-undo-warp-revision, bound to &quot;C-/&quot;, which warps =
+to the car of the above list</div><div>3. vc-annotate-update-history, a fun=
+ction to maintain the above list.</div><div><br></div><div>vc-annotate-warp=
+ revision is modified to call vc-annotate-update-history just before the wa=
+rp happens.</div><div><br></div><div>Properly, vc-annotate-revision-history=
+ should be cleared when vc-annotate is invoked on a file, but I haven&#39;t=
+ dealt with that yet -- I figure there&#39;s time to do that while I get co=
+mments from the community.</div><div><br></div><div>--Peter</div></div>
+
+--000000000000a7a4ee065d259081--
+
+--000000000000a7a4f3065d259083
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0002-add-vc-annotate-undo-warp-revision.patch"
+Content-Disposition: attachment; 
+	filename="0002-add-vc-annotate-undo-warp-revision.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_muw8xizz0>
+X-Attachment-Id: f_muw8xizz0
+
+RnJvbSAxNzczMmViMTU2ZGE1ZGMzMzRiOTllY2E0N2E3MGNlOWQ3MjczZDFmIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBQZXRlciBNYW8gPHBldGVyLm1hb0BnbWFpbC5jb20+CkRhdGU6
+IE1vbiwgNSBPY3QgMjAyNiAyMjoyNjoxMyAtMDcwMApTdWJqZWN0OiBbUEFUQ0ggMi8yXSBhZGQg
+dmMtYW5ub3RhdGUtdW5kby13YXJwLXJldmlzaW9uCgpNYWludGFpbiBoaXN0b3J5IG9mIHJldmlz
+aW9ucyB2aXNpdGVkIGFuZCBwcm92aWRlIGZ1bmN0aW9uYWxpdHkgdG8KdHJhdmVsIGJhY2t3YXJk
+cyBpbiB0aGF0IGhpc3RvcnkuCgpUaGUgcmV2aXNpb24gaGlzdG9yeSBpcyBzdG9yZWQgaW4gYHZj
+LWFubm90YXRlLXJldmlzaW9uLWhpc3RvcnlgIGlmIHRoZQpkZXN0aW5hdGlvbiByZXZpc2lvbiBp
+cyBub3QgKGNhciB2Yy1hbm5vdGF0ZS1yZXZpc2lvbi1oaXN0b3J5KS4gIElmIGl0CmlzLCB0aGVu
+IChwb3AgdmMtYW5ub3RhdGUtcmV2aXNpb24taGlzdG9yeSkuCi0tLQogbGlzcC92Yy92Yy1hbm5v
+dGF0ZS5lbCB8IDMwICsrKysrKysrKysrKysrKysrKysrKysrKysrKystLQogMSBmaWxlIGNoYW5n
+ZWQsIDI4IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvbGlzcC92
+Yy92Yy1hbm5vdGF0ZS5lbCBiL2xpc3AvdmMvdmMtYW5ub3RhdGUuZWwKaW5kZXggNDJkYmJiYmU5
+ZDIuLjdhMGQ4OTgyZjNmIDEwMDY0NAotLS0gYS9saXNwL3ZjL3ZjLWFubm90YXRlLmVsCisrKyBi
+L2xpc3AvdmMvdmMtYW5ub3RhdGUuZWwKQEAgLTE4MSwxMCArMTgxLDE3IEBAIHZjLWFubm90YXRl
+LW1vZGUtbWFwCiAgICJwIiAgICMndmMtYW5ub3RhdGUtcHJldi1yZXZpc2lvbgogICAidyIgICAj
+J3ZjLWFubm90YXRlLXdvcmtpbmctcmV2aXNpb24KICAgInYiICAgIyd2Yy1hbm5vdGF0ZS10b2dn
+bGUtYW5ub3RhdGlvbi12aXNpYmlsaXR5Ci0gICJSRVQiICMndmMtYW5ub3RhdGUtZ290by1saW5l
+KQorICAiUkVUIiAjJ3ZjLWFubm90YXRlLWdvdG8tbGluZQorICAiQy0vIiAjJ3ZjLWFubm90YXRl
+LXVuZG8td2FycC1yZXZpc2lvbikKIAogOzs7IEFubm90YXRlIGZ1bmN0aW9uYWxpdHkKIAorKGRl
+ZnZhci1sb2NhbCB2Yy1hbm5vdGF0ZS1yZXZpc2lvbi1oaXN0b3J5ICcoKQorICAiTGlzdCBvZiBy
+ZXZzcGVjcyB2aXNpdGVkLgorCitUaGlzIHZhcmlhYmxlIGlzIHRpZWQgdG8gdGhlIG5vbi1hbm5v
+dGF0ZWQgZmlsZSBiZWNhdXNlIGl0cyBidWZmZXIgbmFtZQoraXMgc3RhYmxlLiIpCisKIDs7IERl
+Y2xhcmUgZ2xvYmFsbHkgaW5zdGVhZCBvZiBhZGRpdGlvbmFsIHBhcmFtZXRlciB0bwogOzsgdGVt
+cC1idWZmZXItc2hvdy1mdW5jdGlvbiAobm90IHBvc3NpYmxlIHRvIHBhc3MgbW9yZSB0aGFuIG9u
+ZQogOzsgcGFyYW1ldGVyKS4gIFRoZSB1c2Ugb2YgYW5ub3RhdGUtcmF0aW8gaXMgZGVwcmVjYXRl
+ZCBpbiBmYXZvciBvZgpAQCAtNzAxLDcgKzcwOCw4IEBAIHZjLWFubm90YXRlLXdhcnAtcmV2aXNp
+b24KICAgICAgICAoKHN0cmluZ3AgcmV2c3BlYykgKHNldHEgbmV3cmV2IHJldnNwZWMpKQogICAg
+ICAgICh0IChlcnJvciAiSW52YWxpZCBhcmd1bWVudCB0byB2Yy1hbm5vdGF0ZS13YXJwLXJldmlz
+aW9uIikpKQogICAgICAgKHdoZW4gbmV3cmV2Ci0JKHZjLWFubm90YXRlIChvciBmaWxlCisgICAg
+ICAgICh2Yy1hbm5vdGF0ZS11cGRhdGUtaGlzdG9yeSBuZXdyZXYpCisgICAgICAgICh2Yy1hbm5v
+dGF0ZSAob3IgZmlsZQogICAgICAgICAgICAgICAgICAgICAgICAgIChjYWFkciB2Yy1idWZmZXIt
+b3ZlcnJpZGluZy1maWxlc2V0KSkKICAgICAgICAgICAgICAgICAgICAgIG5ld3JldgogICAgICAg
+ICAgICAgICAgICAgICAgdmMtYW5ub3RhdGUtcGFyZW50LWRpc3BsYXktbW9kZQpAQCAtNzEzLDYg
+KzcyMSwyNCBAQCB2Yy1hbm5vdGF0ZS13YXJwLXJldmlzaW9uCiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIChsaW5lLW51bWJlci1hdC1wb3MpKSkKIAkJICAgICB2Yy1h
+bm5vdGF0ZS1iYWNrZW5kKSkpKSkKIAorKGRlZnVuIHZjLWFubm90YXRlLXVuZG8td2FycC1yZXZp
+c2lvbiAoKQorICAiR28gYmFja3dhcmRzIGluIHRoZSB2aXNpdGVkIHJldmlzaW9uIGhpc3Rvcnku
+IgorICAoaW50ZXJhY3RpdmUpCisgIChsZXQgKChyZXZzcGVjIDApKQorICAgIChzYXZlLWV4Y3Vy
+c2lvbgorICAgICAgKHNldC1idWZmZXIgKGdldC1maWxlLWJ1ZmZlciAoY2FhZHIgdmMtYnVmZmVy
+LW92ZXJyaWRpbmctZmlsZXNldCkpKQorICAgICAgKHNldHEgcmV2c3BlYyAoY2FyIHZjLWFubm90
+YXRlLXJldmlzaW9uLWhpc3RvcnkpKSkKKyAgICAodmMtYW5ub3RhdGUtd2FycC1yZXZpc2lvbiBy
+ZXZzcGVjKSkpCisKKyhkZWZ1biB2Yy1hbm5vdGF0ZS11cGRhdGUtaGlzdG9yeSAocmV2c3BlYykK
+KyAgIlVwZGF0ZSB2Yy1hbm5vdGF0ZS1yZXZpc2lvbi1oaXN0b3J5LiIKKyAgKGxldCAoKHRoaXNy
+ZXYgdmMtYnVmZmVyLXJldmlzaW9uKSkKKyAgICAoc2F2ZS1leGN1cnNpb24KKyAgICAgIChzZXQt
+YnVmZmVyIChnZXQtZmlsZS1idWZmZXIgKGNhYWRyIHZjLWJ1ZmZlci1vdmVycmlkaW5nLWZpbGVz
+ZXQpKSkKKyAgICAgIChpZiAoZXF1YWwgcmV2c3BlYyAoY2FyIHZjLWFubm90YXRlLXJldmlzaW9u
+LWhpc3RvcnkpKQorICAgICAgICAgIChwb3AgdmMtYW5ub3RhdGUtcmV2aXNpb24taGlzdG9yeSkK
+KyAgICAgICAgKHB1c2ggdGhpc3JldiB2Yy1hbm5vdGF0ZS1yZXZpc2lvbi1oaXN0b3J5KSkpKSkK
+KwogKGRlZnVuIHZjLWFubm90YXRlLWNvbXBjYXIgKHRocmVzaG9sZCBhLWxpc3QpCiAgICJUZXN0
+IHN1Y2Nlc3NpdmUgY29ucyBjZWxscyBvZiBBLUxJU1QgYWdhaW5zdCBUSFJFU0hPTEQuCiBSZXR1
+cm4gdGhlIGZpcnN0IGNvbnMgY2VsbCB3aXRoIGEgY2FyIHRoYXQgaXMgbm90IGxlc3MgdGhhbiBU
+SFJFU0hPTEQsCi0tIAoyLjQzLjAKCg==
+--000000000000a7a4f3065d259083--
+
+
+From MAILER-DAEMON Wed Oct 07 01:32:01 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEKFg-0005cJ-Ch
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 01:31:46 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1xEJ3p-0002HQ-Ar
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 00:15:38 -0400
+Received: from mail-qv1-xf33.google.com ([2607:f8b0:4864:20::f33])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <jporterbugs@gmail.com>)
+ id 1xEJ3f-0007l1-QK
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 00:15:14 -0400
+Received: by mail-qv1-xf33.google.com with SMTP id
+ 6a1803df08f44-917a7c03eb8so25173306d6.3
+ for <emacs-devel@gnu.org>; Tue, 06 Oct 2026 21:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1791346509; x=1791951309; darn=gnu.org;
+ h=content-transfer-encoding:content-type:in-reply-to:content-language
+ :references:cc:to:subject:from:mime-version:date:message-id:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=QYOgWOGR69yuj073kxyzb65sJXj6POrMYo7uEc2+pqU=;
+ b=X4lEbdN3LqFulktkhQM8DQh5HawF1oSR838t+3wfuw+H3JKnIbbrdIm3v5+/gnWDNf
+ 7gTtSiGHW0kUOOACYn9otJ6Vs5X3cABm6CtXOopUa5qN6qkQMJejNfPIil7cfjNWXlNX
+ Pxhg9KXqEpB3e80vhe54OsTr+HVG5tKlc0e1EXMdg75WMXC5b00pgbzzonrhgy8AbZIj
+ H5qKVeuwxywr1lKVC2LDCmCUguH3EZod/8aIlAaJHnpUMVgnWV2Tx6O2P96tF8F+lV5m
+ x6L/x/ie6Hu9VQDNPU9FJphquVam6KA/Uth8SaSn1pXsv3YI8Jf+a0YvUIQyL3Y9kFb9
+ 2aRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1791346509; x=1791951309;
+ h=content-transfer-encoding:content-type:in-reply-to:content-language
+ :references:cc:to:subject:from:mime-version:date:message-id:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=QYOgWOGR69yuj073kxyzb65sJXj6POrMYo7uEc2+pqU=;
+ b=ei50NKl7/VSWEitVXNdp+y6VPfHyxlMivDoyEfjcn/rooNybebrNsAJ0WVV0sGiIA2
+ yZxyXAgkbE0NxkD5qsT32ry2zP3NN8x4yjFKoR8ex7NEsFCtdEnEtsXbmMPI9DreI/0s
+ b69Y/2Wp+RP48sMbUmcQaAK2LEfLc9dtgjDm9yvBDy33aWNpjavRxq2y1DVcZJkErCm3
+ ZzlCc5WIkqwjoGNFypH6bVXDRkwiymFFC2lLI1eNGqIH4etimeDAa1rrR80iMKBRt5ZH
+ /11pxZo2cvFwGWRf2tGVUd1Jkwf8Ja61fBQP7HBP5ahc4O/MXKfVtjmfiP9DwqNWNkVd
+ yjRA==
+X-Gm-Message-State: AFuF++kzCw6Z8q5mKd4nBdDhNVqbt752DIu+kJOx8F+WM6DaB3V0tIw3
+ RrH/aWJwYioBTgb65EuDRRkZ0BsASIsfCsjplntUCzUFDqffU9HwEyojZl1v6Q==
+X-Gm-Gg: AYBFou2vygCqVDrCJFh65/D+zuIzXO2rVZmc0JpLDKk/DU7BLKertsOjiKq1ihMCIHj
+ QNJwmo82g/uJCRMehpxemUUpWQH27lRgBFz/dyuumGA10N/nNd4SiRoF6viXrmYeyfExuOg2zk0
+ zXHOAq4yKx3FR+mpuKYq4u+E4OBg48nojBoyQ8XGotUapELw6HPHHkqte74Ce0ogzPkNqDlVbw0
+ km6hlM/syG1TJ1pakCWtEighv2EdS122qz7dyntXyiQFdIBzrVcfJ/Bsh0SqdBMxwRL0IBPqLJT
+ XKG880f8kpttVZU7W78NDhzeQ0o7YNYCyisFBiDPQhHA+AMM2wkL/3cE7BQdJ0PxN7kwTuPLx+w
+ z38jbUBsdJ/sdKrx0EjT7pfwJa1+7QoXzUBIPBaPRQrwVXF3HSgLYpx77V+6eC40DnpqK8vDegY
+ ID3geFFLLNWWv0X15c+7vUURlXhZ3vQvc2OakQKDiqEsbVhycpsureH4fSvST567e72gAqrq3/j
+ VdkdJsRvSC1tA==
+X-Received: by 2002:a05:7300:d405:b0:34c:b75a:ac14 with SMTP id
+ 5a478bee46e88-3514e3aafd0mr263101eec.40.1791264521295; 
+ Mon, 05 Oct 2026 22:28:41 -0700 (PDT)
+Received: from [192.168.1.4] ([23.240.109.248])
+ by smtp.googlemail.com with ESMTPSA id
+ 5a478bee46e88-351464fd465sm5680804eec.0.2026.10.05.22.28.40
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Mon, 05 Oct 2026 22:28:40 -0700 (PDT)
+Message-ID: <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+Date: Mon, 5 Oct 2026 22:28:38 -0700
+MIME-Version: 1.0
+From: Jim Porter <jporterbugs@gmail.com>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+To: rms@gnu.org
+Cc: emacs-devel@gnu.org
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+Content-Language: en-US
+In-Reply-To: <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=2607:f8b0:4864:20::f33;
+ envelope-from=jporterbugs@gmail.com; helo=mail-qv1-xf33.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 04:16:33 -0000
+
+On 10/4/2026 8:51 PM, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+>    > Of course, since GNU Emacs is built to give users freedom to use,
+>    > modify, and extend it as they see fit, there's nothing we could do to
+>    > prevent someone from integrating LLMs into their Emacs. However, that
+>    > doesn't mean we need to embrace it ourselves.
+> 
+> That is true, of course -- but it slightly mis-states the issue at
+> hand.  To correct slightly the point Stefan made in his reply, this
+> text quoted above changes the issue from "stand against nonfree
+> software" to "stand against LLMs."
+> 
+> We don't reject LLMs on principle.  We do reject freedom-denying LLMs
+> on principle, along with other freedom-denying computing technology.
+> Given a useful, free LLM, we would have no a priori objection to it.
+> 
+> We are temporarily rejecting code made by LLMs, but that is not a
+> moral judgment.  It is because we do not know how that affects
+> copylefting the code.
+
+My concern isn't exactly a moral one (though I do also have moral 
+concerns with LLMs, and am unconvinced that it's possible to resolve 
+these while keeping the "Large" in "Large Language Model"). I'm more 
+immediately concerned with how LLMs impact the ability to maintain 
+communities, which I feel is the most critical piece of Emacs and 
+GNU/FSF as a whole. Hence, I see this as mainly a practical problem.
+
+LLMs have unfortunately made it easier for people to produce large 
+volumes of plausible output that they don't fully understand, both 
+burdening maintainers and undermining LLM users' ability to develop 
+their skills. The LLMs of course don't understand anything at all, but 
+have been fine-tuned to produce pleasing answers and to function as a 
+replacement of human social interaction and expertise.
+
+I've already had to deal with bad behavior brought on by overzealous LLM 
+users in other software communities and have seen the beginnings of it 
+appear on the Emacs mailing lists. Here and elsewhere, this issue seems 
+to be getting worse, not better, which has made me reconsider where we 
+ought to draw the line. Are LLM-related packages in ELPA a wise idea? 
+I'm not so sure anymore.
+
+I'd hate to see our decisions push away thoughtful contributors who 
+value the community built here over the years. I don't feel sure enough 
+to stake out a definite position on the immediate issue of ELPA packages 
+here, though as mentioned, I'm increasingly worried. I chiefly wanted to 
+share my concerns about these second-order harms while the Emacs 
+community is still generally healthy.
+
+
+From MAILER-DAEMON Wed Oct 07 02:05:28 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEKlJ-0001y4-Lj
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 02:04:46 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1xEJMN-00049i-Lp
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 00:34:54 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1xEJM6-0001hR-72; Wed, 07 Oct 2026 00:34:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=T+Is2VkEivJ9qi3/SX4ucYEfeJ1HOHCZvqk2pqJX2KI=; b=a0gVJz3o3zWc
+ aOqeFiXR8JVClqEbeKc8k/oPTwNdrhpT1u7lOMWDxug9nH3Jlod6Za2dbMVmsRilZ/Riac27P+VDI
+ o95zQWMMdytuLFwvuNv2EoYbe7ehO9hC+M0Hh9zCZHvFFwPYAXvODQEO7Mdio3q+ANP8ORXUP7qzo
+ HvzkjzaBVdrd2tEF0+l7oVjD8UqTxN4GDV0XiXtKjTaii/Dwz5zq9js4Rk7k0NTD+rYmPz6zYplTh
+ kWxBLOZ2XETKO2WrszK5Cg67jSgth0FP9dpjMJaY0MMZEs5hBBpjIGOoq3VKKgqetDRH0lyJFFeBU
+ +9BgPiHXhOYB9n6CXa37lg==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1xEJM5-0057Ig-4P; Wed, 07 Oct 2026 00:34:13 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: Jim Porter <jporterbugs@gmail.com>
+Cc: maximiliancook@fclr.net, emacs-devel@gnu.org
+In-Reply-To: <46d85146-194d-90db-e6c8-165315d30ee7@gmail.com> (message from
+ Jim Porter on Wed, 3 Jun 2026 17:34:23 -0700)
+Subject: Re: References to non-free email service (Gmail) in info manuals
+Reply-To: rms@gnu.org
+References: <m2bjdsx6bt.fsf@fclr.net> <E1wUsqa-0022iL-QQ@fencepost.gnu.org>
+ <46d85146-194d-90db-e6c8-165315d30ee7@gmail.com>
+Message-Id: <E1xEJM5-0057Ig-4P@fencepost.gnu.org>
+Date: Wed, 07 Oct 2026 00:34:13 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 04:35:13 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > On the other hand, Gmail is so popular that it's not as though we're 
+  > *promoting* it to users who might not be aware. For better or worse, 
+  > everyone who'd read the Gnus manual already knows about Gmail.
+
+That is true.  "Pretend Gmail does not exist" is not obligatory,
+and I would guess it is not a very effective way of fighting back.
+
+  > However, I don't see anything in the manual about 
+  > configuring to use OAuth or "less-secure" authentication, so it's not as 
+  > helpful for this goal as it could be.
+
+Since (according to your message) configuring that way involves
+running some nonfree software, we have to be careful how to present
+that.  Perhaps, "There is a way you can run some nonfree software one
+last time so as to cut your ties with unjust Gmail authentication."
+
+There is a crucial moral difference between (1) "I choose nasty
+practice A because it is not as nasty as practice B", and (2) "I will
+do X _once_ to cut the ties that compel me to accept practice Y."  If
+you are willing to accept pattern (1) as valid, that willingness can
+be used to maneuver you into rationalizing any injustice, simply by
+making you choose between that one and something worse.  Not so for
+(2).
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
+From MAILER-DAEMON Wed Oct 07 06:33:45 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEOxw-0005Jg-8w
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 06:33:42 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tomas@tuxteam.de>) id 1xEOxq-0005Ia-Dx
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 06:33:36 -0400
+Received: from mail.tuxteam.de ([5.199.139.25])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tomas@tuxteam.de>)
+ id 1xEOxm-0007Tw-Tn; Wed, 07 Oct 2026 06:33:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tuxteam.de; 
+ s=mail;
+ h=From:In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+ Subject:Cc:To:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+ List-Post:List-Owner:List-Archive;
+ bh=YBQucIPrxhzPHFM2Ir2mafS7I1NS+TYIVbqa/XNttkQ=; b=LI7cAtuh53VZwpxUzmPr+IgHT5
+ 0TXzOtffxZ8AB95eGzEHEeVEr/ckRxOVAFJhInHLAUf8Qb3G6NPc4GDuNjKwBLef44Ne4YFPLVslW
+ Ted7TNvAJcwVOO0iLoB7vLxDyJTo8B1Euc6tme7f2XGc+HFVdhBlOUsSjHVmAG4Vr8sgK9ExktrST
+ 05eMt9TL8XjlQJPdDtM+nQm/eXMOTwSdQe0dsr/0qqzvUkxYqegTQMwK37EnzofvvDqmcdn+JaZis
+ hYZa+syV8sATO0odHVsRqWbxuFP0nAJXo6AGjXW4oLCJauuOR0gHMA9SsrumWH2DPc8bXO9TDPgsO
+ a3DYd9fA==;
+Received: from tomas by mail.tuxteam.de with local (Exim 4.94.2)
+ (envelope-from <tomas@tuxteam.de>)
+ id 1xEOxj-0006QT-0u; Wed, 07 Oct 2026 12:33:27 +0200
+Date: Wed, 7 Oct 2026 12:33:27 +0200
+To: Jim Porter <jporterbugs@gmail.com>
+Cc: rms@gnu.org, emacs-devel@gnu.org
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <asYf95hwG+a54Ozq@tuxteam.de>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+ <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature"; boundary="9kkqNrY5d8I81vAT"
+Content-Disposition: inline
+In-Reply-To: <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+From: <tomas@tuxteam.de>
+Received-SPF: pass client-ip=5.199.139.25; envelope-from=tomas@tuxteam.de;
+ helo=mail.tuxteam.de
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 10:33:36 -0000
+
+
+--9kkqNrY5d8I81vAT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Oct 05, 2026 at 10:28:38PM -0700, Jim Porter wrote:
+
+[...]
+
+> My concern isn't exactly a moral one (though I do also have moral concerns
+> with LLMs, and am unconvinced that it's possible to resolve these while
+> keeping the "Large" in "Large Language Model"). I'm more immediately
+> concerned with how LLMs impact the ability to maintain communities, which=
+ I
+> feel is the most critical piece of Emacs and GNU/FSF as a whole. Hence, I
+> see this as mainly a practical problem.
+
+Thanks for bringing that up. Exactly my thoughts (although I wouldn't have
+managed to put it so cleanly in so few words).
+
+Ultimately, I think this /is/ a moral problem, after all, since it targets
+the very core of communication, the glue which holds our communities
+together.
+
+What else has been software, if not a means of communication? What else
+has been the GPL if not the way to enable open communities, communicating
+via their copylefted programs, making sure they stay open?
+
+This is about to change. You can't "talk" to a generative LLM. I'm
+deeply worried by the current power assymetry as those things are being
+deployed large-scale.
+
+Cheers
+--=20
+t
+
+--9kkqNrY5d8I81vAT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRp53liolZD6iXhAoIFyCz1etHaRgUCasYf7wAKCRAFyCz1etHa
+RnkWAJ4ovKpBDWiSJBo4Qr2Dx6Axyg0lZwCeJ3U7/CvF5liFfWmu9s6cpJzjoug=
+=k2ub
+-----END PGP SIGNATURE-----
+
+--9kkqNrY5d8I81vAT--
+
+
+From MAILER-DAEMON Wed Oct 07 06:59:32 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEPMx-0008SW-G9
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 06:59:31 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xEPML-0008KA-HM
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 06:58:55 -0400
+Received: from fhigh-a1-smtp.messagingengine.com ([103.168.172.152])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xEPMK-0001Lt-1w
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 06:58:53 -0400
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+ by mailfhigh.phl.internal (Postfix) with ESMTP id 777AF14000D0
+ for <emacs-devel@gnu.org>; Wed,  7 Oct 2026 06:58:50 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-11.internal (MEProxy); Wed, 07 Oct 2026 06:58:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-type:content-type:date:date:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:subject:subject:to:to; s=fm1; t=1791370730; x=
+ 1791457130; bh=AvbCLEIU9PpLOSxEoPeZPaKaOZR5KppmZ7wrmrhYeXY=; b=a
+ F+qJyPRp1T2htkrr2Vheem+bS6dm5w5jhTeqmfqZQpJlqoBK0jDfEtp8ASXoEVtj
+ qZdCXDjlp3FqspC0c6RvqNdqUAgmO0ujAFzYSXDbqrSk3YkAXETcJ0JLRwMElms1
+ JoMQlouws4pnb2Z/VeTJZpvWNxD0FTpuHCRzq69SjNGXvXdp2ljBk++UGcKamfwX
+ v8689aFCYkFalr8ivwTVGwWpExePZM3I/5sXPY392tVuUUH+Scf2z8L4Y7/pHrDd
+ M/RwZYtDurE4Mlt/2BqoegPnfnxrQZyoHOvaY3+y7/kKYzatRMqz5zLcxdoAkSWZ
+ LvBnIgGPoXn5Z3iEsop0g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1791370730; x=1791457130; bh=AvbCLEIU9PpLOSxEoPeZPaKaOZR5KppmZ7w
+ rmrhYeXY=; b=uSSENVCNPQgkUZe5p9CSXLvBy+o2SdOKUAc4rilY8M1E4iPBK6M
+ V0218MF+tJPRUS0gGHV/eJNjn/sbj9JMmMckxiMf6eWHuzCHs48WJX7aW5P0ZmAk
+ y+XmcZjaBRcHhXxxAocsE8BvYS1IewMPwcYg94sgSH5RBghbzHnMOC+e7k5XZhAe
+ E9VXplBG6J5mJluezSqHO5AVZOOvq/cAu1DkcGQoO4v4Bh+AGLzOvrcLrBYZUu/0
+ RnBT/PEeBRm856Coefm2kYbZ/sb92fErAOtAAB0l+rN6116h7c0DBTMp1rCOfXtW
+ xqg5JTo4Ahs4Cs8GIPSNxZl6Fuhal0UX65Q==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1791370730; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:da+35AE0yGj3dqtkpflwIqm11fXkeMfEVSyK0y0jvM+5FZ6
+ 0NSEP3HBRQ99LuxqF2U1LJ/xZ626YnbDg1KLcZ5SD6L1HU387wkUjGApshy86S8s
+ Gc3bSs3x3DJ2OD3FEaUHdXNp6K879MtU/RQNHicQs1v04rdtO+S0hg7paxZk6Ww8
+ mLM/ZPdXtNWWAmSFJ4gpUwTdYGcEK81ItwR3IvEXzrdVKujkuyy46YQqPUz1uSFL
+ LBD5GK/ixtOiy9zFB/szYsGMkQBFvZ+eCA1vIM/hI51ZXLZjkF/SqfnV1Rd/hOCK
+ yFNO7jVM7QjrD+69fauEf0mVGcZAp8+9mHRrhGA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=mi-m=1; hc=11;
+ hn=cc,content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:QaVb8ntiOJzkPmqKVTmrCLwscm0MmOyAeGJ761Nu0AA=:RRcXzUpbOvur+80nNvj1rW/UQiSuHxXbAfYsERm4Wc4=;
+X-ME-Sender: <xms:6iXGao-I9tqB71SSm08UjiGNa2U38DqHklvcfAi9u7VvjgWvIO-CDw>
+ <xme:6iXGaoKWTlFwe_ng9mNHSY5P0YIY9wEDUesZw6tEj-HgTF8taCeLt6AaLSDzjjMnp
+ 2wXYQAiHCCtkB65155b3qFI93NpsIp-QSxSQ8VY5oDu34RRrN68ngg>
+X-ME-Received: <xmr:6iXGarbpBOpQYXWwgFhfSXczBNdd-g0gf7ePcSGYLnQQMegGChCJDWWdLetv0BOF2iN2JpYx2K8nJRFxrIQGn8GidJxv28DyHA>
+X-ME-Proxy-Cause: dmFkZTGsVbaiEkoW7Oo46fBfqN232ZgEvGK/E6w+mlXatJwrZ/zErQPrjmf/bsNXLYLD3O
+ kbkKubxcuDlIscsGPAw85u1p44LW7w87VAOBPlOl1f53skI0E6+HR0eaHJJMgynUpI9Y9u
+ sVZppqqcQYM28WOHq1He/JEb9iMA9NXPrxx+XHlfNh0eQLNxLOd1Dsy+niNT6ISczA4dGl
+ SRteQPZqVk0o6eFCVNIgJun45jw5/5ThWD0E57x2qWJYy79B4EfLQVnSNUtbMpOs0hIMxl
+ QxYGYAPe3gDn0qx4s7qO4jHTHOWIRodKD60AUAkt/zYN01dvV6teNsemxk0jLCRoZ0Cyto
+ knqueXfpKYSvMFfjZm23qIlyLILmMN6aWE/ixO0uX7Zm2TASgzQty+w1JMC4rFQI4F4UW4
+ /UeOSYqC6leJGwH/6YU5FghJmDhV4zWzqAPHXlicQ2UBJBud8rUqAQ60G7aou5tdoqIIaT
+ vjLaem9NWrT/8dqj16ZSY5W/b1feMPM3UJZCdqIKvUzOmd+pz4Y7edWyoUeUGfL5y/bk8/
+ sJbebFWCr+owgPw7YFxlvyAQD9f5MDXKmCNBNHeFQIgc4NzrInzUFDtm4wMkOz601PbxMB
+ 8JPKkuB086rqQ4eevHfYzPff/eABdV3vRwqC7WS1tyZXvzA66L1ozJgUXqHg
+X-ME-Proxy: <xmx:6iXGaiKKoz7u3zdWwF-Q-Ehzp56QjHefWSd2ajKtWedj_hQ-1hKuZg>
+ <xmx:6iXGahDYdddZ8643ElpM8tqyieGyLzvII3-AD79QHe6hw8BPO-cUMQ>
+ <xmx:6iXGavrfnLYbVEnLJ-aiwrOdOoY8dW87RiWFsAn8O8rY6mBENiPQBg>
+ <xmx:6iXGakgDUWYasSHYoP-qvEOJa71IfQRB3YzTNEJirPZM4Iy-Jzgtnw>
+ <xmx:6iXGagqcITc5Un2Zgws5aqsIRDdaKkAMUX2gjBwppnrAJgdOJrtlQOjv>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 7 Oct 2026 06:58:50 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 68C0027CC3E; Wed, 07 Oct 2026 11:58:49 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: zach shaftel <zach@shaf.tel>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>, emacs-devel@gnu.org
+Subject: Re: master 1324e366010: Add a 'syntax-propertize-function' to
+ 'lisp-mode'
+In-Reply-To: <87zewq65ig.fsf@shaf.tel>
+References: <179119511421.28524.12364422970517372970@vcs2.savannah.gnu.org>
+ <20261005101156.07571C0F00D@vcs2.savannah.gnu.org>
+ <jwvv77gjlnt.fsf-monnier+emacs@gnu.org> <875wzf7ov8.fsf@shaf.tel>
+ <87v77fthiz.fsf@athena.silentflame.com> <87zewq65ig.fsf@shaf.tel>
+Date: Wed, 07 Oct 2026 11:58:49 +0100
+Message-ID: <87ece1u68m.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=103.168.172.152;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-a1-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 10:58:55 -0000
+
+zach shaftel [06/Oct  2:36pm -04] wrote:
+>> How about putting ` and ' around the strange symbol?
+>
+> Done
+
+Installed, thanks.  (I replaced the commit message with a single line
+beginning with a semicolon.)
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Wed Oct 07 09:14:22 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xERTS-0007eC-GY
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 09:14:22 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <divya@dialetheia.xyz>)
+ id 1xEN18-0008Tx-0A
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 04:28:52 -0400
+Received: from cp.flossboxin.org.in ([152.53.253.13])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <divya@dialetheia.xyz>)
+ id 1xEN14-0005PN-DY
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 04:28:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=dialetheia.xyz; s=mail; h=Content-Type:MIME-Version:Message-ID:Date:Subject
+ :To:From:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+ List-Subscribe:List-Post:List-Owner:List-Archive;
+ bh=IS0LtliEmDjpTzEwTNnGg6wsHEL5ndb2gARTbCeUgL8=; b=iUYrsCjX+IBKkg9gwBI9HoZL+/
+ 8Q56qHbG6ySecOdM9uTh2akx7zJ/1K4sO161Lt4KdVUx0SwymJOUKj8XgWaTvbNOq83tSOFYbC2eT
+ Yaw9gOf1O/Iad1w3vAPAjMscJd/wZRXi9z00tHMoOSJp7btSthmJQSSRAEUHWsi3FLIrzeSTNsyxG
+ njXbP1Ua9sRe/Udy0x7opVXicD6ECIjSM49VYf0PWlsZZ0Egzd5hxLYjV/DprISseWgCQXmQEMgwe
+ Zy/fd1OD92mh9VR2ZqhIXoY1kzGDE3mK7HSz6GRvaCVh85KeEt3nLBWdnHNBYeCcc7gOoR8ar8dNA
+ 42WKJZ5g==;
+Received: from [103.210.91.45] (helo=lambda)
+ by cp.flossboxin.org.in with esmtpsa (TLS1.3) tls
+ TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (Exim 4.96)
+ (envelope-from <divya@dialetheia.xyz>) id 1xEN0x-00GID7-1X
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 13:58:39 +0530
+From: Divya Ranjan Pattanaik <divya@dialetheia.xyz>
+To: emacs-devel@gnu.org
+Subject: Updating my email address
+Date: Wed, 07 Oct 2026 08:28:36 +0000
+Message-ID: <87jyntap8r.fsf@dialetheia.xyz>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: none client-ip=152.53.253.13; envelope-from=divya@dialetheia.xyz;
+ helo=cp.flossboxin.org.in
+X-Spam_score_int: 8
+X-Spam_score: 0.8
+X-Spam_bar: /
+X-Spam_report: (0.8 / 5.0 requ) BAYES_00=-1.9, DKIM_INVALID=0.1,
+ DKIM_SIGNED=0.1, FROM_SUSPICIOUS_NTLD=0.499, FROM_SUSPICIOUS_NTLD_FP=1.999,
+ SPF_HELO_PASS=-0.001, SPF_NONE=0.001,
+ T_PDS_OTHER_BAD_TLD=0.01 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Wed, 07 Oct 2026 09:14:20 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 08:29:02 -0000
+
+Hello,
+
+My last email (divya@subvertising.org) that was served by Autistici/Inventati has now been defunct late August. I cannot get any messages via that address. It took me a while to setup another mail account.
+
+I'd like my copyright assignment to be connected to this new address now. So for any pings regarding any of my patches, if it was sent to divya@subvertising.org, please forward them again to this address:
+
+divya@dialetheia.xyz
+
+Regards,
+-- 
+Divya Ranjan Pattanaik,
+Philosophy, Mathematics, Libre Software.
+
+PGP Fingerprint: F0B3 1A69 8006 8FB8 096A  2F12 B245 10C6 108C 8D4A
+
+
+From MAILER-DAEMON Wed Oct 07 10:06:08 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xESHL-0004sr-Qx
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 10:06:01 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xESBa-0001MN-8K
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 10:00:06 -0400
+Received: from fout-b7-smtp.messagingengine.com ([202.12.124.150])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xESBY-0005S3-NT
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 09:59:57 -0400
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+ by mailfout.stl.internal (Postfix) with ESMTP id A8C271D00228
+ for <emacs-devel@gnu.org>; Wed,  7 Oct 2026 09:59:54 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-05.internal (MEProxy); Wed, 07 Oct 2026 09:59:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm1; t=1791381594; x=1791467994; bh=URR+MgvJH7
+ dhpvuevAd55b+QAwPHT5dL02oPBzWun+E=; b=ZNNnYPXBQUS60yqBKkFXy6lwKB
+ E9vvel3O44YNJapITt/EEPUtvZ8qTYI5UPl4ZppS0xppfODL5kCYb9afCLe3N93H
+ Pa4BgwVay2AXrWrW0zYOwDqIKozOfklEdkrgTki3P8rGQ3Kknv9zx63HEOy4++UE
+ RGU/G0FGUPpfNBDb0510PCWMHJey1H8j4PAw20F4ehNngd2zjfFRMZn4r26VcgKb
+ 3kJlWIGyo/0tBXgCm8OMbHurG5avTEodL4HGj/2JzJN4VbYYsjiHUK2IM4NjXuyW
+ ub0nCQcP2cVhCF0Fi+aOijFHhUBlqNHQNzWKCVtyZHu9vcyxc2CdPQlFzwmQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1791381594; x=1791467994; bh=URR+MgvJH7dhpvuevAd55b+QAwPHT5dL02o
+ PBzWun+E=; b=mrhCHHe6F6Jp+KZ4GGINrpm1Vv2p5+Y6Rm1mCCKvAa9raDkk7jf
+ Cesf81kVYwwTT4iFQzokT+FM7qtKYzW2eZwpumpSjLVD3HFYnZJ3wSQsU5uU67Lb
+ m+guEP87Dkm6jVzfYyS1m13a3B0kQbiWp8vZ47lZmsOCiC9JSq+4g61Lel7Of13I
+ P1cXa7/nQBzz2ZxRiuP9M0tEgSHw+a/xS31kxfjX2AceEGlvMFI/rJAiUE9g0W9E
+ L3vLwtUlofld5IRtHVb8/bZIh3YtrxmMh18Bg3z/WbuX+aMwQWPU4cMfVGBLfb3y
+ UvOYGekkAve5Jww3XXTTdy7twPoPhmKp5yg==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1791381594; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:dkzNFY8+u0hOl9wgfe20w7UslGxDDdioCQKIpJ8RrCqqLt/
+ eRZQfWupyK7I0KSA7OQZOHv6I/xkfKc2/DEtQemx4qd2fsgEMyzlkq9UZUN6PA62
+ mKOEWpX05dsW3CA30A8r730swEWv34fzNbDzuYgsPGrTIYs2QM6Sv0RpsmO47PIB
+ /6zQukR0ZxIyAMptjhccS397UWbPsvdGxa/3Baq5kZQloAknbn2fDMmZZaO6PHem
+ 0TQSbxLzQU9nGh7HJjqjkRfomlFd5p1UKs73sZcFi8EiXHUZv074s2XaQtRgEv1y
+ cSPLK/a28a1amX+P9lXMPIPFmLcDc57RT2PzCaQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=mi-m=1; hc=10;
+ hn=content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:J74w1wQNWysWxx225Rbup28I1qN/c3AleN3Yd1kW9Lk=:Lc1UT4wHHiIFf7bh+aPdj1cajiR9+2Pwf25I/MDVc/8=;
+X-ME-Sender: <xms:WlDGaiEibMwku86_k4TSIU5aRjZTrdryv9COiJmhGdH8KbBs18YdNQ>
+ <xme:WlDGavoaywZ_jM9L7s_S9StTy1uGBhFAhjMprlcvvgGiw-NEScakvDuIMImMGQZq5
+ 1onIIQwjBWkSbYfXcWF3CgSsZgfca5Q7TID5KcA7Awlahj1ABXRptGe>
+X-ME-Received: <xmr:WlDGau4hLhi1xM44dNG_9FW9mkAQoJ1LGIQcGLzUIGC5SgIxii6vrcbcVopwqLc8GKEUdTAtTIVCYMNcMABpzB6zXFMEHkllpA>
+X-ME-Proxy-Cause: dmFkZTFYhvO9bbrg3yQhon494AvB5w9xArIfMmRe5awsynGWiN/j8hbAtJa9JZrrAtzIyy
+ bQFdSEe7g8+kchJ9i7jI6Cfaow+AMo6TBX013OGybCW2fRD8zsa7siK68sfa+5i26Sk3Ew
+ +ZFToywrozXqCIDgjszFGJhFX9EiJ2wzvpw1ek7IBsBUgmEwNhVUeF62QNnSYPUbsHHA67
+ I+74BO+3B5w9t5EKFRqwd5JfUe62mbNQ3KUo0WBc9paQd45FhGwwZaKhlOdbuUWge2S5wc
+ fpgw6lDCWGfeyc2LKj3dLzQcgMpMPc2EEomXR172FWSTvfwvm/aAtVonaZEewdRMW2nkAO
+ fFvNakSTlMEKSlC1W3lp59lG98vn2DsyWjzGAmV2lplRtmkSv8MVWrTg+HOAxoKKAGgzTa
+ /ZdDAtD/RJ4gjPs0OzGmM6FZmh/J+0dCDiuo0MpRo6Z4jiEULozuOY7OeCJtI2z/f5RthO
+ 4m5hdmPwh/Ts05eILq25CzCDHQn+07X+S8suvdU6zA22Sk0z420X2sbg+v9HUALjqMir6M
+ l2+DrNIvgq6kyFqZIIZKCP5LEAydExx+f9iOr97ACgGhLwMroEef1kwGwph6q2a2u6Oi8V
+ MOr92IEzH9j9NvsP66rEn7arDmtUReTT+WEQJpeH5IPXAiraY6XmkwD0OWlA
+X-ME-Proxy: <xmx:WlDGat7lG0JmeL59bRb598Xy3ZVHadJgHavI6ka8i-i9Fyzqh-fozQ>
+ <xmx:WlDGarFJV9es51ZR7ppZYq6aPoMsw6a4DBdyD__pz9mXTj1AxNRz5w>
+ <xmx:WlDGamSvZbGhup0hIkD-aOxlTHlO5GdLA9ssO5bcEi72LTwY3IiK_A>
+ <xmx:WlDGaksD1jVnLnnC0SiVR-973StAgAVV-9Z98Xp6E1EJ2nED_YoVBA>
+ <xmx:WlDGatkr3q7TidFBvxDJiZGbCbqKqGMt-Ws_QdSPnrnwjUnIoEKNfpZB>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 7 Oct 2026 09:59:54 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 6F77E282BF7; Wed, 07 Oct 2026 14:59:53 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Divya Ranjan Pattanaik <divya@dialetheia.xyz>, emacs-devel@gnu.org
+Subject: Re: Updating my email address
+In-Reply-To: <87jyntap8r.fsf@dialetheia.xyz>
+References: <87jyntap8r.fsf@dialetheia.xyz>
+Date: Wed, 07 Oct 2026 14:59:53 +0100
+Message-ID: <87y0c9sjae.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=202.12.124.150;
+ envelope-from=spwhitton@spwhitton.name; helo=fout-b7-smtp.messagingengine.com
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_LOW=-0.7, RCVD_IN_MSPIKE_H2=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 14:00:19 -0000
+
+Divya Ranjan Pattanaik [07/Oct  8:28am GMT] wrote:
+> Hello,
+>
+> My last email (divya@subvertising.org) that was served by Autistici/Inventati has now been defunct late August. I cannot get any messages via that address. It took me a while to setup another mail account.
+>
+> I'd like my copyright assignment to be connected to this new address now. So for any pings regarding any of my patches, if it was sent to divya@subvertising.org, please forward them again to this address:
+>
+> divya@dialetheia.xyz
+
+Thanks.  Can you send us a patch for authors.el and .mailmap please?
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Wed Oct 07 10:46:17 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xESuN-0003Wj-N6
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 10:46:16 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xESuL-0003Ti-4I
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 10:46:14 -0400
+Received: from fhigh-b4-smtp.messagingengine.com ([202.12.124.155])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xESuI-00036X-Qy
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 10:46:12 -0400
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+ by mailfhigh.stl.internal (Postfix) with ESMTP id B3F787A026F
+ for <emacs-devel@gnu.org>; Wed,  7 Oct 2026 10:46:09 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-03.internal (MEProxy); Wed, 07 Oct 2026 10:46:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm1; t=1791384369; x=1791470769; bh=58xVuv3vEI
+ uzT3IbQSSAM8LDJGZEk5nopa1HLZydVRw=; b=Wm3ewGemaPVfcX/kc8sbS+fhPv
+ n9waUsOfB/AChLH37j6yGco/YNxgGoqZc00BYnkDQgUjZiTrvmcAbaidTYXty4nG
+ lQ4/HMdBxRloEv41kQVRV1Jr1PEeUAnNOpe7/HfV5/2PdcRi+2BLv2doZCTK87zc
+ xAjkdgKIVw+ZaDOtdtYk1XDeCsfQ8i4PU6h6GKT6M01qDCSzw2YsWupt6SVduzMz
+ ed3eiXcUghkysGLwwH+JjcJH3J/qj9w2KRNYelKAvjcFhaqUNMxBty665Htln1oo
+ /gcEXG5EqTRDjhgwcvghRJCC8KaWrvRabZZ7BBH4Y6IkEKFy5mmu3Zhd8kvw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1791384369; x=1791470769; bh=58xVuv3vEIuzT3IbQSSAM8LDJGZEk5nopa1
+ HLZydVRw=; b=kLUZnjBQFVCtddLXzpVww0g3ojyOQYpyDcEmRcko76tRBuFEsSv
+ /8vkVlCrzKRxtlehX3qZidgBnxt2gzTUvruwjpv/Io90a4offPVlAp+wBgWm7Rco
+ BzfvMIFXd/RKL4ajnBP9tde0yhlINahsVfEkjd6yFlMXz4m1zQNwpCumFvmwAjeu
+ zGE/Q+wr0EpijgBmSscMbSUs0wrnXiJ0nG0v/TdAyD4HOraJWoVvCuvn6cirkBfE
+ l1RJSqlTqy9AnuHEroFJLMc3DvAlvHPFu6Fo+2eNlLfpI3lejd9iQiWODpFXbRRa
+ AJzfxdUJpfFIGDXyeh0EkYVGbworzzDc1dA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1791384369; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:DddMw0oLLDqqHDqJom/QPKWl0D3aHgGL9AiVFtwMuZaohQZ
+ OpAecSEyb5LlMax9x6kVam4wPuRjLi0cekCMKhFeGHGDDK0BVRTAo804kUZLdGVB
+ XFaaA5VMSK/f2p6JA7/kwHoy5lzOfuhHVJWZIXoxpmiNiRLTutc3ErNgLgKbMb+E
+ 1sRIWDzg446PhNoqOn3ubGhGm8yfVRgFmGL6fSesJEVGus4sTs6iwKD/Z8hv5d1C
+ dD5jD+cttqTD7c95mzsPSofzgPoIPduNyzUmoqR1PRyRIzUi7BJ2N9GrnUSdkqCQ
+ TFg+WtzTO41ui7s+2iXvoajeqK+p+nLte6/Jd2Q==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=mi-m=1; hc=10;
+ hn=content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:SKmm6MTC8u3yn4vDldH6BoTgAbEH8RLSVEzY4OCzW1o=:aW0+pP3ICeCx7KfoNNs00ba5yHSRswFI++2fe0jd1IA=;
+X-ME-Sender: <xms:MVvGai3XVDc9gUnyHQUxMUWCmvwuHRCaxZs3GLCyfpDRiEHcqO6Few>
+ <xme:MVvGahb5mO1eeX5tNvLy6diL3Is-zwml8EwXDiTrxIHpINJA-TX1Lcww2DdQiCa_m
+ YQSQmhqjKrS4dr9_dj-35bZq18CZuzJHt5idKkjqc531Q0Guia43JPK>
+X-ME-Received: <xmr:MVvGatrbMl0YTHnP9wFHyUUwiSFK2zl2kgdYv_FxGzaV20wK7Y6os-2FIoJJX46VisenQpslz9PF5kN9c7pYMSrRxl8WEEfPfg>
+X-ME-Proxy-Cause: dmFkZTF97BWqS9D2UPbhmX9GLtTeyY9p9fl8xtOF++bnHWCzY9zKtBMVk3yJD5zbeACdY5
+ MT2uVzuTffUbIL6+M8g+GVPoayiKIcgXW+rML2zoBSGhOtlND/7jUxBhCkUZVo5y3D1f8L
+ uzLivgES2FHropJ3kjVUc4hVtApKbEdOx5yjtPFYEov6xBROarljTFlyrhLFLAuCtAR9Cy
+ Ol9bUm5hB4C55zBPy+Mv90XwTkfK3bPWMT58HEq401iDic7LvCGGT7EujQzpyD22W9nmKP
+ mesJC5NIX61vnoxOhVDDbCjVCtmDUVTa2NTUzQDICEo/Sgjqjhjs2lxznY92Lq5bWZ/BqR
+ cMN3UBdpI47hZP6qCnRPK2NeixaiN5KBtJL/vIXKEUYgOP730cVcrHatIqHeh3l59J13eD
+ u4YCiEGdvLDuAashJccNe93MQ5E3rKkuzQgJH+u4EYKZRCJZ7zBdt9lbRiDyK9MMLJXegs
+ SCgr71RKZx0LyoWBVNO2lFIRN0yqLPCBiGzR10gD9QDD/0+Sx1yltyZDeuCuEa4ZMjn6Vn
+ kOU9boKpDuOfdSJNT3viT0xUezdmSYQ/ftGTMuNgo+XnjOg2HRWo/mQukRhOY5l94n28hM
+ NTt6hSARezijVX2/RUtMpjp4ZOmHqRK8ZJfwFPixni1zLrek90DPn2IglRkg
+X-ME-Proxy: <xmx:MVvGaloXufHsq60Zc5IV4SfuCc0RUeZDMfPHbv6NN-aeguS1duNQ2Q>
+ <xmx:MVvGan3DCv5_VNxwwszOHy1J1rM9fwYLyxUkS2R3YU6CeUuSfHmXrg>
+ <xmx:MVvGakDTTZsPtnLSXDSnY04GHU0vvCHpujKPNex3ToFGhJVMZEtOzQ>
+ <xmx:MVvGavfvtDQt7CxAzKPqoAGVpILPXLRCBiwwYwCnUU2I1oZXCLuLMg>
+ <xmx:MVvGamAR3rnUfz-MUN_FdlBbijmfwOHZJg-xU-aYr5KaF15CBFcDtXLg>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 7 Oct 2026 10:46:09 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 67A62282BF7; Wed, 07 Oct 2026 15:46:08 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Peter Mao <peter.mao@gmail.com>, emacs-devel@gnu.org
+Subject: Re: vc-annotate enhancement
+In-Reply-To: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+References: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+Date: Wed, 07 Oct 2026 15:46:08 +0100
+Message-ID: <87mrspsh5b.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=202.12.124.155;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-b4-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_MSPIKE_H2=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 14:46:14 -0000
+
+Peter Mao [05/Oct 10:49pm -07] wrote:
+> I use vc-annotate a lot to dig into the history of code I'm working on,
+> typically with vc-annotate-revision-previous-to-line and
+> vc-annotate-revision-at-line, but often, I go too far and would like to
+> back up a few jumps.
+>
+> The patch attached adds to vc-annotate.el:
+> 1. vc-annotate-revision-history -- a buffer local variable holding the
+> revspecs of the revisions visited.
+> 2. vc-annotate-undo-warp-revision, bound to "C-/", which warps to the car
+> of the above list
+> 3. vc-annotate-update-history, a function to maintain the above list.
+>
+> vc-annotate-warp revision is modified to call vc-annotate-update-history
+> just before the warp happens.
+>
+> Properly, vc-annotate-revision-history should be cleared when vc-annotate
+> is invoked on a file, but I haven't dealt with that yet -- I figure there's
+> time to do that while I get comments from the community.
+
+Thanks.  I think we should have a feature like this, but that it should
+use 'r' and 'l' to go back and forth in history like Info.
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Wed Oct 07 10:50:32 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xESyU-0005Pb-N0
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 10:50:31 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xESyO-0005PA-RP
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 10:50:24 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xESyO-0003eb-JE; Wed, 07 Oct 2026 10:50:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=x4BPyDufIMhTKEJOUtKpqWXu5XEYXwiB7mhjaoFNKQY=; b=EjE1d7MDRzUo
+ V+3zo4ouhdQYv3eI70eSnROwHQ7CGt5dxvP5JXWku4Zc9iV9Pfba9VNou3xIIFII0Rdi9u3cHv46D
+ XpMVrOrqTejZ1yRArOvvs1bhmD3AzE1nf52UjlpNCoJUT9WF1Ih4Gesim/xmEW9XHSXAzEIEUJkHi
+ 7xc3RhoAzs32ZF4LMk0/jtkjzNyPBebauArcqKynhrYAuA3qRQcWDWklQMXXLE1wlVv9ClqbXXk4L
+ NYKmFIvx8aDxxivvulJW9JTHfTah74QhX9udjt7GOoxjsvDN0enlSZChnMcmgwS2YTDf8Ylc6yDQn
+ 6nsalc13eCxOSVlSDJ5u8Q==;
+Date: Wed, 07 Oct 2026 17:50:12 +0300
+Message-Id: <86ld89pntn.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Jim Porter <jporterbugs@gmail.com>
+Cc: rms@gnu.org, emacs-devel@gnu.org
+In-Reply-To: <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com> (message from
+ Jim Porter on Mon, 5 Oct 2026 22:28:38 -0700)
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+ <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 14:50:26 -0000
+
+> Date: Mon, 5 Oct 2026 22:28:38 -0700
+> From: Jim Porter <jporterbugs@gmail.com>
+> Cc: emacs-devel@gnu.org
+> 
+> My concern isn't exactly a moral one (though I do also have moral 
+> concerns with LLMs, and am unconvinced that it's possible to resolve 
+> these while keeping the "Large" in "Large Language Model"). I'm more 
+> immediately concerned with how LLMs impact the ability to maintain 
+> communities, which I feel is the most critical piece of Emacs and 
+> GNU/FSF as a whole. Hence, I see this as mainly a practical problem.
+> 
+> LLMs have unfortunately made it easier for people to produce large 
+> volumes of plausible output that they don't fully understand, both 
+> burdening maintainers and undermining LLM users' ability to develop 
+> their skills. The LLMs of course don't understand anything at all, but 
+> have been fine-tuned to produce pleasing answers and to function as a 
+> replacement of human social interaction and expertise.
+
+IMO, there's nothing to codify here, as far as GNU is concerned.  If
+you don't want to accept voluminous output, you can always ask the
+author to rewrite it in more concise form, explaining that you cannot
+afford reading through such long texts.  It doesn't matter whether the
+text was generated manually or with LLM support.
+
+I don't see how this is at all related to the current discussion.  It
+isn't even a tangent.
+
+> I've already had to deal with bad behavior brought on by overzealous LLM 
+> users in other software communities and have seen the beginnings of it 
+> appear on the Emacs mailing lists. Here and elsewhere, this issue seems 
+> to be getting worse, not better, which has made me reconsider where we 
+> ought to draw the line. Are LLM-related packages in ELPA a wise idea? 
+> I'm not so sure anymore.
+
+I don't see how these packages are relevant.  They are not for
+generating voluminous messages and dumping them on Emacs maintainers.
+
+> I'd hate to see our decisions push away thoughtful contributors who 
+> value the community built here over the years. I don't feel sure enough 
+> to stake out a definite position on the immediate issue of ELPA packages 
+> here, though as mentioned, I'm increasingly worried. I chiefly wanted to 
+> share my concerns about these second-order harms while the Emacs 
+> community is still generally healthy.
+
+Sorry, I don't see how all of these (legitimate) concerns are related
+to the GNU Coding Standards and what GNU maintainers are supposed top
+uphold.
+
+
+From MAILER-DAEMON Wed Oct 07 10:56:45 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xET4V-0007FX-Sy
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 10:56:44 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xET4K-0007Eq-6W
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 10:56:34 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xET4J-0004UG-U7; Wed, 07 Oct 2026 10:56:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=yxK2t226WgCek09bCph+xs7+rSoDEQIoAm3tjFkLpQM=; b=r9C/NbnFgXRK
+ MXYckEOhYplRpLxsN7md9zlA9AywzZrm+NtVaj3NKauenWX4XNr+Wa1mtPVdZfRURjN5WuKY5UJy4
+ MWxM1BfWq1s734qxq4M84hENGrjLXklWnT/kIwkLsO2rGEKpjRijiHwqYdUiEjznFY4cqAD7XNCRi
+ vNFoasITLnw9a48DvltluZt0xOOH1cFRXALr9+9p+A0B+couZLGMGGQg6w/6k5mB0QKu99I4b3H1Q
+ 0nLgrIflcHJCI7aFn/YJHgtP/koA1xDtGzdB2PVzQF2kIfMpf0MzKKNyHxYTfZ1JlXbFaomb9iU4I
+ ai2LztEBLnpmvsiR/WGXvg==;
+Date: Wed, 07 Oct 2026 17:56:26 +0300
+Message-Id: <86h5ixpnj9.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Peter Mao <peter.mao@gmail.com>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+ (message from Peter Mao on Mon, 5 Oct 2026 22:49:31 -0700)
+Subject: Re: vc-annotate enhancement
+References: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 14:56:37 -0000
+
+> From: Peter Mao <peter.mao@gmail.com>
+> Date: Mon, 5 Oct 2026 22:49:31 -0700
+> 
+> I use vc-annotate a lot to dig into the history of code I'm working on, typically with
+> vc-annotate-revision-previous-to-line and vc-annotate-revision-at-line, but often, I go too far and would like to
+> back up a few jumps.
+> 
+> The patch attached adds to vc-annotate.el:
+> 1. vc-annotate-revision-history -- a buffer local variable holding the revspecs of the revisions visited.
+> 2. vc-annotate-undo-warp-revision, bound to "C-/", which warps to the car of the above list
+> 3. vc-annotate-update-history, a function to maintain the above list.
+> 
+> vc-annotate-warp revision is modified to call vc-annotate-update-history just before the warp happens.
+> 
+> Properly, vc-annotate-revision-history should be cleared when vc-annotate is invoked on a file, but I haven't
+> dealt with that yet -- I figure there's time to do that while I get comments from the community.
+
+Can you explain why you don't use "C-x v h" instead?
+
+Btw, in the future please post patches to the bug tracker.  A
+convenient way of doing so is to use the "M-x submit-emacs-patch"
+command.
+
+> +(defvar-local vc-annotate-revision-history '()
+
+Should this variable be internal, not public?
+
+> +(defun vc-annotate-undo-warp-revision ()
+> +  "Go backwards in the visited revision history."
+
+This doc string is too terse to be useful, since this is a command,
+not just a utility function.
+
+> +(defun vc-annotate-update-history (revspec)
+> +  "Update vc-annotate-revision-history."
+
+The first line of a function's doc string should mention the
+arguments.
+
+Thanks.
+
+
+From MAILER-DAEMON Wed Oct 07 11:06:44 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xETEA-0000nZ-3f
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 11:06:42 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xETDy-0000iB-0d
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 11:06:32 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xETDt-0005YN-OD; Wed, 07 Oct 2026 11:06:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=WDBXAZinD76lvD9t7biigUZ1cLDciO17AQnwmGwfpls=; b=GUvXToHhxhCW
+ oL7MArnhx3be6gg0C++q3uMbBEeRF1mqiWKrz6duTYlC62hL3XVr6IEGEy9boKt/+veAP7G6FE0UB
+ x9ql9tTRixllAoMOmgcly2tDBBVxGM/ZsS5LBj1i+r4vOeALK1uIBNfMTeW9o1+691NS8DdMGzVSz
+ 1FZkpBu8mmUa0jw84ELWncE9j0OcgxKkwEZ4izTKQhnFAjMq3xrC/wlmvlyhWFQkEsdcKoPDNvVxv
+ AAOkruF78W7ihExqmZfYVTA4ofEJHpePcyEjCF10VLvgFYA76z3aPLdrg/aHcywLn1y+J1vm+VBnq
+ lW+g7mxQheZXy8oWl7exRg==;
+Date: Wed, 07 Oct 2026 18:06:16 +0300
+Message-Id: <86a4oppn2v.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: tomas@tuxteam.de
+Cc: jporterbugs@gmail.com, rms@gnu.org, emacs-devel@gnu.org
+In-Reply-To: <asYf95hwG+a54Ozq@tuxteam.de> (tomas@tuxteam.de)
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+ <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com> <asYf95hwG+a54Ozq@tuxteam.de>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 15:06:37 -0000
+
+> Date: Wed, 7 Oct 2026 12:33:27 +0200
+> Cc: rms@gnu.org, emacs-devel@gnu.org
+> From: <tomas@tuxteam.de>
+> 
+> On Mon, Oct 05, 2026 at 10:28:38PM -0700, Jim Porter wrote:
+> 
+> [...]
+> 
+> > My concern isn't exactly a moral one (though I do also have moral concerns
+> > with LLMs, and am unconvinced that it's possible to resolve these while
+> > keeping the "Large" in "Large Language Model"). I'm more immediately
+> > concerned with how LLMs impact the ability to maintain communities, which I
+> > feel is the most critical piece of Emacs and GNU/FSF as a whole. Hence, I
+> > see this as mainly a practical problem.
+> 
+> Thanks for bringing that up. Exactly my thoughts (although I wouldn't have
+> managed to put it so cleanly in so few words).
+
+This discussion is no longer about Emacs development, so please take
+it to emacs-tangents or some other place.
+
+TIA
+
+
+From MAILER-DAEMON Wed Oct 07 11:13:47 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xETL1-0003JE-4o
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 11:13:47 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xETKz-0003J1-Cl
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 11:13:45 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xETKy-0006Qp-Ct; Wed, 07 Oct 2026 11:13:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=RtzXlXmzLLrkZqmQ3oJy0SZREbQzu8+KSG4Jay9Q5tg=; b=qeSbhIa6zpDE
+ lFnDRp6Pgpm9q41CrcQCCGng+DVaMyItOcYBOBbK+0UaGX17yLC8dTCS0GTGI/ArVwp7pmkmsWpq6
+ l2g/hA2EV35A4AbO/j/ju0OWaOLkPTbhNXHtR9rj5CDGfX8P7/X4JkrD6nnuogvGfHNXAdafViVve
+ I3GGjfqEMQBfXvr6r7r/8eW4YVtT1KvyuafWmkFidKEtIOqWE9o5KzTi26l/2zxTk+4Aa3dPAlaiJ
+ wuZ8KlaRJPmwk5ylLI3Pj0CuIQNDxEJbhUmSbdgP61yuY/23sCbnRL2bTtmtCM1Fyz6ssjsrqDyMo
+ vBqkgEypjhoJkkhFmiAScg==;
+Date: Wed, 07 Oct 2026 18:13:41 +0300
+Message-Id: <864iexpmqi.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Divya Ranjan Pattanaik <divya@dialetheia.xyz>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <87jyntap8r.fsf@dialetheia.xyz> (message from Divya Ranjan
+ Pattanaik on Wed, 07 Oct 2026 08:28:36 +0000)
+Subject: Re: Updating my email address
+References: <87jyntap8r.fsf@dialetheia.xyz>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 15:13:46 -0000
+
+> From: Divya Ranjan Pattanaik <divya@dialetheia.xyz>
+> Date: Wed, 07 Oct 2026 08:28:36 +0000
+> 
+> Hello,
+> 
+> My last email (divya@subvertising.org) that was served by Autistici/Inventati has now been defunct late August. I cannot get any messages via that address. It took me a while to setup another mail account.
+> 
+> I'd like my copyright assignment to be connected to this new address now.
+
+We don't manage the copyright-assignment records.  Please write to
+assign@gnu.org and inform them about the address change.
+
+
+From MAILER-DAEMON Wed Oct 07 11:50:55 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xETux-0000UM-4K
+	for mharc-emacs-devel@gnu.org; Wed, 07 Oct 2026 11:50:55 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xETuv-0000UB-Tn
+ for emacs-devel@gnu.org; Wed, 07 Oct 2026 11:50:54 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xETuv-0001s3-1J; Wed, 07 Oct 2026 11:50:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=Kc4IYsp2ti+1OcGi6GzEC+iy/bW0RhBvx8rd1VUtXtY=; b=eb8BDKeaEpVM
+ NuWxMIVdH7S2JigvD2XlFxvDp73QFu4hotKfknnbpMLXOfj2cHsi/Qw915ncnLpOwip1dla66zO3B
+ dXMhJ5HRo3sDBGtRRJk7YHNQIcAseMV0rEZhk7l2J1r6JI7Qvmay4Ynjs+AxmoYRhIJwvsPWNfx/n
+ u6gwoJN4Fg/HLN4bXsyBltpCZpQZgpEZ3UOt+1SUvR2VK9X3m2YFMruXKEqPQpqIKbNjdhv9G1Dpq
+ AHjvQpgV0eUeT+kXRvxUrdC2t4uQqX7iX0O8iAge0oYHlwPtkaFP+cL1jxc0X/wkywbQzeFTFw020
+ QJv1iGk9CMSf2EV+20wrzA==;
+Date: Wed, 07 Oct 2026 18:50:51 +0300
+Message-Id: <8633uhpl0k.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: divya@dialetheia.xyz, emacs-devel@gnu.org
+In-Reply-To: <87y0c9sjae.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Wed, 07 Oct 2026 14:59:53 +0100)
+Subject: Re: Updating my email address
+References: <87jyntap8r.fsf@dialetheia.xyz>
+ <87y0c9sjae.fsf@athena.silentflame.com>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 07 Oct 2026 15:50:54 -0000
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Date: Wed, 07 Oct 2026 14:59:53 +0100
+> 
+> Divya Ranjan Pattanaik [07/Oct  8:28am GMT] wrote:
+> > Hello,
+> >
+> > My last email (divya@subvertising.org) that was served by Autistici/Inventati has now been defunct late August. I cannot get any messages via that address. It took me a while to setup another mail account.
+> >
+> > I'd like my copyright assignment to be connected to this new address now. So for any pings regarding any of my patches, if it was sent to divya@subvertising.org, please forward them again to this address:
+> >
+> > divya@dialetheia.xyz
+> 
+> Thanks.  Can you send us a patch for authors.el and .mailmap please?
+
+I don't think authors.el needs any changes, since Divya's name and
+address are not there.
+
+

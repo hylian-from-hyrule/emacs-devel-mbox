@@ -1,0 +1,420 @@
+emacs-devel messages from 2026-10-06T18:15:00+02:00 to 2026-10-07T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-06T20:36:07+02:00
+From: zach shaftel <zach@shaf.tel>
+Subject: Re: master 1324e366010: Add a 'syntax-propertize-function' to
+ 'lisp-mode'
+Message-ID: <87zewq65ig.fsf@shaf.tel>
+In-Reply-To: <87v77fthiz.fsf@athena.silentflame.com>
+References: <179119511421.28524.12364422970517372970@vcs2.savannah.gnu.org>
+ <20261005101156.07571C0F00D@vcs2.savannah.gnu.org>
+ <jwvv77gjlnt.fsf-monnier+emacs@gnu.org> <875wzf7ov8.fsf@shaf.tel>
+ <87v77fthiz.fsf@athena.silentflame.com>
+
+Sean Whitton <spwhitton@spwhitton.name> writes:
+
+> zach shaftel [05/Oct  6:40pm -04] wrote:
+>> diff --git a/lisp/emacs-lisp/lisp-mode.el b/lisp/emacs-lisp/lisp-mode.el
+>> index 2778b7f53cf..8a559c718f6 100644
+>> --- a/lisp/emacs-lisp/lisp-mode.el
+>> +++ b/lisp/emacs-lisp/lisp-mode.el
+>> @@ -87,7 +87,10 @@ lisp-mode-syntax-table
+>>  (eval-and-compile
+>>    (defconst lisp-mode-syntax-propertize-rules
+>>      (syntax-propertize-precompile-rules
+>> -     ;; Give entire |multiple escape| sections symbol syntax.
+>> +     ;; Give entire multiple escape sections symbol syntax.  Without
+>> +     ;; this, `forward-sexp' and co. treat symbols| like |this as three
+>> +     ;; expressions, and `lisp-mode-symbol-regexp' won't capture escape
+>> +     ;; sections at all.
+>>       ((rx "|" (+ (or (seq (syntax escape) "|") (not "|"))) "|")
+>>        (0 (and (not (ppss-comment-or-string-start (syntax-ppss)))
+>>                (string-to-syntax "_"))))
+>
+> How about putting ` and ' around the strange symbol?
+
+Done
+
+================================================================================
+Date: 2026-10-07T06:34:13+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: References to non-free email service (Gmail) in info manuals
+Message-ID: <E1xEJM5-0057Ig-4P@fencepost.gnu.org>
+In-Reply-To: <46d85146-194d-90db-e6c8-165315d30ee7@gmail.com> (message from
+ Jim Porter on Wed, 3 Jun 2026 17:34:23 -0700)
+References: <m2bjdsx6bt.fsf@fclr.net> <E1wUsqa-0022iL-QQ@fencepost.gnu.org>
+ <46d85146-194d-90db-e6c8-165315d30ee7@gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > On the other hand, Gmail is so popular that it's not as though we're 
+  > *promoting* it to users who might not be aware. For better or worse, 
+  > everyone who'd read the Gnus manual already knows about Gmail.
+
+That is true.  "Pretend Gmail does not exist" is not obligatory,
+and I would guess it is not a very effective way of fighting back.
+
+  > However, I don't see anything in the manual about 
+  > configuring to use OAuth or "less-secure" authentication, so it's not as 
+  > helpful for this goal as it could be.
+
+Since (according to your message) configuring that way involves
+running some nonfree software, we have to be careful how to present
+that.  Perhaps, "There is a way you can run some nonfree software one
+last time so as to cut your ties with unjust Gmail authentication."
+
+There is a crucial moral difference between (1) "I choose nasty
+practice A because it is not as nasty as practice B", and (2) "I will
+do X _once_ to cut the ties that compel me to accept practice Y."  If
+you are willing to accept pattern (1) as valid, that willingness can
+be used to maneuver you into rationalizing any injustice, simply by
+making you choose between that one and something worse.  Not so for
+(2).
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-07T10:28:36+02:00
+From: Divya Ranjan Pattanaik <divya@dialetheia.xyz>
+Subject: Updating my email address
+Message-ID: <87jyntap8r.fsf@dialetheia.xyz>
+In-Reply-To: 
+References: 
+
+Hello,
+
+My last email (divya@subvertising.org) that was served by Autistici/Inventati has now been defunct late August. I cannot get any messages via that address. It took me a while to setup another mail account.
+
+I'd like my copyright assignment to be connected to this new address now. So for any pings regarding any of my patches, if it was sent to divya@subvertising.org, please forward them again to this address:
+
+divya@dialetheia.xyz
+
+Regards,
+-- 
+Divya Ranjan Pattanaik,
+Philosophy, Mathematics, Libre Software.
+
+PGP Fingerprint: F0B3 1A69 8006 8FB8 096A  2F12 B245 10C6 108C 8D4A
+
+================================================================================
+Date: 2026-10-07T12:33:27+02:00
+From: <tomas@tuxteam.de>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <asYf95hwG+a54Ozq@tuxteam.de>
+In-Reply-To: <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+ <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+
+On Mon, Oct 05, 2026 at 10:28:38PM -0700, Jim Porter wrote:
+
+[...]
+
+> My concern isn't exactly a moral one (though I do also have moral concerns
+> with LLMs, and am unconvinced that it's possible to resolve these while
+> keeping the "Large" in "Large Language Model"). I'm more immediately
+> concerned with how LLMs impact the ability to maintain communities, which I
+> feel is the most critical piece of Emacs and GNU/FSF as a whole. Hence, I
+> see this as mainly a practical problem.
+
+Thanks for bringing that up. Exactly my thoughts (although I wouldn't have
+managed to put it so cleanly in so few words).
+
+Ultimately, I think this /is/ a moral problem, after all, since it targets
+the very core of communication, the glue which holds our communities
+together.
+
+What else has been software, if not a means of communication? What else
+has been the GPL if not the way to enable open communities, communicating
+via their copylefted programs, making sure they stay open?
+
+This is about to change. You can't "talk" to a generative LLM. I'm
+deeply worried by the current power assymetry as those things are being
+deployed large-scale.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-10-07T12:58:49+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: master 1324e366010: Add a 'syntax-propertize-function' to
+ 'lisp-mode'
+Message-ID: <87ece1u68m.fsf@athena.silentflame.com>
+In-Reply-To: <87zewq65ig.fsf@shaf.tel>
+References: <179119511421.28524.12364422970517372970@vcs2.savannah.gnu.org>
+ <20261005101156.07571C0F00D@vcs2.savannah.gnu.org>
+ <jwvv77gjlnt.fsf-monnier+emacs@gnu.org> <875wzf7ov8.fsf@shaf.tel>
+ <87v77fthiz.fsf@athena.silentflame.com> <87zewq65ig.fsf@shaf.tel>
+
+zach shaftel [06/Oct  2:36pm -04] wrote:
+>> How about putting ` and ' around the strange symbol?
+>
+> Done
+
+Installed, thanks.  (I replaced the commit message with a single line
+beginning with a semicolon.)
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-07T15:59:53+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Updating my email address
+Message-ID: <87y0c9sjae.fsf@athena.silentflame.com>
+In-Reply-To: <87jyntap8r.fsf@dialetheia.xyz>
+References: <87jyntap8r.fsf@dialetheia.xyz>
+
+Divya Ranjan Pattanaik [07/Oct  8:28am GMT] wrote:
+> Hello,
+>
+> My last email (divya@subvertising.org) that was served by Autistici/Inventati has now been defunct late August. I cannot get any messages via that address. It took me a while to setup another mail account.
+>
+> I'd like my copyright assignment to be connected to this new address now. So for any pings regarding any of my patches, if it was sent to divya@subvertising.org, please forward them again to this address:
+>
+> divya@dialetheia.xyz
+
+Thanks.  Can you send us a patch for authors.el and .mailmap please?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-07T16:46:08+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: vc-annotate enhancement
+Message-ID: <87mrspsh5b.fsf@athena.silentflame.com>
+In-Reply-To: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+References: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+
+Peter Mao [05/Oct 10:49pm -07] wrote:
+> I use vc-annotate a lot to dig into the history of code I'm working on,
+> typically with vc-annotate-revision-previous-to-line and
+> vc-annotate-revision-at-line, but often, I go too far and would like to
+> back up a few jumps.
+>
+> The patch attached adds to vc-annotate.el:
+> 1. vc-annotate-revision-history -- a buffer local variable holding the
+> revspecs of the revisions visited.
+> 2. vc-annotate-undo-warp-revision, bound to "C-/", which warps to the car
+> of the above list
+> 3. vc-annotate-update-history, a function to maintain the above list.
+>
+> vc-annotate-warp revision is modified to call vc-annotate-update-history
+> just before the warp happens.
+>
+> Properly, vc-annotate-revision-history should be cleared when vc-annotate
+> is invoked on a file, but I haven't dealt with that yet -- I figure there's
+> time to do that while I get comments from the community.
+
+Thanks.  I think we should have a feature like this, but that it should
+use 'r' and 'l' to go back and forth in history like Info.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-07T16:50:12+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <86ld89pntn.fsf@gnu.org>
+In-Reply-To: <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com> (message from
+ Jim Porter on Mon, 5 Oct 2026 22:28:38 -0700)
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+ <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+
+> Date: Mon, 5 Oct 2026 22:28:38 -0700
+> From: Jim Porter <jporterbugs@gmail.com>
+> Cc: emacs-devel@gnu.org
+> 
+> My concern isn't exactly a moral one (though I do also have moral 
+> concerns with LLMs, and am unconvinced that it's possible to resolve 
+> these while keeping the "Large" in "Large Language Model"). I'm more 
+> immediately concerned with how LLMs impact the ability to maintain 
+> communities, which I feel is the most critical piece of Emacs and 
+> GNU/FSF as a whole. Hence, I see this as mainly a practical problem.
+> 
+> LLMs have unfortunately made it easier for people to produce large 
+> volumes of plausible output that they don't fully understand, both 
+> burdening maintainers and undermining LLM users' ability to develop 
+> their skills. The LLMs of course don't understand anything at all, but 
+> have been fine-tuned to produce pleasing answers and to function as a 
+> replacement of human social interaction and expertise.
+
+IMO, there's nothing to codify here, as far as GNU is concerned.  If
+you don't want to accept voluminous output, you can always ask the
+author to rewrite it in more concise form, explaining that you cannot
+afford reading through such long texts.  It doesn't matter whether the
+text was generated manually or with LLM support.
+
+I don't see how this is at all related to the current discussion.  It
+isn't even a tangent.
+
+> I've already had to deal with bad behavior brought on by overzealous LLM 
+> users in other software communities and have seen the beginnings of it 
+> appear on the Emacs mailing lists. Here and elsewhere, this issue seems 
+> to be getting worse, not better, which has made me reconsider where we 
+> ought to draw the line. Are LLM-related packages in ELPA a wise idea? 
+> I'm not so sure anymore.
+
+I don't see how these packages are relevant.  They are not for
+generating voluminous messages and dumping them on Emacs maintainers.
+
+> I'd hate to see our decisions push away thoughtful contributors who 
+> value the community built here over the years. I don't feel sure enough 
+> to stake out a definite position on the immediate issue of ELPA packages 
+> here, though as mentioned, I'm increasingly worried. I chiefly wanted to 
+> share my concerns about these second-order harms while the Emacs 
+> community is still generally healthy.
+
+Sorry, I don't see how all of these (legitimate) concerns are related
+to the GNU Coding Standards and what GNU maintainers are supposed top
+uphold.
+
+================================================================================
+Date: 2026-10-07T16:56:26+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: vc-annotate enhancement
+Message-ID: <86h5ixpnj9.fsf@gnu.org>
+In-Reply-To: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+ (message from Peter Mao on Mon, 5 Oct 2026 22:49:31 -0700)
+References: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+
+> From: Peter Mao <peter.mao@gmail.com>
+> Date: Mon, 5 Oct 2026 22:49:31 -0700
+> 
+> I use vc-annotate a lot to dig into the history of code I'm working on, typically with
+> vc-annotate-revision-previous-to-line and vc-annotate-revision-at-line, but often, I go too far and would like to
+> back up a few jumps.
+> 
+> The patch attached adds to vc-annotate.el:
+> 1. vc-annotate-revision-history -- a buffer local variable holding the revspecs of the revisions visited.
+> 2. vc-annotate-undo-warp-revision, bound to "C-/", which warps to the car of the above list
+> 3. vc-annotate-update-history, a function to maintain the above list.
+> 
+> vc-annotate-warp revision is modified to call vc-annotate-update-history just before the warp happens.
+> 
+> Properly, vc-annotate-revision-history should be cleared when vc-annotate is invoked on a file, but I haven't
+> dealt with that yet -- I figure there's time to do that while I get comments from the community.
+
+Can you explain why you don't use "C-x v h" instead?
+
+Btw, in the future please post patches to the bug tracker.  A
+convenient way of doing so is to use the "M-x submit-emacs-patch"
+command.
+
+> +(defvar-local vc-annotate-revision-history '()
+
+Should this variable be internal, not public?
+
+> +(defun vc-annotate-undo-warp-revision ()
+> +  "Go backwards in the visited revision history."
+
+This doc string is too terse to be useful, since this is a command,
+not just a utility function.
+
+> +(defun vc-annotate-update-history (revspec)
+> +  "Update vc-annotate-revision-history."
+
+The first line of a function's doc string should mention the
+arguments.
+
+Thanks.
+
+================================================================================
+Date: 2026-10-07T17:06:16+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <86a4oppn2v.fsf@gnu.org>
+In-Reply-To: <asYf95hwG+a54Ozq@tuxteam.de> (tomas@tuxteam.de)
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+ <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com> <asYf95hwG+a54Ozq@tuxteam.de>
+
+> Date: Wed, 7 Oct 2026 12:33:27 +0200
+> Cc: rms@gnu.org, emacs-devel@gnu.org
+> From: <tomas@tuxteam.de>
+> 
+> On Mon, Oct 05, 2026 at 10:28:38PM -0700, Jim Porter wrote:
+> 
+> [...]
+> 
+> > My concern isn't exactly a moral one (though I do also have moral concerns
+> > with LLMs, and am unconvinced that it's possible to resolve these while
+> > keeping the "Large" in "Large Language Model"). I'm more immediately
+> > concerned with how LLMs impact the ability to maintain communities, which I
+> > feel is the most critical piece of Emacs and GNU/FSF as a whole. Hence, I
+> > see this as mainly a practical problem.
+> 
+> Thanks for bringing that up. Exactly my thoughts (although I wouldn't have
+> managed to put it so cleanly in so few words).
+
+This discussion is no longer about Emacs development, so please take
+it to emacs-tangents or some other place.
+
+TIA
+
+================================================================================
+Date: 2026-10-07T17:13:41+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Updating my email address
+Message-ID: <864iexpmqi.fsf@gnu.org>
+In-Reply-To: <87jyntap8r.fsf@dialetheia.xyz> (message from Divya Ranjan
+ Pattanaik on Wed, 07 Oct 2026 08:28:36 +0000)
+References: <87jyntap8r.fsf@dialetheia.xyz>
+
+> From: Divya Ranjan Pattanaik <divya@dialetheia.xyz>
+> Date: Wed, 07 Oct 2026 08:28:36 +0000
+> 
+> Hello,
+> 
+> My last email (divya@subvertising.org) that was served by Autistici/Inventati has now been defunct late August. I cannot get any messages via that address. It took me a while to setup another mail account.
+> 
+> I'd like my copyright assignment to be connected to this new address now.
+
+We don't manage the copyright-assignment records.  Please write to
+assign@gnu.org and inform them about the address change.
+
+================================================================================
+Date: 2026-10-07T17:50:51+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Updating my email address
+Message-ID: <8633uhpl0k.fsf@gnu.org>
+In-Reply-To: <87y0c9sjae.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Wed, 07 Oct 2026 14:59:53 +0100)
+References: <87jyntap8r.fsf@dialetheia.xyz>
+ <87y0c9sjae.fsf@athena.silentflame.com>
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Date: Wed, 07 Oct 2026 14:59:53 +0100
+> 
+> Divya Ranjan Pattanaik [07/Oct  8:28am GMT] wrote:
+> > Hello,
+> >
+> > My last email (divya@subvertising.org) that was served by Autistici/Inventati has now been defunct late August. I cannot get any messages via that address. It took me a while to setup another mail account.
+> >
+> > I'd like my copyright assignment to be connected to this new address now. So for any pings regarding any of my patches, if it was sent to divya@subvertising.org, please forward them again to this address:
+> >
+> > divya@dialetheia.xyz
+> 
+> Thanks.  Can you send us a patch for authors.el and .mailmap please?
+
+I don't think authors.el needs any changes, since Divya's name and
+address are not there.
+
