@@ -1,0 +1,536 @@
+emacs-devel messages from 2026-10-07T18:15:00+02:00 to 2026-10-08T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-07T18:21:32+02:00
+From: Peter Mao <peter.mao@gmail.com>
+Subject: Re: vc-annotate enhancement
+Message-ID: <CAEK3s1MemLggaCk02Og44Jxc36ENQeqBM58oM4WFZ3f_nbM7=g@mail.gmail.com>
+In-Reply-To: <87mrspsh5b.fsf@athena.silentflame.com>
+References: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+ <87mrspsh5b.fsf@athena.silentflame.com>
+
+On Wed, Oct 7, 2026 at 7:46 AM Sean Whitton <spwhitton@spwhitton.name>
+wrote:
+
+> Thanks.  I think we should have a feature like this, but that it should
+> use 'r' and 'l' to go back and forth in history like Info.
+>
+
+'r' is free, but 'l' is bound to vc-annotate-show-log-revision-at-line.
+The patch I've provided only stores a one-way history, so it doesn't
+provide a way for 'r' to do anything.
+
+I'm not beholden to anything in the patch.  I was just trying to kick off
+the conversation.
+
+================================================================================
+Date: 2026-10-07T18:38:27+02:00
+From: Peter Mao <peter.mao@gmail.com>
+Subject: Re: vc-annotate enhancement
+Message-ID: <CAEK3s1NiWXfUQtZ-=-fOuCZJTeNxxyFP13KpNQ40jrFR4WZ+hw@mail.gmail.com>
+In-Reply-To: <86h5ixpnj9.fsf@gnu.org>
+References: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+ <86h5ixpnj9.fsf@gnu.org>
+
+On Wed, Oct 7, 2026 at 7:56 AM Eli Zaretskii <eliz@gnu.org> wrote:
+
+> Can you explain why you don't use "C-x v h" instead?
+
+ Ha, that's easy -- I didn't know about it!
+
+Btw, in the future please post patches to the bug tracker.  A
+> convenient way of doing so is to use the "M-x submit-emacs-patch"
+> command.
+>
+OK, but it's not a bug, and I was thinking of the patch as more of a
+conversation starter than a ready-to-ship thing.
+
+thank you for the code-review comments,
+
+Peter
+
+================================================================================
+Date: 2026-10-07T18:45:20+02:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <99dd4d34-471b-4bd2-a516-d53601ae0f4b@gmail.com>
+In-Reply-To: 
+References: 
+
+Hi Jim,
+
+thanks for your thoughtful reply, which was balsam to read after the 
+heated bandwidth consumption the whole issue has caused :-)
+
+I can't but fully support all your arguments. And the phrase that I like 
+most is "plausible output". In the beginnings of LLMs, before detectors 
+where available, I was refereeing a submission to a congress and found a 
+couple paragraphs of my PhD thesis buried in a place no one would 
+normally read. This is my experience of bad behaviour of a user 
+"suffering the blank page syndrome".
+
+Just as an anecdote... I only wanting to say thank you...
+/PA
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-10-07T21:27:24+02:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: x-gtk- names
+Message-ID: <87fqyh2twj.fsf@gmail.com>
+In-Reply-To: <CA+TD5hhUyHJ+s7oOSjmp5m=eOk09c473xek33GB4Guq1ZvgwqA@mail.gmail.com>
+References: <87ik3yz6nc.fsf@posteo.net> <86bj9pedrm.fsf@gnu.org>
+ <eliz@gnu.org> <jwvtsnhkvna.fsf-monnier+emacs@gnu.org>
+ <CA+TD5hhUyHJ+s7oOSjmp5m=eOk09c473xek33GB4Guq1ZvgwqA@mail.gmail.com>
+
+On Tue, 22 Sep 2026, Johan Myréen wrote:
+
+>  > After some investigation I noticed that 31.1 got a New GTK_NATIVE launch
+>  > mode and it is using x-gtk-launch-uri to open up a tab in firefox.
+>
+>  BTW, am I the only one who finds this naming weird?
+>  I see we have a few `x-gtk-<SOMETHING>` in our code, but especially now
+>  that most of these also apply to the Wayland situtation, it feels silly.
+>
+> Luckily, it is just a Lisp function, not a command. The function is also gtk-specific in that
+> it uses a gtk API function, so the gtk part of the name has some justification.
+
+I wonder why it helps using a GTK API for that.  There is `xdg-open' on
+the free DEs, `open' MacOS, and other OSs surely have a version of that
+command.
+
+BTW, I wonder why M-x browse-url TAB shows a bunch of random stuff that
+don't even match my OS.  It seems like this area could be drastically
+simplified, or at least not further complicated going forward.
+
+> On the other hand, the function was introduced specifically for Wayland, not X11, so the
+> x- prefix is silly.
+
+================================================================================
+Date: 2026-10-07T21:49:52+02:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: oauth2.el questions
+Message-ID: <87bj952sv3.fsf@gmail.com>
+In-Reply-To: <878q4ihpf8.fsf@disroot.org>
+References: <878q4ihpf8.fsf@disroot.org>
+
+Hi martianh,
+
+a while back I proposed an alternative implementation supporting
+asynchronous operations.  If you're interested, see
+
+https://lists.gnu.org/archive/html/emacs-devel/2025-11/msg00806.html
+
+I also have some ideas regarding extending auth-source to be async, as
+well as using the system "online accounts" service (works well at least
+on GNOME):
+
+https://codeberg.org/astoff/minimail/src/branch/main/online-accounts.el
+
+On Wed, 30 Sep 2026, martianh wrote:
+
+> hi emacs,
+>
+> pls CC me in replies, i'm a non-subscriber.
+>
+> i am considering using oauth2.el to reduce/simplify the authentication
+> code in mastodon.el, which gives me headaches, but i'm having trouble
+> understanding some basics.
+>
+> i have successfully obtained and stored a token with a registered app,
+> but i'm unclear on how to fetch the token from the store as needed.
+>
+> the main entrypoint has client-secret and client-id as mandatory
+> parameters, which seems to mean that i have to store them somewhere
+> else (presumably in a second encrypted plstore, causing more
+> headaches: client-id and client-secret should be treated like
+> passwords) in order to be able to fetch the auth token. is this
+> correct, or is a package expected to handle tokens in some other way?
+>
+> mastodon.el also supports multiple accounts, at least for saving auth
+> credentials. you set username and host to a different value,
+> reauthenticate, and mastodon.el keeps two sets of credentials, so if
+> you switch back to the first account you don't have to do the auth
+> flow again. i didn't manage to try this out due to the previous
+> hurdle, but i'm curious if this would be (easily) supported by
+> oath2.el, or does it assume 1 account per service somehow?
+>
+> finally, mastodon.el also supports storing auth tokens (but not
+> client/app data) in auth-sources. i take it oauth2.el doesn't have
+> support for storing in auth-sources?
+
+================================================================================
+Date: 2026-10-07T22:06:54+02:00
+From: Petteri Hintsanen <petterih@iki.fi>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <8733uhxokh.fsf@iki.fi>
+In-Reply-To: <86a4oppn2v.fsf@gnu.org>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+ <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+ <asYf95hwG+a54Ozq@tuxteam.de> <86a4oppn2v.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> This discussion is no longer about Emacs development, so please take
+> it to emacs-tangents or some other place.
+
+Quite the contrary.  It is not relevant to GNU Coding Standards and
+their interpretation, but I think it is central to Emacs development on
+the most general level.
+
+Because without healthy community around a shared social contract (both
+written and unwritten) any development effort is much worse off.  Jim
+said it very well.
+
+Thanks,
+Petteri
+
+================================================================================
+Date: 2026-10-07T22:09:17+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: References to non-free email service (Gmail) in info manuals
+Message-ID: <jwv7bjt2s3u.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <E1xEJM5-0057Ig-4P@fencepost.gnu.org> (message from Richard
+ Stallman <rms@gnu.org> on Wed, 07 Oct 2026 00:34:13 -0400)
+References: <m2bjdsx6bt.fsf@fclr.net> <E1wUsqa-0022iL-QQ@fencepost.gnu.org>
+ <46d85146-194d-90db-e6c8-165315d30ee7@gmail.com>
+ <E1xEJM5-0057Ig-4P@fencepost.gnu.org>
+
+> that.  Perhaps, "There is a way you can run some nonfree software one
+> last time so as to cut your ties with unjust Gmail authentication."
+>
+> There is a crucial moral difference between (1) "I choose nasty
+> practice A because it is not as nasty as practice B", and (2) "I will
+> do X _once_ to cut the ties that compel me to accept practice Y."  If
+> you are willing to accept pattern (1) as valid, that willingness can
+> be used to maneuver you into rationalizing any injustice, simply by
+> making you choose between that one and something worse.  Not so for
+> (2).
+
+I agree modulo the fact that experience shows that "one last time" is
+true only until "the next time", so it's still a rationalization.  🙁
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-08T05:38:10+02:00
+From: =?utf-8?Q?Elijah_Gabe_P=C3=A9rez?= <eg642616@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <87ik3ceual.fsf@gmail.com>
+In-Reply-To: <868q4cqent.fsf@gnu.org>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <86a4oyx924.fsf@gnu.org>
+ <861pa4dz09.fsf@gmail.com> <868q4cqent.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: zhaodaniu <zhaodaniu1@gmail.com>
+>> Cc: eg642616@gmail.com,  emacs-devel@gnu.org
+>> Date: Mon, 05 Oct 2026 22:04:54 +0800
+>> 
+>> > Thanks, we now need the implementation for X, and then we can install.
+>> 
+>> Thank Elias Gabriel Perez implementation for X and PGTK.  So we can
+>> install it for now,
+>> 
+>> I merged the patches for pgtk and X and fixed a few minor issues. If
+>> you encounter any problems, please contact me.
+>
+> Thanks, I need someone to apply this on X and see if it compiles okay
+> wand works as expected.  Then I can install.
+
+I've tested the patch on KDE (wayland) I haven't found any errors or
+warnings for gtk+x11 (with and without cairo) and pgtk builds.
+
+-- 
+- E.G.
+
+================================================================================
+Date: 2026-10-08T07:20:48+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: vc-annotate enhancement
+Message-ID: <86zewoojin.fsf@gnu.org>
+In-Reply-To: <CAEK3s1NiWXfUQtZ-=-fOuCZJTeNxxyFP13KpNQ40jrFR4WZ+hw@mail.gmail.com>
+ (message from Peter Mao on Wed, 7 Oct 2026 09:38:27 -0700)
+References: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+ <86h5ixpnj9.fsf@gnu.org>
+ <CAEK3s1NiWXfUQtZ-=-fOuCZJTeNxxyFP13KpNQ40jrFR4WZ+hw@mail.gmail.com>
+
+> From: Peter Mao <peter.mao@gmail.com>
+> Date: Wed, 7 Oct 2026 09:38:27 -0700
+> Cc: emacs-devel@gnu.org
+> 
+> On Wed, Oct 7, 2026 at 7:56 AM Eli Zaretskii <eliz@gnu.org> wrote:
+> 
+>  Can you explain why you don't use "C-x v h" instead?
+> 
+>  Ha, that's easy -- I didn't know about it!
+
+Would you like to review your workflows now that you do know?
+
+>  Btw, in the future please post patches to the bug tracker.  A
+>  convenient way of doing so is to use the "M-x submit-emacs-patch"
+>  command.
+> 
+> OK, but it's not a bug, and I was thinking of the patch as more of a conversation starter than a ready-to-ship
+> thing.
+
+The debbugs bug tracker is used for discussing and tracking patches
+and issues as well, not just bugs.  That's why we have the
+submit-emacs-patch command in the first place.  Discussions and
+patches on this list are harder to link to and harder to find, so if
+in some distant future someone wants to re-read the discussion and
+understand how and why we made some decisions, it's much easier when
+the commit logs have a bug number.
+
+================================================================================
+Date: 2026-10-08T07:32:14+02:00
+From: Peter Mao <peter.mao@gmail.com>
+Subject: Re: vc-annotate enhancement
+Message-ID: <CAEK3s1PB1GPPJ8fOk4d05eP7Jbk3KiByzLOFc9OmAwZYi4-ieQ@mail.gmail.com>
+In-Reply-To: <86zewoojin.fsf@gnu.org>
+References: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+ <86h5ixpnj9.fsf@gnu.org>
+ <CAEK3s1NiWXfUQtZ-=-fOuCZJTeNxxyFP13KpNQ40jrFR4WZ+hw@mail.gmail.com>
+ <86zewoojin.fsf@gnu.org>
+
+On Wed, Oct 7, 2026 at 10:21 PM Eli Zaretskii <eliz@gnu.org> wrote:
+
+> > From: Peter Mao <peter.mao@gmail.com>
+> > Date: Wed, 7 Oct 2026 09:38:27 -0700
+> > Cc: emacs-devel@gnu.org
+> >
+> > On Wed, Oct 7, 2026 at 7:56 AM Eli Zaretskii <eliz@gnu.org> wrote:
+> >
+> >  Can you explain why you don't use "C-x v h" instead?
+> >
+> >  Ha, that's easy -- I didn't know about it!
+>
+> Would you like to review your workflows now that you do know?
+>
+> >  Btw, in the future please post patches to the bug tracker.  A
+> >  convenient way of doing so is to use the "M-x submit-emacs-patch"
+> >  command.
+> >
+> > OK, but it's not a bug, and I was thinking of the patch as more of a
+> conversation starter than a ready-to-ship
+> > thing.
+>
+> The debbugs bug tracker is used for discussing and tracking patches
+> and issues as well, not just bugs.  That's why we have the
+> submit-emacs-patch command in the first place.  Discussions and
+> patches on this list are harder to link to and harder to find, so if
+> in some distant future someone wants to re-read the discussion and
+> understand how and why we made some decisions, it's much easier when
+> the commit logs have a bug number.
+>
+
+Hi Eli,
+thanks for the tips.  I'll certainly try out "C-x v h".  And I'lll resubmit
+the patch the proper way later this week.
+Peter
+
+================================================================================
+Date: 2026-10-08T08:59:53+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <86qzi0oexi.fsf@gnu.org>
+In-Reply-To: <8733uhxokh.fsf@iki.fi> (message from Petteri Hintsanen on Wed,
+ 07 Oct 2026 23:06:54 +0300)
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+ <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+ <asYf95hwG+a54Ozq@tuxteam.de> <86a4oppn2v.fsf@gnu.org>
+ <8733uhxokh.fsf@iki.fi>
+
+> From: Petteri Hintsanen <petterih@iki.fi>
+> Cc: tomas@tuxteam.de,  jporterbugs@gmail.com,  rms@gnu.org,
+>   emacs-devel@gnu.org
+> Date: Wed, 07 Oct 2026 23:06:54 +0300
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > This discussion is no longer about Emacs development, so please take
+> > it to emacs-tangents or some other place.
+> 
+> Quite the contrary.  It is not relevant to GNU Coding Standards and
+> their interpretation, but I think it is central to Emacs development on
+> the most general level.
+
+Sorry, such general level is not appropriate for this list, which is
+dedicated to the technical aspects of the Emacs development.  The
+social aspects of the Emacs development are outside of our mandate as
+the maintainers, so discussing that here is not useful, and tends to
+raise the level of flames and noise, because there's no way the
+differences of opinions in those matters can be reconciled.  So let's
+please not go there.
+
+================================================================================
+Date: 2026-10-08T11:19:13+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <86fqygo8ha.fsf@gnu.org>
+In-Reply-To: <861pa4dz09.fsf@gmail.com> (message from zhaodaniu on Mon, 05 Oct
+ 2026 22:04:54 +0800)
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org>
+ <86o6djyumh.fsf@gmail.com> <864ifb595c.fsf@gnu.org>
+ <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org>
+ <861pacg010.fsf@gmail.com> <8733ur4kav.fsf@gmail.com>
+ <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <86a4oyx924.fsf@gnu.org>
+ <861pa4dz09.fsf@gmail.com>
+
+> From: zhaodaniu <zhaodaniu1@gmail.com>
+> Cc: eg642616@gmail.com,  emacs-devel@gnu.org
+> Date: Mon, 05 Oct 2026 22:04:54 +0800
+> 
+> > Thanks, we now need the implementation for X, and then we can install.
+> 
+> Thank Elias Gabriel Perez implementation for X and PGTK.  So we can
+> install it for now,
+> 
+> I merged the patches for pgtk and X and fixed a few minor issues. If
+> you encounter any problems, please contact me.
+
+Thanks, I installed it, with some minor fixes (like renaming the
+variables according to the discussion).
+
+================================================================================
+Date: 2026-10-08T12:07:08+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: vc-annotate enhancement
+Message-ID: <87fqygsdyr.fsf@athena.silentflame.com>
+In-Reply-To: <CAEK3s1MemLggaCk02Og44Jxc36ENQeqBM58oM4WFZ3f_nbM7=g@mail.gmail.com>
+References: <CAEK3s1MrKe9DeSkWYDXsU74EHy6RvKE7qTkD8tY0mnRqVJs4AQ@mail.gmail.com>
+ <87mrspsh5b.fsf@athena.silentflame.com>
+ <CAEK3s1MemLggaCk02Og44Jxc36ENQeqBM58oM4WFZ3f_nbM7=g@mail.gmail.com>
+
+Peter Mao [07/Oct  9:21am -07] wrote:
+> On Wed, Oct 7, 2026 at 7:46 AM Sean Whitton <spwhitton@spwhitton.name>
+> wrote:
+>
+>> Thanks.  I think we should have a feature like this, but that it should
+>> use 'r' and 'l' to go back and forth in history like Info.
+>>
+>
+> 'r' is free, but 'l' is bound to vc-annotate-show-log-revision-at-line.
+> The patch I've provided only stores a one-way history, so it doesn't
+> provide a way for 'r' to do anything.
+
+Good point about 'l'.
+
+We can figure out the key bindings later, but I do think the mechanism
+should allow going in both directions.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-08T13:13:50+02:00
+From: zhaodaniu <zhaodaniu1@gmail.com>
+Subject: Re: [PATCH] Support strike-through, overline, and wave underline scale
+Message-ID: <CAEOE9jcG5W_+AErNEUvhwUdE39XM_Mwwd3vrOYhqh=gau83NUw@mail.gmail.com>
+In-Reply-To: <86fqygo8ha.fsf@gnu.org>
+References: <86qzigjdfp.fsf@gmail.com> <86pky05b97.fsf@gnu.org>
+ <86se2wf4e6.fsf@gmail.com> <86o6dk57rk.fsf@gnu.org> <86o6djyumh.fsf@gmail.com>
+ <864ifb595c.fsf@gnu.org> <87cxtyco0c.fsf@gmail.com> <867bk63oxt.fsf@gnu.org>
+ <868q4ljytk.fsf@gmail.com> <867bk531ci.fsf@gnu.org> <861pacg010.fsf@gmail.com>
+ <8733ur4kav.fsf@gmail.com> <86fqyrlcni.fsf@gmail.com> <86cxtvz06v.fsf@gnu.org>
+ <86ik3mwva7.fsf@gmail.com> <86a4oyx924.fsf@gnu.org> <861pa4dz09.fsf@gmail.com>
+ <86fqygo8ha.fsf@gnu.org>
+
+cool.
+
+That’s great.
+
+Eli Zaretskii <eliz@gnu.org> 于 2026年10月8日周四 17:19写道：
+
+> > From: zhaodaniu <zhaodaniu1@gmail.com>
+> > Cc: eg642616@gmail.com,  emacs-devel@gnu.org
+> > Date: Mon, 05 Oct 2026 22:04:54 +0800
+> >
+> > > Thanks, we now need the implementation for X, and then we can install.
+> >
+> > Thank Elias Gabriel Perez implementation for X and PGTK.  So we can
+> > install it for now,
+> >
+> > I merged the patches for pgtk and X and fixed a few minor issues. If
+> > you encounter any problems, please contact me.
+>
+> Thanks, I installed it, with some minor fixes (like renaming the
+> variables according to the discussion).
+>
+
+================================================================================
+Date: 2026-10-08T13:54:48+02:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: x-gtk- names
+Message-ID: <CA+TD5hgG3tgrggNFqJZ3rU2rbN=wiCNo04tB=+gsJtvNd1iqdQ@mail.gmail.com>
+In-Reply-To: <87fqyh2twj.fsf@gmail.com>
+References: <87ik3yz6nc.fsf@posteo.net> <86bj9pedrm.fsf@gnu.org>
+ <eliz@gnu.org> <jwvtsnhkvna.fsf-monnier+emacs@gnu.org>
+ <CA+TD5hhUyHJ+s7oOSjmp5m=eOk09c473xek33GB4Guq1ZvgwqA@mail.gmail.com>
+ <87fqyh2twj.fsf@gmail.com>
+
+On Wed, 7 Oct 2026 at 22:27, Augusto Stoffel <arstoffel@gmail.com> wrote:
+
+>
+> I wonder why it helps using a GTK API for that.  There is `xdg-open' on
+> the free DEs, `open' MacOS, and other OSs surely have a version of that
+> command.
+>
+
+I think this would be a good idea, but only if xdg-open can handle what the
+x-gtk-launch-uri function—which this discussion originally was about—was
+created for in the first place (in 2023): to raise the browser window.
+Without this feature, on Wayland, the web page is displayed in an already
+open browser window, but the window stays buried under other windows, which
+is confusing the user.
+
+================================================================================
+Date: 2026-10-08T15:39:49+02:00
+From: Petteri Hintsanen <petterih@iki.fi>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <87wlrswbtm.fsf@iki.fi>
+In-Reply-To: <86qzi0oexi.fsf@gnu.org>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <E1xB0Sk-00B277-DY@fencepost.gnu.org>
+ <5d639d07-e92f-0290-c1fc-92b3fc6104f9@gmail.com>
+ <E1xDZjV-00BBTf-Ns@fencepost.gnu.org>
+ <2bf9e7ac-bcea-1ca6-17c5-9b0ea4b9f1db@gmail.com>
+ <asYf95hwG+a54Ozq@tuxteam.de> <86a4oppn2v.fsf@gnu.org>
+ <8733uhxokh.fsf@iki.fi> <86qzi0oexi.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> Sorry, such general level is not appropriate for this list, which is
+> dedicated to the technical aspects of the Emacs development.  The
+> social aspects of the Emacs development are outside of our mandate as
+> the maintainers.
+
+Fair enough, although I'm afraid that technical aspects are inseparable
+from social ones in this case.
+
+Thanks,
+Petteri
+
