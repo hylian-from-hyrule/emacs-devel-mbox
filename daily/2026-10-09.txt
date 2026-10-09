@@ -1,0 +1,481 @@
+emacs-devel messages from 2026-10-08T18:15:00+02:00 to 2026-10-09T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-08T20:47:18+02:00
+From: Brad Howes <bradhowes@mac.com>
+Subject: Startup processing of user-lisp
+Message-ID: <71034C0E-45FB-4A65-8195-37BF0BA71DA6@mac.com>
+In-Reply-To: 
+References: 
+
+Hello all,
+
+I had the wild idea of placing a .dir-locals.el file in my user-lisp directory that would configure dired to hide the *.elc files. Works great, but upon restart I get a warning:
+
+⛔ Warning (native-compiler): Error: native-compiler-error-empty-byte ("/Users/howes/.emacs.d/user-lisp/.dir-locals.el" "/Users/howes/.emacs.d/user-lisp/.dir-locals.el")
+
+And a *Compile-Log* showing
+
+Compiling internal form(s) at Thu Oct  8 20:41:17 2026
+Warning (bytecomp): file has no ‘lexical-binding’ directive on its first line
+Warning (bytecomp): Malformed function ‘(dired-mode (dired-omit-files . "*.elc") (mode . dired-omit))’
+
+I thought to craft a patch to `prepare-user-lisp` in startup.el to ignore any .dir-locals.el files, and indeed running the patched `prepare-user-lisp` ignores them. However, at startup I am once again confronted with the native-compiler warning and there is a `.dir-locals.elc` file so something else must be happening at startup but I’m at a loss to where this is happening. Any guidance on how to figure out where in the startup logic this is happening? Thanks!
+
+Brad
+
+================================================================================
+Date: 2026-10-08T22:07:35+02:00
+From: Stephen Gildea <stepheng+emacs@gildea.com>
+Subject: backup-by-copying-when-privileged-mismatch seems too low
+Message-ID: <411188.1791490055@pental.sg.gildea.net>
+In-Reply-To: 
+References: 
+
+The variable backup-by-copying-when-privileged-mismatch
+preserves the ownership of files with low user or group id
+(e.g., root-owned system files).  Its current range for
+deciding what ids are in the system range is 200 and below.
+I think this boundary is too low for modern systems.
+
+Systemd uses ids 1-999 for system services.
+
+Various GNU/Linux/Unix user-creation tools I looked at
+(adduser and useradd) create user accounts starting with
+id 1000 or 1001.
+
+macOS starts numbering regular users with id 501.
+
+MS Windows starts regular users accounts with id 1000.
+
+Based on these data, I conclude that
+backup-by-copying-when-privileged-mismatch
+should be increased to this:
+
+  (if (eq system-type 'darwin) 500 999)
+
+Note that backup-by-copying-when-mismatch is t by default
+anyway, and backup-by-copying-when-privileged-mismatch
+then has no further effect.
+
+What do other people see on their systems?  Does anybody
+have regular user or group ids low enough that this change
+would break you?
+
+ < Stephen
+
+================================================================================
+Date: 2026-10-08T22:38:23+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Startup processing of user-lisp
+Message-ID: <87ik3cnd1d.fsf@posteo.net>
+In-Reply-To: <71034C0E-45FB-4A65-8195-37BF0BA71DA6@mac.com>
+References: <71034C0E-45FB-4A65-8195-37BF0BA71DA6@mac.com>
+
+Brad Howes <bradhowes@mac.com> writes:
+
+> Hello all,
+>
+> I had the wild idea of placing a .dir-locals.el file in my user-lisp
+> directory that would configure dired to hide the *.elc files. Works
+> great, but upon restart I get a warning:
+>
+> ⛔ Warning (native-compiler): Error: native-compiler-error-empty-byte
+> ("/Users/howes/.emacs.d/user-lisp/.dir-locals.el"
+> "/Users/howes/.emacs.d/user-lisp/.dir-locals.el")
+>
+> And a *Compile-Log* showing
+>
+> Compiling internal form(s) at Thu Oct  8 20:41:17 2026
+> Warning (bytecomp): file has no ‘lexical-binding’ directive on its first line
+> Warning (bytecomp): Malformed function ‘(dired-mode (dired-omit-files . "*.elc") (mode . dired-omit))’
+>
+> I thought to craft a patch to `prepare-user-lisp` in startup.el to
+> ignore any .dir-locals.el files, and indeed running the patched
+> `prepare-user-lisp` ignores them. However, at startup I am once again
+> confronted with the native-compiler warning and there is a
+> `.dir-locals.elc` file so something else must be happening at startup
+> but I’m at a loss to where this is happening. Any guidance on how to
+> figure out where in the startup logic this is happening? Thanks!
+
+Have you tried adding a `no-byte-compile' local variable cookie to the
+file?
+
+> Brad
+
+================================================================================
+Date: 2026-10-09T07:58:18+02:00
+From: Brad Howes <bradhowes@mac.com>
+Subject: Re: Startup processing of user-lisp
+Message-ID: <3D2F6706-9B95-4388-9782-D9ECBA0918D9@mac.com>
+In-Reply-To: <87ik3cnd1d.fsf@posteo.net>
+References: <71034C0E-45FB-4A65-8195-37BF0BA71DA6@mac.com>
+ <87ik3cnd1d.fsf@posteo.net>
+
+> On 8 Oct 2026, at 22:38, Philip Kaludercic <philipk@posteo.net> wrote:
+> 
+> Have you tried adding a `no-byte-compile' local variable cookie to the
+> file?
+
+Bingo! That worked great. Thanks!
+
+================================================================================
+Date: 2026-10-09T08:08:31+02:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: x-gtk- names
+Message-ID: <87se2f1k4g.fsf@gmail.com>
+In-Reply-To: <CA+TD5hgG3tgrggNFqJZ3rU2rbN=wiCNo04tB=+gsJtvNd1iqdQ@mail.gmail.com>
+References: <87ik3yz6nc.fsf@posteo.net> <86bj9pedrm.fsf@gnu.org>
+ <eliz@gnu.org> <jwvtsnhkvna.fsf-monnier+emacs@gnu.org>
+ <CA+TD5hhUyHJ+s7oOSjmp5m=eOk09c473xek33GB4Guq1ZvgwqA@mail.gmail.com>
+ <87fqyh2twj.fsf@gmail.com>
+ <CA+TD5hgG3tgrggNFqJZ3rU2rbN=wiCNo04tB=+gsJtvNd1iqdQ@mail.gmail.com>
+
+On Thu,  8 Oct 2026, Johan Myréen wrote:
+
+> On Wed, 7 Oct 2026 at 22:27, Augusto Stoffel <arstoffel@gmail.com> wrote:
+>
+>  I wonder why it helps using a GTK API for that.  There is `xdg-open' on
+>  the free DEs, `open' MacOS, and other OSs surely have a version of that
+>  command.
+>
+> I think this would be a good idea, but only if xdg-open can handle what the
+> x-gtk-launch-uri function—which this discussion originally was about—was created for
+> in the first place (in 2023): to raise the browser window. Without this feature, on
+> Wayland, the web page is displayed in an already open browser window, but the window
+> stays buried under other windows, which is confusing the user.
+
+Okay, indeed calling xgd-open in a subprocess does not raise the browser
+window.  I'm pretty sure that's for the same reason why x-gtk-launch-uri
+only focuses the browser if called when Emacs's frame itself is focused.
+
+So that would be an argument in favor of changing browse-url-xdg-open to
+use x-gtk-launch-uri if possible, with (call-process "xdg-open" ...) as
+a fallback.
+
+================================================================================
+Date: 2026-10-09T08:36:08+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: backup-by-copying-when-privileged-mismatch seems too low
+Message-ID: <86a4onmld3.fsf@gnu.org>
+In-Reply-To: <411188.1791490055@pental.sg.gildea.net> (message from Stephen
+ Gildea on Thu, 08 Oct 2026 13:07:35 -0700)
+References: <411188.1791490055@pental.sg.gildea.net>
+
+> From: Stephen Gildea <stepheng+emacs@gildea.com>
+> Date: Thu, 08 Oct 2026 13:07:35 -0700
+> 
+> The variable backup-by-copying-when-privileged-mismatch
+> preserves the ownership of files with low user or group id
+> (e.g., root-owned system files).  Its current range for
+> deciding what ids are in the system range is 200 and below.
+> I think this boundary is too low for modern systems.
+> 
+> Systemd uses ids 1-999 for system services.
+> 
+> Various GNU/Linux/Unix user-creation tools I looked at
+> (adduser and useradd) create user accounts starting with
+> id 1000 or 1001.
+> 
+> macOS starts numbering regular users with id 501.
+> 
+> MS Windows starts regular users accounts with id 1000.
+
+Doesn't Administrator have a lower ID on Windows, like 500?  And the
+Administrators group (which is frequently used as owner of many files
+on Windows) has ID of 544, AFAIR.
+
+> Based on these data, I conclude that
+> backup-by-copying-when-privileged-mismatch
+> should be increased to this:
+> 
+>   (if (eq system-type 'darwin) 500 999)
+> 
+> Note that backup-by-copying-when-mismatch is t by default
+> anyway, and backup-by-copying-when-privileged-mismatch
+> then has no further effect.
+> 
+> What do other people see on their systems?  Does anybody
+> have regular user or group ids low enough that this change
+> would break you?
+
+Adding Paul to this discussion.
+
+backup-by-copying-when-privileged-mismatch is a defcustom, so why do
+we need to discuss its default value? just customize it to a different
+value if it doesn't fit your needs, and move on.
+
+As for the default value, I think the important question is not where
+the "privileged" IDs end, but whether an ID higher than 200 is
+frequently enough assigned to privileged accounts, and what are those
+accounts.  If exceeding the value of 200 is relatively rare, the
+current default is still OK, IMO -- as the default.
+
+================================================================================
+Date: 2026-10-09T09:29:52+02:00
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+Subject: Re: backup-by-copying-when-privileged-mismatch seems too low
+Message-ID: <uld8772mn@urania.fritz.box>
+In-Reply-To: <411188.1791490055@pental.sg.gildea.net>
+References: <411188.1791490055@pental.sg.gildea.net>
+
+>>>>> On Thu, 08 Oct 2026, Stephen Gildea wrote:
+
+> The variable backup-by-copying-when-privileged-mismatch
+> preserves the ownership of files with low user or group id
+> (e.g., root-owned system files).  Its current range for
+> deciding what ids are in the system range is 200 and below.
+> I think this boundary is too low for modern systems.
+
+> Systemd uses ids 1-999 for system services.
+
+> Various GNU/Linux/Unix user-creation tools I looked at
+> (adduser and useradd) create user accounts starting with
+> id 1000 or 1001.
+
+> macOS starts numbering regular users with id 501.
+
+> MS Windows starts regular users accounts with id 1000.
+
+> Based on these data, I conclude that
+> backup-by-copying-when-privileged-mismatch
+> should be increased to this:
+
+>   (if (eq system-type 'darwin) 500 999)
+
+> Note that backup-by-copying-when-mismatch is t by default
+> anyway, and backup-by-copying-when-privileged-mismatch
+> then has no further effect.
+
+> What do other people see on their systems?  Does anybody
+> have regular user or group ids low enough that this change
+> would break you?
+
+IIUC most GNU/Linux distros use shadow [1]. Its login.defs has these
+values:
+
+UID_MIN			 1000
+UID_MAX			60000
+
+So should there be an upper limit as well?
+
+[1] https://github.com/shadow-maint/shadow/blob/master/etc/login.defs
+
+================================================================================
+Date: 2026-10-09T14:10:52+02:00
+From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+Subject: Gnus support for UTF8=ACCEPT and more
+Message-ID: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+In-Reply-To: 
+References: 
+
+Hi,
+
+please find attached two Gnus/IMAP/SMTP patches.
+
+The first simply changes the order of ports 25 and 587 to nudge 
+users
+towards port 587. (Some servers support both, but allow 
+authentication only on 587. On those servers the code would 
+incorrectly assume that authenticating was pointless or 
+impossible, and then fail to send mail unless the user knew more 
+than most. On other servers this change makes sending mail 
+slightly faster or slower.)
+
+The second patch is much larger, and adds support for RFCs 6530-3, 
+9755 and parts of 9051 as a side effect. FWIW 6530 is now 
+supported by the servers for 70-80% of internet users, including 
+the biggest two, gmail and o365.
+
+I've been using versions of these patches since 2023. The 
+attachments are newly rebased to 32.0.50, though.
+
+Thanks in advance for any comments.
+
+Arnt
+
+================================================================================
+Date: 2026-10-09T14:33:52+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+Message-ID: <87cxtjqci7.fsf@athena.silentflame.com>
+In-Reply-To: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+
+Arnt Gulbrandsen [09/Oct  2:10pm +02] wrote:
+> Hi,
+>
+> please find attached two Gnus/IMAP/SMTP patches.
+>
+> The first simply changes the order of ports 25 and 587 to nudge
+> users
+> towards port 587. (Some servers support both, but allow
+> authentication only on 587. On those servers the code would
+> incorrectly assume that authenticating was pointless or
+> impossible, and then fail to send mail unless the user knew more
+> than most. On other servers this change makes sending mail
+> slightly faster or slower.)
+>
+> The second patch is much larger, and adds support for RFCs 6530-3,
+> 9755 and parts of 9051 as a side effect. FWIW 6530 is now
+> supported by the servers for 70-80% of internet users, including
+> the biggest two, gmail and o365.
+>
+> I've been using versions of these patches since 2023. The
+> attachments are newly rebased to 32.0.50, though.
+>
+> Thanks in advance for any comments.
+
+Did you use an LLM to generate these patches?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-09T14:45:36+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+Message-ID: <86se2fkpov.fsf@gnu.org>
+In-Reply-To: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no> (message from Arnt
+ Gulbrandsen on Fri, 9 Oct 2026 14:10:52 +0200)
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+
+> From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+> Date: Fri, 9 Oct 2026 14:10:52 +0200
+> 
+> please find attached two Gnus/IMAP/SMTP patches.
+> 
+> The first simply changes the order of ports 25 and 587 to nudge 
+> users
+> towards port 587. (Some servers support both, but allow 
+> authentication only on 587. On those servers the code would 
+> incorrectly assume that authenticating was pointless or 
+> impossible, and then fail to send mail unless the user knew more 
+> than most. On other servers this change makes sending mail 
+> slightly faster or slower.)
+> 
+> The second patch is much larger, and adds support for RFCs 6530-3, 
+> 9755 and parts of 9051 as a side effect. FWIW 6530 is now 
+> supported by the servers for 70-80% of internet users, including 
+> the biggest two, gmail and o365.
+> 
+> I've been using versions of these patches since 2023. The 
+> attachments are newly rebased to 32.0.50, though.
+
+Nikolay Dobrynin (CC'ed) is working on adding this to Gnus, AFAIU.
+
+================================================================================
+Date: 2026-10-09T15:34:53+02:00
+From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+Message-ID: <87ik3b0zgi.fsf@stabil.gulbrandsen.priv.no>
+In-Reply-To: <87cxtjqci7.fsf@athena.silentflame.com>
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+ <87cxtjqci7.fsf@athena.silentflame.com>
+
+Sean Whitton <spwhitton@spwhitton.name> writes:
+> Did you use an LLM to generate these patches?
+
+Most of the code is from 2023 ;) But I use LLMs. In this case the 
+recent rebasing was done almost entirely by LLM. The list of 
+files/defuns in the commit message was compiled by an LLM, the 
+text in the commit message is by me, and so on. The rebase from 
+30.x to 32.0.50 broke when I ran it; I used an LLM to find out why 
+(and may submit an additional patch, the breakage wasn't due to 
+this).
+
+Did I miss on style? This is the first time since the nineties 
+that I've written >10 lines of emacs-lisp.
+
+Arnt
+
+================================================================================
+Date: 2026-10-09T16:01:20+02:00
+From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+Message-ID: <871p9zrn0v.fsf@libertango.gulbrandsen.priv.no>
+In-Reply-To: <86se2fkpov.fsf@gnu.org> (Eli Zaretskii's message of "Fri, 9 Oct
+ 2026 15:45:36 +0300")
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+ <86se2fkpov.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+> Nikolay Dobrynin (CC'ed) is working on adding this to Gnus, 
+> AFAIU. 
+
+Great. I'm happier if there are more people implementing these 
+RFCs than if I write yet another implementation, so please feel 
+free to discard this, use parts of it, use all of it, whatever 
+floats the boat.
+
+Feel also free to ask me about these RFCs or interop etc, I ought 
+to know know every detail of this.
+
+Arnt
+
+================================================================================
+Date: 2026-10-09T16:25:50+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+Message-ID: <87a4onq7bl.fsf@athena.silentflame.com>
+In-Reply-To: <87ik3b0zgi.fsf@stabil.gulbrandsen.priv.no>
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+ <87cxtjqci7.fsf@athena.silentflame.com>
+ <87ik3b0zgi.fsf@stabil.gulbrandsen.priv.no>
+
+Arnt Gulbrandsen [09/Oct  3:34pm +02] wrote:
+> Sean Whitton <spwhitton@spwhitton.name> writes:
+>> Did you use an LLM to generate these patches?
+>
+> Most of the code is from 2023 ;) But I use LLMs. In this case the
+> recent rebasing was done almost entirely by LLM. The list of
+> files/defuns in the commit message was compiled by an LLM, the
+> text in the commit message is by me, and so on. The rebase from
+> 30.x to 32.0.50 broke when I ran it; I used an LLM to find out why
+> (and may submit an additional patch, the breakage wasn't due to
+> this).
+>
+> Did I miss on style? This is the first time since the nineties
+> that I've written >10 lines of emacs-lisp.
+
+Unfortunately in that case we can't install the patches.  GNU has a
+provisional policy against including any LLM-derived code.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-09T17:21:35+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+Message-ID: <86qzhylx1c.fsf@gnu.org>
+In-Reply-To: <871p9zrn0v.fsf@libertango.gulbrandsen.priv.no> (message from
+ Arnt Gulbrandsen on Fri, 9 Oct 2026 16:01:20 +0200)
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+ <86se2fkpov.fsf@gnu.org> <871p9zrn0v.fsf@libertango.gulbrandsen.priv.no>
+
+> From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+> Cc: Nickolai Dobrynin <nickolai.dobrynin@dobrynin.net>, emacs-devel@gnu.org
+> Date: Fri, 9 Oct 2026 16:01:20 +0200
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> > Nikolay Dobrynin (CC'ed) is working on adding this to Gnus, 
+> > AFAIU. 
+> 
+> Great. I'm happier if there are more people implementing these 
+> RFCs than if I write yet another implementation, so please feel 
+> free to discard this, use parts of it, use all of it, whatever 
+> floats the boat.
+> 
+> Feel also free to ask me about these RFCs or interop etc, I ought 
+> to know know every detail of this.
+
+Maybe you could take a look at bug#81684 and review the code that
+Nikolay is proposing there?  The URL is
+
+  https://debbugs.gnu.org/cgi/bugreport.cgi?bug=81684
+
+It's a very long discussion, so maybe start from the end.
+
+TIA
+

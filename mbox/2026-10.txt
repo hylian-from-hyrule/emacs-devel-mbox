@@ -26949,3 +26949,2499 @@ Thanks,
 Petteri
 
 
+From MAILER-DAEMON Thu Oct 08 14:47:55 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEt9i-0008NC-3g
+	for mharc-emacs-devel@gnu.org; Thu, 08 Oct 2026 14:47:55 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bradhowes@mac.com>) id 1xEt9T-0008M9-Gw
+ for emacs-devel@gnu.org; Thu, 08 Oct 2026 14:47:39 -0400
+Received: from st-2001f-snip6-1.eps.apple.com ([2a01:b747:3001:206::36]
+ helo=outbound.st.icloud.com)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bradhowes@mac.com>) id 1xEt9R-0005MU-Qd
+ for emacs-devel@gnu.org; Thu, 08 Oct 2026 14:47:35 -0400
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+ by p00-icloudmta-asmtp-us-east-1a-60-percent-10 (Postfix) with ESMTPS id
+ C093E18004F3
+ for <emacs-devel@gnu.org>; Thu, 08 Oct 2026 18:47:30 +0000 (UTC)
+X-ICL-RepId: 01a11cd7-8cba-72db-b510-dd5fb1a021df
+X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQBIHVoORQRJF0AGTVIPDxJLGVcFWBxXA3kVUg4ZCF0dGR5XUFoKUV5aF15NRQgPQRkQVgFYVl0FTRpcGFkPHANNVloOWwRHFBcbXAAXG0YCBCMCXwBFAl4JVgEwFw9WTVQZUENUBF9QVBFXUAtcA0AKTHBdckYGRX86Hll2XQddAUkKWBpYBTJ/SHEsAFp2MQ84XgxURVEfVEYTGU4bV01QG18CQg8=
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mac.com; s=1a1hai;
+ t=1791485251; x=1823021251; bh=xDvXNwOFoDwe2yRBEMAEQtKck7HEq8pkrcUBF/MJcAE=;
+ h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:To:x-icloud-hme;
+ b=UevLHIm8avnRR6S26Y+aBcgSXmiu6xB7EPRFN799fToU4SI6ZOBxKP7Xxr5VagmheFreXfZ2Gi/uc1OMOkAhJie7TyP5NNlKRVsfr448D1zKBKFj0t2BlFdSGu0hSsHvjjGrsQ3sEPv62cw5yd912TSG/UoBca+/T4+eeJq5UGvJZcYBOrMU7VUyeSn89dPMM9PbfXSebcjmYVaYf23Kd930C8BmrYeByNas6jjkULzwkLZ3VkX+p4wooJCghySMecuYQGh6yz5vgB3H7horLos32IybZQMRBQoSx9SJQUCx9OPrF53pEuLGGr/7uouLYe0cz7RUby7pAJlxuKKNbw==
+Received: from smtpclient.apple (unknown [17.156.216.30])
+ by p00-icloudmta-asmtp-us-east-1a-60-percent-10 (Postfix) with ESMTPSA id
+ 4671818004D0
+ for <emacs-devel@gnu.org>; Thu, 08 Oct 2026 18:47:30 +0000 (UTC)
+From: Brad Howes <bradhowes@mac.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
+Subject: Startup processing of user-lisp
+Message-Id: <71034C0E-45FB-4A65-8195-37BF0BA71DA6@mac.com>
+Date: Thu, 8 Oct 2026 20:47:18 +0200
+To: "emacs-devel@gnu.org" <emacs-devel@gnu.org>
+X-Mailer: Apple Mail (2.3901.100.1.1.12)
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA4MDA3NCBTYWx0ZWRfX0HZkU6F534gK
+ BsJa5AWAbho9WEbUK8m5qTaYOEEhgqb4+N8eDe+nh1i4A6ejGi4zBbjpJCvbv6uLMTSeNzFI5Zq
+ Tl89mhVVWk78xE507SytXN/AG34fLL2TtQfKrW5gsomnwJi583+1s12pAG4q9khu7WCTfUvVbdF
+ xF3lby+bdWmEFut6hh+jCth37ZqWT/zAcSBj1eFe5huSzJc/x6QdiM57XLrT078jASvN+AO0WiQ
+ NCrdBsoK/m8DrB1vcj1qCpqL3ifiWDKDxgU+wubsXJ1hIogQEtXi1mAun3f9ByYpj4WVyH5oLSq
+ IGpm5Od8j3hyB5SfrBSsS6bs7HsaHxa0urmCla/wtkOj/kB/BdzdMwh9Ugxf2Y=
+X-Proofpoint-GUID: 9H5v7A5XNA6yDxPapxhSjp1pbOLF-kCe
+X-Authority-Info-Out: v=2.4 cv=Pf/yRyhd c=1 sm=1 tr=0 ts=6ac7e542
+ cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
+ a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10
+ a=x7bEGLp0ZPQA:10 a=HrMkdkRjZj8A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=oWvO5GgHM3NKkctkEm4A:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
+X-Proofpoint-ORIG-GUID: 9H5v7A5XNA6yDxPapxhSjp1pbOLF-kCe
+X-JNJ: AAAAAAABLnt4dV8xoLVKVFuSnINSliji7TevBj2oviAPMCyq1966c8pDitLt/AyQhUOaMLcJ5JGAcXKr6bzhl4yVP4dMwfNrRFYAPi4clC0EAa43jor2y+mbAs3g668XSfnppXQB8ynDugt2Qt1qopH0dCVLDOlPeXWqWyUfVkPc9jOoBnK/CwSV/jYEQVrdIA2rHs7/rD4glDlLoVUiOqb5d7WJu/rjsyFbRlZ6MHUOlU3tTkFy09timsrmMekHin+czUmmGGpoOwtaBY2NQlYaV/ox3hsNUId/0dLBQJPNtItfA3fgcwFTHHbYhBR/RRqABVCfxF7kIW9oSTVBgfPFPrklEpZsyYlHcJZmcTjHq/54mUbHextc8EnC+vhdb3yKWM1G1v8WdzcRhX96t3KSscrGSXTbjB7YIl0arKGiv5hCPxjicVMwdGhlG9LwsbIuk16FsNqI+iWxZTZxQNqsCtQYn9ZCAqTRtSaeqLTsQByZTXzQxXD38Jpj7RMXs4ZR2CCYJLegYhzI3dxN+gLPpv14+3SgNoK7Li2KxirtxynrtEvwI01h9J/XVHUCyxcI9v+NA/pjVE4xI5hITuiewNNd0GQcjYbrvmZMS6oazgRCNNqnYJzafvDUeLpidM8rJkxSmcqrYTLFjFi/GTtlnoCHVqsumw0lGAJjBVitm2ZOupRDaVHVEYgbMuhPSDfDmpVMLOrLJ1ySQSW4brQ6xECptnwAWlqWQkOgMVR68zEdujTPd6BeWo9HsBRD46cZ0qW3SIclJOyfvdT+4yLW+PC1zs2k09MLx86GMEnnzjJ1naCEKZVV9TKWJluZlMtD4nrxZ5JhuJA77ZRiUSvJdq6LaYfPwVoDKK5Xece56eHrmKJuQqtHXX2eAgU/HC/iWIAvf5BrD/gDMdxciAnzrg41SetCYiGij1yNH5IY1fbqDqD8xWsjlGraKotnioGvB9KKIvEj4KH78h/wxPuQ5UFSxNe
+ ZPBMi92QvPQfQuD1fBH/crMMkXFYhSWUKzOcTG3bXhVIBlnz3MMToGQQ3ZbY8jGxq3JQRexi6zbBQk7mAB5N0G9Qzm0oRU7onsC5g2mHwmqV4R6rBq9QmEGHkobKWL1+qoHsyQczDlU8FOX1rU3yPoIEY9ulsDcw/vaF9/9Ol7koSnHC8PLKU4mOy0hbhTLy3qXMKDQMVtEN3kWXcUY1RZcIV3jAbUfkUDp5VdmWnPgD0KxpmokbFZ9O/2Q==
+Received-SPF: pass client-ip=2a01:b747:3001:206::36;
+ envelope-from=bradhowes@mac.com; helo=outbound.st.icloud.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 08 Oct 2026 18:47:39 -0000
+
+Hello all,
+
+I had the wild idea of placing a .dir-locals.el file in my user-lisp =
+directory that would configure dired to hide the *.elc files. Works =
+great, but upon restart I get a warning:
+
+=E2=9B=94 Warning (native-compiler): Error: =
+native-compiler-error-empty-byte =
+("/Users/howes/.emacs.d/user-lisp/.dir-locals.el" =
+"/Users/howes/.emacs.d/user-lisp/.dir-locals.el")
+
+And a *Compile-Log* showing
+
+Compiling internal form(s) at Thu Oct  8 20:41:17 2026
+Warning (bytecomp): file has no =E2=80=98lexical-binding=E2=80=99 =
+directive on its first line
+Warning (bytecomp): Malformed function =E2=80=98(dired-mode =
+(dired-omit-files . "*.elc") (mode . dired-omit))=E2=80=99
+
+I thought to craft a patch to `prepare-user-lisp` in startup.el to =
+ignore any .dir-locals.el files, and indeed running the patched =
+`prepare-user-lisp` ignores them. However, at startup I am once again =
+confronted with the native-compiler warning and there is a =
+`.dir-locals.elc` file so something else must be happening at startup =
+but I=E2=80=99m at a loss to where this is happening. Any guidance on =
+how to figure out where in the startup logic this is happening? Thanks!
+
+Brad
+
+
+
+From MAILER-DAEMON Thu Oct 08 16:07:50 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEuP8-0007eH-I8
+	for mharc-emacs-devel@gnu.org; Thu, 08 Oct 2026 16:07:50 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <stepheng+emacs@gildea.com>)
+ id 1xEuP6-0007dr-Hn
+ for emacs-devel@gnu.org; Thu, 08 Oct 2026 16:07:48 -0400
+Received: from tigger.sg.gildea.net ([99.65.78.170] helo=tigger3.gildea.net)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <stepheng+emacs@gildea.com>)
+ id 1xEuP4-0004On-Ge
+ for emacs-devel@gnu.org; Thu, 08 Oct 2026 16:07:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gildea.com;
+ i=@gildea.com; q=dns/txt; s=2023b; t=1791490056; h=from : to : subject
+ : mime-version : content-type : content-id : date : message-id : from;
+ bh=RByZZoYTsHabCUTaBOvXd17ySu7GxJIuvzalXokYw5U=;
+ b=iZ5vMLJT95MlRzff1LPHx7ZqvOrbPu1W2YhtkPT9HsxjMVOfOmxIKyUOHO4b7OqfV9ltD
+ xFK1jDsiDhkZPkmPID9j7ebyGrreVJ/oX4wqLA7y6oXvyxwMlEjyVo8XDD8/+ZIIkdBD5sw
+ aHLcAYdK0zq6fVMh8SvIgIboC+FznHkKQtJNQkd+qi+Go/ekD3uPefQgBBfiX2CBOM81EnJ
+ G/J1P/XRUBP/5BlUQOez9iAJMu0RTpxMMLfuxZIMyCaGs0hzHtU7BIbSi+SIgzoIkaoVv89
+ VgckmzOsCMViqVAbELlva7ub/87winRIPQxObE+iq2sGwBRCnr2VWuyEe07g==
+Received: from pental.sg.gildea.net (pental.wg.gildea.net [192.168.113.18])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+ client-signature RSA-PSS (4096 bits) client-digest SHA256)
+ (Client CN "pental-mail", Issuer "gildea.net Mail Root CA" (verified OK))
+ by tigger3.gildea.net (Postfix) with ESMTPS id 29DEE4295A
+ for <emacs-devel@gnu.org>; Thu,  8 Oct 2026 13:07:36 -0700 (PDT)
+Received: from pental.sg.gildea.net (localhost [127.0.0.1])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (Client did not present a certificate)
+ by pental.sg.gildea.net (Postfix) with ESMTPS id 06CE996048A
+ for <emacs-devel@gnu.org>; Thu,  8 Oct 2026 13:07:36 -0700 (PDT)
+From: Stephen Gildea <stepheng+emacs@gildea.com>
+To: emacs-devel@gnu.org
+Subject: backup-by-copying-when-privileged-mismatch seems too low
+X-Mailer: MH-E 8.6+git; nmh 1.8; Emacs 32.0.50
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <411185.1791490055.1@pental.sg.gildea.net>
+Date: Thu, 08 Oct 2026 13:07:35 -0700
+Message-ID: <411188.1791490055@pental.sg.gildea.net>
+Received-SPF: pass client-ip=99.65.78.170;
+ envelope-from=stepheng+emacs@gildea.com; helo=tigger3.gildea.net
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 08 Oct 2026 20:07:48 -0000
+
+The variable backup-by-copying-when-privileged-mismatch
+preserves the ownership of files with low user or group id
+(e.g., root-owned system files).  Its current range for
+deciding what ids are in the system range is 200 and below.
+I think this boundary is too low for modern systems.
+
+Systemd uses ids 1-999 for system services.
+
+Various GNU/Linux/Unix user-creation tools I looked at
+(adduser and useradd) create user accounts starting with
+id 1000 or 1001.
+
+macOS starts numbering regular users with id 501.
+
+MS Windows starts regular users accounts with id 1000.
+
+Based on these data, I conclude that
+backup-by-copying-when-privileged-mismatch
+should be increased to this:
+
+  (if (eq system-type 'darwin) 500 999)
+
+Note that backup-by-copying-when-mismatch is t by default
+anyway, and backup-by-copying-when-privileged-mismatch
+then has no further effect.
+
+What do other people see on their systems?  Does anybody
+have regular user or group ids low enough that this change
+would break you?
+
+ < Stephen
+
+
+From MAILER-DAEMON Thu Oct 08 16:38:33 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xEusp-0004Ub-QH
+	for mharc-emacs-devel@gnu.org; Thu, 08 Oct 2026 16:38:31 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xEuso-0004UT-OZ
+ for emacs-devel@gnu.org; Thu, 08 Oct 2026 16:38:30 -0400
+Received: from mout02.posteo.de ([185.67.36.66])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xEusm-0007DS-EF
+ for emacs-devel@gnu.org; Thu, 08 Oct 2026 16:38:30 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout02.posteo.de (Postfix) with ESMTPS id EEEE4240103
+ for <emacs-devel@gnu.org>; Thu,  8 Oct 2026 22:38:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1791491903;
+ bh=u8qdgB2CdLlc2aBvFYY0HYEqJLh9ym9swSbTo9Cvor0=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:Content-Transfer-Encoding:From;
+ b=dBFClgh19H91nlhMyI13hsU8A7LWP4ySeJ3hcNrWIowvPiJVzwSPP2/pqBk5k5bN4
+ bjOteZRY6vC6xSLU5Bj7wjS5aiHxKzDYfYZ/tDC0BfA2zLxOmckCdyOqQFvx5FvN0i
+ QA0YyKr153X+HT/r6VYGk4hFsGtup+hAw307/t6uzp/c8f43U8EFf7FeUcu4XvbdT/
+ utfuea7zu5X4D7vaSPvnRzijOTfPUC4HwPYHn7YmgHuJCrYylXRxtVPCq2z3hyAFxn
+ 3MPFIy7mN+YrBZFDx6UHfkFVrk92CQs0NdFuZ4kBFS2uzmkZkg5E2w1ocCW1DqdmD2
+ gb1w3GFbXupng==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4j11zM3rdzz9rxF;
+ Thu,  8 Oct 2026 22:38:23 +0200 (CEST)
+From: Philip Kaludercic <philipk@posteo.net>
+To: Brad Howes <bradhowes@mac.com>
+Cc: "emacs-devel@gnu.org" <emacs-devel@gnu.org>
+Subject: Re: Startup processing of user-lisp
+In-Reply-To: <71034C0E-45FB-4A65-8195-37BF0BA71DA6@mac.com>
+References: <71034C0E-45FB-4A65-8195-37BF0BA71DA6@mac.com>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Thu, 08 Oct 2026 20:38:23 +0000
+Message-ID: <87ik3cnd1d.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=185.67.36.66; envelope-from=philipk@posteo.net;
+ helo=mout02.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 08 Oct 2026 20:38:30 -0000
+
+Brad Howes <bradhowes@mac.com> writes:
+
+> Hello all,
+>
+> I had the wild idea of placing a .dir-locals.el file in my user-lisp
+> directory that would configure dired to hide the *.elc files. Works
+> great, but upon restart I get a warning:
+>
+> =E2=9B=94 Warning (native-compiler): Error: native-compiler-error-empty-b=
+yte
+> ("/Users/howes/.emacs.d/user-lisp/.dir-locals.el"
+> "/Users/howes/.emacs.d/user-lisp/.dir-locals.el")
+>
+> And a *Compile-Log* showing
+>
+> Compiling internal form(s) at Thu Oct  8 20:41:17 2026
+> Warning (bytecomp): file has no =E2=80=98lexical-binding=E2=80=99 directi=
+ve on its first line
+> Warning (bytecomp): Malformed function =E2=80=98(dired-mode (dired-omit-f=
+iles . "*.elc") (mode . dired-omit))=E2=80=99
+>
+> I thought to craft a patch to `prepare-user-lisp` in startup.el to
+> ignore any .dir-locals.el files, and indeed running the patched
+> `prepare-user-lisp` ignores them. However, at startup I am once again
+> confronted with the native-compiler warning and there is a
+> `.dir-locals.elc` file so something else must be happening at startup
+> but I=E2=80=99m at a loss to where this is happening. Any guidance on how=
+ to
+> figure out where in the startup logic this is happening? Thanks!
+
+Have you tried adding a `no-byte-compile' local variable cookie to the
+file?
+
+> Brad
+
+
+From MAILER-DAEMON Fri Oct 09 01:58:48 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xF3cy-00043Y-WD
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 01:58:48 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bradhowes@mac.com>) id 1xF3ct-000436-7F
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 01:58:39 -0400
+Received: from mr-2006c-snip6-1.eps.apple.com ([2a01:b747:3000:204::18]
+ helo=outbound.mr.icloud.com)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bradhowes@mac.com>) id 1xF3cq-0007kw-OT
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 01:58:38 -0400
+Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
+ by p00-icloudmta-asmtp-us-west-2a-100-percent-6 (Postfix) with ESMTPS id
+ EFC8D1800159; Fri, 09 Oct 2026 05:58:31 +0000 (UTC)
+X-ICL-RepId: 01a11f3d-e2df-7720-baaf-09a8a4f81594
+X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQBIHVoORQRJF0AGTVIPDxJLGVcFWBxXA3kVUg4ZCF0dGR5XUFoKUV5aF15NRQgPQhkQVgFYVl0FTRpcGFkPHB1LVloOWwRHFBcbXAAXG0YCBCMCXwBFAl4JVgEwFw9WTVQZUENUBF9QVBFXUAtYdkJ/TgRdAUYLMgBNHlkEUwpdAE8LXxovCzV6OnJdDloKNAA4XgxURVEfVEYTGU4bV01QG18CQg8=
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mac.com; s=1a1hai;
+ t=1791525513; x=1823061513; bh=WM1A9QGu60aMwxFueL+rdsTIGElOual8r/bvfuQWw9w=;
+ h=From:Message-Id:Content-Type:Mime-Version:Subject:Date:To:x-icloud-hme;
+ b=stE5WTpaK+hjypt//0VZjqHiTVQvV9K7iBkPzJX7mUqujl6ocfBpoPXPwb5NJgPAdbZX2fW+AJWfcs1wD8njHiMByyWaiBw18sDCiw9I/GvAjTHpV37N5cG5dAVWgD2FjMf6iH7upDtOpLuVgxxOdjlS2b8JSNu9UGGOJFsIzrcoYt8zmvYroq1t+pJ7ZONYJtPU/tzef4p3oAWyTFFJlJap7h86tg9UJMAoSQUsNr3X8HIsDeFPdIPkclykVbeASbSWSGtwrb66NI9L4c2DP98ki+Hv/Vg3zgvNs8rZgHShoqv8nmjAeEyOncol/TeTQb7LaWcNYaOk8AHhyS6xog==
+Received: from smtpclient.apple (unknown [17.156.200.36])
+ by p00-icloudmta-asmtp-us-west-2a-100-percent-6 (Postfix) with ESMTPSA id
+ E6869180035E; Fri, 09 Oct 2026 05:58:30 +0000 (UTC)
+From: Brad Howes <bradhowes@mac.com>
+Message-Id: <3D2F6706-9B95-4388-9782-D9ECBA0918D9@mac.com>
+Content-Type: multipart/alternative;
+ boundary="Apple-Mail=_DC2EF3F6-4D16-4052-A541-B3FD1DF67CBF"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
+Subject: Re: Startup processing of user-lisp
+Date: Fri, 9 Oct 2026 07:58:18 +0200
+In-Reply-To: <87ik3cnd1d.fsf@posteo.net>
+Cc: "emacs-devel@gnu.org" <emacs-devel@gnu.org>
+To: Philip Kaludercic <philipk@posteo.net>
+References: <71034C0E-45FB-4A65-8195-37BF0BA71DA6@mac.com>
+ <87ik3cnd1d.fsf@posteo.net>
+X-Mailer: Apple Mail (2.3901.100.1.1.12)
+X-Proofpoint-GUID: W-xL2rZ1k0K5U8gzNGE8M3--8qslY6Ji
+X-Authority-Info-Out: v=2.4 cv=AszjHe9P c=1 sm=1 tr=0 ts=6ac88288
+ cx=c_apl:c_pps:t_out a=9mRn2PO/+PIrVdEbaIuMPg==:117
+ a=9mRn2PO/+PIrVdEbaIuMPg==:17 a=660iZSQnnn4A:10 a=x7bEGLp0ZPQA:10
+ a=HrMkdkRjZj8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=uChsZFC9AAAA:8
+ a=gS3LlgcT-lLuDWqG8kQA:9 a=CjuIK1q_8ugA:10 a=yRlW7m_SeScA:10
+ a=PXL7Z1c-EsnH2WhqVkUA:9 a=K3Ldda9zgLzqa7R0:21 a=_W_S_7VecoQA:10
+ a=ULtXvzFHYWHLyBAuiDia:22
+X-Proofpoint-ORIG-GUID: W-xL2rZ1k0K5U8gzNGE8M3--8qslY6Ji
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA5MDAyMyBTYWx0ZWRfX9y/6R70R6D9O
+ Q6EfL3RrYU9DmQCvRSSzmIJ3iiunHe76T9PXk+747YU72zJYfdzz1A03CBn+c9t3asaH1oAdn11
+ D2KKV8hrgWF5RMsn4zsu1/0GYI31ZWiJn9E4PpajooDS66L4VkYJGNXt//eu0hfFHWDGj01yrcj
+ gZtsUQkQS6CAOGwkeulxYiO2l92MO+az2r7AgTHa6oUjeImqdRE5TvRuLywbcXwW6LlO9dKEGuY
+ XS6fXprMBr/mrLfchDiseTLrAX6IDEsJ78qeec8p9wJA1ker94v86vd1LC9ahCGsijBIrl9G6+q
+ AeE1to3N+9iXN/T/QIMijGBdmt7yeJwmiXWZnRC2Zl6X8XfieadajR7i1KNvIU=
+X-JNJ: AAAAAAABhj3TBlkmqzH1Llnnljq1Xar1q+6sovPrzDR0pJweh83LCoToLkeA3+02TnMFFUG6bh4SAzBW9ME/5dZ/q945JUpuwKCAfD6ApiLSHQpr7UnyGMPee67FQpIk3qo+t0RaObEMQ72gr91pv+MzFvqm3/g/CQ2aIUCEx5rc//0dKCltsXJDZ1AL62xcySmkAyS0UlADMIWPZwIsPS3iRrk+CEz3NsraacjSjlux1qQFHTV5Rb1O5bXHUEGlKxwVLMX1Uw6YIumVIotpyy5tb5pmJDHofdlSTS5XFZ/rG5X1hQszLYWandVGfp20PmAOizp+IIqfY8r5AWAAnSSLinl3DSPyvj1UoqZvhb5y/qz9NPYfOIOa+1RHm2hh0VyMgrJSUr9HcM3Wn764BCJ9F/ltZausucfdT1+w9qmfWhSf3YCcQYu4hIJEihXbjcd37cY0Oz4FkKY5v4WqR784XCQP10JMX3yhtMcT3rww4cwkjU89we01TQclUR9v3aDK3WB1I5aPaYrvr09hmwffQXr+Lx7eYwuduV5xmUoww8AOBs5VZzy0BEgLViH6t7bzyioT+VrQCArXivtAIuHH4qSpaGegK0Von5TeSh549njNdTR5unkU5/GwWs7REJdC9h3l5ekxUgGhSwycOxe5tgEF1pI7wpikkkKjsWM1ZwSvgXLqEb1U67yeghoS90lJMRWU6RZhDwl/uxueP94uMT8Yh/6RPdE+6+871Ol0Jhcyc8HtDFSt7fETp16/pyDdzKO1NNV/rNdnyoU1LtwpsymWvNei6ncyd0oRpo0kNWumyrVZiQDnpLwlbljUFTbu56sw3gKsjxwEc7pquoNsGpSHeo1MeVeVoRhSiA/N3z4nJKe6VsNPVjb+7HjA/YWD3D4oQFbvQzwVXW3K1GrPB4sPwUJB6jGRSGqE3nCoUp45ueCQa3P0YI+sqd58noy1Ad0ccAzaO9JIkVfA2pm5SebEEN5
+ jJwvw5SMleiVU+DyzsmhnfZ5lmHOIa9lRpPe3k/GwQDnYB8HezDSKztU1i7PsTh7zjNX9KU7ubP6mYtmcqihcuIQLPdtpTou+EIXO1ZR8V/poLYHXd++zW8OEVFzIJXbMx/qk/et2ImQZOJvXIZerKdRK2W+uL+2wnzYGFjqZY46UvOhCuME21dW6oZWMjGxaK4fOF+X0yZXYBDZXlmdxUs741h9yEBAyGoOGhCt/9p0nAbzsWyRR3UArSNZuPMx9dYipMrmhzs/PyoA3YLyyqyWLLS5Hjw==
+Received-SPF: pass client-ip=2a01:b747:3000:204::18;
+ envelope-from=bradhowes@mac.com; helo=outbound.mr.icloud.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 05:58:39 -0000
+
+
+--Apple-Mail=_DC2EF3F6-4D16-4052-A541-B3FD1DF67CBF
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
+
+
+> On 8 Oct 2026, at 22:38, Philip Kaludercic <philipk@posteo.net> wrote:
+> 
+> Have you tried adding a `no-byte-compile' local variable cookie to the
+> file?
+
+Bingo! That worked great. Thanks!
+
+
+--Apple-Mail=_DC2EF3F6-4D16-4052-A541-B3FD1DF67CBF
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html aria-label=3D"message body"><head><meta http-equiv=3D"content-type" =
+content=3D"text/html; charset=3Dus-ascii"></head><body =
+style=3D"overflow-wrap: break-word; -webkit-nbsp-mode: space; =
+line-break: after-white-space;"><br><div><blockquote type=3D"cite"><div>On=
+ 8 Oct 2026, at 22:38, Philip Kaludercic &lt;philipk@posteo.net&gt; =
+wrote:</div><div><br style=3D"caret-color: rgb(0, 0, 0); font-family: =
+Helvetica; font-size: 12px; font-style: normal; font-variant-caps: =
+normal; font-weight: 400; letter-spacing: normal; orphans: 2; =
+text-align: start; text-indent: 0px; text-transform: none; white-space: =
+normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; =
+text-decoration: none;"><span style=3D"caret-color: rgb(0, 0, 0); =
+font-family: Helvetica; font-size: 12px; font-style: normal; =
+font-variant-caps: normal; font-weight: 400; letter-spacing: normal; =
+orphans: 2; text-align: start; text-indent: 0px; text-transform: none; =
+white-space: normal; widows: 2; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px; text-decoration: none; float: none; =
+display: inline !important;">Have you tried adding a `no-byte-compile' =
+local variable cookie to the</span><br style=3D"caret-color: rgb(0, 0, =
+0); font-family: Helvetica; font-size: 12px; font-style: normal; =
+font-variant-caps: normal; font-weight: 400; letter-spacing: normal; =
+orphans: 2; text-align: start; text-indent: 0px; text-transform: none; =
+white-space: normal; widows: 2; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px; text-decoration: none;"><span =
+style=3D"caret-color: rgb(0, 0, 0); font-family: Helvetica; font-size: =
+12px; font-style: normal; font-variant-caps: normal; font-weight: 400; =
+letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; =
+text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px; text-decoration: none; float: none; =
+display: inline !important;">file?</span><br style=3D"caret-color: =
+rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: =
+normal; font-variant-caps: normal; font-weight: 400; letter-spacing: =
+normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: =
+none; white-space: normal; widows: 2; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px; text-decoration: =
+none;"></div></blockquote></div><br><div>Bingo! That worked great. =
+Thanks!</div><div><br></div></body></html>=
+
+--Apple-Mail=_DC2EF3F6-4D16-4052-A541-B3FD1DF67CBF--
+
+
+From MAILER-DAEMON Fri Oct 09 02:08:51 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xF3mk-0005xK-2v
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 02:08:50 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arstoffel@gmail.com>)
+ id 1xF3me-0005w3-Cy
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 02:08:44 -0400
+Received: from mail-ej1-x636.google.com ([2a00:1450:4864:20::636])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <arstoffel@gmail.com>)
+ id 1xF3mZ-0000CP-CF
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 02:08:44 -0400
+Received: by mail-ej1-x636.google.com with SMTP id
+ a640c23a62f3a-c2e2db5e8e4so992714766b.0
+ for <emacs-devel@gnu.org>; Thu, 08 Oct 2026 23:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1791526113; x=1792130913; darn=gnu.org;
+ h=content-transfer-encoding:content-type:mime-version:message-id:date
+ :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+ :message-id:reply-to:content-type;
+ bh=Sv3bWs7RvGzRnBrxfK8CAQovo9MtRZMw2LV6YDwaLCk=;
+ b=sJSN84x0bfoNmSd6jCoEr62jFoHRloXvMz/yBFCTr7Kjiv4GLdzPpBw0GA3b8bR8WP
+ CybbNGGTPQ/gTIRxca+xvR79YxSIunaA8ZvlpOVmNv7ZjRrK6HY7kGuzK0VuAQ97Yfcn
+ XnR9s3phCP1JstpP39CietaOjDxTurC+d/7YGlMcUXEUbdgAB1r3INI8NPE5EopFzoup
+ sd/XW69bcwV6zcxm0pxwZ/BBMpRD+NatQdEL6W9dPI7xAoCX42tB0D6gaR2j5/WzGQ4G
+ XQczpE7riO5kVEhUr0q5B61fVhHd9Dfm6OKv/PJMT7lZxLP61E6Rp2q346AYOZrVSyQ2
+ /LHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1791526113; x=1792130913;
+ h=content-transfer-encoding:content-type:mime-version:message-id:date
+ :references:in-reply-to:subject:cc:to:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=Sv3bWs7RvGzRnBrxfK8CAQovo9MtRZMw2LV6YDwaLCk=;
+ b=hDlWQaNqvI1cu3nik/TWiPWWTDempgp2ZPCtj7aywFcuy/YbXvnYpqoIeZoBfPpKPu
+ OXNkf9MQPoMLx2It866UgUwH4jHUgAZ1YrOTudNfr9WwLbfiYnlm7SuQ7FXGW9TxIGgR
+ KtqUbGhPE//11TugY/VI5Uo2iYrudR/R148+ND9bKIG78I+M/5i6kDyqm6bOcsUDfTwy
+ k3RBLD9YwojWAVBgQgeB9ptRj3df78p0E5S15uNuFmQGqnrahasFakOHzoS6RSAQI+km
+ tzxcShiJfPXWxWJ3vJG/80frR2pRGhWwV/FP+RzhcTGYYLfqXat+az6dUpCVecUfY3L7
+ aayw==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBzu/pZWw25j92TG+6qsBKyy3wqHglrSGF9j1cyZXEVBORiEUdCq5GqPmVuVs5rZUAKzT3YvsosOTCAdAA==@gnu.org
+X-Gm-Message-State: AFq9FYKfInaPVdFeJzg/M4tGSThiHI/n+IJqnQh8tOInx7oqiK/dMZ63
+ QkwgySjUpVuhxuj7CLrLMfIQVoAaN/CqzVegO8fLK19RzECtYAmpaNcsbfFy0QZF
+X-Gm-Gg: AYBFou1C23sc19dHJj6VZ5pb03xHuUfk7mbFqWO9EYSqLlkA+9KDtYHh/Z23W1DqLf7
+ ue6Mn6rwPSPRjZYO7rKZCVoNYaQRiThciEabH7YkpnDNTAyCjHgjSLoBhTajGaeTuPjHdlDc/kF
+ zZvBpxNYK8FCuTOJPxMeX9MRvNhE1fLinfPd4AY+XsLA3CYuOZGX7wSA9GlX0x3KEQIWnPwK80f
+ TkqCWgCltLNgQw44ZNoFvEAtuVnppI6++TDO+CwGRX2TUpvuSYNu544GDZ4mhmlQ24EEW41eyDT
+ EfvUiylyy77ye/ah6B4AzsSiPtiM/rvwomCZL8BAuJwf/krHauzfc0sWOQIYtgXZ1hWN07bMvpE
+ oRPDxb+nza2R9+iIbj1ItbYux460I7rCDJQX50IwyiBWXrAFR3hoUfr2e9Q6e+s0334RJUESt2M
+ BcIpXJiD6H8u27kyDw6lQyt5YMWaOFd0i7yeNjzKBeG+9U0PSE66VO5YT8BbyNVW+3jS9CY5Bck
+ t2VPtMUwh6d3X8=
+X-Received: by 2002:a17:907:3ccb:b0:c31:5d7a:eb97 with SMTP id
+ a640c23a62f3a-c31aa0b47ddmr78621766b.40.1791526113494; 
+ Thu, 08 Oct 2026 23:08:33 -0700 (PDT)
+Received: from ars3 ([2a00:20:6417:9d74:dbe0:9e0d:a52d:43a3])
+ by smtp.gmail.com with ESMTPSA id
+ a640c23a62f3a-c31a9ac62a7sm43512766b.63.2026.10.08.23.08.32
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Thu, 08 Oct 2026 23:08:32 -0700 (PDT)
+From: Augusto Stoffel <arstoffel@gmail.com>
+To: Johan =?utf-8?Q?Myr=C3=A9en?= <johan.myreen@gmail.com>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>,  Emacs Devel
+ <emacs-devel@gnu.org>
+Subject: Re: x-gtk- names
+In-Reply-To: <CA+TD5hgG3tgrggNFqJZ3rU2rbN=wiCNo04tB=+gsJtvNd1iqdQ@mail.gmail.com>
+References: <87ik3yz6nc.fsf@posteo.net> <86bj9pedrm.fsf@gnu.org>
+ <eliz@gnu.org> <jwvtsnhkvna.fsf-monnier+emacs@gnu.org>
+ <CA+TD5hhUyHJ+s7oOSjmp5m=eOk09c473xek33GB4Guq1ZvgwqA@mail.gmail.com>
+ <87fqyh2twj.fsf@gmail.com>
+ <CA+TD5hgG3tgrggNFqJZ3rU2rbN=wiCNo04tB=+gsJtvNd1iqdQ@mail.gmail.com>
+Date: Fri, 09 Oct 2026 08:08:31 +0200
+Message-ID: <87se2f1k4g.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=2a00:1450:4864:20::636;
+ envelope-from=arstoffel@gmail.com; helo=mail-ej1-x636.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 06:08:45 -0000
+
+
+On Thu,  8 Oct 2026, Johan Myr=C3=A9en wrote:
+
+> On Wed, 7 Oct 2026 at 22:27, Augusto Stoffel <arstoffel@gmail.com> wrote:
+>
+>  I wonder why it helps using a GTK API for that.  There is `xdg-open' on
+>  the free DEs, `open' MacOS, and other OSs surely have a version of that
+>  command.
+>
+> I think this would be a good idea, but only if xdg-open can handle what t=
+he
+> x-gtk-launch-uri function=E2=80=94which this discussion originally was ab=
+out=E2=80=94was created for
+> in the first place (in 2023): to raise the browser window. Without this f=
+eature, on
+> Wayland, the web page is displayed in an already open browser window, but=
+ the window
+> stays buried under other windows, which is confusing the user.
+
+Okay, indeed calling xgd-open in a subprocess does not raise the browser
+window.  I'm pretty sure that's for the same reason why x-gtk-launch-uri
+only focuses the browser if called when Emacs's frame itself is focused.
+
+So that would be an argument in favor of changing browse-url-xdg-open to
+use x-gtk-launch-uri if possible, with (call-process "xdg-open" ...) as
+a fallback.
+
+
+From MAILER-DAEMON Fri Oct 09 02:36:17 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xF4DJ-0003Fa-60
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 02:36:17 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xF4DF-0003FC-1E
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 02:36:14 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xF4DC-0003et-OZ; Fri, 09 Oct 2026 02:36:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=6Ul6ihy5kSllqdQa9oRPAuB0IatTd9ZqkF3DGWROtao=; b=Nv+2Ua7QoE2d
+ 6RwQEFqUtai+izOXTsbpW4/nhrGrYdhEmrzLl4uvXq6UhH5W93oNprczXGYZ2Q3OP53PZTJvVDzV4
+ pn3/eL8PZmb0y6HrNuwp2elWPusn4fLTPzuYfFehVvulwezLCwRN8sf6ny2fBDx69aCamsmb9icRF
+ 9mSHJgMc+Ho11/gj6qXojzuBHu4wDBDH0ukk65u4SpNyWMM11UgiuEsQx4roxwRaXenZuz3OZhfZe
+ Oe+WsxYGg8r+W4xsI3sA9bwI6n0XG8iNuIgznLL0pNOIF4DBUaeFvpK6/JDid/GgPwVcuKzsX0JAQ
+ 2ux1opK/TzHc0uW7FKK3Cw==;
+Date: Fri, 09 Oct 2026 09:36:08 +0300
+Message-Id: <86a4onmld3.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Stephen Gildea <stepheng+emacs@gildea.com>,
+ Paul Eggert <eggert@cs.ucla.edu>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <411188.1791490055@pental.sg.gildea.net> (message from Stephen
+ Gildea on Thu, 08 Oct 2026 13:07:35 -0700)
+Subject: Re: backup-by-copying-when-privileged-mismatch seems too low
+References: <411188.1791490055@pental.sg.gildea.net>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 06:36:14 -0000
+
+> From: Stephen Gildea <stepheng+emacs@gildea.com>
+> Date: Thu, 08 Oct 2026 13:07:35 -0700
+> 
+> The variable backup-by-copying-when-privileged-mismatch
+> preserves the ownership of files with low user or group id
+> (e.g., root-owned system files).  Its current range for
+> deciding what ids are in the system range is 200 and below.
+> I think this boundary is too low for modern systems.
+> 
+> Systemd uses ids 1-999 for system services.
+> 
+> Various GNU/Linux/Unix user-creation tools I looked at
+> (adduser and useradd) create user accounts starting with
+> id 1000 or 1001.
+> 
+> macOS starts numbering regular users with id 501.
+> 
+> MS Windows starts regular users accounts with id 1000.
+
+Doesn't Administrator have a lower ID on Windows, like 500?  And the
+Administrators group (which is frequently used as owner of many files
+on Windows) has ID of 544, AFAIR.
+
+> Based on these data, I conclude that
+> backup-by-copying-when-privileged-mismatch
+> should be increased to this:
+> 
+>   (if (eq system-type 'darwin) 500 999)
+> 
+> Note that backup-by-copying-when-mismatch is t by default
+> anyway, and backup-by-copying-when-privileged-mismatch
+> then has no further effect.
+> 
+> What do other people see on their systems?  Does anybody
+> have regular user or group ids low enough that this change
+> would break you?
+
+Adding Paul to this discussion.
+
+backup-by-copying-when-privileged-mismatch is a defcustom, so why do
+we need to discuss its default value? just customize it to a different
+value if it doesn't fit your needs, and move on.
+
+As for the default value, I think the important question is not where
+the "privileged" IDs end, but whether an ID higher than 200 is
+frequently enough assigned to privileged accounts, and what are those
+accounts.  If exceeding the value of 200 is relatively rare, the
+current default is still OK, IMO -- as the default.
+
+
+From MAILER-DAEMON Fri Oct 09 03:30:17 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xF53Y-0002BR-0Z
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 03:30:17 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xF53S-0002Ay-Tl
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 03:30:11 -0400
+Received: from woodpecker.gentoo.org ([140.211.166.183] helo=smtp.gentoo.org)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_CHACHA20_POLY1305:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xF53R-00009r-2e
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 03:30:10 -0400
+Received: from urania.fritz.box
+ (p200300cbaf4be000227a47c58f3e140e.dip0.t-ipconnect.de
+ [IPv6:2003:cb:af4b:e000:227a:47c5:8f3e:140e])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (No client certificate requested) (Authenticated sender: ulm)
+ by smtp.gentoo.org (Postfix) with ESMTPSA id 62CC4341EEB;
+ Fri, 09 Oct 2026 07:29:58 +0000 (UTC)
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+To: Stephen Gildea <stepheng+emacs@gildea.com>
+Cc: emacs-devel@gnu.org
+Subject: Re: backup-by-copying-when-privileged-mismatch seems too low
+In-Reply-To: <411188.1791490055@pental.sg.gildea.net>
+References: <411188.1791490055@pental.sg.gildea.net>
+Date: Fri, 09 Oct 2026 09:29:52 +0200
+Message-ID: <uld8772mn@urania.fritz.box>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=140.211.166.183; envelope-from=ulm@gentoo.org;
+ helo=smtp.gentoo.org
+X-Spam_score_int: -41
+X-Spam_score: -4.2
+X-Spam_bar: ----
+X-Spam_report: (-4.2 / 5.0 requ) BAYES_00=-1.9, RCVD_IN_DNSWL_MED=-2.3,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 07:30:12 -0000
+
+>>>>> On Thu, 08 Oct 2026, Stephen Gildea wrote:
+
+> The variable backup-by-copying-when-privileged-mismatch
+> preserves the ownership of files with low user or group id
+> (e.g., root-owned system files).  Its current range for
+> deciding what ids are in the system range is 200 and below.
+> I think this boundary is too low for modern systems.
+
+> Systemd uses ids 1-999 for system services.
+
+> Various GNU/Linux/Unix user-creation tools I looked at
+> (adduser and useradd) create user accounts starting with
+> id 1000 or 1001.
+
+> macOS starts numbering regular users with id 501.
+
+> MS Windows starts regular users accounts with id 1000.
+
+> Based on these data, I conclude that
+> backup-by-copying-when-privileged-mismatch
+> should be increased to this:
+
+>   (if (eq system-type 'darwin) 500 999)
+
+> Note that backup-by-copying-when-mismatch is t by default
+> anyway, and backup-by-copying-when-privileged-mismatch
+> then has no further effect.
+
+> What do other people see on their systems?  Does anybody
+> have regular user or group ids low enough that this change
+> would break you?
+
+IIUC most GNU/Linux distros use shadow [1]. Its login.defs has these
+values:
+
+UID_MIN			 1000
+UID_MAX			60000
+
+So should there be an upper limit as well?
+
+[1] https://github.com/shadow-maint/shadow/blob/master/etc/login.defs
+
+
+From MAILER-DAEMON Fri Oct 09 08:11:14 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xF9RR-0000jM-0p
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 08:11:13 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arnt@gulbrandsen.priv.no>)
+ id 1xF9RN-0000j9-Vg
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 08:11:10 -0400
+Received: from stabil.gulbrandsen.priv.no ([2a01:4f8:191:91a8::3])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arnt@gulbrandsen.priv.no>)
+ id 1xF9RI-0003mu-8s
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 08:11:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gulbrandsen.priv.no;
+ s=mail; t=1791547856;
+ bh=QkE09atYhtPTcsZXxaJAcjbiIKcmKpKY2mSqr5M5MpE=;
+ h=From:To:Subject:Date:From;
+ b=oFgsscOr+w9jzqrMJtfmICXsN1/D00UwYE3q8C63CfgCF1m//qAhV7P5BZnWCdFeC
+ Z//2753NxV5+DuW4QNFTjOOsi51Jc41578gZR3fQcV/T4sn3oHcZZFKggW/VJSeDdl
+ 5zk8rzGYU96FyJ9Q/+LQuncsyPjyW+2Z3Ty4Ocgg=
+Received: from stabil.gulbrandsen.priv.no (stabil.gulbrandsen.priv.no
+ [IPv6:2a01:4f8:191:91a8::3])
+ by stabil.gulbrandsen.priv.no (Postfix) with ESMTP id 2D1FBC0045;
+ Fri,  9 Oct 2026 13:10:54 +0100 (IST)
+Received: from arnt@gulbrandsen.priv.no by stabil.gulbrandsen.priv.no
+ (Archiveopteryx 3.2.0) with esmtpsa id 1791547853-30649-30648/11/2127;
+ Fri, 9 Oct 2026 12:10:53 +0000
+From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+To: emacs-devel@gnu.org
+Subject: Gnus support for UTF8=ACCEPT and more
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/32.0.50
+Date: Fri, 9 Oct 2026 14:10:52 +0200
+Message-Id: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="=-=-="
+Received-SPF: pass client-ip=2a01:4f8:191:91a8::3;
+ envelope-from=arnt@gulbrandsen.priv.no; helo=stabil.gulbrandsen.priv.no
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 12:11:10 -0000
+
+--=-=-=
+Content-Type: text/plain; format=flowed
+
+Hi,
+
+please find attached two Gnus/IMAP/SMTP patches.
+
+The first simply changes the order of ports 25 and 587 to nudge 
+users
+towards port 587. (Some servers support both, but allow 
+authentication only on 587. On those servers the code would 
+incorrectly assume that authenticating was pointless or 
+impossible, and then fail to send mail unless the user knew more 
+than most. On other servers this change makes sending mail 
+slightly faster or slower.)
+
+The second patch is much larger, and adds support for RFCs 6530-3, 
+9755 and parts of 9051 as a side effect. FWIW 6530 is now 
+supported by the servers for 70-80% of internet users, including 
+the biggest two, gmail and o365.
+
+I've been using versions of these patches since 2023. The 
+attachments are newly rebased to 32.0.50, though.
+
+Thanks in advance for any comments.
+
+Arnt
+
+
+--=-=-=
+Content-Type: text/x-diff
+Content-Disposition: attachment;
+ filename=0001-Prefer-port-587-to-25-when-querying-for-an-SMTP-serv.patch
+Content-Transfer-Encoding: quoted-printable
+
+=46rom 05ca8fec85c88fd4b8ac4f30f2f7d46f07d0c38a Mon Sep 17 00:00:00 2001
+From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+Date: Sun, 9 Apr 2023 16:26:17 +0200
+Subject: [PATCH 1/2] Prefer port 587 to 25 when querying for an SMTP =
+server
+
+If approximately the same software runs on the two ports, or one port
+isn't used, then this makes no difference.
+
+If significantly different software runs on the two ports, then 587 may
+well be the port to use for submission, but 25 is unlikely to be.
+
+* lisp/mail/smtpmail.el (smtpmail-query-smtp-server): Try port 587
+before port 25.
+=2D--
+ lisp/mail/smtpmail.el | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lisp/mail/smtpmail.el b/lisp/mail/smtpmail.el
+index f60eadc288d..a406e69c274 100644
+=2D-- a/lisp/mail/smtpmail.el
++++ b/lisp/mail/smtpmail.el
+@@ -687,7 +687,7 @@ smtpmail-query-smtp-server
+ a non-standard port, you can set `smtpmail-smtp-service' in advance.
+ Returns an error if the server cannot be contacted."
+   (let ((server (read-string "Outgoing SMTP mail server: "))
+-	(ports '(25 587))
++	(ports '(587 25))
+ 	stream port prompted)
+     (when (and smtpmail-smtp-service
+ 	       (not (member smtpmail-smtp-service ports)))
+=2D-=20
+2.47.3
+
+
+--=-=-=
+Content-Type: text/x-diff; charset=utf-8
+Content-Disposition: attachment;
+ filename=0002-Add-support-for-unicode-email-addresses-in-Gnus-IMAP.patch
+Content-Transfer-Encoding: quoted-printable
+
+=46rom 7a4a4aa99189ff1b800a7c26a8bd5d3220645e75 Mon Sep 17 00:00:00 2001
+From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+Date: Tue, 7 Feb 2023 17:12:17 +0000
+Subject: [PATCH 2/2] Add support for unicode email addresses in Gnus/IMAP=
+ and
+ SMTP.
+
+Send and receive RFC6531/RFC6532 mail and use RFC9755 UTF-8 mailbox
+names. The existing IDNA support and usage is preferred in the cases
+where that's enough.
+
+If Gnus could read/send a message correctly before this commit, it
+behaves identically after. There are a couple of minor related bugfixes
+(Sender is now IDNA-encoded like other address fields, etc).
+
+Note that a user who has pinned the charset (e.g. via
+gnus-default-charset) will see mojibake when looking at UTF8 addresses
+and other new syntax from RFC6532.
+
+Note also a new standards deviation: If message-use-idna is nil (it is t
+by default) and the user sends a message to an ASCII@non-ASCII address,
+Gnus can choose to send it with the UTF8 address in a header field,
+without requiring SMTPUTF8. Sending unencoded UTF8 requires SMTPUTF8
+according to RFC6531.
+
+* lisp/gnus/message.el (message-bogus-addresses): Drop the non-ASCII
+localpart pattern. Such addresses are no longer bogus.
+(message-address-headers): Name the header fields whose contents are
+addresses, so SMTPUTF8 and IDNA cannot drift apart.
+(message-localpart-uses-smtputf8, message-domain-uses-unicode): New
+predicates on a single address.
+(message--address-headers-any): New helper.
+(message-header-uses-smtputf8, message-header-uses-unicode-addresses):
+New predicates on a header.
+(message-send-mail, message-send-news): Skip encoded-word encoding, and
+the all-Latin-1 assertion, when a header holds a u-label.
+(message-idna-to-ascii-rhs): Encode the domains of every address header
+rather than six of them, Bcc and the Resent- fields included; leave
+them alone when the message needs SMTPUTF8.  Doc fix.
+
+* lisp/mail/smtpmail.el (smtpmail-encode-address-domain): New defun.
+(smtpmail--as-characters): New helper.
+(smtpmail-address-needs-smtputf8, smtpmail-addresses-need-smtputf8):
+New predicates, on localparts only, tolerating a null sender.
+(smtpmail-via-smtp): Qualify recipients before deciding anything, then
+decide once for the whole transaction: either SMTPUTF8 with u-labels
+throughout, or a-labels throughout and an ASCII envelope.  Recognise
+the SMTPUTF8 extension in the EHLO response, send the SMTPUTF8 and
+BODY=3D8BITMIME parameters when they are called for, and signal an error
+rather than sending raw UTF-8 to a server that offers neither.  Take
+care to follow the caller's choice of unibyte/multibyte as well as
+encoding.
+(smtpmail-send-it): Fix the case where the caller already converted
+multibyte/unibyte, so RFC2047 encoding is no longer appropriate.
+
+* lisp/gnus/nnimap.el (nnimap): New ENABLED slot.
+(nnimap-open-connection-1): Send ENABLE QRESYNC UTF8=3DACCEPT and record
+what the server enabled.
+(nnimap-token-to-string, nnimap-enabled-utf8): New defuns.
+(nnimap-group-to-imap): Send the mailbox name as UTF-8 when UTF8=3DACCEPT
+is in force, and apply the namespace either way.
+(nnimap-imap-to-group): New defun, split out of 'nnimap-get-groups'
+for roundtrip testing.
+(nnimap-get-groups): Use it.
+(nnimap-send-command): Encode the command as UTF-8; the connection is
+binary.
+(nnimap-unfold-quoted-lines): Handle arriving mailbox names as strings
+even if they arrive as IMAP literals.
+
+* lisp/gnus/gnus-search.el (gnus-search-imap-search-command): Omit the
+charset from SEARCH once UTF8=3DACCEPT is enabled, per RFC9755 5.
+
+* test/lisp/gnus/message-tests.el (message-tests--with-headers): New
+helper.
+(message-address-predicates,
+message-idna-encodes-domains-only-without-smtputf8): Add tests.
+(message-detect-smtputf-usage): Remove, subsumed by the above.
+
+* test/lisp/gnus/nnimap-tests.el: New file, testing the mailbox name
+encodings in both directions, including names that look like modified
+UTF-7 and must not be mistaken for it, and proper handling of non-ASCII
+mailbox names from the server.
+
+* test/lisp/mail/smtpmail-tests.el: New file, testing the SMTPUTF8
+decision and the envelope encoding.
+
+* test/lisp/mail/ietf-drums-tests.el (ietf-drums-tests):
+* test/lisp/mail/mail-extr-tests.el (mail-extract-test-cases): Add
+unicode addresses.
+=2D--
+ lisp/gnus/gnus-search.el           |   5 +-
+ lisp/gnus/message.el               |  80 ++++++++++++++++----
+ lisp/gnus/nnimap.el                |  95 +++++++++++++++---------
+ lisp/mail/smtpmail.el              |  76 +++++++++++++++++--
+ test/lisp/gnus/message-tests.el    | 112 ++++++++++++++++++++++++++++
+ test/lisp/gnus/nnimap-tests.el     | 115 +++++++++++++++++++++++++++++
+ test/lisp/mail/ietf-drums-tests.el |   6 ++
+ test/lisp/mail/mail-extr-tests.el  |   2 +
+ test/lisp/mail/smtpmail-tests.el   |  95 ++++++++++++++++++++++++
+ 9 files changed, 530 insertions(+), 56 deletions(-)
+ create mode 100644 test/lisp/gnus/nnimap-tests.el
+ create mode 100644 test/lisp/mail/smtpmail-tests.el
+
+diff --git a/lisp/gnus/gnus-search.el b/lisp/gnus/gnus-search.el
+index 2e9adeec23d..fc1feab4581 100644
+=2D-- a/lisp/gnus/gnus-search.el
++++ b/lisp/gnus/gnus-search.el
+@@ -1050,6 +1050,7 @@ gnus-search-transform-expression
+ (autoload 'nnimap-change-group "nnimap")
+ (declare-function nnimap-buffer "nnimap" ())
+ (declare-function nnimap-command "nnimap" (&rest args))
++(declare-function nnimap-enabled-utf8 "nnimap" ())
+=20
+ (defvar gnus-search-imap-search-keys
+   '(body cc bcc from header keyword larger smaller subject text to uid =
+x-gm-raw
+@@ -1173,7 +1174,9 @@ gnus-search-imap-search-command
+       (let* ((nnimap-streaming t)
+ 	     (call
+ 	      (nnimap-send-command
+-	       "UID SEARCH CHARSET UTF-8 %s"
++	       (if (nnimap-enabled-utf8)
++		   "UID SEARCH %s"
++		 "UID SEARCH CHARSET UTF-8 %s")
+ 	       (pop query))))
+ 	(dolist (l query)
+ 	  (process-send-string (get-buffer-process (current-buffer)) l)
+diff --git a/lisp/gnus/message.el b/lisp/gnus/message.el
+index 7ad88449c3f..91f6acf5cbe 100644
+=2D-- a/lisp/gnus/message.el
++++ b/lisp/gnus/message.el
+@@ -4560,7 +4560,7 @@ message-text-with-property
+     (nreverse regions)))
+=20
+ (defcustom message-bogus-addresses
+-  '("noreply" "nospam" "invalid" "@.*@" "[^[:ascii:]].*@" "[ \t]")
++  '("noreply" "nospam" "invalid" "@.*@" "[ \t]")
+   "List of regexps of potentially bogus mail addresses.
+ See `message-check-recipients' how to setup checking.
+=20
+@@ -4577,7 +4577,6 @@ message-bogus-addresses
+ 		(const "nospam")
+ 		(const "invalid")
+ 		(const :tag "duplicate @" "@.*@")
+-		(const :tag "non-ascii local part" "[^[:ascii:]].*@")
+ 		(const :tag "`_' in domain part" "@.*_")
+ 		(const :tag "whitespace" "[ \t]"))
+ 	   (repeat :inline t
+@@ -4893,6 +4892,53 @@ message--send-mail-maybe-partially
+           (message-multi-smtp-send-mail)))
+     (message-send-mail-partially)))
+=20
++(defconst message-address-headers
++  '("From" "Sender" "To" "Cc" "Bcc" "Reply-To" "Mail-Reply-To"
++    "Mail-Followup-To" "Resent-From" "Resent-To" "Resent-Cc" "Resent-Bcc=
+")
++  "Header fields whose contents are addresses.
++A non-ASCII localpart in any of these forces SMTPUTF8, since nothing can
++encode one. If the message does not use SMTPUTF8, a non-ASCII domain in
++any of them may become an a-label (xn--...).  The Resent- fields matter
++to the envelope as well: `smtpmail-deduce-address-list' uses them for =
+RCPT
++TO in place of To, Cc and Bcc whenever one of them is present.")
++
++(defun message-localpart-uses-smtputf8 (address)
++  "Return non-nil if ADDRESS has a non-ASCII localpart.
++See `message-address-headers'."
++  (string-match "[^[:ascii:]][^@ \t<]*@" address))
++
++(defun message--address-headers-any (predicate)
++  "Return non-nil if PREDICATE holds for an address in an address =
+header.
++The buffer is expected to be narrowed to the headers; see
++`message-narrow-to-headers'."
++  (seq-some (lambda (header)
++              (let ((field (message-fetch-field header)))
++                (and field
++                     (seq-find predicate
++                               (mail-header-parse-addresses field t)))))
++            message-address-headers))
++
++(defun message-header-uses-smtputf8 ()
++  "Return non-nil if the current buffer needs SMTPUTF8, and nil if not.
++Only localparts count here; see `message-localpart-uses-smtputf8'."
++  (message--address-headers-any #'message-localpart-uses-smtputf8))
++
++(defun message-domain-uses-unicode (address)
++  "Return non-nil if ADDRESS has a non-ASCII domain.
++This thoroughly ignores display name and localpart."
++  (string-match "@[^@ \t<>,;]*[^[:ascii:]]" address))
++
++(defun message-header-uses-unicode-addresses ()
++  "Return non-nil if an address header holds a non-ASCII address.
++Domains matter here, unlike in `message-header-uses-smtputf8', because
++this is used to decide whether to apply RFC2047 encoding, which would
++break domains, while `message-header-uses-smtputf8' is used for
++transport-related decisions."
++  (message--address-headers-any
++   (lambda (address)
++     (or (message-localpart-uses-smtputf8 address)
++         (message-domain-uses-unicode address)))))
++
+ (defun message-send-mail (&optional _)
+   (require 'mail-utils)
+   (let* ((tembuf (message-generate-new-buffer-clone-locals " message =
+temp"))
+@@ -4956,7 +5002,8 @@ message-send-mail
+ 	      (message-generate-headers '(Lines)))
+ 	    ;; Remove some headers.
+ 	    (message-remove-header message-ignored-mail-headers t)
+-            (mail-encode-encoded-word-buffer)
++            (unless (message-header-uses-unicode-addresses)
++              (mail-encode-encoded-word-buffer))
+ 	    ;; Then check for suspicious addresses.
+             (dolist (hdr '("To" "Cc" "Bcc"))
+               (let ((addr (message-fetch-field hdr)))
+@@ -5001,8 +5048,13 @@ message-send-mail
+ 	    (message-insert-courtesy-copy
+ 	     (with-current-buffer mailbuf
+ 	       message-courtesy-message)))
+-          ;; If this was set, `sendmail-program' takes care of encoding.
+-          (unless message-inhibit-body-encoding
++          ;; If message-inhibit-body-encoding was set, `sendmail-program=
+'
++          ;; takes care of encoding. If the message contains u-label =
+domains,
++          ;; we'd better not rfc2047 encode those.
++          (unless (or message-inhibit-body-encoding
++                      (save-restriction
++                        (message-narrow-to-headers)
++                        (message-header-uses-unicode-addresses)))
+             ;; Let's make sure we encoded everything in the buffer.
+             (cl-assert (save-excursion
+                          (goto-char (point-min))
+@@ -5340,7 +5392,8 @@ message-send-news
+ 		  (message-generate-headers '(Lines)))
+ 		;; Remove some headers.
+ 		(message-remove-header message-ignored-news-headers t)
+-                (mail-encode-encoded-word-buffer))
++                (unless (message-header-uses-unicode-addresses)
++                  (mail-encode-encoded-word-buffer)))
+ 	      (goto-char (point-max))
+ 	      ;; require one newline at the end.
+ 	      (or (=3D (preceding-char) ?\n)
+@@ -6289,7 +6342,12 @@ message-idna-to-ascii-rhs-1
+ 	    (widen)))))))
+=20
+ (defun message-idna-to-ascii-rhs ()
+-  "Possibly IDNA encode non-ASCII domain names in From:, To: and Cc: =
+headers."
++  "Possibly IDNA encode non-ASCII domain names in the address headers.
++See `message-use-idna'.
++
++Nothing is encoded when the message needs SMTPUTF8 due to localparts:
++in that case there will be UTF8 on the wire, and an a-label would only =
+make
++the address unreadable for no gain."
+   (interactive nil message-mode)
+   (when message-use-idna
+     (save-excursion
+@@ -6301,12 +6359,8 @@ message-idna-to-ascii-rhs
+ 	;; caused the IDNA encoding on lines that look like headers in
+ 	;; the message body.
+ 	(message-narrow-to-headers-or-head)
+-	(message-idna-to-ascii-rhs-1 "From")
+-	(message-idna-to-ascii-rhs-1 "To")
+-	(message-idna-to-ascii-rhs-1 "Reply-To")
+-	(message-idna-to-ascii-rhs-1 "Mail-Reply-To")
+-	(message-idna-to-ascii-rhs-1 "Mail-Followup-To")
+-	(message-idna-to-ascii-rhs-1 "Cc")))))
++	(unless (message-header-uses-smtputf8)
++	  (mapc #'message-idna-to-ascii-rhs-1 message-address-headers))))))
+=20
+ (defun message-generate-headers (headers)
+   "Prepare article HEADERS.
+diff --git a/lisp/gnus/nnimap.el b/lisp/gnus/nnimap.el
+index 850061ac1d9..70eaf3f35a9 100644
+=2D-- a/lisp/gnus/nnimap.el
++++ b/lisp/gnus/nnimap.el
+@@ -175,7 +175,8 @@ nnimap-process-buffers
+=20
+ (cl-defstruct nnimap
+   group process commands capabilities select-result newlinep server
+-  last-command-time greeting examined stream-type initial-resync)
++  last-command-time greeting examined stream-type initial-resync
++  enabled)
+=20
+ (defvar nnimap-object nil)
+=20
+@@ -199,15 +200,34 @@ nnimap-inhibit-logging
+ (defun nnimap-group-to-imap (group)
+   "Convert Gnus group name to IMAP mailbox name."
+   (let* ((inbox (if nnimap-namespace
+-                    (substring nnimap-namespace 0 -1) nil)))
+-    (utf7-encode
+-     (cond ((or (not inbox)
+-                (string-equal group inbox))
+-            group)
+-           ((string-prefix-p "#" group)
+-            (substring group 1))
+-           (t
+-            (concat nnimap-namespace group))) t)))
++                    (substring nnimap-namespace 0 -1) nil))
++         (mailbox (cond ((or (not inbox)
++                             (string-equal group inbox))
++                         group)
++                        ((string-prefix-p "#" group)
++                         (substring group 1))
++                        (t
++                         (concat nnimap-namespace group)))))
++    (if (nnimap-enabled-utf8)
++        mailbox
++      (utf7-encode mailbox t))))
++
++(defun nnimap-imap-to-group (mailbox)
++  "Convert IMAP mailbox name MAILBOX to a Gnus group name.
++The inverse of `nnimap-group-to-imap'."
++  (let* ((prefix nnimap-namespace)
++         (inbox (if prefix
++                    (substring prefix 0 -1) nil))
++         (group (if (nnimap-enabled-utf8)
++                    (decode-coding-string mailbox 'utf-8)
++                  (utf7-decode mailbox t))))
++    (cond ((or (not prefix)
++               (equal inbox group))
++           group)
++          ((string-prefix-p prefix group)
++           (substring group (length prefix)))
++          (t
++           (concat "#" group)))))
+=20
+ (defun nnimap-buffer ()
+   (nnimap-find-process-buffer nntp-server-buffer))
+@@ -351,7 +371,8 @@ nnimap-unfold-quoted-lines
+       (delete-region (1+ (match-beginning 0)) (point))
+       (setq string (buffer-substring (point) (+ (point) size)))
+       (delete-region (point) (+ (point) size))
+-      (insert (format "%S" string)))))
++      (insert "\"" (replace-regexp-in-string "[\"\\]" "\\\\\\&" string)
++              "\""))))
+=20
+ (defun nnimap-get-length ()
+   (and (re-search-forward "{\\([0-9]+\\)}" (line-end-position) t)
+@@ -594,9 +615,14 @@ nnimap-open-connection-1
+                       (auth-source-forget+ :host host :port port)))
+ 		  (delete-process (nnimap-process nnimap-object))
+ 		  (setq nnimap-object nil))))
+-	    (when nnimap-object
+-	      (when (nnimap-capability "QRESYNC")
+-		(nnimap-command "ENABLE QRESYNC"))
++            (when nnimap-object
++              (when (nnimap-capability "ENABLE")
++                (dolist (response (cddr (nnimap-command
++                                         "ENABLE QRESYNC UTF8=3DACCEPT")=
+))
++                  (when (equal "ENABLED"
++                               (nnimap-token-to-string (car response)))
++                    (setf (nnimap-enabled nnimap-object)
++                          (mapcar #'nnimap-token-to-string (cdr =
+response))))))
+               (nnheader-message 7 "Opening connection to %s...done"
+ 				nnimap-address)
+ 	      (nnimap-process nnimap-object))))))))
+@@ -797,6 +823,14 @@ nnimap-capability
+ (defun nnimap-ver4-p ()
+   (nnimap-capability "IMAP4REV1"))
+=20
++(defun nnimap-token-to-string (token)
++  "Return TOKEN, an atom from a parsed IMAP response, as an upcased =
+string."
++  (upcase (format "%s" token)))
++
++(defun nnimap-enabled-utf8 ()
++  "Return non-nil if UTF8=3DACCEPT has been enabled on this connection."
++  (member "UTF8=3DACCEPT" (nnimap-enabled nnimap-object)))
++
+ (defun nnimap-get-partial-article (article parts structure)
+   (let ((result
+ 	 (nnimap-command
+@@ -1377,10 +1411,6 @@ nnimap-add-cr
+ (defun nnimap-get-groups ()
+   (erase-buffer)
+   (let* ((sequence (nnimap-send-command "LIST \"\" \"*\""))
+-         (prefix nnimap-namespace)
+-         (prefix-len (if prefix (length prefix) nil))
+-         (inbox (if prefix
+-                    (substring prefix 0 -1) nil))
+          groups)
+     (nnimap-wait-for-response sequence)
+     (subst-char-in-region (point-min) (point-max)
+@@ -1398,16 +1428,9 @@ nnimap-get-groups
+ 			   (skip-chars-backward " \r\"")
+ 			   (point)))))
+ 	(unless (member '%Noselect flags)
+-          (let* ((group (utf7-decode (if (stringp group) group
+-                                       (format "%s" group)) t))
+-                 (group (cond ((or (not prefix)
+-                                   (equal inbox group))
+-                               group)
+-                              ((string-prefix-p prefix group)
+-                               (substring group prefix-len))
+-                              (t
+-                               (concat "#" group)))))
+-            (push group groups)))))
++          (push (nnimap-imap-to-group (if (stringp group) group
++                                        (format "%s" group)))
++                groups))))
+     (nreverse groups)))
+=20
+ (defun nnimap-get-responses (sequences)
+@@ -1963,13 +1986,15 @@ nnimap-send-command
+   (setf (nnimap-last-command-time nnimap-object) (current-time))
+   (process-send-string
+    (get-buffer-process (current-buffer))
+-   (nnimap-log-command
+-    (format "%d %s%s\n"
+-            (incf nnimap-sequence)
+-	    (apply #'format args)
+-	    (if (nnimap-newlinep nnimap-object)
+-		""
+-	      "\r"))))
++   (encode-coding-string
++    (nnimap-log-command
++     (format "%d %s%s\n"
++	     (incf nnimap-sequence)
++	     (apply #'format args)
++	     (if (nnimap-newlinep nnimap-object)
++		 ""
++	       "\r")))
++    'utf-8))
+   ;; Some servers apparently can't have many outstanding
+   ;; commands, so throttle them.
+   (unless nnimap-streaming
+diff --git a/lisp/mail/smtpmail.el b/lisp/mail/smtpmail.el
+index a406e69c274..7821a0e0880 100644
+=2D-- a/lisp/mail/smtpmail.el
++++ b/lisp/mail/smtpmail.el
+@@ -57,6 +57,7 @@
+=20
+ (require 'sendmail)
+ (require 'auth-source)
++(require 'puny)
+ (autoload 'mail-strip-quoted-names "mail-utils")
+ (autoload 'message-make-date "message")
+ (autoload 'message-make-message-id "message")
+@@ -242,6 +243,13 @@ smtpmail-send-it
+ 	  ;; mail-do-fcc below) will annoy with asking for a suitable
+ 	  ;; encoding.
+ 	  (set-buffer-file-coding-system smtpmail-code-conv-from nil t)
++	  ;; And the same multibyteness.  An already-encoded message arrives
++	  ;; unibyte, and copying it into a multibyte buffer would turn its
++	  ;; bytes into eight-bit characters, which no coding system with a
++	  ;; MIME charset can encode -- so `mail-encode-header' below would
++	  ;; stop and ask the user to choose one.
++	  (set-buffer-multibyte
++	   (buffer-local-value 'enable-multibyte-characters mailbuf))
+ 	  (insert-buffer-substring mailbuf)
+ 	  (goto-char (point-max))
+ 	  ;; require one newline at the end.
+@@ -357,8 +365,10 @@ smtpmail-send-it
+ 	    (if mail-interactive
+ 		(with-current-buffer errbuf
+ 		  (erase-buffer))))
+-	  ;; Encode the header according to RFC2047.
+-	  (mail-encode-header (point-min) delimline)
++	  ;; Encode the header according to RFC2047, unless whoever handed
++	  ;; us this buffer already did what's needed.
++	  (when enable-multibyte-characters
++	    (mail-encode-header (point-min) delimline))
+ 	  ;; Get recipients' addresses
+ 	  (setq smtpmail-recipient-address-list
+                 (smtpmail-deduce-address-list tembuf (point-min) =
+delimline))
+@@ -720,6 +730,35 @@ smtpmail-user-mail-address
+ 	      (string-search "." (cadr parts))
+ 	      user-mail-address))))
+=20
++(defun smtpmail--as-characters (string)
++  "Return STRING as characters, decoding raw UTF-8 bytes if that is what
++it holds."
++  (if (and (multibyte-string-p string)
++           (not (seq-some (lambda (char) (eq (char-charset char) =
+'eight-bit))
++                          string)))
++      string
++    (decode-coding-string (encode-coding-string string 'raw-text) =
+'utf-8)))
++
++(defun smtpmail-encode-address-domain (address)
++  "Return ADDRESS with its domain as an a-label.
++(Return the localpart as provided.)"
++  (if (string-match "\\`\\(.*\\)@\\([^@]+\\)\\'" address)
++      (concat (match-string 1 address) "@"
++              (puny-encode-domain
++               (smtpmail--as-characters (match-string 2 address))))
++    address))
++
++(defun smtpmail-address-needs-smtputf8 (address)
++  "Return non-nil if ADDRESS has a non-ASCII localpart.
++A non-ASCII domain does not count, since it has an a-label to fall back
++on.  A localpart has no plan b, so it alone forces use of SMTPUTF8."
++  (string-match "\\`[^@]*[^[:ascii:]]" address))
++
++(defun smtpmail-addresses-need-smtputf8 (from recipients)
++  "Return non-nil if FROM or any of RECIPIENTS has a non-ASCII localpart=
+."
++  (seq-find #'smtpmail-address-needs-smtputf8
++            (delq nil (cons from recipients))))
++
+ (defun smtpmail-via-smtp (recipient smtpmail-text-buffer
+ 				    &optional ask-for-password
+                                     send-attempts)
+@@ -749,6 +788,17 @@ smtpmail-via-smtp
+ 	auth-mechanisms
+ 	(supported-extensions '()))
+=20
++    ;; Qualify first, so that the decision below sees the addresses that
++    ;; will actually go out.  RCPT TO: qualifies them again, harmlessly.
++    (setq recipient (mapcar #'smtpmail-maybe-append-domain recipient))
++
++    ;; If any address requires SMTPUTF8, then we send all addresses =
+using
++    ;; UTF8, even if one or more could use IDNA.
++    (unless (smtpmail-addresses-need-smtputf8 envelope-from recipient)
++      (setq envelope-from (and envelope-from
++                               (smtpmail-encode-address-domain envelope-=
+from))
++            recipient (mapcar #'smtpmail-encode-address-domain recipient=
+)))
++
+     (when (and smtpmail-servers-requiring-authorization
+                (string-match-p smtpmail-servers-requiring-authorization
+                                smtpmail-smtp-server))
+@@ -832,7 +882,7 @@ smtpmail-via-smtp
+ 				   '(verb xvrb 8bitmime onex xone
+ 					  expn size dsn etrn
+ 					  enhancedstatuscodes
+-					  help xusr
++					  help xusr smtputf8
+ 					  auth=3Dlogin auth starttls))
+ 			     (setq supported-extensions
+ 				   (cons name supported-extensions)))
+@@ -857,7 +907,9 @@ smtpmail-via-smtp
+ 	      (smtpmail-command-or-throw process "XUSR"))
+=20
+ 	    ;; MAIL FROM:<sender>
+-	    (let ((size-part
++	    (let* ((needs-smtputf8
++		    (smtpmail-addresses-need-smtputf8 envelope-from recipient))
++		   (size-part
+ 		   (if (or (member 'size supported-extensions)
+ 			   (assoc 'size supported-extensions))
+ 		       (format " SIZE=3D%d"
+@@ -868,6 +920,16 @@ smtpmail-via-smtp
+ 				    ;; because of CR-LF representation:
+ 				    (count-lines (point-min) (point-max)))))
+ 		     ""))
++		  (smtputf8-part
++		   (cond ((not needs-smtputf8) "")
++			 ((member 'smtputf8 supported-extensions) " SMTPUTF8")
++			 (t
++			  (error (concat "Sending to %s needs SMTPUTF8, which"
++					 " %s does not offer")
++				 (or (seq-find #'smtpmail-address-needs-smtputf8
++					       (cons envelope-from recipient))
++				     envelope-from)
++				 host))))
+ 		  (body-part
+ 		   (if (member '8bitmime supported-extensions)
+ 		       ;; FIXME:
+@@ -881,13 +943,13 @@ smtpmail-via-smtp
+ 		       ;; return an indication of what encoding the
+ 		       ;; message buffer is now, i.e. ASCII or
+ 		       ;; 8BITMIME.
+-		       (if nil
++		       (if needs-smtputf8
+ 			   " BODY=3D8BITMIME"
+ 			 "")
+ 		     "")))
+ 	      (smtpmail-send-command
+-	       process (format "MAIL FROM:<%s>%s%s"
+-			       envelope-from size-part body-part))
++	       process (format "MAIL FROM:<%s>%s%s%s"
++			       envelope-from size-part smtputf8-part body-part))
+ 	      (cond
+ 	       ((smtpmail-ok-p (setq result (smtpmail-read-response process)))
+ 		;; Success.
+diff --git a/test/lisp/gnus/message-tests.el b/test/lisp/gnus/message-tes=
+ts.el
+index 56fcbeee66f..b6d335cae4d 100644
+=2D-- a/test/lisp/gnus/message-tests.el
++++ b/test/lisp/gnus/message-tests.el
+@@ -150,6 +150,118 @@ message-alter-repeat-address
+                       "\"larsi@gnus.org\" <larsi@gnus.org>")
+                      "larsi@gnus.org")))
+=20
++(defun message-tests--with-headers (headers function)
++  "Call FUNCTION in a buffer holding HEADERS, narrowed to them."
++  (with-temp-buffer
++    (insert headers "Subject: hei\n\n--text follows this line--\nHello.\=
+n")
++    (save-restriction
++      (message-narrow-to-headers)
++      (funcall function))))
++
++
++;;; Internationalised addresses.
++;;
++;; There are eight possible combinations of `message-use-idna` being
++;; set, the localpart using non-ASCII and the domain using non-ASCII.
++;; In some of those eight cases, we have to decide whether to use
++;; u-labels (UTF8) or a-labels (xn--) in the header fields and in
++;; the SMTP transaction. This table shows the intended decisions:
++;;
++;;   message-use-idna  localpart  domain   | header domain  transport
++;;   -------------------------------------------------------------------
++;;   t                 ASCII      ASCII    | --             plain SMTP
++;;   nil               ASCII      ASCII    | --             plain SMTP
++;;   t                 ASCII      Unicode  | a-label        plain SMTP
++;;   nil               ASCII      Unicode  | u-label        plain SMTP =
+(*)
++;;   t                 Unicode    ASCII    | --             SMTPUTF8
++;;   nil               Unicode    ASCII    | --             SMTPUTF8
++;;   t                 Unicode    Unicode  | u-label        SMTPUTF8
++;;   nil               Unicode    Unicode  | u-label        SMTPUTF8
++;;
++;; A Unicode localpart cannot be encoded in any way, so it forces
++;; SMTPUTF8 and `message-use-idna' has nothing left to decide. In the =
+top half
++;; the domain has an a-label to fall back on, so `message-use-idna' =
+chooses.
++;;
++;; (*) deliberately breaks the rules in RFC6531 3.4, which would have us
++;; require SMTPUTF8 for any non-ASCII header content.  A u-label in a =
+header
++;; under an ASCII envelope is not permitted, but it is widely supported,
++;; and it is much better to show the reader UTF8 than xn--. smtpmail =
+sends
++;; the envelope as a-labels in that row; see
++;; `smtpmail-encode-address-domain'.
++
++(ert-deftest message-address-predicates ()
++  (pcase-dolist (`(,headers ,smtputf8 ,unicode)
++                 '(("To: gunnar@example.com\n"       nil nil)
++                   ("To: Ren=C3=A9 <rene@example.com>\n"  nil nil)
++                   ("To: arnt@gr=C3=A5.org\n"             nil t)
++                   ("To: G=C3=B8ril <goeril@gr=C3=A5.org>\n"   nil t)
++                   ("Resent-To: info@gr=C3=A5.org\n"      nil t)
++                   ("To: gr=C3=A5@example.com\n"          t   t)
++                   ("To: gr=C3=A5@gr=C3=A5.org\n"              t   t)
++                   ("To: Ren=C3=A9 <ren=C3=A9@gr=C3=A5.org>\n"      t   =
+t)
++                   ("Sender: g=C3=B8ril@example.com\n"    t   t)
++                   ("Bcc: =E0=A4=89=E0=A4=A6=E0=A4=BE=E0=A4=B9=E0=A4=B0=E0=
+=A4=A3@=E0=A4=89=E0=A4=A6=E0=A4=BE=E0=A4=B9=E0=A4=B0=E0=A4=A3.=E0=A4=AD=E0=
+=A4=BE=E0=A4=B0=E0=A4=A4\n"      t   t)
++                   ("Resent-To: =E9=98=BFQ@=E4=BE=8B=E5=AD=90.=E4=B8=AD=E5=
+=9B=BD\n"     t   t)))
++    (should (eq smtputf8
++                (and (message-tests--with-headers
++                      headers #'message-header-uses-smtputf8)
++                     t)))
++    (should (eq unicode
++                (and (message-tests--with-headers
++                      headers #'message-header-uses-unicode-addresses)
++                     t)))))
++
++(ert-deftest message-idna-encodes-domains-only-without-smtputf8 ()
++  ;; Row 3: every localpart is ASCII, so the domains go out as a-labels
++  ;; and the message stays within plain SMTP.  Bcc counts, since it
++  ;; becomes a RCPT TO, and so do Sender and the Resent- fields.
++  (should (equal (message-tests--with-headers
++                  "To: arnt@gr=C3=A5.org\nBcc: info@gr=C3=A5.org\n"
++                  (lambda ()
++                    (message-idna-to-ascii-rhs)
++                    (buffer-string)))
++                 "To: arnt@xn--gr-zia.org
++Bcc: info@xn--gr-zia.org
++Subject: hei
++
++"))
++  (should (equal (message-tests--with-headers
++                  "Sender: arnt@gr=C3=A5.org\nResent-To: info@gr=C3=A5.o=
+rg\n"
++                  (lambda ()
++                    (message-idna-to-ascii-rhs)
++                    (buffer-string)))
++                 "Sender: arnt@xn--gr-zia.org
++Resent-To: info@xn--gr-zia.org
++Subject: hei
++
++"))
++  ;; Row 4: the same headers with `message-use-idna' off keep their
++  ;; u-labels, and the encoded-word pass must then be skipped.
++  (should (equal (message-tests--with-headers
++                  "To: arnt@gr=C3=A5.org\n"
++                  (lambda ()
++                    (let ((message-use-idna nil))
++                      (message-idna-to-ascii-rhs))
++                    (buffer-string)))
++                 "To: arnt@gr=C3=A5.org
++Subject: hei
++
++"))
++  ;; Rows 7 and 8: one Unicode localpart and the message needs SMTPUTF8
++  ;; whatever `message-use-idna' says, so the u-labels stay.
++  (dolist (use-idna '(t nil))
++    (should (equal (message-tests--with-headers
++                    "To: gr=C3=A5@gr=C3=A5.org\nCc: Ren=C3=A9 <rene@orl=C3=
+=A9ans.fr>\n"
++                    (lambda ()
++                      (let ((message-use-idna use-idna))
++                        (message-idna-to-ascii-rhs))
++                      (buffer-string)))
++                   "To: gr=C3=A5@gr=C3=A5.org
++Cc: Ren=C3=A9 <rene@orl=C3=A9ans.fr>
++Subject: hei
++
++"))))
++
+ (ert-deftest message-replace-header ()
+   (with-temp-buffer
+     (save-excursion
+diff --git a/test/lisp/gnus/nnimap-tests.el b/test/lisp/gnus/nnimap-tests=
+.el
+new file mode 100644
+index 00000000000..3809a3d76de
+=2D-- /dev/null
++++ b/test/lisp/gnus/nnimap-tests.el
+@@ -0,0 +1,115 @@
++;;; nnimap-tests.el --- tests for nnimap.el  -*- lexical-binding:t -*-
++
++;; Copyright (C) 2026 Free Software Foundation, Inc.
++
++;; This file is part of GNU Emacs.
++
++;; GNU Emacs is free software: you can redistribute it and/or modify
++;; it under the terms of the GNU General Public License as published by
++;; the Free Software Foundation, either version 3 of the License, or
++;; (at your option) any later version.
++
++;; GNU Emacs is distributed in the hope that it will be useful,
++;; but WITHOUT ANY WARRANTY; without even the implied warranty of
++;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++;; GNU General Public License for more details.
++
++;; You should have received a copy of the GNU General Public License
++;; along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
++
++;;; Code:
++
++(require 'ert)
++(require 'nnimap)
++
++(defmacro nnimap-tests--with-utf8 (enabled &rest body)
++  "Evaluate BODY with UTF8=3DACCEPT enabled or not, per ENABLED."
++  (declare (indent 1))
++  `(let ((nnimap-object (make-nnimap
++                         :enabled (and ,enabled '("QRESYNC" "UTF8=3DACCE=
+PT")))))
++     ,@body))
++
++(ert-deftest nnimap-enabled-utf8 ()
++  (should (nnimap-tests--with-utf8 t (nnimap-enabled-utf8)))
++  (should-not (nnimap-tests--with-utf8 nil (nnimap-enabled-utf8)))
++  ;; The server may answer in any case, and does not have to name
++  ;; everything we asked it to enable.
++  (let ((nnimap-object (make-nnimap
++                        :enabled (mapcar #'nnimap-token-to-string
++                                         '(qresync "utf8=3Daccept")))))
++    (should (nnimap-enabled-utf8))))
++
++(ert-deftest nnimap-group-to-imap-utf8 ()
++  (let ((nnimap-namespace nil))
++    ;; UTF8=3DACCEPT means the mailbox name travels as a u-label.
++    (should (equal (nnimap-tests--with-utf8 t
++                     (nnimap-group-to-imap "Gel=C3=B6scht"))
++                   "Gel=C3=B6scht"))
++    ;; Without it, the modified UTF-7 of RFC3501 5.1.3 is all we have.
++    (should (equal (nnimap-tests--with-utf8 nil
++                     (nnimap-group-to-imap "Gel=C3=B6scht"))
++                   "Gel&APY-scht"))
++    (should (equal (nnimap-tests--with-utf8 t (nnimap-group-to-imap =
+"INBOX"))
++                   "INBOX"))))
++
++(ert-deftest nnimap-group-to-imap-namespace ()
++  ;; The namespace prefix applies either way; only the encoding differs.
++  (let ((nnimap-namespace "INBOX."))
++    (should (equal (nnimap-tests--with-utf8 t
++                     (nnimap-group-to-imap "Gel=C3=B6scht"))
++                   "INBOX.Gel=C3=B6scht"))
++    (should (equal (nnimap-tests--with-utf8 nil
++                     (nnimap-group-to-imap "Gel=C3=B6scht"))
++                   "INBOX.Gel&APY-scht"))
++    (should (equal (nnimap-tests--with-utf8 t (nnimap-group-to-imap =
+"INBOX"))
++                   "INBOX"))
++    (should (equal (nnimap-tests--with-utf8 t (nnimap-group-to-imap =
+"#Shared"))
++                   "Shared"))))
++
++(ert-deftest nnimap-group-to-imap-escapes-ampersand ()
++  ;; A Gnus name that already looks like modified UTF-7 must come back
++  ;; escaped, or it would name a different mailbox on the server.
++  (let ((nnimap-namespace nil))
++    (should (equal (nnimap-tests--with-utf8 nil
++                     (nnimap-group-to-imap "A&-B"))
++                   "A&--B"))
++    (should (equal (nnimap-tests--with-utf8 nil
++                     (nnimap-group-to-imap "A&AOU-B"))
++                   "A&-AOU-B"))
++    ;; With UTF8=3DACCEPT the ampersand means nothing and is left alone.
++    (should (equal (nnimap-tests--with-utf8 t
++                     (nnimap-group-to-imap "A&-B"))
++                   "A&-B"))))
++
++(ert-deftest nnimap-group-name-round-trip ()
++  ;; `nnimap-group-to-imap' and `nnimap-imap-to-group' are inverses, for
++  ;; both encodings and whether or not a namespace is in the way.
++  (dolist (namespace '(nil "INBOX."))
++    (dolist (enabled '(nil t))
++      (let ((nnimap-namespace namespace))
++        (dolist (group '("plain" "INBOX" "#Shared" "Gel=C3=B6scht" =
+"Gel=C3=B6scht&Co"
++                         "A&-B" "A&=3DB" "A&AOU-B" "=E4=BE=8B=E5=AD=90")=
+)
++          (should
++           (equal group
++                  (nnimap-tests--with-utf8 enabled
++                    (nnimap-imap-to-group
++                     (encode-coding-string (nnimap-group-to-imap group)
++                                           'utf-8))))))))))
++
++(ert-deftest nnimap-unfold-quoted-lines-keeps-bytes ()
++  ;; A UTF-8 mailbox name can arrive either as a quoted string or as a
++  ;; literal. This tests that the literal form ends up being readable,
++  ;; instead of showing backslashed octal.
++  (let ((bytes (encode-coding-string "=D0=98=D1=81=D1=85=D0=BE=D0=B4=D1=8F=
+=D1=89=D0=B8=D0=B5" 'utf-8)))
++    (should (eq (length bytes) 18))
++    (with-temp-buffer
++      (mm-disable-multibyte)
++      (insert "* LIST (\\hasnochildren) \"/\" {18}\r\n" bytes "\r\n")
++      (goto-char (point-min))
++      (nnimap-unfold-quoted-lines)
++      (should (equal (buffer-string)
++                     (concat "* LIST (\\hasnochildren) \"/\" \"" bytes =
+"\"\r\n"))))))
++
++(provide 'nnimap-tests)
++
++;;; nnimap-tests.el ends here
+diff --git a/test/lisp/mail/ietf-drums-tests.el b/test/lisp/mail/ietf-dru=
+ms-tests.el
+index 2dad88cf2f8..e639a525b43 100644
+=2D-- a/test/lisp/mail/ietf-drums-tests.el
++++ b/test/lisp/mail/ietf-drums-tests.el
+@@ -156,6 +156,12 @@ ietf-drums-tests
+                   "=3D?utf-8?B?0JfQtNGA0LDMgdCy0YHRgtCy0YPQudGC0LUh?=3D =
+<foo@goo.ru>"
+                   t)
+                  '("foo@goo.ru" . "=D0=97=D0=B4=D1=80=D0=B0=CC=81=D0=B2=D1=
+=81=D1=82=D0=B2=D1=83=D0=B9=D1=82=D0=B5!")))
++  (should (equal (ietf-drums-parse-address
++                  "ren=C3=A9@example.com (Ren=C3=A9)")
++                 '("ren=C3=A9@example.com" . "Ren=C3=A9")))
++  (should (equal (ietf-drums-parse-address
++                  "ren=C3=A9@ren=C3=A9.ind (Ren=C3=A9)")
++                 '("ren=C3=A9@ren=C3=A9.ind" . "Ren=C3=A9")))
+=20
+   ;; ietf-drums-parse-addresses
+   ;; Note that it's not worth getting too elaborate here, as the heavy
+diff --git a/test/lisp/mail/mail-extr-tests.el b/test/lisp/mail/mail-extr=
+-tests.el
+index fc049c8ef04..b89df132238 100644
+=2D-- a/test/lisp/mail/mail-extr-tests.el
++++ b/test/lisp/mail/mail-extr-tests.el
+@@ -28,6 +28,8 @@ mail-extract-test-cases
+   '(("foo@example.org" . (nil "foo@example.org"))
+     ("J. Random Hacker <foo@example.org>" . ("J. Random Hacker" =
+"foo@example.org"))
+     ("\"J. Random Hacker\" <foo@example.org>" . ("J. Random Hacker" =
+"foo@example.org"))
++    ("\"J. Random Hacker\" <ren=C3=A9@example.org>" . ("J. Random =
+Hacker" "ren=C3=A9@example.org"))
++    ("\"J. Random Ren=C3=A9\" <ren=C3=A9@ren=C3=A9.ind>" . ("J. Random =
+Ren=C3=A9" "ren=C3=A9@ren=C3=A9.ind"))
+     ("=C3=85=C3=A5=C3=A5 =C3=84=C3=A4=C3=A4 <foo@example.org>" . =
+("=C3=85=C3=A5=C3=A5 =C3=84=C3=A4=C3=A4" "foo@example.org"))))
+=20
+ (ert-deftest mail-extract-address-components ()
+diff --git a/test/lisp/mail/smtpmail-tests.el b/test/lisp/mail/smtpmail-t=
+ests.el
+new file mode 100644
+index 00000000000..018eaad6ee0
+=2D-- /dev/null
++++ b/test/lisp/mail/smtpmail-tests.el
+@@ -0,0 +1,95 @@
++;;; smtpmail-tests.el --- tests for smtpmail.el  -*- lexical-binding:t =
+-*-
++
++;; Copyright (C) 2026 Free Software Foundation, Inc.
++
++;; This file is part of GNU Emacs.
++
++;; GNU Emacs is free software: you can redistribute it and/or modify
++;; it under the terms of the GNU General Public License as published by
++;; the Free Software Foundation, either version 3 of the License, or
++;; (at your option) any later version.
++
++;; GNU Emacs is distributed in the hope that it will be useful,
++;; but WITHOUT ANY WARRANTY; without even the implied warranty of
++;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++;; GNU General Public License for more details.
++
++;; You should have received a copy of the GNU General Public License
++;; along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
++
++;;; Code:
++
++(require 'ert)
++(require 'smtpmail)
++
++(ert-deftest smtpmail-detect-smtputf8 ()
++  ;; A domain has an a-label to fall back on, so it decides nothing =
+here.
++  (should (smtpmail-address-needs-smtputf8 "gr=C3=A5@gr=C3=A5.org"))
++  (should (smtpmail-address-needs-smtputf8 "g=C3=B8ril@example.com"))
++  (should (smtpmail-address-needs-smtputf8 "=E9=98=BFQ@=E4=BE=8B=E5=AD=90=
+.=E4=B8=AD=E5=9B=BD"))
++  (should-not (smtpmail-address-needs-smtputf8 "arnt@gr=C3=A5.org"))
++  (should-not (smtpmail-address-needs-smtputf8 "info@m=C3=BCnchen.de"))
++  (should-not (smtpmail-address-needs-smtputf8 "arnt@xn--gr-zia.org"))
++  (should-not (smtpmail-address-needs-smtputf8 "gunnar@example.com")))
++
++(ert-deftest smtpmail-detect-smtputf8-unibyte ()
++  ;; By the time smtpmail sees an address it may have been through a
++  ;; unibyte send buffer, so both spellings have to answer alike.
++  (let ((address "g=C3=B8ril@example.com"))
++    (should (eq (not (smtpmail-address-needs-smtputf8 address))
++                (not (smtpmail-address-needs-smtputf8
++                      (encode-coding-string address 'utf-8)))))))
++
++(ert-deftest smtpmail-detect-smtputf8-envelope ()
++  ;; The question is asked of the transaction, not of each address, so
++  ;; that one Unicode localpart settles it for every recipient.
++  (should (smtpmail-addresses-need-smtputf8
++           "arnt@example.com" '("m=C3=BCller@m=C3=BCller.de" "info@g=C3=B6=
+rtz.de")))
++  (should (smtpmail-addresses-need-smtputf8
++           "arnt@example.com" '("gunnar@example.com" "=E0=A4=89=E0=A4=A6=
+=E0=A4=BE=E0=A4=B9=E0=A4=B0=E0=A4=A3@=E0=A4=89=E0=A4=A6=E0=A4=BE=E0=A4=B9=
+=E0=A4=B0=E0=A4=A3.=E0=A4=AD=E0=A4=BE=E0=A4=B0=E0=A4=A4")))
++  (should (smtpmail-addresses-need-smtputf8
++           "ren=C3=A9@example.com" '("gunnar@example.com")))
++  ;; A domain alone never does, however many of them there are.
++  (should-not (smtpmail-addresses-need-smtputf8
++               "arnt@example.com" '("arnt@gr=C3=A5.org" "info@g=C3=B6rtz=
+.de")))
++  (should-not (smtpmail-addresses-need-smtputf8 "arnt@example.com" nil))
++  ;; The null sender is a legal MAIL FROM, so nil must not signal.
++  (should-not (smtpmail-addresses-need-smtputf8 nil '("gunnar@example.co=
+m"))))
++
++(ert-deftest smtpmail-encode-address-domain ()
++  (should (equal (smtpmail-encode-address-domain "arnt@gr=C3=A5.org")
++                 "arnt@xn--gr-zia.org"))
++  (should (equal (smtpmail-encode-address-domain "info@g=C3=B6rtz.de")
++                 "info@xn--grtz-5qa.de"))
++  ;; It encodes what it is handed; deciding whether to is the caller's =
+job.
++  (should (equal (smtpmail-encode-address-domain "gr=C3=A5@gr=C3=A5.org"=
+)
++                 "gr=C3=A5@xn--gr-zia.org"))
++  (should (equal (smtpmail-encode-address-domain "gunnar@example.com")
++                 "gunnar@example.com"))
++  ;; Idempotent, which matters because `smtpmail-via-smtp' retries.
++  (should (equal (smtpmail-encode-address-domain "arnt@xn--gr-zia.org")
++                 "arnt@xn--gr-zia.org"))
++  ;; An address taken from an already-encoded message buffer arrives as
++  ;; bytes, either as a unibyte string or, once it has been through a
++  ;; multibyte buffer, as eight-bit characters.  Encoding those one by =
+one
++  ;; would give xn--gr-ci583hoda.org.  Both spellings are asserted to be
++  ;; what they claim first: without that, rewriting either into a plain
++  ;; literal would leave a test that passes without testing anything.
++  (let ((unibyte (encode-coding-string "arnt@gr=C3=A5.org" 'utf-8))
++        (eight-bit (with-temp-buffer
++                     (insert (encode-coding-string "arnt@gr=C3=A5.org" =
+'utf-8))
++                     (buffer-string))))
++    (should-not (multibyte-string-p unibyte))
++    (should (seq-some (lambda (char) (eq (char-charset char) 'eight-bit)=
+)
++                      eight-bit))
++    (should (equal (smtpmail-encode-address-domain unibyte)
++                   "arnt@xn--gr-zia.org"))
++    (should (equal (smtpmail-encode-address-domain eight-bit)
++                   "arnt@xn--gr-zia.org")))
++  ;; A local address has no domain to encode.
++  (should (equal (smtpmail-encode-address-domain "gr=C3=A5") "gr=C3=A5")=
+)
++  (should (smtpmail-address-needs-smtputf8 "gr=C3=A5")))
++
++(provide 'smtpmail-tests)
++
++;;; smtpmail-tests.el ends here
+=2D-=20
+2.47.3
+
+
+--=-=-=--
+
+
+From MAILER-DAEMON Fri Oct 09 08:33:58 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xF9nS-0005iO-BL
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 08:33:58 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xF9nR-0005iF-73
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 08:33:57 -0400
+Received: from fhigh-b7-smtp.messagingengine.com ([202.12.124.158])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xF9nP-0006Ti-Gi
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 08:33:56 -0400
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+ by mailfhigh.stl.internal (Postfix) with ESMTP id 277A07A0054
+ for <emacs-devel@gnu.org>; Fri,  9 Oct 2026 08:33:54 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-04.internal (MEProxy); Fri, 09 Oct 2026 08:33:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm1; t=1791549234; x=1791635634; bh=B28simN1nb
+ iVVjk/wAP7IU1heqVn7A09sAAD1Gy/XKo=; b=G9elTMCNAVI4X5rZCwpp4zarep
+ zH7NQb5WU6uxBz3KXReCuoDPZVbQ420j+5WMJets99OguETvkSJruOAWa7Vh27JX
+ cY8ec7m4Wf4/Yrc4UA7qqUEi/M41nOSmJxL6ywEAsss/530mwDVGj/sxh2LDsPd0
+ 0HSac3oZqjc0lBK2m2aMS7qXJmPbzlVBRZYAypShNrFBF5LcWs3KfUqMp5x1bWeo
+ rVYzJ9U8IwyWn3fctFMd4XywQSR4GP+X+3I2Uby6eQU9Wyfo+cLBLJ4jG0M3Macb
+ Sn5FQ6W5ltEu8fqaqebS6d3J9DWhvtfJRKNeamyoe3POAaM+mqsOzcoz73Tw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1791549234; x=1791635634; bh=B28simN1nbiVVjk/wAP7IU1heqVn7A09sAA
+ D1Gy/XKo=; b=H+pWPsJGXKSk4ZMX9IzqyZwFlfOQ0IJzGPldarSMdsCEQ9T/myN
+ skO65Dim5B6uHLp1KW2XUZHbBNWu2Qpdf6GCLVOaVlF0MfCcQSYEGNyEpMkuNpbw
+ 4tdoqErhPtQhlTIiy204iiA4g+e7zL6i1+dMRe5Adc1t+bg/HO8yhILOt/in3Z4s
+ vne0EnCZdyGUexZ4Tqyb1ygKNql3ZoW621vhVA0TKRfF0eJxvFlSBSnnxs2XvDin
+ pw/QA+pa40J19dIJxCpdtF1iyVwkTtSoCz/6wh6JezXM0TexdcyfHBKL50T6Gkx1
+ odd0W1CFURhxdDJB4uydHr5fEJ20tNL7WPA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1791549234; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:AlCDCTCo5alVWkaqM6I8R9wbSi75Q0zbL8hW2tVkksUfjt8
+ M/C3cgNy8sMxusYz015xxBP7UHkhFSX+ZeKX1bt9UzoHOny3Kus/WDVtCv7g45KK
+ JHkZrwvLQDsEcpwJmPt42CNGZNNsgGGN3nJm3OJjY7ln8XLSvK064Pw0jbqjEcYI
+ w+yH7+h2b2WFUOgWCscH0DVDCYkV9qjtO5oElgG67+/hME+xIWpK4d6VqTiM4dwL
+ gqgV7rf3lvK+62AnByB8L+0oIS/bELSGdbgi5tLAtrM0502+2aoRIe4Tz0TVuNHJ
+ GofOdyHv07Wm2FQ9L5w+UxzjXrhH68opukyXexA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=mi-m=1; hc=10;
+ hn=content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:sJSZnznpVSP+/+6lSfYnnJWaCFRReK9PEJgGmgCQWKw=:A9zC6aPkWUtOlHzX6l05S535k3iMlxweqjsg1qhHOX0=;
+X-ME-Sender: <xms:Md_IaopD_BrXHDAksAIkgyKBO5UhLtUgj7iyYD_DHoP7SR1s0EjcIQ>
+ <xme:Md_Iakpd4ulsm5WQMGUEDMy2cfdM3dVvyCJ1hty4Nh4DIvn7lOkb0vPfOJIdrpJxF
+ mo_3By_OLaVE2a72kb80eipzME8YhIGgO6kL44JoDuIx_qI_OSXhLPO>
+X-ME-Received: <xmr:Md_Iaq0qs1XRWG7jazaTXUvZ1pIrUxN569TdcgC-BmMZIa5Jq-dFgDxDS1bJqXjOljGaMJhPuujyaCpSF8lej7xo3ToPf7U5xg>
+X-ME-Proxy-Cause: dmFkZTF4vG5j8dLSQmforI29f+DSwiUn2heURT2Gyz7btzYcDivwtifb1ZdN2Jh8A2lffD
+ CZfMu7XzegLu+CsvKvh2JBV47D4Fs3LocA0Modq/i1frVzBWiYwYsFD0FQs55UtEUttA8P
+ AbWJQT1/STIw1/sRbgKUueDElDiymB1DnDeHuVwimFPntWDXx+xpOvAXV8xTy0U50YNy2r
+ dtkyK+NzkZSDHsL3ensE3/gnc4FE0+On0LF9u912BZ5xX0j2iouSNBdK40zbIys0zJatGd
+ w+WGGDhmh5FgQTxcnrWtXxGbfA6PsHZtk3d+oC8TFziRJ0UKg5fCWOaWfM6DLIGu69fGQz
+ X9CPmqof3FMG04QIYdVnFzofu0CjvCEZmSajr4VkF1D1ksD3vaOA3O7tePSOKDYz6lBjSc
+ 20zulXlky2miVOO+tj/hk1Nyz3Fm7DYj+TW8udsbhbgGDnxaFN/L8x4FQdOnMv5HzATX0x
+ 5k52+a5B6pLSlfB2Cy6+Z48kEyDqjD8BP4ARZZ6SnIyy5UIYR57c10VmB+sn7P82ban5Oq
+ Ci10ax1HnLvh880Jvrl5UQabGdJi0QSEy2f9aaM8UIVBPkOjNjuGfKgH3ySvCeeyc79rhl
+ 4IUL/L/RZdkjpr5NFL3csrEz29shnrRob9oOo2UmBFCPaY5kSJNWBuNTu2OQ
+X-ME-Proxy: <xmx:Md_IarDi9vqXNL-7gMfjDgtNDKWAUuIqMQhhlxoorMuQV9exlahgUQ>
+ <xmx:Md_Iaqcizy6JZeTP-BT2egFf6M6NuDs9ucsz5fyXNiN5fRY7wueYqw>
+ <xmx:Md_Iaoi232jPq9D-JNMIcvCJ579zzcuV7-uD4ne8mSLn0OuEa32jRg>
+ <xmx:Md_IaqqaM7Z3F7XU-YjZPtuhaYg1D3R0YUgcCxXfKeX_ra9p9X-llw>
+ <xmx:Mt_Iav2K3NTU77CG3Ql6u6jBoCiGjiWo6iQlSiR5gl-DKso0iov8F_1V>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 9 Oct 2026 08:33:53 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id CA526285928; Fri, 09 Oct 2026 13:33:52 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>, emacs-devel@gnu.org
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+In-Reply-To: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+Date: Fri, 09 Oct 2026 13:33:52 +0100
+Message-ID: <87cxtjqci7.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=202.12.124.158;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-b7-smtp.messagingengine.com
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_LOW=-0.7, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 12:33:57 -0000
+
+Arnt Gulbrandsen [09/Oct  2:10pm +02] wrote:
+> Hi,
+>
+> please find attached two Gnus/IMAP/SMTP patches.
+>
+> The first simply changes the order of ports 25 and 587 to nudge
+> users
+> towards port 587. (Some servers support both, but allow
+> authentication only on 587. On those servers the code would
+> incorrectly assume that authenticating was pointless or
+> impossible, and then fail to send mail unless the user knew more
+> than most. On other servers this change makes sending mail
+> slightly faster or slower.)
+>
+> The second patch is much larger, and adds support for RFCs 6530-3,
+> 9755 and parts of 9051 as a side effect. FWIW 6530 is now
+> supported by the servers for 70-80% of internet users, including
+> the biggest two, gmail and o365.
+>
+> I've been using versions of these patches since 2023. The
+> attachments are newly rebased to 32.0.50, though.
+>
+> Thanks in advance for any comments.
+
+Did you use an LLM to generate these patches?
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Fri Oct 09 08:45:43 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xF9yp-0007KC-60
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 08:45:43 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xF9ym-0007K2-N4
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 08:45:41 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xF9yl-0007Z6-1y; Fri, 09 Oct 2026 08:45:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=/I8XH3oFHgDClHuNirLyVZz06NiADEViqUSKeezVolc=; b=MxpbwFI864hA
+ V9fkL2Keazvua/39E/MT3sPvfwR4hxH2LVp+f9dnBgv1eickVOuPUgqXPMd9UR1tZnm85IOLzQ9Bx
+ orYkEXZhdKW0l1KsyaAuiG2y1kqhLeSagkTVrsAE4j2Qh6ti5UaH/EPvEpwSrCu6EHUC8dy334T6q
+ oU3UOMHl65gcWXO91pmV1HT34GEMSZT69pfLFMdBAnr8a5cmj7/xeRY7q5yLSRJvzY7W5xAV23JEC
+ RZWocoXkBAfQbIUXC09vAc218Pcg6oc01jQ0q0PcD88wSmHhL3EOeHnhNsi1oiiox24TwuWuOyja6
+ 3EXcKB+BFyoY+tFHOJJS8g==;
+Date: Fri, 09 Oct 2026 15:45:36 +0300
+Message-Id: <86se2fkpov.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>,
+ Nickolai Dobrynin <nickolai.dobrynin@dobrynin.net>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no> (message from Arnt
+ Gulbrandsen on Fri, 9 Oct 2026 14:10:52 +0200)
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 12:45:41 -0000
+
+> From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+> Date: Fri, 9 Oct 2026 14:10:52 +0200
+> 
+> please find attached two Gnus/IMAP/SMTP patches.
+> 
+> The first simply changes the order of ports 25 and 587 to nudge 
+> users
+> towards port 587. (Some servers support both, but allow 
+> authentication only on 587. On those servers the code would 
+> incorrectly assume that authenticating was pointless or 
+> impossible, and then fail to send mail unless the user knew more 
+> than most. On other servers this change makes sending mail 
+> slightly faster or slower.)
+> 
+> The second patch is much larger, and adds support for RFCs 6530-3, 
+> 9755 and parts of 9051 as a side effect. FWIW 6530 is now 
+> supported by the servers for 70-80% of internet users, including 
+> the biggest two, gmail and o365.
+> 
+> I've been using versions of these patches since 2023. The 
+> attachments are newly rebased to 32.0.50, though.
+
+Nikolay Dobrynin (CC'ed) is working on adding this to Gnus, AFAIU.
+
+
+From MAILER-DAEMON Fri Oct 09 09:35:10 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xFAkd-00053P-3n
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 09:35:08 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arnt@gulbrandsen.priv.no>)
+ id 1xFAkY-000538-7Y
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 09:35:02 -0400
+Received: from stabil.gulbrandsen.priv.no ([144.76.73.169])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arnt@gulbrandsen.priv.no>)
+ id 1xFAkW-0004n6-3p
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 09:35:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gulbrandsen.priv.no;
+ s=mail; t=1791552896;
+ bh=9OavVNyaRZMGey/cMN/lPQOrfs7t0+rDLhe0FsoZVuI=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=JhIIBlXHu9M8tXt3D3aYM8Q03ccGL1j49o58S/mII1B2MXPeRSSPoQrMxCCVDUjaw
+ PBnazrg4yeU/QU5wZBJ+e8PKOiqha1s8vomxAMKtMUmytp4WuJKuTuVLqAo+g+y5NE
+ NeBWV6EF3rTtMBORuaohS2lncQ34vNK9qbTRipo4=
+Received: from stabil.gulbrandsen.priv.no (stabil.gulbrandsen.priv.no
+ [IPv6:2a01:4f8:191:91a8::3])
+ by stabil.gulbrandsen.priv.no (Postfix) with ESMTP id 7D71DC0045;
+ Fri,  9 Oct 2026 14:34:55 +0100 (IST)
+Received: from arnt@gulbrandsen.priv.no by stabil.gulbrandsen.priv.no
+ (Archiveopteryx 3.2.0) with esmtpsa id 1791552894-30649-30648/11/2144;
+ Fri, 9 Oct 2026 13:34:54 +0000
+From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: emacs-devel@gnu.org
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+In-Reply-To: <87cxtjqci7.fsf@athena.silentflame.com>
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+ <87cxtjqci7.fsf@athena.silentflame.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/32.0.50
+Date: Fri, 9 Oct 2026 15:34:53 +0200
+Message-Id: <87ik3b0zgi.fsf@stabil.gulbrandsen.priv.no>
+Mime-Version: 1.0
+Content-Type: text/plain; format=flowed
+Received-SPF: pass client-ip=144.76.73.169;
+ envelope-from=arnt@gulbrandsen.priv.no; helo=stabil.gulbrandsen.priv.no
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 13:35:03 -0000
+
+Sean Whitton <spwhitton@spwhitton.name> writes:
+> Did you use an LLM to generate these patches?
+
+Most of the code is from 2023 ;) But I use LLMs. In this case the 
+recent rebasing was done almost entirely by LLM. The list of 
+files/defuns in the commit message was compiled by an LLM, the 
+text in the commit message is by me, and so on. The rebase from 
+30.x to 32.0.50 broke when I ran it; I used an LLM to find out why 
+(and may submit an additional patch, the breakage wasn't due to 
+this).
+
+Did I miss on style? This is the first time since the nineties 
+that I've written >10 lines of emacs-lisp.
+
+Arnt
+
+
+From MAILER-DAEMON Fri Oct 09 10:01:45 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xFBAO-0008Vk-KE
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 10:01:45 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arnt@gulbrandsen.priv.no>)
+ id 1xFBAM-0008VU-Es
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 10:01:43 -0400
+Received: from stabil.gulbrandsen.priv.no ([2a01:4f8:191:91a8::3])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arnt@gulbrandsen.priv.no>)
+ id 1xFBAF-0007H7-E1; Fri, 09 Oct 2026 10:01:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gulbrandsen.priv.no;
+ s=mail; t=1791554484;
+ bh=fbwxxQivVf6RZLmbzTxZ3fyvYrqbeRT5aJxwGDxzGRM=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=D0WXubNXlHM/4Rlo/rPFXVi/svrL9OOhoAVu+dXwpVLkFcPhBV/FSm9Jo17M230Rf
+ jgR3FvY++ZVMAZZD1/WTBipLiXl/iTL8mFOskXbZbHVClpmdbaNZiSzVyvmbFKh9Jh
+ V2mJNHDNToBvrw/RlMVVzCJ7r/CcH4IJ6ppCx780=
+Received: from stabil.gulbrandsen.priv.no (stabil.gulbrandsen.priv.no
+ [IPv6:2a01:4f8:191:91a8::3])
+ by stabil.gulbrandsen.priv.no (Postfix) with ESMTP id 0ACFCC0045;
+ Fri,  9 Oct 2026 15:01:22 +0100 (IST)
+Received: from arnt@gulbrandsen.priv.no by stabil.gulbrandsen.priv.no
+ (Archiveopteryx 3.2.0) with esmtpsa id 1791554481-30649-30648/9/35;
+ Fri, 9 Oct 2026 14:01:21 +0000
+From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: Nickolai Dobrynin <nickolai.dobrynin@dobrynin.net>, emacs-devel@gnu.org
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+In-Reply-To: <86se2fkpov.fsf@gnu.org> (Eli Zaretskii's message of "Fri, 9 Oct
+ 2026 15:45:36 +0300")
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+ <86se2fkpov.fsf@gnu.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/30.2
+Date: Fri, 9 Oct 2026 16:01:20 +0200
+Message-Id: <871p9zrn0v.fsf@libertango.gulbrandsen.priv.no>
+Mime-Version: 1.0
+Content-Type: text/plain; format=flowed
+Received-SPF: pass client-ip=2a01:4f8:191:91a8::3;
+ envelope-from=arnt@gulbrandsen.priv.no; helo=stabil.gulbrandsen.priv.no
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 14:01:43 -0000
+
+Eli Zaretskii <eliz@gnu.org> writes:
+> Nikolay Dobrynin (CC'ed) is working on adding this to Gnus, 
+> AFAIU. 
+
+Great. I'm happier if there are more people implementing these 
+RFCs than if I write yet another implementation, so please feel 
+free to discard this, use parts of it, use all of it, whatever 
+floats the boat.
+
+Feel also free to ask me about these RFCs or interop etc, I ought 
+to know know every detail of this.
+
+Arnt
+
+
+From MAILER-DAEMON Fri Oct 09 10:26:34 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xFBYB-0000Tc-7X
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 10:26:20 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xFBXr-0000Lm-RD
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 10:26:05 -0400
+Received: from fout-b2-smtp.messagingengine.com ([202.12.124.145])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xFBXo-0001HY-94
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 10:25:57 -0400
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+ by mailfout.stl.internal (Postfix) with ESMTP id 54A0C1D000B6
+ for <emacs-devel@gnu.org>; Fri,  9 Oct 2026 10:25:52 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-03.internal (MEProxy); Fri, 09 Oct 2026 10:25:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-type:content-type:date:date:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:subject:subject:to:to; s=fm1; t=1791555952; x=
+ 1791642352; bh=W3Gtqt4vfDouZwOQF0FdUWeN3D6hFFsA0S33f/wRPe4=; b=V
+ nx9qPFV2uhPlKFgVZQXc1/3ALu/zhXpSzbi+RNpECvBwE2shlkq6t7B261n0Xj4y
+ HYZ9M/5NFFFONRNg/smDtFCyMaUSYmsko2SMI8DfYao97VPqQDRP+noq0nxtAhm+
+ 98gxYcwXS8iRTWEstFb38ljfuTz7dCTK7nYXGLQ0OKDuOXI3el+pOH/Me4NLdl9o
+ P3IDbDQFeoa+FGEHM72fnH3weliBvDfq2DBlXq8Uu418K3psSMbWDYgrIDeHcajK
+ EJQ29qRmO50u/9GwXLsSxQXZDMUWWB2V1YVMdVTWmNFY3q2uFnp7ISpt5HVbT7Lr
+ lFfs6nyYJDBZA5MHsSbiQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1791555952; x=1791642352; bh=W3Gtqt4vfDouZwOQF0FdUWeN3D6hFFsA0S3
+ 3f/wRPe4=; b=pDjj1RPmIksHz4J6SVDAZfBDX92fqUIgCOHps2cfK25Yda9AyNF
+ snDpuKGKT1NMX4E/gIa04OyW6xnMddCfzoUe1U5+TL760UjkLhgtgkdX0VwYVEQo
+ Ha773JgWUfIk5o9Djui/VcPvdcxAAv/9CzkjwuikD6xigppSA5motz+5xQe8P0JW
+ vS8L31tsR0uyIfYMePNGByOou1xJblH08Mo5ysaaErP1tbYFHsrTnxc55W7aUjbi
+ VAh7XhAmkVsoVZd1er0Dc6z55v/tYcfMXNXpuViFdrfvVQ+NQcego95by2cgkHt7
+ EILwgz37gvcOICE/C+SrnQqc0g8pjIJsHVw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1791555952; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:oVepJWPqELN6z96Xug9GGi2ceuYZ9Jplxdr7QLenIVSYlPt
+ N8ZiV+F7MYmvUOM/34rVAlPcQmiQ+6zvoIgVYVcfAMSu9ekO2UL3kJsNnwYnyTdy
+ UAalJi0ssUCCRI8FBAzp0lg6tlIi+W75cufkkFx0yCwQY2nMBU4MkFj76sDCPthQ
+ VJrDVtPFuyM8a6sAtTpu/H5+01yv6lCVRIwbR+xAaL03b5NCMu762aEVMPb3ULAQ
+ FYnOKlp6ZuY5+7oIUkeVeIuf3SxTEjKH9rd39HSc63arpHkpern6dIXxzoAfGodZ
+ 0t1+WeQ/Iy+wWEchv186mqjbkAoKOv/mAYie1uA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+ repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+ action=mi-m=1; hc=11;
+ hn=cc,content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:qmD0uHyrqKrvZWS3A8S8z/59YwaLtdvgGYYCNRPusYw=:U5PM/+nc0a3kAToOgy7JX+Ne2iKsC42vML6cRakLp0o=;
+X-ME-Sender: <xms:cPnIajcR7mmbw_dMIzh4SV8IxT5pJODqe9jCU8rmcw1-WFWquOJSWg>
+ <xme:cPnIavNdHGelH4r3bQ5OcjHQiKMV_jK9I-qSKjWC4r0XctI_Fz8vFVST7uirA9ITo
+ lRupwWhCJbt5QXBpXGXanPoQdVwoUevtUGa9lMiPl0wOp8PwgG01CCr>
+X-ME-Received: <xmr:cPnIaqJIye3Wk58CKOK5Z1WRnaWCJ8YeTOjRqWuFSzxPPhE--Guu_SRmPNXE7oHj4xNAn8u8bO2rODxlzlU2QCif42xqisnnjA>
+X-ME-Proxy-Cause: dmFkZTFit3T+zw4zhD+yLcPtczmbXFnioVFanDX+nGKzdJWrUOjWFcoEemzI/DQ9C+JHvI
+ O7w7JerMwJheG9og7y0CxWjtoN4Ba1/+fw8y6d6/KkCNnv4zzdH2Ffi/VV++hVk/I66hwZ
+ R6cb0X9P350ElbWBrLRL286uK51QFJywe+lm0eELZDtnNWpJhx97SoxJ7rKesAqBJEjqln
+ WXweFHgXPnRuyzIfto/z2uxsjdpYbpLDmO0+N5i6xkXbgZ226x43+NY+FgTowgzvCzlM7o
+ qP1NY6oq4SZbPJtoT42yVyRqmYNrZFLICKtYqeDww4FLyYkx1BTi9PHuDJ9z0Lzu0XJjkH
+ O1m9ZU6uf0ciiirNDK0vDJ4xXYQtmMTanJFiXV6QibPF6NUtDQ/JIvrlM7OSg3wOivqroa
+ 9Maj1xwaiPnISsyR5smBZ1MaVS3/XfVh5l7G57LPaz+ETH4J4GCte53e9HYC16Jl97+uHt
+ ISobwCUgKbIRxPX8hK2+dyGZ5VrP+ccBA6C+TPPUE3BZ7y4DhLP96rfZMj5LaKqijE23mn
+ oO3qeEiQt4JLt7xGef8QOg69lzq0NBsSB0U+Cgu3YoGQKjpB2Z1ykprJGEYMxIkG+ZrAgv
+ QCQdMIek3kBMRekX3cEaWZgfER6CzGYVmYIhV3vHKTRR+IRmtvLMIuZ2N8Jg
+X-ME-Proxy: <xmx:cPnIagHCJ68wFRQe_oAMsyLYHMvGeOWP1OArnNtbjUSIcsN6mOnEog>
+ <xmx:cPnIaiT-7OxTYBNTl-UF-zGz17oini2O5iy32cCCP1k3RObtDJx2lQ>
+ <xmx:cPnIasF4BOw0AT96X2zzmFaBBY9EAYZqqi2y4VSkpLWvUhyB1DwhnQ>
+ <xmx:cPnIau-C5Q3YcP4rc4eq4vYg8JCmz1jgIHHeeLn8LVIZZV7RwJlG4g>
+ <xmx:cPnIatKhz26JbKzIViGUHdC2cdsZC3A3UOSXwiT99fkV7S2wOTmx56A6>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 9 Oct 2026 10:25:51 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 74B8A27CC22; Fri, 09 Oct 2026 15:25:50 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+Cc: emacs-devel@gnu.org
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+In-Reply-To: <87ik3b0zgi.fsf@stabil.gulbrandsen.priv.no>
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+ <87cxtjqci7.fsf@athena.silentflame.com>
+ <87ik3b0zgi.fsf@stabil.gulbrandsen.priv.no>
+Date: Fri, 09 Oct 2026 15:25:50 +0100
+Message-ID: <87a4onq7bl.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=202.12.124.145;
+ envelope-from=spwhitton@spwhitton.name; helo=fout-b2-smtp.messagingengine.com
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_LOW=-0.7, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 14:26:09 -0000
+
+Arnt Gulbrandsen [09/Oct  3:34pm +02] wrote:
+> Sean Whitton <spwhitton@spwhitton.name> writes:
+>> Did you use an LLM to generate these patches?
+>
+> Most of the code is from 2023 ;) But I use LLMs. In this case the
+> recent rebasing was done almost entirely by LLM. The list of
+> files/defuns in the commit message was compiled by an LLM, the
+> text in the commit message is by me, and so on. The rebase from
+> 30.x to 32.0.50 broke when I ran it; I used an LLM to find out why
+> (and may submit an additional patch, the breakage wasn't due to
+> this).
+>
+> Did I miss on style? This is the first time since the nineties
+> that I've written >10 lines of emacs-lisp.
+
+Unfortunately in that case we can't install the patches.  GNU has a
+provisional policy against including any LLM-derived code.
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Fri Oct 09 11:22:02 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xFCQ1-00009v-JR
+	for mharc-emacs-devel@gnu.org; Fri, 09 Oct 2026 11:22:00 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xFCPl-00008G-0A
+ for emacs-devel@gnu.org; Fri, 09 Oct 2026 11:21:45 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xFCPh-0007HX-E5; Fri, 09 Oct 2026 11:21:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=iJgeLmGu47MFjKcY3VQ+9VR+EEhGI0PbohuXNh76Ns8=; b=Etz+arIdGPvm
+ 5LPeNv6rjbNqh6MsTYaP92w3NZYPiQ0hRc10wigGMO4pMzs24OHnKLNUxjTylD1qqZKaz+iolxdAT
+ gGqmZpamimDPJd27hY4hpzYMy2xwSARJ1YAyH6z/D51N4hIjfKihWQgRiamqMg1CrHcchZGBr/Qgx
+ 42A1hK4Ai2x78IqF9MKJkpoFXBmHg+QWTcQve96DWLt02ihmlty6A+yEfHD3ivujpV1Tfu91bjx7e
+ HRFcy+6RdEIuqzsGKrNEYmw1v55mDWQXVRtVi+QLwG0t0X9RNzHEYpQahGD0S3uW9WlMi3oyeOmzV
+ esBuf3tP2MaB9UWAmvQMvQ==;
+Date: Fri, 09 Oct 2026 18:21:35 +0300
+Message-Id: <86qzhylx1c.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+Cc: nickolai.dobrynin@dobrynin.net, emacs-devel@gnu.org
+In-Reply-To: <871p9zrn0v.fsf@libertango.gulbrandsen.priv.no> (message from
+ Arnt Gulbrandsen on Fri, 9 Oct 2026 16:01:20 +0200)
+Subject: Re: Gnus support for UTF8=ACCEPT and more
+References: <87pkxj13cj.fsf@stabil.gulbrandsen.priv.no>
+ <86se2fkpov.fsf@gnu.org> <871p9zrn0v.fsf@libertango.gulbrandsen.priv.no>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 09 Oct 2026 15:21:51 -0000
+
+> From: Arnt Gulbrandsen <arnt@gulbrandsen.priv.no>
+> Cc: Nickolai Dobrynin <nickolai.dobrynin@dobrynin.net>, emacs-devel@gnu.org
+> Date: Fri, 9 Oct 2026 16:01:20 +0200
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> > Nikolay Dobrynin (CC'ed) is working on adding this to Gnus, 
+> > AFAIU. 
+> 
+> Great. I'm happier if there are more people implementing these 
+> RFCs than if I write yet another implementation, so please feel 
+> free to discard this, use parts of it, use all of it, whatever 
+> floats the boat.
+> 
+> Feel also free to ask me about these RFCs or interop etc, I ought 
+> to know know every detail of this.
+
+Maybe you could take a look at bug#81684 and review the code that
+Nikolay is proposing there?  The URL is
+
+  https://debbugs.gnu.org/cgi/bugreport.cgi?bug=81684
+
+It's a very long discussion, so maybe start from the end.
+
+TIA
+
+
