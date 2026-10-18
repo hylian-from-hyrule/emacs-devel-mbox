@@ -3,27 +3,30 @@ name: Update emacs-devel archive
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 16,17 * * *"
+    # Repeated opportunities, covering DST and possible Actions delays.
+    - cron: "20,40 16-21 * * *"
 
 permissions:
   contents: write
 
+concurrency:
+  group: emacs-devel-archive
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check Madrid time
         id: madrid
+        shell: bash
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-
-          HOUR=$(TZ=Europe/Madrid date +%H)
-
-          if [ "$HOUR" = "18" ]; then
+          NOW=$(TZ=Europe/Madrid date +%H%M)
+          if (( 10#$NOW >= 1815 )); then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
@@ -33,141 +36,133 @@ jobs:
         if: steps.madrid.outputs.run == 'true'
         uses: actions/checkout@v4
 
-      - name: Compute dates
+      - name: Compute report dates
         if: steps.madrid.outputs.run == 'true'
         id: dates
+        shell: bash
         run: |
-          echo "month=$(TZ=Europe/Madrid date +%Y-%m)" >> "$GITHUB_OUTPUT"
           echo "day=$(TZ=Europe/Madrid date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
-      - name: Download monthly mbox
+      - name: Check for existing daily report
         if: steps.madrid.outputs.run == 'true'
+        id: existing
+        shell: bash
         run: |
+          FILE="daily/${{ steps.dates.outputs.day }}.txt"
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ -f "$FILE" ]; then
+            echo "generate=false" >> "$GITHUB_OUTPUT"
+            echo "Already published: $FILE"
+          else
+            echo "generate=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download required monthly mboxes
+        if: steps.existing.outputs.generate == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
           mkdir -p mbox daily
+          python3 - <<'PY' > /tmp/emacs-devel-months.txt
+          from datetime import date, timedelta
+          from zoneinfo import ZoneInfo
+          from datetime import datetime
+          today = datetime.now(ZoneInfo('Europe/Madrid')).date()
+          yesterday = today - timedelta(days=1)
+          for month in sorted({today.strftime('%Y-%m'), yesterday.strftime('%Y-%m')}):
+              print(month)
+          PY
+          while IFS= read -r month; do
+            echo "Downloading $month"
+            curl --fail --location --retry 3 --retry-delay 10 \
+              "https://lists.gnu.org/archive/mbox/emacs-devel/$month" \
+              -o "mbox/$month.txt"
+          done < /tmp/emacs-devel-months.txt
 
-          curl -fL \
-            "https://lists.gnu.org/archive/mbox/emacs-devel/${{ steps.dates.outputs.month }}" \
-            -o "mbox/${{ steps.dates.outputs.month }}.txt"
-
-      - name: Extract last 24 hours
-        if: steps.madrid.outputs.run == 'true'
+      - name: Extract daily window
+        if: steps.existing.outputs.generate == 'true'
+        env:
+          REPORT_DAY: ${{ steps.dates.outputs.day }}
         run: |
           python3 <<'PY'
           import mailbox
           import email.utils
-          from datetime import datetime, timedelta, timezone
+          import os
+          from datetime import date, datetime, timedelta, timezone
           from zoneinfo import ZoneInfo
           from pathlib import Path
 
-          month = "${{ steps.dates.outputs.month }}"
-          day = "${{ steps.dates.outputs.day }}"
-
-          source = Path(f"mbox/{month}.txt")
-          output = Path(f"daily/{day}.txt")
-
-          madrid = ZoneInfo("Europe/Madrid")
-
-          end = datetime.now(madrid).replace(
-              hour=18,
-              minute=15,
-              second=0,
-              microsecond=0,
-          )
-          start = end - timedelta(hours=24)
-
+          day = date.fromisoformat(os.environ['REPORT_DAY'])
+          madrid = ZoneInfo('Europe/Madrid')
+          end = datetime(day.year, day.month, day.day, 18, 15, tzinfo=madrid)
+          previous = day - timedelta(days=1)
+          start = datetime(previous.year, previous.month, previous.day, 18, 15, tzinfo=madrid)
+          months = sorted({day.strftime('%Y-%m'), previous.strftime('%Y-%m')})
+          output = Path(f'daily/{day.isoformat()}.txt')
           messages = []
+          seen = set()
 
-          mbox = mailbox.mbox(source)
+          for month in months:
+              source = Path(f'mbox/{month}.txt')
+              for msg in mailbox.mbox(source):
+                  raw_date = msg.get('Date')
+                  if not raw_date:
+                      continue
+                  try:
+                      dt = email.utils.parsedate_to_datetime(raw_date)
+                  except (TypeError, ValueError, IndexError):
+                      continue
+                  if dt is None:
+                      continue
+                  if dt.tzinfo is None:
+                      dt = dt.replace(tzinfo=timezone.utc)
+                  local_dt = dt.astimezone(madrid)
+                  if not (start <= local_dt <= end):
+                      continue
+                  key = msg.get('Message-ID') or (str(dt), msg.get('From'), msg.get('Subject'))
+                  if key in seen:
+                      continue
+                  seen.add(key)
+                  messages.append((local_dt, msg))
 
-          for msg in mbox:
-              raw_date = msg.get("Date")
-              if not raw_date:
-                  continue
-
-              try:
-                  dt = email.utils.parsedate_to_datetime(raw_date)
-              except Exception:
-                  continue
-
-              if dt is None:
-                  continue
-
-              if dt.tzinfo is None:
-                  dt = dt.replace(tzinfo=timezone.utc)
-
-              dt_madrid = dt.astimezone(madrid)
-
-              if start <= dt_madrid <= end:
-                  messages.append((dt_madrid, msg))
-
-          messages.sort(key=lambda x: x[0])
-
-          with output.open("w", encoding="utf-8") as f:
-              f.write(
-                  f"emacs-devel messages from "
-                  f"{start.isoformat()} to {end.isoformat()}\n\n"
-              )
-
+          messages.sort(key=lambda item: item[0])
+          with output.open('w', encoding='utf-8') as f:
+              f.write(f'emacs-devel messages from {start.isoformat()} to {end.isoformat()}\n\n')
               for dt, msg in messages:
-                  f.write("=" * 80 + "\n")
-                  f.write(f"Date: {dt.isoformat()}\n")
-                  f.write(f"From: {msg.get('From', '')}\n")
-                  f.write(f"Subject: {msg.get('Subject', '')}\n")
-                  f.write(f"Message-ID: {msg.get('Message-ID', '')}\n")
-                  f.write(f"In-Reply-To: {msg.get('In-Reply-To', '')}\n")
-                  f.write(f"References: {msg.get('References', '')}\n")
-                  f.write("\n")
-
-                  if msg.is_multipart():
-                      body = ""
-
-                      for part in msg.walk():
-                          content_type = part.get_content_type()
-                          disposition = part.get_content_disposition()
-
-                          if (
-                              content_type == "text/plain"
-                              and disposition != "attachment"
-                          ):
-                              charset = part.get_content_charset() or "utf-8"
-                              payload = part.get_payload(decode=True)
-
-                              if payload:
-                                  body = payload.decode(
-                                      charset,
-                                      errors="replace",
-                                  )
-                                  break
-                  else:
-                      charset = msg.get_content_charset() or "utf-8"
-                      payload = msg.get_payload(decode=True)
-
-                      if payload:
-                          body = payload.decode(
-                              charset,
-                              errors="replace",
-                          )
+                  f.write('=' * 80 + '\n')
+                  f.write(f'Date: {dt.isoformat()}\n')
+                  for header in ('From', 'Subject', 'Message-ID', 'In-Reply-To', 'References'):
+                      f.write(f'{header}: {msg.get(header, "")}\n')
+                  f.write('\n')
+                  body = ''
+                  parts = msg.walk() if msg.is_multipart() else [msg]
+                  for part in parts:
+                      if part.get_content_type() != 'text/plain' or part.get_content_disposition() == 'attachment':
+                          continue
+                      payload = part.get_payload(decode=True)
+                      if payload is not None:
+                          charset = part.get_content_charset() or 'utf-8'
+                          try:
+                              body = payload.decode(charset, errors='replace')
+                          except LookupError:
+                              body = payload.decode('utf-8', errors='replace')
                       else:
-                          body = str(msg.get_payload())
-
-                  f.write(body.strip())
-                  f.write("\n\n")
-
-          print(f"Wrote {len(messages)} messages to {output}")
+                          body = str(part.get_payload() or '')
+                      break
+                  f.write(body.strip() + '\n\n')
+          print(f'Wrote {len(messages)} messages to {output}')
           PY
 
       - name: Commit changes
-        if: steps.madrid.outputs.run == 'true'
+        if: steps.existing.outputs.generate == 'true'
+        shell: bash
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add mbox/ daily/
-
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0
           fi
-
           git commit -m "Update emacs-devel archive ${{ steps.dates.outputs.day }}"
           git push
