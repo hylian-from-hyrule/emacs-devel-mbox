@@ -1,0 +1,871 @@
+emacs-devel messages from 2026-10-17T18:15:00+02:00 to 2026-10-18T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-17T19:19:32+02:00
+From: Dov Grobgeld <dov.grobgeld@gmail.com>
+Subject: Re: Library for exporting PDF
+Message-ID: <CA++fsGFgNNMeYX5oRfeCy2a-LwfQdEsdcVFcuW9LFPS9J8MHUg@mail.gmail.com>
+In-Reply-To: <aaee5213-857f-4080-9508-4d0c195bcc41@risk-engineering.org>
+References: <2b9df97c-4882-4f42-bdf0-4818a3afd81e@imayhem.com>
+ <aaee5213-857f-4080-9508-4d0c195bcc41@risk-engineering.org>
+
+Have you considered using and possibly modifying my program paps,
+https://github.com/dov/paps? It renders pango markup to pdf through pango.
+The simplest solution would be to turn emacs buffers into pango markup and
+then render it with paps. Of course it only supports a subset of emacs
+buffer capabilities, e.g. embedded images are not supported. But we could
+extend pango markup, and perhaps call it paps markup, that would support
+whatever is missing. Or add markdown support to paps.
+
+In any case, let me know if this is a route that interests you.
+
+
+On Sun, Oct 11, 2026 at 5:59 PM Eric Marsden <
+eric.marsden@risk-engineering.org> wrote:
+
+> Hi Cecilio,
+>
+> Thanks for your work on this. It could potentially be really useful for
+> various Emacs tools.
+>
+> You don't seem to have specified a license for the code. Could you fix
+> that, please?
+>
+> [I'm hoping you are later able read this message later: email to you is
+> currently failing]
+>
+> <cpardo@imayhem.com> <cpardo@imayhem.com> (TLS error from '
+> mail.imayhem.com': Handshake failed: invalid peer certificate:
+> certificate expired: verification time 1791717337 (UNIX), but certificate
+> is not valid after 1751911583 (39805754 seconds ago))
+>
+> Eric
+>
+>
+> On 02/10/2026 21:38, Cecilio Pardo wrote:
+>
+> I think emacs could benefit greatly from a PDF writing/export
+> capability, so I started to write a library to do that. The first user
+> of the library is a function to export a buffer as PDF.
+>
+> There are missing things, like CCF fonts or bitmap fonts, and a
+> drawing API, and many more.
+>
+> The bulk of the work is the subsetting and embedding of fonts, which
+> was painful to write and more painful to read, and I don't think is
+> production ready. In retrospective probably using Cairo or something
+> for this part would be better, instead of building it on pure lisp as
+> I did.
+>
+> The library is not complete, although it can generate documents such
+> as this, embedding 20 font subsets to display so many beautiful scripts,
+> correctly marked to allow text discovery and copy/paste:
+>
+>
+> https://github.com/cpardotortosa/epdf/blob/28072c60b78416020485d4412ca5bf1b8d52609d/hello.pdf
+>
+> I find that absolutely gorgeous :)
+>
+> The concept works, in case someone would like to take it on.
+>
+> https://github.com/cpardotortosa/epdf
+>
+>
+>
+> --
+> Eric Marsden
+> Web: https://risk-engineering.org/
+>
+>
+
+================================================================================
+Date: 2026-10-17T19:55:24+02:00
+From: Maximilian Cook <maximilian@fclr.net>
+Subject: Re: [ELPA] New package: isbn.el
+Message-ID: <m2tsmk8b5f.fsf@fclr.net>
+In-Reply-To: <87tsmk8t5o.fsf@posteo.net>
+References: <m2bjaiw42g.fsf@fclr.net> <871pb8hnn5.fsf@posteo.net>
+ <m2pkymkv47.fsf@fclr.net> <87h5jwokxn.fsf@posteo.net>
+ <m233vflu2d.fsf@fclr.net> <m2bj8ycye2.fsf@fclr.net>
+ <87mrshba69.fsf@posteo.net> <m21p9sbe61.fsf@fclr.net>
+ <87tsmk8t5o.fsf@posteo.net>
+
+> It looks good, here are just a few minor points I noticed when looking
+> over the code again:
+>
+> diff --git a/isbn.el b/isbn.el
+> index 9142508..277fa73 100644
+> --- a/isbn.el
+> +++ b/isbn.el
+> @@ -210,7 +210,7 @@ region with the converted ISBN."
+>  If nil, reading from, or caching to, a file is disabled."
+>    :type '(choice (file :tag "File")
+>                   (const :tag "Disabled" nil))
+> -  :group 'isbn
+> +  :group 'isbn                          ;you can drop :group as it defaults to the last `defgroup'
+>    :package-version '((isbn . "0.1.0")))
+>  
+>  ;; Cache the ranges so that nested operations (hyphenation ->
+> @@ -237,6 +237,10 @@ If nil, reading from, or caching to, a file is disabled."
+>                 nil isbn-hyphenation-ranges-cache-file t))
+>              (setq isbn-hyphenation-ranges-cache ranges)
+>              (progress-reporter-done prgrp)))
+> +      ;; By catching the message here and discarding the data you are
+> +      ;; losing information that might be useful.  If you want
+> +      ;; non-local exits you should use `throw' and `catch' instead of
+> +      ;; (signal 'error).
+>        (error (error "Failed to retrieve hyphenation data")))))
+>  
+>  (defun isbn-hyphenate (isbn &optional interactive)
+> @@ -257,6 +261,8 @@ with the hyphenated ISBN."
+>              (insert-file-contents isbn-hyphenation-ranges-cache-file)
+>              (setq isbn-hyphenation-ranges-cache (read (current-buffer))))
+>            (progress-reporter-done prgrp))
+> +      ;; The outer `error' is superfluous, as evaluating the inner
+> +      ;; `error' will already unwind the call stack.
+>        (error (error "Hyphenation ranges are not cached.  \
+>  Please run `isbn-update-hyphenation-ranges'"))))
+>  
+> @@ -298,6 +304,8 @@ Please run `isbn-update-hyphenation-ranges'"))))
+>                            (throw 'len (funcall length-from-range n rem)))))))
+>            (unless (eq len 0)
+>              (push (substring rem 0 len) hyphenated)))
+> +      ;; here the same as above.  at the very least I think you should
+> +      ;; not discard the old error data.
+>        (error (error "Could not determine group identifier")))
+>  
+>      ;; 3. Publisher code
+>
+>
+
+These should now be fixed, I believe.  I've opted for clearer error
+statements when applicable.
+
+>>> Oh, you don't have to wait that long, or at least I can say that if you
+>>> are awaiting a response from me (here or off-list) do not hesitate to
+>>> ping me if I need more than a week to respond.
+>>>
+>>> In the mean time, I would be much obliged if you could provide me a
+>>> summary of any changes or decisions that you have made since our last
+>>> exchange.
+>>
+>> The only significant change is that I removed autoloads since the package is first and foremost a library.
+>
+> Yes, I notice that it seems familiar for the most part.  I also noticed
+> that you still have some !fixup commits in the history.  Do you want to
+> squash them before we start synchronizing the repository?  That would be
+> the last point I think we should resolve before adding the repository to
+> ELPA (can you remind me if you wanted to have the package added to GNU
+> or NonGNU ELPA?).
+
+Thank you for your patience with my amateur mistakes!  I've squashed
+those, and everything should be good to go.  I'd prefer adding to GNU
+ELPA since I've done my copyright assignment.  (Once approved, I'll
+update the assignment in the files before bumping the version.)
+
+-- 
+Maximilian Cook
+
+================================================================================
+Date: 2026-10-17T21:58:05+02:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: Library for exporting PDF
+Message-ID: <400867d2-7f36-46fe-b343-51697eca60b1@imayhem.com>
+In-Reply-To: <CA++fsGFgNNMeYX5oRfeCy2a-LwfQdEsdcVFcuW9LFPS9J8MHUg@mail.gmail.com>
+References: <2b9df97c-4882-4f42-bdf0-4818a3afd81e@imayhem.com>
+ <aaee5213-857f-4080-9508-4d0c195bcc41@risk-engineering.org>
+ <CA++fsGFgNNMeYX5oRfeCy2a-LwfQdEsdcVFcuW9LFPS9J8MHUg@mail.gmail.com>
+
+On 10/17/2026 7:19 PM, Dov Grobgeld wrote:
+
+> Have you considered using and possibly modifying my program paps, 
+> https://github.com/dov/paps <https://github.com/dov/paps>? It renders 
+> pango markup to pdf through pango. The simplest solution would be to 
+> turn emacs buffers into pango markup and then render it with paps. Of 
+> course it only supports a subset of emacs buffer capabilities, e.g. 
+> embedded images are not supported. But we could extend pango markup, and 
+> perhaps call it paps markup, that would support whatever is missing. Or 
+> add markdown support to paps.
+> 
+> In any case, let me know if this is a route that interests you.
+I probably should have gone the cairo-pango route instead. The good 
+thing about this implementation is that it just lisp, and doesn't need 
+any modification to emacs C core, and would be a library that lisp 
+programas could use to build pdfs, not only with text, but with 
+graphics. The bad thing is that it has to do everything from scratch.
+
+paps seems like a good way. Requires only an external tool, and building 
+pango markup should be straightforward from buffer text and properties. 
+Also pango markup can do paragraph formatting, can't it? That would be 
+really nice.
+
+paps with an emacs package would be useful. I don't think epdf would add 
+anything to it.
+
+================================================================================
+Date: 2026-10-17T22:27:19+02:00
+From: chad <yandros@gmail.com>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <CAO2hHWb3qosTxASb9-wxz5g1t24-LEmTvBFbKw3kQisrsb_GoA@mail.gmail.com>
+In-Reply-To: <m2tsmkwj06.fsf@macmutant.fritz.box>
+References: <87jynkjv37.fsf@dialetheia.xyz>
+ <m21p9pdcnm.fsf@macmutant.fritz.box>
+ <877bjh6aon.fsf@dialetheia.xyz>
+ <CAN+1Hbpf1vJRY2Yczrfsi29OsAmMbrC+j0fwz1dTmQHXSAythw@mail.gmail.com>
+ <m2tsmkwj06.fsf@macmutant.fritz.box>
+
+On Sat, Oct 17, 2026 at 9:33 AM Arash Esbati <arash@gnu.org> wrote:
+
+> I built the package on macOS.  mupdf from Homebrew is required,
+> mupdf-tools isn't enough.  So my only comment is about people who might
+> install GCC from Homebrew and don't have Command Line Tools for Xcode
+> installed, they probably have to edit the Makefile.
+>
+
+Is it currently possible to install an emacs module on macos (which
+includes
+compiling C, in this case) without having had the Command Line Tools for
+Xcode installed? (Because email: I'm genuinely curious; I'm pretty sure it
+wasn't really possible the last time I checked, but that was a while back.)
+
+~Chad
+P.S. I continue to think Apple should just release all of the code for macos
+under a free license -- even from a purely Apple-centered viewpoint, it
+would help them at least somewhat, probably a great deal, and the "reasons"
+they had to avoid it in the past seem basically moot, these days.
+
+================================================================================
+Date: 2026-10-17T23:50:20+02:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <m2cxt8809v.fsf@macmutant.fritz.box>
+In-Reply-To: <CAO2hHWb3qosTxASb9-wxz5g1t24-LEmTvBFbKw3kQisrsb_GoA@mail.gmail.com>
+References: <87jynkjv37.fsf@dialetheia.xyz>
+ <m21p9pdcnm.fsf@macmutant.fritz.box> <877bjh6aon.fsf@dialetheia.xyz>
+ <CAN+1Hbpf1vJRY2Yczrfsi29OsAmMbrC+j0fwz1dTmQHXSAythw@mail.gmail.com>
+ <m2tsmkwj06.fsf@macmutant.fritz.box>
+ <CAO2hHWb3qosTxASb9-wxz5g1t24-LEmTvBFbKw3kQisrsb_GoA@mail.gmail.com>
+
+chad <yandros@gmail.com> writes:
+
+> Is it currently possible to install an emacs module on macos (which includes 
+> compiling C, in this case) without having had the Command Line Tools for 
+> Xcode installed? (Because email: I'm genuinely curious; I'm pretty sure it
+> wasn't really possible the last time I checked, but that was a while back.)
+
+I can't tell for sure, but you're probably right.  I'm not sure if
+Homebrew installs Xcode CLT, I think they are only needed if you want to
+build formulae from source[1].  I'd say most users running Homebrew and
+invoke GCC have Xcode CLT installed.
+
+Best, Arash
+
+Footnotes:
+[1]  https://docs.brew.sh/Installation#macos-requirements
+
+================================================================================
+Date: 2026-10-18T00:00:32+02:00
+From: Paul Eggert <eggert@cs.ucla.edu>
+Subject: Re: master 979f50016f2: Do not suppress -Wvla
+Message-ID: <c758a678-500e-401b-901d-9ee7ba4e1d6b@cs.ucla.edu>
+In-Reply-To: <86ecdoc2cv.fsf@gnu.org>
+References: <86ecdoc2cv.fsf@gnu.org>
+
+On 2026-10-16 22:39, Eli Zaretskii wrote:
+> This change causes the following new warnings with GCC 9.2.0 on
+> MS-Windows when compiling the latest master branch:
+> 
+>    In file included from getopt.c:44:
+>    gettext.h: In function 'dcpgettext_expr':
+>    gettext.h:471:3: warning: ISO C90 forbids variable length array 'msg_ctxt_id' [-Wvla]
+>      471 |   char msg_ctxt_id[msgctxt_len + msgid_len];
+> 	|   ^~~~
+>    gettext.h: In function 'dcnpgettext_expr':
+>    gettext.h:516:3: warning: ISO C90 forbids variable length array 'msg_ctxt_id' [-Wvla]
+>      516 |   char msg_ctxt_id[msgctxt_len + msgid_len];
+> 	|   ^~~~
+
+I installed the 3rd attached patch to fix that. This shouldn't affect performance.
+
+>    movemail.c: In function 'movemail_strftime':
+>    movemail.c:810:3: warning: ISO C90 forbids variable length array 'fmt' [-Wvla]
+>      810 |   char fmt[size + 6], *q;
+> 	|   ^~~~
+
+Fixed via the 2nd attached patch, which simplifies the code back to the way it was in 2016 (and makes it run a bit faster). Though the simpler code is less general, it still implements its spec and is good enough for movemail. And the more-general "char fmt[size + 6]" was confusing anyway, as "size" is the size of the destination, not of the incoming format.
+
+>    w32console.c: In function 'turn_on_face':
+>    w32console.c:874:3: warning: ISO C90 forbids variable length array 'seq' [-Wvla]
+>      874 |   char seq[sz];
+> 	|   ^~~~
+
+Fixed by the 1st attached patch, which simplifies the code a tiny bit.
+
+> are we now
+> supposed to get rid of all the variable-length arrays in Emacs? why?
+Although it's not essential to remove VLAs, it improves portability and makes static analyzers less nervous. VLAs are a notorious source of low-level attacks on C programs, and I suspect that's why Microsoft pushed back on them and got them removed (OK, well, made them optional) in recent editions of the C standard. Even platforms that support VLAs often look askance at them.
+
+For the abovementioned warnings, VLAs were not particularly useful or efficient, and were easy to remove.
+
+================================================================================
+Date: 2026-10-18T00:53:42+02:00
+From: =?utf-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+Message-ID: <87tsmkvszt.fsf@gmail.com>
+In-Reply-To: <jwvh5ilw1wr.fsf-monnier+emacs@gnu.org>
+References: <87y0c0vvtf.fsf@gmail.com>
+ <jwvpkxawu7y.fsf-monnier+emacs@gnu.org> <87v771wb4y.fsf@gmail.com>
+ <jwvh5ilw1wr.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+> Sounds good (tho I'm not sure why you need `mouse-event-p`, since the
+> `event-start/end` and `posn-*` functions have been designed such that
+> you usually don't need to treat mouse events more specially).
+
+You're right `mouse-event-p` isn't needed, but I do like the clarity of
+"if this is a mouse-event, we may need to temporarily move point".  And
+ctually, I changed my mind and went with a simpler version I found in
+the meantime: no shady `refactor--1` internal interactive, and no
+"call-at-mouse" wrapper.  `refactor` keeps its (BEG END RKIND
+INTERACTIVE) signature and its interactive spec deals with mouse events.
+That spec turned out quite short, since margin and mode-line clicks just
+mean "point":
+
+  (interactive
+   (let ((posn (and (mouse-event-p last-nonmenu-event)
+                    (event-start last-nonmenu-event))))
+     (when posn (select-window (posn-window posn)))
+     `(,@(save-excursion
+           ;; Non-text-area clicks (`posn-area' non-nil) already assume
+           ;; correct point, but text area clicks are likely on Flymake
+           ;; some diagnostic and need moving before `refactor--bounds'.
+           (when (and posn (null (posn-area posn)))
+             (goto-char (posn-point posn)))
+           (refactor--bounds))
+       ,(and current-prefix-arg ...)
+       t)))
+
+I like that `refactor` is now one function, one name. (refactor BEG END)
+stays a usable Lisp entry point returning the actions.  Tests and
+backend authors can use that. Also the kind-specific commands have the
+same signature again and `eglot-code-actions` can be a plain obsolete
+alias again.
+
+>>> Also this probably deserves a comment explaining why we don't use
+>>> `posn-set-point`.
+>> Added: it would move point and select the window permanently, whereas we
+>> just want to run the command there and put things back.  Though I'm not
+>> super-sure this comment is that essential...
+>
+> It could be useful to motivate changes to `posn-set-point` or the
+> introduction of some alternative.  IIRC some commands use
+> `save-window-excursion` around `posn-set-point`, but indeed
+> `with-selected-window` is preferable.  So maybe we should have
+> a `with-point-as-posn` or some such.
+
+Could make sense, though with the change above refactor.el no longer has
+a use for it.
+
+> Ah, so it's like `cursor-sensor-mode`: it's auto-enabled but never
+> auto-disabled.  I suspect we'll eventually want some better way to
+> control what sub-feature is activated from which package, but yeah... we
+> don't know yet what that should look like.  We'll first have to see
+> concrete needs.
+
+Agree.
+
+João
+
+================================================================================
+Date: 2026-10-18T03:34:44+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+Message-ID: <jwvo6cru70b.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87tsmkvszt.fsf@gmail.com>
+References: <87y0c0vvtf.fsf@gmail.com> <jwvpkxawu7y.fsf-monnier+emacs@gnu.org>
+ <87v771wb4y.fsf@gmail.com> <jwvh5ilw1wr.fsf-monnier+emacs@gnu.org>
+ <87tsmkvszt.fsf@gmail.com>
+
+> I like that `refactor` is now one function, one name. (refactor BEG END)
+> stays a usable Lisp entry point returning the actions.  Tests and
+> backend authors can use that. Also the kind-specific commands have the
+> same signature again and `eglot-code-actions` can be a plain obsolete
+> alias again.
+
+Thank you, I appreciate this as well.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-18T04:26:09+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [nongnu] elpa/slime abaa3d07cc: Fix
+ slime-goto-location-position on multibyte encoded files
+Message-ID: <jwvbj8ru4pw.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261018020617.1C967C0FD61@vcs2.savannah.gnu.org>
+References: <179228917422.8445.6431635040173176311@vcs2.savannah.gnu.org>
+ <20261018020617.1C967C0FD61@vcs2.savannah.gnu.org>
+
+> @@ -3376,7 +3376,8 @@ you should check twice before modifying.")
+>    (slime-dcase position
+>      ((:position pos)
+>       (goto-char 1)
+> -     (forward-char (- (1- pos) (slime-eol-conversion-fixup (1- pos)))))
+> +     (let ((pos (byte-to-position pos)))
+> +       (forward-char (- (1- pos) (slime-eol-conversion-fixup (1- pos))))))
+>      ((:offset start offset)
+>       (goto-char start)
+>       (forward-char offset))
+
+The above reminds me of `filepos-to-bufferpos`.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-18T05:27:30+02:00
+From: Qiang Sheng <qiangsheng@sjtu.edu.cn>
+Subject: Re: [ELPA] New package: markdown-ts-appear
+Message-ID: <3CA666C9-2CE3-40F6-A186-3760C65BE01B@sjtu.edu.cn>
+In-Reply-To: <874ieka870.fsf@posteo.net>
+References: <520040404.47473814.1788432256599.JavaMail.zimbra@sjtu.edu.cn>
+ <87tso6gwnl.fsf@posteo.net>
+ <FEC1CCEA-8AA8-4040-A8D6-4903CC00F76B@sjtu.edu.cn>
+ <87o6cyvguf.fsf@posteo.net>
+ <CAN+1HbqvwL_XTsNCm6Tr5=b8RJ70RtJyoS0xFTMbJmHeiyK3gw@mail.gmail.com>
+ <9322949A-E6F4-4A36-949C-EC7D97BC74F6@sjtu.edu.cn>
+ <87v775baoi.fsf@posteo.net>
+ <80CB4A3E-D11A-4446-AABD-FB9ACC2C0376@sjtu.edu.cn>
+ <874ieka870.fsf@posteo.net>
+
+Thanks for pointing this out. I've removed the markdown-table-wrap dependency and implemented the required table layout directly in markdown-ts-appear. Wrapped tables remain available by default.
+
+Now the version of this package is v0.3.0.
+
+The package now only requires Emacs, and I've verified that it compiles and renders tables without loading any external packages.
+
+Best,  
+Qiang Sheng
+
+
+> On Oct 17, 2026, at 19:16, Philip Kaludercic <philipk@posteo.net> wrote:
+> 
+> Qiang Sheng <qiangsheng@sjtu.edu.cn> writes:
+> 
+>> Thanks, Philip, for adding the package to NonGNU ELPA! And thanks to Rahul and Stéphane for the feedback and support!
+> 
+> One issue Stefan noticed and that I missed is that you currently depend
+> on "markdown-table-wrap", which we do not have in NonGNU ELPA.  Is this
+> a hard dependency or something you could refactor into a weak
+> dependency?  If not, we have to take a look at that package as well and
+> add it to NonGNU ELPA as well which can sometimes be tricky depending on
+> the maintainer.
+
+================================================================================
+Date: 2026-10-18T06:56:19+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <E1xIIwV-009igA-1H@fencepost.gnu.org>
+In-Reply-To: <87jyni59n2.fsf@dialetheia.xyz> (message from Divya Ranjan
+ Pattanaik on Fri, 16 Oct 2026 08:31:45 +0000)
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > What is the license of MuPDF?  To link it with Emacs, its license
+  > > needs to be compatible with GPL-3-or-later.
+
+  > It is indeed dual licensed: AGPLv3
+
+Is that AGPL v3 only or is it AGPL v3-or-later?
+
+That is crucial.  Someday there is likely to be an AGPLv4,
+so if MuDPFi's license is not compatible with AGPLv4, MuDPFi is not usable.
+
+           and another commercial permissive license
+
+That is too vague to draw any conclusion from.
+What license is it?  What does it permit?
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-18T06:56:21+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <E1xIIwX-009igl-1U@fencepost.gnu.org>
+In-Reply-To: <87bj8u585n.fsf@dialetheia.xyz> (message from Divya Ranjan
+ Pattanaik on Fri, 16 Oct 2026 09:03:48 +0000)
+References: <87jynkjv37.fsf@dialetheia.xyz>
+ <E1xHZpn-0078A1-GM@fencepost.gnu.org> <87bj8u585n.fsf@dialetheia.xyz>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Examples of this would be: say, you want to write a lisp
+  > program that takes all the text of the current page and do some
+  > operation on it. That would be very much possible (and is indeed via
+  > another branch that hasn't been merged yet) by simply writing a thin
+  > wrapper around a module function that calls a libmupdf function which
+  > gives us the page's text as a UTF-8 string. All of this can be made
+  > available to Emacs Lisp.
+
+This does sound useful.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-18T08:54:47+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <871p9n8pmy.fsf@posteo.net>
+In-Reply-To: <E1xIIwV-009igA-1H@fencepost.gnu.org>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > > What is the license of MuPDF?  To link it with Emacs, its license
+>   > > needs to be compatible with GPL-3-or-later.
+>
+>   > It is indeed dual licensed: AGPLv3
+>
+> Is that AGPL v3 only or is it AGPL v3-or-later?
+>
+> That is crucial.  Someday there is likely to be an AGPLv4,
+> so if MuDPFi's license is not compatible with AGPLv4, MuDPFi is not usable.
+
+Unless I am mistaken, this here should be AGPLv3-or-later:
+
+https://artifex.com/licensing/gnu-agpl-v3
+
+
+>            and another commercial permissive license
+>
+> That is too vague to draw any conclusion from.
+> What license is it?  What does it permit?
+
+It is dual licensed, so IIRC commercial clients who cannot agree to
+AGPLv3 can agree on a custom license with the MuPDF developers in
+exchange for a fee, see
+https://artifex.com/licensing#commercial-license.
+
+All in all, this should all be fine and NOT a blocker for this package.
+
+================================================================================
+Date: 2026-10-18T08:58:23+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [ELPA] New package: markdown-ts-appear
+Message-ID: <87wlrf7awh.fsf@posteo.net>
+In-Reply-To: <3CA666C9-2CE3-40F6-A186-3760C65BE01B@sjtu.edu.cn>
+References: <520040404.47473814.1788432256599.JavaMail.zimbra@sjtu.edu.cn>
+ <87tso6gwnl.fsf@posteo.net>
+ <FEC1CCEA-8AA8-4040-A8D6-4903CC00F76B@sjtu.edu.cn>
+ <87o6cyvguf.fsf@posteo.net>
+ <CAN+1HbqvwL_XTsNCm6Tr5=b8RJ70RtJyoS0xFTMbJmHeiyK3gw@mail.gmail.com>
+ <9322949A-E6F4-4A36-949C-EC7D97BC74F6@sjtu.edu.cn>
+ <87v775baoi.fsf@posteo.net>
+ <80CB4A3E-D11A-4446-AABD-FB9ACC2C0376@sjtu.edu.cn>
+ <874ieka870.fsf@posteo.net>
+ <3CA666C9-2CE3-40F6-A186-3760C65BE01B@sjtu.edu.cn>
+
+Qiang Sheng <qiangsheng@sjtu.edu.cn> writes:
+
+> Thanks for pointing this out. I've removed the markdown-table-wrap
+> dependency and implemented the required table layout directly in
+> markdown-ts-appear. Wrapped tables remain available by default.
+
+IMO it isn't really necessary to re-implement the functionality
+yourself.  I assume this was done using AI?  As pointed out in the
+initial review, one of the main annoyances for humans reading AI code is
+that it is much too verbose and more difficult to handle since LLMs
+apparently are not trained to be concise (why would they after all if
+the business model is pay-per-token).
+
+My advice would really just be to handle this feature as a soft
+dependency that your package can enable and integrate if the
+markdown-table-wrap is installed, and otherwise gracefully handle the
+absence -- that is unless I have misunderstood that this functionality
+is essential to the package?
+
+> Now the version of this package is v0.3.0.
+>
+> The package now only requires Emacs, and I've verified that it compiles and renders tables without loading any external packages.
+>
+> Best,  
+> Qiang Sheng
+>
+>
+>> On Oct 17, 2026, at 19:16, Philip Kaludercic <philipk@posteo.net> wrote:
+>> 
+>> Qiang Sheng <qiangsheng@sjtu.edu.cn> writes:
+>> 
+>>> Thanks, Philip, for adding the package to NonGNU ELPA! And thanks to Rahul and Stéphane for the feedback and support!
+>> 
+>> One issue Stefan noticed and that I missed is that you currently depend
+>> on "markdown-table-wrap", which we do not have in NonGNU ELPA.  Is this
+>> a hard dependency or something you could refactor into a weak
+>> dependency?  If not, we have to take a look at that package as well and
+>> add it to NonGNU ELPA as well which can sometimes be tricky depending on
+>> the maintainer.
+
+================================================================================
+Date: 2026-10-18T09:16:58+02:00
+From: Qiang Sheng <qiangsheng@sjtu.edu.cn>
+Subject: Re: [ELPA] New package: markdown-ts-appear
+Message-ID: <902CA2ED-EA27-41FB-9619-BFDD3B6CBCE7@sjtu.edu.cn>
+In-Reply-To: <87wlrf7awh.fsf@posteo.net>
+References: <520040404.47473814.1788432256599.JavaMail.zimbra@sjtu.edu.cn>
+ <87tso6gwnl.fsf@posteo.net>
+ <FEC1CCEA-8AA8-4040-A8D6-4903CC00F76B@sjtu.edu.cn>
+ <87o6cyvguf.fsf@posteo.net>
+ <CAN+1HbqvwL_XTsNCm6Tr5=b8RJ70RtJyoS0xFTMbJmHeiyK3gw@mail.gmail.com>
+ <9322949A-E6F4-4A36-949C-EC7D97BC74F6@sjtu.edu.cn>
+ <87v775baoi.fsf@posteo.net>
+ <80CB4A3E-D11A-4446-AABD-FB9ACC2C0376@sjtu.edu.cn>
+ <874ieka870.fsf@posteo.net>
+ <3CA666C9-2CE3-40F6-A186-3760C65BE01B@sjtu.edu.cn>
+ <87wlrf7awh.fsf@posteo.net>
+
+Thanks for the suggestion! Yes, the code was AI-generated, but the decision to implement it ourselves was deliberate.
+
+First, I'm not entirely satisfied with an optional dependency. I want wrapping to work out of the box as the default, without requiring users to install another package. Otherwise, they might never discover it, even if it offers a better experience.
+
+Second, this isn't simply a copy of markdown-table-wrap. I've adapted the implementation to use Tree-sitter, simplifying the processing logic and improving performance.
+
+Finally, the implementation is only about 130 lines. I've reviewed it and removed some redundancy, though I may have missed things due to my limited experience. I'm happy to hear suggestions for further simplification.
+
+I appreciate the feedback, but I think keeping this functionality built in is a reasonable choice.
+
+
+> On Oct 18, 2026, at 14:58, Philip Kaludercic <philipk@posteo.net> wrote:
+> 
+> Qiang Sheng <qiangsheng@sjtu.edu.cn> writes:
+> 
+>> Thanks for pointing this out. I've removed the markdown-table-wrap
+>> dependency and implemented the required table layout directly in
+>> markdown-ts-appear. Wrapped tables remain available by default.
+> 
+> IMO it isn't really necessary to re-implement the functionality
+> yourself.  I assume this was done using AI?  As pointed out in the
+> initial review, one of the main annoyances for humans reading AI code is
+> that it is much too verbose and more difficult to handle since LLMs
+> apparently are not trained to be concise (why would they after all if
+> the business model is pay-per-token).
+> 
+> My advice would really just be to handle this feature as a soft
+> dependency that your package can enable and integrate if the
+> markdown-table-wrap is installed, and otherwise gracefully handle the
+> absence -- that is unless I have misunderstood that this functionality
+> is essential to the package?
+> 
+>> Now the version of this package is v0.3.0.
+>> 
+>> The package now only requires Emacs, and I've verified that it compiles and renders tables without loading any external packages.
+>> 
+>> Best,  
+>> Qiang Sheng
+>> 
+>> 
+>>> On Oct 17, 2026, at 19:16, Philip Kaludercic <philipk@posteo.net> wrote:
+>>> 
+>>> Qiang Sheng <qiangsheng@sjtu.edu.cn> writes:
+>>> 
+>>>> Thanks, Philip, for adding the package to NonGNU ELPA! And thanks to Rahul and Stéphane for the feedback and support!
+>>> 
+>>> One issue Stefan noticed and that I missed is that you currently depend
+>>> on "markdown-table-wrap", which we do not have in NonGNU ELPA.  Is this
+>>> a hard dependency or something you could refactor into a weak
+>>> dependency?  If not, we have to take a look at that package as well and
+>>> add it to NonGNU ELPA as well which can sometimes be tricky depending on
+>>> the maintainer.
+
+================================================================================
+Date: 2026-10-18T09:49:00+02:00
+From: Mekeor Melire <mekeor@posteo.de>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <87zewbzbx4.fsf@posteo.de>
+In-Reply-To: <jwvbj8suzen.fsf-monnier+emacs@gnu.org>
+References: <87jynkjv37.fsf@dialetheia.xyz> <87ld7xdcdr.fsf@posteo.de>
+ <8733u56a89.fsf@dialetheia.xyz> <87a4odcxgf.fsf@posteo.de>
+ <87y0bx4gzb.fsf@dialetheia.xyz> <87qzhp9us6.fsf@posteo.net>
+ <jwvbj8suzen.fsf-monnier+emacs@gnu.org>
+
+On 2026-10-17 at 11:28, Stefan Monnier wrote:
+
+> IMO, asking to change the name is justified only if there are
+> serious issues like naming conflicts.
+
+Emacs maintainers like yourself have the authority to require
+changes like the renaming of a project that wants to be included.
+
+But non-authoritative Emacs users like myself can still express
+their worries and provoke an argumentative discussion. I'm
+interested in your arguments, i.e. whether and why you agree or
+disagree with my worries.
+
+I'm baffled that my critique lead to hollow arguments like ‘others
+did it too’, naming suggestions, and pointing to contribution
+guidelines. I propose to focus instead on an analytical debate.
+
+================================================================================
+Date: 2026-10-18T11:27:15+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [ELPA] New package: markdown-ts-appear
+Message-ID: <87se23740f.fsf@posteo.net>
+In-Reply-To: <902CA2ED-EA27-41FB-9619-BFDD3B6CBCE7@sjtu.edu.cn>
+References: <520040404.47473814.1788432256599.JavaMail.zimbra@sjtu.edu.cn>
+ <87tso6gwnl.fsf@posteo.net>
+ <FEC1CCEA-8AA8-4040-A8D6-4903CC00F76B@sjtu.edu.cn>
+ <87o6cyvguf.fsf@posteo.net>
+ <CAN+1HbqvwL_XTsNCm6Tr5=b8RJ70RtJyoS0xFTMbJmHeiyK3gw@mail.gmail.com>
+ <9322949A-E6F4-4A36-949C-EC7D97BC74F6@sjtu.edu.cn>
+ <87v775baoi.fsf@posteo.net>
+ <80CB4A3E-D11A-4446-AABD-FB9ACC2C0376@sjtu.edu.cn>
+ <874ieka870.fsf@posteo.net>
+ <3CA666C9-2CE3-40F6-A186-3760C65BE01B@sjtu.edu.cn>
+ <87wlrf7awh.fsf@posteo.net>
+ <902CA2ED-EA27-41FB-9619-BFDD3B6CBCE7@sjtu.edu.cn>
+
+Qiang Sheng <qiangsheng@sjtu.edu.cn> writes:
+
+> Thanks for the suggestion! Yes, the code was AI-generated, but the decision to implement it ourselves was deliberate.
+>
+> First, I'm not entirely satisfied with an optional dependency. I want
+> wrapping to work out of the box as the default, without requiring
+> users to install another package. Otherwise, they might never discover
+> it, even if it offers a better experience.
+>
+> Second, this isn't simply a copy of markdown-table-wrap. I've adapted
+> the implementation to use Tree-sitter, simplifying the processing
+> logic and improving performance.
+>
+> Finally, the implementation is only about 130 lines. I've reviewed it
+> and removed some redundancy, though I may have missed things due to my
+> limited experience. I'm happy to hear suggestions for further
+> simplification.
+>
+> I appreciate the feedback, but I think keeping this functionality built in is a reasonable choice.
+
+Your judgment is more reliable if this was a conscious decision from
+your position as a maintainer and a user, in which case you can
+disregard my comment.
+
+>> On Oct 18, 2026, at 14:58, Philip Kaludercic <philipk@posteo.net> wrote:
+>> 
+>> Qiang Sheng <qiangsheng@sjtu.edu.cn> writes:
+>> 
+>>> Thanks for pointing this out. I've removed the markdown-table-wrap
+>>> dependency and implemented the required table layout directly in
+>>> markdown-ts-appear. Wrapped tables remain available by default.
+>> 
+>> IMO it isn't really necessary to re-implement the functionality
+>> yourself.  I assume this was done using AI?  As pointed out in the
+>> initial review, one of the main annoyances for humans reading AI code is
+>> that it is much too verbose and more difficult to handle since LLMs
+>> apparently are not trained to be concise (why would they after all if
+>> the business model is pay-per-token).
+>> 
+>> My advice would really just be to handle this feature as a soft
+>> dependency that your package can enable and integrate if the
+>> markdown-table-wrap is installed, and otherwise gracefully handle the
+>> absence -- that is unless I have misunderstood that this functionality
+>> is essential to the package?
+>> 
+>>> Now the version of this package is v0.3.0.
+>>> 
+>>> The package now only requires Emacs, and I've verified that it compiles and renders tables without loading any external packages.
+>>> 
+>>> Best,  
+>>> Qiang Sheng
+>>> 
+>>> 
+>>>> On Oct 17, 2026, at 19:16, Philip Kaludercic <philipk@posteo.net> wrote:
+>>>> 
+>>>> Qiang Sheng <qiangsheng@sjtu.edu.cn> writes:
+>>>> 
+>>>>> Thanks, Philip, for adding the package to NonGNU ELPA! And thanks to Rahul and Stéphane for the feedback and support!
+>>>> 
+>>>> One issue Stefan noticed and that I missed is that you currently depend
+>>>> on "markdown-table-wrap", which we do not have in NonGNU ELPA.  Is this
+>>>> a hard dependency or something you could refactor into a weak
+>>>> dependency?  If not, we have to take a look at that package as well and
+>>>> add it to NonGNU ELPA as well which can sometimes be tricky depending on
+>>>> the maintainer.
+
+================================================================================
+Date: 2026-10-18T11:51:29+02:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <m2jynf9w0u.fsf@macmutant.fritz.box>
+In-Reply-To: <871p9n8pmy.fsf@posteo.net>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> Richard Stallman <rms@gnu.org> writes:
+>
+>>
+>> Is that AGPL v3 only or is it AGPL v3-or-later?
+>>
+>> That is crucial.  Someday there is likely to be an AGPLv4,
+>> so if MuDPFi's license is not compatible with AGPLv4, MuDPFi is not usable.
+>
+> Unless I am mistaken, this here should be AGPLv3-or-later:
+>
+> https://artifex.com/licensing/gnu-agpl-v3
+
+MuPDF is AGPLv3-or-later[1]:
+
+  LICENSE
+
+  MuPDF is Copyright (c) 2006-2023 Artifex Software, Inc.
+
+  This program is free software: you can redistribute it and/or modify it under
+  the terms of the GNU Affero General Public License as published by the Free
+  Software Foundation, either version 3 of the License, or (at your option) any
+  later version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License along
+  with this program. If not, see <http://www.gnu.org/licenses/>.
+
+Best, Arash
+
+Footnotes:
+[1]  https://codeberg.org/artifex-software/mupdf
+
+================================================================================
+Date: 2026-10-18T18:11:05+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Test
+Message-ID: <86h5ij7zvq.fsf@gnu.org>
+In-Reply-To: 
+References: 
+
+Testing, please ignore.
+
