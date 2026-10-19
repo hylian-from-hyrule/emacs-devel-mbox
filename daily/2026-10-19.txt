@@ -1,0 +1,798 @@
+emacs-devel messages from 2026-10-18T18:15:00+02:00 to 2026-10-19T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-18T21:52:28+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [ELPA] New package: isbn.el
+Message-ID: <874ieipz0k.fsf@posteo.net>
+In-Reply-To: <m2tsmk8b5f.fsf@fclr.net>
+References: <m2bjaiw42g.fsf@fclr.net> <871pb8hnn5.fsf@posteo.net>
+ <m2pkymkv47.fsf@fclr.net> <87h5jwokxn.fsf@posteo.net>
+ <m233vflu2d.fsf@fclr.net> <m2bj8ycye2.fsf@fclr.net>
+ <87mrshba69.fsf@posteo.net> <m21p9sbe61.fsf@fclr.net>
+ <87tsmk8t5o.fsf@posteo.net> <m2tsmk8b5f.fsf@fclr.net>
+
+Maximilian Cook <maximilian@fclr.net> writes:
+
+>> It looks good, here are just a few minor points I noticed when looking
+>> over the code again:
+>>
+>> diff --git a/isbn.el b/isbn.el
+>> index 9142508..277fa73 100644
+>> --- a/isbn.el
+>> +++ b/isbn.el
+>> @@ -210,7 +210,7 @@ region with the converted ISBN."
+>>  If nil, reading from, or caching to, a file is disabled."
+>>    :type '(choice (file :tag "File")
+>>                   (const :tag "Disabled" nil))
+>> -  :group 'isbn
+>> +  :group 'isbn                          ;you can drop :group as it defaults to the last `defgroup'
+>>    :package-version '((isbn . "0.1.0")))
+>>  
+>>  ;; Cache the ranges so that nested operations (hyphenation ->
+>> @@ -237,6 +237,10 @@ If nil, reading from, or caching to, a file is disabled."
+>>                 nil isbn-hyphenation-ranges-cache-file t))
+>>              (setq isbn-hyphenation-ranges-cache ranges)
+>>              (progress-reporter-done prgrp)))
+>> +      ;; By catching the message here and discarding the data you are
+>> +      ;; losing information that might be useful.  If you want
+>> +      ;; non-local exits you should use `throw' and `catch' instead of
+>> +      ;; (signal 'error).
+>>        (error (error "Failed to retrieve hyphenation data")))))
+>>  
+>>  (defun isbn-hyphenate (isbn &optional interactive)
+>> @@ -257,6 +261,8 @@ with the hyphenated ISBN."
+>>              (insert-file-contents isbn-hyphenation-ranges-cache-file)
+>>              (setq isbn-hyphenation-ranges-cache (read (current-buffer))))
+>>            (progress-reporter-done prgrp))
+>> +      ;; The outer `error' is superfluous, as evaluating the inner
+>> +      ;; `error' will already unwind the call stack.
+>>        (error (error "Hyphenation ranges are not cached.  \
+>>  Please run `isbn-update-hyphenation-ranges'"))))
+>>  
+>> @@ -298,6 +304,8 @@ Please run `isbn-update-hyphenation-ranges'"))))
+>>                            (throw 'len (funcall length-from-range n rem)))))))
+>>            (unless (eq len 0)
+>>              (push (substring rem 0 len) hyphenated)))
+>> +      ;; here the same as above.  at the very least I think you should
+>> +      ;; not discard the old error data.
+>>        (error (error "Could not determine group identifier")))
+>>  
+>>      ;; 3. Publisher code
+>>
+>>
+>
+> These should now be fixed, I believe.  I've opted for clearer error
+> statements when applicable.
+
+1+
+
+>>>> Oh, you don't have to wait that long, or at least I can say that if you
+>>>> are awaiting a response from me (here or off-list) do not hesitate to
+>>>> ping me if I need more than a week to respond.
+>>>>
+>>>> In the mean time, I would be much obliged if you could provide me a
+>>>> summary of any changes or decisions that you have made since our last
+>>>> exchange.
+>>>
+>>> The only significant change is that I removed autoloads since the package is first and foremost a library.
+>>
+>> Yes, I notice that it seems familiar for the most part.  I also noticed
+>> that you still have some !fixup commits in the history.  Do you want to
+>> squash them before we start synchronizing the repository?  That would be
+>> the last point I think we should resolve before adding the repository to
+>> ELPA (can you remind me if you wanted to have the package added to GNU
+>> or NonGNU ELPA?).
+>
+> Thank you for your patience with my amateur mistakes!  I've squashed
+> those, and everything should be good to go.  I'd prefer adding to GNU
+> ELPA since I've done my copyright assignment.  (Once approved, I'll
+> update the assignment in the files before bumping the version.)
+
+Don't worry, I am glad to help :)
+
+I've added the package to gnu.git and the build server should publish the
+package when you cut a release with the updated copyright line.
+
+If there is anything else, please don't hesitate to contact us!
+
+================================================================================
+Date: 2026-10-19T06:21:12+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <E1xIes4-004llH-Nd@fencepost.gnu.org>
+In-Reply-To: <87bj8u585n.fsf@dialetheia.xyz> (message from Divya Ranjan
+ Pattanaik on Fri, 16 Oct 2026 09:03:48 +0000)
+References: <87jynkjv37.fsf@dialetheia.xyz>
+ <E1xHZpn-0078A1-GM@fencepost.gnu.org> <87bj8u585n.fsf@dialetheia.xyz>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Right now in the `master` branch, a document for Emacs is a buffer
+  > with an overlay that has specific :display, :window and other
+  > properties. Right now `buffer-string' will simply give the binary PDF
+  > data from the buffer, which is pretty much useless.
+
+  > So the issue is, a PDF document has two forms: 1. binary data
+  > 2. rendered image of the binary data
+
+  > The binary data itself is, in my opinion, unusable. We /must/ first
+  > render the data into an image. But the issue then is how to interact
+  > with the document when it is shown as an image?
+
+I see the dilemma.  With the current functionality of emacs-reader, is
+there an advantage in using a package such as emacs-reader, rather
+than launching a free PDF reader program in its own window and
+switching between that window and Emacs's frames?
+
+  > I think there are a few avenues to us. With the dynamic module, we
+  > basically have the entirety of libmupdf available to us. Which means,
+  > any operation libmupdf can do (which is a lot), we can also do via
+  > emacs-reader. Examples of this would be: say, you want to write a lisp
+  > program that takes all the text of the current page and do some
+  > operation on it. That would be very much possible (and is indeed via
+  > another branch that hasn't been merged yet) by simply writing a thin
+  > wrapper around a module function that calls a libmupdf function which
+  > gives us the page's text as a UTF-8 string. All of this can be made
+  > available to Emacs Lisp.
+
+This would give emacs-reader a real advantage compared with separate
+PDF reader programs.  But we need to verify that the license of
+libmupdf is compatible with future versions of the GNU AGPL, not solely
+with AGPL version 3.
+
+  > A few things we've taken in this direction in another branch is to
+  > have 'embedded cursors', i.e., a cursor /inside/ the rendered image
+  > showing the document. This cursor duplicates Emacs' buffer notions of
+  > point, mark and region allowing you to move /within/ the text via
+  > C-f/b/n/p, mark, yank, etc. It is a rudimentary implementation as a
+  > proof of concept. But by allowing such navigation, we can then allow
+  > Emacs to operate on a given region programmatically. Of course, this
+  > can also be done by simply selecting a region with the mouse. We plan
+  > to later use this to integrate Emacspeak and make documents accessible
+  > for visually impaired users.
+
+That sounds good, too.
+
+Does this depend on libmupdf, or is it implemented separately?
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-19T06:21:13+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <E1xIes5-004llV-KM@fencepost.gnu.org>
+In-Reply-To: <87qzhp9us6.fsf@posteo.net> (message from Philip Kaludercic on
+ Fri, 16 Oct 2026 21:53:47 +0000)
+References: <87jynkjv37.fsf@dialetheia.xyz> <87ld7xdcdr.fsf@posteo.de>
+ <8733u56a89.fsf@dialetheia.xyz> <87a4odcxgf.fsf@posteo.de>
+ <87y0bx4gzb.fsf@dialetheia.xyz> <87qzhp9us6.fsf@posteo.net>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+There are many package names (and older file names from before we
+called them packages) that mean nothing to users, or that users will
+find hard to remember.  Often they spread into command names, too.
+
+For instance, the command to put a mime attachment into an email is in
+the file `mml.el' and its name is M-x mml-attach-file.  attach-file is
+the natural name for this command, but sometimes I have to strain to
+recall the prefix, `mml'.  The file's comments suggest that "MML"
+means something related to mime, but I can't find why those three letters.
+
+The command to list the GPG public keys I have is `epa-list-keys'
+because it is in a file named `epa.el'.  Sometimes I have to strain to
+recall the prefix, "epa".  It is an acronym for Easy PGP Assistant,
+which could help me remember it, but not reliably.
+
+Over the decades, lots of Lisp files installed with names that were
+not chosen to be helpful to users add up to a major obstacle for using Emacs.
+
+It seems to me that we should try to avoid adding to this obstacle.
+To have a standard practice of choosing new, helpful names for packages
+when we add them is a natural way to do this.
+
+In other words, keeping the old name is not a good default policy
+if we want to help the users.
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-19T06:24:33+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <E1xIevJ-004w3I-AQ@fencepost.gnu.org>
+In-Reply-To: <9f368bf8-717e-4057-b4b8-914b09a19357@imayhem.com> (message from
+ Cecilio Pardo on Sat, 17 Oct 2026 09:25:41 +0200)
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <eb99b9b424e5a2570a279033afbc3ef4@gnu.support> <878q4njf74.fsf@localhost>
+ <46364c6b173dc27ae5aae32bf0a5b336@gnu.support> <875wzrjd68.fsf@localhost>
+ <70a26394be2966ca298ffa137e86001b@gnu.support> <8733uvj8ji.fsf@localhost>
+ <06cef3d600dd85b6db32303374034255@gnu.support> <87mrskyu97.fsf@localhost>
+ <0b8c438c429ed29fef9c12e2cf6c3f08@gnu.support>
+ <E13E6580-B5FE-4C2A-BAAF-4C162099C017@disroot.org>
+ <5e1e8ba3cac7e4100546e7cf65bdd69b@gnu.support>
+ <4c363fb0-38d9-49fa-8a0f-4af1ea1f253b@imayhem.com>
+ <E1xHBwX-008VVJ-FH@fencepost.gnu.org>
+ <8570bcd8-bc3b-4235-bc26-8ac90e116fad@imayhem.com>
+ <E1xHvnu-00GQn5-5O@fencepost.gnu.org>
+ <9f368bf8-717e-4057-b4b8-914b09a19357@imayhem.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > We concluded that Java programs were free but "trapped".  When we made
+  > > a free Java implementation, that released those free programs from the
+  > > trap.  See https://gnu.org/philosophy/java-trap.html.
+  > > 
+  > > The GPU trap is not precisely equivalent to that, but the basic idea fits.
+
+  > I don't think so. Renouncing Java until a free compiler was available 
+  > was possible.
+
+That is what we did.  It took a decade.
+
+  > Having a friend build them for you was possible.
+
+That was not a solution.  It would have meant that each of us would
+have to send each version of our Java program to the "friend" with the
+compiler, to get it compiled.  Basically, that "friend" would be a
+SaaSS service (a server that compiles code on demand).
+
+  > Here, the solution is not getting closer, on the contrary.
+
+That is speculation, and vague.  You can't convince the GNU Project to
+change its moral standards with handwaving.
+
+Remember, these moral standards are about what is legitimate
+for the GNU Project to say and do.  We don't try to dictate
+to the users.
+
+                                                               Also, the 
+  > impact of Java is not comparable to the impact of this thing.
+
+That is a rather vague statement.  It may be true to some extent, but
+it is too vague to imply a specific conclusion.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-19T06:53:01+02:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <877bjeuw9e.fsf@mail.gmail.com>
+In-Reply-To: <E1xIes5-004llV-KM@fencepost.gnu.org>
+References: <87jynkjv37.fsf@dialetheia.xyz> <87ld7xdcdr.fsf@posteo.de>
+ <8733u56a89.fsf@dialetheia.xyz> <87a4odcxgf.fsf@posteo.de>
+ <87y0bx4gzb.fsf@dialetheia.xyz> <87qzhp9us6.fsf@posteo.net>
+ <E1xIes5-004llV-KM@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> For instance, the command to put a mime attachment into an email is in
+> the file `mml.el' and its name is M-x mml-attach-file.  attach-file is
+> the natural name for this command, but sometimes I have to strain to
+> recall the prefix, `mml'.  The file's comments suggest that "MML"
+> means something related to mime, but I can't find why those three letters.
+
+"... a library called 'mml' has been defined that parses a language
+called MML (MIME Meta Language) and generates MIME messages." ("Emacs
+MIME" section of the manual).
+
+================================================================================
+Date: 2026-10-19T09:34:19+02:00
+From: chenyh572@gmail.com
+Subject: [NonGNU ELPA] Submission inquiry: clutch,
+ an interactive database client
+Message-ID: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+Hello ELPA maintainers,
+
+I maintain Clutch, an interactive database client for Emacs, and would
+like to request its inclusion in NonGNU ELPA.
+
+Repository: https://github.com/LuciusChen/clutch
+License: GPL-3.0-or-later
+Current release: 0.7.0
+Minimum Emacs version: 29.1
+Declared package dependencies: Emacs 29.1 and Transient 0.3.7
+
+Clutch provides SQL editing buffers, an interactive result grid,
+schema discovery and completion, and staged row edits that can be
+previewed before execution. Its SQLite path uses Emacs's built-in
+SQLite support, without additional protocol packages or Java. Other
+database backends use optional protocol libraries or a separately
+installed JDBC agent.
+
+I would like to clarify the code-provenance policy before proceeding
+further. Development includes code generated with OpenAI Codex and
+Claude Code, which is disclosed in the package's Assisted-by headers.
+Could you confirm whether a package with this development history is
+eligible for NonGNU ELPA under the current policy?
+
+The main Lisp file is clutch.el, and the Lisp sources are in the
+repository root on the default main branch. Release notes are in
+CHANGELOG.md. There is no special build step for the Lisp package.
+
+If the package is eligible, I would appreciate any review comments and
+packaging changes needed for inclusion.
+
+Thank you for your guidance and consideration.
+
+Lucius Chen
+chenyh572@gmail.com
+
+================================================================================
+Date: 2026-10-19T10:54:54+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <87wlrejcip.fsf@athena.silentflame.com>
+In-Reply-To: <87fqy659j4.fsf@dialetheia.xyz>
+References: <87jynkjv37.fsf@dialetheia.xyz>
+ <874ieop45z.fsf@athena.silentflame.com> <87fqy8je3b.fsf@dialetheia.xyz>
+ <87v773nyvy.fsf@athena.silentflame.com> <877bjjjnw7.fsf@dialetheia.xyz>
+ <87ecdrnv7c.fsf@athena.silentflame.com> <8733u7jn0d.fsf@dialetheia.xyz>
+ <871p9rngva.fsf@athena.silentflame.com> <87ld7zhr3s.fsf@dialetheia.xyz>
+ <87wlrikpxq.fsf@athena.silentflame.com> <87fqy659j4.fsf@dialetheia.xyz>
+
+Divya Ranjan Pattanaik [16/Oct  8:34am GMT] wrote:
+> Sean Whitton <spwhitton@spwhitton.name> writes:
+>
+>> Divya Ranjan Pattanaik [15/Oct  4:21pm GMT] wrote:
+>>> Sean Whitton <spwhitton@spwhitton.name> writes:
+>>>
+>>>> Divya Ranjan Pattanaik [15/Oct 10:06am GMT] wrote:
+>>>>> Sean Whitton <spwhitton@spwhitton.name> writes:
+>>>>>
+>>>>>> If you mean only take some of the changes, that would be okay.
+>>>>>
+>>>>> That is what I meant. So, we can revert the 43b23e19 patch and keep
+>>>>> 873cb28a only, which has 10LOC changes to Makefile. I presume, the
+>>>>> changes to README aren't to be counted here right?
+>>>>
+>>>> No, they count because they're copyrightable, and part of the project as
+>>>> contributed to.
+>>>
+>>> Patch 43b23e19 has been reverted:
+>>>
+>>> https://codeberg.org/MonadicSheep/emacs-reader/commit/8289710b926bc4297022676c15984bae0e28ac94
+>>>
+>>> The README part of 873cb28a has been removed:
+>>>
+>>> https://codeberg.org/MonadicSheep/emacs-reader/commit/8289710b926bc4297022676c15984bae0e28ac94
+>>
+>> This is the same link twice?
+>
+> Apologies, the second link should be:
+>
+> https://codeberg.org/MonadicSheep/emacs-reader/commit/6045ba1a88524db2115187f6b60358e0d3d42e69
+
+I think all is sorted now -- thanks again.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-19T11:02:27+02:00
+From: Tushar <tusharhero@sdf.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <86zewagj18.fsf@sdf.org>
+In-Reply-To: <87ecdo8r2s.fsf@posteo.net>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <338030d76e7f7283ef0a26ab02af0d18@dialetheia.xyz>
+ <87ecdo8r2s.fsf@posteo.net>
+
+Hello Philip,
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+[...]
+
+>
+>>> Looking at just the Elisp code, most of it seems to be either
+>>> arithmetical+state maintainance business logic or just fine Lisp.  FWIW
+>>> I have a few comments and suggestions here, but sadly not much more
+>>> than
+>>> this:
+>>> diff --git a/reader.el b/reader.el
+>>> index 27c097c..374c6b5 100644
+>>> --- a/reader.el
+>>> +++ b/reader.el
+>>> @@ -29,12 +29,15 @@
+>>>  ;; relies on MuPDF to do the rendering, and Emacs Lisp's native image
+>>>  ;; displaying capabilities to view the rendered images and
+>>> manipulate them.
+>>
+>>> +;; Can you point to some symbols (major-modes, commands, etc.) here
+>>> as well?
+>>> +
+>>
+>> We were planning to add a Info manual soon.
+>
+> I guess that would work as well, but I was hoping for something concrete
+> and actionable that you could call or add to your init.el (or a comment
+> to the effect that this isn't necessary if that is so) instead of a link
+> to even more information.  Think of it as a favor to us impatient people ;)
+>
+>
+> [...]
+>
+>>>        (with-current-buffer "*reader-module-compilation*"
+>>>  	;; Buffer-local hook
+>>> @@ -78,6 +86,8 @@
+>>>  (if (reader--module-built-p)
+>>>      (reader--load-module)
+>>>    (when (yes-or-no-p "Build reader's dynamic module? ")
+>>> +    ;; Should this really happen on the top-level when loading?  Can
+>>> +    ;; you not defer it until when you have to load the module?
+>>
+>> This runs when reader.el is loaded. Which usually happens after the user
+>> tries to open a document in some way, or somehow leads to reader.el
+>> loading. Is there a better way to achieve the same effect?
+>
+> I would have expected that the major mode ensures that the module is
+> built and if not starts the command to do so.  Or do you think that
+> wouldn't make sense.  You could of course also provide a
+> (reader-ensure-module) function that users can call from their init if
+> they prefer that.
+>
+
+We do have the command ‘reader-build’. I had tried adding a
+‘reader-ensure-module’ which would then get called by ‘reader-mode’. But
+that seemed to break bookmarks.
+
+I wish every package that uses dynamic modules didn't have worry about
+manually managing this themselves.
+
+When we didn't automatically build the dynamic module, we were able to
+just do ‘(require 'render-core)’ and that worked fine. Now it is much
+more complicated. Earlier, we thought we could rely on package-vc's
+‘:make’ but that turned out to be very unreliable.
+
+[...]
+
+>>>  (defconst reader-supported-formats (list "pdf" "epub" "mobi"
+>>>  					 "fb2" "xps" "cbz"
+>>>  					 "docx""pptx" "xlsx"
+>>> @@ -164,7 +170,7 @@ WINDOW must be a valid window and defaults to
+>>> the selected one."
+>>>  (defun reader--process-command-queue ()
+>>>    "Process the next command in the queue."
+>>>    (when-let* ((cmd (pop reader--command-queue))
+>>> -	      (delay 0.0001))
+>>> +	      (delay 0.0001))		;why the one-shot binding?
+>>
+>> Just to give a name to the magic number.
+>
+> Hmm ok.  If you ask me it is not really a magic number, since the
+> argument of the function you were passing delay to explicitly annotates
+> it as a time argument (though this is perhaps more of a thing if you use
+> eldoc) -- while at the same time the actual reason why you decide to use
+> this value as opposed to 0.001 or 0.00001 is a "magic" decision.
+>
+> [...]
+>
+>
+
+It was just the number we arrived at while testing. I will add a
+comment.
+
+-- 
+tusharhero
+
+================================================================================
+Date: 2026-10-19T11:32:44+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <8733u2jarn.fsf@athena.silentflame.com>
+In-Reply-To: <87y0bx4gzb.fsf@dialetheia.xyz>
+References: <87jynkjv37.fsf@dialetheia.xyz> <87ld7xdcdr.fsf@posteo.de>
+ <8733u56a89.fsf@dialetheia.xyz> <87a4odcxgf.fsf@posteo.de>
+ <87y0bx4gzb.fsf@dialetheia.xyz>
+
+Divya Ranjan Pattanaik [16/Oct  6:50pm GMT] wrote:
+> Mekeor Melire <mekeor@posteo.de> writes:
+>>
+>>> But, if others here have any suggestions on a change of name,
+>>> I'm all ears :)
+>>
+>> Before searching for new names, we should discuss with arguments
+>> whether renaming is appropriate.
+>
+> Sure, I'm open to hear others' opinions on this. My arguments have
+> been made an year ago, so I don't wish to repeat them in deail
+> again. In short, I don't think it is /necessary/ to change the name. A
+> brief scroll through elpa.gnu.org would show several packages with
+> very generic names. To name a few: bluetooth.el, chess, djvu, scaner,
+> typewriter, web-server, etc.
+>
+> So, yes, it is a generic name, but I have not seen genericity being
+> considered a negative indicator when considering the package names for
+> ELPA submission.
+>
+> I understand that some people have the opinion that generic names
+> should be avoided, but I differ from such an opinion. For me, the name
+> should first and foremost signify the goal of the program. In this
+> case, it does. It's a program to read documents.
+>
+> Let's hear what others have to say on this. That said, if Emacs or
+> ELPA maintainers consider it absolutely necessary for the package to
+> be renamed to be considered for inclusion in ELPA, I will comply.
+
+Genericity of names for packages that aren't general solutions to
+problems is, in fact, a negative indicator when considering package
+names for ELPA submission.
+
+However, arguably this package is a very general solution to the problem
+of reading documents in Emacs, so perhaps it deserves the name.
+
+My main concern here is that this is a complex package, and if the
+current maintainers move on at some point, it might fall into disrepair
+with no-one willing to dive into the complexity that would be required
+to keep it from bitrotting.  One has to be humble about one's own
+motivation and spare some thought for this future situation, even if it
+seems far off to you at present.
+
+(I also think that Mekeor raises a good point about "reader" clashing
+directly with the Lisp reader that's a part of core Emacs, but maybe we
+just have to accept this part.  Would you give some thought to renaming
+it to "emacs-doc-reader", perhaps?)
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-19T11:58:11+02:00
+From: =?utf-8?Q?=C3=93scar?= Fuentes <oscarfv@eclipso.eu>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <875wyyau6k.fsf@hiperboreo.eu>
+In-Reply-To: <8733u2jarn.fsf@athena.silentflame.com>
+References: <87jynkjv37.fsf@dialetheia.xyz> <87ld7xdcdr.fsf@posteo.de>
+ <8733u56a89.fsf@dialetheia.xyz> <87a4odcxgf.fsf@posteo.de>
+ <87y0bx4gzb.fsf@dialetheia.xyz>
+ <8733u2jarn.fsf@athena.silentflame.com>
+
+Sean Whitton <spwhitton@spwhitton.name> writes:
+
+> (I also think that Mekeor raises a good point about "reader" clashing
+> directly with the Lisp reader that's a part of core Emacs, but maybe we
+> just have to accept this part.  Would you give some thought to renaming
+> it to "emacs-doc-reader", perhaps?)
+
+IMAO the "emacs-" part in an Emacs package name is quite superfluous.
+
+Moreover, on this specific case, I agree that "emacs-reader" may sound
+not-quite-right to an Elisp programmer.
+
+"doc-reader" is good, "reader" is even better.
+
+================================================================================
+Date: 2026-10-19T12:58:57+02:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: Subject: A pragmatic view on Emacs and LLM integration
+Message-ID: <05a4a59a-5b63-4f15-9392-b80fa86db5c1@imayhem.com>
+In-Reply-To: <E1xIevJ-004w3I-AQ@fencepost.gnu.org>
+References: <d16ad83c-156c-45f5-aa6f-7913253ef565@imayhem.com>
+ <eb99b9b424e5a2570a279033afbc3ef4@gnu.support> <878q4njf74.fsf@localhost>
+ <46364c6b173dc27ae5aae32bf0a5b336@gnu.support> <875wzrjd68.fsf@localhost>
+ <70a26394be2966ca298ffa137e86001b@gnu.support> <8733uvj8ji.fsf@localhost>
+ <06cef3d600dd85b6db32303374034255@gnu.support> <87mrskyu97.fsf@localhost>
+ <0b8c438c429ed29fef9c12e2cf6c3f08@gnu.support>
+ <E13E6580-B5FE-4C2A-BAAF-4C162099C017@disroot.org>
+ <5e1e8ba3cac7e4100546e7cf65bdd69b@gnu.support>
+ <4c363fb0-38d9-49fa-8a0f-4af1ea1f253b@imayhem.com>
+ <E1xHBwX-008VVJ-FH@fencepost.gnu.org>
+ <8570bcd8-bc3b-4235-bc26-8ac90e116fad@imayhem.com>
+ <E1xHvnu-00GQn5-5O@fencepost.gnu.org>
+ <9f368bf8-717e-4057-b4b8-914b09a19357@imayhem.com>
+ <E1xIevJ-004w3I-AQ@fencepost.gnu.org>
+
+On 10/19/2026 6:24 AM, Richard Stallman wrote:
+
+>    > Having a friend build them for you was possible.
+> 
+> That was not a solution.  It would have meant that each of us would
+> have to send each version of our Java program to the "friend" with the
+> compiler, to get it compiled.  Basically, that "friend" would be a
+> SaaSS service (a server that compiles code on demand).
+
+Agreed. I withdraw that.
+
+> 
+>    > Here, the solution is not getting closer, on the contrary.
+> 
+> That is speculation, and vague.  You can't convince the GNU Project to
+> change its moral standards with handwaving.
+On “the solution is not getting closer,” here is something
+specific. Epoch AI estimates that the cost of training frontier models
+has grown about 2.4 times per year since 2016, and that the largest
+models could cost over a billion dollars to train by 2027. The compute
+used grows even faster, 4 to 5 times per year.
+
+That’s the difference with the Java trap. There, one free program,
+written once, freed every free Java program. Here, each model needs
+its own training, and each new one costs more than the last. Waiting a
+decade made the Java trap disappear. With current trends, waiting a
+decade makes this one much deeper.
+
+I don't think I proposed any concrete change in the GNU project
+standards. Maybe I did and I don't remember.
+
+This things are new. Is only normal that no standards are prepared for
+anythin new that could come. That's all I have.
+
+================================================================================
+Date: 2026-10-19T13:16:28+02:00
+From: Pengji Zhang <me@pengjiz.com>
+Subject: How can I make a function with interactive form not a command?
+Message-ID: <87mrsakkj7.fsf@pengjiz.com>
+In-Reply-To: 
+References: 
+
+Hello,
+
+I wanted to advise a command to change its interactive form. However,
+that means the advice function must have an interactive form as well. As
+such, it shows up in, for instance, 'M-x'. I wonder if there is a way to
+explicitly mark such a function as non-command? Thanks!
+
+Regards,
+Pengji
+
+PS here is an example to reproduce the problem I have (note that
+':interactive-only' requires Emacs>=31):
+
+  (define-advice find-file (:interative-only (&rest _) advice)
+    (interactive (lambda (spec) (advice-eval-interactive-spec spec)))
+    nil)
+
+Then a 'find-file@advice' will show up in 'M-x', which I do not want.
+
+================================================================================
+Date: 2026-10-19T13:24:06+02:00
+From: Gabriel Santos <gabrielsantosdesouza@disroot.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <9B13BBC0-EAFA-46EA-8B0B-21F395EFDD56@disroot.org>
+In-Reply-To: <875wyyau6k.fsf@hiperboreo.eu>
+References: <87jynkjv37.fsf@dialetheia.xyz> <87ld7xdcdr.fsf@posteo.de>
+ <8733u56a89.fsf@dialetheia.xyz> <87a4odcxgf.fsf@posteo.de>
+ <87y0bx4gzb.fsf@dialetheia.xyz> <8733u2jarn.fsf@athena.silentflame.com>
+ <875wyyau6k.fsf@hiperboreo.eu>
+
+Em 19 de outubro de 2026 06:58:11 BRT, "Óscar Fuentes via Emacs development discussions." <emacs-devel@gnu.org> escreveu:
+>Sean Whitton <spwhitton@spwhitton.name> writes:
+>
+>> (I also think that Mekeor raises a good point about "reader" clashing
+>> directly with the Lisp reader that's a part of core Emacs, but maybe we
+>> just have to accept this part.  Would you give some thought to renaming
+>> it to "emacs-doc-reader", perhaps?)
+>
+>IMAO the "emacs-" part in an Emacs package name is quite superfluous.
+>
+>Moreover, on this specific case, I agree that "emacs-reader" may sound
+>not-quite-right to an Elisp programmer.
+>
+>"doc-reader" is good, "reader" is even better.
+The package is already called reader in a way:
+
+```emacs-lisp
+(use-package reader
+  :vc (:url "https://codeberg.org/MonadicSheep/emacs-reader")
+  :ensure-system-package
+  (mupdf-gl . mupdf)
+  :ensure t)
+```
+
+;;; reader.el --- General-purpose Document Reader -*- lexical-binding: t; -*-
+
+M-x reader
+
+- reader-build
+- reader-nav-mode
+- reader-open-doc
+- reader-close-doc
+- ...
+
+-- 
+Gabriel Santos (https://gs-101.dev)
+
+================================================================================
+Date: 2026-10-19T14:49:58+02:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: How can I make a function with interactive form not a command?
+Message-ID: <CAN+1HbpqzJBjtEuu3Z1+CWFcqRGqiK_1QEOjzENF4M72MYqM6Q@mail.gmail.com>
+In-Reply-To: <87mrsakkj7.fsf@pengjiz.com>
+References: <87mrsakkj7.fsf@pengjiz.com>
+
+On Mon, Oct 19, 2026 at 8:28 AM Pengji Zhang <me@pengjiz.com> wrote:
+
+> Hello,
+>
+> I wanted to advise a command to change its interactive form. However,
+> that means the advice function must have an interactive form as well. As
+> such, it shows up in, for instance, 'M-x'. I wonder if there is a way to
+> explicitly mark such a function as non-command? Thanks!
+>
+> Regards,
+> Pengji
+>
+> PS here is an example to reproduce the problem I have (note that
+> ':interactive-only' requires Emacs>=31):
+>
+>   (define-advice find-file (:interative-only (&rest _) advice)
+>     (interactive (lambda (spec) (advice-eval-interactive-spec spec)))
+>     nil)
+>
+> Then a 'find-file@advice' will show up in 'M-x', which I do not want.
+>
+
+One way is:
+
+(put 'your-advice-symbol-name 'completion-predicate #'ignore)
+
+================================================================================
+Date: 2026-10-19T16:23:43+02:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU ELPA] Submission inquiry: clutch, an interactive database
+ client
+Message-ID: <6eff9f435c5843c62b1bd598285224c5@gnu.support>
+In-Reply-To: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+References: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+
+I am not Emacs maintainer and I comply to the rejected e-mail:  "The 
+OP's question was addressed to the Emacs maintainers. If you want to 
+respond, please make sure you say explicitly your are not an Emacs
+maintainer, before expressing your personal opinions about this package. 
+"
+
+On 2026-10-19 15:15, Jean Louis wrote:
+> On 2026-10-19 10:34, chenyh572@gmail.com wrote:
+>> Hello ELPA maintainers,
+>> 
+>> I maintain Clutch, an interactive database client for Emacs, and would
+>> like to request its inclusion in NonGNU ELPA.
+> 
+> As a participant, user of Emacs, I find the package techncally useful, 
+> though with following objections against putting it in ELPA, based on 
+> GNU free software philosophy:
+> 
+> - it is hosted on Github, it could be hosted on a friendly code hosting 
+> service; see 
+> https://www.gnu.org/server/staging/whats-wrong-with-github.html
+> 
+> - remote SaaSS Large Language Model was used to generate code (service 
+> as a software substitute, see: 
+> https://www.gnu.org/philosophy/who-does-that-server-really-serve.html) 
+> so copyrights are questionable; so there are 113 commits by Claude 
+> Sonnet 4.6 SaaSS LLM, 87 commits by Claude Opus SaaSS LLM, 2 commits by 
+> Claude Sonnet 4.5 SaaSS LLM and 1 by Claude Opus 4.5 SaaSS LLM; for 
+> reason that policy is still not there for GNU project on how to deal 
+> with legalities of such software.
+
+-- 
+Jean Louis
+
