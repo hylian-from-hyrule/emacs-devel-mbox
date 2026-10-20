@@ -1,0 +1,729 @@
+emacs-devel messages from 2026-10-19T18:15:00+02:00 to 2026-10-20T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-19T19:22:22+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <87fqy1txkj.fsf@posteo.net>
+In-Reply-To: <86zewagj18.fsf@sdf.org>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <338030d76e7f7283ef0a26ab02af0d18@dialetheia.xyz>
+ <87ecdo8r2s.fsf@posteo.net> <86zewagj18.fsf@sdf.org>
+
+Tushar <tusharhero@sdf.org> writes:
+
+> Hello Philip,
+>
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+> [...]
+>
+>>
+>>>> Looking at just the Elisp code, most of it seems to be either
+>>>> arithmetical+state maintainance business logic or just fine Lisp.  FWIW
+>>>> I have a few comments and suggestions here, but sadly not much more
+>>>> than
+>>>> this:
+>>>> diff --git a/reader.el b/reader.el
+>>>> index 27c097c..374c6b5 100644
+>>>> --- a/reader.el
+>>>> +++ b/reader.el
+>>>> @@ -29,12 +29,15 @@
+>>>>  ;; relies on MuPDF to do the rendering, and Emacs Lisp's native image
+>>>>  ;; displaying capabilities to view the rendered images and
+>>>> manipulate them.
+>>>
+>>>> +;; Can you point to some symbols (major-modes, commands, etc.) here
+>>>> as well?
+>>>> +
+>>>
+>>> We were planning to add a Info manual soon.
+>>
+>> I guess that would work as well, but I was hoping for something concrete
+>> and actionable that you could call or add to your init.el (or a comment
+>> to the effect that this isn't necessary if that is so) instead of a link
+>> to even more information.  Think of it as a favor to us impatient people ;)
+>>
+>>
+>> [...]
+>>
+>>>>        (with-current-buffer "*reader-module-compilation*"
+>>>>  	;; Buffer-local hook
+>>>> @@ -78,6 +86,8 @@
+>>>>  (if (reader--module-built-p)
+>>>>      (reader--load-module)
+>>>>    (when (yes-or-no-p "Build reader's dynamic module? ")
+>>>> +    ;; Should this really happen on the top-level when loading?  Can
+>>>> +    ;; you not defer it until when you have to load the module?
+>>>
+>>> This runs when reader.el is loaded. Which usually happens after the user
+>>> tries to open a document in some way, or somehow leads to reader.el
+>>> loading. Is there a better way to achieve the same effect?
+>>
+>> I would have expected that the major mode ensures that the module is
+>> built and if not starts the command to do so.  Or do you think that
+>> wouldn't make sense.  You could of course also provide a
+>> (reader-ensure-module) function that users can call from their init if
+>> they prefer that.
+>>
+>
+> We do have the command ‘reader-build’. I had tried adding a
+> ‘reader-ensure-module’ which would then get called by ‘reader-mode’. But
+> that seemed to break bookmarks.
+
+What is the relation there?
+
+> I wish every package that uses dynamic modules didn't have worry about
+> manually managing this themselves.
+>
+> When we didn't automatically build the dynamic module, we were able to
+> just do ‘(require 'render-core)’ and that worked fine. Now it is much
+> more complicated. Earlier, we thought we could rely on package-vc's
+> ‘:make’ but that turned out to be very unreliable.
+
+In my estimation, that is sadly a problem with dynamic modules that we
+are not in a good position to solve.  It is possible, like you are
+doing, to have a Makefile with a few common package managers, but that
+is never really portable :/
+
+> [...]
+>
+>>>>  (defconst reader-supported-formats (list "pdf" "epub" "mobi"
+>>>>  					 "fb2" "xps" "cbz"
+>>>>  					 "docx""pptx" "xlsx"
+>>>> @@ -164,7 +170,7 @@ WINDOW must be a valid window and defaults to
+>>>> the selected one."
+>>>>  (defun reader--process-command-queue ()
+>>>>    "Process the next command in the queue."
+>>>>    (when-let* ((cmd (pop reader--command-queue))
+>>>> -	      (delay 0.0001))
+>>>> +	      (delay 0.0001))		;why the one-shot binding?
+>>>
+>>> Just to give a name to the magic number.
+>>
+>> Hmm ok.  If you ask me it is not really a magic number, since the
+>> argument of the function you were passing delay to explicitly annotates
+>> it as a time argument (though this is perhaps more of a thing if you use
+>> eldoc) -- while at the same time the actual reason why you decide to use
+>> this value as opposed to 0.001 or 0.00001 is a "magic" decision.
+>>
+>> [...]
+>>
+>>
+>
+> It was just the number we arrived at while testing. I will add a
+> comment.
+
+Don't worry too much about this, it was just a minor comment.
+
+================================================================================
+Date: 2026-10-20T05:59:36+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: How can I make a function with interactive form not a command?
+Message-ID: <jwvwlrdnhtq.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87mrsakkj7.fsf@pengjiz.com> (message from Pengji Zhang
+ <me@pengjiz.com> on Mon, 19 Oct 2026 19:16:28 +0800)
+References: <87mrsakkj7.fsf@pengjiz.com>
+
+> PS here is an example to reproduce the problem I have (note that
+> ':interactive-only' requires Emacs>=31):
+>
+>   (define-advice find-file (:interative-only (&rest _) advice)
+>     (interactive (lambda (spec) (advice-eval-interactive-spec spec)))
+>     nil)
+>
+> Then a 'find-file@advice' will show up in 'M-x', which I do not want.
+
+I'd suggest `M-x report-emacs-bug` (which is also the way to request
+new features).
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-20T06:58:08+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Full GNU Standards Compliance Report for llm Package
+Message-ID: <E1xJ1vM-00GO6J-Vi@fencepost.gnu.org>
+In-Reply-To: <86zewwtzth.fsf@gnu.org> (message from Eli Zaretskii on Fri, 02
+ Oct 2026 08:51:38 +0300)
+References: <e77467e4fbc4e0548a6b442d38505522@gnu.support>
+ <87zex2rhvp.fsf@posteo.net>
+ <fb5475e64bb9b14237df505506831f7e@gnu.support> <87v77qr7v9.fsf@posteo.net>
+ <E1xBOpf-004JtE-NW@fencepost.gnu.org> <86ik3o1rvd.fsf@gnu.org>
+ <E1xCUxF-00Gr3A-Fx@fencepost.gnu.org> <86zewwtzth.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Also, the above seems to contradict the requirement not to recommend
+  > Chrome by mentioning it in our documentation and user options.
+
+It is ok to mention Chrome because it is very well known, and all the
+users of those systems know about it.  That exception is explained in
+the node References.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-20T06:58:13+02:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [OFFTOPIC] "ethically" running proprietary code?
+Message-ID: <E1xJ1vR-00GODN-4l@fencepost.gnu.org>
+In-Reply-To: <86o6dctvyv.fsf@gnu.org> (message from Eli Zaretskii on Fri, 02
+ Oct 2026 10:14:48 +0300)
+References: <86jyu4y0oy.fsf@sdf.org> <E1x72zl-000APm-J0@fencepost.gnu.org>
+ <jwvcxubeh5b.fsf-monnier+emacs@gnu.org>
+ <05a8a58452154ad25e0a1833a9e201d3@gnu.support>
+ <jwvpkyabta9.fsf-monnier+emacs@gnu.org> <8733v6gzae.fsf@web.de>
+ <E1x8AJ9-00G1XF-EX@fencepost.gnu.org> <867bkggyiz.fsf@gnu.org>
+ <87zexccn98.fsf@web.de> <87zexcdwjz.fsf@thanosapollo.org>
+ <95fd654e156b6203e06bcc651f8430f2@gnu.support>
+ <87wlsfe993.fsf@thanosapollo.org>
+ <27adfdd486ecb5c024995efc84edb5be@gnu.support> <865wzzf7ba.fsf@gnu.org>
+ <f9317a4974acb2df2dbcd248de549639@gnu.support> <861panf0to.fsf@gnu.org>
+ <E1xC8jV-008Oyq-Fl@fencepost.gnu.org> <86jyo1wz7l.fsf@gnu.org>
+ <CAN+1HbrxBSmikHjF2hrixjaEFyW=gG5LxQrZRasrySCGxTvK4g@mail.gmail.com>
+ <875wzlruma.fsf@web.de> <86qzi8txy4.fsf@gnu.org> <87jyo0r3ec.fsf@web.de>
+ <86o6dctvyv.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > If we cannot remove packages from elpa, we must be much more careful
+  > > which packages are accepted in elpa, than when we can remove packages
+  > > when their situation changes.
+
+  > Yes, and that's my main point.  We must test all those conditions up
+  > front, and if the conditions can change thereafter, we are screwed.
+
+Indeed, we need to check that a package meets all our conditions, at
+the outset.  That is why I intend to set up a new, careful procedure
+for evaluating ELPA packages -- to make sure we notice any problems.
+
+However, if we are stuck with a choice between (1) hurting a
+contributor's feelings and (2) violating our principles in what we
+distribute to users, the second alternative is far worse.  If we have
+fallen into that situation, we must get ourselves out of it.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-20T08:25:46+02:00
+From: Michael Albinus <michael.albinus@gmx.de>
+Subject: Re: [NonGNU ELPA] Submission inquiry: clutch, an interactive
+ database client
+Message-ID: <87cxt499cl.fsf@gmx.de>
+In-Reply-To: <6eff9f435c5843c62b1bd598285224c5@gnu.support>
+References: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+ <6eff9f435c5843c62b1bd598285224c5@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+Hi,
+
+> I am not Emacs maintainer and I comply to the rejected e-mail:  "The
+> OP's question was addressed to the Emacs maintainers. If you want to
+> respond, please make sure you say explicitly your are not an Emacs
+> maintainer, before expressing your personal opinions about this
+> package. "
+
+I'm also not an Emacs maintainer. However,
+
+>> As a participant, user of Emacs, I find the package techncally
+>> useful, though with following objections against putting it in ELPA,
+>> based on GNU free software philosophy:
+>> - it is hosted on Github, it could be hosted on a friendly code
+>> hosting service; see
+>> https://www.gnu.org/server/staging/whats-wrong-with-github.html
+
+With this fundamentalism, we must remove 265 packages from GNU ELPA, and
+240 packages from NonGNU ELPA. Please get real.
+
+>> - remote SaaSS Large Language Model was used to generate code
+>> (service as a software substitute, see:
+>> https://www.gnu.org/philosophy/who-does-that-server-really-serve.html)
+>> so copyrights are questionable; so there are 113 commits by Claude
+>> Sonnet 4.6 SaaSS LLM, 87 commits by Claude Opus SaaSS LLM, 2 commits
+>> by Claude Sonnet 4.5 SaaSS LLM and 1 by Claude Opus 4.5 SaaSS LLM;
+>> for reason that policy is still not there for GNU project on how to
+>> deal with legalities of such software.
+
+This is a valid argument according to current criteria.
+
+Best regards, Michael.
+
+================================================================================
+Date: 2026-10-20T08:38:26+02:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+Message-ID: <aa29b962-8ec1-4976-8ce1-0687b6357986@gmail.com>
+In-Reply-To: 
+References: 
+
+Hi Joao
+
+A user report for refactor.el.
+
+I'm generally satisfied with it, and it gets getting better the more I 
+use it.
+
+There are some points that need might polishing, though.
+
+My ELisp experience (*scatch* and .el files): I'm a bit confused about 
+refacctor-suggestion-mode here. It would be nice for a user to know what 
+this means.
+
+For example:
+I'm quite used to seeing the "old"
+
+defun: ARGS DOCSTRING...
+
+In the mini-buffer when programming. It helps me know where I am and I'd 
+be disappointed (and a bit confused) if I lost that. I have found out 
+that I get my desried behaviour by disabling refactor-suggestion-mode 
+for both. I even disable elisp-refactor-mode in *scratch* completely.
+
+Then, I'm using LSP for LaTeX and Python
+
+- Python (python-lsp-server + ruff) works nicely
+
+
+- LaTeX: neither Digestif nor TexLab seem to work as expected
+
+[eglot] Connected! Server 'TexLab' now managing '(latex-mode)' buffers 
+in project 'fragmentation'.
+refactor: backend eglot failed: ("[eglot] Unsupported or ignored LSP 
+capability ':codeActionProvider'")
+
+This happens both with and without refactor-suggestion-mode and even 
+when I add :codeActionProvider to eglot-ignored-server-capabilities.
+
+- Finally, a quirk <blush> (my fingers, surely) </blush>: if it were 
+possible to remove spaces and tabs from the end of the new variable name 
+before replacing, that would be nice
+
+But in general, it is an improvement :-)
+
+Thanks a ton for the work, /PA
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-10-20T10:52:34+02:00
+From: "=?utf-8?B?Sm/Do28gVMOhdm9yYQ==?=" <joaotavora@gmail.com>
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+Message-ID: <87se20wy7h.fsf@gmail.com>
+In-Reply-To: <aa29b962-8ec1-4976-8ce1-0687b6357986@gmail.com>
+References: <87y0c0vvtf.fsf@gmail.com>
+ <aa29b962-8ec1-4976-8ce1-0687b6357986@gmail.com>
+
+"Pedro A. Aranda" <paguti@gmail.com> writes:
+
+> A user report for refactor.el.
+
+Thanks, fixed the latex and the renaming issues.  As to elisp-refactor,
+it's toy, not up for submission.  What you're seeing is really an
+elisp-mode issue: it doesn't compose ElDoc sources.  Report that
+separately to bug-gnu-emacs if you care about it.
+
+João
+
+================================================================================
+Date: 2026-10-20T10:58:28+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: The Kitty Keyboard Protocol and C-g
+Message-ID: <87v76whhor.fsf@athena.silentflame.com>
+In-Reply-To: 
+References: 
+
+The Kitty Keyboard Protocol[1] is a new way for terminal emulators to
+communicate user input to text mode applications, like xterm's
+modifyOtherKeys that we already support, but with several more
+enhancements such as distinguishing between key-down and key-up events,
+and disambiguating more possible key chord presses.
+
+It's also already widely implemented in terminal emulators (alacritty,
+foot, ghostty are some big names on GNU; on non-free platforms, macOS's
+iTerm2 and Microsoft's terminal application implement it) as compared
+with just Xterm for modifyOtherKeys.
+
+I'm planning to implement KKP for Emacs.  I'll work from the
+implementation of modifyOtherKeys, so I don't expect anything to be
+difficult or controversial, except for one thing: KKP means that C-g
+arrives as a multi-byte sequence, and that means we can't register it as
+the controlling tty's VINTR and VQUIT like we do at present.
+
+Essentially this means that with KKP enabled, C-g in a 'emacs -nw' frame
+will be like C-g in an 'emacsclient -t' frame: it can still interrupt
+Emacs, but only at the next maybe_quit, via the SIGIO route.
+The (info "(emacs)Emergency Escape") mechanism would become unavailable.
+
+I think this trade-off is acceptable and KKP should be turned on by
+default.  We can document the issue, and users can always turn off KKP
+support in favour of keeping emergency escape.  I predict that most
+people would prefer to have C-. and C-, work without any specific
+configuration in their text mode frames.
+
+I did try asking about extending KKP so that it doesn't rule out use of
+VINTR etc. but this did not receive a warm reception.[2]
+
+[1]  https://sw.kovidgoyal.net/kitty/keyboard-protocol/
+[2]  https://github.com/kovidgoyal/kitty/issues/10704
+     (non-free javascript only, unfortunately)
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-20T13:22:54+02:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: The Kitty Keyboard Protocol and C-g
+Message-ID: <m2cxt4wr8x.fsf@gmail.com>
+In-Reply-To: <87v76whhor.fsf@athena.silentflame.com>
+References: <87v76whhor.fsf@athena.silentflame.com>
+
+Sean Whitton <spwhitton@spwhitton.name> writes:
+
+> I'm planning to implement KKP for Emacs.
+
+FWIW, I've used https://github.com/benotn/kkp for several years, mainly
+with iTerm on macOS. Worked well.
+
+================================================================================
+Date: 2026-10-20T13:53:03+02:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: How can I make a function with interactive form not a command?
+Message-ID: <CAN+1HbpB+JecA3DNbQHX-fCO=Rsf6nif9a9xzCHVLynU7EDSAQ@mail.gmail.com>
+In-Reply-To: <CAN+1HbpqzJBjtEuu3Z1+CWFcqRGqiK_1QEOjzENF4M72MYqM6Q@mail.gmail.com>
+References: <87mrsakkj7.fsf@pengjiz.com>
+ <CAN+1HbpqzJBjtEuu3Z1+CWFcqRGqiK_1QEOjzENF4M72MYqM6Q@mail.gmail.com>
+
+On Mon, Oct 19, 2026 at 8:49 AM Stéphane Marks <shipmints@gmail.com> wrote:
+
+> On Mon, Oct 19, 2026 at 8:28 AM Pengji Zhang <me@pengjiz.com> wrote:
+>
+>> Hello,
+>>
+>> I wanted to advise a command to change its interactive form. However,
+>> that means the advice function must have an interactive form as well. As
+>> such, it shows up in, for instance, 'M-x'. I wonder if there is a way to
+>> explicitly mark such a function as non-command? Thanks!
+>>
+>> Regards,
+>> Pengji
+>>
+>> PS here is an example to reproduce the problem I have (note that
+>> ':interactive-only' requires Emacs>=31):
+>>
+>>   (define-advice find-file (:interative-only (&rest _) advice)
+>>     (interactive (lambda (spec) (advice-eval-interactive-spec spec)))
+>>     nil)
+>>
+>> Then a 'find-file@advice' will show up in 'M-x', which I do not want.
+>>
+>
+> One way is:
+>
+> (put 'your-advice-symbol-name 'completion-predicate #'ignore)
+>
+
+Another way is to do the above "in line" as in:
+
+  (define-advice find-file (:interactive-only (&rest _) advice)
+    (declare (completion ignore)) ; tags the symbol for you
+    (interactive (lambda (spec) (advice-eval-interactive-spec spec)))
+    nil)
+
+================================================================================
+Date: 2026-10-20T13:58:37+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: The Kitty Keyboard Protocol and C-g
+Message-ID: <86zew87fde.fsf@gnu.org>
+In-Reply-To: <87v76whhor.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Tue, 20 Oct 2026 09:58:28 +0100)
+References: <87v76whhor.fsf@athena.silentflame.com>
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Date: Tue, 20 Oct 2026 09:58:28 +0100
+> 
+> The Kitty Keyboard Protocol[1] is a new way for terminal emulators to
+> communicate user input to text mode applications, like xterm's
+> modifyOtherKeys that we already support, but with several more
+> enhancements such as distinguishing between key-down and key-up events,
+> and disambiguating more possible key chord presses.
+> 
+> It's also already widely implemented in terminal emulators (alacritty,
+> foot, ghostty are some big names on GNU; on non-free platforms, macOS's
+> iTerm2 and Microsoft's terminal application implement it) as compared
+> with just Xterm for modifyOtherKeys.
+> 
+> I'm planning to implement KKP for Emacs.  I'll work from the
+> implementation of modifyOtherKeys, so I don't expect anything to be
+> difficult or controversial, except for one thing: KKP means that C-g
+> arrives as a multi-byte sequence, and that means we can't register it as
+> the controlling tty's VINTR and VQUIT like we do at present.
+> 
+> Essentially this means that with KKP enabled, C-g in a 'emacs -nw' frame
+> will be like C-g in an 'emacsclient -t' frame: it can still interrupt
+> Emacs, but only at the next maybe_quit, via the SIGIO route.
+> The (info "(emacs)Emergency Escape") mechanism would become unavailable.
+> 
+> I think this trade-off is acceptable and KKP should be turned on by
+> default.  We can document the issue, and users can always turn off KKP
+> support in favour of keeping emergency escape.  I predict that most
+> people would prefer to have C-. and C-, work without any specific
+> configuration in their text mode frames.
+
+How do you envision this to be integrated into Emacs?
+Terminal-specific functionality is currently implemented in lisp/term/
+packages, and a suitable package is loaded at startup by looking at
+the value of TERM.  Will this implementation do the same?  If yes, how
+can a terminal other than Kitty request this functionality early
+enough to be used throughout the session?  If that's not how you plan
+on integrating the protocol, what are your current thoughts on this?
+
+================================================================================
+Date: 2026-10-20T14:14:03+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: The Kitty Keyboard Protocol and C-g
+Message-ID: <87fqy0h8ms.fsf@athena.silentflame.com>
+In-Reply-To: <86zew87fde.fsf@gnu.org>
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+
+Eli Zaretskii [20/Oct  2:58pm +03] wrote:
+>> From: Sean Whitton <spwhitton@spwhitton.name>
+>> Date: Tue, 20 Oct 2026 09:58:28 +0100
+>>
+>> The Kitty Keyboard Protocol[1] is a new way for terminal emulators to
+>> communicate user input to text mode applications, like xterm's
+>> modifyOtherKeys that we already support, but with several more
+>> enhancements such as distinguishing between key-down and key-up events,
+>> and disambiguating more possible key chord presses.
+>>
+>> It's also already widely implemented in terminal emulators (alacritty,
+>> foot, ghostty are some big names on GNU; on non-free platforms, macOS's
+>> iTerm2 and Microsoft's terminal application implement it) as compared
+>> with just Xterm for modifyOtherKeys.
+>>
+>> I'm planning to implement KKP for Emacs.  I'll work from the
+>> implementation of modifyOtherKeys, so I don't expect anything to be
+>> difficult or controversial, except for one thing: KKP means that C-g
+>> arrives as a multi-byte sequence, and that means we can't register it as
+>> the controlling tty's VINTR and VQUIT like we do at present.
+>>
+>> Essentially this means that with KKP enabled, C-g in a 'emacs -nw' frame
+>> will be like C-g in an 'emacsclient -t' frame: it can still interrupt
+>> Emacs, but only at the next maybe_quit, via the SIGIO route.
+>> The (info "(emacs)Emergency Escape") mechanism would become unavailable.
+>>
+>> I think this trade-off is acceptable and KKP should be turned on by
+>> default.  We can document the issue, and users can always turn off KKP
+>> support in favour of keeping emergency escape.  I predict that most
+>> people would prefer to have C-. and C-, work without any specific
+>> configuration in their text mode frames.
+>
+> How do you envision this to be integrated into Emacs?
+> Terminal-specific functionality is currently implemented in lisp/term/
+> packages, and a suitable package is loaded at startup by looking at
+> the value of TERM.  Will this implementation do the same?  If yes, how
+> can a terminal other than Kitty request this functionality early
+> enough to be used throughout the session?  If that's not how you plan
+> on integrating the protocol, what are your current thoughts on this?
+
+Almost all the implementation will be in lisp/term/xterm.el.  The query
+for whether KKP is supported just goes in alongside the autodetection
+that we already do there.  All the existing terminals that support KKP
+already use lisp/term/xterm.el, so far as I can tell.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-20T15:28:40+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: The Kitty Keyboard Protocol and C-g
+Message-ID: <86wlrc7b7b.fsf@gnu.org>
+In-Reply-To: <87fqy0h8ms.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Tue, 20 Oct 2026 13:14:03 +0100)
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com>
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Cc: emacs-devel@gnu.org
+> Date: Tue, 20 Oct 2026 13:14:03 +0100
+> 
+> Eli Zaretskii [20/Oct  2:58pm +03] wrote:
+> > How do you envision this to be integrated into Emacs?
+> > Terminal-specific functionality is currently implemented in lisp/term/
+> > packages, and a suitable package is loaded at startup by looking at
+> > the value of TERM.  Will this implementation do the same?  If yes, how
+> > can a terminal other than Kitty request this functionality early
+> > enough to be used throughout the session?  If that's not how you plan
+> > on integrating the protocol, what are your current thoughts on this?
+> 
+> Almost all the implementation will be in lisp/term/xterm.el.
+
+Why not a separate file?  xterm.el is already a monster.
+
+And what about making this optional?  The loading of xterm.el etc. is
+unconditional, given the value of TERM.
+
+> The query
+> for whether KKP is supported just goes in alongside the autodetection
+> that we already do there.  All the existing terminals that support KKP
+> already use lisp/term/xterm.el, so far as I can tell.
+
+w32console.el doesn't (although I'm not sure it isn't a feature).
+
+================================================================================
+Date: 2026-10-20T16:07:38+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: The Kitty Keyboard Protocol and C-g
+Message-ID: <87a4o8h3dh.fsf@athena.silentflame.com>
+In-Reply-To: <86wlrc7b7b.fsf@gnu.org>
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com> <86wlrc7b7b.fsf@gnu.org>
+
+Eli Zaretskii [20/Oct  4:28pm +03] wrote:
+>> From: Sean Whitton <spwhitton@spwhitton.name>
+>> Cc: emacs-devel@gnu.org
+>> Date: Tue, 20 Oct 2026 13:14:03 +0100
+>>
+>> Eli Zaretskii [20/Oct  2:58pm +03] wrote:
+>> > How do you envision this to be integrated into Emacs?
+>> > Terminal-specific functionality is currently implemented in lisp/term/
+>> > packages, and a suitable package is loaded at startup by looking at
+>> > the value of TERM.  Will this implementation do the same?  If yes, how
+>> > can a terminal other than Kitty request this functionality early
+>> > enough to be used throughout the session?  If that's not how you plan
+>> > on integrating the protocol, what are your current thoughts on this?
+>>
+>> Almost all the implementation will be in lisp/term/xterm.el.
+>
+> Why not a separate file?  xterm.el is already a monster.
+>
+> And what about making this optional?  The loading of xterm.el etc. is
+> unconditional, given the value of TERM.
+
+I think it'll be clear from my patch, so let me get back to you on that.
+
+>> The query
+>> for whether KKP is supported just goes in alongside the autodetection
+>> that we already do there.  All the existing terminals that support KKP
+>> already use lisp/term/xterm.el, so far as I can tell.
+>
+> w32console.el doesn't (although I'm not sure it isn't a feature).
+
+I think there are multiple different consoles in Windows, right?
+Does Emacs support "Microsoft terminal"?
+That's the one that KKP is meant to be implemented on.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-20T17:10:28+02:00
+From: Tushar <tusharhero@sdf.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <86jynce7bv.fsf@sdf.org>
+In-Reply-To: <87fqy1txkj.fsf@posteo.net>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <338030d76e7f7283ef0a26ab02af0d18@dialetheia.xyz>
+ <87ecdo8r2s.fsf@posteo.net> <86zewagj18.fsf@sdf.org>
+ <87fqy1txkj.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+>>>>
+>>>> This runs when reader.el is loaded. Which usually happens after the user
+>>>> tries to open a document in some way, or somehow leads to reader.el
+>>>> loading. Is there a better way to achieve the same effect?
+>>>
+>>> I would have expected that the major mode ensures that the module is
+>>> built and if not starts the command to do so.  Or do you think that
+>>> wouldn't make sense.  You could of course also provide a
+>>> (reader-ensure-module) function that users can call from their init if
+>>> they prefer that.
+>>>
+>>
+>> We do have the command ‘reader-build’. I had tried adding a
+>> ‘reader-ensure-module’ which would then get called by ‘reader-mode’. But
+>> that seemed to break bookmarks.
+>
+> What is the relation there?
+>
+
+I have implemented it again, this time the bookmarks work fine. I think
+it was a timing issue I had to add ‘(sit-for 1)’ to let it compile.
+
+>> I wish every package that uses dynamic modules didn't have worry about
+>> manually managing this themselves.
+>>
+>> When we didn't automatically build the dynamic module, we were able to
+>> just do ‘(require 'render-core)’ and that worked fine. Now it is much
+>> more complicated. Earlier, we thought we could rely on package-vc's
+>> ‘:make’ but that turned out to be very unreliable.
+>
+> In my estimation, that is sadly a problem with dynamic modules that we
+> are not in a good position to solve.  It is possible, like you are
+> doing, to have a Makefile with a few common package managers, but that
+> is never really portable :/
+>
+
+I think we can at least make it easier. Currently, if you try to do
+error handling on the ‘(require 'render-core)’, byte compile fails to
+recognize the symbols from render-core. So, you have to forward declare
+everything. Anyway, I think this is something to be discussed later.
+
+-- 
+tusharhero
+
+================================================================================
+Date: 2026-10-20T17:39:31+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: The Kitty Keyboard Protocol and C-g
+Message-ID: <86qzhk7558.fsf@gnu.org>
+In-Reply-To: <87a4o8h3dh.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Tue, 20 Oct 2026 15:07:38 +0100)
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com> <86wlrc7b7b.fsf@gnu.org>
+ <87a4o8h3dh.fsf@athena.silentflame.com>
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Cc: emacs-devel@gnu.org
+> Date: Tue, 20 Oct 2026 15:07:38 +0100
+> 
+> Eli Zaretskii [20/Oct  4:28pm +03] wrote:
+> > w32console.el doesn't (although I'm not sure it isn't a feature).
+> 
+> I think there are multiple different consoles in Windows, right?
+
+There are 2: the old one (ConHost) and the Windows Terminal.
+
+> Does Emacs support "Microsoft terminal"?
+
+If you mean the Windows Terminal, then yes.
+
+> That's the one that KKP is meant to be implemented on.
+
+We will need to make sure that KKP doesn't get in the way of any
+tricks we play on Windows in the -nw sessions, such as input of mouse
+events.  And anyway, the KPP support is only available in a preview
+version of the Windows Terminal for now.  I, for example, don't have
+that version installed, I only have the latest official release.
+
