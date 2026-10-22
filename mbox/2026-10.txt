@@ -67942,3 +67942,628 @@ If you think that is doable, I would recommend taking that path.
 >> > Kinney
 
 
+From MAILER-DAEMON Thu Oct 22 00:59:22 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xJkte-0005Wf-31
+	for mharc-emacs-devel@gnu.org; Thu, 22 Oct 2026 00:59:22 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tusharhero@sdf.org>)
+ id 1xJbBL-0001Og-MN
+ for emacs-devel@gnu.org; Wed, 21 Oct 2026 14:37:00 -0400
+Received: from mx.sdf.org ([205.166.94.24])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <tusharhero@sdf.org>)
+ id 1xJbBJ-0002Ch-GG; Wed, 21 Oct 2026 14:36:59 -0400
+Received: from sdf.org (sdf.org [205.166.94.16])
+ by mx.sdf.org (8.18.1/8.14.3) with ESMTPS id 69LIaf6O025586
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+ Wed, 21 Oct 2026 18:36:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=sdf.org; s=default;
+ t=1792607803; bh=QS99kaoHBPXrYkQ51VhDOWJqK/WX+zXIcbNNQuRNI28=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date;
+ b=Er6BympmyYjuPyfXkqiGjWv0alHu5ODILM7KScGojaDqJ4VG/kXsUSoAeiHRRGjyt
+ x9pTOWlHrG+i+/qQaMGW9I3hh+5zWfVPOGnMghaBXj/TNMvTbuZCaZJebeC8lST5M2
+ qMO8WRw7JRb7OzqGiN9VNAsOFGSIasTvUoiTE2bc=
+Received: (from tusharhero@localhost)
+ by sdf.org (8.18.1/8.12.8/Submit) id 69LIaerx025347;
+ Wed, 21 Oct 2026 18:36:40 GMT
+From: Tushar <tusharhero@sdf.org>
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: rms@gnu.org, divya@dialetheia.xyz, emacs-devel@gnu.org, eliz@gnu.org,
+ spwhitton@spwhitton.name
+Subject: Re: [ELPA] New package: emacs-reader
+In-Reply-To: <8733tzrl0d.fsf@posteo.net>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <338030d76e7f7283ef0a26ab02af0d18@dialetheia.xyz>
+ <87ecdo8r2s.fsf@posteo.net> <86zewagj18.fsf@sdf.org>
+ <87fqy1txkj.fsf@posteo.net> <E1xJXw4-0075JW-GL@fencepost.gnu.org>
+ <8733tzrl0d.fsf@posteo.net>
+Date: Thu, 22 Oct 2026 00:06:38 +0530
+Message-ID: <864iee99zd.fsf@sdf.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=205.166.94.24; envelope-from=tusharhero@sdf.org;
+ helo=mx.sdf.org
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Thu, 22 Oct 2026 00:59:18 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 21 Oct 2026 18:37:01 -0000
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> Richard Stallman <rms@gnu.org> writes:
+>> Or are these the "package managers" such as NPM that will often link
+>> your code with nonfree code by default?  Or is it some other kind of
+>> "package manager"?  Whichever it is, why does Emacs need to deal with
+>> them in order to build and use a dynamic module?
+>
+> If the user doesn't have the necessary dependencies on their system, it
+> will try to install them for the user.
+>
+
+This is not true. We do not try to install the dependencies.
+
+-- 
+tusharhero
+
+
+From MAILER-DAEMON Thu Oct 22 01:03:36 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xJkxi-0006f5-CE
+	for mharc-emacs-devel@gnu.org; Thu, 22 Oct 2026 01:03:35 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xJkxc-0006eY-Q3
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 01:03:30 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xJkxc-0002qj-HP; Thu, 22 Oct 2026 01:03:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=DL0JXzpOcOkA57CsfVKKw5G8aEaWXnEjgIGe7ZpCG50=; b=h/Le9+4YsQjD
+ Q2Jo09U8F5c30edEqWbB8TnxvUHLgBb7AltqpneW4i7ilLL6qBrSQI0ULVXzZBSTLivLy1te0Ue+4
+ 2t3E2ScHUrBoDlfEOVcWLruS08ozHBy5caJtcdUEIWSfaz/WfqOs1eZnW0GNJREPzpo2Ul1nW9KBl
+ M1/JInft3J6G+UTEntTPr6l2z3uieIV3fuIG+Pk0CfanmLOSHeuFaDgD7itSn6HuSeQgauEnIZTE9
+ iUbjP67uW5ikspdekDXdMlCftJE+OrDVPxXxSmvS6LAc1WbPmJfnoiiTDr04DEa82IO0WiBz/FUvt
+ apLp8x68TTNoQg71zxUFOg==;
+Date: Thu, 22 Oct 2026 08:03:24 +0300
+Message-Id: <865wyu72eb.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: vhkdzszh@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <87y0bqrk3q.fsf@posteo.net> (message from Philip Kaludercic on
+ Wed, 21 Oct 2026 18:20:42 +0000)
+Subject: Re: [NonGNU ELPA] New package: ekp
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 22 Oct 2026 05:03:31 -0000
+
+> From: Philip Kaludercic <philipk@posteo.net>
+> Cc: emacs-devel@gnu.org
+> Date: Wed, 21 Oct 2026 18:20:42 +0000
+> 
+> 
+> > So the question is only whether rewriting the affected code is enough
+> > for you, or whether the history itself makes the submission
+> > unacceptable.  Either answer is fine; I would rather know than guess.
+> 
+> LLM generated code is a copyright issue for us.  If the changes are
+> undone and rewritten (ideally by someone not familiar with the initial
+> implementation) then it shouldn't be an issue.
+> 
+> Regarding NonGNU ELPA:  I do recall Richard mentioning that LLM
+> generated code shouldn't be added to NonGNU ELPA, but this policy was
+> never agreed on.  Before the fact, it was already the case that we had
+> LLM generated code, which is not an issue from the copyright assignment
+> perspective, since packages in NonGNU ELPA don't have to have the
+> copyright assigned to the FSF.
+> 
+> So the question is up to you, if you want to have the package in NonGNU
+> ELPA or in GNU ELPA/core Emacs as Eli suggested. 
+
+IMO, rewriting that code is a good idea anyway, because that makes
+this package much easier to install anywhere.
+
+
+From MAILER-DAEMON Thu Oct 22 01:14:25 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xJl8D-0000dx-Dm
+	for mharc-emacs-devel@gnu.org; Thu, 22 Oct 2026 01:14:25 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xJl8B-0000dk-RN
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 01:14:23 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xJl8B-0003na-Im; Thu, 22 Oct 2026 01:14:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=YzHg9XKrtfrLYb0tQfnftz6Cr62tt4OcO20nNIRiuQs=; b=X5pfPU4Q0+N5
+ VtWGQZyN5v289MTNIMYbCbplqlseQxjcNmng5P0mjL0C1lart4e4as0LwnrtCLU6dAC6bZiP49nfu
+ 5qLXcKk6s53Fv0SLKx0RgILH6mFv/9FRYV5UW/SvHogiARtcPT7Uv0r9DNMaoG97Bt0S3Uw7DjZEI
+ 7Qe3qBbzwmV5F35i+d4Vfy2EbQYfrZkfmD0zukDKe/ZRQT2+EEYrkJzYvQrxekWxH0TEST/qIJxsS
+ 9lYdc8X5oN/V4FNwSCyLOB5xwHmMWBv6oa43ualzFAJS3pVeSILpU3g8Uta0ixmZ/hEauTBzKQmSr
+ M66jZzxX8R/RS4CzOJrhZQ==;
+Date: Thu, 22 Oct 2026 08:14:20 +0300
+Message-Id: <864iee71w3.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: vhkdzszh@gmail.com
+Cc: emacs-devel@gnu.org
+In-Reply-To: <179260749323.17379.16571524871324292533@gmail.com>
+ (vhkdzszh@gmail.com)
+Subject: Re: [NonGNU ELPA] New package: ekp
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 22 Oct 2026 05:14:24 -0000
+
+> From: vhkdzszh@gmail.com
+> Date: Thu, 22 Oct 2026 02:31:33 +0800
+> 
+> Thanks, and sorry about the threading -- I was using a send path that
+> dropped the reference headers.  That is fixed now.
+> 
+> Given that, I would like to go with NonGNU ELPA.  I do not want to
+> argue with Richard's position, so if he objects I will withdraw and
+> wait rather than push it through.
+> 
+> If the maintainers would rather see it in GNU ELPA or core, I am
+> prepared to rewrite the affected code; I only would not want to rewrite
+> it and then find the question still open.
+
+I stand by my original comment: I Think that the right place for such
+functionality is in Emacs core, right there near fill-paragraph and
+stuff.  The default line-breaking in Emacs is good, but it sometimes
+does things sub-optimally, so making it better is always welcome.
+
+More generally, bringing Emacs in compliance with the Unicode
+Line-breaking Algorithm is our long-term goal, and this package is one
+step in that direction (and perhaps can be later extended to do more
+of what Unicode mandates, see UAX#14).
+
+So I suggest to look at rewriting the LLM-generated parts as one small
+measure towards incorporating this in Emacs (there will be others,
+like how to let the user control this etc.), and do it now if it's
+feasible.  If nothing else, it will make our further steps much
+simpler.
+
+Thanks.
+
+
+From MAILER-DAEMON Thu Oct 22 03:20:52 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xJn6a-0000PC-Gx
+	for mharc-emacs-devel@gnu.org; Thu, 22 Oct 2026 03:20:52 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <vhkdzszh@gmail.com>)
+ id 1xJn6Z-0000Ox-Dp
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 03:20:51 -0400
+Received: from mail-pg1-x52a.google.com ([2607:f8b0:4864:20::52a])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <vhkdzszh@gmail.com>)
+ id 1xJn6W-00089m-KB
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 03:20:51 -0400
+Received: by mail-pg1-x52a.google.com with SMTP id
+ 41be03b00d2f7-cc52c1b8286so304768a12.1
+ for <emacs-devel@gnu.org>; Thu, 22 Oct 2026 00:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1792653647; x=1793258447; darn=gnu.org;
+ h=mime-version:content-transfer-encoding:content-type:message-id:date
+ :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+ :message-id:reply-to:content-type;
+ bh=C0hp1mfMQpSPhuSEsUBAkCBodBZKGSzl2s1J2ZGRL5Y=;
+ b=pB5xXtqcriGcls2pKQeOdf67SQwB7PWUJEJ6WLTNyt644Wgr5ld72UX5swCJe7by1K
+ 3inP6GA6o684eaC2/xw6WVXfSjJeAXuHtqa4iPFX3MgUSQcU6kRpAZR5Kz/K+Z8vtSCI
+ PxDMa5iRPySG0vnFu2CrJ2vj7rK0cU6eij9X1vv2XUqQqyOLB4lm1AqH8qTuiEYZfxes
+ e6FaulfJBKAEzcKuQMP/h9JVszRHkoLbHkV1FCo2GzR3EH6mVjAwPbdWd5S5Sy8n92/8
+ o4+8/aebE4RIiWwg57mquFR5VnyQUUd+QEkGSDK8HOG9wpk7kSMdlVdGWWmbnHhG8VBH
+ +J+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1792653647; x=1793258447;
+ h=mime-version:content-transfer-encoding:content-type:message-id:date
+ :references:in-reply-to:subject:cc:to:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=C0hp1mfMQpSPhuSEsUBAkCBodBZKGSzl2s1J2ZGRL5Y=;
+ b=v3UkLyVBJxG1fnphVA04i+qxYtlIr06TuNwQO9oCgqhKEix/08QiBD85DKLOPoXN4b
+ 2YbI4O5BnMjMIBoq/ocWReW09j9NlCOzAPnUcbXCZGvb/+zzaflOA87k/q1R5ngPt84n
+ y2GLymTD3Ms07y7VcU2E1gB+R6hlKDcMtoIkJoVmqr9kSDqbWZ9I3d8zpRpzbrteQ17C
+ qDyNWBNOr3C3g+IjG5a1AwvIb+vvdauyUCz6UmRf+INPLKV0Ucb3k5umGv7vcXvna4PV
+ 9m+dgDgJofYtSu+eTiHw3HJjiMyeam8sUoUUel/7CTfX95O9Yxqbaxqq9PrcFWv1EL2V
+ k9Rw==
+X-Gm-Message-State: AFq9FYKle6t5aPfoIaG3UEQBUZJbJU6Wo3If6vkO8Un1v0s33rMus/NK
+ VntSTdY6AzGX3/IvAQUGWZfny887MvhkFEghswwlhN87x0C+42N4ArMD
+X-Gm-Gg: AYBFou2iYKqHpZe7jFMA11osQ9wkzGjEuVXzCddZqXOuyXICE14TH71QyCTrpXW6DsU
+ 5qTtk9eAumYM5tHiCmBjEWZsT7jF13glx4b0S3SUCl0rFTyX+JALLKj2UuWcD9Arhc45dvlhSqO
+ hp5/ATRFubJtvZs4S/eSs3fgsNH+cuDGdfEXn8cRQ6++IULf0mBd/X4VCColfQSEBdHlc/FsJUm
+ w0XcJ8nIpNr5o9yDViqsGjmtAllJVCqzTEXrbm0GJ7rhNkD1Ojp9jY12WlDTcTeejFvjUQE7mzB
+ dFRp50SQqHdnrKmDm49CQTJ0Y/zcd2V4gzHJPytGY6wnZn1+AyZZKWZJD0gTp29pasOauk/speb
+ 7vncKc4SXOOJJ2V4pKisIC/EvMo3xPxc3d0TYbUZdpqtmojFEOLFhXgex4NuIdu9qb8TgH7jqB0
+ j1zcmDi6PmPtSjImZdoWfIshr8Ec8ScF3B6OuUxdiUovZibgNo6PBS9AOOtySzj/NGcB5hhGxxC
+ N6v232BuazXW+DcKGuPSf96dakzT6FF7mYG+kMzRjEHr18acUMUCoSVBuP3KtS/7lnyneiv/PEh
+ hQRtm2kVPFNKjFvmgV/1dML3Q8PgkCq8tGYu2uDToZFzkaI8hts0MBsDszWgoZiZ69TEA2zo4ah
+ yhw==
+X-Received: by 2002:a17:90b:4c8f:b0:3a0:cca0:4a8c with SMTP id
+ 98e67ed59e1d1-3ada6c56e08mr974418a91.7.1792653646550; 
+ Thu, 22 Oct 2026 00:20:46 -0700 (PDT)
+Received: from
+ 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+ ([2409:8d70:80:8acb:18e0:b702:efbd:555a])
+ by smtp.gmail.com with ESMTPSA id
+ 98e67ed59e1d1-3ada48bb3b6sm2972399a91.13.2026.10.22.00.20.44
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Thu, 22 Oct 2026 00:20:46 -0700 (PDT)
+From: Kinney Zhang <vhkdzszh@gmail.com>
+To: eliz@gnu.org
+Cc: emacs-devel@gnu.org
+Subject: Re: [NonGNU ELPA] New package: ekp
+In-Reply-To: <864iee71w3.fsf@gnu.org>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com> <864iee71w3.fsf@gnu.org>
+Date: Thu, 22 Oct 2026 15:20:42 +0800
+Message-ID: <179265364218.81518.17612804954593858950@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Received-SPF: pass client-ip=2607:f8b0:4864:20::52a;
+ envelope-from=vhkdzszh@gmail.com; helo=mail-pg1-x52a.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 22 Oct 2026 07:20:51 -0000
+
+Thank you.  Then I will aim for core.
+
+I will rewrite the LLM-generated parts.  That is not a quick job: the
+affected code is around 800 lines, and doing it properly means
+re-deriving the logic and re-running the acceptance tests, so I expect
+weeks rather than days.  The point is not only to satisfy the policy: I
+want the result to be code that users can read, reason about and change
+for themselves.
+
+I will come back when it is done and the tests pass, and we can talk
+about how a core contribution should look.
+
+Kinney
+
+在 2026-10-22 08:14，Eli Zaretskii <eliz@gnu.org> 写道：
+> > From: vhkdzszh@gmail.com
+> > Date: Thu, 22 Oct 2026 02:31:33 +0800
+> > 
+> > Thanks, and sorry about the threading -- I was using a send path that
+> > dropped the reference headers.  That is fixed now.
+> > 
+> > Given that, I would like to go with NonGNU ELPA.  I do not want to
+> > argue with Richard's position, so if he objects I will withdraw and
+> > wait rather than push it through.
+> > 
+> > If the maintainers would rather see it in GNU ELPA or core, I am
+> > prepared to rewrite the affected code; I only would not want to rewrite
+> > it and then find the question still open.
+> 
+> I stand by my original comment: I Think that the right place for such
+> functionality is in Emacs core, right there near fill-paragraph and
+> stuff.  The default line-breaking in Emacs is good, but it sometimes
+> does things sub-optimally, so making it better is always welcome.
+> 
+> More generally, bringing Emacs in compliance with the Unicode
+> Line-breaking Algorithm is our long-term goal, and this package is one
+> step in that direction (and perhaps can be later extended to do more
+> of what Unicode mandates, see UAX#14).
+> 
+> So I suggest to look at rewriting the LLM-generated parts as one small
+> measure towards incorporating this in Emacs (there will be others,
+> like how to let the user control this etc.), and do it now if it's
+> feasible.  If nothing else, it will make our further steps much
+> simpler.
+> 
+> Thanks.
+
+
+From MAILER-DAEMON Thu Oct 22 03:27:52 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xJnDL-0003WG-7U
+	for mharc-emacs-devel@gnu.org; Thu, 22 Oct 2026 03:27:51 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xJnDG-0003Vv-SK
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 03:27:46 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xJnDE-0000PL-R6
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 03:27:46 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1xJnD9-0007RL-Lj
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 09:27:39 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [NonGNU ELPA] Submission inquiry: clutch,
+ an interactive database client
+Date: Wed, 21 Oct 2026 16:34:58 -0400
+Message-ID: <jwvld7qhk0p.fsf-monnier+emacs@gnu.org>
+References: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+ <E1xJXxO-0077Vu-KE@fencepost.gnu.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:Tyj3iR43I97OAllyzCfEu4IYjd4=
+In-Reply-To: <E1xJXxO-0077Vu-KE@fencepost.gnu.org> (message from Richard
+ Stallman <rms@gnu.org> on Wed, 21 Oct 2026 11:10:22 -0400)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 0
+X-Spam_score: -0.1
+X-Spam_bar: /
+X-Spam_report: (-0.1 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_06_12=1.543,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.25, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 22 Oct 2026 07:27:47 -0000
+
+> NonGNU ELPA packages are not strictly speaking part of Emacs, but they
+> are closely associated with Emacs, so we want them to follow the same
+> legal policies as GNU packages.
+
+I strongly disagree here.  The whole point of NonGNU ELPA is that it
+does *not* follow the same legal policies.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Thu Oct 22 11:01:11 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xJuI2-0004im-Ju
+	for mharc-emacs-devel@gnu.org; Thu, 22 Oct 2026 11:01:10 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xJuI0-0004fi-25
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 11:01:08 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xJuHy-0005ee-Fy
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 11:01:07 -0400
+Received: from pmg2.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id AAF9780932;
+ Thu, 22 Oct 2026 11:01:04 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1792681264;
+ bh=iIvT4VbyZ1SN/vKzCForrQvJdHqnejRMN6AKptqbpoY=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=Laijuff2azdjDcSKdcKqVbcAbJ3FvOlQfbnuKIeUjYhH/r1f+/3D/U6qMWVP7WaqN
+ o51mX7UzqzDOnjxTFaaduthZ0u6JE/VSh9RG1sXzDB1hulGekeJ/NoKzodB9csjYRG
+ 25UyKNY6gmeunMXlfou7rdq5xANTxd0zW0gAljveaiIBjZ/SyDCfX+sLKU202zjsCk
+ 6YdHzld7sSrRZd+xv2PrMjZIoMFnOVxwrEPFfqh3/uQJG+C93VtOo2HoBLQVpAr7kL
+ GLSvcKPJR+gobdJveON9vr15bRjeTTG2gDvojw6PkJrR4WGX+0O4cs8adwmMccqLVJ
+ en6ScB7+yxtAw==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 1D3538073D;
+ Thu, 22 Oct 2026 11:01:04 -0400 (EDT)
+Received: from pastel (104-195-192-230.cpe.teksavvy.com [104.195.192.230])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id EC0FB120343;
+ Thu, 22 Oct 2026 11:01:03 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Jonas Bernoulli <jonas@bernoul.li>
+Cc: emacs-devel@gnu.org
+Subject: Re: [nongnu] elpa/magit 4a889060a1: git-commit-setup-capf: Add
+ dabbrev-capf at end of hook
+In-Reply-To: <20261022082831.53217C0FD6A@vcs2.savannah.gnu.org>
+Message-ID: <jwvy0bpkcka.fsf-monnier+emacs@gnu.org>
+References: <179265771076.17287.17229819570607534054@vcs2.savannah.gnu.org>
+ <20261022082831.53217C0FD6A@vcs2.savannah.gnu.org>
+Date: Thu, 22 Oct 2026 11:01:02 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.117 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 22 Oct 2026 15:01:08 -0000
+
+>     It is unclear why I decided to do the opposite in [1: 2366db4b].
+>     `dabbrev-capf' does not opt-in to being non-exclusive, so once it is
+>     called, subsequent functions are not.  It is unclear why this function
+>     does not opt-in.  Its also unclear why functions have to explicitly
+>     declare that they are non-exclusive; requiring functions to declare
+>     that the are exclusive would seem more natural.
+
+That's because the non-exclusive handling is an ugly hack with lots of
+undesirable behaviors.
+[ And I find it's hard to do better at that place.  ]
+
+My general recommendation is: don't use it, ever.
+Better use functions that combine two CAPF into one.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Thu Oct 22 15:38:24 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xJycF-0004rT-SJ
+	for mharc-emacs-devel@gnu.org; Thu, 22 Oct 2026 15:38:21 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xJyc7-0004ql-Io
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 15:38:12 -0400
+Received: from mout01.posteo.de ([185.67.36.65])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xJyc4-0002WE-7G
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 15:38:09 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout01.posteo.de (Postfix) with ESMTPS id D0A83240027
+ for <emacs-devel@gnu.org>; Thu, 22 Oct 2026 21:38:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1792697881;
+ bh=++Wv037etuWP+TjFVfSl6wmPj4iyYKEtXHpMnfaHU9E=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:From;
+ b=R0ZeuaaeUy+hb0dS2SGkFr6z6NtW3atp9OCVPoAQNiP7oO0gXOsnUCVevtBcg/7ed
+ ebglPVtgQO2O0LJBl7mlHz2457NhGOekA87A3ZmYnYEzRsDHwbVoD7URXVZsXrJ5Ye
+ VkheAbV5B7uCN6CK4Os4veNZVUfZwUXRDRmY8+wNMd9Os8ogLoh7SIY0rq6ZLoMmwb
+ CP6Lr+iJHMhfanmZ9O4d3mO2khTwkFqXB0DZN/8GQCVNnyZDVIJhVcJ1py02OIDXwn
+ o7VYk1P+sEGH51mHQfb91vIC95klm1IEkByi///KpuPDfvizhRgYQEPyiQiT736eLf
+ Tk95Yk5rYOQ/w==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4j9bzF16b0z6txv;
+ Thu, 22 Oct 2026 21:38:01 +0200 (CEST)
+From: Philip Kaludercic <philipk@posteo.net>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+Subject: Re: [NonGNU ELPA] Submission inquiry: clutch, an interactive
+ database client
+In-Reply-To: <jwvld7qhk0p.fsf-monnier+emacs@gnu.org>
+References: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+ <E1xJXxO-0077Vu-KE@fencepost.gnu.org>
+ <jwvld7qhk0p.fsf-monnier+emacs@gnu.org>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Thu, 22 Oct 2026 19:38:01 +0000
+Message-ID: <87ik2tr0fc.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=185.67.36.65; envelope-from=philipk@posteo.net;
+ helo=mout01.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 22 Oct 2026 19:38:12 -0000
+
+Stefan Monnier via "Emacs development discussions."
+<emacs-devel@gnu.org> writes:
+
+>> NonGNU ELPA packages are not strictly speaking part of Emacs, but they
+>> are closely associated with Emacs, so we want them to follow the same
+>> legal policies as GNU packages.
+>
+> I strongly disagree here.  The whole point of NonGNU ELPA is that it
+> does *not* follow the same legal policies.
+
+I strongly second Stefan's position!
+
+

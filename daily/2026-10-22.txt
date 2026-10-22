@@ -1,0 +1,755 @@
+emacs-devel messages from 2026-10-21T18:15:00+02:00 to 2026-10-22T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-21T18:17:24+02:00
+From: vhkdzszh@gmail.com
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <179259944455.56097.16621094599408093966@gmail.com>
+In-Reply-To: 
+References: 
+
+Hello,
+
+Before we settle the name, I should raise something that came up off-list.
+
+The package history contains two merged pull requests from GitHub Copilot
+branches, and recent fixes were prepared with an LLM-assisted editor.
+rms has just stated in the clutch thread that NonGNU ELPA does not
+include LLM-generated code.
+
+If that applies here, I would rather withdraw the submission than have
+the maintainers spend time on it.  If the policy is about generated code
+specifically, I can rewrite the sections that came from Copilot and
+document that in the commits.
+
+Which would you prefer?
+
+Kinney
+
+================================================================================
+Date: 2026-10-21T18:23:17+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <871p9jf2fe.fsf@athena.silentflame.com>
+In-Reply-To: <CAN+1Hbo-82F57wYCMKK-KK-TvSh3diw6K3V8c-iwfnJ4Gt9fjg@mail.gmail.com>
+References: <179259688821.96921.4536628848399111316@gmail.com>
+ <CAN+1Hbo-82F57wYCMKK-KK-TvSh3diw6K3V8c-iwfnJ4Gt9fjg@mail.gmail.com>
+
+Stéphane Marks [21/Oct 11:49am -04] wrote:
+> On Wed, Oct 21, 2026 at 11:35 AM <vhkdzszh@gmail.com> wrote:
+>
+>> Hello Sean,
+>>
+>> I would like to go with `ekp-wrap`, which Alexander Adolf proposed.
+>> "Wrap" is the term Emacs already uses for breaking text at line
+>> boundaries (word-wrap, visual-line-mode), so it says what the package
+>> does, and the prefix stays short enough to read.
+>>
+>> His other idea was `ekp-fill`.  I prefer "wrap" because the package also
+>> handles CJK text, where there is nothing to fill between.
+>>
+>> If you would rather avoid the "ekp" abbreviation altogether, I can use
+>> `knuth-plass-typeset`; I only worry that the longer prefix makes every
+>> public symbol heavier.
+>>
+>
+> It looks as if there are no commands in the package, so a longer, more
+> precise and descriptive package name space seems to have no harm to users.
+>
+> P.S. I just saw rms say in another thread that LLM-originated content is
+> not welcome in NonGNU ELPA so I'm not sure what that means for this package.
+
+Oh, is this packages LLM-authored?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-21T18:24:11+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87y0brdntg.fsf@athena.silentflame.com>
+In-Reply-To: <179259944455.56097.16621094599408093966@gmail.com>
+References: <179259944455.56097.16621094599408093966@gmail.com>
+
+vhkdzszh@gmail.com [22/Oct 12:17am +08] wrote:
+> Hello,
+>
+> Before we settle the name, I should raise something that came up off-list.
+>
+> The package history contains two merged pull requests from GitHub Copilot
+> branches, and recent fixes were prepared with an LLM-assisted editor.
+> rms has just stated in the clutch thread that NonGNU ELPA does not
+> include LLM-generated code.
+>
+> If that applies here, I would rather withdraw the submission than have
+> the maintainers spend time on it.  If the policy is about generated code
+> specifically, I can rewrite the sections that came from Copilot and
+> document that in the commits.
+
+We do have that policy, but I don't quite understand what you say
+here -- what would the policy be about, if not generated code?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-21T18:25:05+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87v76vdnry.fsf@athena.silentflame.com>
+In-Reply-To: <179259688821.96921.4536628848399111316@gmail.com>
+References: <179259688821.96921.4536628848399111316@gmail.com>
+
+vhkdzszh@gmail.com [21/Oct 11:34pm +08] wrote:
+> Hello Sean,
+>
+> I would like to go with `ekp-wrap`, which Alexander Adolf proposed.
+> "Wrap" is the term Emacs already uses for breaking text at line
+> boundaries (word-wrap, visual-line-mode), so it says what the package
+> does, and the prefix stays short enough to read.
+>
+> His other idea was `ekp-fill`.  I prefer "wrap" because the package also
+> handles CJK text, where there is nothing to fill between.
+
+Thank you for considering the feedback.  It's true that fill is the
+usual Emacs term for this, even for CJK text, so ekp-fill is probably
+more useful.
+
+> If you would rather avoid the "ekp" abbreviation altogether, I can use
+> `knuth-plass-typeset`; I only worry that the longer prefix makes every
+> public symbol heavier.
+
+You could consider using the symbol shorthands feature of Emacs.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-21T18:39:45+02:00
+From: vhkdzszh@gmail.com
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <179260078509.84898.7507602913885656282@gmail.com>
+In-Reply-To: 
+References: 
+
+Sorry, that sentence was muddled.  What I meant was simpler: the two
+Copilot merges are LLM-generated code and therefore fall under the
+policy, and I am prepared to rewrite those parts.  The "if" was not
+meant to suggest the policy is about something else.
+
+So the question is only whether rewriting the affected code is enough
+for you, or whether the history itself makes the submission
+unacceptable.  Either answer is fine; I would rather know than guess.
+
+On the name: ekp-fill it is.  I will look at symbol shorthands for the
+prefix.
+
+Kinney
+
+================================================================================
+Date: 2026-10-21T19:08:05+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <86h5if6ky2.fsf@gnu.org>
+In-Reply-To: <179258443601.84793.12863871076813397901@gmail.com>
+ (vhkdzszh@gmail.com)
+References: <179258443601.84793.12863871076813397901@gmail.com>
+
+> From: vhkdzszh@gmail.com
+> Date: Wed, 21 Oct 2026 20:07:16 +0800
+> 
+> Hello,
+> 
+> I would like to submit ekp for NonGNU ELPA.
+> 
+>   Package:    ekp
+>   Repository: https://github.com/emacs-taf/ekp
+>   Maintainer: Kinney Zhang <vhkdzszh@gmail.com>
+>   License:    GPL-3.0-or-later
+>   Requires:   Emacs 29.1
+> 
+> ekp implements Knuth-Plass optimal line breaking for Emacs buffers.
+> Paragraphs are split into boxes, a globally optimal break sequence is
+> chosen, and lines are justified to the pixel.  It supports mixed CJK and
+> Latin text, kinsoku rules, discretionary hyphenation, and per-region
+> break policies for URLs, paths and identifiers.
+
+Thanks, but why is this an add-on package instead of being part of
+core Emacs features?  Line breaking is central to any serious text
+editing, so not having this in Emacs sounds like a shame to me.
+
+================================================================================
+Date: 2026-10-21T19:10:48+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: The Kitty Keyboard Protocol and C-g
+Message-ID: <86fqxz6ktj.fsf@gnu.org>
+In-Reply-To: <87mrs7fcga.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Wed, 21 Oct 2026 13:46:45 +0100)
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com> <86wlrc7b7b.fsf@gnu.org>
+ <87a4o8h3dh.fsf@athena.silentflame.com> <86qzhk7558.fsf@gnu.org>
+ <87mrs7fcga.fsf@athena.silentflame.com>
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Cc: emacs-devel@gnu.org
+> Date: Wed, 21 Oct 2026 13:46:45 +0100
+> 
+> Eli Zaretskii [20/Oct  6:39pm +03] wrote:
+> >> From: Sean Whitton <spwhitton@spwhitton.name>
+> >> Cc: emacs-devel@gnu.org
+> >> Date: Tue, 20 Oct 2026 15:07:38 +0100
+> >>
+> >> Eli Zaretskii [20/Oct  4:28pm +03] wrote:
+> >> > w32console.el doesn't (although I'm not sure it isn't a feature).
+> >>
+> >> I think there are multiple different consoles in Windows, right?
+> >
+> > There are 2: the old one (ConHost) and the Windows Terminal.
+> >
+> >> Does Emacs support "Microsoft terminal"?
+> >
+> > If you mean the Windows Terminal, then yes.
+> 
+> It means <https://github.com/microsoft/terminal>.
+
+Which says right on the first line of README:
+
+   Welcome to the Windows Terminal [...]
+
+So yes, that's the one.
+
+================================================================================
+Date: 2026-10-21T19:44:30+02:00
+From: vhkdzszh@gmail.com
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <179260467030.59261.5772722536576099677@gmail.com>
+In-Reply-To: <86h5if6ky2.fsf@gnu.org>
+References: <86h5if6ky2.fsf@gnu.org>
+
+Thanks.  The package grew inside a rendering framework where line
+breaking had to be pluggable, so it started life outside the core.  I
+would be glad to see it in core eventually; I assumed a core change
+needs copyright assignment and a much slower review, so I began with a
+package.
+
+One thing you may not have seen yet: I wrote earlier in this thread that
+two merged pull requests came from Copilot, and recent fixes were
+prepared with an LLM-assisted editor.  If the policy also applies to
+core contributions, then this is a dead end until those parts are
+rewritten.  I am willing to rewrite them either way.
+
+Kinney
+
+================================================================================
+Date: 2026-10-21T19:57:00+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [ELPA] New package: isbn.el
+Message-ID: <87a4o7rl78.fsf@posteo.net>
+In-Reply-To: <m2ecdj8ahv.fsf@fclr.net>
+References: <m2bjaiw42g.fsf@fclr.net> <871pb8hnn5.fsf@posteo.net>
+ <m2pkymkv47.fsf@fclr.net> <87h5jwokxn.fsf@posteo.net>
+ <m233vflu2d.fsf@fclr.net> <m2bj8ycye2.fsf@fclr.net>
+ <87mrshba69.fsf@posteo.net> <m21p9sbe61.fsf@fclr.net>
+ <87tsmk8t5o.fsf@posteo.net> <m2tsmk8b5f.fsf@fclr.net>
+ <874ieipz0k.fsf@posteo.net> <m2ld7s8hzk.fsf@fclr.net>
+ <jwvqzhjlrl0.fsf-monnier+emacs@gnu.org> <87ecdjsgp3.fsf@posteo.net>
+ <m2ecdj8ahv.fsf@fclr.net>
+
+Maximilian Cook <maximilian@fclr.net> writes:
+
+>> I didn't forget git push, I forgot to git pull, which is why git push
+>> failed ^^.  That has been remedied now, but locally the package still
+>> won't build...
+>>
+>> % make fetch/isbn
+>> emacs --batch -Q -l admin/elpa-admin.el \
+>>          -f elpaa-batch-pkg-spec-make-dependencies .pkg-descs.mk
+>> emacs --batch -l admin/elpa-admin.el -f elpaa-batch-fetch-and-show "isbn"
+>> Fetching updates for isbn...
+>> New package isbn hasn’t been pushed to origin yet
+>> % make build/isbn
+>> emacs --batch -l .../elpa/admin/elpa-admin.el	\
+>>          -f elpaa-batch-make-one-package isbn
+>> Not pushed to origin yet.  Not updating worktree
+>> ======== Building tarball archive-devel/isbn-0.1.0.0.20261017.78.tar...
+>> Problem with copyright notices:
+>> isbn/isbn.el:;; Copyright (C) 2026 Maximilian Cook
+>> Missing copyright notice in isbn/isbn.el
+>> Build error for archive-devel/isbn-0.1.0.0.20261017.78.tar: (error "Abort")
+>> ######## Build of package archive-devel/isbn-0.1.0.0.20261017.78.tar FAILED!!
+>> ======== Building tarball archive/isbn-0.1.0.tar...
+>> Problem with copyright notices:
+>> isbn/isbn.el:;; Copyright (C) 2026 Maximilian Cook
+>> Missing copyright notice in isbn/isbn.el
+>> Build error for archive/isbn-0.1.0.tar: (error "Abort")
+>> ######## Build of package archive/isbn-0.1.0.tar FAILED!!
+>
+> I now see it up, which is great.  Anything prior to v0.2.0 won't build
+> since I updated the copyright assignment at v0.2.0.  Is there anything
+> to be done on my end to fix the build error?
+
+No, it seems that this was only an issue on my local system, but on the
+build server it appeared to go through: https://elpa.gnu.org/packages/isbn.html
+
+================================================================================
+Date: 2026-10-21T20:01:09+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <8733tzrl0d.fsf@posteo.net>
+In-Reply-To: <E1xJXw4-0075JW-GL@fencepost.gnu.org>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <338030d76e7f7283ef0a26ab02af0d18@dialetheia.xyz>
+ <87ecdo8r2s.fsf@posteo.net> <86zewagj18.fsf@sdf.org>
+ <87fqy1txkj.fsf@posteo.net> <E1xJXw4-0075JW-GL@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > In my estimation, that is sadly a problem with dynamic modules that we
+>   > are not in a good position to solve.  It is possible, like you are
+>   > doing, to have a Makefile with a few common package managers, but that
+>   > is never really portable :/
+>
+> This mention of "a few common package managers" makes me worried.  In
+> general, we can't trust package managers not to pull in nonfree
+> modules.  Whether there might really be a problem depends
+> on what job is being done with those package managers; of course,
+> the words above don't say.
+
+Given the dependencies that the Emacs package needs, it would require a
+pathological package manager to install nonfree dependencies.
+
+> Can you explain what job is being done here with those package
+> managers?  Perhaps show the pertinent part of the makefile?
+
+You can find out everything you need by checking out the repository:
+https://codeberg.org/MonadicSheep/emacs-reader
+
+> We may need someone to study that code carefully and verify that _with
+> each package manager_ it avoids linking with anything nonfree, unless
+> that thing fits into the "system library" exception in GPLv3.
+>
+> Are these the "package managers" such as dpkg, used by system distros?
+
+Yes.
+
+> Or are these the "package managers" such as NPM that will often link
+> your code with nonfree code by default?  Or is it some other kind of
+> "package manager"?  Whichever it is, why does Emacs need to deal with
+> them in order to build and use a dynamic module?
+
+If the user doesn't have the necessary dependencies on their system, it
+will try to install them for the user.
+
+================================================================================
+Date: 2026-10-21T20:20:42+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87y0bqrk3q.fsf@posteo.net>
+In-Reply-To: <179260078509.84898.7507602913885656282@gmail.com>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+
+(General point, can you try to respond directly to messages so that you
+don't break threading?)
+
+vhkdzszh@gmail.com writes:
+
+> Sorry, that sentence was muddled.  What I meant was simpler: the two
+> Copilot merges are LLM-generated code and therefore fall under the
+> policy, and I am prepared to rewrite those parts.  The "if" was not
+> meant to suggest the policy is about something else.
+>
+> So the question is only whether rewriting the affected code is enough
+> for you, or whether the history itself makes the submission
+> unacceptable.  Either answer is fine; I would rather know than guess.
+
+LLM generated code is a copyright issue for us.  If the changes are
+undone and rewritten (ideally by someone not familiar with the initial
+implementation) then it shouldn't be an issue.
+
+Regarding NonGNU ELPA:  I do recall Richard mentioning that LLM
+generated code shouldn't be added to NonGNU ELPA, but this policy was
+never agreed on.  Before the fact, it was already the case that we had
+LLM generated code, which is not an issue from the copyright assignment
+perspective, since packages in NonGNU ELPA don't have to have the
+copyright assigned to the FSF.
+
+So the question is up to you, if you want to have the package in NonGNU
+ELPA or in GNU ELPA/core Emacs as Eli suggested. 
+
+> On the name: ekp-fill it is.  I will look at symbol shorthands for the
+> prefix.
+>
+> Kinney
+
+================================================================================
+Date: 2026-10-21T20:31:33+02:00
+From: vhkdzszh@gmail.com
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <179260749323.17379.16571524871324292533@gmail.com>
+In-Reply-To: <87y0bqrk3q.fsf@posteo.net>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+
+Thanks, and sorry about the threading -- I was using a send path that
+dropped the reference headers.  That is fixed now.
+
+Given that, I would like to go with NonGNU ELPA.  I do not want to
+argue with Richard's position, so if he objects I will withdraw and
+wait rather than push it through.
+
+If the maintainers would rather see it in GNU ELPA or core, I am
+prepared to rewrite the affected code; I only would not want to rewrite
+it and then find the question still open.
+
+Kinney
+
+在 2026-10-21 18:20，Philip Kaludercic <philipk@posteo.net> 写道：
+> 
+> (General point, can you try to respond directly to messages so that you
+> don't break threading?)
+> 
+> vhkdzszh@gmail.com writes:
+> 
+> > Sorry, that sentence was muddled.  What I meant was simpler: the two
+> > Copilot merges are LLM-generated code and therefore fall under the
+> > policy, and I am prepared to rewrite those parts.  The "if" was not
+> > meant to suggest the policy is about something else.
+> >
+> > So the question is only whether rewriting the affected code is enough
+> > for you, or whether the history itself makes the submission
+> > unacceptable.  Either answer is fine; I would rather know than guess.
+> 
+> LLM generated code is a copyright issue for us.  If the changes are
+> undone and rewritten (ideally by someone not familiar with the initial
+> implementation) then it shouldn't be an issue.
+> 
+> Regarding NonGNU ELPA:  I do recall Richard mentioning that LLM
+> generated code shouldn't be added to NonGNU ELPA, but this policy was
+> never agreed on.  Before the fact, it was already the case that we had
+> LLM generated code, which is not an issue from the copyright assignment
+> perspective, since packages in NonGNU ELPA don't have to have the
+> copyright assigned to the FSF.
+> 
+> So the question is up to you, if you want to have the package in NonGNU
+> ELPA or in GNU ELPA/core Emacs as Eli suggested. 
+> 
+> > On the name: ekp-fill it is.  I will look at symbol shorthands for the
+> > prefix.
+> >
+> > Kinney
+
+================================================================================
+Date: 2026-10-21T20:36:38+02:00
+From: Tushar <tusharhero@sdf.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <864iee99zd.fsf@sdf.org>
+In-Reply-To: <8733tzrl0d.fsf@posteo.net>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <338030d76e7f7283ef0a26ab02af0d18@dialetheia.xyz>
+ <87ecdo8r2s.fsf@posteo.net> <86zewagj18.fsf@sdf.org>
+ <87fqy1txkj.fsf@posteo.net> <E1xJXw4-0075JW-GL@fencepost.gnu.org>
+ <8733tzrl0d.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> Richard Stallman <rms@gnu.org> writes:
+>> Or are these the "package managers" such as NPM that will often link
+>> your code with nonfree code by default?  Or is it some other kind of
+>> "package manager"?  Whichever it is, why does Emacs need to deal with
+>> them in order to build and use a dynamic module?
+>
+> If the user doesn't have the necessary dependencies on their system, it
+> will try to install them for the user.
+>
+
+This is not true. We do not try to install the dependencies.
+
+-- 
+tusharhero
+
+================================================================================
+Date: 2026-10-21T20:50:16+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <87tsmeriqi.fsf@posteo.net>
+In-Reply-To: <864iee99zd.fsf@sdf.org>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <338030d76e7f7283ef0a26ab02af0d18@dialetheia.xyz>
+ <87ecdo8r2s.fsf@posteo.net> <86zewagj18.fsf@sdf.org>
+ <87fqy1txkj.fsf@posteo.net> <E1xJXw4-0075JW-GL@fencepost.gnu.org>
+ <8733tzrl0d.fsf@posteo.net> <864iee99zd.fsf@sdf.org>
+
+Tushar <tusharhero@sdf.org> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>> Richard Stallman <rms@gnu.org> writes:
+>>> Or are these the "package managers" such as NPM that will often link
+>>> your code with nonfree code by default?  Or is it some other kind of
+>>> "package manager"?  Whichever it is, why does Emacs need to deal with
+>>> them in order to build and use a dynamic module?
+>>
+>> If the user doesn't have the necessary dependencies on their system, it
+>> will try to install them for the user.
+>>
+>
+> This is not true. We do not try to install the dependencies.
+
+My apologies, I misremembered in that case!  You just check for the
+existence of specific package managers to decide whether or not you want
+to use pkg-config to supply compiler and build flags.
+
+================================================================================
+Date: 2026-10-21T20:52:46+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87pkx2rima.fsf@posteo.net>
+In-Reply-To: <179260749323.17379.16571524871324292533@gmail.com>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com>
+
+vhkdzszh@gmail.com writes:
+
+> Thanks, and sorry about the threading -- I was using a send path that
+> dropped the reference headers.  That is fixed now.
+
+While on the topic, you should also try to stick with wide replies as
+not everyone following the mailing list is subscribed to it.
+
+> Given that, I would like to go with NonGNU ELPA.  I do not want to
+> argue with Richard's position, so if he objects I will withdraw and
+> wait rather than push it through.
+>
+> If the maintainers would rather see it in GNU ELPA or core, I am
+> prepared to rewrite the affected code; I only would not want to rewrite
+> it and then find the question still open.
+
+If you think that is doable, I would recommend taking that path.
+
+> Kinney
+>
+> 在 2026-10-21 18:20，Philip Kaludercic <philipk@posteo.net> 写道：
+>> 
+>> (General point, can you try to respond directly to messages so that you
+>> don't break threading?)
+>> 
+>> vhkdzszh@gmail.com writes:
+>> 
+>> > Sorry, that sentence was muddled.  What I meant was simpler: the two
+>> > Copilot merges are LLM-generated code and therefore fall under the
+>> > policy, and I am prepared to rewrite those parts.  The "if" was not
+>> > meant to suggest the policy is about something else.
+>> >
+>> > So the question is only whether rewriting the affected code is enough
+>> > for you, or whether the history itself makes the submission
+>> > unacceptable.  Either answer is fine; I would rather know than guess.
+>> 
+>> LLM generated code is a copyright issue for us.  If the changes are
+>> undone and rewritten (ideally by someone not familiar with the initial
+>> implementation) then it shouldn't be an issue.
+>> 
+>> Regarding NonGNU ELPA:  I do recall Richard mentioning that LLM
+>> generated code shouldn't be added to NonGNU ELPA, but this policy was
+>> never agreed on.  Before the fact, it was already the case that we had
+>> LLM generated code, which is not an issue from the copyright assignment
+>> perspective, since packages in NonGNU ELPA don't have to have the
+>> copyright assigned to the FSF.
+>> 
+>> So the question is up to you, if you want to have the package in NonGNU
+>> ELPA or in GNU ELPA/core Emacs as Eli suggested. 
+>> 
+>> > On the name: ekp-fill it is.  I will look at symbol shorthands for the
+>> > prefix.
+>> >
+>> > Kinney
+
+================================================================================
+Date: 2026-10-21T22:34:58+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [NonGNU ELPA] Submission inquiry: clutch,
+ an interactive database client
+Message-ID: <jwvld7qhk0p.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <E1xJXxO-0077Vu-KE@fencepost.gnu.org> (message from Richard
+ Stallman <rms@gnu.org> on Wed, 21 Oct 2026 11:10:22 -0400)
+References: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+ <E1xJXxO-0077Vu-KE@fencepost.gnu.org>
+
+> NonGNU ELPA packages are not strictly speaking part of Emacs, but they
+> are closely associated with Emacs, so we want them to follow the same
+> legal policies as GNU packages.
+
+I strongly disagree here.  The whole point of NonGNU ELPA is that it
+does *not* follow the same legal policies.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-22T07:03:24+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <865wyu72eb.fsf@gnu.org>
+In-Reply-To: <87y0bqrk3q.fsf@posteo.net> (message from Philip Kaludercic on
+ Wed, 21 Oct 2026 18:20:42 +0000)
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+
+> From: Philip Kaludercic <philipk@posteo.net>
+> Cc: emacs-devel@gnu.org
+> Date: Wed, 21 Oct 2026 18:20:42 +0000
+> 
+> 
+> > So the question is only whether rewriting the affected code is enough
+> > for you, or whether the history itself makes the submission
+> > unacceptable.  Either answer is fine; I would rather know than guess.
+> 
+> LLM generated code is a copyright issue for us.  If the changes are
+> undone and rewritten (ideally by someone not familiar with the initial
+> implementation) then it shouldn't be an issue.
+> 
+> Regarding NonGNU ELPA:  I do recall Richard mentioning that LLM
+> generated code shouldn't be added to NonGNU ELPA, but this policy was
+> never agreed on.  Before the fact, it was already the case that we had
+> LLM generated code, which is not an issue from the copyright assignment
+> perspective, since packages in NonGNU ELPA don't have to have the
+> copyright assigned to the FSF.
+> 
+> So the question is up to you, if you want to have the package in NonGNU
+> ELPA or in GNU ELPA/core Emacs as Eli suggested. 
+
+IMO, rewriting that code is a good idea anyway, because that makes
+this package much easier to install anywhere.
+
+================================================================================
+Date: 2026-10-22T07:14:20+02:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <864iee71w3.fsf@gnu.org>
+In-Reply-To: <179260749323.17379.16571524871324292533@gmail.com>
+ (vhkdzszh@gmail.com)
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com>
+
+> From: vhkdzszh@gmail.com
+> Date: Thu, 22 Oct 2026 02:31:33 +0800
+> 
+> Thanks, and sorry about the threading -- I was using a send path that
+> dropped the reference headers.  That is fixed now.
+> 
+> Given that, I would like to go with NonGNU ELPA.  I do not want to
+> argue with Richard's position, so if he objects I will withdraw and
+> wait rather than push it through.
+> 
+> If the maintainers would rather see it in GNU ELPA or core, I am
+> prepared to rewrite the affected code; I only would not want to rewrite
+> it and then find the question still open.
+
+I stand by my original comment: I Think that the right place for such
+functionality is in Emacs core, right there near fill-paragraph and
+stuff.  The default line-breaking in Emacs is good, but it sometimes
+does things sub-optimally, so making it better is always welcome.
+
+More generally, bringing Emacs in compliance with the Unicode
+Line-breaking Algorithm is our long-term goal, and this package is one
+step in that direction (and perhaps can be later extended to do more
+of what Unicode mandates, see UAX#14).
+
+So I suggest to look at rewriting the LLM-generated parts as one small
+measure towards incorporating this in Emacs (there will be others,
+like how to let the user control this etc.), and do it now if it's
+feasible.  If nothing else, it will make our further steps much
+simpler.
+
+Thanks.
+
+================================================================================
+Date: 2026-10-22T09:20:42+02:00
+From: Kinney Zhang <vhkdzszh@gmail.com>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <179265364218.81518.17612804954593858950@gmail.com>
+In-Reply-To: <864iee71w3.fsf@gnu.org>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com> <864iee71w3.fsf@gnu.org>
+
+Thank you.  Then I will aim for core.
+
+I will rewrite the LLM-generated parts.  That is not a quick job: the
+affected code is around 800 lines, and doing it properly means
+re-deriving the logic and re-running the acceptance tests, so I expect
+weeks rather than days.  The point is not only to satisfy the policy: I
+want the result to be code that users can read, reason about and change
+for themselves.
+
+I will come back when it is done and the tests pass, and we can talk
+about how a core contribution should look.
+
+Kinney
+
+在 2026-10-22 08:14，Eli Zaretskii <eliz@gnu.org> 写道：
+> > From: vhkdzszh@gmail.com
+> > Date: Thu, 22 Oct 2026 02:31:33 +0800
+> > 
+> > Thanks, and sorry about the threading -- I was using a send path that
+> > dropped the reference headers.  That is fixed now.
+> > 
+> > Given that, I would like to go with NonGNU ELPA.  I do not want to
+> > argue with Richard's position, so if he objects I will withdraw and
+> > wait rather than push it through.
+> > 
+> > If the maintainers would rather see it in GNU ELPA or core, I am
+> > prepared to rewrite the affected code; I only would not want to rewrite
+> > it and then find the question still open.
+> 
+> I stand by my original comment: I Think that the right place for such
+> functionality is in Emacs core, right there near fill-paragraph and
+> stuff.  The default line-breaking in Emacs is good, but it sometimes
+> does things sub-optimally, so making it better is always welcome.
+> 
+> More generally, bringing Emacs in compliance with the Unicode
+> Line-breaking Algorithm is our long-term goal, and this package is one
+> step in that direction (and perhaps can be later extended to do more
+> of what Unicode mandates, see UAX#14).
+> 
+> So I suggest to look at rewriting the LLM-generated parts as one small
+> measure towards incorporating this in Emacs (there will be others,
+> like how to let the user control this etc.), and do it now if it's
+> feasible.  If nothing else, it will make our further steps much
+> simpler.
+> 
+> Thanks.
+
+================================================================================
+Date: 2026-10-22T17:01:02+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [nongnu] elpa/magit 4a889060a1: git-commit-setup-capf: Add
+ dabbrev-capf at end of hook
+Message-ID: <jwvy0bpkcka.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261022082831.53217C0FD6A@vcs2.savannah.gnu.org>
+References: <179265771076.17287.17229819570607534054@vcs2.savannah.gnu.org>
+ <20261022082831.53217C0FD6A@vcs2.savannah.gnu.org>
+
+>     It is unclear why I decided to do the opposite in [1: 2366db4b].
+>     `dabbrev-capf' does not opt-in to being non-exclusive, so once it is
+>     called, subsequent functions are not.  It is unclear why this function
+>     does not opt-in.  Its also unclear why functions have to explicitly
+>     declare that they are non-exclusive; requiring functions to declare
+>     that the are exclusive would seem more natural.
+
+That's because the non-exclusive handling is an ugly hack with lots of
+undesirable behaviors.
+[ And I find it's hard to do better at that place.  ]
+
+My general recommendation is: don't use it, ever.
+Better use functions that combine two CAPF into one.
+
+
+=== Stefan
+
