@@ -1,0 +1,346 @@
+emacs-devel messages from 2026-10-22T18:15:00+02:00 to 2026-10-23T18:15:00+02:00
+
+================================================================================
+Date: 2026-10-22T21:38:01+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] Submission inquiry: clutch, an interactive
+ database client
+Message-ID: <87ik2tr0fc.fsf@posteo.net>
+In-Reply-To: <jwvld7qhk0p.fsf-monnier+emacs@gnu.org>
+References: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+ <E1xJXxO-0077Vu-KE@fencepost.gnu.org>
+ <jwvld7qhk0p.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier via "Emacs development discussions."
+<emacs-devel@gnu.org> writes:
+
+>> NonGNU ELPA packages are not strictly speaking part of Emacs, but they
+>> are closely associated with Emacs, so we want them to follow the same
+>> legal policies as GNU packages.
+>
+> I strongly disagree here.  The whole point of NonGNU ELPA is that it
+> does *not* follow the same legal policies.
+
+I strongly second Stefan's position!
+
+================================================================================
+Date: 2026-10-22T23:42:07+02:00
+From: Maximilian Cook <maximilian@fclr.net>
+Subject: Re: [ELPA] New package: isbn.el
+Message-ID: <m27bj98lao.fsf@fclr.net>
+In-Reply-To: <87a4o7rl78.fsf@posteo.net>
+References: <m2bjaiw42g.fsf@fclr.net> <871pb8hnn5.fsf@posteo.net>
+ <m2pkymkv47.fsf@fclr.net> <87h5jwokxn.fsf@posteo.net>
+ <m233vflu2d.fsf@fclr.net> <m2bj8ycye2.fsf@fclr.net>
+ <87mrshba69.fsf@posteo.net> <m21p9sbe61.fsf@fclr.net>
+ <87tsmk8t5o.fsf@posteo.net> <m2tsmk8b5f.fsf@fclr.net>
+ <874ieipz0k.fsf@posteo.net> <m2ld7s8hzk.fsf@fclr.net>
+ <jwvqzhjlrl0.fsf-monnier+emacs@gnu.org> <87ecdjsgp3.fsf@posteo.net>
+ <m2ecdj8ahv.fsf@fclr.net> <87a4o7rl78.fsf@posteo.net>
+
+> No, it seems that this was only an issue on my local system, but on the
+> build server it appeared to go through: https://elpa.gnu.org/packages/isbn.html
+
+It seems everything is good then, and we can close the thread.  Again,
+thank you for all your help!
+
+-- 
+Maximilian Cook
+
+================================================================================
+Date: 2026-10-23T07:21:48+02:00
+From: Ryan Prior <rprior@protonmail.com>
+Subject: Re: Contributing xc.el to ELPA
+Message-ID: <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+In-Reply-To: <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+
+On Saturday, July 18th, 2026 at 12:40 AM, Ryan Prior <rprior@protonmail.com> wrote:
+
+> I've pushed a new minor version update to Codeberg responsive to feedback and incorporating your patches. I appreciate your time and attention!
+
+
+It's been a minute, but I got confirmation today from the FSF that my copyright assignment for Emacs is on the books.
+
+In terms of my xc.el package https://codeberg.org/ryanprior/xc.el/ I've been using it daily for the past months and pleased with where it's at for the time being. I would be happy to contribute it to GNU elpa.
+
+If osmebod
+
+Thanks,
+Ryan
+
+================================================================================
+Date: 2026-10-23T11:49:23+02:00
+From: Evgeny Zajcev <lg.zevlg@gmail.com>
+Subject: [PATCH] yank-media improvements
+Message-ID: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+This patch addresses two things in the yank-media:
+1. Error caused by empty selection with matching mime type
+2. Ability to avoid querying user for mime type selection when several
+selection types matches
+
+If "text/.*" type is registered, say `(yank-media-handler '("text/.*")
+#'ignore)` and you copy image the clipboard and try to yank it with `M-x
+yank-media RET` you will get a backtrace:
+Debugger entered--Lisp error: (args-out-of-range "" -1)
+  elt("" -1)
+  (= 0 (elt data (1- (length data))))
+  (if (= 0 (elt data (1- (length data)))) (substring data 0 (1- (length
+data))) data)
+  (if coding-system (decode-coding-string data coding-system) (if (= 0 (elt
+data (1- (length data)))) (substring data 0 (1- (length data))) data))
+  (let ((coding-system (yank-media--utf-16-p data))) (if coding-system
+(decode-coding-string data coding-system) (if (= 0 (elt data (1- (length
+data)))) (substring data 0 (1- (length data))) data)))
+  (cond ((not (stringp data)) (format "%s" data)) ((string-match-p
+"\\`text/" (symbol-name data-type)) (let ((coding-system
+(yank-media--utf-16-p data))) (if coding-system (decode-coding-string data
+coding-system) (if (= 0 (elt data (1- ...))) (substring data 0 (1- (length
+data))) data)))) (t data))
+  yank-media-types--format(text/_moz_htmlcontext "")
+  (if (string-match-p "\\`text/" (symbol-name data-type))
+(yank-media-types--format data-type data) data)
+  (if data (if (string-match-p "\\`text/" (symbol-name data-type))
+(yank-media-types--format data-type data) data) nil)
+  (let* ((data (and t (gui-get-selection 'CLIPBOARD data-type)))) (if data
+(if (string-match-p "\\`text/" (symbol-name data-type))
+(yank-media-types--format data-type data) data) nil))
+  yank-media--get-selection(text/_moz_htmlcontext)
+...
+
+
+It is common to register "image/.*" handler, however, copying an image into
+the clipboard might put into selection multiple mime types matching this
+pattern, for example image/png and image/jpeg.  Executing `M-x yank-media
+RET' will prompt you to choose a mime type.  Having "image/.*" handler is
+essential, because some of image format might be missing in Emacs, and you
+still be able to yank a media.  Therefore, `no-query' prefix argument is
+added to avoid querying for the mime type and use first matching one.
+
+Thanks
+
+-- 
+lg
+
+================================================================================
+Date: 2026-10-23T11:51:10+02:00
+From: Evgeny Zajcev <lg.zevlg@gmail.com>
+Subject: Re: [PATCH] yank-media improvements
+Message-ID: <CAO=W_ZomJVuyS5jVkuDk4Sb3x2q6fxBd05f7UvVVsHX3to+qrw@mail.gmail.com>
+In-Reply-To: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+References: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+
+I forgot to attach the patch itself :)
+
+пт, 23 окт. 2026 г. в 12:49, Evgeny Zajcev <lg.zevlg@gmail.com>:
+
+> This patch addresses two things in the yank-media:
+> 1. Error caused by empty selection with matching mime type
+> 2. Ability to avoid querying user for mime type selection when several
+> selection types matches
+>
+> If "text/.*" type is registered, say `(yank-media-handler '("text/.*")
+> #'ignore)` and you copy image the clipboard and try to yank it with `M-x
+> yank-media RET` you will get a backtrace:
+> Debugger entered--Lisp error: (args-out-of-range "" -1)
+>   elt("" -1)
+>   (= 0 (elt data (1- (length data))))
+>   (if (= 0 (elt data (1- (length data)))) (substring data 0 (1- (length
+> data))) data)
+>   (if coding-system (decode-coding-string data coding-system) (if (= 0
+> (elt data (1- (length data)))) (substring data 0 (1- (length data))) data))
+>   (let ((coding-system (yank-media--utf-16-p data))) (if coding-system
+> (decode-coding-string data coding-system) (if (= 0 (elt data (1- (length
+> data)))) (substring data 0 (1- (length data))) data)))
+>   (cond ((not (stringp data)) (format "%s" data)) ((string-match-p
+> "\\`text/" (symbol-name data-type)) (let ((coding-system
+> (yank-media--utf-16-p data))) (if coding-system (decode-coding-string data
+> coding-system) (if (= 0 (elt data (1- ...))) (substring data 0 (1- (length
+> data))) data)))) (t data))
+>   yank-media-types--format(text/_moz_htmlcontext "")
+>   (if (string-match-p "\\`text/" (symbol-name data-type))
+> (yank-media-types--format data-type data) data)
+>   (if data (if (string-match-p "\\`text/" (symbol-name data-type))
+> (yank-media-types--format data-type data) data) nil)
+>   (let* ((data (and t (gui-get-selection 'CLIPBOARD data-type)))) (if data
+> (if (string-match-p "\\`text/" (symbol-name data-type))
+> (yank-media-types--format data-type data) data) nil))
+>   yank-media--get-selection(text/_moz_htmlcontext)
+> ...
+>
+>
+> It is common to register "image/.*" handler, however, copying an image
+> into the clipboard might put into selection multiple mime types matching
+> this pattern, for example image/png and image/jpeg.  Executing `M-x
+> yank-media RET' will prompt you to choose a mime type.  Having "image/.*"
+> handler is essential, because some of image format might be missing in
+> Emacs, and you still be able to yank a media.  Therefore, `no-query' prefix
+> argument is added to avoid querying for the mime type and use first
+> matching one.
+>
+> Thanks
+>
+> --
+> lg
+>
+
+
+-- 
+lg
+
+================================================================================
+Date: 2026-10-23T12:28:27+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87fqxwemno.fsf@athena.silentflame.com>
+In-Reply-To: <179260078509.84898.7507602913885656282@gmail.com>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+
+vhkdzszh@gmail.com [22/Oct 12:39am +08] wrote:
+> Sorry, that sentence was muddled.  What I meant was simpler: the two
+> Copilot merges are LLM-generated code and therefore fall under the
+> policy, and I am prepared to rewrite those parts.  The "if" was not
+> meant to suggest the policy is about something else.
+>
+> So the question is only whether rewriting the affected code is enough
+> for you, or whether the history itself makes the submission
+> unacceptable.  Either answer is fine; I would rather know than guess.
+>
+> On the name: ekp-fill it is.  I will look at symbol shorthands for the
+> prefix.
+
+The Git history doesn't matter, no.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-23T12:29:29+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87cxt0emly.fsf@athena.silentflame.com>
+In-Reply-To: <179265364218.81518.17612804954593858950@gmail.com>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com>
+ <864iee71w3.fsf@gnu.org>
+ <179265364218.81518.17612804954593858950@gmail.com>
+
+Kinney Zhang [22/Oct  3:20pm +08] wrote:
+> Thank you.  Then I will aim for core.
+>
+> I will rewrite the LLM-generated parts.  That is not a quick job: the
+> affected code is around 800 lines, and doing it properly means
+> re-deriving the logic and re-running the acceptance tests, so I expect
+> weeks rather than days.  The point is not only to satisfy the policy: I
+> want the result to be code that users can read, reason about and change
+> for themselves.
+>
+> I will come back when it is done and the tests pass, and we can talk
+> about how a core contribution should look.
+
+Thanks.  Please make sure you don't read the LLM-generated code while
+rewriting it, so that there is no question that it is your own work.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-23T12:36:10+02:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [PATCH] yank-media improvements
+Message-ID: <875wysemat.fsf@athena.silentflame.com>
+In-Reply-To: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+References: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+
+Evgeny Zajcev [23/Oct 12:49pm +03] wrote:
+> This patch addresses two things in the yank-media:
+> 1. Error caused by empty selection with matching mime type
+> 2. Ability to avoid querying user for mime type selection when several
+> selection types matches
+
+Please separate them into two patches, and preferably open a new bug
+report with the patches rather than just writing to emacs-devel.
+
+Also, I don't think we should use the prefix argument for this.  We can
+prompt the user to select the type with completing-read, with a default
+value so they can just type RET to do the equivalent of your universal
+argument.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-23T14:21:52+02:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: Contributing xc.el to ELPA
+Message-ID: <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+In-Reply-To: <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+
+On Fri, Oct 23, 2026 at 2:14 AM Ryan Prior <rprior@protonmail.com> wrote:
+
+> On Saturday, July 18th, 2026 at 12:40 AM, Ryan Prior <
+> rprior@protonmail.com> wrote:
+>
+> > I've pushed a new minor version update to Codeberg responsive to
+> feedback and incorporating your patches. I appreciate your time and
+> attention!
+>
+>
+> It's been a minute, but I got confirmation today from the FSF that my
+> copyright assignment for Emacs is on the books.
+>
+> In terms of my xc.el package https://codeberg.org/ryanprior/xc.el/ I've
+> been using it daily for the past months and pleased with where it's at for
+> the time being. I would be happy to contribute it to GNU elpa.
+>
+
+I have no idea what xc is so I clicked on the link on your package's
+codeberg page which leads to https://xcfile.dev/ which reports "This site
+can’t be reached".
+
+At the risk of bike shedding, calling the package xc seems very generic
+even if the name matches some external command it wraps.
+
+================================================================================
+Date: 2026-10-23T14:25:36+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Contributing xc.el to ELPA
+Message-ID: <jwvfqxwk3jj.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+
+>> I've pushed a new minor version update to Codeberg responsive to feedback
+>> and incorporating your patches. I appreciate your time and attention!
+> It's been a minute, but I got confirmation today from the FSF that my
+> copyright assignment for Emacs is on the books.
+
+Yes, I saw that as well.
+
+> In terms of my xc.el package https://codeberg.org/ryanprior/xc.el/ I've been
+> using it daily for the past months and pleased with where it's at for the
+> time being. I would be happy to contribute it to GNU elpa.
+
+It's near the top of my TODO list, indeed.
+
+
+=== Stefan
+

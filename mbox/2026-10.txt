@@ -68567,3 +68567,1914 @@ Stefan Monnier via "Emacs development discussions."
 I strongly second Stefan's position!
 
 
+From MAILER-DAEMON Thu Oct 22 17:42:19 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xK0YF-0003Y8-4R
+	for mharc-emacs-devel@gnu.org; Thu, 22 Oct 2026 17:42:19 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <maximilian@fclr.net>)
+ id 1xK0YA-0003Xl-9b
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 17:42:14 -0400
+Received: from sendmail.purelymail.com ([34.202.193.197])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <maximilian@fclr.net>)
+ id 1xK0Y8-0006KZ-Hx
+ for emacs-devel@gnu.org; Thu, 22 Oct 2026 17:42:14 -0400
+DKIM-Signature: a=rsa-sha256;
+ b=MD1xsYn2wu6Oz5spL6CQDG3KjeLz0LjLu6K9B8p0e7Lj/7dAYX0VOkABly1YEoSkt4nfrhD3xODOzUUjNksKUzjUs8LefyW1mtY8WusEKiL5HDP39BwXbqZhjs7Oqwq26LyMQpBC2Ia2QKs/0cXiVyZdmVAAEjp8HUgRsJ7a5wThiVigKO2pH4JS03tCHeWCFCHTFdYCGvo0jL+NFFghmeEyhWbQS6ssMTyRFYC5KoioY2OuWFOvPAcT3I1boOWTDCsGirIDfHkNaogwI1c2/tev0WFonBxqSIbmsNFU2A3NXUCzHyX00d0kZRqYstv1S9TX/nxwtXqM+MusfP+Oyw==;
+ s=purelymail1; d=fclr.net; v=1;
+ bh=EjBFxaGF0ad1iKZFTW6HNBkHyP3scbE9jiTcqX4TH/Y=;
+ h=Received:From:To:Subject:Date; 
+DKIM-Signature: a=rsa-sha256;
+ b=cFhxg6ivh/HZV1iKkD4rR3tJ3paB9iAqulyljcIl0WGTw0bQz/t3knx8kGQLdsPhiJVrHH0+1AZ9bm7MEJkL9mKMWBsXex/gjsc/YRNyXHl1JgRUXHlLWtcZrgPgX8fsmgkv9yB9te4zOuLCGAufFLrQ1MWofRiXs8YmprcSxlymjSHjiH5vOc1XeNx1N8+cAssp1Va1/xOz9D11hmKKpUNS7cKBmrYUaIbAwdKYBd73Bny5x6yFYPfVUUZQ5OxQkJ/JTkXbX419ORZCiADuEak+HDykgHxEmSyN4zvtt9XM6Suf9goT7FXMN7eMdF3uS+PxuSc1R1Rx121LTuulTw==;
+ s=purelymail1; d=purelymail.com; v=1;
+ bh=EjBFxaGF0ad1iKZFTW6HNBkHyP3scbE9jiTcqX4TH/Y=;
+ h=Feedback-ID:Received:From:To:Subject:Date; 
+Feedback-ID: 45487:7817:null:purelymail
+X-Pm-Original-To: emacs-devel@gnu.org
+Authentication-Results: purelymail.com; auth=pass
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id 106514563; 
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Thu, 22 Oct 2026 21:42:07 +0000 (UTC)
+From: Maximilian Cook <maximilian@fclr.net>
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>,   emacs-devel@gnu.org
+Subject: Re: [ELPA] New package: isbn.el
+In-Reply-To: <87a4o7rl78.fsf@posteo.net>
+References: <m2bjaiw42g.fsf@fclr.net> <871pb8hnn5.fsf@posteo.net>
+ <m2pkymkv47.fsf@fclr.net> <87h5jwokxn.fsf@posteo.net>
+ <m233vflu2d.fsf@fclr.net> <m2bj8ycye2.fsf@fclr.net>
+ <87mrshba69.fsf@posteo.net> <m21p9sbe61.fsf@fclr.net>
+ <87tsmk8t5o.fsf@posteo.net> <m2tsmk8b5f.fsf@fclr.net>
+ <874ieipz0k.fsf@posteo.net> <m2ld7s8hzk.fsf@fclr.net>
+ <jwvqzhjlrl0.fsf-monnier+emacs@gnu.org> <87ecdjsgp3.fsf@posteo.net>
+ <m2ecdj8ahv.fsf@fclr.net> <87a4o7rl78.fsf@posteo.net>
+Mail-Followup-To: Philip Kaludercic <philipk@posteo.net>, Stefan Monnier
+ <monnier@iro.umontreal.ca>, emacs-devel@gnu.org
+Date: Thu, 22 Oct 2026 17:42:07 -0400
+Message-ID: <m27bj98lao.fsf@fclr.net>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=34.202.193.197; envelope-from=maximilian@fclr.net;
+ helo=sendmail.purelymail.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_MSPIKE_H2=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 22 Oct 2026 21:42:14 -0000
+
+> No, it seems that this was only an issue on my local system, but on the
+> build server it appeared to go through: https://elpa.gnu.org/packages/isbn.html
+
+It seems everything is good then, and we can close the thread.  Again,
+thank you for all your help!
+
+-- 
+Maximilian Cook
+
+
+From MAILER-DAEMON Fri Oct 23 02:13:49 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xK8XF-0001ro-FP
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 02:13:49 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rprior@protonmail.com>)
+ id 1xK7jI-0000E8-6b
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 01:22:12 -0400
+Received: from mail-05.mail-europe.com ([85.9.206.169])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rprior@protonmail.com>)
+ id 1xK7jG-0006ml-EO
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 01:22:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+ s=protonmail3; t=1792732915; x=1792992115;
+ bh=UgLhsnodNp0hm79Ktp8I1iEJMN60OSy92DmgvRDcPZw=;
+ h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+ Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+ Message-ID:BIMI-Selector;
+ b=qhxhFkd/Ci6kHRLIWCSr+LJ01nEEnlfdbVca7GOnVvn2Hf29t4s+sb82a7WcZviv+
+ 1nvLgh2EbFR9IU6gUbpnA9FJl8NScFRq+ej3Q3s7G6p38k+iFkN7EMLVUgldWBlpTT
+ vZ7xiKSHKAb6fSyX68rA6UUdfKXo16oRkJ6I71uAVQlRicLAmIqFFJWbSh/fT8MfIQ
+ Nxd22gdABTDtQwuDDRfQcE3ktcNBh5t7YaYYPmqRmipqwhifcLW2qtcAxpU1hshR4C
+ kW63a587dWoKp45qv0mUaJlGIkIn4dn80/acPtoH5pKPCXXIwrrS/xuiErWg2t3Jla
+ DiXmR6B3tqRwA==
+Date: Fri, 23 Oct 2026 05:21:48 +0000
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+From: Ryan Prior <rprior@protonmail.com>
+Cc: "emacs-devel@gnu.org" <emacs-devel@gnu.org>
+Subject: Re: Contributing xc.el to ELPA
+Message-ID: <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+In-Reply-To: <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+Feedback-ID: 7396961:user:proton
+X-Pm-Message-ID: a799ade21c41aac0f6e3a13b0c9bb8f87050af33
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=85.9.206.169; envelope-from=rprior@protonmail.com;
+ helo=mail-05.mail-europe.com
+X-Spam_score_int: -27
+X-Spam_score: -2.8
+X-Spam_bar: --
+X-Spam_report: (-2.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_LOW=-0.7, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Fri, 23 Oct 2026 02:13:47 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 05:22:14 -0000
+
+On Saturday, July 18th, 2026 at 12:40 AM, Ryan Prior <rprior@protonmail.com=
+> wrote:
+
+> I've pushed a new minor version update to Codeberg responsive to feedback=
+ and incorporating your patches. I appreciate your time and attention!
+
+
+It's been a minute, but I got confirmation today from the FSF that my copyr=
+ight assignment for Emacs is on the books.
+
+In terms of my xc.el package https://codeberg.org/ryanprior/xc.el/ I've bee=
+n using it daily for the past months and pleased with where it's at for the=
+ time being. I would be happy to contribute it to GNU elpa.
+
+If osmebod
+
+Thanks,
+Ryan
+
+
+From MAILER-DAEMON Fri Oct 23 05:49:40 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKBu8-0002Nt-7f
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 05:49:40 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <lg.zevlg@gmail.com>)
+ id 1xKBu6-0002NZ-SL
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 05:49:38 -0400
+Received: from mail-oo1-xc2f.google.com ([2607:f8b0:4864:20::c2f])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <lg.zevlg@gmail.com>)
+ id 1xKBu5-0000ZD-2T
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 05:49:38 -0400
+Received: by mail-oo1-xc2f.google.com with SMTP id
+ 006d021491bc7-6ddef424972so409747eaf.3
+ for <emacs-devel@gnu.org>; Fri, 23 Oct 2026 02:49:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792748975; cv=none;
+ d=google.com; s=arc-20260327;
+ b=UJXNx9DtZEjuY6O8wsagqLnx6Cr8SC/CtaC0ilUmp4IHVoiCzcFNQf40S0krXU2T4d
+ apzIpCp6VhPtlhzAqBT6nwiAR9wWkRzwlWSaIDL6bcla5yQBAjLg8vtkVnCvoSA/wCVW
+ ef3OfCi5KxNuEqRjEtvPr4SUcdxPCAQG9fHEsVIiX7D2JusrjM3g5QBYVeTbnX/u8ptj
+ aeu4AKz9ePbBMHTjUifTktd5x+bf7kGjzmShiaC8o9iSSERY5GEWlQPPOfXtcox/duB+
+ /8a5Huhd1PMm5O2Bvn/Bl2x5bNRNXJnsxFD/waptuCrU6bzdRxwZcVOGgT5TGFC1KQUn
+ ILYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=to:subject:message-id:date:from:mime-version:dkim-signature;
+ bh=tMPNRBbMFymo6alXGC1oybSmFD9J6wNLoIzTqxnIEyo=;
+ fh=HV2FbNbmRAL9EDYuSytuJzOOpf40V7oAV3EOMrvTftc=;
+ b=OLr1ShEk5INo+rFtSFsveSGPu5vOdNVpw/BZdEztXhxwo2ADvZSX/J/8KCfVWphBCD
+ y2eGrPiJxksaRiIGEX9dNePJg5qGWpEZpSFQ251OSlK49nf0waWSlIZuwgZKdZauBZKn
+ 2BaGgXXBeS4CwTzji440WIUX2TW8Lpf7jobfpZVd0Dc5qkxc2tc6rFPSaCCoU56tg4xJ
+ ePvI8ONxZQ4OpLTtHCWtyssbULYBAGbwA6+9qXOvLK+1FMbv6Y7jUq6VOeLuoM+3718e
+ 9G1KJGd2E1t7qFWRun89TgZvEDyT9VeP6iFuom4WmM3fsO5gRTwWU4PO7x+CJfXh2bZW
+ 8a8Q==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1792748975; x=1793353775; darn=gnu.org;
+ h=content-type:to:subject:message-id:date:from:mime-version:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=tMPNRBbMFymo6alXGC1oybSmFD9J6wNLoIzTqxnIEyo=;
+ b=nATpByfByoJqAXDgv5UKLsF/m0JmbGzzj53BdATHXFpCfJXYTjZDIQB8JTFMemezYG
+ sT+jzE/1JxkSIPdIxCsQkEkS3RoWduqrSNHuZIAc8Y1pGFY1gbKK8VX6LvR9UGLlcXEy
+ L9OuXDw4q7/p1gBfQOZpdiUN6HTnoKJIu5wDyXgc/Ui3TYOdtrKrgG1W4eN1JxQ1ssIE
+ vNBNEuw9NpTWNi8SIqumTRLmw9lYFo+ZmC2H/lqdApja4yJnly1HlSIZjJezNHyH1/E9
+ 9DYn211ha6QfoYD+MNUSI6wa/oNhsU8p2C8Kwwt9rFtVrbf1PGkw/T0uQ0bzZgCuRkAg
+ paIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1792748975; x=1793353775;
+ h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=tMPNRBbMFymo6alXGC1oybSmFD9J6wNLoIzTqxnIEyo=;
+ b=Y0UF8m8eVOcoGYeqZPIUr+TXCQO8hyyEsqpL+ZoZyK3+dMWkVNq+l2y7E3hHTEJLAv
+ ARZPeTM1lFzhm7iKtbAFkoUgxqNjymKyh8rC5BzxZ9Jwiw9KuebEVDfDia6jofltREcv
+ d04IfHc7YcUjVLPrzocc35fmON8YokI0rCp0yAEGPu+j2VVlkBIQwoqFeOBIY56bFpQI
+ 0vKpgyVNoTA45eqvzJoYAi0NzSgqlJZFlQazCkI+zflM7z3FBi4SU2zAWKng1wbusZkj
+ JftqHZ3vzKMYRW32AH6PbApKRRDYjuoZb5kuoPGrwffZ32ADILdI4WxiRLZvJZEeIfI0
+ 9FIw==
+X-Gm-Message-State: AFq9FYIpqXdsGvFLkWwH3Y3E+Kc4HgKQNuoYYeeUb1sDXvS4BXPFIkL0
+ NLLR2XcnWgpMaB/zyGDfxfzR9DUhYrRsp5ZH3o2K91GkXaDAkH5vLRK1zcyAlQpY3+bMi1RafDY
+ zHojBO69bzx+WP7A+d+eRJOD1ibYoMm3QWOuDdeU=
+X-Gm-Gg: AYBFou2/ykSwXkwi3JQFlyN3qUjBpaNUp3XyFwzJmw8GOjltSsO3kn5dhcV119jaefV
+ UoSIHIRbF1UHw1AXvwSc5Cf5a9S1cRsLX145TnjkU+Oo89qG7+Wq1uFldtQh0lEG95FiprZxZjl
+ g+IYUi9ap4kK0vq4/Z2Pg2xLcALJNWf8Ruj9yP5nALboXojl6Vrf071R0V578v52qE2Q6r/HWgj
+ aQqKj/L66hODshQ/fg51OQ2/sZm3ohSFxfx2S0o1HZCcF+sCuT6pgGs0/1olCQxu+V3/L1UieBa
+ vUTzj5uGReqxA4867cfdUEnvoHZJJgF5P1Hpme79frHueKDvHNcr33dwAfFXdW69r6MGtenJMPO
+ TfoZG6+Iv/0/GUDx5OgyWOmWWQxPgNeNRotUZdh5g592luydl/maSVmBRLg==
+X-Received: by 2002:a05:6820:5709:10b0:70a:992e:f3d1 with SMTP id
+ 006d021491bc7-70b889d0964mr776885eaf.20.1792748974948; Fri, 23 Oct 2026
+ 02:49:34 -0700 (PDT)
+MIME-Version: 1.0
+From: Evgeny Zajcev <lg.zevlg@gmail.com>
+Date: Fri, 23 Oct 2026 12:49:23 +0300
+X-Gm-Features: AclHuK86_Op0Suop6He5nJAkuVTf4wqfdgzMdx3zVk9uVbojgidd_x6YTxTjLLc
+Message-ID: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+Subject: [PATCH] yank-media improvements
+To: emacs-devel <emacs-devel@gnu.org>
+Content-Type: multipart/alternative; boundary="000000000000d2c5fe065e7ee529"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::c2f;
+ envelope-from=lg.zevlg@gmail.com; helo=mail-oo1-xc2f.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 09:49:39 -0000
+
+--000000000000d2c5fe065e7ee529
+Content-Type: text/plain; charset="UTF-8"
+
+This patch addresses two things in the yank-media:
+1. Error caused by empty selection with matching mime type
+2. Ability to avoid querying user for mime type selection when several
+selection types matches
+
+If "text/.*" type is registered, say `(yank-media-handler '("text/.*")
+#'ignore)` and you copy image the clipboard and try to yank it with `M-x
+yank-media RET` you will get a backtrace:
+Debugger entered--Lisp error: (args-out-of-range "" -1)
+  elt("" -1)
+  (= 0 (elt data (1- (length data))))
+  (if (= 0 (elt data (1- (length data)))) (substring data 0 (1- (length
+data))) data)
+  (if coding-system (decode-coding-string data coding-system) (if (= 0 (elt
+data (1- (length data)))) (substring data 0 (1- (length data))) data))
+  (let ((coding-system (yank-media--utf-16-p data))) (if coding-system
+(decode-coding-string data coding-system) (if (= 0 (elt data (1- (length
+data)))) (substring data 0 (1- (length data))) data)))
+  (cond ((not (stringp data)) (format "%s" data)) ((string-match-p
+"\\`text/" (symbol-name data-type)) (let ((coding-system
+(yank-media--utf-16-p data))) (if coding-system (decode-coding-string data
+coding-system) (if (= 0 (elt data (1- ...))) (substring data 0 (1- (length
+data))) data)))) (t data))
+  yank-media-types--format(text/_moz_htmlcontext "")
+  (if (string-match-p "\\`text/" (symbol-name data-type))
+(yank-media-types--format data-type data) data)
+  (if data (if (string-match-p "\\`text/" (symbol-name data-type))
+(yank-media-types--format data-type data) data) nil)
+  (let* ((data (and t (gui-get-selection 'CLIPBOARD data-type)))) (if data
+(if (string-match-p "\\`text/" (symbol-name data-type))
+(yank-media-types--format data-type data) data) nil))
+  yank-media--get-selection(text/_moz_htmlcontext)
+...
+
+
+It is common to register "image/.*" handler, however, copying an image into
+the clipboard might put into selection multiple mime types matching this
+pattern, for example image/png and image/jpeg.  Executing `M-x yank-media
+RET' will prompt you to choose a mime type.  Having "image/.*" handler is
+essential, because some of image format might be missing in Emacs, and you
+still be able to yank a media.  Therefore, `no-query' prefix argument is
+added to avoid querying for the mime type and use first matching one.
+
+Thanks
+
+-- 
+lg
+
+--000000000000d2c5fe065e7ee529
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>This patch addresses two things in the yank-media:</d=
+iv><div>1. Error caused by empty selection with matching mime type</div><di=
+v>2. Ability to avoid querying user for mime type selection when several se=
+lection types matches</div><div><br></div><div>If &quot;text/.*&quot; type =
+is registered, say `(yank-media-handler &#39;(&quot;text/.*&quot;) #&#39;ig=
+nore)` and you copy image the clipboard and try to yank it with `M-x yank-m=
+edia RET` you will get a backtrace:</div><div>Debugger entered--Lisp error:=
+ (args-out-of-range &quot;&quot; -1)<br>=C2=A0 elt(&quot;&quot; -1)<br>=C2=
+=A0 (=3D 0 (elt data (1- (length data))))<br>=C2=A0 (if (=3D 0 (elt data (1=
+- (length data)))) (substring data 0 (1- (length data))) data)<br>=C2=A0 (i=
+f coding-system (decode-coding-string data coding-system) (if (=3D 0 (elt d=
+ata (1- (length data)))) (substring data 0 (1- (length data))) data))<br>=
+=C2=A0 (let ((coding-system (yank-media--utf-16-p data))) (if coding-system=
+ (decode-coding-string data coding-system) (if (=3D 0 (elt data (1- (length=
+ data)))) (substring data 0 (1- (length data))) data)))<br>=C2=A0 (cond ((n=
+ot (stringp data)) (format &quot;%s&quot; data)) ((string-match-p &quot;\\`=
+text/&quot; (symbol-name data-type)) (let ((coding-system (yank-media--utf-=
+16-p data))) (if coding-system (decode-coding-string data coding-system) (i=
+f (=3D 0 (elt data (1- ...))) (substring data 0 (1- (length data))) data)))=
+) (t data))<br>=C2=A0 yank-media-types--format(text/_moz_htmlcontext &quot;=
+&quot;)<br>=C2=A0 (if (string-match-p &quot;\\`text/&quot; (symbol-name dat=
+a-type)) (yank-media-types--format data-type data) data)<br>=C2=A0 (if data=
+ (if (string-match-p &quot;\\`text/&quot; (symbol-name data-type)) (yank-me=
+dia-types--format data-type data) data) nil)<br>=C2=A0 (let* ((data (and t =
+(gui-get-selection &#39;CLIPBOARD data-type)))) (if data (if (string-match-=
+p &quot;\\`text/&quot; (symbol-name data-type)) (yank-media-types--format d=
+ata-type data) data) nil))<br>=C2=A0 yank-media--get-selection(text/_moz_ht=
+mlcontext)</div><div>...</div><div><br></div><div><br></div><div>It is comm=
+on to register &quot;image/.*&quot; handler, however, copying an image into=
+ the clipboard might put into selection multiple mime types matching this p=
+attern, for example image/png and image/jpeg.=C2=A0 Executing `M-x yank-med=
+ia RET&#39; will prompt you to choose a mime type.=C2=A0 Having &quot;image=
+/.*&quot; handler is essential, because some of image format might be missi=
+ng in Emacs, and you still be able to yank a media.=C2=A0 Therefore, `no-qu=
+ery&#39; prefix argument is added to avoid querying for the mime type and u=
+se first matching one.<br></div><div><br></div><div>Thanks</div><div><br></=
+div><span class=3D"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" c=
+lass=3D"gmail_signature" data-smartmail=3D"gmail_signature">lg</div></div>
+
+--000000000000d2c5fe065e7ee529--
+
+
+From MAILER-DAEMON Fri Oct 23 05:51:35 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKBvy-00030C-Il
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 05:51:35 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <lg.zevlg@gmail.com>)
+ id 1xKBvo-0002wi-PO
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 05:51:26 -0400
+Received: from mail-oi1-x233.google.com ([2607:f8b0:4864:20::233])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <lg.zevlg@gmail.com>)
+ id 1xKBvm-0000se-SV
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 05:51:24 -0400
+Received: by mail-oi1-x233.google.com with SMTP id
+ 5614622812f47-55650fe1f0dso389134b6e.2
+ for <emacs-devel@gnu.org>; Fri, 23 Oct 2026 02:51:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792749081; cv=none;
+ d=google.com; s=arc-20260327;
+ b=hfVrDUjNZpBib25Ij1fzIKSsp0DPkkNoaRtgBxWlzrxPHz8XUy7KAfEZs7eFzGtYWp
+ 83bAOHfB0go9E9X+5GN4pVMxhesKHsB+27OulphVyMosLnjBHBsot/C13GCas2lCRdYu
+ ubbGDjGygAXFPcqormFzROM3e7dFaMFhKOb5ky++BowEEy69MmbqjUnMn3Yz7yN+YQZC
+ zhCkFa/mpACWjhIBqM+4FLxqr0jEf+psnorKUCVUSn7N9P2s22i/DkEX8t3Os/NsZmHu
+ 0DoT6faDS+m+L6JoPP+Z+6rul9I5m5GxljBJQK5GHkldG6McXZQje3tdEgdLiem4DOai
+ f7iA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+ :dkim-signature;
+ bh=6df8liB6w6CCySX9nwKKnte6lEs5SCbIWlbFJtOp038=;
+ fh=HV2FbNbmRAL9EDYuSytuJzOOpf40V7oAV3EOMrvTftc=;
+ b=orwQt5qdM1wzDk1313RLm6hAfhlbqYDOGGKsScZt06+jVcoshHulwqT+ZCi6k5uZDn
+ R0dlm8O2jJcEJMb5Ip8yI7pNcskPno/Q7Z5T5eQ69WCo34HhHDb/Kh5lVEgzvjueCr/J
+ QurOVySqCg4coLuyzIRF5+aRgW1e8fz7YPnwLdb4ZO/HgdXKb0Z4nPKG9QPgRfQ7KQ3L
+ n7zIZblXbJnMBVvdDXuvtuKDfQoQ15lMQEt6A26EDtzw5uEo3WfegSkce8orQN58f02H
+ Uh6Rxuju3jObDebIws2zMO4YZIRuEhZ/vNrpobOGmPC4excwnt4sUB+WU9G1eEUF3lZt
+ 0OxQ==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1792749081; x=1793353881; darn=gnu.org;
+ h=content-type:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=6df8liB6w6CCySX9nwKKnte6lEs5SCbIWlbFJtOp038=;
+ b=eN74+yg7uiS6zdBAgwodwJo2KclRnZGCYFEx7+urjBlgTdMaHEwezKSKmoCPTVYF9t
+ pIPL3d4hLjdOg4DVe7Qhm/7+gJarlUS79UPCpFYtLdEFUKDjE8YqxTg05cEF1w3GAz6k
+ pni9VsNHI9e1e30++ZHbGvIC5D13sSwxwon18BTSQ+xiGhR49zNavfG2q5njBukm05ac
+ D147XekH0Z/WDUPpIUN7ThMBmFNKCgZp9xViQF9hn5+nwxP+Gg51Tp2YL1tTmT0eNaXR
+ raOYGbLU0UqsTx2DPmzvYvt3wLXC0wN5F5UViEE1dhL32HIFOxJLD7wJvaxjOpztOq5t
+ 00tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1792749081; x=1793353881;
+ h=content-type:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+ :message-id:reply-to:content-type;
+ bh=6df8liB6w6CCySX9nwKKnte6lEs5SCbIWlbFJtOp038=;
+ b=ZARyIJJUgGC0H108yWzO9HdJ0ADJsAGmnQbKPoaT+dbnR+1WR1ZhyNiTMul5gq0TDL
+ 0yZSnszx8ZvAV7pXtb3pkGz0o7UmALlkC/J8Ip3gj02NyXaL2xENNDMxwzfTtkBpCrYJ
+ O6BDyfkmoi/hNqBbYpcQ3LjtogJxLZaGeYgA3zRncxqyroqlcBKTBCW+kk5Ebb977vhk
+ pQENO+bBe3R60MgKPBW4Q6JWEfnD7SNRFAqGss/HhViNz+0TYWWxfwWm+LB6KebTP7U5
+ eEK+m2deAUUK4efOFZGf7Ew7paXf4WpMkTW5d1ET6H3+FIO1vIXrY06tB/9CggTRp1DP
+ BKAw==
+X-Gm-Message-State: AFq9FYKl0B1RDZljJNcIrFnKkhOceFuwXYxAhz/DQ+St+XcnIpIiHEJp
+ 6IBXEjIJ1tnsJahGpFMGeV7UQ5ajwPdtW99J12kUMB4v27ngpQ9lzblbW0MwZofGa8bQCS4+9Dx
+ kvhVCR+gnxXpRiRXguD8wbDC+ZE+CbeW8Kf9g
+X-Gm-Gg: AYBFou1sCQCNyKsWGONmV24pR470qb0Xs8Qc50PDiFiYRLOndalewO7BnSd4gWjolsL
+ LgqeUsdQbnlAaOTEqeX7DPK+wJysGPN11TTsmyHCQYTR/5wYtaKvRHgfkofsP0kK6/7MNz/Lu5X
+ izpRn1nqEQ6geaTEzBbgd/0k6UX3f45Etqtvh405RSs7DVnBzGkPrAGaEbpF/2BApSPibOyja8q
+ A5uT48QFI8mljEwQa0oSb4Bj9N5AN1yg8i/Ea/wByLgAk4ezPZvGoa5/zXTT5mUuLsykaQ6nwOy
+ fhN+hwy/PZAXVED0zNnvMj+ZrtJuVN3tsaFAEVYxkSpd4blaFJ3WK4mZBDQrx/1QEfJpyBuIJ3+
+ 2EHPk+zPbex5ffDvtVM5fHFPls6Hhk0R5HpoTrA==
+X-Received: by 2002:a05:6808:4fdf:b0:4e9:df3c:c45c with SMTP id
+ 5614622812f47-55be8428afbmr1267339b6e.19.1792749081472; Fri, 23 Oct 2026
+ 02:51:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+In-Reply-To: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+From: Evgeny Zajcev <lg.zevlg@gmail.com>
+Date: Fri, 23 Oct 2026 12:51:10 +0300
+X-Gm-Features: AclHuK-_MYwAz2fedz8NOnhW6vGCnDxrmdhZIDF2bYsf3KbGC19x40vmB7EhQ0I
+Message-ID: <CAO=W_ZomJVuyS5jVkuDk4Sb3x2q6fxBd05f7UvVVsHX3to+qrw@mail.gmail.com>
+Subject: Re: [PATCH] yank-media improvements
+To: emacs-devel <emacs-devel@gnu.org>
+Content-Type: multipart/mixed; boundary="0000000000002c4d5e065e7eecc3"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::233;
+ envelope-from=lg.zevlg@gmail.com; helo=mail-oi1-x233.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 09:51:26 -0000
+
+--0000000000002c4d5e065e7eecc3
+Content-Type: multipart/alternative; boundary="0000000000002c4d5b065e7eecc1"
+
+--0000000000002c4d5b065e7eecc1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+I forgot to attach the patch itself :)
+
+=D0=BF=D1=82, 23 =D0=BE=D0=BA=D1=82. 2026=E2=80=AF=D0=B3. =D0=B2 12:49, Evg=
+eny Zajcev <lg.zevlg@gmail.com>:
+
+> This patch addresses two things in the yank-media:
+> 1. Error caused by empty selection with matching mime type
+> 2. Ability to avoid querying user for mime type selection when several
+> selection types matches
+>
+> If "text/.*" type is registered, say `(yank-media-handler '("text/.*")
+> #'ignore)` and you copy image the clipboard and try to yank it with `M-x
+> yank-media RET` you will get a backtrace:
+> Debugger entered--Lisp error: (args-out-of-range "" -1)
+>   elt("" -1)
+>   (=3D 0 (elt data (1- (length data))))
+>   (if (=3D 0 (elt data (1- (length data)))) (substring data 0 (1- (length
+> data))) data)
+>   (if coding-system (decode-coding-string data coding-system) (if (=3D 0
+> (elt data (1- (length data)))) (substring data 0 (1- (length data))) data=
+))
+>   (let ((coding-system (yank-media--utf-16-p data))) (if coding-system
+> (decode-coding-string data coding-system) (if (=3D 0 (elt data (1- (lengt=
+h
+> data)))) (substring data 0 (1- (length data))) data)))
+>   (cond ((not (stringp data)) (format "%s" data)) ((string-match-p
+> "\\`text/" (symbol-name data-type)) (let ((coding-system
+> (yank-media--utf-16-p data))) (if coding-system (decode-coding-string dat=
+a
+> coding-system) (if (=3D 0 (elt data (1- ...))) (substring data 0 (1- (len=
+gth
+> data))) data)))) (t data))
+>   yank-media-types--format(text/_moz_htmlcontext "")
+>   (if (string-match-p "\\`text/" (symbol-name data-type))
+> (yank-media-types--format data-type data) data)
+>   (if data (if (string-match-p "\\`text/" (symbol-name data-type))
+> (yank-media-types--format data-type data) data) nil)
+>   (let* ((data (and t (gui-get-selection 'CLIPBOARD data-type)))) (if dat=
+a
+> (if (string-match-p "\\`text/" (symbol-name data-type))
+> (yank-media-types--format data-type data) data) nil))
+>   yank-media--get-selection(text/_moz_htmlcontext)
+> ...
+>
+>
+> It is common to register "image/.*" handler, however, copying an image
+> into the clipboard might put into selection multiple mime types matching
+> this pattern, for example image/png and image/jpeg.  Executing `M-x
+> yank-media RET' will prompt you to choose a mime type.  Having "image/.*"
+> handler is essential, because some of image format might be missing in
+> Emacs, and you still be able to yank a media.  Therefore, `no-query' pref=
+ix
+> argument is added to avoid querying for the mime type and use first
+> matching one.
+>
+> Thanks
+>
+> --
+> lg
+>
+
+
+--=20
+lg
+
+--0000000000002c4d5b065e7eecc1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">I forgot to attach the patch itself :)<br></div><br><div c=
+lass=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_=
+attr">=D0=BF=D1=82, 23 =D0=BE=D0=BA=D1=82. 2026=E2=80=AF=D0=B3. =D0=B2 12:4=
+9, Evgeny Zajcev &lt;<a href=3D"mailto:lg.zevlg@gmail.com">lg.zevlg@gmail.c=
+om</a>&gt;:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
+0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div=
+ dir=3D"ltr"><div>This patch addresses two things in the yank-media:</div><=
+div>1. Error caused by empty selection with matching mime type</div><div>2.=
+ Ability to avoid querying user for mime type selection when several select=
+ion types matches</div><div><br></div><div>If &quot;text/.*&quot; type is r=
+egistered, say `(yank-media-handler &#39;(&quot;text/.*&quot;) #&#39;ignore=
+)` and you copy image the clipboard and try to yank it with `M-x yank-media=
+ RET` you will get a backtrace:</div><div>Debugger entered--Lisp error: (ar=
+gs-out-of-range &quot;&quot; -1)<br>=C2=A0 elt(&quot;&quot; -1)<br>=C2=A0 (=
+=3D 0 (elt data (1- (length data))))<br>=C2=A0 (if (=3D 0 (elt data (1- (le=
+ngth data)))) (substring data 0 (1- (length data))) data)<br>=C2=A0 (if cod=
+ing-system (decode-coding-string data coding-system) (if (=3D 0 (elt data (=
+1- (length data)))) (substring data 0 (1- (length data))) data))<br>=C2=A0 =
+(let ((coding-system (yank-media--utf-16-p data))) (if coding-system (decod=
+e-coding-string data coding-system) (if (=3D 0 (elt data (1- (length data))=
+)) (substring data 0 (1- (length data))) data)))<br>=C2=A0 (cond ((not (str=
+ingp data)) (format &quot;%s&quot; data)) ((string-match-p &quot;\\`text/&q=
+uot; (symbol-name data-type)) (let ((coding-system (yank-media--utf-16-p da=
+ta))) (if coding-system (decode-coding-string data coding-system) (if (=3D =
+0 (elt data (1- ...))) (substring data 0 (1- (length data))) data)))) (t da=
+ta))<br>=C2=A0 yank-media-types--format(text/_moz_htmlcontext &quot;&quot;)=
+<br>=C2=A0 (if (string-match-p &quot;\\`text/&quot; (symbol-name data-type)=
+) (yank-media-types--format data-type data) data)<br>=C2=A0 (if data (if (s=
+tring-match-p &quot;\\`text/&quot; (symbol-name data-type)) (yank-media-typ=
+es--format data-type data) data) nil)<br>=C2=A0 (let* ((data (and t (gui-ge=
+t-selection &#39;CLIPBOARD data-type)))) (if data (if (string-match-p &quot=
+;\\`text/&quot; (symbol-name data-type)) (yank-media-types--format data-typ=
+e data) data) nil))<br>=C2=A0 yank-media--get-selection(text/_moz_htmlconte=
+xt)</div><div>...</div><div><br></div><div><br></div><div>It is common to r=
+egister &quot;image/.*&quot; handler, however, copying an image into the cl=
+ipboard might put into selection multiple mime types matching this pattern,=
+ for example image/png and image/jpeg.=C2=A0 Executing `M-x yank-media RET&=
+#39; will prompt you to choose a mime type.=C2=A0 Having &quot;image/.*&quo=
+t; handler is essential, because some of image format might be missing in E=
+macs, and you still be able to yank a media.=C2=A0 Therefore, `no-query&#39=
+; prefix argument is added to avoid querying for the mime type and use firs=
+t matching one.<br></div><div><br></div><div>Thanks</div><div><br></div><sp=
+an class=3D"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" class=3D=
+"gmail_signature">lg</div></div>
+</blockquote></div><div><br clear=3D"all"></div><br><span class=3D"gmail_si=
+gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature">lg=
+</div>
+
+--0000000000002c4d5b065e7eecc1--
+
+--0000000000002c4d5e065e7eecc3
+Content-Type: application/x-patch; name="0001-Improve-yank-media.patch"
+Content-Disposition: attachment; filename="0001-Improve-yank-media.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mvkshrun0>
+X-Attachment-Id: f_mvkshrun0
+
+RnJvbSBhYjUzZmEzN2UwYjFjYTQ5Mjk5MDI2NzkzYTNhZDZhNWZlYmJiMmNkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBFdmdlbnkgWmFqY2V2IDx6ZXZsZ0B5YW5kZXgucnU+CkRhdGU6
+IEZyaSwgMjMgT2N0IDIwMjYgMTI6MzM6MzEgKzAzMDAKU3ViamVjdDogW1BBVENIXSBJbXByb3Zl
+ICd5YW5rLW1lZGlhJwoKKiBsaXNwL3lhbmstbWVkaWEuZWwgKHlhbmstbWVkaWEtdHlwZXMtLWZv
+cm1hdCk6IENvcnJlY3RseSBoYW5kbGUKZW1wdHkgZGF0YS4KCiogbGlzcC95YW5rLW1lZGlhLmVs
+ICh5YW5rLW1lZGlhKTogQWRkICduby1xdWVyeScgcHJlZml4IGFyZ3VtZW50IHRvCmF2b2lkIHF1
+ZXJ5aW5nIHRoZSB1c2VyIGZvciBhIGNob2ljZSBpZiBzZXZlcmFsIHNlbGVjdGlvbiB0eXBlcyBt
+YXRjaC4KLS0tCiBsaXNwL3lhbmstbWVkaWEuZWwgfCAxMyArKysrKysrKy0tLS0tCiAxIGZpbGUg
+Y2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2xp
+c3AveWFuay1tZWRpYS5lbCBiL2xpc3AveWFuay1tZWRpYS5lbAppbmRleCBlMzNjMzZkYTViNi4u
+YzNmNDhiZThjY2YgMTAwNjQ0Ci0tLSBhL2xpc3AveWFuay1tZWRpYS5lbAorKysgYi9saXNwL3lh
+bmstbWVkaWEuZWwKQEAgLTMwLDE1ICszMCwxOCBAQAogKGRlZnZhciB5YW5rLW1lZGlhLS1yZWdp
+c3RlcmVkLWhhbmRsZXJzIG5pbCkKIAogOzs7IyMjYXV0b2xvYWQKLShkZWZ1biB5YW5rLW1lZGlh
+ICgpCisoZGVmdW4geWFuay1tZWRpYSAoJm9wdGlvbmFsIG5vLXF1ZXJ5KQogICAiWWFuayBtZWRp
+YSAoaW1hZ2VzLCBIVE1MIGFuZCB0aGUgbGlrZSkgZnJvbSB0aGUgY2xpcGJvYXJkLgorSWYgYFxc
+W3VuaXZlcnNhbC1hcmd1bWVudF0gaXMgc3BlY2lmaWVkIGFuZCBzZXZlcmFsIG1pbWUgdHlwZXMg
+YXJlCithdmFpbGFibGUsIHRoZW4gZG9uJ3QgcXVlcnkgdXNlciBhbmQgdXNlIGZpcnN0IG9uZS4K
+KwogVGhpcyBjb21tYW5kIGRlcGVuZHMgb24gdGhlIGN1cnJlbnQgbWFqb3IgbW9kZSBoYXZpbmcg
+c3VwcG9ydCBmb3IKIGFjY2VwdGluZyB0aGUgbWVkaWEgdHlwZS4gIFRoZSBtb2RlIGhhcyB0byBy
+ZWdpc3RlciBpdHNlbGYgdXNpbmcKIHRoZSBgeWFuay1tZWRpYS1oYW5kbGVyJyBtZWNoYW5pc20u
+CiAKIEFsc28gc2VlIGB5YW5rLW1lZGlhLXR5cGVzJyBmb3IgYSBjb21tYW5kIHRoYXQgbGV0cyB5
+b3UgZXhwbG9yZQogYWxsIHRoZSBkaWZmZXJlbnQgc2VsZWN0aW9uIHR5cGVzLiIKLSAgKGludGVy
+YWN0aXZlKQorICAoaW50ZXJhY3RpdmUgIlAiKQogICAodW5sZXNzIHlhbmstbWVkaWEtLXJlZ2lz
+dGVyZWQtaGFuZGxlcnMKICAgICAodXNlci1lcnJvciAiVGhlIGAlcycgbW9kZSBoYXNuJ3QgcmVn
+aXN0ZXJlZCBhbnkgaGFuZGxlcnMiIG1ham9yLW1vZGUpKQogICAobGV0ICgoYWxsLXR5cGVzIG5p
+bCkpCkBAIC01MSw3ICs1NCw3IEBAIHlhbmstbWVkaWEKICAgICAgICAiTm8gaGFuZGxlciBpbiB0
+aGUgY3VycmVudCBidWZmZXIgZm9yIGFueXRoaW5nIG9uIHRoZSBjbGlwYm9hcmQiKSkKICAgICA7
+OyBXZSBoYXZlIGEgaGFuZGxlciBpbiB0aGUgY3VycmVudCBidWZmZXI7IGlmIHRoZXJlJ3MganVz
+dAogICAgIDs7IG1hdGNoaW5nIHR5cGUsIGp1c3QgY2FsbCB0aGUgaGFuZGxlci4KLSAgICAoaWYg
+KGxlbmd0aD0gYWxsLXR5cGVzIDEpCisgICAgKGlmIChvciBuby1xdWVyeSAobGVuZ3RoPSBhbGwt
+dHlwZXMgMSkpCiAgICAgICAgIChmdW5jYWxsIChjZGFyIGFsbC10eXBlcykgKGNhYXIgYWxsLXR5
+cGVzKQogICAgICAgICAgICAgICAgICAoeWFuay1tZWRpYS0tZ2V0LXNlbGVjdGlvbiAoY2FhciBh
+bGwtdHlwZXMpKSkKICAgICAgIDs7IE1vcmUgdGhhbiBvbmUgdHlwZSB0aGUgdXNlciBmb3Igd2hh
+dCB0eXBlIHRvIGluc2VydC4KQEAgLTE2MCw4ICsxNjMsOCBAQCB5YW5rLW1lZGlhLXR5cGVzLS1m
+b3JtYXQKICAgICAgICAgICAoZGVjb2RlLWNvZGluZy1zdHJpbmcgZGF0YSBjb2Rpbmctc3lzdGVt
+KQogICAgICAgICA7OyBTb21lIHByb2dyYW1zIGFkZCBhIG51bCBjaGFyYWN0ZXIgYXQgdGhlIGVu
+ZCBvZiB0ZXh0LyoKICAgICAgICAgOzsgc2VsZWN0aW9ucy4gIFJlbW92ZSB0aGF0LgotICAgICAg
+ICAoaWYgKHplcm9wIChlbHQgZGF0YSAoMS0gKGxlbmd0aCBkYXRhKSkpKQotICAgICAgICAgICAg
+KHN1YnN0cmluZyBkYXRhIDAgKDEtIChsZW5ndGggZGF0YSkpKQorICAgICAgICAoaWYgKHN0cmlu
+Zy1zdWZmaXgtcCAiXDAiIGRhdGEpCisgICAgICAgICAgICAoc3Vic3RyaW5nIGRhdGEgMCAtMSkK
+ICAgICAgICAgICBkYXRhKSkpKQogICAgKHQKICAgICBkYXRhKSkpCi0tIAoyLjI1LjEKCg==
+--0000000000002c4d5e065e7eecc3--
+
+
+From MAILER-DAEMON Fri Oct 23 06:28:38 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKCVq-0002Nq-OZ
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 06:28:38 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xKCVn-0002NH-EV
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 06:28:36 -0400
+Received: from flow-a3-smtp.messagingengine.com ([103.168.172.138])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xKCVl-0005PT-UQ
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 06:28:35 -0400
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+ by mailflow.phl.internal (Postfix) with ESMTP id A2A89138087D
+ for <emacs-devel@gnu.org>; Fri, 23 Oct 2026 06:28:28 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-01.internal (MEProxy); Fri, 23 Oct 2026 06:28:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm1; t=1792751308; x=1792758508; bh=lVp4ZwjtCP
+ dZY1Z3XsAGi0uZytuC1vtmqD55gS+K0do=; b=CqJ5aY1eLQ/9z3/z1GiVxO9kLo
+ D7Scvej4DhZXnA6BHA7rwnufHATyKE9CgA10yaNk1m+O7TT469fv0poxZgZuBxni
+ 3R73Ob7QwE+O8xxrqR815jTu4VkV5gjglTVAH6E1DGICtEeKOCMwa12IeMBo4IOg
+ HH4YN0DemJRdyq81flqUIIs/YgS44s8hPiY02lcWZltSSJKMAcvzCbHaIJ9TBTQ5
+ 7ew1qvvtBl3iU7sEzW/x270WSXu32cPG2h+4ySA/lUrQt09WwIzArKz/yw3ofOfr
+ IRbMmH2MgqF+u5dSrh1swVLmkrn9duLtyyaIReTRo2PiFJoEwmp3uiFAtj+g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1792751308; x=1792758508; bh=lVp4ZwjtCPdZY1Z3XsAGi0uZytuC1vtmqD5
+ 5gS+K0do=; b=rd2vfnttYnNjk57O+RTuM3avELUSf8njOVjcxl4JsM7DdheV5aZ
+ aRbl7ge4lVU2Y3ck/PsmXBVl+Th3Un6lBslxjSE06+y/ubeahFRSlp889Ws1+2eR
+ BTyvNKWtbJjSEKMZOukS3dUzRXWjkhpxECt0pdri1T4cC0Pz04w2Zq/AfxzCULO1
+ VDGZq5+K6lybYUFYRFonMozxjVhfy4HhHiER5wx3UZtzpez1WX46hc+sNDpdghFF
+ Y8jUQFrPxX5e/Wakkcf68aHkYwLu6YrcV2/sSJxSGfaJ+mZ41brXQE06DXsRNxQg
+ U5ezezbnYp//Mcc0iPEHQUsmS6FLAedg28w==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792751308; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:gZT/pfQN3ofkdeSNzlCKhQ0kTPfZ9D0wW2nkYmRPkGl5Jey
+ Kv+3zd8x2oKstEZxMpLkhblrlcG7Ccy/wWT3UY8cUhnp924L3j1729aLGxfeyvm5
+ iPuvN1+pl63eIJtsfi5ofEHHzZr9tTFgkFqInh8knJUBbHeJgbO4Tu1G3IWagG+r
+ 2bdKFtNbNd2MQZ6o+hZcT9iuKhsByW73yC1tGNSPQGTH4xu6E2zyNWywtfzIlBa5
+ p8+0fGi+/1sfgaxiUBiVyv9BL4fXhitMcmXH7n1bV1ujMQiGQm0PJoIcnSr49Pao
+ dHUv2BFgdXErCSpgiMYCRMoz9OD+6PfRUb5eyCA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=mi-m=1; hc=10;
+ hn=content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:BL89ytmnj0q+Ku8rN/IXuzBaNc7erQZbgbIbNHtySV0=:bQc8DOIvMr6Zfyx5HLgET0lvEiJpgucY9g29X9AP6j8=;
+X-ME-Sender: <xms:zDbbagU0Kn5E0E1M2HxvI0Aju8tTiV0LyuLfv_CHVXlzMqKvQ9BYbw>
+ <xme:zDbbag6R-67NsDukHjmXe62hLtBv_azrE2a_nY3LJMRcOZqesoNtQWZO2_fEaNBQA
+ uYkZ_vYsWgmyKqdwP04Ts3zlbZwkIcEuitNsezgKu0jF61-ssg2QN4Q>
+X-ME-Received: <xmr:zDbbanJgVnFN9pVi9q_owaMZ591SeHCtnE71lzJ2Z7B7biAUqo6mETaVJI9FC0nyPaM3bbLe-KWcPc3zWU3CbnJbqFTBdu8nCg>
+X-ME-Proxy-Cause: dmFkZTGJZStxN17145RhsQMAUEjkkytG/fo55HpB1bdVtVhszaT7TSFrMeNyUqWSA3qDmv
+ 9v9HWxNi5P+MzYcj9l0aIqRPpmX1g/6RdBlDl1KSAWhM7m5/iCIa9Yi/D9xCQf99kVJ91r
+ dd4bEedRVIcU8N4P2UC8PPN5N1qiyh8EcmJZBQa8bXKReux22UdKApq7Mi4Id8raFZdXy+
+ uYMl+Ro3pkuLEcmYCK/IObwI6orhR/gFziGaOaGLMG1DG+IcvEdX+h503hzMgTK/u89EnL
+ 0kHitrYFeBf3iIWi4v8tAKdfaYIk1qCsIdTXYjTrWgFKz0yZ+CEVW4CXTYIJ/Ot5AINNKC
+ 04GmZDLJ3njLeR/SaSoUcAspvZ6IvSXs8WsXhD/nKQ9I/xPrWZCYtHoRPU2ghWLW3ofV9m
+ 4DwoDv4TmvySeB9mmGAOB9wNfbADOtdjviPsCTq4y6jVYnqy6PDaeUUVp2NKfMLFFrE8EV
+ eKcQW2xoaFOsq1pmcmSdDVvDWkcF3CMbrDJmVN1FRTVkB25qGO12FVB5JIO1PUFGaPEvAR
+ lT+mBYOP7HW5PsUggPTfu9BaRXYMlUrSp50cZUv5csu6aGsmryNcOm+J2v+JGzOdDxSn/V
+ SLdLK3TN2xQft6moJ+e4Zxj8XwszZcWmxk/xjsZT0gBySFVKxKj2xtgDogBg
+X-ME-Proxy: <xmx:zDbbahIcGXq1_wVwIhK1sfrhnf-8qa9M2wtth7MhnpBZNBn2e5mOXw>
+ <xmx:zDbbatUVyjxzqIExkfTz-fB6VMrF8ftB-BQdCVHTgpZkeIyh3SQ2hQ>
+ <xmx:zDbbarjy3m9Uqxo62F62YVSN-6yPVrbhCxTFjdfynf9LgnlwNnkIhA>
+ <xmx:zDbbag8mZSukG8g1oRaGtczAaF14w_bK3l2RrOejlCd5bxQq0x3kcQ>
+ <xmx:zDbbahm5uk7TvpW6O3llytDncuahNcJzoiD2TJn7_UKg3Mv3t67ERZUc>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 23 Oct 2026 06:28:28 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id A5349282ACA; Fri, 23 Oct 2026 11:28:27 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: vhkdzszh@gmail.com, emacs-devel@gnu.org
+Subject: Re: [NonGNU ELPA] New package: ekp
+In-Reply-To: <179260078509.84898.7507602913885656282@gmail.com>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+Date: Fri, 23 Oct 2026 11:28:27 +0100
+Message-ID: <87fqxwemno.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=103.168.172.138;
+ envelope-from=spwhitton@spwhitton.name; helo=flow-a3-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 10:28:36 -0000
+
+vhkdzszh@gmail.com [22/Oct 12:39am +08] wrote:
+> Sorry, that sentence was muddled.  What I meant was simpler: the two
+> Copilot merges are LLM-generated code and therefore fall under the
+> policy, and I am prepared to rewrite those parts.  The "if" was not
+> meant to suggest the policy is about something else.
+>
+> So the question is only whether rewriting the affected code is enough
+> for you, or whether the history itself makes the submission
+> unacceptable.  Either answer is fine; I would rather know than guess.
+>
+> On the name: ekp-fill it is.  I will look at symbol shorthands for the
+> prefix.
+
+The Git history doesn't matter, no.
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Fri Oct 23 06:29:39 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKCWn-00030t-Eb
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 06:29:37 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xKCWk-00030L-4b
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 06:29:35 -0400
+Received: from fout-a3-smtp.messagingengine.com ([103.168.172.146])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xKCWh-0005Vz-2R
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 06:29:32 -0400
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+ by mailfout.phl.internal (Postfix) with ESMTP id 4AE03EC00EB
+ for <emacs-devel@gnu.org>; Fri, 23 Oct 2026 06:29:30 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-02.internal (MEProxy); Fri, 23 Oct 2026 06:29:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-type:content-type:date:date:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:subject:subject:to:to; s=fm1; t=1792751370; x=
+ 1792837770; bh=K5sx8q8JGb1eSPHJ+dRMVWXZD833elWETRuC0MVmzIQ=; b=c
+ HidParJ716FXT0mY5SADriVcxORYzQOyIPt/RRaSGkYjn5Bvq1U4JKu1sZdDjqk3
+ x/8tzgD7mYvbXZsBkvBcYcFCQQgKv/AsQOc2WQCQLnYbma7yViVzYQApuPsvIogb
+ ERXFhgYMQnK4KN53R7mO5SD3kZNnuubMSchG36sQ+0H6GLAvK9nw/csRTQWV+0hD
+ +WZ3aUA9z9P3YeBFxm8Kqv8Dhv5J9zpce//FkkaaRb6i1wI/0EmBPjKMf88Yiv6J
+ aA1x332y7aWcN9sllze0Tax6S7PAZSd19XsUuDY3GtnMUu2ouWBT8q9HWqGoA7K1
+ XWgEwb8Awz7QjmE12YAOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1792751370; x=1792837770; bh=K5sx8q8JGb1eSPHJ+dRMVWXZD833elWETRu
+ C0MVmzIQ=; b=XNf79x/KB1AWCf3/f5GqiIyuSp4pGfybtNrP224bww2T8oIgNWY
+ Yv+ONYcHCCDxM5wDXD8ltB5bK5B9dSGQDPzMvMXiMaGJpnhfsOP7Z+oBR3HklJty
+ Tg6vtDyoAznDPRO0NSTd6mXCCIxktuwazcpeu91atSFI50rUQt7TIfhT6dMAXJ3i
+ sxwXJKyWHEYBvTIQqJCu7Qz/+1uz8HvZeXRwRJi/kRB7ILnfYgARxNMeKET2gXWm
+ uDeFYnlOcfw4GY9czpBfiM4sTDFyDubTKsOUDonHM206f6N+jkZBxdmDeXe8x0tL
+ 2Y7d8atBHz7c3A9TDijua87MMY1zlTyPgrw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792751370; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:fTM5PL8h2r6yEkL5Ts8iCCK2lZQLXfe8kTiRocWOfNIzntb
+ bCZUvmGXxJI3H9uqo2XsGKt7kl4EemHUi6v/d6hxOxUiULPfil1aQ316IBvbO4MT
+ pPlNxeuK7TxcZNYjCriuJmu1o5ypbPyTmngNkrIpuoE/LhRNtL6tkTqH60Rir+fp
+ 8IfwBfUyzrhNtToXZ93mk4t4mmQY4F90XXdIQv6j65FOvcgsz379D2PCWz09YOBH
+ FYeh7OM1gjb+AtplVvF31EYfCpPfTVfterxIEGaiGSh34Z47mWPF4PIM4WeHxL0x
+ 5PmbPjrw2y35bhC+sSMpIGeO6hfEVYRKjY7UqRg==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=mi-m=1; hc=11;
+ hn=cc,content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:SqHA45sEGWxaGUoRxwmF/hka+bRmK7NvWH/ZNufIIzs=:bnU3aHd/qvOBhVIyEJZQUbqdryJ44UsxxTsDD6h8nDA=;
+X-ME-Sender: <xms:CjfbakSu3nTlH1XPOvZJf_6OfmH8ZLoxnRFOycjRA87QIxFx__CJ5A>
+ <xme:CjfbamE2qQ-Qi6ck5uw9lnpFHAEVeIuqS8FcLjFYcZ92jSoF8c0P1uVQG1wxyf-_4
+ buMvXChP1u5QKLQ9oVSeJiYyYeHsEuQARp_uZYHRLl1Rj1C7W7QKWUW>
+X-ME-Received: <xmr:Cjfbag8A6MyTy4U88v9nPWVhMB9kqw2EIQJHhxf0byloEcGRmel8y4_rlIx-kAaJ-C8LFcyHpDg3fbE-cQ4QWd9pEZNBINEqFQ>
+X-ME-Proxy-Cause: dmFkZTFG0F/lDBau42136VSmzfmGnA4QG62p7UhWBra1gD7FWK2QSd7QD4DfzNBbI8km6N
+ j2pbQbmm+upYpXcCpsXOy4Z5glyP+xU/GO0ZXejnmzVEAwCnnNf2OOwgVeyQ5SAMsCHwt+
+ S0Oo9AbC9rTmsY1oT00rVIzd7yfr9iyi9HDxQpr7Pr1KqvHhZfh3lC1iZcFJnKVhVezgV8
+ 8ha3zpp6J0IzsKJKzqSF2Rcq38DCihPnz0YTdl2ygko6dqSuAZtzLfH69CvFqCPb4IMXUN
+ +Q9fnVMAGM0sAJ8us8UReCX0loF09iUoiRmh25N83XSrrqEmd83oryvLDp1pOr4HIvhQrC
+ EVxlhsHarbzS/qPIdk8QpG8aAlmbP39JWBm0FDrT/WanLcrintcfHBtIUayECGekKUYzRl
+ WcbTjh5A6vFJGxSYsWjzzV8dNAtOUIXNaZvBtQEv8myiYmfjRPptqEMgW8PsfkleAvEyyS
+ ahzjO4GdHCQtQi/BMGKKH+bHLS7Gn5mp8yFTtBkzFljklHJOAPFWgB2VB4gyMo9aELkou+
+ hpFGLB7TmFFe0dKAD5aKRK3ScoRnWjpHgkLvQmBp4gn8Oj6oOCoJeapZ+snQHcofk/RfKu
+ Hz6Z4mmXdyppSSkfHbdsHw+R5AO9NQgVBKUPY+p+nCsj5JGy7vMHwImx52aA
+X-ME-Proxy: <xmx:CjfbagJ4e3BKOK9yKd3w8kRyq5_b1juHYz0u2_0Yqk9U7oINZvwPlQ>
+ <xmx:CjfbajbtuWS4tjs-ywq0FJIrKzrpIDaSwC1l1cNtrgWvi1Y-buFP4Q>
+ <xmx:CjfbaqIH21ivJFmtVEFFXzZhreX5JJiHdXfMdUzBk5dJT_REWeJWGg>
+ <xmx:CjfbapBH140uf6E76rVYQltF26EhDjUev7fKiPQc4h-it7RhlTWhhQ>
+ <xmx:Cjfbandkig6JGCyNXByPlDtv6p5dDfRxZkpWXVgUtyuLOZNLPt31ayaA>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 23 Oct 2026 06:29:29 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 513E928731C; Fri, 23 Oct 2026 11:29:29 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Kinney Zhang <vhkdzszh@gmail.com>, eliz@gnu.org
+Cc: emacs-devel@gnu.org
+Subject: Re: [NonGNU ELPA] New package: ekp
+In-Reply-To: <179265364218.81518.17612804954593858950@gmail.com>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com>
+ <864iee71w3.fsf@gnu.org>
+ <179265364218.81518.17612804954593858950@gmail.com>
+Date: Fri, 23 Oct 2026 11:29:29 +0100
+Message-ID: <87cxt0emly.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=103.168.172.146;
+ envelope-from=spwhitton@spwhitton.name; helo=fout-a3-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 10:29:35 -0000
+
+Kinney Zhang [22/Oct  3:20pm +08] wrote:
+> Thank you.  Then I will aim for core.
+>
+> I will rewrite the LLM-generated parts.  That is not a quick job: the
+> affected code is around 800 lines, and doing it properly means
+> re-deriving the logic and re-running the acceptance tests, so I expect
+> weeks rather than days.  The point is not only to satisfy the policy: I
+> want the result to be code that users can read, reason about and change
+> for themselves.
+>
+> I will come back when it is done and the tests pass, and we can talk
+> about how a core contribution should look.
+
+Thanks.  Please make sure you don't read the LLM-generated code while
+rewriting it, so that there is no question that it is your own work.
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Fri Oct 23 06:36:15 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKCdD-0004dK-5P
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 06:36:15 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xKCdB-0004dB-3c
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 06:36:13 -0400
+Received: from flow-a3-smtp.messagingengine.com ([103.168.172.138])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xKCd9-0006ff-O7
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 06:36:12 -0400
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+ by mailflow.phl.internal (Postfix) with ESMTP id 3001913813A8
+ for <emacs-devel@gnu.org>; Fri, 23 Oct 2026 06:36:11 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-04.internal (MEProxy); Fri, 23 Oct 2026 06:36:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm1; t=1792751771; x=1792758971; bh=Htn3xLnshv
+ 5i7tABd2DeJLtK2R6Crcl1TIXaiXKFUHs=; b=fzun8nzUmHETNJcrKrndfRJc8t
+ lO4vHeMvtjvVv+Fdlm8+kcTEQriaoSq7dB0txdPzNCjCG/SwVEjqXLnfwYYhgxK2
+ KYcPEY9Fzf/8v1zXDOMyy4VJA0qsForqc49zGFGayyKhRowG3dOJLsBpfQ8VIROz
+ XSMV0U2mhukhO1fBCE0sI5Ix65tWZMhdm95n+S0ZzI78PBrm17RpXZImOF8Xrleu
+ 5niDsW+5g8o/zW80X+UqxyF3cmjgzv+It7Xkeh2f7QYgzKRXd8Ai6NwO7WrxaWyJ
+ dGgK04d8ahWYfj6l6G/iD+26SyHxwinBNnsdJCi4nqlvbaDOWVN+Q0P/1rZg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1792751771; x=1792758971; bh=Htn3xLnshv5i7tABd2DeJLtK2R6Crcl1TIX
+ aiXKFUHs=; b=W4IhHSkaAb9OMREbkBNO3wODQ5S0DNy0jZ2nqpDDK5UNkpHS4ow
+ UhJbQwWgeCT+CytadLsrBPqHFeWi9XJOfxRZgjA4NEFXwh7yxHF3D6dshvqiIzCg
+ GhtrMiZ3HTBrbX/8FnoVP7xjop1fcQ6vzKIUgRo4ERtb3uqq82xKFGixoEloUkeY
+ tcwj6G7UFXXh9Iwt3115jxDAClKgqbOx6kCxeBXLcO3XIGU+fipV/JsErBErZ+2m
+ s5YtLcJqxigU8DJf2eSMVUqUvcBYreYI4TR6EFZC0e6t2xrSmZ5HjthZ6WYzX1zo
+ LFaALWaS+JEmPxFMlPBTxRyJuyN56fZ5c3Q==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792751771; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:gx8EAppfDeVYwp8BBwBAEGhBxXF3PO8N5XKyBTwwHh0I8Ly
+ wwdi+Ud+3qvAeE1XRRKM1n67WqiF9Dwa0jh3iRBMMn0CJgcIH6s++Cg9Y1i50pH4
+ pD8BrHrIlU4tpu5TJFhl4stxNXs/RuScDEokyIxw+ttq7vIaBcm+QQgLAJ1ozdhK
+ rmaky0Nyx1e+5Dn2m+PcihERUDYE7Uu57vSfsLZH53gKW16/8J/XXyRsWxGnHqRY
+ yJ2/78G/YT6gHCiOaz34AajzqdwOLfN83GBYTEvxo2D3APdA/LCbvKKtad1fIYbf
+ RL546rXj8XlNDLElez+VZqw3NY+8EcrEUP2ZfXw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=mi-m=1; hc=10;
+ hn=content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:wQIBEk9guVLzeKe2e/FWCByDtE8kH0MvElVynoHrxaU=:vMx0VammXP0acgrucg/RWBf66Ix8sPybLkrUhQcAV0c=;
+X-ME-Sender: <xms:mzjbalL9iKHTV_gfaKmuZoCpvUGeqi6qVkU0MJrMK7mvd7AblYrBIw>
+ <xme:mzjbatd0LkCA04PeKUU7bjydxuu2QmVIG3Z8ElAwd7LU5BmII7ehaymUiiLAcOmxs
+ gJWIr_Y9ZZxsPpCefgFetcc9fxfn_2uIDlCDWNGDnNrUYZYtaOpmZPX>
+X-ME-Received: <xmr:mzjbagfz80egt5hB4580loNxFXUb2ynmkJr_2nfRaxIGrAiYhUcoSa85vtOAPBd_9AIduH_v13NML9A97VTOeXwAA8x_h2zPrQ>
+X-ME-Proxy-Cause: dmFkZTGubsdZ0/I4WmCMcZO8cS3uIU5Sregd3gc2lFgZE/CgE5lvPffxhyJ+vB9n2ZtlqY
+ 9I/TA9vBT1Vuwq7Zv1E9pESDYY7F0b8X9uzOMbmsLpE+70n7v6RytRD35M490jdWolqLCP
+ Ey3JRr7oe9Kua4znet7HXstRpOqpVI9isnkG0qejUIVF6wQZCkANUQx1ip9DIYsAHZLBk8
+ kE6Kcvh6z8lPw9WWTYWTfqGAKCIXUutO2NbueKc2KAZvbXRb5xcJUhqVDdXWkLxuNkyDl+
+ S9/txWx36a4DfSuHdSb5+7qZn8tsn3Hq70oEG7e7MVJAXR+SxB1nTvRA/iAZAii3/iKODa
+ ofGmFu1hhjIveHAiDgmXma418nkBJ/XjFWgG7vtnDmBDrUk+LZxC8F7aiWtr+IL4gOZMx1
+ xIUuQVNcNXoVYc+RLP4oCT8P42eeuu1dl1r3rpDE2tQaIj9jOTA/2wnT8ONU6q9RgdOk4m
+ Nmc2DNQs2DhZl20IkdTz39fsGyP49K3gavahfERyEEAjeVTrEkPhvathRLGMYsC0YvXiST
+ PPmm/pjvbwWimYB7cSj4F+1WeGpjxgPuaJ+dlEw+B0bK7f0OCnnu3zp+GHxdTSFrcrixzk
+ WgFQh9NPC6YzSxH8TcqG3SzjEvvuCO06E4RTh2PrxXbnaTsVrrJD0nn64Ohw
+X-ME-Proxy: <xmx:mzjbaoNjPsRJjPw2keotHKlWflA0UbDiueCBKiP5dmomNiCBoJabXg>
+ <xmx:mzjbavIGBScPzB20KvYO_8xYcp2Eq4n-xbllQ2gkcsh7O-dad1nBIA>
+ <xmx:mzjbahGqU4zqfmjCLWjkoNPOtoVMWjxqdnpcZ0m_pazarU9qg1iWHA>
+ <xmx:mzjbavQs3Vnqp7SGMeOeaXPAg4QSvMdUCH96EuLvGpKnQd8tdrvnNA>
+ <xmx:mzjbanqk972Io-uKmZz9nFhQ52CLSyr70ICAQBvkRW3ZB0kdc7i2X-LF>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 23 Oct 2026 06:36:10 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 290B628731C; Fri, 23 Oct 2026 11:36:10 +0100 (BST)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Evgeny Zajcev <lg.zevlg@gmail.com>, emacs-devel <emacs-devel@gnu.org>
+Subject: Re: [PATCH] yank-media improvements
+In-Reply-To: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+References: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+Date: Fri, 23 Oct 2026 11:36:10 +0100
+Message-ID: <875wysemat.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=103.168.172.138;
+ envelope-from=spwhitton@spwhitton.name; helo=flow-a3-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 10:36:13 -0000
+
+Evgeny Zajcev [23/Oct 12:49pm +03] wrote:
+> This patch addresses two things in the yank-media:
+> 1. Error caused by empty selection with matching mime type
+> 2. Ability to avoid querying user for mime type selection when several
+> selection types matches
+
+Please separate them into two patches, and preferably open a new bug
+report with the patches rather than just writing to emacs-devel.
+
+Also, I don't think we should use the prefix argument for this.  We can
+prompt the user to select the type with completing-read, with a default
+value so they can just type RET to do the equivalent of your universal
+argument.
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Fri Oct 23 08:22:10 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKEHi-0005e1-PO
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 08:22:10 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xKEHg-0005dq-WF
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 08:22:09 -0400
+Received: from mail-ua1-x935.google.com ([2607:f8b0:4864:20::935])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xKEHe-0003Zb-Ho
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 08:22:08 -0400
+Received: by mail-ua1-x935.google.com with SMTP id
+ a1e0cc1a2514c-98fea7e52b7so561240241.0
+ for <emacs-devel@gnu.org>; Fri, 23 Oct 2026 05:22:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792758124; cv=none;
+ d=google.com; s=arc-20260327;
+ b=oqhVl6UboJznLh/0x+ogxNh49vQnNk66wxqRs0MfYrbtH5IZb8i/F07x3/wnZQhX9Z
+ mOOA2kbpS0oxX2p53zS3OheqLrwQ6aR5a6dfae6Ta785FYW0ZHcDlExh98f3Nz2popJx
+ V5EFTXWSM8H05jOdeMXwMvwBhEqsITaE6e+JiFL2D9rIsJG874ysQ12e/m/l0DOCA0eY
+ ZWVafa+NwQHGpFET7uldr9sGJOFEgDESptYKLwlMhuQ9zFhBWDVhhunVqO4Pb7u+iN19
+ 60n0CusF/dbL7rVMM2bJg9PN9drnmNYd7xaqiTifbjP9/wIm8kXhZTqOp00uRPIdoHPo
+ a2qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=o0LayzUXbAK0u4dRhrLsHX0mCYimBnXfTiHiPhJrzWI=;
+ fh=/7RaojpokER9xmAPR2oZgW8QsbW22dspiSr4o3w3G1k=;
+ b=FPDTU5oqXPHMYihyT7xGsE8lrIIRGU9CVfzbytqstZJp8ix+B+W/ZwELkesHsegb/k
+ GQ1WxxZmVvzZd5QOq9RimyHXwJwGIQwK3IC3shyhktN/6l35FG94vw14X5W63ueUPVTi
+ vgArLRJbJsFktMuwD3Cc8vGvOjk5IgW8UdjnLr3SdE65EN7WIHaxFStZBY4x5WMO82bw
+ Sau3x6NjzilOH90vu3m1qcaydPFgnjYXx+qZX/YG9FkClmwfiUhzKYvFFcouFLUAztzJ
+ 6VxRNxhzu4O2ZcfpolQ14zeSMb1674Ok3ePHDZNfONYJaT1W+3VupugxCSt9mLTrOTwu
+ Q7PQ==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1792758124; x=1793362924; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=o0LayzUXbAK0u4dRhrLsHX0mCYimBnXfTiHiPhJrzWI=;
+ b=De4eqe++UpsmFQTd7nYqxx0QQHch2TNQod3ImcItqfz7sSgfwE+fxVxloWLR0XFpIe
+ ixgNt+gLzRNjbjEOE2TegYLIA+glDFxg/U559SHuY1BOgQFNhmj//Ue0sV/s1DpN7Quj
+ gEvKkwd0hymVyAwQsp+nEDoTidX2JisJYKqLK/m+Ioz8it3XpXFHbNqM3oPjQCT8B52B
+ pOlrPELoou6XfdQIJL6Cd7R9Tb+tmcjOvpb99cReHeJ/FK1WxeEYxrEj7foZItJWJIo+
+ GDR/C/5X++6KEZ0EZbt/8HjOGkDaN+YUWSGwKy367xpV9LieybH/qtg+9CcDuAuPunNK
+ qtwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1792758124; x=1793362924;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=o0LayzUXbAK0u4dRhrLsHX0mCYimBnXfTiHiPhJrzWI=;
+ b=Mn2ub0JP6QC4N+HA0Ug+h/lpJjuLpaSZ8WkicXfzF4a5T8m4PF3LGN8XodiEJdYJYB
+ teD8KLPdIVe1zmfecD04CT96hs3Xw4/4oGtZhSmdD9djDLCYFQ9drwKMSzLqE4noSd60
+ bg5lsXfPX/0MYMegOJgq2AWH9+/LQnq3YTJddQyM99y2tVNb0QQNpywUNgN3vzXqGNne
+ frLE6wE041AWyTQpPR8x9e2BK1MQgIgZQVOy3+NvoP3qmuUX4LrQmXFkojGWJCJeBxJs
+ Y7kkXwRky7YA+dxupH5+mM4242vTfNDbeXQU+xnkCy5yDVJ9Hifev6VrtsGG1YZWSYJB
+ /xzg==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBy9fntD3Mo+J5eEJsWtJPKfbhhYy+7s+D1sIigTc/NX/WxTCfXaCnUg3i0HO0aDFa6OnDnev0uwX/oErg==@gnu.org
+X-Gm-Message-State: AFq9FYIKtp+GTEaDsrFt5QvSK3fDoXgjaK6dCzcndECnuqh4vXflCD46
+ LiFMx9+HYdBIXkhg1YEQR96itUGvjkDbr5/3gHL/vALaaDHAjuVRjAYOVp4ZgMt7tHoEvXIJ2el
+ NkjMaydpdbft4LUnu3LkXZshVkrQoVDU=
+X-Gm-Gg: AYBFou2qog+WgNt3dzMhITyOi2ts0Ey+P66hJEsUS9cY2LzFm/49gwbYTMUAJ9BKdbx
+ JAqe0+hd2DsVKbbr/MIcgT65huv7tyFu730cPyKELBnlVCeW8UWjd7CCRhXwQfQjvBSeF48AIUc
+ CGFhjNA+gUv1jtpw1SpMowogFVrHbsT8riokk4Nw5lJC2B3oFtIugG/KwF/3IFd44w3CWqkZA4w
+ 9cg8bsiSVEnkknFEeW9FFQcK9N6iOq7WgIye04vQ7k5579tyHK+dbawEKMIjFCk9LDNBsyCNDeF
+ 3veNLYvyfJlmGMQO7xjLbvLbFqf+pry1ZyuGGAvvi7Zr1+xEz8M5l/2aRUWwFLKJdeK457jglFa
+ ikOQbSFAG6MzvpEuzbrTn73//k1zhMeqa25SdKNswNEn/uTDD5FYjVbGcWS5BeD41yz/4bWvC2J
+ 7FPyNeciFU0X30gQA/P/k+NPoxSbWfeL0LDqzikQXFF5yOR1wi17LB7AsZQIOHj0Gjeg36iM++i
+ 4WnnmasvqovRoUjBbNrTFdDX4EHmRvRp0ewY9cykDoL91nmgFKKAifkZKuPLUs=
+X-Received: by 2002:a05:6102:2d0d:b0:7cc:25bc:3b27 with SMTP id
+ ada2fe7eead31-7ccc2f58648mr927218137.5.1792758124034; Fri, 23 Oct 2026
+ 05:22:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+In-Reply-To: <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Date: Fri, 23 Oct 2026 08:21:52 -0400
+X-Gm-Features: AclHuK9bFMigXDWn4HFfWSC8GwTrX3Bu0m4TlfUoX1-DqBBvf8BA0Z7mlfzlS7w
+Message-ID: <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+Subject: Re: Contributing xc.el to ELPA
+To: Ryan Prior <rprior@protonmail.com>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>,
+ "emacs-devel@gnu.org" <emacs-devel@gnu.org>
+Content-Type: multipart/alternative; boundary="00000000000026c191065e8107e2"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::935;
+ envelope-from=shipmints@gmail.com; helo=mail-ua1-x935.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001, T_KAM_HTML_FONT_INVALID=0.01 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 12:22:09 -0000
+
+--00000000000026c191065e8107e2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 23, 2026 at 2:14=E2=80=AFAM Ryan Prior <rprior@protonmail.com> =
+wrote:
+
+> On Saturday, July 18th, 2026 at 12:40 AM, Ryan Prior <
+> rprior@protonmail.com> wrote:
+>
+> > I've pushed a new minor version update to Codeberg responsive to
+> feedback and incorporating your patches. I appreciate your time and
+> attention!
+>
+>
+> It's been a minute, but I got confirmation today from the FSF that my
+> copyright assignment for Emacs is on the books.
+>
+> In terms of my xc.el package https://codeberg.org/ryanprior/xc.el/ I've
+> been using it daily for the past months and pleased with where it's at fo=
+r
+> the time being. I would be happy to contribute it to GNU elpa.
+>
+
+I have no idea what xc is so I clicked on the link on your package's
+codeberg page which leads to https://xcfile.dev/ which reports "This site
+can=E2=80=99t be reached".
+
+At the risk of bike shedding, calling the package xc seems very generic
+even if the name matches some external command it wraps.
+
+--00000000000026c191065e8107e2
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
+t-family:monospace"><span style=3D"font-family:Arial,Helvetica,sans-serif;b=
+ackground-color:transparent">On Fri, Oct 23, 2026 at 2:14=E2=80=AFAM Ryan P=
+rior &lt;<a href=3D"mailto:rprior@protonmail.com">rprior@protonmail.com</a>=
+&gt; wrote:</span></div></div><div class=3D"gmail_quote gmail_quote_contain=
+er"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bor=
+der-left:1px solid rgb(204,204,204);padding-left:1ex">On Saturday, July 18t=
+h, 2026 at 12:40 AM, Ryan Prior &lt;<a href=3D"mailto:rprior@protonmail.com=
+" target=3D"_blank">rprior@protonmail.com</a>&gt; wrote:<br>
+<br>
+&gt; I&#39;ve pushed a new minor version update to Codeberg responsive to f=
+eedback and incorporating your patches. I appreciate your time and attentio=
+n!<br>
+<br>
+<br>
+It&#39;s been a minute, but I got confirmation today from the FSF that my c=
+opyright assignment for Emacs is on the books.<br>
+<br>
+In terms of my xc.el package <a href=3D"https://codeberg.org/ryanprior/xc.e=
+l/" rel=3D"noreferrer" target=3D"_blank">https://codeberg.org/ryanprior/xc.=
+el/</a> I&#39;ve been using it daily for the past months and pleased with w=
+here it&#39;s at for the time being. I would be happy to contribute it to G=
+NU elpa.<br></blockquote><div><br></div><div class=3D"gmail_default" style=
+=3D"font-family:monospace">I have no idea what xc is so I clicked on the li=
+nk on your package&#39;s codeberg page which leads to=C2=A0<a href=3D"https=
+://xcfile.dev/">https://xcfile.dev/</a>=C2=A0which reports &quot;This site =
+can=E2=80=99t be reached&quot;.</div><div class=3D"gmail_default" style=3D"=
+font-family:monospace"><br></div><div class=3D"gmail_default" style=3D"font=
+-family:monospace">At the risk of bike shedding, calling the package xc see=
+ms very generic even if the name matches some external command it wraps.</d=
+iv></div></div>
+
+--00000000000026c191065e8107e2--
+
+
+From MAILER-DAEMON Fri Oct 23 08:25:51 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKELG-0007GS-K3
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 08:25:51 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xKELC-0007G4-6c
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 08:25:46 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xKELA-00048f-Dx
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 08:25:45 -0400
+Received: from pmg2.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 64227809AC;
+ Fri, 23 Oct 2026 08:25:39 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1792758338;
+ bh=DhvyB+A1DClxnLVVD271GYQXZ75hS6Apf+eADmN9Png=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=T1aNHDObDNeVomiCWBuIOY/VCGUNv1EHQb4YDiPyaLuDTC6WGh3Nn28ADsaMGlmLo
+ 2QiNOWw1x67ht3xhJTgG12CZoex4JqpO7aL5g4juMtP41hguZMRWeCOayqgRpKwGp4
+ VodAunS6itCtG0Mi5KfUUTW1P1xMJIyeORcv+0MiRncvS8TpiaeUZW7ZE7/wWEdr02
+ DInMpaAk8MEnDNj6m89wccWDbLGcGVLj1w5LElK7UI4obMD8BdD7LqbxI5S/iTLPfD
+ +oW9QVLzv0k0EMueFnvDbIZTb2rzkpZaDKs/HosOb8UwpuPBNAvIlZ5DAuqd1wjNjS
+ gVN/EALpI044A==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 900B680404;
+ Fri, 23 Oct 2026 08:25:38 -0400 (EDT)
+Received: from pastel (unknown [108.175.229.86])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 635F8120541;
+ Fri, 23 Oct 2026 08:25:38 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Ryan Prior <rprior@protonmail.com>
+Cc: "emacs-devel@gnu.org" <emacs-devel@gnu.org>
+Subject: Re: Contributing xc.el to ELPA
+In-Reply-To: <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+Message-ID: <jwvfqxwk3jj.fsf-monnier+emacs@gnu.org>
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+Date: Fri, 23 Oct 2026 08:25:36 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.038 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 12:25:46 -0000
+
+>> I've pushed a new minor version update to Codeberg responsive to feedback
+>> and incorporating your patches. I appreciate your time and attention!
+> It's been a minute, but I got confirmation today from the FSF that my
+> copyright assignment for Emacs is on the books.
+
+Yes, I saw that as well.
+
+> In terms of my xc.el package https://codeberg.org/ryanprior/xc.el/ I've been
+> using it daily for the past months and pleased with where it's at for the
+> time being. I would be happy to contribute it to GNU elpa.
+
+It's near the top of my TODO list, indeed.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Fri Oct 23 13:11:47 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKInx-0007Hv-34
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 13:11:47 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xKInr-0007H1-RE
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 13:11:39 -0400
+Received: from mail-vs1-xe29.google.com ([2607:f8b0:4864:20::e29])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xKIno-0007s1-0U
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 13:11:37 -0400
+Received: by mail-vs1-xe29.google.com with SMTP id
+ ada2fe7eead31-7cc2bb73cd9so361823137.3
+ for <emacs-devel@gnu.org>; Fri, 23 Oct 2026 10:11:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792775494; cv=none;
+ d=google.com; s=arc-20260327;
+ b=JbsNQq8/ASzVLhdcQIuf0yI1Xi5lDxYCv9PuxPnmLw3Yv6cTGhOGuDyMmfG37thRy7
+ Nut7TdmMG5g8GlWOcqIV+hvals7iuaK4uPy3yJpQWC2mP1Qro4O5AkIgpvEtuBuytjJc
+ F+wxZZ8QtyMB9kyKdv0tRmbcj7kIk8Of3rksQ8wtbpr8vp33Tu67gefnYC0IwhFvN6ia
+ 9d6W3OklYpPHRwbYz1FuCNb2KY4iq3g1RPk2jaCtS7qlFIxVUzEbNRGtWBQuKysoJ+Z/
+ tkXSuHZq+X7WpgeMQ/jnhEJJMZyncIWUyyPpMO/iTuMf1efbnSV1Z0JDI5v0v3jDvsOE
+ 7QXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=eZdyOuvx3clHuT+dhzc30rPusTCMzmT8K6E8Wq+SZGA=;
+ fh=r/BD3kZqzRapUufgqYb4JDFcXQDXmAKuC9dgzztonJk=;
+ b=Q7Q3A41Z8Hg3uphZh+TumR9GG/GobJ/s0p8CuOqincakIVCBWiFQmHmxJP4ERJZg/s
+ 6u7NPxGbPOfxVtt2QqUcOT8qxsa+0Ev0VN8Hxbhzb2mwEkg7FZ+rhINnXookdJyRcSVm
+ 9TBq0Dhq5n6NUCtwuOJqfu+4aIjQZ1VS7OtE55UeqPfggkvqIX6suIE4KUNGMkmFKJBh
+ iD1oWViAWWBNKNznVT2VxiI+qnDz/nd7WJnRUylPHHugPvQ1goqi1IJ+vaLQOHJ9qI0B
+ zo/NrXu4Ir2nTBD8tiXooaiYtjUb+yQkxylC/m7ByVlGL4sjs7nXPidei0oBUti0CvU0
+ O1Nw==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1792775494; x=1793380294; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=eZdyOuvx3clHuT+dhzc30rPusTCMzmT8K6E8Wq+SZGA=;
+ b=lhPY/htk8eVauGURw/oi3MkWrHBArsB2chsVp5zy/CeSH88muAqgnlRzCbwTzI1jdf
+ OyGDPPoNL4HX9hL3CrHPpiVEF9CTJPmMvkU0wn8BUSrl70pw0914C34zMQbwuF/Dhd30
+ PbQjWfh0/hI+RvpRJ6PP0j4RVHL9OVhmT/MMaEsw8pLkd3hC72erY3zPUcphwZ204dR7
+ ZQi+35bW/+eJE6g3mnhMcUCjYqFLfGmYvYBbhEoJWeeo0kireTLa0AkvWrCY9xkHBUpU
+ ZIkRcylAo7us3YHdaihugT6SicGb2qPKaE6GwoAFTj7TlvaFpwCYYSrOenPmlTUfDk3x
+ qyUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1792775494; x=1793380294;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=eZdyOuvx3clHuT+dhzc30rPusTCMzmT8K6E8Wq+SZGA=;
+ b=q6AMJqvWrUxNojM44ZNAKBEO1Kx7sa6rlKC9mpiS8eESP4y3+KF3hMcjQRkeV8Fwmi
+ kNX4u5f3SkiBBgO0V40mPkz77e2HzCs8ckPH+qPk016E221FtO4jUmcqatdZmDlfC+Wi
+ 5UaxgahO/eNz4E0D7jl7W5NLDaLWKBakd0aEgLrYWRLKjPNsIHVuDW3yCstDTh93/9ae
+ HNPgGAoHVqF3eekZaVDmOA6x1ZP7NgfoZGl4ymG1edW33W2h/htkECZW87B/NsctcmO9
+ geKOCn6nF6l8aPnZhVBYsPJ4oeQx+gzyTycaM+ZOI4QtPCoxF1i0ti1ayVScaRAzUgv0
+ 13hw==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBzy03hBKTJqZi6rNyDPMVtK+pmkskYzxfF5WH8CtJQLduoULhquJ7zEH58Uj4ioEniMnPy+8RU9QYJi+w==@gnu.org
+X-Gm-Message-State: AFq9FYJFwpql811u6YjB7gmKLn5b8A9DMazGFncrlcIafErqnOyCR6qo
+ Okff1Y8xOE0wiD+zXH3AHBlUdTpIkxHyLxK6LANWNZD3b7FFSDdHGcPBv2ls1eVty1Vf98RJxwb
+ ku0IrIJA0Z3l4k2rVRNrOzZns16edsDo=
+X-Gm-Gg: AYBFou063X0qoIw1lPQmPIBOZx5e2lq4A3xXdFIPMezvi2xebCxJConj88nHdQ0cIci
+ y9zojexM5RlUwn9Sluyta8a1UEUIq4p9to6/zhJed4uH12Luq3fLC7tos32UmwlVNTRtxQDieVh
+ WncukZXovnYxMVifdzOtzudx0Y27sF0Zpwf99p/zjerpOkN83FII9cLyQ4LE/ch4a+D0o2jJZyT
+ RzdhcblfRv9QjFaoPvUK6EA46aJ1Nqdb5p7MHXL5+shKUxSsnK8+pErbl5seAU8oM2thW3RC8mt
+ /5UC1ClTVXzEuXoyWtPLIWi8H8vEASQ0I7Kj01Bec7UqYHZ0uFjeBTtvbiDCBx2xPERy3L/wHpQ
+ jU8UqWJHHdsCgoOq8bMU7GfEq04d2kaEUl2H/jhIycdixBH8bzp+6G+bjWAOHk9LvlapFw12MjD
+ aLDqMFShTmxtOEpJLCgULpuWn4xJWvo50ANVcIKDuQtZzBDJ1GRhdfltlGretDhtC70nFXBcuY6
+ amijeezcaNijK899BMKj7rxCrCshKIUIJRQ64yXAJBDDZ2pnvGmSW89dj9Xyuo=
+X-Received: by 2002:a05:6102:83d9:b0:7c1:f530:2d8e with SMTP id
+ ada2fe7eead31-7ccc34426ccmr1003211137.35.1792775494314; Fri, 23 Oct 2026
+ 10:11:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+ <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+ <6wHFMzpZsg0sa4yv7Ou91HFrfzM-eMqoQU1tQlcnTEXtkeLraFPdWpKi5RWjX2sdLkf1dFV_swlbZYodvjtpsKVc0hDsX982wr9bXEmK83Q=@protonmail.com>
+In-Reply-To: <6wHFMzpZsg0sa4yv7Ou91HFrfzM-eMqoQU1tQlcnTEXtkeLraFPdWpKi5RWjX2sdLkf1dFV_swlbZYodvjtpsKVc0hDsX982wr9bXEmK83Q=@protonmail.com>
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Date: Fri, 23 Oct 2026 13:11:22 -0400
+X-Gm-Features: AclHuK-RDdZvlmTdbt-w84cI5nULPjlFzcNHoGPMfkmcK4AQrJnRcXVB7ooJ4uU
+Message-ID: <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+Subject: Re: Contributing xc.el to ELPA
+To: Ryan Prior <rprior@protonmail.com>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>,
+ "emacs-devel@gnu.org" <emacs-devel@gnu.org>
+Content-Type: multipart/alternative; boundary="000000000000802f38065e85123f"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::e29;
+ envelope-from=shipmints@gmail.com; helo=mail-vs1-xe29.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001, T_KAM_HTML_FONT_INVALID=0.01 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 17:11:40 -0000
+
+--000000000000802f38065e85123f
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 23, 2026 at 1:06=E2=80=AFPM Ryan Prior <rprior@protonmail.com> =
+wrote:
+
+> On Friday, October 23rd, 2026 at 7:22 AM, St=C3=A9phane Marks <
+> shipmints@gmail.com> wrote:
+>
+> > I have no idea what xc is so I clicked on the link on your package's
+> codeberg page which leads to https://xcfile.dev/ which reports "This site
+> can=E2=80=99t be reached".
+>
+> Yes, it's regrettable. I reached out to the web admin but have not heard
+> back yet: https://github.com/joerdav/xc/issues/177
+> I look forward to having that resource back online. The Wayback Machine
+> crawled it as recently as September:
+> https://web.archive.org/web/20260904105559/https://xcfile.dev/
+>
+> > At the risk of bike shedding, calling the package xc seems very generic
+> even if the name matches some external command it wraps.
+>
+> That's reasonable, do folks like xcfile.el or some other name better? (th=
+e
+> Guix package for xcfile.dev is also called `xc', so I plan to package
+> this as `emacs-xc', or similar.)
+>
+
+Aha, I see now.  I have to admit it's not something that appeals to me as I
+prefer using approaches like Makefiles and consider them source code.  A
+quick scan suggests that it is tough to share a single xc file across
+"environments"; i.e., to easily override environment variables to run in
+production vs. development.  If there's a sufficient audience for xc-like
+tools, then so be it.
+
+--000000000000802f38065e85123f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
+t-family:monospace"><span style=3D"font-family:Arial,Helvetica,sans-serif;b=
+ackground-color:transparent">On Fri, Oct 23, 2026 at 1:06=E2=80=AFPM Ryan P=
+rior &lt;<a href=3D"mailto:rprior@protonmail.com">rprior@protonmail.com</a>=
+&gt; wrote:</span></div></div><div class=3D"gmail_quote gmail_quote_contain=
+er"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bor=
+der-left:1px solid rgb(204,204,204);padding-left:1ex">On Friday, October 23=
+rd, 2026 at 7:22 AM, St=C3=A9phane Marks &lt;<a href=3D"mailto:shipmints@gm=
+ail.com" target=3D"_blank">shipmints@gmail.com</a>&gt; wrote:<br>
+<br>
+&gt; I have no idea what xc is so I clicked on the link on your package&#39=
+;s codeberg page which leads to <a href=3D"https://xcfile.dev/" rel=3D"nore=
+ferrer" target=3D"_blank">https://xcfile.dev/</a> which reports &quot;This =
+site can=E2=80=99t be reached&quot;.<br>
+<br>
+Yes, it&#39;s regrettable. I reached out to the web admin but have not hear=
+d back yet: <a href=3D"https://github.com/joerdav/xc/issues/177" rel=3D"nor=
+eferrer" target=3D"_blank">https://github.com/joerdav/xc/issues/177</a><br>
+I look forward to having that resource back online. The Wayback Machine cra=
+wled it as recently as September: <a href=3D"https://web.archive.org/web/20=
+260904105559/https://xcfile.dev/" rel=3D"noreferrer" target=3D"_blank">http=
+s://web.archive.org/web/20260904105559/https://xcfile.dev/</a><br>
+<br>
+&gt; At the risk of bike shedding, calling the package xc seems very generi=
+c even if the name matches some external command it wraps.<br>
+<br>
+That&#39;s reasonable, do folks like xcfile.el or some other name better? (=
+the Guix package for <a href=3D"http://xcfile.dev" rel=3D"noreferrer" targe=
+t=3D"_blank">xcfile.dev</a> is also called `xc&#39;, so I plan to package t=
+his as `emacs-xc&#39;, or similar.)<br></blockquote><div><br></div><div cla=
+ss=3D"gmail_default" style=3D"font-family:monospace">Aha, I see now.=C2=A0 =
+I have to admit it&#39;s not something that appeals to me as I prefer using=
+ approaches like Makefiles and consider them source code.=C2=A0 A quick sca=
+n suggests that it is tough to share a single xc file across &quot;environm=
+ents&quot;; i.e., to easily override environment variables to run in produc=
+tion vs. development.=C2=A0 If there&#39;s a sufficient audience for xc-lik=
+e tools, then so be it.</div></div></div>
+
+--000000000000802f38065e85123f--
+
+
+From MAILER-DAEMON Fri Oct 23 14:20:37 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKJsb-0006j9-5z
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 14:20:37 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <visuweshm@gmail.com>)
+ id 1xKJsZ-0006it-Vq
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 14:20:36 -0400
+Received: from mail-dy2-x0b.google.com ([2607:f8b0:4864:36::b])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <visuweshm@gmail.com>)
+ id 1xKJsY-0005lf-BC
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 14:20:35 -0400
+Received: by mail-dy2-x0b.google.com with SMTP id
+ 5a478bee46e88-368c26de2e0so308613eec.1
+ for <emacs-devel@gnu.org>; Fri, 23 Oct 2026 11:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1792779632; x=1793384432; darn=gnu.org;
+ h=content-transfer-encoding:content-type:mime-version:user-agent
+ :message-id:date:references:in-reply-to:subject:cc:to:from:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=Tyed8G5JcPhEEYoDwWAMTgZtD8+MWVAamUcwtyfw58Y=;
+ b=QqDN50csaH3Gtp8uO3L34xlvuLDqw+USumAAOvFuFRoN+0x5RlUnEYFs9zY5Pr9ixR
+ D9mcAkXJa/NmikU4gVb8Ywpkg98EH1RaoH2rrIsR49I4tG30fYOYl4vNqbFoan1L+XtP
+ gkxNdJBh7+qTgPIpoc7qedh4FcpbFfxEWohZvgdj0B1fx6HqVkrES2MAtAgrouzGlPbs
+ FeriDGq0TbmlFKqI2s8DZfIYBFVkdgBGir+XTAFpagZ9iXUq3krYY1fXfw65jQCdbYTS
+ aB3lo7ChxWYb4vGmJLMZYkS1sxEa5wbZfvY79lyKzTGiaTpRjAZ8dCg67O7Hsh85e9Kx
+ 7XgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1792779632; x=1793384432;
+ h=content-transfer-encoding:content-type:mime-version:user-agent
+ :message-id:date:references:in-reply-to:subject:cc:to:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=Tyed8G5JcPhEEYoDwWAMTgZtD8+MWVAamUcwtyfw58Y=;
+ b=qUb5BHIGRff8+C14Qh/N4gATFzgCBGhuxOK6BEzOsHbZI+13SrJWIoOzNWNNppnhX8
+ n02Ynp+c6YPaznmc8yEkVYWwNWyhdZCtlWLZoDB96BDlnndqXWhjrVP4SnHUUU0DIZ19
+ I9OmyRjG5e13JGlbT/EUpRnXJFLt+pQnixWmHEoexp2L2N3T/alJy0zUDLuMkmvxfTUn
+ iiFvm5GC6g7h9bl/EGLI2PgMHIql2+xHVMqHWMJWqs0FJKCWySejWN3SFWP2VxM2gHIe
+ 2aiWgHS/ck5xifLEinvQTuzEgotj4besiczCTuJpzoHzjt5/j+rPyHn8Lw2S9IlfBc68
+ ohUw==
+X-Gm-Message-State: AFq9FYLo9wQl8GWkoayO4wLcY119vN/Y6dLVPvYlIEF1Y+JSgzR6l4jr
+ jenT6Xs96+EJAWo7Orz3UY8Int0y++pdZKeneAXv1wz4WaWwcToCZj4T
+X-Gm-Gg: AYBFou1zf13jczV7WsR8xCkvysTwM3xV0fQ6axHedW6WOUxJWuJdkJWPeaYN5Bk0ESN
+ +eOVYtt1a2hvS+J1qaJBGRVzIwvIefLwDNsqW8Pjchj/5C8fGz0sZ+HA204Wx3hsmcEvNC3VNXp
+ GqkswekQeRL4oABPvNLPGtJJVm6Do+NREY7fU97jYAXqNE+wavWD8wp0MtcZXE223suvwKWx7u5
+ V9BfusXdG73JfDZxTXCCus2y9D6ImrGqLeA1gbVLEjz1/YDMxNEedzSE3WmfF34mxH9rAKIN8+7
+ xfgIU4h6HUMcnbCVKp3RMak8aR77wDkSiEFA6IRa79mjnw+KpZph43e7EDq1HVfcVW8xpL6d8vR
+ ybkF3C9mXG6wVslEvsRLuNQRZYxKleB2Mbk7xY1eq9vx6DQ80IdyeGPcBR/9HOQJ429t5GI4u6/
+ wZHZxwZ89l6Gb6GQzNgem+8h2oDTLJ7QMtBCeMalAa6n9JLWVV8I0uMwOfbsKkHPDuI3R0JAVy8
+ l0M7796D4Xq2n643YfhtoHJmZBV0pvsvOh0AkilA9zW4CeLgUS0CvNAqu5x7e7JKzOaGRRG
+X-Received: by 2002:a05:693c:4017:b0:368:2548:c094 with SMTP id
+ 5a478bee46e88-369e83642f4mr206811eec.3.1792779632261; 
+ Fri, 23 Oct 2026 11:20:32 -0700 (PDT)
+Received: from localhost ([158.144.112.56])
+ by smtp.gmail.com with UTF8SMTPSA id
+ 5a478bee46e88-369e6eb3008sm1141783eec.22.2026.10.23.11.20.30
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Fri, 23 Oct 2026 11:20:31 -0700 (PDT)
+From: Visuwesh <visuweshm@gmail.com>
+To: Evgeny Zajcev <lg.zevlg@gmail.com>
+Cc: emacs-devel <emacs-devel@gnu.org>
+Subject: Re: [PATCH] yank-media improvements
+In-Reply-To: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+References: <CAO=W_ZqYb6Lpx-6oL1MQwjvxkj5C12fw3d6jchLb0BrXrHLQZA@mail.gmail.com>
+Date: Fri, 23 Oct 2026 23:50:20 +0530
+Message-ID: <87h5icwa6z.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=2607:f8b0:4864:36::b;
+ envelope-from=visuweshm@gmail.com; helo=mail-dy2-x0b.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 18:20:36 -0000
+
+[=E0=AE=B5=E0=AF=86=E0=AE=B3=E0=AF=8D=E0=AE=B3=E0=AE=BF =E0=AE=85=E0=AE=95=
+=E0=AF=8D=E0=AE=9F=E0=AF=8B=E0=AE=AA=E0=AE=B0=E0=AF=8D 23, 2026] Evgeny Zaj=
+cev wrote:
+
+> This patch addresses two things in the yank-media:
+> 1. Error caused by empty selection with matching mime type
+> 2. Ability to avoid querying user for mime type selection when several
+> selection types matches
+>
+> [...]
+>
+> It is common to register "image/.*" handler, however, copying an image in=
+to
+> the clipboard might put into selection multiple mime types matching this
+> pattern, for example image/png and image/jpeg.  Executing `M-x yank-media
+> RET' will prompt you to choose a mime type.  Having "image/.*" handler is
+> essential, because some of image format might be missing in Emacs, and you
+> still be able to yank a media.  Therefore, `no-query' prefix argument is
+> added to avoid querying for the mime type and use first matching one.
+
+You seem to be using an older version of Emacs since number (2) was
+taken care of in
+
+    commit 0ee50a3420fb8df8f3477dac610dcd53c633fff5
+    Author: Visuwesh <visuweshm@gmail.com>
+    Date:   Thu Feb 13 16:43:06 2025 +0530
+
+        Make yank-media auto select the best mime type
+
+        * lisp/yank-media.el (yank-media-preferred-types): Add new
+        variable that holds the list of mime types in order of their
+        preference.
+        (yank-media-autoselect-function): Add new variable and function
+        to choose the most preferred media type.
+        (yank-media): Make 'yank-media' choose the most preferred mime
+        type by default.
+        * doc/emacs/killing.texi (Clipboard):
+        * doc/lispref/frames.texi (Yanking Media): Document the new
+        behaviour, and the new variables.
+        * etc/NEWS: Announce the change.  (Bug#75116)
+
+
+From MAILER-DAEMON Fri Oct 23 14:53:06 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKKNs-0004uz-CJ
+	for mharc-emacs-devel@gnu.org; Fri, 23 Oct 2026 14:52:59 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xKKNl-0004uH-W0
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 14:52:53 -0400
+Received: from mail-vk1-xa34.google.com ([2607:f8b0:4864:20::a34])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xKKNk-0008SD-06
+ for emacs-devel@gnu.org; Fri, 23 Oct 2026 14:52:49 -0400
+Received: by mail-vk1-xa34.google.com with SMTP id
+ 71dfb90a1353d-5eac3b6b2ceso457753e0c.2
+ for <emacs-devel@gnu.org>; Fri, 23 Oct 2026 11:52:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792781567; cv=none;
+ d=google.com; s=arc-20260327;
+ b=XwI6uNWGV6VT4ON6gW7sFnGTSmn8iogZeWCv31yTitKdAv4Se3md0TGwFMTFuDiSw6
+ uDmlfWubKTSsLQbzHMz2l45xh6lyj34sqcQaj5iKE6iFGHRJZrVXXcjEVinulLyD/Uuw
+ iguEKGnTX7+wD/u1r0fKeZaqb1/fPg6C7fd9Pzwrd+Qamv5zhCcFUaHTxLmE/UGWzIyD
+ Vg7Yju+LnPPIQM1/ybdR7QVBWGxZvICTAiYInL/pNFrg6Db82njSQXd3stjdcO2mFI11
+ 2iFQLTa7gffa36714ApbEVoGt3Kyk43lo9SIcgsA/zdrCI38VGDeifdURcI1IrcKJ/+u
+ AoMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=mG5QBCMuiURNnQ8OHyftcVwQAn59aNcZuQWeuvy3SNA=;
+ fh=rhq5ZR7ZoE6+lQM50mfRXZp9BAie78hosGY4eDTrqTI=;
+ b=Np2ZeBWEiZE3dpstxyrUjRXmZR0JyvtnmOFiTPno2Vg74ZzkwrHkMEcpzAFt4bTdE5
+ j2WXfUcEWNCo1sN7ynOIRHwsjceTXz+K2G1nj3Mv2R/R1vw8axM7JLKIjEHx/2rGOC+c
+ hB23VO8vINz7OAlOTvUNilyJOgxXBqOFLvbRhwfILN1LB7hLIOi69eHR6r+KfMOy+PkW
+ ioytAVvrelWmqlaH0B/L+QBdUzogh1o2ilaOaQC/RRc+KY3dSMakrGiUCdfh4AdFWKOq
+ KTRZBYVNLgYTp6RGmGP1+uMSHdLaLZN6p+LtuWz2q+7uTTg8VtylSRv6I459K7D/oeCG
+ NAxQ==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1792781567; x=1793386367; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=mG5QBCMuiURNnQ8OHyftcVwQAn59aNcZuQWeuvy3SNA=;
+ b=pGWunjijAZ3GWSnFMYGD2qQEhoUwpC/phVsFzZ0GSpLVOQeTwRzlECtA4VOiiswaU1
+ UnJMU9plY32387P4wJ+uMnfHUEHU8x2/CTwTBG5U4cVw0yZcW8S6lP0K+2ilp6iuUhdh
+ I0ZL1wnATYtlHqGTqHY84mcD/XY8n1ci9d+kFU2gQwLxB3E9zrdXX45ZUm7ku3kpq/aU
+ pw1vGflT1jACpVRz/QE7iMtN/lzW2R8oL8dqgreX3pOnpQ0WiwmoYWya1SbZFHqoHsQI
+ tBGHpCCsHb3Q1M4j4lNQPPDRMvhfGj7CpifEy2YVLLBpnfVTF6trOBb+uBWS7JM7JExu
+ Mq9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1792781567; x=1793386367;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=mG5QBCMuiURNnQ8OHyftcVwQAn59aNcZuQWeuvy3SNA=;
+ b=tBpMwHMTXwP8rWqJ86MlEj161QFjsPK2rLjdrpicNWsRcpAMCK8OJuQoe+0sXKu2QJ
+ 3C7YojmgQwzIcgX/pvOxp6GMe0NPswYQG0e3e6RPSw672i6cTNeFZ/7XAoRdI6vZw2aG
+ BBs7yYixnKrcIIiYWao3CouuQEERm+wdoue7wDvu27amMNKWNIMvzaZ+6z0aQMA9DN65
+ 0Mhb+MX4uxe7/mCn/2fVLp5wUffIEZT2rf1Y7M700qrSR7kLG3YiX3j/c3qhtbCKzzge
+ 8V66gBtUj9jY8c6/uFukvcaLVIJv0hCtUtORJAAR1plCxwGFsjm6Im0k98bMK+ms3lkW
+ VHxA==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBwQCuysR5ujpOvbwm0u4T19XivMhXZt6vqT3YI0dUiBEXLsD0bVWli3z3GhbW3gURid72o3Iucgmyyh4w==@gnu.org
+X-Gm-Message-State: AFq9FYJmgcyupWebbVqk4vQaytpPiMB8FvFbycEttnM95uyAugSEuIXK
+ Spd7HAxT4CoqCLit27l47aY2NvsxYadHWduZWvB58SK1UWjVig5XDHKJ5tvWzM7ciMCMVr86v+F
+ LyC5TITRUac7Cxx2RI6gz5mDhjy8kQV8=
+X-Gm-Gg: AYBFou1DdLRWEFMKFtJ6jAeGGkBrV9CJXfURrMTYVlCkd/QEqdf3heSHbFCwWXqfWpM
+ AqIMUUtSVY/wZEM85WEL7Gu5OQN13jby8lFjfQSmslFPiNCE7hjK6mb96g6Fb7n9Lbjb3MYI86E
+ yB7UOGH7W7Eq/XbHlUugXmQ02E11/AeVzTK+oE9ZcNkvfAELLwNi/XJKy747YS92+jkwNBfUDUJ
+ eAofCYJ5XskJFn83zbq5O7Ez26FVpjIm2wD+3HFsixV3RvjD1G1FMSFReL7e9BbBTRPhw1cBDcZ
+ 8/bhDQU/bDGcdAMT7N4X2PgshpXU+QvRMj5CeXd2f8RyDqq4UrqZxwqMl4knnZNzMHWUZg66w+z
+ 807XCUabpydPCNBTwXUozuaDq9Bu3Rf9+/QTdZhzHEzJ8YuzZrEWcygZ7+jZefI8aJhal9UQ0pO
+ D25G8nideNaDMkHi+6fsMD8TNv0l5UEXDGpsEaoromSTRdzsg80mNjUPCvaRA0KsMJ3g9dEC48l
+ s70xjTkmVBcbPW2zvurbu0ziSZ+K5vEUhoiAofGGZOA+JHP3J3uJIdaebSszcg=
+X-Received: by 2002:a05:6102:a187:10b0:7cc:b246:31e2 with SMTP id
+ ada2fe7eead31-7ce5cdcaef7mr17728137.22.1792781566674; Fri, 23 Oct 2026
+ 11:52:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+ <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+ <6wHFMzpZsg0sa4yv7Ou91HFrfzM-eMqoQU1tQlcnTEXtkeLraFPdWpKi5RWjX2sdLkf1dFV_swlbZYodvjtpsKVc0hDsX982wr9bXEmK83Q=@protonmail.com>
+ <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+ <2mmCUFED3TczAUdtcnnlFz1sW_NKpMudeiYNij2k3z3KwKL_i5tGhmVHsJGYiJfKMaOMBixXSafq1cg2EoG2x5bZ5jIiY0g1gvJYWOSroYQ=@protonmail.com>
+In-Reply-To: <2mmCUFED3TczAUdtcnnlFz1sW_NKpMudeiYNij2k3z3KwKL_i5tGhmVHsJGYiJfKMaOMBixXSafq1cg2EoG2x5bZ5jIiY0g1gvJYWOSroYQ=@protonmail.com>
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Date: Fri, 23 Oct 2026 14:52:35 -0400
+X-Gm-Features: AclHuK-DfRds_Aw2RAT5vg011MWKCj7k6Uy90wsDv63sid7GKWqJag61wuHUesE
+Message-ID: <CAN+1HbrBAVg=UoFZV1T7KMwPPRJvRwU8f1MPPinju-3F-HsjJA@mail.gmail.com>
+Subject: Re: Contributing xc.el to ELPA
+To: Ryan Prior <rprior@protonmail.com>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>,
+ "emacs-devel@gnu.org" <emacs-devel@gnu.org>
+Content-Type: multipart/alternative; boundary="000000000000710af1065e867c8e"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::a34;
+ envelope-from=shipmints@gmail.com; helo=mail-vk1-xa34.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001, T_KAM_HTML_FONT_INVALID=0.01 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 23 Oct 2026 18:52:53 -0000
+
+--000000000000710af1065e867c8e
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 23, 2026 at 1:27=E2=80=AFPM Ryan Prior <rprior@protonmail.com> =
+wrote:
+
+> On Friday, October 23rd, 2026 at 12:11 PM, St=C3=A9phane Marks <
+> shipmints@gmail.com> wrote:
+>
+> > Aha, I see now. I have to admit it's not something that appeals to me a=
+s
+> I prefer using approaches like Makefiles and consider them source code. A
+> quick scan suggests that it is tough to share a single xc file across
+> "environments"; i.e., to easily override environment variables to run in
+> production vs. development.
+>
+> Right, xc not as powerful as make, and in many cases make is the better
+> choice. The aim of xc is to ensure the project's top-level task entry
+> points are well documented in the README and easy to run.  For example,
+> autotools projects that have README instructions to run "configure, make,
+> make install" could use xc to ensure that those exact instructions produc=
+e
+> the desired result, and set up a system to alert them to any README
+> breakage.
+>
+> Here's an example of one of my projects where I use xc for my dev workflo=
+w
+> and also for automatic continuous integration. You can see I have a step
+> for CI that just sets some env variables & runs xc again:
+> https://codeberg.org/ryanprior/fennel-packer#headline-23
+>
+> If things got much more complicated, I would turn to make or bash or
+> similar in service of keeping the README easy to follow. I do like how ea=
+sy
+> it makes it to hyperlink specific automation steps, and I like that my
+> green "build | success" badge in the repo will turn red if my README is
+> incorrect.
+>
+> I wrote a high level blog post laying out my motivation for xc in case
+> that's interesting:
+> https://www.ryanprior.com/posts/put-your-runbook-in-your-readme/
+
+
+I hear you but I'll keep code in code to ensure reproducibility, source
+tracking, code sharing/function libraries, etc.  Run books can easily refer
+to commands that do the right thing no matter what tools are being used
+including harness agents and where the logs are obvious.  Whatever floats
+your boats.
+
+--000000000000710af1065e867c8e
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
+t-family:monospace"><span style=3D"font-family:Arial,Helvetica,sans-serif;b=
+ackground-color:transparent">On Fri, Oct 23, 2026 at 1:27=E2=80=AFPM Ryan P=
+rior &lt;<a href=3D"mailto:rprior@protonmail.com">rprior@protonmail.com</a>=
+&gt; wrote:</span></div></div><div class=3D"gmail_quote gmail_quote_contain=
+er"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bor=
+der-left:1px solid rgb(204,204,204);padding-left:1ex">On Friday, October 23=
+rd, 2026 at 12:11 PM, St=C3=A9phane Marks &lt;<a href=3D"mailto:shipmints@g=
+mail.com" target=3D"_blank">shipmints@gmail.com</a>&gt; wrote:<br>
+<br>
+&gt; Aha, I see now. I have to admit it&#39;s not something that appeals to=
+ me as I prefer using approaches like Makefiles and consider them source co=
+de. A quick scan suggests that it is tough to share a single xc file across=
+ &quot;environments&quot;; i.e., to easily override environment variables t=
+o run in production vs. development.<br>
+<br>
+Right, xc not as powerful as make, and in many cases make is the better cho=
+ice. The aim of xc is to ensure the project&#39;s top-level task entry poin=
+ts are well documented in the README and easy to run.=C2=A0 For example, au=
+totools projects that have README instructions to run &quot;configure, make=
+, make install&quot; could use xc to ensure that those exact instructions p=
+roduce the desired result, and set up a system to alert them to any README =
+breakage.<br>
+<br>
+Here&#39;s an example of one of my projects where I use xc for my dev workf=
+low and also for automatic continuous integration. You can see I have a ste=
+p for CI that just sets some env variables &amp; runs xc again: <a href=3D"=
+https://codeberg.org/ryanprior/fennel-packer#headline-23" rel=3D"noreferrer=
+" target=3D"_blank">https://codeberg.org/ryanprior/fennel-packer#headline-2=
+3</a><br>
+<br>
+If things got much more complicated, I would turn to make or bash or simila=
+r in service of keeping the README easy to follow. I do like how easy it ma=
+kes it to hyperlink specific automation steps, and I like that my green &qu=
+ot;build | success&quot; badge in the repo will turn red if my README is in=
+correct.<br>
+<br>
+I wrote a high level blog post laying out my motivation for xc in case that=
+&#39;s interesting: <a href=3D"https://www.ryanprior.com/posts/put-your-run=
+book-in-your-readme/" rel=3D"noreferrer" target=3D"_blank">https://www.ryan=
+prior.com/posts/put-your-runbook-in-your-readme/</a></blockquote><div><br><=
+/div><div class=3D"gmail_default" style=3D"font-family:monospace">I hear yo=
+u but I&#39;ll keep code in code to ensure reproducibility, source tracking=
+, code sharing/function libraries, etc.=C2=A0 Run books can easily refer to=
+ commands that do the right thing no matter what tools are being used inclu=
+ding harness agents and where the logs are obvious.=C2=A0 Whatever floats y=
+our boats.</div></div></div>
+
+--000000000000710af1065e867c8e--
+
+
