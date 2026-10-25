@@ -1,0 +1,667 @@
+emacs-devel messages from 2026-10-24T18:15:00+02:00 to 2026-10-25T18:15:00+01:00
+
+================================================================================
+Date: 2026-10-24T21:23:17+02:00
+From: Morgan Willcock <morgan@ice9.digital>
+Subject: Re: [nongnu] elpa/ebuild-mode 3608e05baa 1/4: Reinstate the mode
+ hook functions
+Message-ID: <877bj6ucm2.fsf@ice9.digital>
+In-Reply-To: <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org>
+References: <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+> Hi Ulrich,
+>
+>>     * ebuild-mode.el (ebuild-mode-add-font-lock, ebuild-mode-hook):
+>>     * gentoo-newsitem-mode.el (gentoo-newsitem-add-font-lock)
+>>     (gentoo-newsitem-mode-hook):
+>>     * devbook-mode.el (devbook-add-font-lock, devbook-mode-hook):
+>>     * glep-mode.el (glep-mode-add-font-lock, glep-mode-hook):
+>>     Reinstate the mode hook functions because major modes must not
+>>     call font-lock-add-keywords.
+>
+> I'm curious:
+>
+> Why do you think major modes shouldn't call `font-lock-add-keywords`?
+> And why do you think it's less bad to do it from the mode hook?
+>
+> [ Admittedly, `font-lock-add-keywords` is rarely needed in major-modes,
+>   but it's not like it should be avoided at all costs.
+>   It can make sense for example when defining a derived mode where the
+>   font-lock rules should do whatever the parent does plus a few more
+>   rules.  ]
+
+>From the documentation for font-lock-add-keywords:
+
+  Warning: Major mode commands must not call font-lock-add-keywords
+  under any circumstances, either directly or indirectly, except through
+  their mode hooks. (Doing so would lead to incorrect behavior for some
+  minor modes.) They should set up their rules for search-based
+  fontification by setting font-lock-keywords.
+
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Customizing-Keywords.html
+
+-- 
+Morgan Willcock
+
+================================================================================
+Date: 2026-10-24T21:56:00+02:00
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+Subject: Re: [nongnu] elpa/ebuild-mode 3608e05baa 1/4: Reinstate the mode
+ hook functions
+Message-ID: <u5wyqq3e7@gentoo.org>
+In-Reply-To: <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org>
+References: <179276412219.6038.803214883139792156@vcs2.savannah.gnu.org>
+ <20261023140203.840A1C0FD72@vcs2.savannah.gnu.org>
+ <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org>
+
+>>>>> On Sat, 24 Oct 2026, Stefan Monnier wrote:
+
+>> * ebuild-mode.el (ebuild-mode-add-font-lock, ebuild-mode-hook):
+>> * gentoo-newsitem-mode.el (gentoo-newsitem-add-font-lock)
+>> (gentoo-newsitem-mode-hook):
+>> * devbook-mode.el (devbook-add-font-lock, devbook-mode-hook):
+>> * glep-mode.el (glep-mode-add-font-lock, glep-mode-hook):
+>> Reinstate the mode hook functions because major modes must not
+>> call font-lock-add-keywords.
+
+> I'm curious:
+
+> Why do you think major modes shouldn't call `font-lock-add-keywords`?
+> And why do you think it's less bad to do it from the mode hook?
+
+The Emacs Lisp Reference Manual says so in section 24.7.3:
+
+ -- Function: font-lock-add-keywords mode keywords &optional how
+
+     *Warning:* Major mode commands must not call
+     ‘font-lock-add-keywords’ under any circumstances, either directly
+     or indirectly, except through their mode hooks.  (Doing so would
+     lead to incorrect behavior for some minor modes.)  They should set
+     up their rules for search-based fontification by setting
+     ‘font-lock-keywords’.
+
+> [ Admittedly, `font-lock-add-keywords` is rarely needed in major-modes,
+>   but it's not like it should be avoided at all costs.
+>   It can make sense for example when defining a derived mode where the
+>   font-lock rules should do whatever the parent does plus a few more
+>   rules.  ]
+
+That's exactly the case here, ebuild-mode is a derived mode of sh-mode,
+and should inherit all its rules, including its three highlighting
+levels.
+
+Ulrich
+
+================================================================================
+Date: 2026-10-24T23:24:43+02:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87ecderdut.fsf@posteo.net>
+In-Reply-To: <E1xKMjr-00FXxq-2Z@fencepost.gnu.org>
+References: <179258443601.84793.12863871076813397901@gmail.com>
+ <E1xKMjr-00FXxq-2Z@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > ekp implements Knuth-Plass optimal line breaking for Emacs buffers.
+>   > Paragraphs are split into boxes, a globally optimal break sequence is
+>   > chosen, and lines are justified to the pixel.
+>
+> Thanks for working on this useful feature.
+>
+> (I am very glad that other people started looking for a clear
+> and helpful name before I set this out.  Thanks to you, too!)
+>
+> I never heard of "Knuth-Plass" anything, although I wrote TeX
+> programs.  But since you mentioned Knuth and text formatting, I
+> suspected it might have something to do with TeX.  Indeed, this
+> is what TeX uses.
+>
+> So how about TeXlike-line-break?  Or TeX-line-break?  People who see
+> such a title will get a fairly specific idea of what this is good for.
+
+TeX-line-break would likely confuse some people, as you might think that
+it is a feature that deals specifically with breaking lines in .tex files.
+
+> Another message suggested "typeset".  That term gives some information
+> about what this does, but it is very general.  As someone else noted,
+> many packages might do typesetting.
+>
+>   > - There is no Texinfo manual.
+>
+> Could it be useful to refer people to part of the TeXbook for part
+> of documenting this package?
+
+I think that pointing to the wikipedia page ought to be sufficient:
+https://en.wikipedia.org/wiki/Knuth%E2%80%93Plass_line-breaking_algorithm,
+there are further references from that page.
+
+>   > - native/ holds an optional C accelerator that the user builds on
+>   >   request with make; the package is fully functional without it.
+>
+> What facilities are needed to build and install this?
+>
+>   > - dictionaries/ carries 84 hyphenation patterns taken from LibreOffice.
+>   >   MANIFEST.tsv pins the upstream commit and records the licence evidence
+>   >   for each file; LICENSES.md explains the scheme.
+>
+> What does .tsv mean?
+>
+>   > For the C-h P description, please use the Commentary of ekp.el: the
+>   > README is Markdown, and the Commentary opens with the package summary.
+>
+> Please post that here -- we should look at it with a view to
+> evaluating it _for this use_.
+
+================================================================================
+Date: 2026-10-25T00:22:48+02:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: font-lock-add-keywords from major modes (was: [nongnu]
+ elpa/ebuild-mode 3608e05baa 1/4: Reinstate the mode hook functions)
+Message-ID: <jwvwlr6hi88.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <u5wyqq3e7@gentoo.org>
+References: <179276412219.6038.803214883139792156@vcs2.savannah.gnu.org>
+ <20261023140203.840A1C0FD72@vcs2.savannah.gnu.org>
+ <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org> <u5wyqq3e7@gentoo.org>
+
+>>> * ebuild-mode.el (ebuild-mode-add-font-lock, ebuild-mode-hook):
+>>> * gentoo-newsitem-mode.el (gentoo-newsitem-add-font-lock)
+>>> (gentoo-newsitem-mode-hook):
+>>> * devbook-mode.el (devbook-add-font-lock, devbook-mode-hook):
+>>> * glep-mode.el (glep-mode-add-font-lock, glep-mode-hook):
+>>> Reinstate the mode hook functions because major modes must not
+>>> call font-lock-add-keywords.
+>
+>> I'm curious:
+>
+>> Why do you think major modes shouldn't call `font-lock-add-keywords`?
+>> And why do you think it's less bad to do it from the mode hook?
+>
+> The Emacs Lisp Reference Manual says so in section 24.7.3:
+>
+>  -- Function: font-lock-add-keywords mode keywords &optional how
+>
+>      *Warning:* Major mode commands must not call
+>      ‘font-lock-add-keywords’ under any circumstances, either directly
+>      or indirectly, except through their mode hooks.  (Doing so would
+>      lead to incorrect behavior for some minor modes.)  They should set
+>      up their rules for search-based fontification by setting
+>      ‘font-lock-keywords’.
+
+Hmm... thanks.  I see this paragraph comes from:
+
+    commit 03de4399116421aa6d96ee93f4ace948304339da
+    Author: Richard M. Stallman <rms@gnu.org>
+    Date:   Wed Jun 8 15:32:01 2005 +0000
+
+    (Mode Line Data): Minor cleanup.
+    (Customizing Keywords): Node split out of Search-based Fontification.
+    Add example of using font-lock-add-keywords from a hook.
+    Clarify when MODE should be non-nil, and when nil.
+
+The closest I can find in the previous text is:
+
+    @strong{Warning:} Only use a non-@code{nil} @var{mode} argument when
+    you use @code{font-lock-add-keywords} or
+    @code{font-lock-remove-keywords} in your @file{.emacs} file.  When you
+    use these functions from a Lisp program (such as a minor mode), we
+    recommend that you use @code{nil} for @var{mode} (and place the call
+    on a hook) to avoid subtle problems due to the details of the
+    implementation.
+
+but AFAIK it refers to other problems.  Richard, do you remember what
+were the "incorrect behavior for some minor modes" that could occur when
+`font-lock-add-keywords` was used from a major mode function (and why
+that did not apply to the major mode hook)?
+
+We've made several changes to the way keywords are initialized and hook
+are run since June 2005, so I'm not sure the problem is still current
+(and if it is, maybe it's a good opportunity to see if we can fix it).
+
+>> [ Admittedly, `font-lock-add-keywords` is rarely needed in major-modes,
+>>   but it's not like it should be avoided at all costs.
+>>   It can make sense for example when defining a derived mode where the
+>>   font-lock rules should do whatever the parent does plus a few more
+>>   rules.  ]
+>
+> That's exactly the case here, ebuild-mode is a derived mode of sh-mode,
+> and should inherit all its rules, including its three highlighting
+> levels.
+
+So `font-lock-add-keywords` is the right solution there.
+
+In the mean time, for `gentoo-newsitem-mode` you should definitely set
+`font-lock-defaults` instead (haven't looked at your other modes).
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-25T08:48:26+01:00
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+Subject: Re: font-lock-add-keywords from major modes
+Message-ID: <uwlr6nrud@gentoo.org>
+In-Reply-To: <jwvwlr6hi88.fsf-monnier+emacs@gnu.org>
+References: <179276412219.6038.803214883139792156@vcs2.savannah.gnu.org>
+ <20261023140203.840A1C0FD72@vcs2.savannah.gnu.org>
+ <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org> <u5wyqq3e7@gentoo.org>
+ <jwvwlr6hi88.fsf-monnier+emacs@gnu.org>
+
+>>>>> On Sun, 25 Oct 2026, Stefan Monnier wrote:
+
+>>> [ Admittedly, `font-lock-add-keywords` is rarely needed in major-modes,
+>>> but it's not like it should be avoided at all costs.
+>>> It can make sense for example when defining a derived mode where the
+>>> font-lock rules should do whatever the parent does plus a few more
+>>> rules.  ]
+>> 
+>> That's exactly the case here, ebuild-mode is a derived mode of sh-mode,
+>> and should inherit all its rules, including its three highlighting
+>> levels.
+
+> So `font-lock-add-keywords` is the right solution there.
+
+> In the mean time, for `gentoo-newsitem-mode` you should definitely set
+> `font-lock-defaults` instead (haven't looked at your other modes).
+
+In fact, that was how it was done before, but I had changed it to
+font-lock-add-keywords in 2024, shortly after adding the test suite.
+
+I've now sorted out the test failure and reverted to font-lock-defaults.
+In a feature branch, for the time being:
+https://codeberg.org/ulm/ebuild-mode/src/branch/font-lock-defaults
+
+Ulrich
+
+================================================================================
+Date: 2026-10-25T13:33:33+01:00
+From: Eli Barzilay <eli@barzilay.org>
+Subject: markdown-ts-mode: a plain-text base mode, with editing as a layer
+Message-ID: <27357.63261.512714.425155@gargle.gargle.HOWL>
+In-Reply-To: 
+References: 
+
+Good morning!
+
+TL;DR: markdown-ts-mode's highlighting is great, but its editing layer
+fights plain-text editing, which is the whole point of Markdown. I cut
+it down to a highlighting-only mode in under 300 lines (link below), and
+I'd like to propose a small base like that as the default .md mode, with
+the editing machinery as an opt-in layer. Along the way I found a few
+bugs (one runs arbitrary `*-mode' functions from fence names), a treesit
+"fast mode" issue that needs a supported opt-out, a grammar bug, and
+a case for generalizing mhtml's submode code instead of reimplementing
+it.
+
+----
+
+I've been moving my setup to Emacs 31, and tried `markdown-ts-mode'. The
+highlighting is very nice -- it follows the actual syntax, and code
+fences in their own language are a real improvement. But the editing
+layer got in my way almost everywhere. To actually use this thing, I'd
+probably need to go over most key bindings, and disable/tweak many of
+them. I think it's worth discussing now, while the mode is still
+experimental and its design is open for 32.
+
+The main point: Markdown was designed so that the plain text *is* the
+format, and not needing any tooling is most of its appeal. Emacs is a
+great text editor, and that's all a Markdown buffer needs, plus
+highlighting. Typing a `*' on each side of a word is much easier for me
+than remembering `C-c C-x C-f', and I don't think that's a fringe view.
+With the default settings, I ran into some problems very quickly:
+
+- RET in a table row is the same as <down>; at the last row it adds an
+  empty row, which the next keystroke misaligns anyway.
+- TAB in a table moves to the next cell after deleting the padding around
+  all cells. Elsewhere (e.g., in a block quote), TAB is an outline-cycle
+  command that does nothing visible.
+- RET in a list continues the item, so starting a new bullet takes extra
+  keys (delete spaces, add the bullet). I'm sure that there's some other
+  key chord that I'll never remember that I should use -- but the
+  default text editing is what I know in my bones.
+- M-<left>/M-<right> are taken for changing levels -- if you have sexp
+  navigation on these keys, you get unintended edits of text blocks, and
+  therefore much frustration.
+
+There's no way to get just "plain text editing + highlighting":
+`markdown-ts-view-mode' is a read-only version of the full mode.
+
+I'm aware that there are many people on the opposite side of this fence,
+so I'm not trying to convert anyone. But given that what I need is
+pretty much a strict subset of what's there, it seems like it would be
+obvious to make a basic version that has no special editing
+capabilities, and then another one that adds that on top of the basic
+one.
+
+Some size context: `markdown-ts-mode.el' is about 5,700 lines, plus
+1,100 in `markdown-ts-mode-x.el'. Its .elc is the second largest of the
+60 in lisp/textmodes (only bibtex is bigger), larger than tex-mode,
+sgml-mode, rst, table, and artist. By the file's own sections, font-lock
+and faces are about 350 lines; most of the rest is editing commands,
+link handling, list, table and heading manipulation, filling, and the
+code-block context machinery. Redundant code is a fact of life in any
+software that serves more than one person, but it seems like a more
+extreme case if there's a huge mode with well under 10% being the stuff
+that I need...
+
+To see what this base would look like, I made `md-ts-mode', a cut-down
+version that is temporarily at
+
+  https://gist.github.com/elibarzilay/7f4159764f28e28aa7ba95319fe67388
+
+(it will move to a permanent place later). It is under 300 lines, uses
+the same two grammars with the same pinned commits, derives from
+`text-mode', and has no keymap and no commands. It was made as a quick
+proof of concept, but turned out to be everything I actually need. It
+has:
+
+- full highlighting, with markup visible and full size,
+- code fences highlighted in their own language (the language's mode is
+  found through `auto-mode-alist', plus a small alias list),
+- Outline and Imenu through the standard treesit settings, so plain
+  `outline-minor-mode' just works,
+- the real URL as `thing-at-point' (so `browse-url-at-point' works)
+  anywhere on a link, including reference links and autolinks.
+
+The trade-off I know of: fences are fontified by running the language's
+mode on the block, so editing inside a huge fence re-highlights all of
+it. Still, it's impressively small for a version that I think (a) is
+very useful in itself as a basis for the full, um, "editor experience",
+and (b) does everything needed for people like me, who have written text
+with Emacs for a good number of decades, and are happy with it.
+
+So I want to propose a small base mode like this as the default for .md
+files, with the editing machinery as an autoloaded layer that people
+turn on; or the other way around: have the default use this base with
+the editing coming from a file with a way for me to turn it off. A small
+base can settle (and stay stable) soon (most of the discussion so far
+has been about editing features), and it's a better foundation for
+different editing styles: e.g., an AUCTeX-like layer, an org-like one,
+and whatever else people come up with -- all sharing one parser +
+display setup. (And given how markdown became so important, more editing
+styles are bound to sprout in the next few years.)
+
+Working on a small mode also makes problems easier to see, when they
+don't drown in a huge file of editing machinery. I ran into these in
+markdown-ts-mode:
+
+- A fence language runs any function named LANG-mode: a "column-number"
+  fence turns on `column-number-mode', and "server" would call
+  `server-mode'.
+- Outline navigation sees only top-level (`#') headings: the outline
+  predicate checks for a "section" node, but tree-sitter hands it nested
+  sections under the grammar's internal name "_section2", so they fail.
+  (md-ts-mode checks only the section's first child.)
+- A big fence in an unknown language gets no highlighting, because of
+  font-lock "fast mode" (below).
+
+And some issues below the mode level:
+
+- treesit's font-lock "fast mode" kicks in once a buffer has an expensive
+  node, after which rules on nodes larger than ~6,000 chars never match --
+  exactly big fenced blocks. There's no documented way to opt out;
+  md-ts-mode sets the internal `treesit--font-lock-fast-mode' to nil. Modes
+  that fontify embedded blocks need a supported way to do that.
+- The markdown-inline grammar ignores the flanking rules for
+  single-tilde strikethrough: in "foo ~bar ~baz ~blah" I get a strike
+  through "baz ". This happens also with "*"s and "_"s. This is a bug in
+  tree-sitter-markdown.
+
+I'm not saying that these problems are unsolvable or hard -- they're
+just very easy to lose track of when your code base is mostly not it.
+
+Finally, one feature I deliberately left out: making keys in a fence
+behave as in the fence's language. Done right, this needs swapping
+keymaps *and* the buffer-local state (indentation, syntax table, comment
+settings) as the cursor moves in and out. mhtml-mode does it for HTML,
+markdown-ts-mode has its own ~250-line version, Org has its own for
+source blocks, and in 31 php-ts-mode builds on mhtml-ts-mode to get it.
+Rather than another private implementation, I think mhtml's code should
+be generalized into a reusable library, with treesit answering "which
+language is at point" -- and then Markdown would use it in a few lines.
+Again, nothing blocking this from being done now, but it's that much
+more difficult in a huge project.
+
+I'll be happy to help with any of this if it makes sense. Otherwise, no
+flaming intended: consider me happy with my quick hack and I'll shut up.
+
+-- 
+                   ((x=>x(x))(x=>x(x)))                  Eli Barzilay:
+                   http://barzilay.org/                  Maze is Life!
+
+================================================================================
+Date: 2026-10-25T13:59:57+01:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: bug#79204: [PATCH] pgtk: Use cairo_set_source_surface()
+Message-ID: <CA+TD5hgnWD-M-54J+ErOZHt7MguCkeHeBhFpKCRORY3DmQfPnQ@mail.gmail.com>
+In-Reply-To: <86a4o32rot.fsf@gnu.org>
+References: <M8yxlqYBNDCtxw7MCi6Ug8tgwI9aJYPbUwmdbjPzeDnGjfFYpfZ5llVP4JaxPEZ7EWzY7H3AqF9F0WSkzAkiAOxl8v5iscbq6Qs1X7NC15o=@pm.me>
+ <87mrwr1qd7.fsf@stebalien.com>
+ <CA+TD5hj4u=4+5z+Uon65QJnpJjLMaXfnzLq9aAwBOnOEzeayOA@mail.gmail.com>
+ <87se5p8ma5.fsf@stebalien.com>
+ <2Owi9orX92D9Licppbcwhfw14llghz_3L1fBOWT94N_rlqZJQbmMY5JA0saq0lVfFVQZi7KhttvPUD1cYVyCFB7q65QNCuT7TcF3h65hKC4=@pm.me>
+ <CA+TD5hhgqMLqKu=3wgM-V2fj0i-49xSmypkJrDN126YhH7rsUw@mail.gmail.com>
+ <861pd8ivi9.fsf@gnu.org>
+ <bZripTPf2nd4r-seKpD8eJtKFOlcaKtDhyQ9Fdr-tXFEx_uJ5RC-kdW05DI463mUS-6HEy3nYAP7Xkm88SJefEw0XGWj400RtGAIJmHO4QM=@pm.me>
+ <87a4rwktni.fsf@stebalien.com>
+ <l1l7KMPwKktBrZFT05kXEf4TPb1nSLhZi6IAfnnOm6AUeAnEFCkYShdpt23zPqdADmekZ2WFbtnkPn98XQ1UTJ66l_ncIIaiPK93bSqy5ts=@pm.me>
+ <86a4o32rot.fsf@gnu.org>
+
+For what it's worth, I tested this patch and got a speedup of about 10x to
+20x speedup. The test was performed on a PGTK build on Wayland.
+
+The unpatched master head version feels quite sluggish compared to the
+patched build. Even with only a 10x speedup, the patch is valuable.
+
+================================================================================
+Date: 2026-10-25T14:07:34+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: bug#79204: [PATCH] pgtk: Use cairo_set_source_surface()
+Message-ID: <86h5ia0vzd.fsf@gnu.org>
+In-Reply-To: <CA+TD5hgnWD-M-54J+ErOZHt7MguCkeHeBhFpKCRORY3DmQfPnQ@mail.gmail.com>
+ (message from Johan =?utf-8?Q?Myr=C3=A9en?= on Sun, 25 Oct 2026 14:59:57
+ +0200)
+References: <M8yxlqYBNDCtxw7MCi6Ug8tgwI9aJYPbUwmdbjPzeDnGjfFYpfZ5llVP4JaxPEZ7EWzY7H3AqF9F0WSkzAkiAOxl8v5iscbq6Qs1X7NC15o=@pm.me>
+ <87mrwr1qd7.fsf@stebalien.com>
+ <CA+TD5hj4u=4+5z+Uon65QJnpJjLMaXfnzLq9aAwBOnOEzeayOA@mail.gmail.com>
+ <87se5p8ma5.fsf@stebalien.com>
+ <2Owi9orX92D9Licppbcwhfw14llghz_3L1fBOWT94N_rlqZJQbmMY5JA0saq0lVfFVQZi7KhttvPUD1cYVyCFB7q65QNCuT7TcF3h65hKC4=@pm.me>
+ <CA+TD5hhgqMLqKu=3wgM-V2fj0i-49xSmypkJrDN126YhH7rsUw@mail.gmail.com>
+ <861pd8ivi9.fsf@gnu.org>
+ <bZripTPf2nd4r-seKpD8eJtKFOlcaKtDhyQ9Fdr-tXFEx_uJ5RC-kdW05DI463mUS-6HEy3nYAP7Xkm88SJefEw0XGWj400RtGAIJmHO4QM=@pm.me>
+ <87a4rwktni.fsf@stebalien.com>
+ <l1l7KMPwKktBrZFT05kXEf4TPb1nSLhZi6IAfnnOm6AUeAnEFCkYShdpt23zPqdADmekZ2WFbtnkPn98XQ1UTJ66l_ncIIaiPK93bSqy5ts=@pm.me>
+ <86a4o32rot.fsf@gnu.org>
+ <CA+TD5hgnWD-M-54J+ErOZHt7MguCkeHeBhFpKCRORY3DmQfPnQ@mail.gmail.com>
+
+> From: Johan Myréen <johan.myreen@gmail.com>
+> Date: Sun, 25 Oct 2026 14:59:57 +0200
+> Cc: Patryk Wychowaniec <pwychowaniec@pm.me>, steven@stebalien.com, luangruo@yahoo.com, 
+> 	79204@debbugs.gnu.org, emacs-devel@gnu.org, rahguzar@mailbox.org
+> 
+> For what it's worth, I tested this patch and got a speedup of about 10x to 20x speedup. The test was performed
+> on a PGTK build on Wayland.
+> 
+> The unpatched master head version feels quite sluggish compared to the patched build. Even with only a 10x
+> speedup, the patch is valuable.
+
+Thanks.
+
+================================================================================
+Date: 2026-10-25T15:47:21+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <E1xKzVJ-000D3V-0s@fencepost.gnu.org>
+In-Reply-To: <179265364218.81518.17612804954593858950@gmail.com> (message from
+ Kinney Zhang on Thu, 22 Oct 2026 15:20:42 +0800)
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com> <864iee71w3.fsf@gnu.org>
+ <179265364218.81518.17612804954593858950@gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > I will rewrite the LLM-generated parts.  That is not a quick job: the
+  > affected code is around 800 lines, and doing it properly means
+  > re-deriving the logic and re-running the acceptance tests, so I expect
+  > weeks rather than days.  The point is not only to satisfy the policy: I
+  > want the result to be code that users can read, reason about and change
+  > for themselves.
+
+Thank you for this effort.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-25T15:51:06+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <E1xKzYw-000DL1-J2@fencepost.gnu.org>
+In-Reply-To: <179259944455.56097.16621094599408093966@gmail.com>
+ (vhkdzszh@gmail.com)
+References: <179259944455.56097.16621094599408093966@gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > The package history contains two merged pull requests from GitHub Copilot
+  > branches, and recent fixes were prepared with an LLM-assisted editor.
+  > rms has just stated in the clutch thread that NonGNU ELPA does not
+  > include LLM-generated code.
+
+The reason we avoid LLM-generated material (code or text) is because
+of legal uncertainty, not a moral judgment.
+
+Could you explain concretely what sort of things you had the
+LLM-assisted editor do?  Based on that, I can find out whether
+it causes a legal uncertainty.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-25T15:51:08+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+In-Reply-To: <179260078509.84898.7507602913885656282@gmail.com>
+ (vhkdzszh@gmail.com)
+References: <179260078509.84898.7507602913885656282@gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > On the name: ekp-fill it is.
+
+Did you ever consider my suggestions based on TeX?
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-25T15:51:09+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+In-Reply-To: <871p9n8pmy.fsf@posteo.net> (message from Philip Kaludercic on
+ Sun, 18 Oct 2026 06:54:47 +0000)
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Unless I am mistaken, this here should be AGPLv3-or-later:
+
+  > https://artifex.com/licensing/gnu-agpl-v3
+
+Sad to say, you're mistaken.  That page contains a copy of GNU AGPL
+version 3.  But it says NOTHING about which versions of the GNU AGPL
+apply to any particular program.
+
+(This is an example of the confusion that GitHub spreads about license
+versions.  See https://www.gnu.org/philosophy/whats-wrong-with-github.html.)
+
+https://artifex.com/licensing doesn't clearly say which AGPL versions
+it authorizes the use of, but I think it is AGPL v3 only.
+
+HOWEVER
+
+  > MuPDF is AGPLv3-or-later[1]:
+
+  >   LICENSE
+
+  >   MuPDF is Copyright (c) 2006-2023 Artifex Software, Inc.
+
+  >   This program is free software: you can redistribute it and/or modify it under
+  >   the terms of the GNU Affero General Public License as published by the Free
+  >   Software Foundation, either version 3 of the License, or (at your option) any
+  >   later version.
+
+That is entirely clear.  https://artifex.com/licensing is confused,
+but that doesn't affect MuPDF.  We can use MuPDF and link it with Emacs.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-25T15:51:10+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [ELPA] New package: markdown-ts-appear
+Message-ID: <E1xKzZ0-000DM6-3C@fencepost.gnu.org>
+In-Reply-To: <87wlrf7awh.fsf@posteo.net> (message from Philip Kaludercic on
+ Sun, 18 Oct 2026 06:58:23 +0000)
+References: <520040404.47473814.1788432256599.JavaMail.zimbra@sjtu.edu.cn>
+ <87tso6gwnl.fsf@posteo.net>
+ <FEC1CCEA-8AA8-4040-A8D6-4903CC00F76B@sjtu.edu.cn>
+ <87o6cyvguf.fsf@posteo.net>
+ <CAN+1HbqvwL_XTsNCm6Tr5=b8RJ70RtJyoS0xFTMbJmHeiyK3gw@mail.gmail.com>
+ <9322949A-E6F4-4A36-949C-EC7D97BC74F6@sjtu.edu.cn>
+ <87v775baoi.fsf@posteo.net>
+ <80CB4A3E-D11A-4446-AABD-FB9ACC2C0376@sjtu.edu.cn>
+ <874ieka870.fsf@posteo.net>
+ <3CA666C9-2CE3-40F6-A186-3760C65BE01B@sjtu.edu.cn> <87wlrf7awh.fsf@posteo.net>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > My advice would really just be to handle this feature as a soft
+  > dependency that your package can enable and integrate if the
+  > markdown-table-wrap is installed, and otherwise gracefully handle the
+  > absence
+
+Would you please explain more concretely what is being suggested here?
+I can't get a clear idea from those terse words.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+

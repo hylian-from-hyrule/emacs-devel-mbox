@@ -73505,3 +73505,1399 @@ in the major mode function.
 
 
 
+From MAILER-DAEMON Sat Oct 24 15:23:37 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKhL6-0000lf-GB
+	for mharc-emacs-devel@gnu.org; Sat, 24 Oct 2026 15:23:37 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <morgan@ice9.digital>)
+ id 1xKhL4-0000lR-Rc
+ for emacs-devel@gnu.org; Sat, 24 Oct 2026 15:23:34 -0400
+Received: from out-40.mta1.migadu.com ([95.215.58.40] helo=mta1.migadu.com)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <morgan@ice9.digital>)
+ id 1xKhL2-0008LV-Or
+ for emacs-devel@gnu.org; Sat, 24 Oct 2026 15:23:34 -0400
+X-Envelope-To: emacs-devel@gnu.org
+DKIM-Signature: a=rsa-sha256; bh=cUqBQI4sr+kIk2xanyyIP79FLk6nwFCNwK8bURIQliM=; 
+ c=simple/simple; d=ice9.digital;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792869807; v=1; x=1793474607;
+ b=ZCtHG217hhcMqJpKD8ZE15OMLWwK1NBpikpd5474uKKMojjqUsFAKMzml97pLndTFEn6sOL9
+ BZOVO1VZ6jLg76DcWhb+uX0cYVFSkLunSzHMUFiBO9q4qwhLRKVK2QLP0ajp2Eg7Pn7TwCboibY
+ llHbSx0in+spB10o7CoXbsSbDxb9xibWJuaqpPuQP+HRwXbmbVT6NdnxNLEBPM+ckC47uz+dAqY
+ 9UJp7OYXYydA2gRvUWd+vMuuZuwIveF7H+un00Un/2bydpWJzNqxjOTWm17OOamEBh1M0zrBu62
+ lhbvtRcz5aotBq5YNEG35chT6n/HTTyAKrrYLWDWxxxwg==
+X-Envelope-To: emacs-devel@gnu.org
+Received: by mta10.migadu.com with ESMTPS id 653f74abcd60d8da;
+ Sat, 24 Oct 2026 19:23:27 +0000
+X-Mizu-Trace-ID: 653f74abcd60d8da
+X-Migadu-Flow: FLOW_OUT
+From: Morgan Willcock <morgan@ice9.digital>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: Ulrich =?utf-8?Q?M=C3=BCller?= <ulm@gentoo.org>,  emacs-devel@gnu.org
+Subject: Re: [nongnu] elpa/ebuild-mode 3608e05baa 1/4: Reinstate the mode
+ hook functions
+In-Reply-To: <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org>
+References: <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org>
+Date: Sat, 24 Oct 2026 20:23:17 +0100
+Message-ID: <877bj6ucm2.fsf@ice9.digital>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=95.215.58.40; envelope-from=morgan@ice9.digital;
+ helo=mta1.migadu.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_MSPIKE_H2=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 24 Oct 2026 19:23:35 -0000
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+> Hi Ulrich,
+>
+>>     * ebuild-mode.el (ebuild-mode-add-font-lock, ebuild-mode-hook):
+>>     * gentoo-newsitem-mode.el (gentoo-newsitem-add-font-lock)
+>>     (gentoo-newsitem-mode-hook):
+>>     * devbook-mode.el (devbook-add-font-lock, devbook-mode-hook):
+>>     * glep-mode.el (glep-mode-add-font-lock, glep-mode-hook):
+>>     Reinstate the mode hook functions because major modes must not
+>>     call font-lock-add-keywords.
+>
+> I'm curious:
+>
+> Why do you think major modes shouldn't call `font-lock-add-keywords`?
+> And why do you think it's less bad to do it from the mode hook?
+>
+> [ Admittedly, `font-lock-add-keywords` is rarely needed in major-modes,
+>   but it's not like it should be avoided at all costs.
+>   It can make sense for example when defining a derived mode where the
+>   font-lock rules should do whatever the parent does plus a few more
+>   rules.  ]
+
+>From the documentation for font-lock-add-keywords:
+
+  Warning: Major mode commands must not call font-lock-add-keywords
+  under any circumstances, either directly or indirectly, except through
+  their mode hooks. (Doing so would lead to incorrect behavior for some
+  minor modes.) They should set up their rules for search-based
+  fontification by setting font-lock-keywords.
+
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Customizing-Keywords.html
+
+-- 
+Morgan Willcock
+
+
+From MAILER-DAEMON Sat Oct 24 15:56:11 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKhqd-0008VJ-Oe
+	for mharc-emacs-devel@gnu.org; Sat, 24 Oct 2026 15:56:11 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xKhqb-0008Up-My
+ for emacs-devel@gnu.org; Sat, 24 Oct 2026 15:56:09 -0400
+Received: from woodpecker.gentoo.org ([140.211.166.183] helo=smtp.gentoo.org)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_CHACHA20_POLY1305:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xKhqZ-00040s-Sw
+ for emacs-devel@gnu.org; Sat, 24 Oct 2026 15:56:09 -0400
+Received: from urania (p200300cbaf178e0045bd3c523a5bca53.dip0.t-ipconnect.de
+ [IPv6:2003:cb:af17:8e00:45bd:3c52:3a5b:ca53])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (No client certificate requested) (Authenticated sender: ulm)
+ by smtp.gentoo.org (Postfix) with ESMTPSA id 36EEF3410C3;
+ Sat, 24 Oct 2026 19:56:04 +0000 (UTC)
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: Ulrich =?utf-8?Q?M=C3=BCller?= <ulm@gentoo.org>,  emacs-devel@gnu.org
+Subject: Re: [nongnu] elpa/ebuild-mode 3608e05baa 1/4: Reinstate the mode
+ hook functions
+In-Reply-To: <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org>
+References: <179276412219.6038.803214883139792156@vcs2.savannah.gnu.org>
+ <20261023140203.840A1C0FD72@vcs2.savannah.gnu.org>
+ <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org>
+Date: Sat, 24 Oct 2026 21:56:00 +0200
+Message-ID: <u5wyqq3e7@gentoo.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=140.211.166.183; envelope-from=ulm@gentoo.org;
+ helo=smtp.gentoo.org
+X-Spam_score_int: -41
+X-Spam_score: -4.2
+X-Spam_bar: ----
+X-Spam_report: (-4.2 / 5.0 requ) BAYES_00=-1.9, RCVD_IN_DNSWL_MED=-2.3,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 24 Oct 2026 19:56:10 -0000
+
+>>>>> On Sat, 24 Oct 2026, Stefan Monnier wrote:
+
+>> * ebuild-mode.el (ebuild-mode-add-font-lock, ebuild-mode-hook):
+>> * gentoo-newsitem-mode.el (gentoo-newsitem-add-font-lock)
+>> (gentoo-newsitem-mode-hook):
+>> * devbook-mode.el (devbook-add-font-lock, devbook-mode-hook):
+>> * glep-mode.el (glep-mode-add-font-lock, glep-mode-hook):
+>> Reinstate the mode hook functions because major modes must not
+>> call font-lock-add-keywords.
+
+> I'm curious:
+
+> Why do you think major modes shouldn't call `font-lock-add-keywords`?
+> And why do you think it's less bad to do it from the mode hook?
+
+The Emacs Lisp Reference Manual says so in section 24.7.3:
+
+ -- Function: font-lock-add-keywords mode keywords &optional how
+
+     *Warning:* Major mode commands must not call
+     =E2=80=98font-lock-add-keywords=E2=80=99 under any circumstances, eith=
+er directly
+     or indirectly, except through their mode hooks.  (Doing so would
+     lead to incorrect behavior for some minor modes.)  They should set
+     up their rules for search-based fontification by setting
+     =E2=80=98font-lock-keywords=E2=80=99.
+
+> [ Admittedly, `font-lock-add-keywords` is rarely needed in major-modes,
+>   but it's not like it should be avoided at all costs.
+>   It can make sense for example when defining a derived mode where the
+>   font-lock rules should do whatever the parent does plus a few more
+>   rules.  ]
+
+That's exactly the case here, ebuild-mode is a derived mode of sh-mode,
+and should inherit all its rules, including its three highlighting
+levels.
+
+Ulrich
+
+
+From MAILER-DAEMON Sat Oct 24 17:25:02 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKjEc-00058D-CT
+	for mharc-emacs-devel@gnu.org; Sat, 24 Oct 2026 17:25:02 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xKjEa-00057z-Ll
+ for emacs-devel@gnu.org; Sat, 24 Oct 2026 17:25:00 -0400
+Received: from mout02.posteo.de ([185.67.36.66])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xKjEY-0003ns-GA
+ for emacs-devel@gnu.org; Sat, 24 Oct 2026 17:25:00 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout02.posteo.de (Postfix) with ESMTPS id D0AE6240101
+ for <emacs-devel@gnu.org>; Sat, 24 Oct 2026 23:24:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1792877083;
+ bh=Ex2v/X5NTf4eErNReiQ7LDy+iuBg+3KkrwLlKsM9z7M=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:From;
+ b=m8LV7c+mrw+wXhwkkMqqfoEY8H5w0HJWOnIHdfCfP7XfdTNU2yqytZb0wR+3rrSzY
+ x97xk+ueuHxrlgDPbu+s6iLvQcB5f72OT+TKaJEDcF7Bybe+BI4V/75j5EXPrVbrXm
+ emIU6ADfCAfc8oCwl8ts0DHWEQznk+trBMKfFDBIOa3MLlzxrfoRIkDbcmg0zrT2QE
+ 4RwKUjbb5azyY1d6x+EjXsoSLlU8vHz6H+3QGoIZs2l0o3OR2igl440mfw0XIRIVKV
+ LzLYx0VjOBqJhfFITd2TGTAm02IVwimybcRz+Hnqnt1bSju6kgDLsbO5wTHwgktUDT
+ qI7NgRQIXLyhQ==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4jBtFR2QjSz9rxN;
+ Sat, 24 Oct 2026 23:24:43 +0200 (CEST)
+From: Philip Kaludercic <philipk@posteo.net>
+To: rms@gnu.org
+Cc: vhkdzszh@gmail.com,  emacs-devel@gnu.org
+Subject: Re: [NonGNU ELPA] New package: ekp
+In-Reply-To: <E1xKMjr-00FXxq-2Z@fencepost.gnu.org>
+References: <179258443601.84793.12863871076813397901@gmail.com>
+ <E1xKMjr-00FXxq-2Z@fencepost.gnu.org>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Sat, 24 Oct 2026 21:24:43 +0000
+Message-ID: <87ecderdut.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=185.67.36.66; envelope-from=philipk@posteo.net;
+ helo=mout02.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 24 Oct 2026 21:25:00 -0000
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > ekp implements Knuth-Plass optimal line breaking for Emacs buffers.
+>   > Paragraphs are split into boxes, a globally optimal break sequence is
+>   > chosen, and lines are justified to the pixel.
+>
+> Thanks for working on this useful feature.
+>
+> (I am very glad that other people started looking for a clear
+> and helpful name before I set this out.  Thanks to you, too!)
+>
+> I never heard of "Knuth-Plass" anything, although I wrote TeX
+> programs.  But since you mentioned Knuth and text formatting, I
+> suspected it might have something to do with TeX.  Indeed, this
+> is what TeX uses.
+>
+> So how about TeXlike-line-break?  Or TeX-line-break?  People who see
+> such a title will get a fairly specific idea of what this is good for.
+
+TeX-line-break would likely confuse some people, as you might think that
+it is a feature that deals specifically with breaking lines in .tex files.
+
+> Another message suggested "typeset".  That term gives some information
+> about what this does, but it is very general.  As someone else noted,
+> many packages might do typesetting.
+>
+>   > - There is no Texinfo manual.
+>
+> Could it be useful to refer people to part of the TeXbook for part
+> of documenting this package?
+
+I think that pointing to the wikipedia page ought to be sufficient:
+https://en.wikipedia.org/wiki/Knuth%E2%80%93Plass_line-breaking_algorithm,
+there are further references from that page.
+
+>   > - native/ holds an optional C accelerator that the user builds on
+>   >   request with make; the package is fully functional without it.
+>
+> What facilities are needed to build and install this?
+>
+>   > - dictionaries/ carries 84 hyphenation patterns taken from LibreOffice.
+>   >   MANIFEST.tsv pins the upstream commit and records the licence evidence
+>   >   for each file; LICENSES.md explains the scheme.
+>
+> What does .tsv mean?
+>
+>   > For the C-h P description, please use the Commentary of ekp.el: the
+>   > README is Markdown, and the Commentary opens with the package summary.
+>
+> Please post that here -- we should look at it with a view to
+> evaluating it _for this use_.
+
+
+From MAILER-DAEMON Sat Oct 24 18:22:58 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKk8f-0004dp-UL
+	for mharc-emacs-devel@gnu.org; Sat, 24 Oct 2026 18:22:57 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xKk8d-0004dc-Un
+ for emacs-devel@gnu.org; Sat, 24 Oct 2026 18:22:55 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xKk8c-0000gm-72; Sat, 24 Oct 2026 18:22:55 -0400
+Received: from pmg3.iro.umontreal.ca (localhost [127.0.0.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id 57858441485;
+ Sat, 24 Oct 2026 18:22:51 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1792880569;
+ bh=EgyQqCFkivj1rxcO+aho1fTMnj1uBu2qzXF8l/wpzbA=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=OnxbLGOSCsTdRoURV2uEK7o/ss5HL3LIvDqE2vSNxahVIL7Cn6e1+GcrMY0Jr6eYC
+ Yzt1M7yNCjJIoekFckjZM8Z1+/hSOHqF7rt9ImrO+OXtnrPivVGUHvOV3z2HMJDXvd
+ v0FHLQesUmewtseux809euTjlv9M/PbcdoGvoj7hRSE9mrpWtBOIDDrtxI8I5FmCeM
+ Ei46WqofzF/rs2TmxZiXwZN+UmGmhkVmSwUdKgdThh7WHGt7EP4Lt0KrY54ZbSgFD7
+ J1CH/OEOzvR1eaYpW8Q6wZ1oGXiN6PdsERqLs3Sh3ioWmIpoeWP7Q+hk8Op0GADONG
+ H2JiVM9+RCcHA==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id B110C4413E7;
+ Sat, 24 Oct 2026 18:22:49 -0400 (EDT)
+Received: from pastel (104-195-217-152.cpe.teksavvy.com [104.195.217.152])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 7E583120512;
+ Sat, 24 Oct 2026 18:22:49 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Ulrich =?windows-1252?Q?M=FCller?= <ulm@gentoo.org>
+Cc: emacs-devel@gnu.org, rms@gnu.org
+Subject: font-lock-add-keywords from major modes (was: [nongnu]
+ elpa/ebuild-mode 3608e05baa 1/4: Reinstate the mode hook functions)
+In-Reply-To: <u5wyqq3e7@gentoo.org>
+Message-ID: <jwvwlr6hi88.fsf-monnier+emacs@gnu.org>
+References: <179276412219.6038.803214883139792156@vcs2.savannah.gnu.org>
+ <20261023140203.840A1C0FD72@vcs2.savannah.gnu.org>
+ <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org> <u5wyqq3e7@gentoo.org>
+Date: Sat, 24 Oct 2026 18:22:48 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.189 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 24 Oct 2026 22:22:56 -0000
+
+>>> * ebuild-mode.el (ebuild-mode-add-font-lock, ebuild-mode-hook):
+>>> * gentoo-newsitem-mode.el (gentoo-newsitem-add-font-lock)
+>>> (gentoo-newsitem-mode-hook):
+>>> * devbook-mode.el (devbook-add-font-lock, devbook-mode-hook):
+>>> * glep-mode.el (glep-mode-add-font-lock, glep-mode-hook):
+>>> Reinstate the mode hook functions because major modes must not
+>>> call font-lock-add-keywords.
+>
+>> I'm curious:
+>
+>> Why do you think major modes shouldn't call `font-lock-add-keywords`?
+>> And why do you think it's less bad to do it from the mode hook?
+>
+> The Emacs Lisp Reference Manual says so in section 24.7.3:
+>
+>  -- Function: font-lock-add-keywords mode keywords &optional how
+>
+>      *Warning:* Major mode commands must not call
+>      =E2=80=98font-lock-add-keywords=E2=80=99 under any circumstances, ei=
+ther directly
+>      or indirectly, except through their mode hooks.  (Doing so would
+>      lead to incorrect behavior for some minor modes.)  They should set
+>      up their rules for search-based fontification by setting
+>      =E2=80=98font-lock-keywords=E2=80=99.
+
+Hmm... thanks.  I see this paragraph comes from:
+
+    commit 03de4399116421aa6d96ee93f4ace948304339da
+    Author: Richard M. Stallman <rms@gnu.org>
+    Date:   Wed Jun 8 15:32:01 2005 +0000
+
+    (Mode Line Data): Minor cleanup.
+    (Customizing Keywords): Node split out of Search-based Fontification.
+    Add example of using font-lock-add-keywords from a hook.
+    Clarify when MODE should be non-nil, and when nil.
+
+The closest I can find in the previous text is:
+
+    @strong{Warning:} Only use a non-@code{nil} @var{mode} argument when
+    you use @code{font-lock-add-keywords} or
+    @code{font-lock-remove-keywords} in your @file{.emacs} file.  When you
+    use these functions from a Lisp program (such as a minor mode), we
+    recommend that you use @code{nil} for @var{mode} (and place the call
+    on a hook) to avoid subtle problems due to the details of the
+    implementation.
+
+but AFAIK it refers to other problems.  Richard, do you remember what
+were the "incorrect behavior for some minor modes" that could occur when
+`font-lock-add-keywords` was used from a major mode function (and why
+that did not apply to the major mode hook)?
+
+We've made several changes to the way keywords are initialized and hook
+are run since June 2005, so I'm not sure the problem is still current
+(and if it is, maybe it's a good opportunity to see if we can fix it).
+
+>> [ Admittedly, `font-lock-add-keywords` is rarely needed in major-modes,
+>>   but it's not like it should be avoided at all costs.
+>>   It can make sense for example when defining a derived mode where the
+>>   font-lock rules should do whatever the parent does plus a few more
+>>   rules.  ]
+>
+> That's exactly the case here, ebuild-mode is a derived mode of sh-mode,
+> and should inherit all its rules, including its three highlighting
+> levels.
+
+So `font-lock-add-keywords` is the right solution there.
+
+In the mean time, for `gentoo-newsitem-mode` you should definitely set
+`font-lock-defaults` instead (haven't looked at your other modes).
+
+
+=3D=3D=3D Stefan
+
+
+
+From MAILER-DAEMON Sun Oct 25 03:48:41 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKsy9-0007eU-HQ
+	for mharc-emacs-devel@gnu.org; Sun, 25 Oct 2026 03:48:41 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xKsy5-0007dT-I9
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 03:48:38 -0400
+Received: from woodpecker.gentoo.org ([140.211.166.183] helo=smtp.gentoo.org)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_CHACHA20_POLY1305:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xKsy3-0006Sd-NT
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 03:48:37 -0400
+Received: from urania (p200300cbaf2bc0002386891b1b9c7005.dip0.t-ipconnect.de
+ [IPv6:2003:cb:af2b:c000:2386:891b:1b9c:7005])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (No client certificate requested) (Authenticated sender: ulm)
+ by smtp.gentoo.org (Postfix) with ESMTPSA id A7635341E69;
+ Sun, 25 Oct 2026 07:48:31 +0000 (UTC)
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: Ulrich =?utf-8?Q?M=C3=BCller?= <ulm@gentoo.org>,  emacs-devel@gnu.org
+Subject: Re: font-lock-add-keywords from major modes
+In-Reply-To: <jwvwlr6hi88.fsf-monnier+emacs@gnu.org>
+References: <179276412219.6038.803214883139792156@vcs2.savannah.gnu.org>
+ <20261023140203.840A1C0FD72@vcs2.savannah.gnu.org>
+ <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org> <u5wyqq3e7@gentoo.org>
+ <jwvwlr6hi88.fsf-monnier+emacs@gnu.org>
+Date: Sun, 25 Oct 2026 08:48:26 +0100
+Message-ID: <uwlr6nrud@gentoo.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=140.211.166.183; envelope-from=ulm@gentoo.org;
+ helo=smtp.gentoo.org
+X-Spam_score_int: -41
+X-Spam_score: -4.2
+X-Spam_bar: ----
+X-Spam_report: (-4.2 / 5.0 requ) BAYES_00=-1.9, RCVD_IN_DNSWL_MED=-2.3,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 25 Oct 2026 07:48:38 -0000
+
+>>>>> On Sun, 25 Oct 2026, Stefan Monnier wrote:
+
+>>> [ Admittedly, `font-lock-add-keywords` is rarely needed in major-modes,
+>>> but it's not like it should be avoided at all costs.
+>>> It can make sense for example when defining a derived mode where the
+>>> font-lock rules should do whatever the parent does plus a few more
+>>> rules.  ]
+>> 
+>> That's exactly the case here, ebuild-mode is a derived mode of sh-mode,
+>> and should inherit all its rules, including its three highlighting
+>> levels.
+
+> So `font-lock-add-keywords` is the right solution there.
+
+> In the mean time, for `gentoo-newsitem-mode` you should definitely set
+> `font-lock-defaults` instead (haven't looked at your other modes).
+
+In fact, that was how it was done before, but I had changed it to
+font-lock-add-keywords in 2024, shortly after adding the test suite.
+
+I've now sorted out the test failure and reverted to font-lock-defaults.
+In a feature branch, for the time being:
+https://codeberg.org/ulm/ebuild-mode/src/branch/font-lock-defaults
+
+Ulrich
+
+
+From MAILER-DAEMON Sun Oct 25 08:33:44 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKxQ0-0007LV-7B
+	for mharc-emacs-devel@gnu.org; Sun, 25 Oct 2026 08:33:44 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eli@barzilay.org>) id 1xKxPy-0007KH-2M
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 08:33:42 -0400
+Received: from mail-qv1-xf29.google.com ([2607:f8b0:4864:20::f29])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <eli@barzilay.org>) id 1xKxPt-0006MG-Lh
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 08:33:40 -0400
+Received: by mail-qv1-xf29.google.com with SMTP id
+ 6a1803df08f44-91c04f35e96so3890836d6.3
+ for <emacs-devel@gnu.org>; Sun, 25 Oct 2026 05:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=barzilay-org.20251104.gappssmtp.com; s=20251104; t=1792931616; x=1793536416;
+ darn=gnu.org; 
+ h=subject:cc:to:date:message-id:content-transfer-encoding
+ :content-type:mime-version:from:from:to:cc:subject:date:message-id
+ :reply-to:content-type;
+ bh=uXP0fgNGk8wQVwgEuLZOKjA+iMBFhbqvM0YsFidPWs8=;
+ b=wywwNjKepEglps1+7fQ0Gd5DHPj+G/iLjWdsitaWNYqn4THipJ18VgBN9rYsythRA/
+ W3LFj4NcKeGQ3VXo+OfSQo8MG+0kSFjF6kPcP8QLN5cfGQjk3hD1cg1MJJn7ExZAlN8k
+ UFdpl75o+t2u4fXqIfbmZBMg/1nnC/NbrSrsb32gnJ/R/+2MWK9lArf2RgEJY0nxy3ku
+ vkQE2Os9rp/wyD6PVh5UCe5crvTGRkGgfUNa87jcZAc7zMoe2FQBIL+slhyv8mcydr9i
+ Z6vtOZSyoKIXP4kpfLgAdibtQ5T355J74qUlNgFTC7pW6JsdfDWrG5Ee8hvxw68L7XMB
+ OpAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1792931616; x=1793536416;
+ h=subject:cc:to:date:message-id:content-transfer-encoding
+ :content-type:mime-version:from:x-gm-gg:x-gm-message-state:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=uXP0fgNGk8wQVwgEuLZOKjA+iMBFhbqvM0YsFidPWs8=;
+ b=SRYnAOV/9yGTkAxI3lwPgfiGe/KWpdO3jQNxhJRD/kMSii9pRUiVOaPVPsvundi0/N
+ kuO5mB+n4HjPz3TET1m9zLt+94Yswuac8FG+8LZbn+LV7wszjK/qlE4thKHw9SP+Eo9Z
+ 2oH3wpLfainWj1qE0XEjWCMltfDwzTw9iBqci8HH2xZ/D45x48IhV1U/fMaEYModpK+2
+ KKTaYRYQEyNmyJyrnwTkcn5fC2jYzWu8exqtOxoFu8mBw4srPbo9Z1qCotJxlle4n/U3
+ PSfsbQAw9G7k1kfyg/ElkVVEfDt8YbyIietLNMCUHfw7+Ugn2oZIuZlR6x6pRwfpW7Wx
+ RKUQ==
+X-Gm-Message-State: AFq9FYK44QD+QkRJ1YjsxUO2aVQY3QRDWqdfv/GmDU/fhcg6E1qMIye9
+ 7UN1+zJgy+3vHP3IGG83yspVhaPPlVCKZ37oBkFcia8NOxe2vQouZ8zV2KD3vdBOEQ==
+X-Gm-Gg: AYBFou0svP/7c8qElrms6LTxkALM0Kavr6IK67UMTmFH54Ksth+j+4iRh0t/nSpLmhf
+ 739MMqc9yS/CuuWHtzF08jMl4w3foDlUNULwFSudZNr1QtELm0H+hzm2pSNItXF81iCVJ5Rvs1J
+ +K6w+4HEumRy4FIyqU/yqNE+fK3NXG3xDXhKVW5nvwMMLwSHXKeLB+02VAP4aWuZuYN0PIZVLj7
+ sf9iGQBUe9kD4YcsbPaFTah7KLu9ns5SYPs2f4plpMw7pM6P2m09l03f9FDouSCQDnbbw5lzDOM
+ D1N/NvGscWQ5e4YzA/IOTy6BOXbsGk3QHfyZaC1OY9zpHeQduQhT6Lwz3rUakItFOWx0I1GmsuG
+ MmE/wfqs+xSOqzmHUaALhyCTGsBHqjnDczjJVgLbB9KPnQWB9S+IgL+cZ9f+XJEbFTZODuyORKx
+ MWgjk3oWe3wj0U0gXSTYRsuru2yxoRCdwS6VL+mDzN4qdboJxdegtX1XEVZ6ABM0L84G8vYtcXq
+ uzb2nYiytyUKMyMFv56rlTB/qh1lyeHaUBlVF+PR60e58/NgYFNsFukjCzLkUGOzJbO+Amw2lVe
+ EqYGa2c81k81IrQt3rS9v/eaAyXxNmbe1OCRMcKTzdJ13O4o58SkHw3eh3u6049Y3F9/oXAo1EH
+ r7X0=
+X-Received: by 2002:a05:6214:20e4:b0:91b:8b45:6bae with SMTP id
+ 6a1803df08f44-91c48d3c344mr98381266d6.2.1792931615818; 
+ Sun, 25 Oct 2026 05:33:35 -0700 (PDT)
+Received: from mustafa.barzilay.org (c-24-60-195-177.hsd1.ma.comcast.net.
+ [24.60.195.177]) by smtp.gmail.com with ESMTPSA id
+ 6a1803df08f44-91c47c944casm44586416d6.32.2026.10.25.05.33.34
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Sun, 25 Oct 2026 05:33:34 -0700 (PDT)
+From: Eli Barzilay <eli@barzilay.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <27357.63261.512714.425155@gargle.gargle.HOWL>
+Date: Sun, 25 Oct 2026 08:33:33 -0400
+To: emacs-devel@gnu.org
+CC: Rahul Martim Juliato <rahul.juliato@gmail.com>,
+ =?utf-8?Q?St=C3=A9phane?= Marks <shipmints@gmail.com>
+Subject: markdown-ts-mode: a plain-text base mode, with editing as a layer
+X-Mailer: VM 8.2.0a under 31.1.50 (x86_64-pc-linux-gnu)
+Received-SPF: none client-ip=2607:f8b0:4864:20::f29;
+ envelope-from=eli@barzilay.org; helo=mail-qv1-xf29.google.com
+X-Spam_score_int: -18
+X-Spam_score: -1.9
+X-Spam_bar: -
+X-Spam_report: (-1.9 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_NONE=0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 25 Oct 2026 12:33:42 -0000
+
+Good morning!
+
+TL;DR: markdown-ts-mode's highlighting is great, but its editing layer
+fights plain-text editing, which is the whole point of Markdown. I cut
+it down to a highlighting-only mode in under 300 lines (link below), and
+I'd like to propose a small base like that as the default .md mode, with
+the editing machinery as an opt-in layer. Along the way I found a few
+bugs (one runs arbitrary `*-mode' functions from fence names), a treesit
+"fast mode" issue that needs a supported opt-out, a grammar bug, and
+a case for generalizing mhtml's submode code instead of reimplementing
+it.
+
+----
+
+I've been moving my setup to Emacs 31, and tried `markdown-ts-mode'. The
+highlighting is very nice -- it follows the actual syntax, and code
+fences in their own language are a real improvement. But the editing
+layer got in my way almost everywhere. To actually use this thing, I'd
+probably need to go over most key bindings, and disable/tweak many of
+them. I think it's worth discussing now, while the mode is still
+experimental and its design is open for 32.
+
+The main point: Markdown was designed so that the plain text *is* the
+format, and not needing any tooling is most of its appeal. Emacs is a
+great text editor, and that's all a Markdown buffer needs, plus
+highlighting. Typing a `*' on each side of a word is much easier for me
+than remembering `C-c C-x C-f', and I don't think that's a fringe view.
+With the default settings, I ran into some problems very quickly:
+
+- RET in a table row is the same as <down>; at the last row it adds an
+  empty row, which the next keystroke misaligns anyway.
+- TAB in a table moves to the next cell after deleting the padding around
+  all cells. Elsewhere (e.g., in a block quote), TAB is an outline-cycle
+  command that does nothing visible.
+- RET in a list continues the item, so starting a new bullet takes extra
+  keys (delete spaces, add the bullet). I'm sure that there's some other
+  key chord that I'll never remember that I should use -- but the
+  default text editing is what I know in my bones.
+- M-<left>/M-<right> are taken for changing levels -- if you have sexp
+  navigation on these keys, you get unintended edits of text blocks, and
+  therefore much frustration.
+
+There's no way to get just "plain text editing + highlighting":
+`markdown-ts-view-mode' is a read-only version of the full mode.
+
+I'm aware that there are many people on the opposite side of this fence,
+so I'm not trying to convert anyone. But given that what I need is
+pretty much a strict subset of what's there, it seems like it would be
+obvious to make a basic version that has no special editing
+capabilities, and then another one that adds that on top of the basic
+one.
+
+Some size context: `markdown-ts-mode.el' is about 5,700 lines, plus
+1,100 in `markdown-ts-mode-x.el'. Its .elc is the second largest of the
+60 in lisp/textmodes (only bibtex is bigger), larger than tex-mode,
+sgml-mode, rst, table, and artist. By the file's own sections, font-lock
+and faces are about 350 lines; most of the rest is editing commands,
+link handling, list, table and heading manipulation, filling, and the
+code-block context machinery. Redundant code is a fact of life in any
+software that serves more than one person, but it seems like a more
+extreme case if there's a huge mode with well under 10% being the stuff
+that I need...
+
+To see what this base would look like, I made `md-ts-mode', a cut-down
+version that is temporarily at
+
+  https://gist.github.com/elibarzilay/7f4159764f28e28aa7ba95319fe67388
+
+(it will move to a permanent place later). It is under 300 lines, uses
+the same two grammars with the same pinned commits, derives from
+`text-mode', and has no keymap and no commands. It was made as a quick
+proof of concept, but turned out to be everything I actually need. It
+has:
+
+- full highlighting, with markup visible and full size,
+- code fences highlighted in their own language (the language's mode is
+  found through `auto-mode-alist', plus a small alias list),
+- Outline and Imenu through the standard treesit settings, so plain
+  `outline-minor-mode' just works,
+- the real URL as `thing-at-point' (so `browse-url-at-point' works)
+  anywhere on a link, including reference links and autolinks.
+
+The trade-off I know of: fences are fontified by running the language's
+mode on the block, so editing inside a huge fence re-highlights all of
+it. Still, it's impressively small for a version that I think (a) is
+very useful in itself as a basis for the full, um, "editor experience",
+and (b) does everything needed for people like me, who have written text
+with Emacs for a good number of decades, and are happy with it.
+
+So I want to propose a small base mode like this as the default for .md
+files, with the editing machinery as an autoloaded layer that people
+turn on; or the other way around: have the default use this base with
+the editing coming from a file with a way for me to turn it off. A small
+base can settle (and stay stable) soon (most of the discussion so far
+has been about editing features), and it's a better foundation for
+different editing styles: e.g., an AUCTeX-like layer, an org-like one,
+and whatever else people come up with -- all sharing one parser +
+display setup. (And given how markdown became so important, more editing
+styles are bound to sprout in the next few years.)
+
+Working on a small mode also makes problems easier to see, when they
+don't drown in a huge file of editing machinery. I ran into these in
+markdown-ts-mode:
+
+- A fence language runs any function named LANG-mode: a "column-number"
+  fence turns on `column-number-mode', and "server" would call
+  `server-mode'.
+- Outline navigation sees only top-level (`#') headings: the outline
+  predicate checks for a "section" node, but tree-sitter hands it nested
+  sections under the grammar's internal name "_section2", so they fail.
+  (md-ts-mode checks only the section's first child.)
+- A big fence in an unknown language gets no highlighting, because of
+  font-lock "fast mode" (below).
+
+And some issues below the mode level:
+
+- treesit's font-lock "fast mode" kicks in once a buffer has an expensive
+  node, after which rules on nodes larger than ~6,000 chars never match --
+  exactly big fenced blocks. There's no documented way to opt out;
+  md-ts-mode sets the internal `treesit--font-lock-fast-mode' to nil. Modes
+  that fontify embedded blocks need a supported way to do that.
+- The markdown-inline grammar ignores the flanking rules for
+  single-tilde strikethrough: in "foo ~bar ~baz ~blah" I get a strike
+  through "baz ". This happens also with "*"s and "_"s. This is a bug in
+  tree-sitter-markdown.
+
+I'm not saying that these problems are unsolvable or hard -- they're
+just very easy to lose track of when your code base is mostly not it.
+
+Finally, one feature I deliberately left out: making keys in a fence
+behave as in the fence's language. Done right, this needs swapping
+keymaps *and* the buffer-local state (indentation, syntax table, comment
+settings) as the cursor moves in and out. mhtml-mode does it for HTML,
+markdown-ts-mode has its own ~250-line version, Org has its own for
+source blocks, and in 31 php-ts-mode builds on mhtml-ts-mode to get it.
+Rather than another private implementation, I think mhtml's code should
+be generalized into a reusable library, with treesit answering "which
+language is at point" -- and then Markdown would use it in a few lines.
+Again, nothing blocking this from being done now, but it's that much
+more difficult in a huge project.
+
+I'll be happy to help with any of this if it makes sense. Otherwise, no
+flaming intended: consider me happy with my quick hack and I'll shut up.
+
+-- 
+                   ((x=>x(x))(x=>x(x)))                  Eli Barzilay:
+                   http://barzilay.org/                  Maze is Life!
+
+
+From MAILER-DAEMON Sun Oct 25 09:00:23 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKxpn-000235-PD
+	for mharc-emacs-devel@gnu.org; Sun, 25 Oct 2026 09:00:23 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1xKxpc-00022P-PB
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 09:00:14 -0400
+Received: from mail-qk1-x72c.google.com ([2607:f8b0:4864:20::72c])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <johan.myreen@gmail.com>)
+ id 1xKxpb-00087d-16
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 09:00:12 -0400
+Received: by mail-qk1-x72c.google.com with SMTP id
+ af79cd13be357-93c5b7f5bfaso325514785a.1
+ for <emacs-devel@gnu.org>; Sun, 25 Oct 2026 06:00:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792933209; cv=none;
+ d=google.com; s=arc-20260327;
+ b=hdLqQZU9Rd1DUtjhPqeKyIT0sozWJvo84Z6YI1eHZjlbUkLy9i4U9eGgmzRS9SN08J
+ HrhGS/lOsmRpJCZV9Jy5DSJvPoqhWh+RlB9jFXoIolLwha8SPuyb8RhhJ/eh17XZ4Bt8
+ YEvpnfmLHI91cSmRmJPjcv59ZF793X1ThGPOIDjQt9bKH/QSC8sUp4Nphy+Q4WQpxM3X
+ 0D4yNTHaCtpqlDMrLiM9Scz5fFFR261gWYjhoIDn2sjKIGlPrK0reoBSkomaDUTWqYNw
+ tBKFBVX1mgzA5apWky3YE1wUgQo8rt/xzx3PNiFWKu03qgGq543aw+E6tBmhbBWzUBug
+ E0SA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=+CfkZMI8Fp01AgcWKAExO31AjBe8Gmpy+PuSxW5jUJw=;
+ fh=2zXubLHiNds8xrTP/14fbpERRJRg0Vi0HtWsy7k6BRE=;
+ b=OGH2wXJle7HV6X5FhSk+OfIf9TiD+wErj1L002xKLGaNmCviiPG6Uv1Gi/UyzPAM1X
+ G223G3ccJalDcHwj7bjMr7OYclyH+ATw7uXWz7hlzN+XS2vpNhTQCqA5R/5GZLarIzzx
+ 2nDQ09tueCa1F+jok8a/P8aDxnemGYPvkR5sNsxGGq3XoS6fFoApbW1ZDMkX6WS7CuP2
+ 7pRAyDTE2irML2rwQx4m7TEs6IcMHnHxmV632rGCkj53LMZH9wsvKVGC9nbY32ZtSizv
+ 9IrAhrmpcwNj4z+KNt4wtLLVS88iApnM8TfFKEDHmeEHOxWxWjZCEs/zvF019lawYAyK
+ gqEg==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1792933209; x=1793538009; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=+CfkZMI8Fp01AgcWKAExO31AjBe8Gmpy+PuSxW5jUJw=;
+ b=IrqCUBiEPdWfqgOMVlYRxjegsd/2x1rkg2Boaq7w4vCtwNmXfm5jeEzZuFO7Vfa6/v
+ wD16You4xvOzMPjXUnClqVCFr9s4vWxV8jGvQJQEtPLZMTsk4exq9SoaDyv4vAJBthaQ
+ 8XnMug8LnGkeeElnZJF2+2ouZFzzYnlyiyccB+j2EdB2E/wPFrGS/jFT1RzKzWMp19+2
+ wp4gSN5PrM17e8b5gLuPNXJoUtqGqrwpWqxM18XwKS0Itg5am77qZ5c5dnex/GigpjL4
+ 4iQuvG3CG+C/eYn2aE+sxaeS45zlDteX6l+5JnT3alqyzxwhWifvn3ETGIAxbb8OFLuZ
+ 5Crw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1792933209; x=1793538009;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=+CfkZMI8Fp01AgcWKAExO31AjBe8Gmpy+PuSxW5jUJw=;
+ b=XdLIfGfRffVM697XVJLKLOF4wkIOYUeUKDvWlZ/99Ml39r2MapI5gtuIwiFzBXNKft
+ znl5ytvgGXe5kx1T33T1EI2eNKF7n3JDi4uismvzYTWgDGmBfV9VuKbDQqVqBjog1FlM
+ uby7lr0JMqibfPAnwJ6F4x2CKdgZtLMiC7PfTxrD/CWrNXPkoPZWpdZmfYvIkHuB7DVU
+ 4LvsvyK1fA0A0pejQg1n9jOBxL21UXFWae8FO2GU2ZCgFnTL9QHfsJopRg1R5ReiOFNm
+ prdxthuulgHbVsqxn9FlVTn7tOE7wL9ZXvuwSS+Tya5WWom76chRi4N3LohDtR7TNDjw
+ geBg==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBwXJoLrqPKtUQJoR1+3V4oUXGWA3POjwi5wGkJPLDaZAQK5arTEUiwvDnvUkfOkJzW/L1044TMkL9lUBw==@gnu.org
+X-Gm-Message-State: AFq9FYLkdcdkKooHKUzYnDOP8AmvkcqOQPq3cOjMv+OiEUxZIb49xGEI
+ lXOkX2JjMPXTwhIPGyTrHaGq7txP8nlzFCxDaZj16XT83PdzPaG+4666aseQRtCnoo6/1K5Qriy
+ WBvNYeOsfiVIEHNPxdkg1ubMUwfeI7XE=
+X-Gm-Gg: AYBFou1lZDO+J6ajguuC1go199aWx/AyQVKNV2Hg9is2Fdz0YANbNmC0QR2FQ+ErVeN
+ yZLyMow6ndp4lYPnuvZTlh+vuZ5slvvi5jqKaoEyWo0TvMeXvxtP9d28pVbrYw4K+ccL+p+cpQH
+ CUiLnKJw29InKVC6FxicHu3ipNLuJWSRCCdUYYZswJHKvw+/g8C9uz35Qal32MWh1jr2NtXtzj8
+ alncksmWuyk3Ye9CrWDH2TXj0P50IKy9F4MNwDnoNiNVwRWBnECDSLm1sItzWaVUW0CBAllauzv
+ tzd8joIqCiaJHCPEm+i5jSMlvLtJlWyy9fxUd8zanvlSjnGl5smbkrwvCE2X7NAdeBIdrqnWv2a
+ nyB7CnIPkp9VStsDpUwktM5H+2dkp7dMmaVTSoH7snD/UnaG9S8jkHltTGIIY/TN9DLpI
+X-Received: by 2002:a05:620a:414c:b0:93f:16d4:3c0a with SMTP id
+ af79cd13be357-940efa126d2mr497968985a.4.1792933209030; Sun, 25 Oct 2026
+ 06:00:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <M8yxlqYBNDCtxw7MCi6Ug8tgwI9aJYPbUwmdbjPzeDnGjfFYpfZ5llVP4JaxPEZ7EWzY7H3AqF9F0WSkzAkiAOxl8v5iscbq6Qs1X7NC15o=@pm.me>
+ <87mrwr1qd7.fsf@stebalien.com>
+ <CA+TD5hj4u=4+5z+Uon65QJnpJjLMaXfnzLq9aAwBOnOEzeayOA@mail.gmail.com>
+ <87se5p8ma5.fsf@stebalien.com>
+ <2Owi9orX92D9Licppbcwhfw14llghz_3L1fBOWT94N_rlqZJQbmMY5JA0saq0lVfFVQZi7KhttvPUD1cYVyCFB7q65QNCuT7TcF3h65hKC4=@pm.me>
+ <CA+TD5hhgqMLqKu=3wgM-V2fj0i-49xSmypkJrDN126YhH7rsUw@mail.gmail.com>
+ <861pd8ivi9.fsf@gnu.org>
+ <bZripTPf2nd4r-seKpD8eJtKFOlcaKtDhyQ9Fdr-tXFEx_uJ5RC-kdW05DI463mUS-6HEy3nYAP7Xkm88SJefEw0XGWj400RtGAIJmHO4QM=@pm.me>
+ <87a4rwktni.fsf@stebalien.com>
+ <l1l7KMPwKktBrZFT05kXEf4TPb1nSLhZi6IAfnnOm6AUeAnEFCkYShdpt23zPqdADmekZ2WFbtnkPn98XQ1UTJ66l_ncIIaiPK93bSqy5ts=@pm.me>
+ <86a4o32rot.fsf@gnu.org>
+In-Reply-To: <86a4o32rot.fsf@gnu.org>
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Date: Sun, 25 Oct 2026 14:59:57 +0200
+X-Gm-Features: AclHuK-Q1S8by5N5edEPAkrBDeKZxRVbKi2p3l_jJEEf3ID6fVw9LsOiS2ECE08
+Message-ID: <CA+TD5hgnWD-M-54J+ErOZHt7MguCkeHeBhFpKCRORY3DmQfPnQ@mail.gmail.com>
+Subject: Re: bug#79204: [PATCH] pgtk: Use cairo_set_source_surface()
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: Patryk Wychowaniec <pwychowaniec@pm.me>, steven@stebalien.com,
+ luangruo@yahoo.com, 
+ 79204@debbugs.gnu.org, emacs-devel@gnu.org, rahguzar@mailbox.org
+Content-Type: multipart/alternative; boundary="00000000000007c6ee065ea9cb5d"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::72c;
+ envelope-from=johan.myreen@gmail.com; helo=mail-qk1-x72c.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 25 Oct 2026 13:00:16 -0000
+
+--00000000000007c6ee065ea9cb5d
+Content-Type: text/plain; charset="UTF-8"
+
+For what it's worth, I tested this patch and got a speedup of about 10x to
+20x speedup. The test was performed on a PGTK build on Wayland.
+
+The unpatched master head version feels quite sluggish compared to the
+patched build. Even with only a 10x speedup, the patch is valuable.
+
+--00000000000007c6ee065ea9cb5d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div>For what it&#39;s worth, I tested th=
+is patch and got a speedup of about 10x to 20x speedup. The test was perfor=
+med on a PGTK build on Wayland.</div><div><br></div><div>The unpatched mast=
+er head version feels quite sluggish compared to the patched build. Even wi=
+th only a 10x speedup, the patch is valuable.</div><div><br></div></div>
+</div>
+
+--00000000000007c6ee065ea9cb5d--
+
+
+From MAILER-DAEMON Sun Oct 25 09:07:43 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKxwt-0003MB-7W
+	for mharc-emacs-devel@gnu.org; Sun, 25 Oct 2026 09:07:43 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xKxwq-0003Lv-2p
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 09:07:40 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xKxwn-0000JC-PW; Sun, 25 Oct 2026 09:07:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-version:References:Subject:In-Reply-To:To:From:
+ Date; bh=+NgKdhYiCje5i3B0H/aiGXVgfJu6WBl8NNPzg4EboiI=; b=sK+JfDoupMz/FEkV8/f+
+ cj/l5QV9Qx3hZZHYanWOtPrsZz/3R2G20O9N3emnKOtyswWW8PjSHEce5KtHFg8DaSrt8PPEj6X1U
+ DoPlQbwM7omsYsxF1rmT0r9MYRng1urzX3O8H8BEAtQAcJuWoTpyQ2tANgSSk9ueSaTGGLeJ4uCPj
+ lQcfB1fOkjEsrS3MResa9CXzLDRiMuHr07v0Rf6hKSY2VB4CnGyCWRpTdavVo+I9rI1HC0yJhBtTr
+ 6fd1X06enrj+CpOTSeiqAXRHEzbavDW7cw4zpPEFA7Zxk/1KhKNyhZCUaIQuQEJ1XbU6NLgkQz83z
+ XiwFoG7rBds9vQ==;
+Date: Sun, 25 Oct 2026 15:07:34 +0200
+Message-Id: <86h5ia0vzd.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Johan =?utf-8?Q?Myr=C3=A9en?= <johan.myreen@gmail.com>
+Cc: pwychowaniec@pm.me, steven@stebalien.com, luangruo@yahoo.com,
+ 79204@debbugs.gnu.org, emacs-devel@gnu.org, rahguzar@mailbox.org
+In-Reply-To: <CA+TD5hgnWD-M-54J+ErOZHt7MguCkeHeBhFpKCRORY3DmQfPnQ@mail.gmail.com>
+ (message from Johan =?utf-8?Q?Myr=C3=A9en?= on Sun, 25 Oct 2026 14:59:57
+ +0200)
+Subject: Re: bug#79204: [PATCH] pgtk: Use cairo_set_source_surface()
+References: <M8yxlqYBNDCtxw7MCi6Ug8tgwI9aJYPbUwmdbjPzeDnGjfFYpfZ5llVP4JaxPEZ7EWzY7H3AqF9F0WSkzAkiAOxl8v5iscbq6Qs1X7NC15o=@pm.me>
+ <87mrwr1qd7.fsf@stebalien.com>
+ <CA+TD5hj4u=4+5z+Uon65QJnpJjLMaXfnzLq9aAwBOnOEzeayOA@mail.gmail.com>
+ <87se5p8ma5.fsf@stebalien.com>
+ <2Owi9orX92D9Licppbcwhfw14llghz_3L1fBOWT94N_rlqZJQbmMY5JA0saq0lVfFVQZi7KhttvPUD1cYVyCFB7q65QNCuT7TcF3h65hKC4=@pm.me>
+ <CA+TD5hhgqMLqKu=3wgM-V2fj0i-49xSmypkJrDN126YhH7rsUw@mail.gmail.com>
+ <861pd8ivi9.fsf@gnu.org>
+ <bZripTPf2nd4r-seKpD8eJtKFOlcaKtDhyQ9Fdr-tXFEx_uJ5RC-kdW05DI463mUS-6HEy3nYAP7Xkm88SJefEw0XGWj400RtGAIJmHO4QM=@pm.me>
+ <87a4rwktni.fsf@stebalien.com>
+ <l1l7KMPwKktBrZFT05kXEf4TPb1nSLhZi6IAfnnOm6AUeAnEFCkYShdpt23zPqdADmekZ2WFbtnkPn98XQ1UTJ66l_ncIIaiPK93bSqy5ts=@pm.me>
+ <86a4o32rot.fsf@gnu.org>
+ <CA+TD5hgnWD-M-54J+ErOZHt7MguCkeHeBhFpKCRORY3DmQfPnQ@mail.gmail.com>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 25 Oct 2026 13:07:41 -0000
+
+> From: Johan Myréen <johan.myreen@gmail.com>
+> Date: Sun, 25 Oct 2026 14:59:57 +0200
+> Cc: Patryk Wychowaniec <pwychowaniec@pm.me>, steven@stebalien.com, luangruo@yahoo.com, 
+> 	79204@debbugs.gnu.org, emacs-devel@gnu.org, rahguzar@mailbox.org
+> 
+> For what it's worth, I tested this patch and got a speedup of about 10x to 20x speedup. The test was performed
+> on a PGTK build on Wayland.
+> 
+> The unpatched master head version feels quite sluggish compared to the patched build. Even with only a 10x
+> speedup, the patch is valuable.
+
+Thanks.
+
+
+From MAILER-DAEMON Sun Oct 25 10:48:44 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKzWc-00028M-Ed
+	for mharc-emacs-devel@gnu.org; Sun, 25 Oct 2026 10:48:44 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1xKzVr-00025U-64
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 10:48:00 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1xKzVq-0002dr-Lj; Sun, 25 Oct 2026 10:47:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=HAs9RVAXKGPPwgU4TtxBMOpH4gQtUd8zugBl8XtQBfw=; b=kHW8aYVGKjw+
+ mD0lTHNiZ4zkwOMt0vM468L2TtIuZ683AL6WaghR0uqbrb0ubSaL3qNUCBMMOVm+hhZvNExdVs4pr
+ X47hoIyX6KIMVGCQh938esbtYJC3Oz1uhdxFA8PZ8k57Xqrl5c1ZYSOM6UEmOfvTiVtqgqLE9BARf
+ yJeqyooulBWUMbDFdkt+bgzNNTF2hntcsl0zUWNGZViTOu+ROZNMdI4jfSMAoE9b1j55mcvEOL+XW
+ 4/3nMmDteyjbtOdI/HALg/tALD7ZC2Tgcx9EolnhVCzuWoiFTPMKGNhGaNWNFD6ZzHjjCO4pGoQ/f
+ MBPWIMFS8zGcml9yZKIvEQ==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1xKzVJ-000D3V-0s; Sun, 25 Oct 2026 10:47:23 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: Kinney Zhang <vhkdzszh@gmail.com>
+Cc: eliz@gnu.org, emacs-devel@gnu.org
+In-Reply-To: <179265364218.81518.17612804954593858950@gmail.com> (message from
+ Kinney Zhang on Thu, 22 Oct 2026 15:20:42 +0800)
+Subject: Re: [NonGNU ELPA] New package: ekp
+Reply-To: rms@gnu.org
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com> <864iee71w3.fsf@gnu.org>
+ <179265364218.81518.17612804954593858950@gmail.com>
+Message-Id: <E1xKzVJ-000D3V-0s@fencepost.gnu.org>
+Date: Sun, 25 Oct 2026 10:47:21 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 25 Oct 2026 14:48:11 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > I will rewrite the LLM-generated parts.  That is not a quick job: the
+  > affected code is around 800 lines, and doing it properly means
+  > re-deriving the logic and re-running the acceptance tests, so I expect
+  > weeks rather than days.  The point is not only to satisfy the policy: I
+  > want the result to be code that users can read, reason about and change
+  > for themselves.
+
+Thank you for this effort.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
+From MAILER-DAEMON Sun Oct 25 10:51:08 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKzYy-00037n-De
+	for mharc-emacs-devel@gnu.org; Sun, 25 Oct 2026 10:51:08 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1xKzYx-00037O-68
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 10:51:07 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1xKzYw-0005aM-T3; Sun, 25 Oct 2026 10:51:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=yC7xNRYzto9eVAND7GgdyM9AAybDrIumq9kHW0h3uY8=; b=N32/oN3SVqYD
+ RHu+wUe0nveIeGBcX4eAausjVOCa1ErBYz916n7GoXEe0nPuqb/Yng8Cjb5AFFMkQi9QM2t3iojBU
+ jrpOWF42xUz/+gAuzyC0ZbmX64GPL2AfcaWwYpoiUvtxNvb6nM07ev2xHMkbff9HaDIDeC7JmWDUb
+ K1zr9o16TetGfa0wC4EaP0O2QF0Q9N2EVpelwNDL4sfggV5r5EsOuij8IP50BIS6k/0pRW0l3ADl2
+ UtPlXK4kY/tkCaFIf9EM0OKhGhEuiS5O57KtQnaB1XIHp1HORwXZidSp0dwO2euqzUVrzneSdMh9H
+ /gmJ+Dr8Gin7d0QhakO58w==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1xKzYw-000DL1-J2; Sun, 25 Oct 2026 10:51:06 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: vhkdzszh@gmail.com
+Cc: emacs-devel@gnu.org
+In-Reply-To: <179259944455.56097.16621094599408093966@gmail.com>
+ (vhkdzszh@gmail.com)
+Subject: Re: [NonGNU ELPA] New package: ekp
+Reply-To: rms@gnu.org
+References: <179259944455.56097.16621094599408093966@gmail.com>
+Message-Id: <E1xKzYw-000DL1-J2@fencepost.gnu.org>
+Date: Sun, 25 Oct 2026 10:51:06 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 25 Oct 2026 14:51:07 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > The package history contains two merged pull requests from GitHub Copilot
+  > branches, and recent fixes were prepared with an LLM-assisted editor.
+  > rms has just stated in the clutch thread that NonGNU ELPA does not
+  > include LLM-generated code.
+
+The reason we avoid LLM-generated material (code or text) is because
+of legal uncertainty, not a moral judgment.
+
+Could you explain concretely what sort of things you had the
+LLM-assisted editor do?  Based on that, I can find out whether
+it causes a legal uncertainty.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
+From MAILER-DAEMON Sun Oct 25 10:51:12 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKzZ0-00038T-J4
+	for mharc-emacs-devel@gnu.org; Sun, 25 Oct 2026 10:51:11 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1xKzYz-000386-07
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 10:51:09 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1xKzYy-0005bs-MV; Sun, 25 Oct 2026 10:51:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=MXHEDCefpMAP7qyMLppHDzUTmOGYrqNqmWgWyeF7V5w=; b=fTE7M0TkPv+D
+ /enAxZsUBFLqgiqYeiO8RYv5puxlOf8rohG9KhjxvTQvpkiBlJmFziU3ysnREDzD39gx3LiHwGLGl
+ 0OJFUPVGAS/DSTtDmdFa/yizFfQJwpxQzI86SRCafATkf+PAKN2ZDC6un9Tj1L/dJ4eaJhTwATPkn
+ 9aDMgbWFlc2gJRlBWiXqjc5QrpbkGE+nY9vcuTFcoD8uaUStHaBWDa/n8yt26c6YDkE61CON77ovd
+ ctTuDD5gsTd4u2168ZLU/vNDBRwjMNyt3tzzAGl3TDreg7eESbg8kxipPtWn0dORQZzKiWQIZPnp3
+ Cg8Uw89Bu87zl2P1XOzQVg==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1xKzYy-000DLb-HL; Sun, 25 Oct 2026 10:51:08 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: vhkdzszh@gmail.com
+Cc: emacs-devel@gnu.org
+In-Reply-To: <179260078509.84898.7507602913885656282@gmail.com>
+ (vhkdzszh@gmail.com)
+Subject: Re: [NonGNU ELPA] New package: ekp
+Reply-To: rms@gnu.org
+References: <179260078509.84898.7507602913885656282@gmail.com>
+Message-Id: <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+Date: Sun, 25 Oct 2026 10:51:08 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 25 Oct 2026 14:51:09 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > On the name: ekp-fill it is.
+
+Did you ever consider my suggestions based on TeX?
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
+From MAILER-DAEMON Sun Oct 25 10:51:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKzZ9-0003FE-K4
+	for mharc-emacs-devel@gnu.org; Sun, 25 Oct 2026 10:51:21 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1xKzZ0-00038H-0N
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 10:51:10 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1xKzYz-0005cl-JG; Sun, 25 Oct 2026 10:51:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=vwG2noKKkl5Oclo78ZMc0W+kAGV04c0D7920lisOjQU=; b=Yq9nYja3kd0c
+ jr5uPYfgByQWdQJ5PQvxx03MC8IEAOHMOQR+6yT29Y/Il85Xo0fw379BP3EchRvkPTIGnr8bOwZTF
+ KHGp8W/DHBII84WqPbKwL72go9XNa8bGfHSbgpIs2YPkSLr/bihDqXU/KrMXWyXayyVTmOFufw6Es
+ Xju+LQNuI2KFSKlJjn/2xseC0VKtfPBNm/ooTZctG+7Ukycjv8nbcavW0QIYJMi28UHBb8PD1Ujm3
+ 9Bby4wJdv1p5Yo3kD0aqcxi+IozHz1DuW0f1eL1y+ufrL0VnvUG/YyINds5OGPUkerznXE957bQkC
+ 24bbrub2eTRjWup63HgBPQ==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1xKzYz-000DLo-6M; Sun, 25 Oct 2026 10:51:09 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: divya@dialetheia.xyz, emacs-devel@gnu.org, tusharhero@sdf.org,
+ eliz@gnu.org, spwhitton@spwhitton.name
+In-Reply-To: <871p9n8pmy.fsf@posteo.net> (message from Philip Kaludercic on
+ Sun, 18 Oct 2026 06:54:47 +0000)
+Subject: Re: [ELPA] New package: emacs-reader
+Reply-To: rms@gnu.org
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+Message-Id: <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+Date: Sun, 25 Oct 2026 10:51:09 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 25 Oct 2026 14:51:10 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Unless I am mistaken, this here should be AGPLv3-or-later:
+
+  > https://artifex.com/licensing/gnu-agpl-v3
+
+Sad to say, you're mistaken.  That page contains a copy of GNU AGPL
+version 3.  But it says NOTHING about which versions of the GNU AGPL
+apply to any particular program.
+
+(This is an example of the confusion that GitHub spreads about license
+versions.  See https://www.gnu.org/philosophy/whats-wrong-with-github.html.)
+
+https://artifex.com/licensing doesn't clearly say which AGPL versions
+it authorizes the use of, but I think it is AGPL v3 only.
+
+HOWEVER
+
+  > MuPDF is AGPLv3-or-later[1]:
+
+  >   LICENSE
+
+  >   MuPDF is Copyright (c) 2006-2023 Artifex Software, Inc.
+
+  >   This program is free software: you can redistribute it and/or modify it under
+  >   the terms of the GNU Affero General Public License as published by the Free
+  >   Software Foundation, either version 3 of the License, or (at your option) any
+  >   later version.
+
+That is entirely clear.  https://artifex.com/licensing is confused,
+but that doesn't affect MuPDF.  We can use MuPDF and link it with Emacs.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
+From MAILER-DAEMON Sun Oct 25 10:51:52 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xKzZU-0003QK-Pj
+	for mharc-emacs-devel@gnu.org; Sun, 25 Oct 2026 10:51:47 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1xKzZ6-0003Eu-PT
+ for emacs-devel@gnu.org; Sun, 25 Oct 2026 10:51:19 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1xKzZ0-0005dN-EQ; Sun, 25 Oct 2026 10:51:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=+wegu7PmK5yttiXM0E3l99oMNrTXaGRcdj9SkpXb3Wc=; b=Nio4n8LawlQ1
+ ScVlPDj29g+ukzOt4W2dAt6XLl4EKMA3j5fnZOhMGnIIsQ/npmO2iRNSKDE3xxRYfcx9/9GnVNSAl
+ gWinuNufp2FnMfM7fr7SeUbtQpbIjn6H4fKiEIsD7lRo/ED5HLsHF1IUeDAvNZtdXnNeOT8jmQ4UN
+ aezk2jTd98n7mQVToCT4zsX/+jKyEqjAeNY0/cdL4+uPDq4vM55K86mwiRhGCLeCbG09HZdHeI2kz
+ xLS301vhGhTMVU4X1mXm75Aw0duZzAko7YjqIxsJsLx/hbBCOfJ0be0aMVrigu9I/Zpv5Gjm3VGR0
+ cC1bayXsDtwRbmFcDhwuVQ==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1xKzZ0-000DM6-3C; Sun, 25 Oct 2026 10:51:10 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: qiangsheng@sjtu.edu.cn, shipmints@gmail.com, emacs-devel@gnu.org,
+ rahuljuliato@gmail.com, rahul.juliato@gmail.com, monnier@umontreal.ca
+In-Reply-To: <87wlrf7awh.fsf@posteo.net> (message from Philip Kaludercic on
+ Sun, 18 Oct 2026 06:58:23 +0000)
+Subject: Re: [ELPA] New package: markdown-ts-appear
+Reply-To: rms@gnu.org
+References: <520040404.47473814.1788432256599.JavaMail.zimbra@sjtu.edu.cn>
+ <87tso6gwnl.fsf@posteo.net>
+ <FEC1CCEA-8AA8-4040-A8D6-4903CC00F76B@sjtu.edu.cn>
+ <87o6cyvguf.fsf@posteo.net>
+ <CAN+1HbqvwL_XTsNCm6Tr5=b8RJ70RtJyoS0xFTMbJmHeiyK3gw@mail.gmail.com>
+ <9322949A-E6F4-4A36-949C-EC7D97BC74F6@sjtu.edu.cn>
+ <87v775baoi.fsf@posteo.net>
+ <80CB4A3E-D11A-4446-AABD-FB9ACC2C0376@sjtu.edu.cn>
+ <874ieka870.fsf@posteo.net>
+ <3CA666C9-2CE3-40F6-A186-3760C65BE01B@sjtu.edu.cn> <87wlrf7awh.fsf@posteo.net>
+Message-Id: <E1xKzZ0-000DM6-3C@fencepost.gnu.org>
+Date: Sun, 25 Oct 2026 10:51:10 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 25 Oct 2026 14:51:23 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > My advice would really just be to handle this feature as a soft
+  > dependency that your package can enable and integrate if the
+  > markdown-table-wrap is installed, and otherwise gracefully handle the
+  > absence
+
+Would you please explain more concretely what is being suggested here?
+I can't get a clear idea from those terse words.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
