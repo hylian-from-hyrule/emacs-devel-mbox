@@ -74901,3 +74901,1050 @@ Internet Hall-of-Famer (https://internethalloffame.org)
 
 
 
+From MAILER-DAEMON Mon Oct 26 07:16:32 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLIgo-0006FO-Mx
+	for mharc-emacs-devel@gnu.org; Mon, 26 Oct 2026 07:16:32 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <vhkdzszh@gmail.com>)
+ id 1xLIgh-0006EY-C6
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 07:16:23 -0400
+Received: from mail-pg1-x52b.google.com ([2607:f8b0:4864:20::52b])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <vhkdzszh@gmail.com>)
+ id 1xLIga-0008TO-4v
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 07:16:23 -0400
+Received: by mail-pg1-x52b.google.com with SMTP id
+ 41be03b00d2f7-cd60c5da24cso1529355a12.0
+ for <emacs-devel@gnu.org>; Mon, 26 Oct 2026 04:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1793013373; x=1793618173; darn=gnu.org;
+ h=mime-version:content-transfer-encoding:content-type:message-id:date
+ :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+ :message-id:reply-to:content-type;
+ bh=mq2cYT5Av0U2TdNd7auonXTkdWEGnbvBRR2rqJD/8Rw=;
+ b=LKD15T0+unhIywBtUwgaq4OaH7fgj4CoiIuDXDgQC16QkOobScxJwsJMn2GR79aLQz
+ pJNqMKYZHCfOtDuVEazaeE4hlwKZO4tWonvAm4pvqn1ouLz5/yEaTBZpHZbhuS3nbLP/
+ AbD86oQLBDC5u4d5IIavd7KcEqDJF0PzTRg6twyl2poBezoRuC2vT3+BVuMoD42iTMV5
+ 2IQ+mQNM7h0uUhZ4U+L1Sc68eigtmm5Ny2azeh1UEYPwKAj2NERpgSmP4ZFpq9vD4HUz
+ kSacJLu3ZLmeN8Q7I9yHy9fDYwGw2XKyP86B5wePRTcLSh3DlVA/yOca4oVEpo0fu2su
+ loQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1793013373; x=1793618173;
+ h=mime-version:content-transfer-encoding:content-type:message-id:date
+ :references:in-reply-to:subject:cc:to:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=mq2cYT5Av0U2TdNd7auonXTkdWEGnbvBRR2rqJD/8Rw=;
+ b=fqP3cuTckVg6GKtjBKxZdkwzZlVdnjezdjdIJOA+ajlH7xLXNZ9Nmpc2CytNi8hJcP
+ ycdJEyIHQc8sfiiibG+OUsG4AqXfIGwhkJFj3uvDsZFEmmMhzdrb/kioYq1iiyWV++HF
+ R4cg2xyzf77+7dg1BIHHn/7FqI/28GNkbgEoe4kHfc4JhrLAXLJep+eZWDjvjqTr12Oc
+ pr8Hr4ZuY7HZvO+/6QLsYhViWvPIyQNk9q8LklIOptI8Dt2MuRTntCD6IVdgYFPeLrw8
+ /xPYekHNt9ahqtX5vA53ypWSs5uWYI1pJm35GBIG8w/YOfb7AyJPPOhvshgt9ojiW6yc
+ Mbfw==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBz6aJN1BzkeGdO+C9n6YvHjx/0T1FSFQdYKolEzOcoSqKFrvU5BiwbumIhP6tPyLeAfhWVk2MkZ/1EYcw==@gnu.org
+X-Gm-Message-State: AFq9FYIESubyg1uvz2M0Ph6SvcRwOODuT5ojRLcTUSApjBmdtms2Iui+
+ eh615eGM9kiqZHy3viXRPmvrqi1QeovZjCHGbryG3ywaeBnEBjhUp0jieI7rguZB90fg2Q==
+X-Gm-Gg: AYBFou08iy2Q+MqY+IoAToCIKEXKt1A92JDw4S/icoc8LODCkK7BbQWmN1v6YgJRvxO
+ HBS3oEetO4hXVksZCwRofgFgpkrJFZ3bPNrzLRBCgJnqE3IbhjL/X7Nd10A1fUrT9Sd9Ii9LmVW
+ M30yFYyrtZA6nNUR+h99c8C14yyOocpsIR5WRsexew/1FKc6fImiiy/0cwOdiIAsuPg+VnSeams
+ 6ELWN3tYdFZpbb6NuVizETdqcqHb0BZX7j7S23Csnl+V5ZgF+btHBSJUCay6YuSBRG+kcJO03FY
+ M7+WebOLBgbq0WsS404WNCFYl8+FYTCNlb4KABTT8wJyYfWq+nDYC29wDdVy5109MNvMydNrLel
+ aQXaaNzWG4T7cHNJTy2LGpHhQFUnIuKFoAFO0HQStONkCX84Zv3KJIahj5htSKZYTmH02OxYujw
+ M31a2XBSMeEi6BjA8RMQ6HTD4zlb/P4IHdPU3hvPK/Ord3v1ym+NYJTifE0Nn8ZOoXc8gTpiOgr
+ h4mnOobxwwocTPPEXF0Z6WvMhxetU1haG+IqgCduVgS6vlMSJJNkRBcOtCNwjCrV8/QDYBRbZZC
+ YzmUs9VsfhgRic4xUTiJKfMZkybDX4fYTYatLyf18kYGjp/8WEfpAvQ=
+X-Received: by 2002:a17:90b:524c:b0:3a4:b418:94ce with SMTP id
+ 98e67ed59e1d1-3adea1ad6eamr5486883a91.1.1793013372855; 
+ Mon, 26 Oct 2026 04:16:12 -0700 (PDT)
+Received: from
+ 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+ ([47.243.111.1]) by smtp.gmail.com with ESMTPSA id
+ 98e67ed59e1d1-3adebadfa96sm8130857a91.7.2026.10.26.04.16.08
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Mon, 26 Oct 2026 04:16:10 -0700 (PDT)
+From: Kinney Zhang <vhkdzszh@gmail.com>
+To: rms@gnu.org
+Cc: philipk@posteo.net, emacs-devel@gnu.org
+Subject: Re: [NonGNU ELPA] New package: ekp
+In-Reply-To: <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+Date: Mon, 26 Oct 2026 19:16:06 +0800
+Message-ID: <179301336681.7054.17558261044765912242@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Received-SPF: pass client-ip=2607:f8b0:4864:20::52b;
+ envelope-from=vhkdzszh@gmail.com; helo=mail-pg1-x52b.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 26 Oct 2026 11:16:23 -0000
+
+The TeX names would misdescribe the package, and I am not using them.
+Knuth-Plass is the algorithm TeX uses for breaking lines, but the algorithm
+is not TeX: it takes boxes and glue and returns break positions.  It knows
+nothing about markup, about .tex files, or about the TeX program.  This
+package runs that algorithm over ordinary Emacs buffers; it never reads or
+calls TeX, and nobody needs a TeX document to get anything out of it.
+
+`TeX-line-break' would tell people the package does something with .tex
+files, and `TeXlike-line-break' says the same thing more vaguely.  Either
+name sends people who want TeX help to the wrong place, and tells people
+who have never used TeX that the package is not for them, when their text
+is exactly what it is for.
+
+`typeset' is too broad, as you said.  I settled on `ekp-fill'.  Emacs
+already calls this operation filling -- `fill-paragraph', `auto-fill-mode',
+`fill-column' -- so the name uses a word the editor has taught its users
+already.
+
+If you want precision over brevity, `knuth-plass-line-break' names the
+algorithm the code implements and claims nothing about TeX.  I will use
+that instead if you prefer it.
+
+The core of the package is handwritten: the box/glue/penalty model, the
+dynamic program, the CJK classification, the layout engine, the C module's
+interface.  It decides where lines break, and it is older than the two
+merges.  Both came from GitHub Copilot's agent, and both only rework code
+that was already there.
+
+PR #8 (February 2026, copilot/analyze-repo-issues) added 398 lines and
+removed 410 across five files -- 754 changed lines in ekp-utils.el, 42 in
+ekp.el, a few in the C module.  Duplicate helpers merged into one (two
+identical binary searches became one function with two aliases; two copies
+of the module-reload helper became one), docstrings added, definitions made
+uniform, and two small bugs fixed along the way: a missing NULL check in
+the C paragraph builder, and a teardown loop that joined thread slots which
+had never been started.
+
+PR #10 (May 2026, copilot/fix-issue-9) completed the kinsoku rules with the
+opening-punctuation case, about 50 lines, inside a mechanism that already
+handled the closing one.
+
+Later fixes were drafted the same way, in the same files, each one a local
+correction inside an existing function.  None of it touched the algorithm
+or decided how the package behaves.  I am rewriting all of it from the
+specification, not editing it, and re-running the tests -- the ~800 lines I
+mentioned.
+
+The Commentary is at the end, verbatim as `C-h P' shows it.  It is long
+because it doubles as the list of supported interfaces; if you would rather
+`C-h P' showed a short description for users, I will move the interface
+list into a manual page.
+
+Building the accelerator needs a C11 compiler, POSIX threads, and an Emacs
+built with modules, so that `emacs-module.h' is installed.  `make -C
+native' does it.  Nothing else needs C; without the module the Elisp
+breaker handles every paragraph.
+
+`.tsv' is tab-separated values: one dictionary per line, with its file
+name, where it came from, the upstream commit, and the licence evidence.
+It lets a reviewer check each bundled file against its licence without
+reading the dictionary itself.
+
+I will point the documentation at the Wikipedia page for the algorithm
+instead of the TeXbook, as Philip suggested.
+
+Kinney
+
+-------------------- 8< --------------------
+
+
+Knuth-Plass optimal line breaking for Emacs.  Text is split into boxes,
+the globally optimal break sequence is chosen, CJK kinsoku rules and
+discretionary hyphenation apply, and lines are justified to the pixel.
+
+`make' is optional: it builds the native acceleration module, and
+without it the pure Elisp breaker handles every paragraph.
+
+Public API
+
+Load this package with (require 'ekp) after adding the repository
+root to load-path.
+Only the interfaces listed below are supported for use by other packages.
+All unlisted symbols and implementation features are internal, including
+names without a double hyphen.  Do not require files below lisp/ from consume=
+rs.
+This Commentary is the authoritative export list; implementations and precise
+docstrings remain beside their definitions.  The ETAF Reference Manual contai=
+ns workflows.
+
+Variable: ekp-adjacent-fitness-penalty
+Penalty when adjacent lines differ in tightness by >1 class.
+
+Variable: ekp-alignment
+Paragraph alignment mode.
+`justify'      =E2=80=94 flush both edges (default)
+`ragged-right' =E2=80=94 natural spacing, lines end ragged on the right
+`ragged-left'  =E2=80=94 natural spacing, lines start ragged on the left
+`center'       =E2=80=94 natural spacing, both edges share the leftover
+Non-justify modes keep inter-word glue rigid; the K-P optimizer still
+picks breaks that minimize raggedness within
+`ekp-ragged-stretch-pixel' per line.
+
+Function: ekp-allow-break-region (beg end &optional announce)
+Clear session-local `ekp-no-break' from BEG through END.
+ANNOUNCE requests interactive feedback.
+
+Variable: ekp-auto-justify-lazy-threshold
+Buffer size beyond which whole-buffer reflows run visible-first.
+
+Function: ekp-auto-justify-mode (&optional arg)
+Maintain a non-mutating KP display projection.
+
+Completed paragraphs use the effective `ekp-buffer-measure': narrowest
+window by default, a fixed width, or a `(max . N)' cap.
+Manual no-break and verbatim properties last only for the current buffer
+session.
+
+This is a minor mode.  If called interactively, toggle the
+`EKP-Auto-Justify mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate the variable `ekp-auto-justify-mode'.
+
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
+
+\{ekp-auto-justify-mode-map}
+
+Variable: ekp-auto-justify-native-append
+Use the loaded native module for automatic live append DP.
+This affects only the already prepared live append path.  Explicit string
+layout and full buffer layout still obey `ekp-use-c-module' directly; when
+the native module is unavailable, live append falls back to Elisp.
+
+Variable: ekp-auto-justify-paragraph-limit
+Maximum hard-paragraph characters planned automatically.
+Longer paragraphs stay natural so enabling the mode, pasting, and
+ordinary editing cannot enter an unbounded paragraph-wide planning
+operation.  `ekp-refill-paragraph' remains the explicit full-quality
+command and is not limited by this value.
+
+Variable: ekp-auto-justify-resize-delay
+Seconds to debounce window resize reflows.
+
+Variable: ekp-auto-justify-tick-budget
+Seconds of work allowed in one lazy reflow tick.
+
+Error: ekp-backend-contract-error
+Malformed C backend result
+Catch this condition with condition-case; failed calls do not return a value.
+
+Variable: ekp-break-policy
+Text property controlling regional break policy.
+`normal' clears automatic token or face restrictions, `hyphenate'
+enables discretionary hyphenation, and `no-hyphen' suppresses it.
+This property is not a hard no-break switch; rigid atoms remain
+owned by the separate `ekp-no-break' text property.
+
+Variable: ekp-buffer-inline-faces
+Faces whose exact spans use `ekp-inline-code-policy'.
+
+Variable: ekp-buffer-margin-pixel
+Pixels reserved inside the window body width.
+
+Variable: ekp-buffer-measure
+Measure used for automatic and default manual buffer layout.
+`narrowest-window' uses the narrowest live window displaying the
+buffer.  A positive integer is a fixed pixel width.  `(max . N)'
+caps the narrowest live window at N pixels.
+
+Variable: ekp-buffer-mode-policy-alist
+Mode profiles consulted by automatic and manual buffer layout.
+
+Variable: ekp-buffer-skip-faces
+Faces whose paragraphs stay verbatim.
+
+Variable: ekp-buffer-skip-predicate
+Function called with a paragraph string that should stay verbatim.
+
+Function: ekp-c-module-build (&optional profile)
+Build the C module with make using PROFILE.
+PROFILE is one of `portable', `native', `debug', or `sanitize';
+the default is `portable'.
+
+Function: ekp-c-module-load ()
+Load EKP C module if available.
+Refuses to enable a module older than
+`ekp-c-module-required-version' (rebuild with make).
+
+Variable: ekp-cjk-no-line-end-extra
+Custom CJK characters that must not end a line.
+Used only by the `custom' kinsoku profile.
+
+Variable: ekp-cjk-no-line-start-extra
+Custom/Japanese CJK letters that must not start a line.
+Used only by the `custom' kinsoku profile.  The `ja' profile uses
+an immutable built-in Japanese addition set.
+
+Function: ekp-clear-caches ()
+Clear all paragraph and measurement caches.
+Run after font or theme changes that affect glyph widths.
+
+Function: ekp-clear-verbatim-region (beg end &optional announce)
+Clear session-local `ekp-verbatim' from BEG through END.
+ANNOUNCE requests interactive feedback.
+
+Variable: ekp-consecutive-hyphen-penalty
+Base penalty multiplier for consecutive hyphenated lines.
+Actual penalty =3D this =C3=97 count=C2=B2, encouraging spread of hyphens.
+
+Variable: ekp-default-cws-stretch-pixel
+Max stretched pixel of whitespace between CJK chars.
+
+Function: ekp-diagnose ()
+Report the authoritative width and any skipped projection conflicts.
+
+Variable: ekp-first-line-indent
+First-line indentation: pixels, or t for 2 em of the paragraph font.
+Sugar for the common CJK paragraph convention; ignored when
+`ekp-parshape' is set.
+
+Function: ekp-hyphen-create (&optional lang file left right)
+Create hyphenator for LANG or dictionary FILE.
+LEFT/RIGHT override the minimum characters kept before/after breaks;
+by default the dictionary's own LEFTHYPHENMIN/RIGHTHYPHENMIN apply
+(2/2 when it declares none).
+
+Error: ekp-hyphen-dictionary-not-found
+Hyphenation dictionary not found
+Catch this condition with condition-case; failed calls do not return a value.
+
+Error: ekp-hyphen-error
+Hyphenation error
+Catch this condition with condition-case; failed calls do not return a value.
+
+Variable: ekp-hyphen-penalty
+Penalty for hyphenated breaks.  Higher =3D avoid hyphenation.  Default 50.
+Note: added to demerits as penalty=C2=B2, following the K-P formula.
+
+Error: ekp-hyphen-unsupported-pattern
+Dictionary uses unsupported replacement patterns
+Catch this condition with condition-case; failed calls do not return a value.
+
+Variable: ekp-hyphenation
+Global discretionary hyphenation policy.
+`auto' and `on' use the configured dictionary when available;
+missing dictionaries disable hyphenation without signaling.
+`off' disables discretionary hyphenation.
+
+Variable: ekp-inline-code-policy
+Default break policy for automatic inline code spans.
+`normal' uses ordinary breaks and hyphenation.  `no-hyphen' keeps
+ordinary legal breaks but suppresses discretionary dictionary
+hyphens.  `no-break' makes fitting automatic spans rigid; overwide
+automatic spans downgrade to `no-hyphen'.  This option does not
+affect explicit `ekp-no-break' regions.
+
+Function: ekp-justify-buffer (&optional pixel)
+Project the accessible buffer as KP layout at PIXEL.
+
+Function: ekp-justify-region (beg end &optional pixel)
+Project BEG through END as KP layout at PIXEL without changing text.
+
+Variable: ekp-kinsoku-profile
+Kinsoku profile used when compiling paragraph break permissions.
+
+Variable: ekp-last-line-min-ratio
+Minimum fill ratio for last line (0.0-1.0).
+
+Variable: ekp-last-line-short-penalty
+Penalty multiplier for underfilled last lines.
+Applied as: this =C3=97 (1 - fill-ratio) when fill < `ekp-last-line-min-ratio=
+'.
+
+Variable: ekp-latin-lang
+Language code for hyphenation (e.g., "en_US", "de_DE").
+
+Function: ekp-layout-plan (string line-pixel)
+Return a semantic KP layout plan for STRING at LINE-PIXEL.
+The plan records source offsets, glue targets, breaks, indentation,
+and discretionary hyphens without choosing a display representation.
+
+Function: ekp-layout-plan-string (plan)
+Return the cleaned source text PLAN was planned from.
+
+Function: ekp-layout-plan-lines (plan)
+Return PLAN's display lines as a vector of line records.
+
+Function: ekp-layout-plan-state (plan)
+Return PLAN's state: `planned', or `natural' when the overlong-token
+policy left it unbroken.
+
+Function: ekp-layout-line-index (line)
+Return LINE's zero-based index within its plan.
+
+Function: ekp-layout-line-source-start (line)
+Return the source offset where LINE starts.
+
+Function: ekp-layout-line-source-end (line)
+Return the source offset just past LINE's source range.
+
+Function: ekp-layout-line-leading-pixel (line)
+Return the pixel width LINE keeps before its first box.
+
+Function: ekp-layout-line-trailing-pixel (line)
+Return the trailing pixel width LINE carries after its last box.
+
+Function: ekp-layout-line-hyphen-p (line)
+Return non-nil when LINE ends with a discretionary hyphen.
+
+Function: ekp-layout-line-gaps (line)
+Return LINE's semantic gaps as a vector of gap records.
+
+Function: ekp-layout-gap-natural-pixel (gap)
+Return GAP's unstretched natural width in pixels.
+
+Function: ekp-layout-gap-target-pixel (gap)
+Return GAP's target width in pixels chosen by the layout.
+
+Variable: ekp-line-penalty
+Penalty for each line break.  Higher =3D fewer lines.  Default 10.
+
+Variable: ekp-looseness
+Target line count offset: 0=3Doptimal, +1=3Dlooser (more lines), -1=3Dtighter.
+When non-zero, a full (position =C3=97 line-count) dynamic program is run
+and the path whose line count is closest to (optimal + looseness) with
+the lowest demerits is selected.  Only supported by the Elisp engine;
+when non-zero the C module is bypassed automatically.
+
+Function: ekp-markdown-setup ()
+Protect common Markdown code faces in the current buffer.
+
+Function: ekp-no-break-region (beg end &optional announce)
+Mark BEG through END as an unbreakable session-local atom.
+ANNOUNCE requests interactive feedback.
+
+Variable: ekp-number-unit-suffixes
+Exact suffixes recognized by the compact number-unit classifier.
+
+Function: ekp-org-setup ()
+Protect common Org structural faces in the current buffer.
+
+Variable: ekp-overlong-token-policy
+Policy for ordinary non-CJK tokens wider than the measure.
+
+Variable: ekp-para-cache-limit
+Maximum number of cached paragraphs.
+When exceeded, the whole paragraph cache is flushed (cheap to rebuild).
+
+Function: ekp-param-reset ()
+Clear explicit spacing parameters; defaults are derived per string again.
+
+Function: ekp-param-set (lws-i lws-+ lws-- mws-i mws-+ mws-- cws-i cws-+ cws-=
+-)
+Set all spacing parameters explicitly; persist until `ekp-param-reset'.
+The nine pixel values, in order, are LWS-I LWS-+ LWS-- MWS-I MWS-+
+MWS-- CWS-I CWS-+ CWS--: ideal, stretch (+) and shrink (-) for the
+Latin (LWS), mixed (MWS) and CJK (CWS) word spaces.
+
+Variable: ekp-parshape
+Per-line layout, as a sequence of (INDENT . WIDTH) cons cells.
+Line i (0-based) uses element i; lines beyond the last element reuse
+it (like TeX \parshape).  INDENT is the left offset in pixels,
+WIDTH the text width =E2=80=94 the rendered line occupies INDENT + WIDTH.
+Line-number-dependent widths require the (position =C3=97 line-count) DP,
+so this is Elisp-only: the C module is bypassed while set.
+
+Function: ekp-pixel-justify (string line-pixel)
+Justify multiline STRING to LINE-PIXEL pixels.
+Each newline-separated segment is treated as one paragraph.
+When the C module is available, paragraphs are computed in parallel.
+
+Function: ekp-pixel-range-justify (string min-pixel max-pixel)
+Find optimal width for STRING between MIN-PIXEL and MAX-PIXEL.
+Returns (justified-text . optimal-pixel).
+
+Variable: ekp-protrusion
+Non-nil enables right-edge character protrusion (hanging punctuation).
+A line ending in punctuation lets part of that glyph hang past the
+flush edge, per `ekp-protrusion-ratios' =E2=80=94 CLREQ line-end punctuation
+squeeze and microtype-style hanging periods/hyphens in one mechanism.
+Left-edge protrusion is not implemented: Emacs cannot render text
+before the line origin.  Buffer integration reserves the protrusion
+width in its layout when enabled.
+
+Variable: ekp-protrusion-ratios
+Alist CLASS =E2=86=92 RATIO of the glyph width allowed to protrude.
+`cjk-close': fullwidth closers (=E3=80=82=E3=80=81=E3=80=8D); 0.5 hangs exact=
+ly the
+whitespace half of the glyph =E2=80=94 visually equivalent to CLREQ line-end
+compression.  `latin-close': chars from `ekp--no-line-start-chars'
+ending a word (period, comma, quotes).  `hyphen': the soft hyphen
+inserted at a break.
+
+Variable: ekp-ragged-stretch-pixel
+Per-line end-of-line flexibility (pixels) for non-justify alignment.
+This is what a ragged line may fall short of the target width without
+badness reaching infinity (like \raggedright with a finite \rightskip
+stretch).  nil derives 8=C3=97 the Latin word-space ideal (=E2=89=882 em).
+
+Function: ekp-refill-paragraph ()
+Apply a complete KP layout to the hard paragraph at point.
+
+Variable: ekp-token-break-policies
+Break policies for bounded automatic token classifiers.
+
+Function: ekp-unjustify-buffer ()
+Remove EKP projection from the accessible buffer.
+
+Function: ekp-unjustify-region (beg end)
+Remove EKP display projection intersecting BEG through END.
+
+Variable: ekp-use-c-module
+When non-nil, use C dynamic module for DP computation if available.
+The C module provides significant performance improvement for large texts.
+Set to nil to force pure Elisp implementation.
+
+Function: ekp-verbatim-region (beg end &optional announce)
+Keep paragraphs intersecting BEG through END verbatim this session.
+ANNOUNCE requests interactive feedback.
+
+
+From MAILER-DAEMON Mon Oct 26 12:45:11 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLNos-0002n3-Em
+	for mharc-emacs-devel@gnu.org; Mon, 26 Oct 2026 12:45:10 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xLNor-0002m3-2r
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 12:45:09 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xLNop-0002uS-Ax
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 12:45:08 -0400
+Received: from pmg1.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg1.iro.umontreal.ca (Proxmox) with ESMTP id 1F21E100081;
+ Mon, 26 Oct 2026 12:45:06 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1793033105;
+ bh=SFAve+aPMg7NN/X+3cNwgJE/G/HRg7AgbkWC/IDmXdM=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=kUbEaJBYu/1DHw3kPvp4dkP/F+ttdEY1oAURlq/sshWyymYvc2xqMjnkwDMn49Zfl
+ zjY70d47L8cwnSHPOOa0B+tbAPe++CgHDBSSUkSF86ISXvsP/SgW8b863ngIkb0ko0
+ +38pwJZWjO8KhLyO3rQkapG+w974+ELkBON942EtyR8lrNmq48YeeXrfM9D/JU2733
+ /E/DItLVCpkyBIOVbHGrRvMScXVbdOw89WjgVBvHqTqAJ+fvEl4K9cGuWctO2GKFTH
+ ukqouSdy9px1zlW2G+7zr9vTN6xJc6+AHQn6FpMnAusZc45iXSqJMFRTujGk9qtwrl
+ fW275DkZGzz3g==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg1.iro.umontreal.ca (Proxmox) with ESMTP id 022F8100040;
+ Mon, 26 Oct 2026 12:45:05 -0400 (EDT)
+Received: from lechazo (lechon.iro.umontreal.ca [132.204.27.242])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id E60221202E4;
+ Mon, 26 Oct 2026 12:45:04 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: emacs-devel@gnu.org
+Subject: Re: master 402482ada96: dired-rename-file: Don't allow moving
+ edited files between repos
+In-Reply-To: <20261026102558.BBEEBC0FD7E@vcs2.savannah.gnu.org>
+Message-ID: <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+References: <179301035784.24225.1014254998978829844@vcs2.savannah.gnu.org>
+ <20261026102558.BBEEBC0FD7E@vcs2.savannah.gnu.org>
+Date: Mon, 26 Oct 2026 12:45:04 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.275 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 26 Oct 2026 16:45:09 -0000
+
+>     dired-rename-file: Don't allow moving edited files between repos
+>     
+>     * lisp/dired-aux.el (dired-rename-file): Don't allow moving
+>     edited files between repositories.
+>     * test/lisp/vc/vc-tests/vc-test-misc.el
+>     (vc-test-dired-rename-file-between-repos): Test this case.
+> ---
+>  lisp/dired-aux.el                     | 3 +++
+>  test/lisp/vc/vc-tests/vc-test-misc.el | 8 ++++++++
+>  2 files changed, 11 insertions(+)
+>
+> diff --git a/lisp/dired-aux.el b/lisp/dired-aux.el
+> index 37702a8b471..79cbf1dbc96 100644
+> --- a/lisp/dired-aux.el
+> +++ b/lisp/dired-aux.el
+> @@ -2383,6 +2383,9 @@ unless OK-IF-ALREADY-EXISTS is non-nil."
+>                                    (file-name-directory newname)))))
+>            (if (equal file-root newname-root)
+>                (vc-rename-file file newname ok-if-already-exists)
+> +            (when (eq (vc-state file) 'edited)
+> +              (error "Please commit or undo your changes before moving %s"
+> +                     file))
+
+I don't know if it's just me, but I find the above rather "un-Emacsy":
+I'd have expected a `y-or-n-p` prompt to allow the users to shoot
+themselves in the foot at their leisure.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Mon Oct 26 12:47:48 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLNrQ-00041K-Hf
+	for mharc-emacs-devel@gnu.org; Mon, 26 Oct 2026 12:47:48 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xLNrN-00040q-6Z
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 12:47:45 -0400
+Received: from mail-ua1-x933.google.com ([2607:f8b0:4864:20::933])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xLNrK-00034L-36
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 12:47:43 -0400
+Received: by mail-ua1-x933.google.com with SMTP id
+ a1e0cc1a2514c-9909e82513fso66123241.0
+ for <emacs-devel@gnu.org>; Mon, 26 Oct 2026 09:47:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793033260; cv=none;
+ d=google.com; s=arc-20260327;
+ b=IlJ4+C2Qozq2Vz2y5gsiEr8TflZcXx8kz6eqj0+qmZcxZhiuMSIAv1uXn97zWfW3CT
+ Ba/BxAT5dhscqInv68pWR+4p0oGG6kcdqzmDdjOfdGlY8nTRVRIFaqrrC4TWLkHBOlDU
+ naXgoAZE/n1gWO0vpa2Sx2W7eBNbe0+XLcxUFSnWXgJ7b9ZcZ9u+JNK7plrep1jsbjQ2
+ zCVbjJ6G3nAuY+JXI+tnknHc3UkxRFHfMiETLJAvN5JDO96x3fW/oBr78iTzBjIT8Gnb
+ izxr2KI7JXQ2K/IoLmtKXAppzrVCqbXVRaU/9LUm0tIFHODN2n1SzyJiNV2VzlMYYoga
+ wJQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=psphUcnhQyqnFoI2QuofB4um3lUY9FK1ZuMtQgCe2po=;
+ fh=bZqLPqI9otMC/SNJipg/g94fJv6a7en8EXEF5r5sHAM=;
+ b=ADb0RLtW0/JyQgB1YlmAXVNTGUZS+cskKPuZVDQjZfaDQGdyr38F3TRo6co8iBDT3i
+ UMiaD7q8algeXJJgpCkfccSW1jm/zjN/7o3ag0j1Ako9oBfJAG1hJNqwM3C1nYoPE5zU
+ K+Z4FWdK0B2wE7LRXtEmvrQFWEB4lQXQTuer3gwUlyuwARotamVV9qACKsosrUOFtPWs
+ UueYPJFjl4qa7gIZImUlYC/v56tRrl8Nva3eAktNNyVzsB7YHghKUfzxBQDb72zo2HdW
+ tEUxE1CijWGSVJ5DNO2kJd75DqZ7A+4/5cAwEVFhOyHeAkYf8Tm3STRPYl6y3u8yGeuo
+ TYcg==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1793033260; x=1793638060; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=psphUcnhQyqnFoI2QuofB4um3lUY9FK1ZuMtQgCe2po=;
+ b=CcEMK4MyoAw9Ya7h++AwCWiehpXQ9Q5iehWtVNIzl3QvlhBcutp1ui5PnVNEdkBwUj
+ XTeH2qh5id3Zh3ibm51a7Yk/fQqhAYq6ixJrVfr+SyWC2TxYvdR3+EFFv85GMBwm1LxR
+ 00xEh4QHPzd+MnmOEKMF/4FPGq2mdCT/Dvaqo+xzKVGlZ6qZTpJDX0AV54T9Igq0dBZf
+ gd+r8T9+v90mvjNz4bi7iLMRb/EEupH/1/l4tBk8o3KYFh1gkWlk0wXNzGUJe4ifKO6Q
+ BQuaA1xd3ik4jUG4091YBtmr1dfKkSTuiGtznD2lIjJ15as1oHjlO4uDVQ1yvu8fLxOw
+ gbkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1793033260; x=1793638060;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=psphUcnhQyqnFoI2QuofB4um3lUY9FK1ZuMtQgCe2po=;
+ b=D49cc7nWSremDkdFQwx25qz4Ovk3Vjz5gfnUgA1PMeAkE2OCheJURCHQO4Ywtb/Ll/
+ YLucqlBKRF/3lqzcKSG7fGLrJUmxkXBYDXAV0B6Hd12yrWcMFIGKHX4vScXX7i82EMNJ
+ rphAao4PEO1a3egiRI9UZ+7bo4fLnBWuL8ltZ7ecMKbpgtlSF9HFSzqB5AIPRp6ERkbZ
+ sb+SP+0bGFGTaEev34vCRf3Qfv55LlzMIRdRF1C1g5U5RF14/sYVvCpZV+s6r+PyAq/b
+ ARmG0w780l+9iRfBVjE7jRsfLV8Xj6YLtklj26UFMzU6AjFP5pSa05P9W/dVTMvoWqky
+ E+Jg==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBxXIws+plJGGuZkjjnqpugaFJFrXKJz0yOCQ7bs7SxPI58MIH8YKPI4ImLMrmebMDvN5NV15U1Dqh4rSg==@gnu.org
+X-Gm-Message-State: AFq9FYJ+0tm5ruSz3GeygyG8tX2WJmEkb3P5gEFUrq2UbPymKtp6Y1Q0
+ F+IgmQLqmuzLwh7H8NDmvyFNmMkeOyEq2K3x/Pe9mCeRUNpYHTTafU4IKVzTCGb9hYRZqj+Dldq
+ g2se0MoVRaEFcLpIOYQM7YCzYCOxac/w=
+X-Gm-Gg: AYBFou2xmC+li6fI0cYY/VuSFbSlIoIBvAJnSA81TpgNM4eOqtVHC2JK+wMJ/lEE13Z
+ j+JnQz+eTtZ7iH1fReIBP32dOyZF1EC4+hXDT1BzirKXsfgpy08jXCJcCzyA7dABgzhcGVb7aZf
+ +Fl995rwEpiyVjhnAJTxa5LHJykXIXqY2klmgCk4QyaN52PEDE8XcwOHI45VwbF6n0pfa9z3mF2
+ NtvwzSTBcc0c817we4GWc5uFzDfnaFihblPO++BjbtLUi+hp4WR3O9M0u1aVBL52xiDnKs6O77t
+ 8yyXSI5aTJ53RrqwIL+4muCFZCF8vd+AMPLQmU7d7RMmasFkGCj3ApnQ1ASA64gmpC2HukORHnH
+ sMLlhS5iA5Y71u1AYj2mtNieVLxccyzPsffZaT0JsRXmpHhrHDysCJFtHh74ZmnZI0OpoeA1yw9
+ LeW6P7xPA4fR7VTqTGprwQcGbEXW5wSLPj9jHxun5YYP1oB35CcuQakYZyiNvTfsu2XpyN1OZX8
+ BirWTiRnCWESH5wOI46zTlWyKDeah28vtoOIut59LrRlqUzkty1FS6UVgCBC0A=
+X-Received: by 2002:a05:6102:3754:b0:7c2:799c:9018 with SMTP id
+ ada2fe7eead31-7cea09aed22mr130379137.0.1793033260239; Mon, 26 Oct 2026
+ 09:47:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <179301035784.24225.1014254998978829844@vcs2.savannah.gnu.org>
+ <20261026102558.BBEEBC0FD7E@vcs2.savannah.gnu.org>
+ <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Date: Mon, 26 Oct 2026 12:47:28 -0400
+X-Gm-Features: AclHuK-K6N8SeajnFArHQM9gXbyWnudzmbQDtkEcKlg6kY3h1rm9maRG_48XtNs
+Message-ID: <CAN+1Hbq_YybgR2TLRi16cbA702SiqV5Upq53wyKgieTRgaxxOg@mail.gmail.com>
+Subject: Re: master 402482ada96: dired-rename-file: Don't allow moving edited
+ files between repos
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: Sean Whitton <spwhitton@spwhitton.name>, emacs-devel@gnu.org
+Content-Type: multipart/alternative; boundary="0000000000008c0ea9065ec116bf"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::933;
+ envelope-from=shipmints@gmail.com; helo=mail-ua1-x933.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001, T_KAM_HTML_FONT_INVALID=0.01 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 26 Oct 2026 16:47:45 -0000
+
+--0000000000008c0ea9065ec116bf
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Oct 26, 2026 at 12:45=E2=80=AFPM Stefan Monnier <monnier@iro.umontr=
+eal.ca>
+wrote:
+
+> >     dired-rename-file: Don't allow moving edited files between repos
+> >
+> >     * lisp/dired-aux.el (dired-rename-file): Don't allow moving
+> >     edited files between repositories.
+> >     * test/lisp/vc/vc-tests/vc-test-misc.el
+> >     (vc-test-dired-rename-file-between-repos): Test this case.
+> > ---
+> >  lisp/dired-aux.el                     | 3 +++
+> >  test/lisp/vc/vc-tests/vc-test-misc.el | 8 ++++++++
+> >  2 files changed, 11 insertions(+)
+> >
+> > diff --git a/lisp/dired-aux.el b/lisp/dired-aux.el
+> > index 37702a8b471..79cbf1dbc96 100644
+> > --- a/lisp/dired-aux.el
+> > +++ b/lisp/dired-aux.el
+> > @@ -2383,6 +2383,9 @@ unless OK-IF-ALREADY-EXISTS is non-nil."
+> >                                    (file-name-directory newname)))))
+> >            (if (equal file-root newname-root)
+> >                (vc-rename-file file newname ok-if-already-exists)
+> > +            (when (eq (vc-state file) 'edited)
+> > +              (error "Please commit or undo your changes before moving
+> %s"
+> > +                     file))
+>
+> I don't know if it's just me, but I find the above rather "un-Emacsy":
+> I'd have expected a `y-or-n-p` prompt to allow the users to shoot
+> themselves in the foot at their leisure.
+>
+
+The command `delete-file` doesn't have foot-gun safety.  That's always
+surprised me.
+
+--0000000000008c0ea9065ec116bf
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
+t-family:monospace"><span style=3D"font-family:Arial,Helvetica,sans-serif;b=
+ackground-color:transparent">On Mon, Oct 26, 2026 at 12:45=E2=80=AFPM Stefa=
+n Monnier &lt;<a href=3D"mailto:monnier@iro.umontreal.ca">monnier@iro.umont=
+real.ca</a>&gt; wrote:</span></div></div><div class=3D"gmail_quote gmail_qu=
+ote_container"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0p=
+x 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">&gt;=C2=A0=
+ =C2=A0 =C2=A0dired-rename-file: Don&#39;t allow moving edited files betwee=
+n repos<br>
+&gt;=C2=A0 =C2=A0 =C2=A0<br>
+&gt;=C2=A0 =C2=A0 =C2=A0* lisp/dired-aux.el (dired-rename-file): Don&#39;t =
+allow moving<br>
+&gt;=C2=A0 =C2=A0 =C2=A0edited files between repositories.<br>
+&gt;=C2=A0 =C2=A0 =C2=A0* test/lisp/vc/vc-tests/vc-test-misc.el<br>
+&gt;=C2=A0 =C2=A0 =C2=A0(vc-test-dired-rename-file-between-repos): Test thi=
+s case.<br>
+&gt; ---<br>
+&gt;=C2=A0 lisp/dired-aux.el=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 3 +++<br>
+&gt;=C2=A0 test/lisp/vc/vc-tests/vc-test-misc.el | 8 ++++++++<br>
+&gt;=C2=A0 2 files changed, 11 insertions(+)<br>
+&gt;<br>
+&gt; diff --git a/lisp/dired-aux.el b/lisp/dired-aux.el<br>
+&gt; index 37702a8b471..79cbf1dbc96 100644<br>
+&gt; --- a/lisp/dired-aux.el<br>
+&gt; +++ b/lisp/dired-aux.el<br>
+&gt; @@ -2383,6 +2383,9 @@ unless OK-IF-ALREADY-EXISTS is non-nil.&quot;<br=
+>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (file-name-director=
+y newname)))))<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (if (equal file-root newname-=
+root)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (vc-rename-file=
+ file newname ok-if-already-exists)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (when (eq (vc-state file) &=
+#39;edited)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (error &quot;Please =
+commit or undo your changes before moving %s&quot;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0file))<br>
+<br>
+I don&#39;t know if it&#39;s just me, but I find the above rather &quot;un-=
+Emacsy&quot;:<br>
+I&#39;d have expected a `y-or-n-p` prompt to allow the users to shoot<br>
+themselves in the foot at their leisure.<br></blockquote><div><br></div><di=
+v class=3D"gmail_default" style=3D"font-family:monospace">The command `dele=
+te-file` doesn&#39;t have foot-gun safety.=C2=A0 That&#39;s always surprise=
+d me.</div></div></div>
+
+--0000000000008c0ea9065ec116bf--
+
+
+From MAILER-DAEMON Mon Oct 26 14:32:59 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLPVD-0005fE-8a
+	for mharc-emacs-devel@gnu.org; Mon, 26 Oct 2026 14:32:59 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>) id 1xLPVB-0005f1-Ux
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 14:32:57 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rms@gnu.org>)
+ id 1xLPVB-0007FH-DV; Mon, 26 Oct 2026 14:32:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Date:References:Subject:In-Reply-To:To:From:
+ mime-version; bh=MJKydbKIW9Z8o1WIuScxmSrE0VKkhKjcci1bU0a1Uj0=; b=LnORVK7QXSlA
+ fPNcNBIhLer9qX8NOiMMCHTWnfkqnc7DtHwgDfjoLdo+VaFO7tu3Dpm3QX4Vgzy0/YLD47ATN+E+s
+ v5vJ3Nuuuczsltjp8r52CgfGR21iXFaybh+7629UJUcej61nu68O7jNYvM6BcjOkK2ESNFmzQGflM
+ JEQM05HMRqtODrnE38rLAWgSweuKsjzk98NJSrWyZyb8qfVlcazihwWiFYBk/Hz6vLl+GKPQPqEW6
+ guZub3y5QQZYW7aNd7oiijQ2Bc2VCSDi7uwhVvnKxnqfeGjmxaGLxiT+CHPibV1IpjrSt6I7dmbpQ
+ saNoZpZAYro6KmRcM7k3oQ==;
+Received: from rms by fencepost.gnu.org with local (Exim 4.93)
+ (envelope-from <rms@gnu.org>)
+ id 1xLPVA-00F3Uz-5o; Mon, 26 Oct 2026 14:32:56 -0400
+Content-Type: text/plain; charset=Utf-8
+From: Richard Stallman <rms@gnu.org>
+To: =?iso-8859-1?Q?St=C3=A9phane?= Marks <shipmints@gmail.com>
+Cc: rprior@protonmail.com, monnier@iro.umontreal.ca,
+	emacs-devel@gnu.org
+In-Reply-To: <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+ (message from =?iso-8859-1?Q?St=C3=A9phane?= Marks on Fri, 23 Oct 2026
+ 13:11:22 -0400)
+Subject: Re: Contributing xc.el to ELPA
+Reply-To: rms@gnu.org
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+ <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+ <6wHFMzpZsg0sa4yv7Ou91HFrfzM-eMqoQU1tQlcnTEXtkeLraFPdWpKi5RWjX2sdLkf1dFV_swlbZYodvjtpsKVc0hDsX982wr9bXEmK83Q=@protonmail.com>
+ <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+Message-Id: <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+Date: Mon, 26 Oct 2026 14:32:56 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 26 Oct 2026 18:32:58 -0000
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+Hold on here!  Please, someone, post a brief description (10 lines or
+20) of what job this package does, followed by its introductory
+documentation.  Then please wait a week for responses to that
+before proposing any decision.
+
+Ryan Prior posted some information about an external program xalled
+`xc'.  But it is addressed to people with substantial prior knowledge,
+so it is not really readable for people like me who don't use that
+program.
+
+Also, how does 'xc.el' relate to `xc'?
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+
+
+
+From MAILER-DAEMON Mon Oct 26 14:47:44 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLPjT-0001FU-Kv
+	for mharc-emacs-devel@gnu.org; Mon, 26 Oct 2026 14:47:43 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xLPjR-0001CY-DM
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 14:47:41 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xLPjP-000071-QN; Mon, 26 Oct 2026 14:47:41 -0400
+Received: from pmg1.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg1.iro.umontreal.ca (Proxmox) with ESMTP id BB2A3100081;
+ Mon, 26 Oct 2026 14:47:37 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1793040456;
+ bh=/93LJbNZr0tbyEbtty1xDNrxFRwo6WOdiRfrJwswZu0=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=h1zCoGv3LV1q6ADBSn68nKyRZpFVJfBnwBmMSaH8UEKe3cjRK3W8VADFngwzlIDA5
+ KNrPo585534LDy70Pra9shY3wZwvcrTj6w3+2irf0PUyyIQeyMk7bVH6I2gRnk+9bI
+ rYb5vPCOFI+qYBdiU2o58Ej7va47PdL1ML2lxBB3Olh6cBAHxvbDVzDpU6AfKJjM4j
+ qwJrxhIt1yYAWxVlZDvU4KbAeRrmEC7qGnUjCGLR4ffKh9ocQtpY9ZjMx3VxttvOHv
+ RCseNQLl+3+em+dRnb14/Z9Ikm/oRH6nN7tG+PLhumpP0S3qog1jpdkxZb90txZ5Eg
+ rxqUmt8P5Ahkg==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg1.iro.umontreal.ca (Proxmox) with ESMTP id 9836E100070;
+ Mon, 26 Oct 2026 14:47:36 -0400 (EDT)
+Received: from lechazo (lechon.iro.umontreal.ca [132.204.27.242])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 8BDC312045A;
+ Mon, 26 Oct 2026 14:47:36 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: rms@gnu.org
+Cc: =?windows-1252?B?U3TDqXBoYW5l?= Marks <shipmints@gmail.com>,
+ rprior@protonmail.com, emacs-devel@gnu.org
+Subject: Re: Contributing xc.el to ELPA
+In-Reply-To: <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+Message-ID: <jwvbj8gs3j3.fsf-monnier+emacs@gnu.org>
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+ <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+ <6wHFMzpZsg0sa4yv7Ou91HFrfzM-eMqoQU1tQlcnTEXtkeLraFPdWpKi5RWjX2sdLkf1dFV_swlbZYodvjtpsKVc0hDsX982wr9bXEmK83Q=@protonmail.com>
+ <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+ <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+Date: Mon, 26 Oct 2026 14:47:36 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.250 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 26 Oct 2026 18:47:41 -0000
+
+All taken care of.
+
+Richard, do you want to take over maintenance of (Non)GNU ELPA?
+If not, I suggest you let us do our job, thank you,
+
+
+=== Stefan
+
+
+Richard Stallman [2026-10-26 14:32:56] wrote:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+> Hold on here!  Please, someone, post a brief description (10 lines or
+> 20) of what job this package does, followed by its introductory
+> documentation.  Then please wait a week for responses to that
+> before proposing any decision.
+>
+> Ryan Prior posted some information about an external program xalled
+> `xc'.  But it is addressed to people with substantial prior knowledge,
+> so it is not really readable for people like me who don't use that
+> program.
+>
+> Also, how does 'xc.el' relate to `xc'?
+
+
+

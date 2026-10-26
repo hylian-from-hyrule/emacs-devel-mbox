@@ -1,0 +1,518 @@
+emacs-devel messages from 2026-10-25T18:15:00+01:00 to 2026-10-26T18:15:00+01:00
+
+================================================================================
+Date: 2026-10-26T12:16:06+01:00
+From: Kinney Zhang <vhkdzszh@gmail.com>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <179301336681.7054.17558261044765912242@gmail.com>
+In-Reply-To: <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+
+The TeX names would misdescribe the package, and I am not using them.
+Knuth-Plass is the algorithm TeX uses for breaking lines, but the algorithm
+is not TeX: it takes boxes and glue and returns break positions.  It knows
+nothing about markup, about .tex files, or about the TeX program.  This
+package runs that algorithm over ordinary Emacs buffers; it never reads or
+calls TeX, and nobody needs a TeX document to get anything out of it.
+
+`TeX-line-break' would tell people the package does something with .tex
+files, and `TeXlike-line-break' says the same thing more vaguely.  Either
+name sends people who want TeX help to the wrong place, and tells people
+who have never used TeX that the package is not for them, when their text
+is exactly what it is for.
+
+`typeset' is too broad, as you said.  I settled on `ekp-fill'.  Emacs
+already calls this operation filling -- `fill-paragraph', `auto-fill-mode',
+`fill-column' -- so the name uses a word the editor has taught its users
+already.
+
+If you want precision over brevity, `knuth-plass-line-break' names the
+algorithm the code implements and claims nothing about TeX.  I will use
+that instead if you prefer it.
+
+The core of the package is handwritten: the box/glue/penalty model, the
+dynamic program, the CJK classification, the layout engine, the C module's
+interface.  It decides where lines break, and it is older than the two
+merges.  Both came from GitHub Copilot's agent, and both only rework code
+that was already there.
+
+PR #8 (February 2026, copilot/analyze-repo-issues) added 398 lines and
+removed 410 across five files -- 754 changed lines in ekp-utils.el, 42 in
+ekp.el, a few in the C module.  Duplicate helpers merged into one (two
+identical binary searches became one function with two aliases; two copies
+of the module-reload helper became one), docstrings added, definitions made
+uniform, and two small bugs fixed along the way: a missing NULL check in
+the C paragraph builder, and a teardown loop that joined thread slots which
+had never been started.
+
+PR #10 (May 2026, copilot/fix-issue-9) completed the kinsoku rules with the
+opening-punctuation case, about 50 lines, inside a mechanism that already
+handled the closing one.
+
+Later fixes were drafted the same way, in the same files, each one a local
+correction inside an existing function.  None of it touched the algorithm
+or decided how the package behaves.  I am rewriting all of it from the
+specification, not editing it, and re-running the tests -- the ~800 lines I
+mentioned.
+
+The Commentary is at the end, verbatim as `C-h P' shows it.  It is long
+because it doubles as the list of supported interfaces; if you would rather
+`C-h P' showed a short description for users, I will move the interface
+list into a manual page.
+
+Building the accelerator needs a C11 compiler, POSIX threads, and an Emacs
+built with modules, so that `emacs-module.h' is installed.  `make -C
+native' does it.  Nothing else needs C; without the module the Elisp
+breaker handles every paragraph.
+
+`.tsv' is tab-separated values: one dictionary per line, with its file
+name, where it came from, the upstream commit, and the licence evidence.
+It lets a reviewer check each bundled file against its licence without
+reading the dictionary itself.
+
+I will point the documentation at the Wikipedia page for the algorithm
+instead of the TeXbook, as Philip suggested.
+
+Kinney
+
+-------------------- 8< --------------------
+
+
+Knuth-Plass optimal line breaking for Emacs.  Text is split into boxes,
+the globally optimal break sequence is chosen, CJK kinsoku rules and
+discretionary hyphenation apply, and lines are justified to the pixel.
+
+`make' is optional: it builds the native acceleration module, and
+without it the pure Elisp breaker handles every paragraph.
+
+Public API
+
+Load this package with (require 'ekp) after adding the repository
+root to load-path.
+Only the interfaces listed below are supported for use by other packages.
+All unlisted symbols and implementation features are internal, including
+names without a double hyphen.  Do not require files below lisp/ from consumers.
+This Commentary is the authoritative export list; implementations and precise
+docstrings remain beside their definitions.  The ETAF Reference Manual contains workflows.
+
+Variable: ekp-adjacent-fitness-penalty
+Penalty when adjacent lines differ in tightness by >1 class.
+
+Variable: ekp-alignment
+Paragraph alignment mode.
+`justify'      — flush both edges (default)
+`ragged-right' — natural spacing, lines end ragged on the right
+`ragged-left'  — natural spacing, lines start ragged on the left
+`center'       — natural spacing, both edges share the leftover
+Non-justify modes keep inter-word glue rigid; the K-P optimizer still
+picks breaks that minimize raggedness within
+`ekp-ragged-stretch-pixel' per line.
+
+Function: ekp-allow-break-region (beg end &optional announce)
+Clear session-local `ekp-no-break' from BEG through END.
+ANNOUNCE requests interactive feedback.
+
+Variable: ekp-auto-justify-lazy-threshold
+Buffer size beyond which whole-buffer reflows run visible-first.
+
+Function: ekp-auto-justify-mode (&optional arg)
+Maintain a non-mutating KP display projection.
+
+Completed paragraphs use the effective `ekp-buffer-measure': narrowest
+window by default, a fixed width, or a `(max . N)' cap.
+Manual no-break and verbatim properties last only for the current buffer
+session.
+
+This is a minor mode.  If called interactively, toggle the
+`EKP-Auto-Justify mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate the variable `ekp-auto-justify-mode'.
+
+The mode's hook is called both when the mode is enabled and when it is
+disabled.
+
+\{ekp-auto-justify-mode-map}
+
+Variable: ekp-auto-justify-native-append
+Use the loaded native module for automatic live append DP.
+This affects only the already prepared live append path.  Explicit string
+layout and full buffer layout still obey `ekp-use-c-module' directly; when
+the native module is unavailable, live append falls back to Elisp.
+
+Variable: ekp-auto-justify-paragraph-limit
+Maximum hard-paragraph characters planned automatically.
+Longer paragraphs stay natural so enabling the mode, pasting, and
+ordinary editing cannot enter an unbounded paragraph-wide planning
+operation.  `ekp-refill-paragraph' remains the explicit full-quality
+command and is not limited by this value.
+
+Variable: ekp-auto-justify-resize-delay
+Seconds to debounce window resize reflows.
+
+Variable: ekp-auto-justify-tick-budget
+Seconds of work allowed in one lazy reflow tick.
+
+Error: ekp-backend-contract-error
+Malformed C backend result
+Catch this condition with condition-case; failed calls do not return a value.
+
+Variable: ekp-break-policy
+Text property controlling regional break policy.
+`normal' clears automatic token or face restrictions, `hyphenate'
+enables discretionary hyphenation, and `no-hyphen' suppresses it.
+This property is not a hard no-break switch; rigid atoms remain
+owned by the separate `ekp-no-break' text property.
+
+Variable: ekp-buffer-inline-faces
+Faces whose exact spans use `ekp-inline-code-policy'.
+
+Variable: ekp-buffer-margin-pixel
+Pixels reserved inside the window body width.
+
+Variable: ekp-buffer-measure
+Measure used for automatic and default manual buffer layout.
+`narrowest-window' uses the narrowest live window displaying the
+buffer.  A positive integer is a fixed pixel width.  `(max . N)'
+caps the narrowest live window at N pixels.
+
+Variable: ekp-buffer-mode-policy-alist
+Mode profiles consulted by automatic and manual buffer layout.
+
+Variable: ekp-buffer-skip-faces
+Faces whose paragraphs stay verbatim.
+
+Variable: ekp-buffer-skip-predicate
+Function called with a paragraph string that should stay verbatim.
+
+Function: ekp-c-module-build (&optional profile)
+Build the C module with make using PROFILE.
+PROFILE is one of `portable', `native', `debug', or `sanitize';
+the default is `portable'.
+
+Function: ekp-c-module-load ()
+Load EKP C module if available.
+Refuses to enable a module older than
+`ekp-c-module-required-version' (rebuild with make).
+
+Variable: ekp-cjk-no-line-end-extra
+Custom CJK characters that must not end a line.
+Used only by the `custom' kinsoku profile.
+
+Variable: ekp-cjk-no-line-start-extra
+Custom/Japanese CJK letters that must not start a line.
+Used only by the `custom' kinsoku profile.  The `ja' profile uses
+an immutable built-in Japanese addition set.
+
+Function: ekp-clear-caches ()
+Clear all paragraph and measurement caches.
+Run after font or theme changes that affect glyph widths.
+
+Function: ekp-clear-verbatim-region (beg end &optional announce)
+Clear session-local `ekp-verbatim' from BEG through END.
+ANNOUNCE requests interactive feedback.
+
+Variable: ekp-consecutive-hyphen-penalty
+Base penalty multiplier for consecutive hyphenated lines.
+Actual penalty = this × count², encouraging spread of hyphens.
+
+Variable: ekp-default-cws-stretch-pixel
+Max stretched pixel of whitespace between CJK chars.
+
+Function: ekp-diagnose ()
+Report the authoritative width and any skipped projection conflicts.
+
+Variable: ekp-first-line-indent
+First-line indentation: pixels, or t for 2 em of the paragraph font.
+Sugar for the common CJK paragraph convention; ignored when
+`ekp-parshape' is set.
+
+Function: ekp-hyphen-create (&optional lang file left right)
+Create hyphenator for LANG or dictionary FILE.
+LEFT/RIGHT override the minimum characters kept before/after breaks;
+by default the dictionary's own LEFTHYPHENMIN/RIGHTHYPHENMIN apply
+(2/2 when it declares none).
+
+Error: ekp-hyphen-dictionary-not-found
+Hyphenation dictionary not found
+Catch this condition with condition-case; failed calls do not return a value.
+
+Error: ekp-hyphen-error
+Hyphenation error
+Catch this condition with condition-case; failed calls do not return a value.
+
+Variable: ekp-hyphen-penalty
+Penalty for hyphenated breaks.  Higher = avoid hyphenation.  Default 50.
+Note: added to demerits as penalty², following the K-P formula.
+
+Error: ekp-hyphen-unsupported-pattern
+Dictionary uses unsupported replacement patterns
+Catch this condition with condition-case; failed calls do not return a value.
+
+Variable: ekp-hyphenation
+Global discretionary hyphenation policy.
+`auto' and `on' use the configured dictionary when available;
+missing dictionaries disable hyphenation without signaling.
+`off' disables discretionary hyphenation.
+
+Variable: ekp-inline-code-policy
+Default break policy for automatic inline code spans.
+`normal' uses ordinary breaks and hyphenation.  `no-hyphen' keeps
+ordinary legal breaks but suppresses discretionary dictionary
+hyphens.  `no-break' makes fitting automatic spans rigid; overwide
+automatic spans downgrade to `no-hyphen'.  This option does not
+affect explicit `ekp-no-break' regions.
+
+Function: ekp-justify-buffer (&optional pixel)
+Project the accessible buffer as KP layout at PIXEL.
+
+Function: ekp-justify-region (beg end &optional pixel)
+Project BEG through END as KP layout at PIXEL without changing text.
+
+Variable: ekp-kinsoku-profile
+Kinsoku profile used when compiling paragraph break permissions.
+
+Variable: ekp-last-line-min-ratio
+Minimum fill ratio for last line (0.0-1.0).
+
+Variable: ekp-last-line-short-penalty
+Penalty multiplier for underfilled last lines.
+Applied as: this × (1 - fill-ratio) when fill < `ekp-last-line-min-ratio'.
+
+Variable: ekp-latin-lang
+Language code for hyphenation (e.g., "en_US", "de_DE").
+
+Function: ekp-layout-plan (string line-pixel)
+Return a semantic KP layout plan for STRING at LINE-PIXEL.
+The plan records source offsets, glue targets, breaks, indentation,
+and discretionary hyphens without choosing a display representation.
+
+Function: ekp-layout-plan-string (plan)
+Return the cleaned source text PLAN was planned from.
+
+Function: ekp-layout-plan-lines (plan)
+Return PLAN's display lines as a vector of line records.
+
+Function: ekp-layout-plan-state (plan)
+Return PLAN's state: `planned', or `natural' when the overlong-token
+policy left it unbroken.
+
+Function: ekp-layout-line-index (line)
+Return LINE's zero-based index within its plan.
+
+Function: ekp-layout-line-source-start (line)
+Return the source offset where LINE starts.
+
+Function: ekp-layout-line-source-end (line)
+Return the source offset just past LINE's source range.
+
+Function: ekp-layout-line-leading-pixel (line)
+Return the pixel width LINE keeps before its first box.
+
+Function: ekp-layout-line-trailing-pixel (line)
+Return the trailing pixel width LINE carries after its last box.
+
+Function: ekp-layout-line-hyphen-p (line)
+Return non-nil when LINE ends with a discretionary hyphen.
+
+Function: ekp-layout-line-gaps (line)
+Return LINE's semantic gaps as a vector of gap records.
+
+Function: ekp-layout-gap-natural-pixel (gap)
+Return GAP's unstretched natural width in pixels.
+
+Function: ekp-layout-gap-target-pixel (gap)
+Return GAP's target width in pixels chosen by the layout.
+
+Variable: ekp-line-penalty
+Penalty for each line break.  Higher = fewer lines.  Default 10.
+
+Variable: ekp-looseness
+Target line count offset: 0=optimal, +1=looser (more lines), -1=tighter.
+When non-zero, a full (position × line-count) dynamic program is run
+and the path whose line count is closest to (optimal + looseness) with
+the lowest demerits is selected.  Only supported by the Elisp engine;
+when non-zero the C module is bypassed automatically.
+
+Function: ekp-markdown-setup ()
+Protect common Markdown code faces in the current buffer.
+
+Function: ekp-no-break-region (beg end &optional announce)
+Mark BEG through END as an unbreakable session-local atom.
+ANNOUNCE requests interactive feedback.
+
+Variable: ekp-number-unit-suffixes
+Exact suffixes recognized by the compact number-unit classifier.
+
+Function: ekp-org-setup ()
+Protect common Org structural faces in the current buffer.
+
+Variable: ekp-overlong-token-policy
+Policy for ordinary non-CJK tokens wider than the measure.
+
+Variable: ekp-para-cache-limit
+Maximum number of cached paragraphs.
+When exceeded, the whole paragraph cache is flushed (cheap to rebuild).
+
+Function: ekp-param-reset ()
+Clear explicit spacing parameters; defaults are derived per string again.
+
+Function: ekp-param-set (lws-i lws-+ lws-- mws-i mws-+ mws-- cws-i cws-+ cws--)
+Set all spacing parameters explicitly; persist until `ekp-param-reset'.
+The nine pixel values, in order, are LWS-I LWS-+ LWS-- MWS-I MWS-+
+MWS-- CWS-I CWS-+ CWS--: ideal, stretch (+) and shrink (-) for the
+Latin (LWS), mixed (MWS) and CJK (CWS) word spaces.
+
+Variable: ekp-parshape
+Per-line layout, as a sequence of (INDENT . WIDTH) cons cells.
+Line i (0-based) uses element i; lines beyond the last element reuse
+it (like TeX \parshape).  INDENT is the left offset in pixels,
+WIDTH the text width — the rendered line occupies INDENT + WIDTH.
+Line-number-dependent widths require the (position × line-count) DP,
+so this is Elisp-only: the C module is bypassed while set.
+
+Function: ekp-pixel-justify (string line-pixel)
+Justify multiline STRING to LINE-PIXEL pixels.
+Each newline-separated segment is treated as one paragraph.
+When the C module is available, paragraphs are computed in parallel.
+
+Function: ekp-pixel-range-justify (string min-pixel max-pixel)
+Find optimal width for STRING between MIN-PIXEL and MAX-PIXEL.
+Returns (justified-text . optimal-pixel).
+
+Variable: ekp-protrusion
+Non-nil enables right-edge character protrusion (hanging punctuation).
+A line ending in punctuation lets part of that glyph hang past the
+flush edge, per `ekp-protrusion-ratios' — CLREQ line-end punctuation
+squeeze and microtype-style hanging periods/hyphens in one mechanism.
+Left-edge protrusion is not implemented: Emacs cannot render text
+before the line origin.  Buffer integration reserves the protrusion
+width in its layout when enabled.
+
+Variable: ekp-protrusion-ratios
+Alist CLASS → RATIO of the glyph width allowed to protrude.
+`cjk-close': fullwidth closers (。、」); 0.5 hangs exactly the
+whitespace half of the glyph — visually equivalent to CLREQ line-end
+compression.  `latin-close': chars from `ekp--no-line-start-chars'
+ending a word (period, comma, quotes).  `hyphen': the soft hyphen
+inserted at a break.
+
+Variable: ekp-ragged-stretch-pixel
+Per-line end-of-line flexibility (pixels) for non-justify alignment.
+This is what a ragged line may fall short of the target width without
+badness reaching infinity (like \raggedright with a finite \rightskip
+stretch).  nil derives 8× the Latin word-space ideal (≈2 em).
+
+Function: ekp-refill-paragraph ()
+Apply a complete KP layout to the hard paragraph at point.
+
+Variable: ekp-token-break-policies
+Break policies for bounded automatic token classifiers.
+
+Function: ekp-unjustify-buffer ()
+Remove EKP projection from the accessible buffer.
+
+Function: ekp-unjustify-region (beg end)
+Remove EKP display projection intersecting BEG through END.
+
+Variable: ekp-use-c-module
+When non-nil, use C dynamic module for DP computation if available.
+The C module provides significant performance improvement for large texts.
+Set to nil to force pure Elisp implementation.
+
+Function: ekp-verbatim-region (beg end &optional announce)
+Keep paragraphs intersecting BEG through END verbatim this session.
+ANNOUNCE requests interactive feedback.
+
+================================================================================
+Date: 2026-10-26T17:45:04+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 402482ada96: dired-rename-file: Don't allow moving
+ edited files between repos
+Message-ID: <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261026102558.BBEEBC0FD7E@vcs2.savannah.gnu.org>
+References: <179301035784.24225.1014254998978829844@vcs2.savannah.gnu.org>
+ <20261026102558.BBEEBC0FD7E@vcs2.savannah.gnu.org>
+
+>     dired-rename-file: Don't allow moving edited files between repos
+>     
+>     * lisp/dired-aux.el (dired-rename-file): Don't allow moving
+>     edited files between repositories.
+>     * test/lisp/vc/vc-tests/vc-test-misc.el
+>     (vc-test-dired-rename-file-between-repos): Test this case.
+> ---
+>  lisp/dired-aux.el                     | 3 +++
+>  test/lisp/vc/vc-tests/vc-test-misc.el | 8 ++++++++
+>  2 files changed, 11 insertions(+)
+>
+> diff --git a/lisp/dired-aux.el b/lisp/dired-aux.el
+> index 37702a8b471..79cbf1dbc96 100644
+> --- a/lisp/dired-aux.el
+> +++ b/lisp/dired-aux.el
+> @@ -2383,6 +2383,9 @@ unless OK-IF-ALREADY-EXISTS is non-nil."
+>                                    (file-name-directory newname)))))
+>            (if (equal file-root newname-root)
+>                (vc-rename-file file newname ok-if-already-exists)
+> +            (when (eq (vc-state file) 'edited)
+> +              (error "Please commit or undo your changes before moving %s"
+> +                     file))
+
+I don't know if it's just me, but I find the above rather "un-Emacsy":
+I'd have expected a `y-or-n-p` prompt to allow the users to shoot
+themselves in the foot at their leisure.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-26T17:47:28+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: master 402482ada96: dired-rename-file: Don't allow moving edited
+ files between repos
+Message-ID: <CAN+1Hbq_YybgR2TLRi16cbA702SiqV5Upq53wyKgieTRgaxxOg@mail.gmail.com>
+In-Reply-To: <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+References: <179301035784.24225.1014254998978829844@vcs2.savannah.gnu.org>
+ <20261026102558.BBEEBC0FD7E@vcs2.savannah.gnu.org>
+ <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+
+On Mon, Oct 26, 2026 at 12:45 PM Stefan Monnier <monnier@iro.umontreal.ca>
+wrote:
+
+> >     dired-rename-file: Don't allow moving edited files between repos
+> >
+> >     * lisp/dired-aux.el (dired-rename-file): Don't allow moving
+> >     edited files between repositories.
+> >     * test/lisp/vc/vc-tests/vc-test-misc.el
+> >     (vc-test-dired-rename-file-between-repos): Test this case.
+> > ---
+> >  lisp/dired-aux.el                     | 3 +++
+> >  test/lisp/vc/vc-tests/vc-test-misc.el | 8 ++++++++
+> >  2 files changed, 11 insertions(+)
+> >
+> > diff --git a/lisp/dired-aux.el b/lisp/dired-aux.el
+> > index 37702a8b471..79cbf1dbc96 100644
+> > --- a/lisp/dired-aux.el
+> > +++ b/lisp/dired-aux.el
+> > @@ -2383,6 +2383,9 @@ unless OK-IF-ALREADY-EXISTS is non-nil."
+> >                                    (file-name-directory newname)))))
+> >            (if (equal file-root newname-root)
+> >                (vc-rename-file file newname ok-if-already-exists)
+> > +            (when (eq (vc-state file) 'edited)
+> > +              (error "Please commit or undo your changes before moving
+> %s"
+> > +                     file))
+>
+> I don't know if it's just me, but I find the above rather "un-Emacsy":
+> I'd have expected a `y-or-n-p` prompt to allow the users to shoot
+> themselves in the foot at their leisure.
+>
+
+The command `delete-file` doesn't have foot-gun safety.  That's always
+surprised me.
+
