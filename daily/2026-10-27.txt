@@ -1,0 +1,671 @@
+emacs-devel messages from 2026-10-26T18:15:00+01:00 to 2026-10-27T18:15:00+01:00
+
+================================================================================
+Date: 2026-10-26T19:32:56+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Contributing xc.el to ELPA
+Message-ID: <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+In-Reply-To: <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+ (message from =?iso-8859-1?Q?St=C3=A9phane?= Marks on Fri, 23 Oct 2026
+ 13:11:22 -0400)
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+ <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+ <6wHFMzpZsg0sa4yv7Ou91HFrfzM-eMqoQU1tQlcnTEXtkeLraFPdWpKi5RWjX2sdLkf1dFV_swlbZYodvjtpsKVc0hDsX982wr9bXEmK83Q=@protonmail.com>
+ <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+Hold on here!  Please, someone, post a brief description (10 lines or
+20) of what job this package does, followed by its introductory
+documentation.  Then please wait a week for responses to that
+before proposing any decision.
+
+Ryan Prior posted some information about an external program xalled
+`xc'.  But it is addressed to people with substantial prior knowledge,
+so it is not really readable for people like me who don't use that
+program.
+
+Also, how does 'xc.el' relate to `xc'?
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-10-26T19:47:36+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Contributing xc.el to ELPA
+Message-ID: <jwvbj8gs3j3.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+ <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+ <6wHFMzpZsg0sa4yv7Ou91HFrfzM-eMqoQU1tQlcnTEXtkeLraFPdWpKi5RWjX2sdLkf1dFV_swlbZYodvjtpsKVc0hDsX982wr9bXEmK83Q=@protonmail.com>
+ <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+ <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+
+All taken care of.
+
+Richard, do you want to take over maintenance of (Non)GNU ELPA?
+If not, I suggest you let us do our job, thank you,
+
+
+=== Stefan
+
+
+Richard Stallman [2026-10-26 14:32:56] wrote:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+> Hold on here!  Please, someone, post a brief description (10 lines or
+> 20) of what job this package does, followed by its introductory
+> documentation.  Then please wait a week for responses to that
+> before proposing any decision.
+>
+> Ryan Prior posted some information about an external program xalled
+> `xc'.  But it is addressed to people with substantial prior knowledge,
+> so it is not really readable for people like me who don't use that
+> program.
+>
+> Also, how does 'xc.el' relate to `xc'?
+
+================================================================================
+Date: 2026-10-26T21:41:51+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Contributing xc.el to ELPA
+Message-ID: <f6b9ed528caa6419f4d6bbd59176357e@gnu.support>
+In-Reply-To: <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+ <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+ <6wHFMzpZsg0sa4yv7Ou91HFrfzM-eMqoQU1tQlcnTEXtkeLraFPdWpKi5RWjX2sdLkf1dFV_swlbZYodvjtpsKVc0hDsX982wr9bXEmK83Q=@protonmail.com>
+ <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+ <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+
+On 2026-10-26 21:32, Richard Stallman wrote:
+> Hold on here!  Please, someone, post a brief description (10 lines or
+> 20) of what job this package does, followed by its introductory
+> documentation.
+
+`xc.el` is an Emacs front end for `xc`, a task runner that takes its 
+commands out of a README.
+
+In a project using `xc`, each task is a heading with a fenced code block 
+under it, in `README.md` or `README.org`. The name of the heading is the 
+name of the task, and the code in the block is what gets run. The point 
+is that the docs and the scripts are the same file, so the steps people 
+read are the steps they run. A `Makefile` and a README drift apart 
+because they are two separate things. Here they cannot.
+
+`M-x xc` asks `xc` for the task names in the README of the current 
+project, offers them for completion, and runs the one you pick in a 
+term-mode buffer. The buffer scrolls to the bottom as output arrives, 
+and `q` closes it once the task has finished. Nothing is run through a 
+shell: the package calls the `xc` executable directly with 
+`call-process`, and warns if `xc` is not on the PATH.
+
+Examples:
+---------
+
+Markdown, the basic case
+
+     # Tasks
+     ## build
+
+     Builds the binary.
+
+     ```
+     go build ./cmd/xc
+     ```
+
+So the comand `go build` would be executed by the xc.
+
+Org mode
+----------
+
+     * Tasks
+     ** deploy
+     Sends the site to the server.
+     #+begin_src sh
+     rsync -a public/ user@example.org:site/
+     #+end_src
+
+so the rsync command above would be executed.
+
+Introductory documentation
+
+An extract from the header of `xc.el`:
+
+     ;;; xc.el --- Emacs interface for xc  -*- lexical-binding: t; -*-
+
+     ;;; Commentary:
+     ;; An Emacs interface to the xc task-runner, <https://xcfile.dev/>
+     ;; Use `xc' to launch a task defined in your README
+
+     ;; The common use case for `xc' is to run build, test, deploy type 
+commands
+     ;; that are documented in your README. Putting the documented steps 
+on
+     ;; the ``hot path'' ensures they don't get out-of-date and aids in
+     ;; discoverability. A unique feature of `xc' is that it supports 
+both
+     ;; Markdown and org-mode READMEs.
+
+ From `README.org`:
+
+     * To use
+
+     - =M-x= xc =RET= task-name =RET= \
+       Runs the given task. The set of available tasks is offered for 
+completion.
+
+     - In Treemacs, a project with =xc= tasks in its root README will 
+show an =[XC TASKS]= list in its tree. To run a task, double-click it, 
+or move point to your desired task and press =RET=. See the action shot 
+above for an example, and "Configuration" below for instructions to 
+enable the Treemacs integration.
+
+     #+begin_src elisp
+       ;; Recommended: bind to keyboard
+       (bind-key "C-c x" #'xc)
+
+       ;; If you use Treemacs, initialize the integration:
+       (with-eval-after-load 'treemacs
+         (require 'xc-treemacs))
+     #+end_src
+
+
+> Also, how does 'xc.el' relate to `xc'?
+
+See above.
+
+Example:
+
+$ xc deps
++ ls -1
+README.md
+README.org
+sub
+tagged.org
++ echo '3 tasks in this README'
+3 tasks in this README
+
+by running `xc` program, it gives possible tasks for execution that were 
+defined in README files.
+
+So Emacs command shows xc outputs in the buffer, with completion of task 
+names, tasks defined in README, and executes such.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-10-27T03:40:33+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Gentoo: can libxml2 be enabled by default?
+Message-ID: <874ie7kgri.fsf@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+I recently discovered a privacy problem: to show an HTML article in Gnus,
+the web browser fetches extra content (images, etc.), in order to display
+the page properly. The corresponding HTTP requests were made without my
+consent, so it's a tracking issue.
+
+Thanks to Tassilo Horn on gmane.emacs.gnus.general, I found out that
+enabling libxml2 should solve the problem, and it, seemingly, did. At
+least, I did not see the HTTP requests from that point on. Turns out,
+enabling libxml2 sets the default web browser to 'shr', and the library
+is on by default in Emacs repo. The same, however, is not true for
+app-editors/emacs Gentoo ebuild. On Gentoo, I had to enable libxml2
+explicitly.
+
+The maintainer for this ebuild is listed as Ulrich Müller
+
+https://packages.gentoo.org/packages/app-editors/emacs
+
+so my request is mostly geared towards him. Can libxml2 be enabled by
+default?
+
+Apologies for posting distro-specific stuff here. The problem seems
+important enough, so I didn't want to compartmentalize it.
+
+
+Many thanks.
+
+================================================================================
+Date: 2026-10-27T07:00:07+01:00
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Message-ID: <ua4nzof88@gentoo.org>
+In-Reply-To: <874ie7kgri.fsf@mail.gmail.com>
+References: <874ie7kgri.fsf@mail.gmail.com>
+
+>>>>> On Tue, 27 Oct 2026, Nickolai Dobrynin wrote:
+
+> I recently discovered a privacy problem: to show an HTML article in Gnus,
+> the web browser fetches extra content (images, etc.), in order to display
+> the page properly. The corresponding HTTP requests were made without my
+> consent, so it's a tracking issue.
+
+> Thanks to Tassilo Horn on gmane.emacs.gnus.general, I found out that
+> enabling libxml2 should solve the problem, and it, seemingly, did. At
+> least, I did not see the HTTP requests from that point on. Turns out,
+> enabling libxml2 sets the default web browser to 'shr', and the library
+> is on by default in Emacs repo. The same, however, is not true for
+> app-editors/emacs Gentoo ebuild. On Gentoo, I had to enable libxml2
+> explicitly.
+
+AFAICS this is controlled by mm-text-html-renderer, and "shr" is the
+default unless w3m, links or lynx is found.
+
+If there are privacy issues with these other browsers, then maybe GNUS
+shouldn't use them? It looks like a rather indirect way to work around
+the problem by linking Emacs against libxml2.
+
+(There are also settings like mm-discouraged-alternatives,
+mm-html-inhibit-images, mm-w3m-safe-url-regexp and several others,
+maybe you should look into these?)
+
+> The maintainer for this ebuild is listed as Ulrich Müller
+> https://packages.gentoo.org/packages/app-editors/emacs
+
+Which doesn't list me as maintainer, but says:
+
+| Maintainer(s): Gentoo GNU Emacs project <gnu-emacs@gentoo.org>
+| https://packages.gentoo.org/maintainer/gnu-emacs@gentoo.org
+
+> so my request is mostly geared towards him. Can libxml2 be enabled by
+> default?
+
+Users can enable it via the corresponding use flag (and apparently you
+have done so now?). Gentoo policy is to leave flags off by default,
+especially if they pull in additional dependencies. 
+
+> Apologies for posting distro-specific stuff here. The problem seems
+> important enough, so I didn't want to compartmentalize it.
+
+Still, I'd suggest that you submit issues to bugs.gentoo.org when they
+are about Gentoo in particular.
+
+================================================================================
+Date: 2026-10-27T07:08:37+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Message-ID: <86tsm7y8t6.fsf@gnu.org>
+In-Reply-To: <ua4nzof88@gentoo.org> (message from Ulrich =?utf-8?Q?M=C3=BC?=
+ =?utf-8?Q?ller?= on Tue, 27 Oct 2026 07:00:07 +0100)
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+
+> From: Ulrich Müller <ulm@gentoo.org>
+> Cc: emacs-devel@gnu.org
+> Date: Tue, 27 Oct 2026 07:00:07 +0100
+> 
+> >>>>> On Tue, 27 Oct 2026, Nickolai Dobrynin wrote:
+> 
+> > I recently discovered a privacy problem: to show an HTML article in Gnus,
+> > the web browser fetches extra content (images, etc.), in order to display
+> > the page properly. The corresponding HTTP requests were made without my
+> > consent, so it's a tracking issue.
+> 
+> > Thanks to Tassilo Horn on gmane.emacs.gnus.general, I found out that
+> > enabling libxml2 should solve the problem, and it, seemingly, did. At
+> > least, I did not see the HTTP requests from that point on. Turns out,
+> > enabling libxml2 sets the default web browser to 'shr', and the library
+> > is on by default in Emacs repo. The same, however, is not true for
+> > app-editors/emacs Gentoo ebuild. On Gentoo, I had to enable libxml2
+> > explicitly.
+> 
+> AFAICS this is controlled by mm-text-html-renderer, and "shr" is the
+> default unless w3m, links or lynx is found.
+> 
+> If there are privacy issues with these other browsers, then maybe GNUS
+> shouldn't use them? It looks like a rather indirect way to work around
+> the problem by linking Emacs against libxml2.
+
+TBH, I was surprised to hear that some distro distributes Emacs built
+without libxml2.  What is the purpose of such an omission?  I expect
+quite a few useful features in Emacs to be disabled as result, and
+what are the advantages to justify that?
+
+================================================================================
+Date: 2026-10-27T08:03:37+01:00
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Message-ID: <u5wynocae@gentoo.org>
+In-Reply-To: <86tsm7y8t6.fsf@gnu.org>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org>
+
+>>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+
+> TBH, I was surprised to hear that some distro distributes Emacs built
+> without libxml2.  What is the purpose of such an omission?  I expect
+> quite a few useful features in Emacs to be disabled as result, and
+> what are the advantages to justify that?
+
+Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+for it, and users can choose if Emacs is built with or without libxml2.
+
+The default for the libxml2 flag can be discussed, of course.
+
+https://devmanual.gentoo.org/general-concepts/use-flags/index.html#iuse-defaults
+
+================================================================================
+Date: 2026-10-27T10:15:08+01:00
+From: =?utf-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+Message-ID: <874ie7ijxf.fsf@gmail.com>
+In-Reply-To: <87y0c0vvtf.fsf@gmail.com>
+References: <87y0c0vvtf.fsf@gmail.com>
+
+Hi,
+
+I've pushed refactor.el to master, along with the Eglot changes that
+make it a Refactor backend.
+
+I have the commit making refactor a :core GNU ELPA package ready, but I
+can't push it, I think because I'm not a member of the new Savannah
+group for elpa/gnu.git.  Could someone add savannah user
+'capitaomorte')?  Until then, Eglot snapshots from GNU-devel ELPA can't
+be installed, since they now require refactor.
+
+The feature/actions branch is now just a historical record: the commits
+on master were rebased and slightly reworked, so don't merge it.  It can
+be deleted.
+
+João
+
+================================================================================
+Date: 2026-10-27T10:38:05+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Message-ID: <86pkwvxz42.fsf@gnu.org>
+In-Reply-To: <u5wynocae@gentoo.org> (message from Ulrich =?utf-8?Q?M=C3=BC?=
+ =?utf-8?Q?ller?= on Tue, 27 Oct 2026 08:03:37 +0100)
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org> <u5wynocae@gentoo.org>
+
+> From: Ulrich Müller <ulm@gentoo.org>
+> Cc: Ulrich Müller <ulm@gentoo.org>,  ndobrynin@gmail.com,
+>  emacs-devel@gnu.org
+> Date: Tue, 27 Oct 2026 08:03:37 +0100
+> 
+> >>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+> 
+> > TBH, I was surprised to hear that some distro distributes Emacs built
+> > without libxml2.  What is the purpose of such an omission?  I expect
+> > quite a few useful features in Emacs to be disabled as result, and
+> > what are the advantages to justify that?
+> 
+> Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+> for it, and users can choose if Emacs is built with or without libxml2.
+> 
+> The default for the libxml2 flag can be discussed, of course.
+> 
+> https://devmanual.gentoo.org/general-concepts/use-flags/index.html#iuse-defaults
+
+I indeed think that the default should be to build with libxml2.
+Sean, do you agree?
+
+(I didn't see on that page what are the current defaults, so I
+couldn't tell if the rest of the defaults are IMO reasonable.)
+
+================================================================================
+Date: 2026-10-27T10:58:25+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Message-ID: <874ie7o472.fsf@athena.silentflame.com>
+In-Reply-To: <86pkwvxz42.fsf@gnu.org>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org> <u5wynocae@gentoo.org> <86pkwvxz42.fsf@gnu.org>
+
+Eli Zaretskii [27/Oct 11:38am +02] wrote:
+>> From: Ulrich Müller <ulm@gentoo.org>
+>> Cc: Ulrich Müller <ulm@gentoo.org>,  ndobrynin@gmail.com,
+>>  emacs-devel@gnu.org
+>> Date: Tue, 27 Oct 2026 08:03:37 +0100
+>>
+>> >>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+>>
+>> > TBH, I was surprised to hear that some distro distributes Emacs built
+>> > without libxml2.  What is the purpose of such an omission?  I expect
+>> > quite a few useful features in Emacs to be disabled as result, and
+>> > what are the advantages to justify that?
+>>
+>> Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+>> for it, and users can choose if Emacs is built with or without libxml2.
+>>
+>> The default for the libxml2 flag can be discussed, of course.
+>>
+>> https://devmanual.gentoo.org/general-concepts/use-flags/index.html#iuse-defaults
+>
+> I indeed think that the default should be to build with libxml2.
+> Sean, do you agree?
+>
+> (I didn't see on that page what are the current defaults, so I
+> couldn't tell if the rest of the defaults are IMO reasonable.)
+
+Yes, probably.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-27T11:00:00+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: master 402482ada96: dired-rename-file: Don't allow moving
+ edited files between repos
+Message-ID: <871p9bo44f.fsf@athena.silentflame.com>
+In-Reply-To: <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+References: <179301035784.24225.1014254998978829844@vcs2.savannah.gnu.org>
+ <20261026102558.BBEEBC0FD7E@vcs2.savannah.gnu.org>
+ <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier [26/Oct 12:45pm -04] wrote:
+>>     dired-rename-file: Don't allow moving edited files between repos
+>>
+>>     * lisp/dired-aux.el (dired-rename-file): Don't allow moving
+>>     edited files between repositories.
+>>     * test/lisp/vc/vc-tests/vc-test-misc.el
+>>     (vc-test-dired-rename-file-between-repos): Test this case.
+>> ---
+>>  lisp/dired-aux.el                     | 3 +++
+>>  test/lisp/vc/vc-tests/vc-test-misc.el | 8 ++++++++
+>>  2 files changed, 11 insertions(+)
+>>
+>> diff --git a/lisp/dired-aux.el b/lisp/dired-aux.el
+>> index 37702a8b471..79cbf1dbc96 100644
+>> --- a/lisp/dired-aux.el
+>> +++ b/lisp/dired-aux.el
+>> @@ -2383,6 +2383,9 @@ unless OK-IF-ALREADY-EXISTS is non-nil."
+>>                                    (file-name-directory newname)))))
+>>            (if (equal file-root newname-root)
+>>                (vc-rename-file file newname ok-if-already-exists)
+>> +            (when (eq (vc-state file) 'edited)
+>> +              (error "Please commit or undo your changes before moving %s"
+>> +                     file))
+>
+> I don't know if it's just me, but I find the above rather "un-Emacsy":
+> I'd have expected a `y-or-n-p` prompt to allow the users to shoot
+> themselves in the foot at their leisure.
+
+The subsequent call to vc-delete-file will fail with just the same
+error, which is why I thought it should give up at this point.
+
+Might be worth improving that but maybe the consequences with some older
+VCS are much worse or something.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-27T13:09:38+01:00
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Message-ID: <uo6cfmjjx@gentoo.org>
+In-Reply-To: <86pkwvxz42.fsf@gnu.org>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org> <u5wynocae@gentoo.org>
+ <86pkwvxz42.fsf@gnu.org>
+
+>>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+
+>> > TBH, I was surprised to hear that some distro distributes Emacs built
+>> > without libxml2.  What is the purpose of such an omission?  I expect
+>> > quite a few useful features in Emacs to be disabled as result, and
+>> > what are the advantages to justify that?
+>> 
+>> Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+>> for it, and users can choose if Emacs is built with or without libxml2.
+>> 
+>> The default for the libxml2 flag can be discussed, of course.
+>> 
+>> https://devmanual.gentoo.org/general-concepts/use-flags/index.html#iuse-defaults
+
+> I indeed think that the default should be to build with libxml2.
+> Sean, do you agree?
+
+As I said, for anything to happen, the OP should report the issue via
+the proper channel, i.e. bugs.gentoo.org.
+
+Just to mention it, libxml2 had its fair share of security vulnerabilies
+in recent years:
+https://bugs.gentoo.org/buglist.cgi?chfieldfrom=2024-01-01&chfieldto=Now&component=Vulnerabilities&list_id=8333478&query_format=advanced&short_desc=dev-libs%2Flibxml2&short_desc_type=allwordssubstr
+
+================================================================================
+Date: 2026-10-27T15:01:32+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Message-ID: <87ld7j5jk3.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org> <u5wynocae@gentoo.org>
+ <86pkwvxz42.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Ulrich Müller <ulm@gentoo.org>
+>> Cc: Ulrich Müller <ulm@gentoo.org>,  ndobrynin@gmail.com,
+>>  emacs-devel@gnu.org
+>> Date: Tue, 27 Oct 2026 08:03:37 +0100
+>> 
+>> >>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+>> 
+>> > TBH, I was surprised to hear that some distro distributes Emacs built
+>> > without libxml2.  What is the purpose of such an omission?  I expect
+>> > quite a few useful features in Emacs to be disabled as result, and
+>> > what are the advantages to justify that?
+>> 
+>> Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+>> for it, and users can choose if Emacs is built with or without libxml2.
+>> 
+>> The default for the libxml2 flag can be discussed, of course.
+>
+> I indeed think that the default should be to build with libxml2.
+
+To give more details, I became aware of the unwanted HTTP requests
+through the `gnus-html-wash-tags' function in gnus-html.el:
+
+(gnus-message 8 "gnus-html-wash-tags: fetching link URL %s" url)
+
+After enabling libxml2, these messages stopped. Also,
+`gnus-html-wash-images' contains
+
+(gnus-message 8 "gnus-html-wash-tags: fetching image URL %s" url)
+
+I don't recall seeing these particular messages even with image loading
+enabled.
+
+Right now, I have no idea if these are the only two channels through
+which the requests go. Only a network tool can say for sure.
+
+Thus, turning libxml2 on by default seems reasonable *pending further
+review*.
+
+================================================================================
+Date: 2026-10-27T15:26:45+01:00
+From: Mike Kupfer <kupfer@rawbw.com>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Message-ID: <7102.1793111205@bach.localdomain>
+In-Reply-To: <ua4nzof88@gentoo.org>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+
+Ulrich Müller wrote:
+
+> AFAICS this is controlled by mm-text-html-renderer, and "shr" is the
+> default unless w3m, links or lynx is found.
+
+But shr requires libxml2; see shr-render-buffer and the high-level
+commentary at the top of lisp/net/shr.el.  
+
+It does seem odd for shr to be the fallback in the defcustom for
+mm-text-html-renderer.  If we get to the fallback clause, the libxml
+check would have failed, so we know shr won't work.
+
+mike
+
+================================================================================
+Date: 2026-10-27T16:51:45+01:00
+From: "Thomas Ingram" <thomas@taingram.org>
+Subject: ansi-colors broken in vc-compilation mode
+Message-ID: <69485ac5-1f02-4f66-9c5a-fb5ac0d32fa6@app.fastmail.com>
+In-Reply-To: 
+References: 
+
+Grettings,
+
+I have a possible bug.  In VC, after pushing to a repo my build system (builds.sr.ht) responds with a status that is shown in the VC-Compilation buffer with ANSI colored text.  The escape codes are broken and not rendered correctly.
+
+For a regular compilation mode buffer I could fix this by enabling this hook:
+
+(add-hoom 'compilation-filter-hook #'ansi-color-compilation-filter)
+
+But there is not an easy equivalent for VC.  Would it be possible to add a similar vc filter hook?
+
+Thanks for your help,
+
+--
+Thomas Ingram
+https://taingram.org/
+
+================================================================================
+Date: 2026-10-27T17:40:48+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Message-ID: <jwvo6cfqerd.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <ua4nzof88@gentoo.org> (message from Ulrich
+ =?windows-1252?Q?M=FCller?= <ulm@gentoo.org> on Tue, 27 Oct 2026 07:00:07
+ +0100)
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+
+> If there are privacy issues with these other browsers, then maybe GNUS
+> shouldn't use them?  It looks like a rather indirect way to work around
+> the problem by linking Emacs against libxml2.
+
++1
+
+
+=== Stefan
+

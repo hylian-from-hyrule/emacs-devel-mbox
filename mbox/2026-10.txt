@@ -75948,3 +75948,1463 @@ Richard Stallman [2026-10-26 14:32:56] wrote:
 
 
 
+From MAILER-DAEMON Mon Oct 26 22:45:13 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLXBZ-00020k-M3
+	for mharc-emacs-devel@gnu.org; Mon, 26 Oct 2026 22:45:13 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xLXBV-0001zA-SE
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 22:45:10 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xLXBT-0003tJ-TS
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 22:45:09 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1xLXBO-0005Pb-Aw
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 03:45:02 +0100
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Gentoo: can libxml2 be enabled by default?
+Date: Tue, 27 Oct 2026 03:40:33 +0100
+Message-ID: <874ie7kgri.fsf@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Cancel-Lock: sha1:PriGhY051pLk+mKOBg3WyXzrDmA=
+Content-Language: en-US
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 3
+X-Spam_score: 0.3
+X-Spam_bar: /
+X-Spam_report: (0.3 / 5.0 requ) BAYES_00=-1.9, DKIM_ADSP_CUSTOM_MED=0.001,
+ FORGED_GMAIL_RCVD=1, FREEMAIL_FORGED_FROMDOMAIN=0.001, FREEMAIL_FROM=0.001,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.25, NML_ADSP_CUSTOM_MED=0.9,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 02:45:10 -0000
+
+I recently discovered a privacy problem: to show an HTML article in Gnus,
+the web browser fetches extra content (images, etc.), in order to display
+the page properly. The corresponding HTTP requests were made without my
+consent, so it's a tracking issue.
+
+Thanks to Tassilo Horn on gmane.emacs.gnus.general, I found out that
+enabling libxml2 should solve the problem, and it, seemingly, did. At
+least, I did not see the HTTP requests from that point on. Turns out,
+enabling libxml2 sets the default web browser to 'shr', and the library
+is on by default in Emacs repo. The same, however, is not true for
+app-editors/emacs Gentoo ebuild. On Gentoo, I had to enable libxml2
+explicitly.
+
+The maintainer for this ebuild is listed as Ulrich Müller
+
+https://packages.gentoo.org/packages/app-editors/emacs
+
+so my request is mostly geared towards him. Can libxml2 be enabled by
+default?
+
+Apologies for posting distro-specific stuff here. The problem seems
+important enough, so I didn't want to compartmentalize it.
+
+
+Many thanks.
+
+
+
+From MAILER-DAEMON Tue Oct 27 01:45:57 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLa0T-0004I1-Nw
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 01:45:57 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>) id 1xLRW4-0004NZ-1d
+ for emacs-devel@gnu.org; Mon, 26 Oct 2026 16:42:00 -0400
+Received: from comm.rcdrun.com ([85.137.228.158])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <bugs@gnu.support>)
+ id 1xLRVz-0001ag-P8; Mon, 26 Oct 2026 16:41:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnu.support; s=mail;
+ t=1793047311; bh=BmrYEFDuT+SYazhMO1rh/ycReC8NR3IzvcXppoFX/Fw=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+ b=E1aBDBfvJ2CGSUjku1Bs1N5AsnDqE5M01PzCq85QLuZUe8PX/J5HdymGoe2I3GfMv
+ 7jCDYKTmUlTbaWeRwcKOgls0gwRtcB9jHil+7+vz2qMbVyUHR6MZB555iddoWhIOoE
+ q4JdttJZV12mNkCmrBQl6K+8Lw2S/ZAdRgimYOjY5/yxLisIlWLHocP+FbONUi8U7U
+ ahsD6Fvh/4iyU6gG/mNuo06njgsDprF+Vz9EJmkYI8QYHK7cwM9YHTv4bjYgGJ2Rtc
+ s2DmE9VNlLFrGc3pGBo7HhS4va4lLqTq7Mworp0ISHrCyCnc98AHLzoyew5IwEL9qz
+ IlDnHj50sIMog==
+Received: from comm.rcdrun.com (localhost [IPv6:::1])
+ by comm.rcdrun.com (Postfix) with ESMTP id 0355C22000C;
+ Mon, 26 Oct 2026 20:41:51 +0000 (UTC)
+MIME-Version: 1.0
+Date: Mon, 26 Oct 2026 23:41:51 +0300
+From: Jean Louis <bugs@gnu.support>
+To: rms@gnu.org
+Cc: =?UTF-8?Q?St=C3=83=C2=A9phane_Marks?= <shipmints@gmail.com>,
+ rprior@protonmail.com, monnier@iro.umontreal.ca, emacs-devel@gnu.org
+Subject: Re: Contributing xc.el to ELPA
+In-Reply-To: <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+References: <1-wf6fW7AhznHqbi-1lf5VxVivMAe-J2qdku11iUzlRVi1Rq9LhKm1FrFplc4A3wxFb_LnqV3EdYann02otQo2vpuuXeRhiMhHQ16NKV8u8=@protonmail.com>
+ <jwv8q79l7vu.fsf-monnier+emacs@gnu.org>
+ <LrHihRvD8WEmS9-KmMkMY8-PM0JtPjUeDRCsCMU-440VDCnYUCTdhfdwz9S11xjcps1X-BE9cCkmL_rY_TSkYgWxDIEZpyNihsZlz2vRQ08=@protonmail.com>
+ <jwvbjc52m82.fsf-monnier+emacs@gnu.org>
+ <uZjOiNaImLb9Dpiiqxhlpw3qDl6H7sD_akoF8UnpB1vIsk_19eih3cVmPPHDwqB2x2tI4Al3HlKJJKdBsKiK89X5MwH27ih_dDMyIdii8F0=@protonmail.com>
+ <8WIxPC1Ul-UqePIXa6CDu8srhHI0DGURrV6iTdN8lfKqYdC7qQrVHVjd86IALv__irHQOc2SXb7Lz0E9rdGM3-7q5UEVeCmLotYb6I-O1SM=@protonmail.com>
+ <CAN+1HboSd766oBgHiozzHqNHhRN8Rf4Xuvz_cFzDHL2WVheJ=w@mail.gmail.com>
+ <6wHFMzpZsg0sa4yv7Ou91HFrfzM-eMqoQU1tQlcnTEXtkeLraFPdWpKi5RWjX2sdLkf1dFV_swlbZYodvjtpsKVc0hDsX982wr9bXEmK83Q=@protonmail.com>
+ <CAN+1Hbqw5ZRpH=Lm85+A6TwH=_M4he9_BG5QJgDarQOCNm5z7A@mail.gmail.com>
+ <E1xLPVA-00F3Uz-5o@fencepost.gnu.org>
+Message-ID: <f6b9ed528caa6419f4d6bbd59176357e@gnu.support>
+X-Sender: bugs@gnu.support
+Organization: GNU Support
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=85.137.228.158; envelope-from=bugs@gnu.support;
+ helo=comm.rcdrun.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Tue, 27 Oct 2026 01:45:56 -0400
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Mon, 26 Oct 2026 20:42:01 -0000
+
+On 2026-10-26 21:32, Richard Stallman wrote:
+> Hold on here!  Please, someone, post a brief description (10 lines or
+> 20) of what job this package does, followed by its introductory
+> documentation.
+
+`xc.el` is an Emacs front end for `xc`, a task runner that takes its 
+commands out of a README.
+
+In a project using `xc`, each task is a heading with a fenced code block 
+under it, in `README.md` or `README.org`. The name of the heading is the 
+name of the task, and the code in the block is what gets run. The point 
+is that the docs and the scripts are the same file, so the steps people 
+read are the steps they run. A `Makefile` and a README drift apart 
+because they are two separate things. Here they cannot.
+
+`M-x xc` asks `xc` for the task names in the README of the current 
+project, offers them for completion, and runs the one you pick in a 
+term-mode buffer. The buffer scrolls to the bottom as output arrives, 
+and `q` closes it once the task has finished. Nothing is run through a 
+shell: the package calls the `xc` executable directly with 
+`call-process`, and warns if `xc` is not on the PATH.
+
+Examples:
+---------
+
+Markdown, the basic case
+
+     # Tasks
+     ## build
+
+     Builds the binary.
+
+     ```
+     go build ./cmd/xc
+     ```
+
+So the comand `go build` would be executed by the xc.
+
+Org mode
+----------
+
+     * Tasks
+     ** deploy
+     Sends the site to the server.
+     #+begin_src sh
+     rsync -a public/ user@example.org:site/
+     #+end_src
+
+so the rsync command above would be executed.
+
+Introductory documentation
+
+An extract from the header of `xc.el`:
+
+     ;;; xc.el --- Emacs interface for xc  -*- lexical-binding: t; -*-
+
+     ;;; Commentary:
+     ;; An Emacs interface to the xc task-runner, <https://xcfile.dev/>
+     ;; Use `xc' to launch a task defined in your README
+
+     ;; The common use case for `xc' is to run build, test, deploy type 
+commands
+     ;; that are documented in your README. Putting the documented steps 
+on
+     ;; the ``hot path'' ensures they don't get out-of-date and aids in
+     ;; discoverability. A unique feature of `xc' is that it supports 
+both
+     ;; Markdown and org-mode READMEs.
+
+ From `README.org`:
+
+     * To use
+
+     - =M-x= xc =RET= task-name =RET= \
+       Runs the given task. The set of available tasks is offered for 
+completion.
+
+     - In Treemacs, a project with =xc= tasks in its root README will 
+show an =[XC TASKS]= list in its tree. To run a task, double-click it, 
+or move point to your desired task and press =RET=. See the action shot 
+above for an example, and "Configuration" below for instructions to 
+enable the Treemacs integration.
+
+     #+begin_src elisp
+       ;; Recommended: bind to keyboard
+       (bind-key "C-c x" #'xc)
+
+       ;; If you use Treemacs, initialize the integration:
+       (with-eval-after-load 'treemacs
+         (require 'xc-treemacs))
+     #+end_src
+
+
+> Also, how does 'xc.el' relate to `xc'?
+
+See above.
+
+Example:
+
+$ xc deps
++ ls -1
+README.md
+README.org
+sub
+tagged.org
++ echo '3 tasks in this README'
+3 tasks in this README
+
+by running `xc` program, it gives possible tasks for execution that were 
+defined in README files.
+
+So Emacs command shows xc outputs in the buffer, with completion of task 
+names, tasks defined in README, and executes such.
+
+-- 
+Jean Louis
+
+
+From MAILER-DAEMON Tue Oct 27 02:00:32 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLaEZ-00079m-Mo
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 02:00:32 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xLaEP-00079F-Jk
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 02:00:23 -0400
+Received: from woodpecker.gentoo.org ([140.211.166.183] helo=smtp.gentoo.org)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_CHACHA20_POLY1305:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xLaEM-00060n-EV
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 02:00:20 -0400
+Received: from urania (p200300cbaf0a3b00002d7f922dd0296e.dip0.t-ipconnect.de
+ [IPv6:2003:cb:af0a:3b00:2d:7f92:2dd0:296e])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (No client certificate requested) (Authenticated sender: ulm)
+ by smtp.gentoo.org (Postfix) with ESMTPSA id 8BF80341E56;
+ Tue, 27 Oct 2026 06:00:14 +0000 (UTC)
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+To: Nickolai Dobrynin <ndobrynin@gmail.com>
+Cc: emacs-devel@gnu.org
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+In-Reply-To: <874ie7kgri.fsf@mail.gmail.com>
+References: <874ie7kgri.fsf@mail.gmail.com>
+Date: Tue, 27 Oct 2026 07:00:07 +0100
+Message-ID: <ua4nzof88@gentoo.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=140.211.166.183; envelope-from=ulm@gentoo.org;
+ helo=smtp.gentoo.org
+X-Spam_score_int: -41
+X-Spam_score: -4.2
+X-Spam_bar: ----
+X-Spam_report: (-4.2 / 5.0 requ) BAYES_00=-1.9, RCVD_IN_DNSWL_MED=-2.3,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 06:00:24 -0000
+
+>>>>> On Tue, 27 Oct 2026, Nickolai Dobrynin wrote:
+
+> I recently discovered a privacy problem: to show an HTML article in Gnus,
+> the web browser fetches extra content (images, etc.), in order to display
+> the page properly. The corresponding HTTP requests were made without my
+> consent, so it's a tracking issue.
+
+> Thanks to Tassilo Horn on gmane.emacs.gnus.general, I found out that
+> enabling libxml2 should solve the problem, and it, seemingly, did. At
+> least, I did not see the HTTP requests from that point on. Turns out,
+> enabling libxml2 sets the default web browser to 'shr', and the library
+> is on by default in Emacs repo. The same, however, is not true for
+> app-editors/emacs Gentoo ebuild. On Gentoo, I had to enable libxml2
+> explicitly.
+
+AFAICS this is controlled by mm-text-html-renderer, and "shr" is the
+default unless w3m, links or lynx is found.
+
+If there are privacy issues with these other browsers, then maybe GNUS
+shouldn't use them? It looks like a rather indirect way to work around
+the problem by linking Emacs against libxml2.
+
+(There are also settings like mm-discouraged-alternatives,
+mm-html-inhibit-images, mm-w3m-safe-url-regexp and several others,
+maybe you should look into these?)
+
+> The maintainer for this ebuild is listed as Ulrich M=C3=BCller
+> https://packages.gentoo.org/packages/app-editors/emacs
+
+Which doesn't list me as maintainer, but says:
+
+| Maintainer(s): Gentoo GNU Emacs project <gnu-emacs@gentoo.org>
+| https://packages.gentoo.org/maintainer/gnu-emacs@gentoo.org
+
+> so my request is mostly geared towards him. Can libxml2 be enabled by
+> default?
+
+Users can enable it via the corresponding use flag (and apparently you
+have done so now?). Gentoo policy is to leave flags off by default,
+especially if they pull in additional dependencies.=20
+
+> Apologies for posting distro-specific stuff here. The problem seems
+> important enough, so I didn't want to compartmentalize it.
+
+Still, I'd suggest that you submit issues to bugs.gentoo.org when they
+are about Gentoo in particular.
+
+
+From MAILER-DAEMON Tue Oct 27 02:08:52 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLaMb-00049a-Tr
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 02:08:52 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xLaMU-00049K-P7
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 02:08:44 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xLaMS-0006k8-VJ; Tue, 27 Oct 2026 02:08:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-version:References:Subject:In-Reply-To:To:From:
+ Date; bh=RngSeL77HlkOoxAqw/5gV+pUFxHDOha4SOakB0V+oFw=; b=Hzuat/FIIS23+eUOJMeJ
+ zMTcG7qIh0zovJjDEsseh6vIl8wa0zJqKfkDVZA/tAxzBMAt4OrP9yW6/eQT+o/Vc9rB3j7Ix7iXr
+ zQWJoPFk1T5UVXsqzyGFpSAkKNL3aNIfN5BosvQiIyEkb10hdg4p4O/3z0grMMnGbsf2p0fAGbtX/
+ 42IIxU9Nsd+nfIJdqeemNitUuvs4jXN4wCd7WgMueg7RE5DPx0bSNSDZ8xuprkHzYWfNqf5vXs8i1
+ KKn3ZfEnFibBsnwjduS+G6erzU8AjkEEjR6BK03DzKUjvR9393ciD7LzdzigEMa7ewXo4EI4jm4Nw
+ 5u7WkivnXT05aQ==;
+Date: Tue, 27 Oct 2026 08:08:37 +0200
+Message-Id: <86tsm7y8t6.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Ulrich =?utf-8?Q?M=C3=BCller?= <ulm@gentoo.org>
+Cc: ndobrynin@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <ua4nzof88@gentoo.org> (message from Ulrich =?utf-8?Q?M=C3=BC?=
+ =?utf-8?Q?ller?= on Tue, 27 Oct 2026 07:00:07 +0100)
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 06:08:44 -0000
+
+> From: Ulrich MÃ¼ller <ulm@gentoo.org>
+> Cc: emacs-devel@gnu.org
+> Date: Tue, 27 Oct 2026 07:00:07 +0100
+> 
+> >>>>> On Tue, 27 Oct 2026, Nickolai Dobrynin wrote:
+> 
+> > I recently discovered a privacy problem: to show an HTML article in Gnus,
+> > the web browser fetches extra content (images, etc.), in order to display
+> > the page properly. The corresponding HTTP requests were made without my
+> > consent, so it's a tracking issue.
+> 
+> > Thanks to Tassilo Horn on gmane.emacs.gnus.general, I found out that
+> > enabling libxml2 should solve the problem, and it, seemingly, did. At
+> > least, I did not see the HTTP requests from that point on. Turns out,
+> > enabling libxml2 sets the default web browser to 'shr', and the library
+> > is on by default in Emacs repo. The same, however, is not true for
+> > app-editors/emacs Gentoo ebuild. On Gentoo, I had to enable libxml2
+> > explicitly.
+> 
+> AFAICS this is controlled by mm-text-html-renderer, and "shr" is the
+> default unless w3m, links or lynx is found.
+> 
+> If there are privacy issues with these other browsers, then maybe GNUS
+> shouldn't use them? It looks like a rather indirect way to work around
+> the problem by linking Emacs against libxml2.
+
+TBH, I was surprised to hear that some distro distributes Emacs built
+without libxml2.  What is the purpose of such an omission?  I expect
+quite a few useful features in Emacs to be disabled as result, and
+what are the advantages to justify that?
+
+
+From MAILER-DAEMON Tue Oct 27 03:03:50 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLbDp-0000Wo-UV
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 03:03:49 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xLbDo-0000We-AS
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 03:03:48 -0400
+Received: from woodpecker.gentoo.org ([140.211.166.183] helo=smtp.gentoo.org)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_CHACHA20_POLY1305:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>)
+ id 1xLbDl-0002wO-GN; Tue, 27 Oct 2026 03:03:47 -0400
+Received: from urania (p200300cbaf0a3b00002d7f922dd0296e.dip0.t-ipconnect.de
+ [IPv6:2003:cb:af0a:3b00:2d:7f92:2dd0:296e])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (No client certificate requested) (Authenticated sender: ulm)
+ by smtp.gentoo.org (Postfix) with ESMTPSA id 48441341E68;
+ Tue, 27 Oct 2026 07:03:41 +0000 (UTC)
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: Ulrich =?utf-8?Q?M=C3=BCller?= <ulm@gentoo.org>,  ndobrynin@gmail.com,
+ emacs-devel@gnu.org
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+In-Reply-To: <86tsm7y8t6.fsf@gnu.org>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org>
+Date: Tue, 27 Oct 2026 08:03:37 +0100
+Message-ID: <u5wynocae@gentoo.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=140.211.166.183; envelope-from=ulm@gentoo.org;
+ helo=smtp.gentoo.org
+X-Spam_score_int: -41
+X-Spam_score: -4.2
+X-Spam_bar: ----
+X-Spam_report: (-4.2 / 5.0 requ) BAYES_00=-1.9, RCVD_IN_DNSWL_MED=-2.3,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 07:03:48 -0000
+
+>>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+
+> TBH, I was surprised to hear that some distro distributes Emacs built
+> without libxml2.  What is the purpose of such an omission?  I expect
+> quite a few useful features in Emacs to be disabled as result, and
+> what are the advantages to justify that?
+
+Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+for it, and users can choose if Emacs is built with or without libxml2.
+
+The default for the libxml2 flag can be discussed, of course.
+
+https://devmanual.gentoo.org/general-concepts/use-flags/index.html#iuse-defaults
+
+
+From MAILER-DAEMON Tue Oct 27 05:14:38 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLdGQ-0002KW-Lf
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 05:14:38 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <joaotavora@gmail.com>)
+ id 1xLdGO-0002KO-Sb
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 05:14:36 -0400
+Received: from mail-wm1-x333.google.com ([2a00:1450:4864:20::333])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <joaotavora@gmail.com>)
+ id 1xLdGN-0006Qq-Ib
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 05:14:36 -0400
+Received: by mail-wm1-x333.google.com with SMTP id
+ 5b1f17b1804b1-4a2d6d01ecbso19312955e9.0
+ for <emacs-devel@gnu.org>; Tue, 27 Oct 2026 02:14:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20251104; t=1793092473; x=1793697273; darn=gnu.org;
+ h=content-transfer-encoding:content-type:mime-version:message-id:date
+ :references:in-reply-to:subject:to:from:from:to:cc:subject:date
+ :message-id:reply-to:content-type;
+ bh=Yo0J2lrTVfMSu0J4TkBQ4Ecbk0ccWA9S8lVvSh7t41U=;
+ b=qOcUqyRKtfvZyFOeXIbdEPqyXYCMoVJ++ATtzEJYGbdsRULEX2Pr+uPncLfwY7xInb
+ DG9CYJx3E1pftTseEbz/kaf2M2BXZmgPBSPbL1IAQyPyxC+OubGve62Upg7Dsdj7r4Lq
+ 0iqhh/pspbvJT/FioONu4w7MAyPwY5CFSSHqH/Pp73OOVjH+NFf9F6ILnUdfza+xkaQv
+ ClfeGegAm4Fw1RuuvQQ+CrZXe3yrR2agWF81QYm1EAXNyZSNEqKEA26DX9WWA6u/5Z9t
+ k7FZIrr5hwPOvhtGHY6KyQny7kDjsah5AFPnFLLSIVOQ27jdZxl95CiWqKwbQ3Q6paGr
+ JEeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1793092473; x=1793697273;
+ h=content-transfer-encoding:content-type:mime-version:message-id:date
+ :references:in-reply-to:subject:to:from:x-gm-gg:x-gm-message-state
+ :from:to:cc:subject:date:message-id:reply-to:content-type;
+ bh=Yo0J2lrTVfMSu0J4TkBQ4Ecbk0ccWA9S8lVvSh7t41U=;
+ b=zNH9x0MGp+SlKCNPmn9000zgg7DrnY2/i4UZ2JVDHPTG/+kAJQ6Bg3W11XwGiAnQp7
+ ecwK+6FKmWbI00aVp9/7S3R239PFc9qgyrR+pandZvuWockJuyfBgzMkCbTi2j34/ipd
+ Ntip3ccPHf5jcKuoE+DGdGXmw838WSENXiHKgKNBcGgKb5Kxj9nd+kQGg4bT472cYSRt
+ XG0KqfpNXcsAeY6Axb0TDP5rVnN4KzjK76wRiKvJ0a51SNAK52LIxwarRjmY287Aw041
+ oZu1wKCtZBHq9I5ri2nlB9HZpTlTsMtZjt2gqOGSYc/2KED5cJxijllmHB36mohJPD29
+ Ok2Q==
+X-Gm-Message-State: AFq9FYI0UkMTv8NkSSdNTGfsaU02xFbsNeZeDo4mu2epNazW9akiWVGr
+ kYEmG2SLxKlk2nHaPsekZPK8FVXwif21XcDVtKJ0M2cerAseFPE5mK3J5FWnsg==
+X-Gm-Gg: AYBFou0BBBW8tTZzk9rd12YygcZmqfftFi7CwJJoKAIaJu0L3d4YkERRAJmG0aZRsa0
+ BcDZ6PnRBI+hZAFbPS7JXujcwBzD5yPDPdyLpMgl3gDkq3kUXpIu15O/0hJQC0L1jCyWvrUo+hJ
+ hHaWyqB0LVdryDAp8XHFr+olMMQ2VFoNrXdY/Fqg9npb4MsGcecMRrEbtl8+mSNZvcZwa1reSyZ
+ 3f5N2ZVKJvR56W62TvyPlA9GNZjTzt3lS1W70cqSK3pkw/EoSrHmrq/l+zLVhdLT8jkncA2S3HG
+ fkBvom8LU9kVPoWlzUsmQM2PX8hLSA6rzNBPYKsxQIAXKM4SZKO6z0jjVTV5F8vP1cp3c/Zzcj8
+ MUeRl2lOH5M12FhT1u7El3st3oB/XlH9rQtoijGkUVCtu/AQ+Hzobe7LlQGVHh/bZ+hmfT42DsR
+ H0Wuh8OPIOpAc4HEpPaEnuGbDTT0xNY0jZq5Sm+IBR6cyYjZFVfHkTYSam9kz0oYCuA2V/MZOZr
+ vYmq58w4GhmjsQ0Mr6Rx7rTWeEMcaqyf+9nKPFRuqe4RY7iyv0BUlAIOzzOv1bjji69yFSGsmeA
+ Kd7SLNeEqLL4J3msEN8+UAu+86hv8b2PNHEmKLkT4Jv3SX+ARfMx7R2i
+X-Received: by 2002:a05:600c:c056:b0:4a4:4d57:8487 with SMTP id
+ 5b1f17b1804b1-4a44d57864amr111116585e9.5.1793092472839; 
+ Tue, 27 Oct 2026 02:14:32 -0700 (PDT)
+Received: from krug (87-196-74-94.net.novis.pt. [87.196.74.94])
+ by smtp.gmail.com with ESMTPSA id
+ 5b1f17b1804b1-4a35a574088sm238455555e9.9.2026.10.27.02.14.31
+ for <emacs-devel@gnu.org>
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Tue, 27 Oct 2026 02:14:32 -0700 (PDT)
+From: =?utf-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+To: emacs-devel@gnu.org
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+In-Reply-To: <87y0c0vvtf.fsf@gmail.com>
+References: <87y0c0vvtf.fsf@gmail.com>
+Date: Tue, 27 Oct 2026 09:15:08 +0000
+Message-ID: <874ie7ijxf.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=2a00:1450:4864:20::333;
+ envelope-from=joaotavora@gmail.com; helo=mail-wm1-x333.google.com
+X-Spam_score_int: 12
+X-Spam_score: 1.2
+X-Spam_bar: +
+X-Spam_report: (1.2 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1, DKIM_VALID=-0.1,
+ DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_SBL_CSS=3.335, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 09:14:37 -0000
+
+Hi,
+
+I've pushed refactor.el to master, along with the Eglot changes that
+make it a Refactor backend.
+
+I have the commit making refactor a :core GNU ELPA package ready, but I
+can't push it, I think because I'm not a member of the new Savannah
+group for elpa/gnu.git.  Could someone add savannah user
+'capitaomorte')?  Until then, Eglot snapshots from GNU-devel ELPA can't
+be installed, since they now require refactor.
+
+The feature/actions branch is now just a historical record: the commits
+on master were rebased and slightly reworked, so don't merge it.  It can
+be deleted.
+
+Jo=C3=A3o
+
+
+From MAILER-DAEMON Tue Oct 27 05:38:12 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLddE-0005vA-4x
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 05:38:12 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xLddA-0005ui-9J
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 05:38:09 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xLdd9-0000Ue-Qb; Tue, 27 Oct 2026 05:38:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-version:References:Subject:In-Reply-To:To:From:
+ Date; bh=R6m2Xzke6iP6MN65rVDc6Sbi+BWpWlT+AFv1XZeEEHA=; b=Z0o0mHLyItz77Tw+rr/7
+ IEblQPsaRZe8wSqgGf90FThO+ku22IV3Fli2nIifG8JROOWsm74CNYf1LgvuKYlIPEdnMnEWYNesT
+ Htowe/iZ3g7coKYSHBBgouoK/5VRxPRL4uvW7sm+S2d1aNPR/qz1jG1gqkTpBmJaID7xIPkTuXD5M
+ cdaE5PK/6+DsN0LSazeYmHNrcObTgP53p/eGqFWPL2H9gQcddi8xsn8pgyOLmfb+do6utKLuB+Cy8
+ rbLBSmBDpTjfcIH6PtioTXC6XlblnSpgHZ15UG8XJ/0C8U/BAVHCEyzyBdyvvudtpB18sHYKkuZbr
+ jQvA+XNZKcmnjQ==;
+Date: Tue, 27 Oct 2026 11:38:05 +0200
+Message-Id: <86pkwvxz42.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Ulrich =?utf-8?Q?M=C3=BCller?= <ulm@gentoo.org>,
+ Sean Whitton <spwhitton@spwhitton.name>
+Cc: ndobrynin@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <u5wynocae@gentoo.org> (message from Ulrich =?utf-8?Q?M=C3=BC?=
+ =?utf-8?Q?ller?= on Tue, 27 Oct 2026 08:03:37 +0100)
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org> <u5wynocae@gentoo.org>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 09:38:09 -0000
+
+> From: Ulrich MÃ¼ller <ulm@gentoo.org>
+> Cc: Ulrich MÃ¼ller <ulm@gentoo.org>,  ndobrynin@gmail.com,
+>  emacs-devel@gnu.org
+> Date: Tue, 27 Oct 2026 08:03:37 +0100
+> 
+> >>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+> 
+> > TBH, I was surprised to hear that some distro distributes Emacs built
+> > without libxml2.  What is the purpose of such an omission?  I expect
+> > quite a few useful features in Emacs to be disabled as result, and
+> > what are the advantages to justify that?
+> 
+> Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+> for it, and users can choose if Emacs is built with or without libxml2.
+> 
+> The default for the libxml2 flag can be discussed, of course.
+> 
+> https://devmanual.gentoo.org/general-concepts/use-flags/index.html#iuse-defaults
+
+I indeed think that the default should be to build with libxml2.
+Sean, do you agree?
+
+(I didn't see on that page what are the current defaults, so I
+couldn't tell if the rest of the defaults are IMO reasonable.)
+
+
+From MAILER-DAEMON Tue Oct 27 05:58:33 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLdwu-0006AA-F4
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 05:58:33 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xLdws-00068x-PL
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 05:58:31 -0400
+Received: from fhigh-b5-smtp.messagingengine.com ([202.12.124.156])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xLdwq-00031X-6Y
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 05:58:30 -0400
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+ by mailfhigh.stl.internal (Postfix) with ESMTP id B657A7A00D3
+ for <emacs-devel@gnu.org>; Tue, 27 Oct 2026 05:58:26 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-05.internal (MEProxy); Tue, 27 Oct 2026 05:58:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-transfer-encoding:content-type:content-type
+ :date:date:from:from:in-reply-to:in-reply-to:message-id
+ :mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+ t=1793095106; x=1793181506; bh=ahTor5tf9LpB3WTWKBDTS2uLeurxGU4D
+ sBUxw65lGEI=; b=D+nGhI3tNPqFM5VEOBtDQ+aIsj8iXUuFlav167WkBIwyhti8
+ piqWo4MNNiQk5WPtAhvRRsQl1KesD7+o4IkYS3y24dmESfIJSW1fWyho1cW6zfNL
+ LG6+7IquHfH/LNUVzErKcPo1HJ/5paOmSew0H6A8zfkqVIDpFq3qfdege3ikbWyG
+ XjUTcKvqOTw1SEfBeSfbWE+/c9xUCVH9V5Bl4iQZfG8YlMEKgQbAjqlGiB0aIqU6
+ 2JYosLIZj24STRHd9fZitYq/1OvkLaNO93V16DwCBCP6p3iGcPamLcx2PpuhoBsq
+ gIJL2ELXYdo5l1jrDtoH23R27I54CC6a+oW1GQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793095106; x=
+ 1793181506; bh=ahTor5tf9LpB3WTWKBDTS2uLeurxGU4DsBUxw65lGEI=; b=Y
+ MztdUbOgboc1RhM6zewEoQzXVwuxwKowYe4SP7+Sq5XTlBQwkxjJb9s1PtBxgjhh
+ EL43WYRQgVvtXE6gAqC34WCT2fuwYzfqagvCHktW++zolpdsr4ORZkJB4lp1jzAu
+ 4epz8v4yBzKPdudGf/fZtHwiWUYSAQjA4sAioDFAdLJnmUmC+CV1b//333qb35TI
+ euqwG/jqgLbIwzYfm5BgFZ6Z1FmCzNMNsjJdm8AVTyiAILo6AV19cImmtTT8O3a7
+ ub87ud/3l98xnhQCP8SVQqwVHBAVjwPD119aeZgM6OuzCAvAbRsZZlZtDPhxAmgd
+ 08T7ZbnAgrqbuc1hNC7iA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793095106; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:UcuL78DYqkGNVruka8Wif4ONeeynXeh3nW+XMuYGCK4ZvLV
+ 2A8c6RxmHQ/ZWjvEpaSzvuM03uw4dMMF056wL4P8Asn9BEvY/oUKpEzdUmrdP+IX
+ Ho/gr3TMHyXI1fCJGk0Lcdzp5sYCXqsjq0jk3/6lQJVyoF0Vi3lxlQpcLJ9U6O6A
+ V5zwG6iuxetwsWl27RkkcS+R4TiExdcdoPRvK5zbiOvlk5//KZ0rFWLMHfl36W+Z
+ pwBXYd693RE9bwyqhwI0hAv1RU5Hd/d0fB7PxXLWduhP2AxgJ+2HbiB7zpPQsU1k
+ ABNRoDplzNz+/VSUSE9OBZxp1N6bKgBHMi4Dduw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=mi-m=1; hc=12;
+ hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+ from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:URIqXZwA6g3YUFm5RqaToezFB1BHS564UxEUOVZbw9Q=:2HKeF2OBL5mBk8igqNCPp6BeyRSHjkxwrcmAJP1ph0A=;
+X-ME-Sender: <xms:wXXgahFEz3DUEwgy4uaA-YDB1ox9KELs7q1flLJeCnShkdYdzx2Ebg>
+ <xme:wXXgamfCpMectqUqiQK2dpPwtCRubejrxrZiQn8N4ImYXQGm2U9pCz6Ts-xKiJSGw
+ qpe5hf1aRrVbQjR29bfqGe6FVWYdyBn4H8fug_ZTJr6Cwqm8X8zajc>
+X-ME-Received: <xmr:wXXgarFZlv4f2ACH4EhAr16LdlrpaaEiLC91W7M7Tf4Pe6VZGfOrLqUR2-tBcJdmwe6YskkUIwWRXm-XXvrwvKmsGIcr6DZ77A>
+X-ME-Proxy-Cause: dmFkZTFtGIt39hZ3DdEdZwDuwxlRzA10+a64yVUS/szXy8dhnL/5gCM4n5n98vI9naygpR
+ TQlZsPLMlIhJqcrZydtW0h8B754CntUafyXpR5vn595Brh7iuVFyMcNFlDa/IEHuoCLWoj
+ Q9LgE+08d9ui9yup6GtIm1gXi6nUbZBVwq3hFMAzydQDTeFMbU/JVRCdltuCXBzp2SmMPY
+ vt3LBlUxVe15IWDi73lWQ7cmuIc6exVk7fT6mBOI3hMqdOPd05rhAW7o6kkDiQ2b7PM5Vo
+ +4HGWPbOL2k7+SYWq7KXUdINOXzxbKv45Fo91TFqyB4Vn1FAzClFQAcLqi3/6ZRd8E+3th
+ 9gSV+Lm6wXMubj3ahmO4dq/Kv3/GETzanS+cOjY6la5spE6sY6rhsdI4Et0gT5/EPN2CTQ
+ 5LbnHqJPFZogQyPzZmBwTCFblYlzJZx/e4w1lqrnBdQqCyZle5gcXYuNHuqz6hGC+katVG
+ dtOx5XN+vNn2Vekjyifd6o2bxetaRMeJVFwlsqWWIZF3k1WNxh/aIPNtPnLgnQTlVdKSNc
+ Rz6DhrwDXlDjs6ORfNzVcAidezqpl1SAhU+/lQpDgVV85Q2QEwHt2MZnTEgS01zbV/+ye/
+ ZhaVQBc2RY0bazu96o6JHTdKC5djIWNuc+YS2HTfQf9NvvcWFy9P+q4MJiAw
+X-ME-Proxy: <xmx:wXXgavX28wr1FwU6laLliBh7cLESpYonPgRfAErwE7CV2kv6jS63SQ>
+ <xmx:wXXgaiJShmfTo5wEKS-japVkKs-Y6jkMnAgj9A6hwMV7HFzTrClB_Q>
+ <xmx:wXXgan-Sc86fdgDSPnB2IYh0dX44YYkQx9OsaW7LgQwc_ICB57WzSw>
+ <xmx:wXXgatKvKJmE0qEi3MmDSWwEe6cLTWnMaqJVacwrKUfkdk_tEPWbkQ>
+ <xmx:wnXgaln_X5KjGu5hzk4zEg26v8rC9VU8dsTQ9YAkhPLMmRc8UejFVQWL>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 27 Oct 2026 05:58:25 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 0F08A27C511; Tue, 27 Oct 2026 09:58:25 +0000 (GMT)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Eli Zaretskii <eliz@gnu.org>, Ulrich =?utf-8?Q?M=C3=BCller?=
+ <ulm@gentoo.org>
+Cc: ndobrynin@gmail.com, emacs-devel@gnu.org
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+In-Reply-To: <86pkwvxz42.fsf@gnu.org>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org> <u5wynocae@gentoo.org> <86pkwvxz42.fsf@gnu.org>
+Date: Tue, 27 Oct 2026 09:58:25 +0000
+Message-ID: <874ie7o472.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=202.12.124.156;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-b5-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 09:58:31 -0000
+
+Eli Zaretskii [27/Oct 11:38am +02] wrote:
+>> From: Ulrich M=C3=BCller <ulm@gentoo.org>
+>> Cc: Ulrich M=C3=BCller <ulm@gentoo.org>,  ndobrynin@gmail.com,
+>>  emacs-devel@gnu.org
+>> Date: Tue, 27 Oct 2026 08:03:37 +0100
+>>
+>> >>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+>>
+>> > TBH, I was surprised to hear that some distro distributes Emacs built
+>> > without libxml2.  What is the purpose of such an omission?  I expect
+>> > quite a few useful features in Emacs to be disabled as result, and
+>> > what are the advantages to justify that?
+>>
+>> Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+>> for it, and users can choose if Emacs is built with or without libxml2.
+>>
+>> The default for the libxml2 flag can be discussed, of course.
+>>
+>> https://devmanual.gentoo.org/general-concepts/use-flags/index.html#iuse-=
+defaults
+>
+> I indeed think that the default should be to build with libxml2.
+> Sean, do you agree?
+>
+> (I didn't see on that page what are the current defaults, so I
+> couldn't tell if the rest of the defaults are IMO reasonable.)
+
+Yes, probably.
+
+--=20
+Sean Whitton
+
+
+From MAILER-DAEMON Tue Oct 27 06:00:08 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLdyR-0006my-Uj
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 06:00:08 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xLdyP-0006md-2D
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 06:00:05 -0400
+Received: from fhigh-b5-smtp.messagingengine.com ([202.12.124.156])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xLdyM-0003Dz-Ps
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 06:00:04 -0400
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+ by mailfhigh.stl.internal (Postfix) with ESMTP id C68617A00D9
+ for <emacs-devel@gnu.org>; Tue, 27 Oct 2026 06:00:01 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-06.internal (MEProxy); Tue, 27 Oct 2026 06:00:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-type:content-type:date:date:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:subject:subject:to:to; s=fm1; t=1793095201; x=
+ 1793181601; bh=rYufIbOPRAXL9bL278pamaeCPFeWpENdPn3H54eIT4U=; b=E
+ IzDgPYUm3jcKb0skRV3B5rDc3ZD72uxdGnlpd/mxGJ1GfDbqYfNDHts20GAT7FRP
+ rQ7C1oA9W4yZevIGrH5c4OMMlDNEut4D/eUBvQ6o8qXIOW+df6CZAflddArE0KKy
+ PfKH2A9r3Xfz0ICLCjPxY3LRmQFVhsatp4zGIkhuQsKh0EJ5CjwqvffxRzRKIu7/
+ 0gencNeEaK+fdUWXaDeVuqK8StdoQ6NuHQzpxktYjN+tFKYtIc/KAcYGmwvVBJIa
+ X3a6Gzw+fcnmk6f1+LyenbRhP3OEpFjpx5Gn/Gn4/Kz4gvpyyDCxHmOFU7KhUUiD
+ 11x+Nqx56+fgcQ3Tg2J7A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1793095201; x=1793181601; bh=rYufIbOPRAXL9bL278pamaeCPFeWpENdPn3
+ H54eIT4U=; b=vHNehsaN2a2lUszeYANQjPW99NrROhYKRVzEE3YEQI9h40u89BD
+ nWuwmoeKed2x0G67pwhsFBeHFhDdjDVvg0uiFQ+p7YB6ojK74unai3xUyHOTo6TE
+ Jz1k5Uy0o73PHLCbDo7CYP//3mEHtcMvhafU7ecIDZSUHzYS4/aCu8BulwR9csZ8
+ pZm7zWqsc53dCR1BxNBJ6cZVtXyd8mobNrEa3ByYR+hMyCY/vKBJHlo/dA9LSZnE
+ cCdzTawuF8fDvbq3qo5uiJsyvNvT7GNpGLU+JjaQ2nx8IKv4OI+BtFIOjqWh4WU5
+ 0WWyFI/Cai19qnwyYxlQXvHeHNM6uhzAFBA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793095201; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:myDZg9yPAS6ieHIfBImZmJ6GyIWwtQ4HSGbSJXsk+5udJeh
+ 7OHtdfJs/Y7aTDHAjui27jUuvzBl9HInn5SoaoLdWw3kJRBavmotUDxI2cU3zFOj
+ cdSiRk5tUdiPoSde8EO9Q2nO1Fp7uRCHiRNAx0aV/wWcrN1cuUG8EjPOcbvilzhg
+ jjL+wPOfrDY1q8z/wFcTwGkbG/D5EV2+Fs1QYxktFZ6hkf6uC0sfvwAyfIJRAQuz
+ JIJ4a2LDbme6gR4/zgECX16qBaJhGloVcTyMnvGGTMwMFcitwr1/U8r/097j/S+t
+ yIJLtFq5oZ2vG3qx3eIei5H6d57KnYQjf/ltfrw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=mi-m=1; hc=11;
+ hn=cc,content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:uDLDniHYV7vBEuvarKWzAMAThI1+mfQODWZLGjhDkoY=:PvWC5OghHCdhVksaqCtrR3YHM67O80vDFeqXuQuA4JM=;
+X-ME-Sender: <xms:IXbgautkLwIgHs2mOY1Jxszw8fsYwcxucHLpvq_BYpPsIh5k10u3Vg>
+ <xme:IXbgape5EC60jq7NAQ67qYlx5u2RIrmToj3din0wafyDhP8Je5d1_B978Ch1HLITD
+ RrGO2wRlgjiczUiAFF-b9UlL5tkUbJcyfAVZE2WDr9DSCutKRwlLaGK>
+X-ME-Received: <xmr:IXbganalWeHlVrJebsTMjAb0fmYtsbSNoWPV8MmLdNDzCDY55Y-Nt4QncpcIWNVbgluk9UIPii-nZAiojpReNl043d3UCRsHgg>
+X-ME-Proxy-Cause: dmFkZTF6l7bfyaWWO8H/nPwXkNbCIpsHelPX7DL0X5+Vn+CW12IlocQe8yh+7jweEhqIBL
+ twseuV4Y6dwnR5/D2oS3izwqHwVX5c0puGM804OkIPN+zWrWKA8WmUimCZRytpBAajKNSw
+ TjyZf49xrsMOZFxAlNJVESOurJD/3Dq78zu2DdDq+h6SHqZmq21EYkaGRXtSW0JLGtUPlh
+ /CrgXwnVS/49PscLuWQTQyZ+v9+QCMoflwa4kfwP3r69XtlHduCgLRjO4vWdk8t39Ya28n
+ klSC3QJFXbLR1wt9fr4N1qQ4sKHo9vJs/U7CuSkLyISrv3kNVH2sjvjV7N4ji99Y9QE5q7
+ fUPQNMSohZ75IfAclwNj4vYY3HdqXEtAgBPWp09qCXcYYQa8oTpwerZG38hPbWDSOV8lpc
+ M3J0exSD2W1vHolfngFZV/AAUS8jR8XUU0JIGffyqSBLKBXBN7AAkjtBTUAxxGe1K0whZz
+ l/gEuo5JmvP00c/i4bG1EGO/iZUV53oy4h86iv0r9WHWtfkalhjWNaMaUUdUXq0DqTkDgA
+ SJq+eWjeZiS3WaN+YTPNx7DKacAXl+grYAEiKMN5ffKxggsciZmGi3jbU0CVph08MCTZNF
+ xJREHXhjAEsL9Ut8Gzf4V4dib7knTXV9VrvvkaMN6cspdg9SF0U3gLsCXeog
+X-ME-Proxy: <xmx:IXbgakXAdYLwws_PiqLG1DjTWrcWCbkJgaPV78H3Gu26Ynx-aY1i_w>
+ <xmx:IXbgahhZQ1Yb8IayNjtSKmXxKIxV532xw7n7ueXPQe-E-tiaH54PhA>
+ <xmx:IXbgaqVqcMy4iNtj4MivmP9GW1atmm9oL9QkWJzg4uXediigHjjD7w>
+ <xmx:IXbgagNZXk2ievCopIGdyq4KPUenKODE1O3CTGWCWnpK90yC7_LRIg>
+ <xmx:IXbgatdmtRh0gObNO-FC-1JOgilfX4fG979S-yAyxuvdNGsL1s7uxAGy>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 27 Oct 2026 06:00:01 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 1F16B27C749; Tue, 27 Oct 2026 10:00:00 +0000 (GMT)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-devel@gnu.org
+Subject: Re: master 402482ada96: dired-rename-file: Don't allow moving
+ edited files between repos
+In-Reply-To: <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+References: <179301035784.24225.1014254998978829844@vcs2.savannah.gnu.org>
+ <20261026102558.BBEEBC0FD7E@vcs2.savannah.gnu.org>
+ <jwvo6cgs9cw.fsf-monnier+emacs@gnu.org>
+Date: Tue, 27 Oct 2026 10:00:00 +0000
+Message-ID: <871p9bo44f.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=202.12.124.156;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-b5-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 10:00:05 -0000
+
+Stefan Monnier [26/Oct 12:45pm -04] wrote:
+>>     dired-rename-file: Don't allow moving edited files between repos
+>>
+>>     * lisp/dired-aux.el (dired-rename-file): Don't allow moving
+>>     edited files between repositories.
+>>     * test/lisp/vc/vc-tests/vc-test-misc.el
+>>     (vc-test-dired-rename-file-between-repos): Test this case.
+>> ---
+>>  lisp/dired-aux.el                     | 3 +++
+>>  test/lisp/vc/vc-tests/vc-test-misc.el | 8 ++++++++
+>>  2 files changed, 11 insertions(+)
+>>
+>> diff --git a/lisp/dired-aux.el b/lisp/dired-aux.el
+>> index 37702a8b471..79cbf1dbc96 100644
+>> --- a/lisp/dired-aux.el
+>> +++ b/lisp/dired-aux.el
+>> @@ -2383,6 +2383,9 @@ unless OK-IF-ALREADY-EXISTS is non-nil."
+>>                                    (file-name-directory newname)))))
+>>            (if (equal file-root newname-root)
+>>                (vc-rename-file file newname ok-if-already-exists)
+>> +            (when (eq (vc-state file) 'edited)
+>> +              (error "Please commit or undo your changes before moving %s"
+>> +                     file))
+>
+> I don't know if it's just me, but I find the above rather "un-Emacsy":
+> I'd have expected a `y-or-n-p` prompt to allow the users to shoot
+> themselves in the foot at their leisure.
+
+The subsequent call to vc-delete-file will fail with just the same
+error, which is why I thought it should give up at this point.
+
+Might be worth improving that but maybe the consequences with some older
+VCS are much worse or something.
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Tue Oct 27 08:09:53 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLg01-0007ES-Qd
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 08:09:53 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>) id 1xLg00-0007EJ-O2
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 08:09:52 -0400
+Received: from dev.gentoo.org ([2001:470:ea4a:1:5054:ff:fec7:86e4]
+ helo=smtp.gentoo.org)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_CHACHA20_POLY1305:256)
+ (Exim 4.90_1) (envelope-from <ulm@gentoo.org>)
+ id 1xLfzy-0000Ep-Og; Tue, 27 Oct 2026 08:09:52 -0400
+Received: from urania (unknown [IPv6:2001:4c80:40:539:b877:565f:7e2f:2761])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+ (No client certificate requested) (Authenticated sender: ulm)
+ by smtp.gentoo.org (Postfix) with ESMTPSA id F28423415D7;
+ Tue, 27 Oct 2026 12:09:41 +0000 (UTC)
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: Ulrich =?utf-8?Q?M=C3=BCller?= <ulm@gentoo.org>,  Sean Whitton
+ <spwhitton@spwhitton.name>,  ndobrynin@gmail.com,  emacs-devel@gnu.org
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+In-Reply-To: <86pkwvxz42.fsf@gnu.org>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org> <u5wynocae@gentoo.org>
+ <86pkwvxz42.fsf@gnu.org>
+Date: Tue, 27 Oct 2026 13:09:38 +0100
+Message-ID: <uo6cfmjjx@gentoo.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=2001:470:ea4a:1:5054:ff:fec7:86e4;
+ envelope-from=ulm@gentoo.org; helo=smtp.gentoo.org
+X-Spam_score_int: -41
+X-Spam_score: -4.2
+X-Spam_bar: ----
+X-Spam_report: (-4.2 / 5.0 requ) BAYES_00=-1.9, GB_FAKE_RF=0.001,
+ RCVD_IN_DNSWL_MED=-2.3, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 12:09:53 -0000
+
+>>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+
+>> > TBH, I was surprised to hear that some distro distributes Emacs built
+>> > without libxml2.  What is the purpose of such an omission?  I expect
+>> > quite a few useful features in Emacs to be disabled as result, and
+>> > what are the advantages to justify that?
+>> 
+>> Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+>> for it, and users can choose if Emacs is built with or without libxml2.
+>> 
+>> The default for the libxml2 flag can be discussed, of course.
+>> 
+>> https://devmanual.gentoo.org/general-concepts/use-flags/index.html#iuse-defaults
+
+> I indeed think that the default should be to build with libxml2.
+> Sean, do you agree?
+
+As I said, for anything to happen, the OP should report the issue via
+the proper channel, i.e. bugs.gentoo.org.
+
+Just to mention it, libxml2 had its fair share of security vulnerabilies
+in recent years:
+https://bugs.gentoo.org/buglist.cgi?chfieldfrom=2024-01-01&chfieldto=Now&component=Vulnerabilities&list_id=8333478&query_format=advanced&short_desc=dev-libs%2Flibxml2&short_desc_type=allwordssubstr
+
+
+From MAILER-DAEMON Tue Oct 27 10:01:46 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLhkH-0007yw-NH
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 10:01:45 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xLhkF-0007yV-Eh
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 10:01:43 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xLhkE-0002F2-2W
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 10:01:43 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1xLhkB-0007aj-EV
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 15:01:39 +0100
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Date: Tue, 27 Oct 2026 15:01:32 +0100
+Message-ID: <87ld7j5jk3.fsf@mail.gmail.com>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+ <86tsm7y8t6.fsf@gnu.org> <u5wynocae@gentoo.org>
+ <86pkwvxz42.fsf@gnu.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Cancel-Lock: sha1:SQHK3vMvTwikIFejLef/dEPIwqA=
+Content-Language: en-US
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 3
+X-Spam_score: 0.3
+X-Spam_bar: /
+X-Spam_report: (0.3 / 5.0 requ) BAYES_00=-1.9, DKIM_ADSP_CUSTOM_MED=0.001,
+ FORGED_GMAIL_RCVD=1, FREEMAIL_FORGED_FROMDOMAIN=0.001, FREEMAIL_FROM=0.001,
+ HEADER_FROM_DIFFERENT_DOMAINS=0.25, NML_ADSP_CUSTOM_MED=0.9,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 14:01:43 -0000
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Ulrich Müller <ulm@gentoo.org>
+>> Cc: Ulrich Müller <ulm@gentoo.org>,  ndobrynin@gmail.com,
+>>  emacs-devel@gnu.org
+>> Date: Tue, 27 Oct 2026 08:03:37 +0100
+>> 
+>> >>>>> On Tue, 27 Oct 2026, Eli Zaretskii wrote:
+>> 
+>> > TBH, I was surprised to hear that some distro distributes Emacs built
+>> > without libxml2.  What is the purpose of such an omission?  I expect
+>> > quite a few useful features in Emacs to be disabled as result, and
+>> > what are the advantages to justify that?
+>> 
+>> Technically, we (Gentoo) don't distribute Emacs. We distribute an ebuild
+>> for it, and users can choose if Emacs is built with or without libxml2.
+>> 
+>> The default for the libxml2 flag can be discussed, of course.
+>
+> I indeed think that the default should be to build with libxml2.
+
+To give more details, I became aware of the unwanted HTTP requests
+through the `gnus-html-wash-tags' function in gnus-html.el:
+
+(gnus-message 8 "gnus-html-wash-tags: fetching link URL %s" url)
+
+After enabling libxml2, these messages stopped. Also,
+`gnus-html-wash-images' contains
+
+(gnus-message 8 "gnus-html-wash-tags: fetching image URL %s" url)
+
+I don't recall seeing these particular messages even with image loading
+enabled.
+
+Right now, I have no idea if these are the only two channels through
+which the requests go. Only a network tool can say for sure.
+
+Thus, turning libxml2 on by default seems reasonable *pending further
+review*.
+
+
+
+From MAILER-DAEMON Tue Oct 27 10:27:12 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLi8u-0005lM-Mi
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 10:27:12 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <kupfer@rawbw.com>) id 1xLi8t-0005l3-Ii
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 10:27:11 -0400
+Received: from shell1.rawbw.com ([198.144.192.42])
+ by eggs.gnu.org with esmtp (Exim 4.90_1)
+ (envelope-from <kupfer@rawbw.com>) id 1xLi8r-0004iB-Ai
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 10:27:11 -0400
+Received: from bach.localdomain (135-180-175-182.dsl.dynamic.sonic.net
+ [135.180.175.182] (may be forged)) (authenticated bits=0)
+ by shell1.rawbw.com (8.15.1/8.15.1) with ESMTPSA id 69REQjNb035676
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+ Tue, 27 Oct 2026 07:26:50 -0700 (PDT)
+ (envelope-from kupfer@rawbw.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=rawbw.com; s=apr2026;
+ t=1793111211; bh=nEkr+nii8oD9JWvI0uKZqU09ajQu5T/Fni+aZpeJPYA=;
+ h=From:To:cc:Subject:In-reply-to:References:Date;
+ b=M9P+l5C48YZC+FJGGQQi0AH9LrccSfBQO2GoJr0oyIFbGLqzoI4/eLuXUDdmjTytN
+ SeTXjm3WiYvSq+VPDNHb2znfeRISQKmZYrQObriTfM18OW5uFe3bXFWpiiHEIhFVP6
+ qwPsEqEkDo/8QIOAv8XMxw+6Nww3FQv087u0RDQA=
+X-Authentication-Warning: shell1.rawbw.com: Host
+ 135-180-175-182.dsl.dynamic.sonic.net [135.180.175.182] (may be forged)
+ claimed to be bach.localdomain
+From: Mike Kupfer <kupfer@rawbw.com>
+To: Ulrich =?utf-8?Q?M=C3=BCller?= <ulm@gentoo.org>
+cc: Nickolai Dobrynin <ndobrynin@gmail.com>, emacs-devel@gnu.org
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+In-reply-to: <ua4nzof88@gentoo.org>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+Comments: In-reply-to Ulrich =?utf-8?Q?M=C3=BCller?= <ulm@gentoo.org>
+ message dated "Tue, 27 Oct 2026 07:00:07 +0100."
+X-Mailer: MH-E 8.6+git; nmh 1.8; Emacs 32.0.50
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 27 Oct 2026 07:26:45 -0700
+Message-ID: <7102.1793111205@bach.localdomain>
+Received-SPF: pass client-ip=198.144.192.42; envelope-from=kupfer@rawbw.com;
+ helo=shell1.rawbw.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 14:27:11 -0000
+
+Ulrich M=C3=BCller wrote:
+
+> AFAICS this is controlled by mm-text-html-renderer, and "shr" is the
+> default unless w3m, links or lynx is found.
+
+But shr requires libxml2; see shr-render-buffer and the high-level
+commentary at the top of lisp/net/shr.el.=20=20
+
+It does seem odd for shr to be the fallback in the defcustom for
+mm-text-html-renderer.  If we get to the fallback clause, the libxml
+check would have failed, so we know shr won't work.
+
+mike
+
+
+From MAILER-DAEMON Tue Oct 27 11:52:19 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLjTH-0006sk-Pf
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 11:52:19 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <thomas@taingram.org>)
+ id 1xLjTF-0006sR-Ue
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 11:52:17 -0400
+Received: from fhigh-b8-smtp.messagingengine.com ([202.12.124.159])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <thomas@taingram.org>)
+ id 1xLjT9-000535-MI
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 11:52:17 -0400
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+ by mailfhigh.stl.internal (Postfix) with ESMTP id D729B7A017C
+ for <emacs-devel@gnu.org>; Tue, 27 Oct 2026 11:52:06 -0400 (EDT)
+Received: from phl-imap-09 ([10.202.2.99])
+ by phl-compute-06.internal (MEProxy); Tue, 27 Oct 2026 11:52:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=taingram.org; h=
+ cc:content-transfer-encoding:content-type:content-type:date:date
+ :from:from:in-reply-to:message-id:mime-version:reply-to:subject
+ :subject:to:to; s=fm1; t=1793116326; x=1793202726; bh=BzLcGO/gCn
+ VBdcNfR4OhtH+vVUQzUgj7b2M13ghsO7E=; b=ajwq7Q0yT1TV346PtOr0yxZ9pX
+ AWu5ic6nZiVk22coqHKbUgQVzrIAohfgNIWa62aFtJsEQNWaNfGFD8RKjs1EOjdf
+ 2fj5JafLAgK0nYjM3WNvE1Duhs4VQbcRMeTRVmvbNQ+mE2h7Tl74hZaU+KbzsP66
+ e5UyzXmcRpRlwB7sqKpi6G91KmbsjVQkXBeO6IOMKpAL+Ps5ulFNQyJ661dO/1HP
+ LKzFvr3dtVGUJaD2Kc4JYlXnmqPFn+o6Mj020kEZfzpRaGAXRbywRKlMLjOqT5iG
+ EzHT6XedS9SCTLQPTWWjAEvS3VyYGZhZidmaBzUQUspuLc0AIZa/xaCazCxw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-transfer-encoding:content-type
+ :content-type:date:date:feedback-id:feedback-id:from:from
+ :in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1793116326; x=1793202726; bh=BzLcGO/gCnVBdcNfR4OhtH+vVUQzUgj7b2M
+ 13ghsO7E=; b=I5iym+f04Cc0FmPIlto6LboNhlKQFAsPyoExgfTZsJc1mZJ9J8S
+ BNdYBtLWtyfw0qI8WcXGl4cM3NdLP/OWasWyK4PjFfr4t9HKhlmQrZau28ZOxWlI
+ FZW1L+onGX9x7BO4DKceQsHExEsXxD4u6OWOtnYrv/GDI9x+C3h9dbMj5Q2BsmE9
+ 0V8zWDeQATSFwmGaw+D7rKATvDuTv4svgiPiLZTfV1hp98Bz5w1sbBggC4EeI6Zf
+ W8mxhzyE0Jq2kyhSj6yBPudUKiTl6ToSQ16bZGfOdmElndFvPElz1Q+bkDSZuCws
+ sSpuHcTSHEEEXG/arjV/DhKCqGeDMa/BDxQ==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=sign d=taingram.org a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793116326; d=taingram.org;
+ mf=PHRob21hc0B0YWluZ3JhbS5vcmc+;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:Mt7en6P9IH2cH8V/BOlOPmJEn3/ISaLxfir6UNG/43rtBup
+ lIrgT2tUbf43OZBzYJ6DHsh9SNHHCOV7S5DC+Ut7RU+dUJ9KUxDIxVCYK3FvayNn
+ hlUTTN1UJq3YkOPXaV48vMsLM7gXEfHppeYrH8v4kq2P6ryY59wyZ8/UEYzfW9jE
+ A4p8kvGfsn3ZD+1Mg9ND/yDslVnbCObWFKx4QoLVxfNF4PKm7osS7svzIeIDVRgF
+ MElJA5Sinc8ppJ0bJA7iF/FlY9QzvRMwBANd+JJ/ZSDxyvWj7zQRDaYxzdaXLz3U
+ SOEWdWcXt5CfTo33TtRxiUyas31VXG8UzBUEkbQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=mi-m=1; hc=9;
+ hn=content-transfer-encoding,content-type,date,feedback-id,from,
+ message-id,mime-version,subject,to;
+Message-Instance: m=1;
+ h=sha256:ZRTdzXFiI+Th98rM/WnZStOa2MU2q7KsJBTAeagElvI=:4OlGbjeR6lLbkrP0U0Ih7jhXJh5IiXRWOXGLjbRgrbo=;
+X-ME-Sender: <xms:psjgauyoyjS0I1JBHMWuq_x6XXOUKLFZN38w06_VggnGdy-gTOWYgQ>
+ <xme:psjgalHILMvAGxGxe8MdhtBcv3RfE_f-tGEXpWj76Uk90-Qu-RTzJ7Xrba3S4tmwS
+ IUomYoAWYdO5IylMKafEksiUyzmVCb3U0YOxnDdffc29PIC_RVZ7Oqt>
+X-ME-Proxy-Cause: dmFkZTF6Ii2eaYvFFOscCLYnO6RcouDntk2kgfASg+r+UjYtdJmJIF+XQrRgoVtuoxvCOu
+ 8WhnP/yKekVqBdz5Gg4AVGqA9QMzPC+2q5tvtzcrv7HdKa8mQj/7fo10afBtgC6pF+lH0N
+ 18IWFxGq27vR90FFZeLiP8w1wLX4p1A2KGIbRIh+25d1IecInIaY8ySiCglPXgQMCv4Mqd
+ 2Sm+NkKqcxW9kR6LjLxtM83kQMvKHAP9Z2ZDDDW97/zQoIsXxHbAbNiecopo0yDIkQSdYJ
+ sh7GZMQR7BIvGdWoHkIw1TE6MJTKwUjCAGD2C7O3eijekN1PHYeRDdeT0Afvmt9T1SgjEE
+ YxNzE/aX/ze+kXXbJXtuVKwERScWZ4E8n64pHfB4lEAowxvo/GfGaSItSXCi7bxIWSFpig
+ GGrmIQpj/KiXco8LIBhtR1J+bWXDizH4NN53uvoOywNCpPKKjLW9oLhmMcp5CtwbfoNWFR
+ zd22mPEgAGKUZRhzNWeBnlOyqmyQclTyACyQCaRI4e+JUVHnPLe19h4c4UZ2aysUaDtgIA
+ g7tpjP8DiFRNgVG3SwWoLZ2NhhVSbAEbwlC/pnK0zNv3wU/96DhBeasVTTzRuSYA7Hdpun
+ MFZm7HIUIQNVAsYqxxbd0lTMHSR7VUJ/25PbwibdoQcfd6V9bAwS9jZ7suiA
+X-ME-Proxy: <xmx:psjgaoUlhJevdFVDak7od6evepqgCLF9kcm_WAyIfLdwJvgzKE_t_A>
+ <xmx:psjgajiMNdCiKrfHQkt7DVOdiMJJzk9vGd5TiRlG0DlIeFkxKjhXOA>
+ <xmx:psjgaiBviRIZnlGlaIE7SMK0nQ-YOGeM1oHZhe--fuowze6hFbRmFQ>
+ <xmx:psjgaseRUPhc6uPGOf-3GnSdR-TMig-Ttgv0l9txyLlFEYUNNX5sfQ>
+ <xmx:psjgaoepFQlmeXRbb3C4x7VZP9zLwUP0kpLlIzUjb9hVurbPCgE6nXFU>
+Feedback-ID: i77e949d5:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+ id E31653020081; Tue, 27 Oct 2026 11:52:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+MIME-Version: 1.0
+Date: Tue, 27 Oct 2026 11:51:45 -0400
+From: "Thomas Ingram" <thomas@taingram.org>
+To: emacs-devel@gnu.org
+Message-Id: <69485ac5-1f02-4f66-9c5a-fb5ac0d32fa6@app.fastmail.com>
+Subject: ansi-colors broken in vc-compilation mode
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=202.12.124.159; envelope-from=thomas@taingram.org;
+ helo=fhigh-b8-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 15:52:18 -0000
+
+Grettings,
+
+I have a possible bug.  In VC, after pushing to a repo my build system (builds.sr.ht) responds with a status that is shown in the VC-Compilation buffer with ANSI colored text.  The escape codes are broken and not rendered correctly.
+
+For a regular compilation mode buffer I could fix this by enabling this hook:
+
+(add-hoom 'compilation-filter-hook #'ansi-color-compilation-filter)
+
+But there is not an easy equivalent for VC.  Would it be possible to add a similar vc filter hook?
+
+Thanks for your help,
+
+--
+Thomas Ingram
+https://taingram.org/
+
+
+From MAILER-DAEMON Tue Oct 27 16:07:51 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLnSZ-0000pl-2S
+	for mharc-emacs-devel@gnu.org; Tue, 27 Oct 2026 16:07:51 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xLnSX-0000pM-9O
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 16:07:49 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xLnSV-0006Z4-Vo
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 16:07:49 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1xLnST-0006tH-6o
+ for emacs-devel@gnu.org; Tue, 27 Oct 2026 21:07:45 +0100
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Gentoo: can libxml2 be enabled by default?
+Date: Tue, 27 Oct 2026 12:40:48 -0400
+Message-ID: <jwvo6cfqerd.fsf-monnier+emacs@gnu.org>
+References: <874ie7kgri.fsf@mail.gmail.com> <ua4nzof88@gentoo.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:s6BtQem6N/faQ/fthkcgcJh4cfs=
+In-Reply-To: <ua4nzof88@gentoo.org> (message from Ulrich
+ =?windows-1252?Q?M=FCller?= <ulm@gentoo.org> on Tue, 27 Oct 2026 07:00:07
+ +0100)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 0
+X-Spam_score: -0.1
+X-Spam_bar: /
+X-Spam_report: (-0.1 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_03_06=1.592,
+ GB_FAKE_RF=0.001, HEADER_FROM_DIFFERENT_DOMAINS=0.25, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Tue, 27 Oct 2026 20:07:49 -0000
+
+> If there are privacy issues with these other browsers, then maybe GNUS
+> shouldn't use them?  It looks like a rather indirect way to work around
+> the problem by linking Emacs against libxml2.
+
++1
+
+
+=== Stefan
+
+
+
