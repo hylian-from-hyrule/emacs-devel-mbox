@@ -77408,3 +77408,842 @@ X-List-Received-Date: Tue, 27 Oct 2026 20:07:49 -0000
 
 
 
+From MAILER-DAEMON Wed Oct 28 02:17:13 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xLwyH-0006tB-7Z
+	for mharc-emacs-devel@gnu.org; Wed, 28 Oct 2026 02:17:13 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <paaguti@gmail.com>) id 1xLwyE-0006sC-Ha
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 02:17:11 -0400
+Received: from mail-wm1-x336.google.com ([2a00:1450:4864:20::336])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <paaguti@gmail.com>) id 1xLwyD-00037r-3r
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 02:17:10 -0400
+Received: by mail-wm1-x336.google.com with SMTP id
+ 5b1f17b1804b1-4a2000d5fb1so3647445e9.1
+ for <emacs-devel@gnu.org>; Tue, 27 Oct 2026 23:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1793168227; x=1793773027; darn=gnu.org;
+ h=to:cc:date:message-id:subject:mime-version
+ :content-transfer-encoding:content-type:from:from:to:cc:subject:date
+ :message-id:reply-to:content-type;
+ bh=e5gLI/cTdrJjOnEN3KgOgnRFbc4dNSrn35g5Xrq6URI=;
+ b=AznW8mRdEOl6YcogKweAGKdn/jN0+iRvvTThmNCw4hkh8p7WKpFFaCPRzqReDP8dBs
+ kx3wRXehyyL8WaqitfQe7DOr1zMTK42UgTZa9tOKlqECDnbd84ljz86tKboqVkPNLMjE
+ rxXGeoYFufe4lFNxMVUgHIu3wBy5PebuTq2Wpnno7a2//X5mNQx3znWN3uFyQutQh2Eg
+ vJ+w4YUbVzgCrmiZdBOElliTT+nqUbtVoEAdN7SajnrSAydjN7ryEshbJmRaD0A3fk7w
+ 6zDEfo7b8SFeom4bEbxX7D8ttdRWo96lyODs3Kmzz5igGUBwUOLcBVC+uEZHImc5pNPM
+ Lt/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1793168227; x=1793773027;
+ h=to:cc:date:message-id:subject:mime-version
+ :content-transfer-encoding:content-type:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=e5gLI/cTdrJjOnEN3KgOgnRFbc4dNSrn35g5Xrq6URI=;
+ b=hEz1k1ZD/2NjerLGWC36Dv2he1ZNoxQU223zYhWDJkUydK8ZZ4LMqryUUBLjUfCA2j
+ P7jO8eQs7NtFh9zgCA1GprqLoV3b0BNTmKs6wcubZhqd1ocGYKCJhalcZRC2kDp4m6s2
+ J5U9j+M1/JD6dAQ2cXYoIZLmLaNvmGBeIqGkegL+2C6Oxg6UPuvOykKGwylslN/6YuKI
+ /9jJAufwEJ4Y4ZHzxaDdfcELV4mkjDp4pbKUn5OP7mgZHSQafJMiSRSBxojEXjMdsoNL
+ WYG7Afz7GSYDPQ5ExQwS1waELKpIFn0yMWS0voNR07+SJGpTvpXezQSK6rf9fuw4x7tj
+ p9Gg==
+X-Gm-Message-State: AFq9FYIobD8UA0eQ8fMt59HQaiaEbybxZBXKka7yiNqtv2WaTJpi8HJM
+ fbGl1bKtT7hLwXwmS6uGkim6bCuliOAH3MrnPhkNcL3RcZisS1jvxU9Q
+X-Gm-Gg: AYBFou1rq9KeZKLPDgzHIr/gvbRLL0Uw4NNINtXVdPpUEa94r4JcEjie+o7nOc2JK/4
+ GgN2Gl4+S1Mr8U8F2l4hz6Hv84bdFpFXn2w+58qx+w9aNQnQB8uDIsgjj1RX6hIrwdco8ofGmrH
+ uGIXqHuLiKMtf9ETGsBq/iNGisekLYs6kTeMXxCVFY/iRyra/BW+5dxwnsiEiwO3qGcFpXV0FCq
+ g6eAk06MkJvt+otK6OtyBz1I2aUQUwIJAQx5zb+yYMBo5kIYIuWVWy6g1VMJCMWBInP2ckLKz5R
+ l3Tf5l2nwfOx8/XRYOWq8TM9rRg3OpVc3C7MzfITTcYolnyKJk6vCNY7vZnjrAszRFFluL3nx3J
+ igvFVvor/10ifMfQXzll37VbgsSmTXujjJV5zL/7b6/9kJRuUUOYYLJzC7g92ME9mrmwAaI9fYK
+ u96AbGyQfL0tLqWaR7Ju3aqbAkcGYlKNkpm56tSqGElroXTTcAC4/G5lHEyk/tDniLCZdarX5jE
+ wKrH7RDiCRuuRKFMdU3xSS6s50KkqaCTXsVGQzOlkoJ7jeV21V7N+7/N+ay1Y5myrUkPfjsZSsr
+ KgE3iiTon3IzYyplCeNdF2CkAKd6PISxhRqwvtm2aOAUSUJONci1kwR4+y2TzolOcoeOrTJ1WCB
+ rnmsQG9NSD76qY98N63WgtzOudquLeEiu8tN6SZ4l0kcUkYk=
+X-Received: by 2002:a05:600c:859c:b0:4a0:2488:71cc with SMTP id
+ 5b1f17b1804b1-4a9674e6404mr17289885e9.32.1793168227257; 
+ Tue, 27 Oct 2026 23:17:07 -0700 (PDT)
+Received: from smtpclient.apple (182.red-79-148-62.dynamicip.rima-tde.net.
+ [79.148.62.182]) by smtp.gmail.com with ESMTPSA id
+ ffacd0b85a97d-48e3ecde7c3sm28026620f8f.51.2026.10.27.23.17.04
+ (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+ Tue, 27 Oct 2026 23:17:04 -0700 (PDT)
+From: Pedro Andres Aranda Gutierrez <paaguti@gmail.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.700.51.1.1\))
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+Message-Id: <7CE6DC2B-148C-40A9-87E4-F5969E3DE40E@gmail.com>
+Date: Wed, 28 Oct 2026 07:16:53 +0100
+Cc: emacs-devel <emacs-devel@gnu.org>
+To: joaotavora@gmail.com
+X-Mailer: Apple Mail (2.3864.700.51.1.1)
+Received-SPF: pass client-ip=2a00:1450:4864:20::336;
+ envelope-from=paaguti@gmail.com; helo=mail-wm1-x336.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ GB_FAKE_RF=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 28 Oct 2026 06:17:11 -0000
+
+Thanks for this!=20
+
+=E2=80=9CIt works for me (TM)=E2=80=9D ;-) and wonderfully so. I=E2=80=99m=
+ keeping the toy Elisp refactor backend for the moment being :-)
+
+Best, /PA
+
+
+
+
+From MAILER-DAEMON Wed Oct 28 05:43:57 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xM0CH-0008VD-FY
+	for mharc-emacs-devel@gnu.org; Wed, 28 Oct 2026 05:43:55 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xM0Bz-0007qv-IL
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 05:43:38 -0400
+Received: from flow-b1-smtp.messagingengine.com ([202.12.124.136])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xM0Bx-00008p-P6
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 05:43:35 -0400
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+ by mailflow.stl.internal (Postfix) with ESMTP id 60B4113002A0
+ for <emacs-devel@gnu.org>; Wed, 28 Oct 2026 05:43:32 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-02.internal (MEProxy); Wed, 28 Oct 2026 05:43:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm1; t=1793180612; x=1793187812; bh=sKb3AkLtqa
+ 1fSbjkuTIYOtLtnrMkjajD9Li3eV7AsuI=; b=Ycb9L7R2y1iXV9ay13eJhhFH4k
+ ad1rbDGHo20tkYg8ijJvHYdhC0/IBn3sEalTb4AEvrHr1mTau2KG2ogH1SKDqLsK
+ NkfQtVtYeSc37cqt/PLdirhEO/Rc0Z2sAljVTpjo1KcO4NIjN7I6DKzeZeQC7xhO
+ Lfa20piDYmzJiaFyJqcjYSwBsibOogb4qz1a4J9jY/BpbJP5SYigV03ntfMNpRJE
+ tXNey0XCmtJlmnhYIwtdam9l1L/2Y8UCPoKC8guDwX7gp6/MZFpXMQCJq4nUV04Q
+ K2KKlyt2KLkWRT0O75HWS9fksy3GjnPkibqv3isF4X4Tzq9D9r9PPQs1W9hw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1793180612; x=1793187812; bh=sKb3AkLtqa1fSbjkuTIYOtLtnrMkjajD9Li
+ 3eV7AsuI=; b=WgVKU6KeyKxrGwbUtU7ob05hANmsBvf948KkEpoiIk+NBiqPLJd
+ shD1gyUB1db3mw/DgP7CtmZOECAZ/AJvxCt06HQ+fja6VHOGW+rPckzjTrrkq4aB
+ +eZvzS2lqVk9z4eHI+seCcW1/7zms9T/TUbygg1a1xJSIkTtPwKJp7L9VRNC2m1E
+ D0xLvFkHe1jkCe7FTLAYGKyJYPl2/+x/4spVo7iU8kSHVS1sQm1PoIs3fDiL2rmk
+ x/2/n2NHNAYPtaQIiKk7o8xLlD2bk3yTZ4ZdJS6/ORo8z+7JIAGTY52yBl5hr2LG
+ VeJPNk+pjeqWKbrMk6czq7Nc3ZWN8HKgKHg==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793180612; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:SiCwZuDU8WgXtPuOCkhqxqmtbNC29razsEFSvuDq5WCiAoT
+ gCDWUK4yRddb9LVgVz5KT+fhQMbfYwLw26SCXugzj609oNJFl/1jku9saBUvZRV2
+ eid5kqTOehhhlMXYiTkLGfFYqM5WMV2sgCh9VD5CBmAB0WM+nBnmeJ8Xldq+Z/bc
+ MRd+Gy+gfJk+q9vHi8KdSjUZadaLxcvd5vJUZx/+IXJzQB/Vx0COlxBqIsJKSttp
+ PGzhkG6aRamoViT9KP73G0J+tdar3s+WN/nFxme1LOMroNKiwRcPA7xZmkfJLly4
+ Dys9TnpBavHikfRkYJlWsP20LCcFPkmJ5P6lKcw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+ repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+ action=mi-m=1; hc=10;
+ hn=content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:jT1mPrdPM3Vu6VxnUruF7ZvnmuN6fV2T7AjpLRKXrjM=:FSIVWC1E5NboG50dvhvPgBVaJNdwGAc6K54yszXDKzg=;
+X-ME-Sender: <xms:w8Phas33iIrMbkBAIGcdY22a5kiDRsqUrjjPYMyilJlxV9My8xA-4w>
+ <xme:w8PhajadmgMoPTozt0kywTR5R41Q5e-vlzK-eAsXAkcmC0XsWQneZH4ZcxMVWsTUa
+ Zz3YxdHpALXWuF2fG8jgAiOiEJZv6nxXk5gO-2PLZtC2RX5SEjR9V2Y>
+X-ME-Received: <xmr:w8Phanp92kI4SjugQGpLAxhOkHp9Vav5KGzc5DUhqs5A5n7qDfHJ9-7MndSEXxalsfXLltT4wIeiFTg6aA4Ztaq3ya597vZZcA>
+X-ME-Proxy-Cause: dmFkZTFl8NZa5mdFvWWIljGU8an1Wk6YjjK63dDLNy4gBboAQrSgRaVzpxEOvpprD7WxQk
+ 0TYvEQ6iRp2vSvjAsLEl1mApmxMIlO1oGx8wvIsJwLD5pnIaU58Vu0vA6rUhLrDLUAVA0k
+ NZVMNtufTAnZwUjAssW9bwUMk/kXgyyZp+6QHNIfkXKd5C6DI+/geNj4SsgkphFa9qyeoq
+ VUrY6eshbsEOeAoGuykk1sgdtItwOovL3TdonJzcfRFrr3SBwAGqf0+r168+1q4qnLBr6E
+ aZYP8YyJqPc/fontp21RcK1a81Sa9Vo8zgTVTNSWdWb2UGAIaRGmEWY3kt6erhd23W8fo8
+ DBOxmQ7jZqGgEemIPNUAJfU+Ijw16g18ZLMAJuwIAk+rQs9D0Yzx57L9TNGWHij+4PcDaA
+ rYVWEqcCgtVMFw5QW//W2pzgOu6xFkG0/A1vM/IVDt/68KHhuwPtz4x097vIRy5RYpazMZ
+ qwJ22gYYSgOV/LrtCMlzUrHveftaCT4Xb+t+Z0ep+ywxb1Bo5BbTKFxtpx1/3VoUjCH+ol
+ 0Ch1QZ90SG6abPEY/cr+Fe3Wv60f3Ww28+x6otMGVod/S/rESnoPT8eCk9hHpn/Nb4PAH6
+ +/AVsoNv7HnMZTbf6SztFm6amYX4v6XWg2Ij0YsiCohlUXfQQjO1yg054UWQ
+X-ME-Proxy: <xmx:w8PhanqozhRGlM9MP245-GkMeW9zeuq_HBs6ijkABwmiJEkESHo0ow>
+ <xmx:w8Phah1OHNiXrfQYLrAgGYalCFnX53hMC060x-oYZ8QtnPmRAkN7pg>
+ <xmx:w8PhamCZ0cKeCCGuVeptjbwWgUkoP2VhwHFBmQqnoM0T-fRNTfLooA>
+ <xmx:w8PhapcLUdGFd9Iy7X2Njm1Cw-AtfkyDhkLA3Gew8uHP8XvdmqcQow>
+ <xmx:xMPhavYFWyZx-UjQMGTAALffdW30Y4kIec-KpfmeYo-rLbAg-gSielMk>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 28 Oct 2026 05:43:31 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id E38C727C749; Wed, 28 Oct 2026 09:43:30 +0000 (GMT)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Thomas Ingram <thomas@taingram.org>, emacs-devel@gnu.org
+Subject: Re: ansi-colors broken in vc-compilation mode
+In-Reply-To: <69485ac5-1f02-4f66-9c5a-fb5ac0d32fa6@app.fastmail.com>
+References: <69485ac5-1f02-4f66-9c5a-fb5ac0d32fa6@app.fastmail.com>
+Date: Wed, 28 Oct 2026 09:43:30 +0000
+Message-ID: <87ld7ima7x.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=202.12.124.136;
+ envelope-from=spwhitton@spwhitton.name; helo=flow-b1-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 28 Oct 2026 09:43:39 -0000
+
+Thomas Ingram [27/Oct 11:51am -04] wrote:
+> Grettings,
+>
+> I have a possible bug.  In VC, after pushing to a repo my build system (builds.sr.ht) responds with a status that is shown in the VC-Compilation buffer with ANSI colored text.  The escape codes are broken and not rendered correctly.
+>
+> For a regular compilation mode buffer I could fix this by enabling this hook:
+>
+> (add-hoom 'compilation-filter-hook #'ansi-color-compilation-filter)
+>
+> But there is not an easy equivalent for VC.  Would it be possible to add a similar vc filter hook?
+
+Please file a bug report.
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Wed Oct 28 13:36:59 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xM7a7-0000Op-29
+	for mharc-emacs-devel@gnu.org; Wed, 28 Oct 2026 13:36:59 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xM7a0-0000OH-Pe
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 13:36:52 -0400
+Received: from mout01.posteo.de ([185.67.36.65])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xM7Zv-0006N6-17
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 13:36:49 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout01.posteo.de (Postfix) with ESMTPS id 26AA3240027
+ for <emacs-devel@gnu.org>; Wed, 28 Oct 2026 18:36:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1793208994;
+ bh=z1I1uTrAcW1/f7ZZDamlC01rFPAePQ8xJr/xrM6g72Q=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:Content-Transfer-Encoding:From;
+ b=OhV3M82UrcKZeqPficDz80PT4WgqwiSXc2qnolW4O2IbogWLXS0X3BIV9nzTtgutE
+ pSC08cUdQew+GMMlZsEWK0sFWe514H4L/keyXhwTvVWfUVhoqXfaA+nmYnJPhnWfG8
+ mSOarzwUTuOf20u7dgGlY1jkI8v20yA8vuut00k8KaKPPAPxFyMP+9THc5yI2RC0Hk
+ RIUVUkf4DJ9Ntd7PmdBDapoUonaKPBehjAtO6LbuCeKRZTcMVLONnt6WWjJFIyfxkq
+ Qmt4KX7XwWIGU8ec9l01s11NHblztDeqREFX71Xae5PF3zJhKLzu6/i5LGCkLXiw4W
+ rg+O0WfBZmd1g==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4jFF0K4c1hz6v1l;
+ Wed, 28 Oct 2026 18:36:33 +0100 (CET)
+From: Philip Kaludercic <philipk@posteo.net>
+To: =?utf-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+Cc: emacs-devel@gnu.org
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+In-Reply-To: <874ie7ijxf.fsf@gmail.com>
+References: <87y0c0vvtf.fsf@gmail.com> <874ie7ijxf.fsf@gmail.com>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Wed, 28 Oct 2026 17:36:33 +0000
+Message-ID: <87a4nxrala.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=185.67.36.65; envelope-from=philipk@posteo.net;
+ helo=mout01.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 28 Oct 2026 17:36:53 -0000
+
+Jo=C3=A3o T=C3=A1vora <joaotavora@gmail.com> writes:
+
+> Hi,
+>
+> I've pushed refactor.el to master, along with the Eglot changes that
+> make it a Refactor backend.
+>
+> I have the commit making refactor a :core GNU ELPA package ready, but I
+> can't push it, I think because I'm not a member of the new Savannah
+> group for elpa/gnu.git.  Could someone add savannah user
+> 'capitaomorte')?  Until then, Eglot snapshots from GNU-devel ELPA can't
+> be installed, since they now require refactor.
+
+I can't add you, but if you send me the patch I am happy to apply it for
+you.
+
+> The feature/actions branch is now just a historical record: the commits
+> on master were rebased and slightly reworked, so don't merge it.  It can
+> be deleted.
+>
+> Jo=C3=A3o
+
+
+From MAILER-DAEMON Wed Oct 28 14:20:56 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xM8Gb-0003xV-JW
+	for mharc-emacs-devel@gnu.org; Wed, 28 Oct 2026 14:20:54 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <joaotavora@gmail.com>)
+ id 1xM8GZ-0003wm-9V
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 14:20:51 -0400
+Received: from mail-oo1-xc29.google.com ([2607:f8b0:4864:20::c29])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <joaotavora@gmail.com>)
+ id 1xM8GX-0002Zv-0D
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 14:20:50 -0400
+Received: by mail-oo1-xc29.google.com with SMTP id
+ 006d021491bc7-6dd059478dcso999011eaf.0
+ for <emacs-devel@gnu.org>; Wed, 28 Oct 2026 11:20:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793211646; cv=none;
+ d=google.com; s=arc-20260327;
+ b=iYopWFvlaU3CIja0Kd9ykpYyqoMJwbXzjzuEM3I6G7ry1e22p95fZq/4WMPVrD28FH
+ /fUS+XVUWmU47Ft/4kxyjLpAlbiO/44PrBFTGb2YJXJ+CFzJwQ9pOxVH4HCZF7tDRkyl
+ gtpVqzcjky6jSQmgqUaavjKMNncULknSEb9fqUMw+4byR3BEKjQ40BiWtxUX7RKNnsBT
+ e+yMgo4hHR3yAmw/BmxSDNlw23xpK/t9kEYu7/P1OluAkiNZCHbuKJIYIYZPpLIxuksO
+ mbSO2EVXrlPRzcSI/K8jLuFK3bq8KbA3yDHyW8RAIJoGdng8KmXgJ7PsA6S1MNDW+8Pf
+ P51g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=53N0AE2lksED6mGqO7aKreyBYbgK2uoCP+pVStveZek=;
+ fh=qPrb2QRrrgY/lETZg1e4sQ1VvqGdi6XbAsh6bJsqeEc=;
+ b=kNfOG/uuFn34+Ibxzr7G1wGeS+4gUjwmh3P0unAmxj4K+0ToMYpieCGMwY/W+9Pppr
+ 9ViBT7mpSW2PC8im8Ti1HKBIiFdhzKnvYIf1ovciNVlAGXpL0g5VGGIowh0c/fDi6P1g
+ gmm8rk7fHo0YVLEoEQzsGjKEqq8mxTzutkIZ756ee+3yKKGj8lSTvgHTgpQInWkuJPJd
+ g/WBRyZqG8KbRvWqsu5bnB5hPkEweoz1dOuQpgEeG661qhlil+3/jaOXqrvrdVoi5QVh
+ +7E5lnjKYIfVRZBp0ybRKFuYO0fyqkxVjhU4kkYR51KxvazsFFRk3QIBQHv+rCEK+9JR
+ b0NQ==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1793211646; x=1793816446; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=53N0AE2lksED6mGqO7aKreyBYbgK2uoCP+pVStveZek=;
+ b=XuBfjQz37wAmv3tnFeVGaOuweFM0Kn4G+/QU2Bo3UrUAMiWLUJm3pneRiyH1bQaT0f
+ 3iIh1iFHbaiOElQahhRc7Yfo6uLqwX7swW8XsKFpmA9AFzVkYRofBhPTcJzR1L3nNCpD
+ Ox1emTGMJOLE0S+o4rIuJwdvaJXokTBQbA4PQ8c6iIw+sb4Anz3lHjrlT6DMbhtuSAHx
+ D2sOigr4KjWwqgHuucNLtqQESVZtPgoB0jqwF5rxZDaLWIXOMi70DOw0js1+GnBxZJSP
+ cnBBTPIGcKRxJbSLHuhwMxhJWAhT0jOqMILu4wO16Iy8de+EPcusI+Hxsfb6w+ZVHOWI
+ gDtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1793211646; x=1793816446;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=53N0AE2lksED6mGqO7aKreyBYbgK2uoCP+pVStveZek=;
+ b=PqSIDTzOpuwdp72X6RK43sQBuhertm03MNEpDo5o723dj2dnsFmeeBd/i1gJJy0C7S
+ YSYFZ8fbBqr1qGZHNcCdTrPV6++zF6F1wNfK7TEqDyO6gYvTz1eVnY8hN9ZVESKPkgrt
+ t4CnBeLNv/yGq4xSlpDaTy6PQ8+EtJgCs2+IrfVjRN1rhu7sI4obiKTySIZT8lsh9Qa3
+ H2B8UqtTX38XG/JGzNVoO3ZWMNdRgGwCZg2lXXKMEVE2111pNg5lbhParHMmfWuiorfi
+ uwVJUl+SFzHtS10xlzl1+tQn0IGu4XeRNvh4/+olKPl7t7kYoc5Qm6ESvduQ8DxWWEjJ
+ uRUQ==
+X-Gm-Message-State: AFq9FYIjviqN+D0sgqsL9bVzBZEiT+KuzIn7YY7kP7faOMwpgXGUG1Kb
+ 9tqjoXrL0aKqJqnBLPE22Ydglu0D/xPAJ8XOSj3QhPN9zBbDlvsb1HY7Ja0kwGGzRNCU2lY8T4E
+ MCDhAAktR9On4XYUvKJs8iE2c+GKKZ84=
+X-Gm-Gg: AYBFou0cOEHTqAkq2RGYFAWDCV3KYGtn1jubl20axRcl4Y7ZsPj6IfjHCCB5xVnqM8d
+ vdwjPtjHS6K95q/irC2hLGzVCe06CJ9FeXs6H3/P4bXFAOF6PTKNRrMl4cgYrsmF/ir7LyVRFOL
+ C28fCiz1T76f88nnBcBG9ZxMflaXJ9zsr6vdzRsWYT8kqzoP/q2yMa4H5lDJSWrS/Of4M98HgIg
+ L40l2q6I9m/HD2e3xd9e60JPYt+wlqVLydmz49/FW+Dlrui1g7S+FQLNw69rs3Q2+zPT4iOSgac
+ 3CC0q8JAYK3OjiG/ZeNeD/W6YPOln2PAfW9sNjzIHgUNPnN3nmIpP0dvJ+3NhjosU/9ccAjoixs
+ x+oGl3z5tkC62zQ1a67lPA56UF6zdbVP7JLQ+yU0IZciIeaG8tZ4d5KA/r5NUkCGHifATNHKLLH
+ h6X1rVsFNHVYYFzH9bLc3l
+X-Received: by 2002:a05:6820:c3ca:b0:6f8:2e98:cfe3 with SMTP id
+ 006d021491bc7-713eaf5b42bmr1129281eaf.10.1793211646296; Wed, 28 Oct 2026
+ 11:20:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <87y0c0vvtf.fsf@gmail.com> <874ie7ijxf.fsf@gmail.com>
+ <87a4nxrala.fsf@posteo.net>
+In-Reply-To: <87a4nxrala.fsf@posteo.net>
+From: =?UTF-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+Date: Wed, 28 Oct 2026 18:20:35 +0000
+X-Gm-Features: AclHuK-ZyC2PWMTZJ5s3b8NAZoZ-sBrMqm7pXgI4B0PYoD3doAzZ9JqKRm2ifjI
+Message-ID: <CALDnm53zJJ2Lvzyj0TW+_3mF==DBWmCfCUK97cSyw7wK2G7i=g@mail.gmail.com>
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+To: Philip Kaludercic <philipk@posteo.net>
+Cc: emacs-devel <emacs-devel@gnu.org>
+Content-Type: multipart/alternative; boundary="0000000000002f4851065eea9f6b"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::c29;
+ envelope-from=joaotavora@gmail.com; helo=mail-oo1-xc29.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 28 Oct 2026 18:20:51 -0000
+
+--0000000000002f4851065eea9f6b
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Sure. On my mobile right now, but it can be easily described: the patch was
+a single line, adding lisp/progmodes/refactor.el as a :core package.
+Nothing more.
+
+Currently, I think Eglot from GNU devel ELPA is broken, because it can't
+find the "refactor" package. So I'd be great if you could add it, or
+someone add me to elpa.git when possible, as before.  Not that I write very
+frequently there, but sometimes I need to.
+
+Jo=C3=A3o
+
+On Wed, Oct 28, 2026, 17:36 Philip Kaludercic <philipk@posteo.net> wrote:
+
+> Jo=C3=A3o T=C3=A1vora <joaotavora@gmail.com> writes:
+>
+> > Hi,
+> >
+> > I've pushed refactor.el to master, along with the Eglot changes that
+> > make it a Refactor backend.
+> >
+> > I have the commit making refactor a :core GNU ELPA package ready, but I
+> > can't push it, I think because I'm not a member of the new Savannah
+> > group for elpa/gnu.git.  Could someone add savannah user
+> > 'capitaomorte')?  Until then, Eglot snapshots from GNU-devel ELPA can't
+> > be installed, since they now require refactor.
+>
+> I can't add you, but if you send me the patch I am happy to apply it for
+> you.
+>
+> > The feature/actions branch is now just a historical record: the commits
+> > on master were rebased and slightly reworked, so don't merge it.  It ca=
+n
+> > be deleted.
+> >
+> > Jo=C3=A3o
+>
+
+--0000000000002f4851065eea9f6b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto"><div><div>Sure. On my mobile right now, but it can be eas=
+ily described: the patch was a single line, adding lisp/progmodes/refactor.=
+el as a :core package. Nothing more.=C2=A0</div><div dir=3D"auto"><br></div=
+><div dir=3D"auto">Currently, I think Eglot from GNU devel ELPA is broken, =
+because it can&#39;t find the &quot;refactor&quot; package. So I&#39;d be g=
+reat if you could add it, or someone add me to elpa.git when possible, as b=
+efore.=C2=A0 Not that I write very frequently there, but sometimes I need t=
+o.</div><div><br></div><div data-smartmail=3D"gmail_signature">Jo=C3=A3o</d=
+iv><br><div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" cl=
+ass=3D"gmail_attr">On Wed, Oct 28, 2026, 17:36 Philip Kaludercic &lt;<a hre=
+f=3D"mailto:philipk@posteo.net">philipk@posteo.net</a>&gt; wrote:<br></div>=
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex">Jo=C3=A3o T=C3=A1vora &lt=
+;<a href=3D"mailto:joaotavora@gmail.com" target=3D"_blank" rel=3D"noreferre=
+r">joaotavora@gmail.com</a>&gt; writes:<br>
+<br>
+&gt; Hi,<br>
+&gt;<br>
+&gt; I&#39;ve pushed refactor.el to master, along with the Eglot changes th=
+at<br>
+&gt; make it a Refactor backend.<br>
+&gt;<br>
+&gt; I have the commit making refactor a :core GNU ELPA package ready, but =
+I<br>
+&gt; can&#39;t push it, I think because I&#39;m not a member of the new Sav=
+annah<br>
+&gt; group for elpa/gnu.git.=C2=A0 Could someone add savannah user<br>
+&gt; &#39;capitaomorte&#39;)?=C2=A0 Until then, Eglot snapshots from GNU-de=
+vel ELPA can&#39;t<br>
+&gt; be installed, since they now require refactor.<br>
+<br>
+I can&#39;t add you, but if you send me the patch I am happy to apply it fo=
+r<br>
+you.<br>
+<br>
+&gt; The feature/actions branch is now just a historical record: the commit=
+s<br>
+&gt; on master were rebased and slightly reworked, so don&#39;t merge it.=
+=C2=A0 It can<br>
+&gt; be deleted.<br>
+&gt;<br>
+&gt; Jo=C3=A3o<br>
+</blockquote></div></div></div>
+
+--0000000000002f4851065eea9f6b--
+
+
+From MAILER-DAEMON Wed Oct 28 14:34:09 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xM8TQ-0001kp-Qh
+	for mharc-emacs-devel@gnu.org; Wed, 28 Oct 2026 14:34:08 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xM8TP-0001jG-7T
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 14:34:07 -0400
+Received: from mout02.posteo.de ([185.67.36.66])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xM8TM-00042d-W9
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 14:34:06 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout02.posteo.de (Postfix) with ESMTPS id 19332240103
+ for <emacs-devel@gnu.org>; Wed, 28 Oct 2026 19:33:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1793212431;
+ bh=wXVxl84QrsIs/TyFn6DEXUGoBYuJfxLlXnkGxUNLsEE=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:Content-Transfer-Encoding:From;
+ b=Uo1WN5LfmKCDbZr0XZNYSSL+E5fZNQNGRWdGg05/Hoyy+WXLKgtG7JkPV6aqB4HHR
+ qUz0/2JlPRxLTpQnxzg/nygdAGp7QRFo6qCGWCwYLsGjbTdtLillbXDWoc5CKPheNZ
+ 8UIzApFyx2YzqT0cxqJq1DvTWCyTbOKcTiGz1YJGtT3kkqNY3Zz7603oPUuN2XATdj
+ jkobLEsBINqcILu43Rsh/vVmYsJWxG84Dp3ODZ41Gb0qRlYM81Hemrry+O1wMi2uAq
+ GuXkwyWXSfh3gHZkLbyh0sgtPSqt3ukBLwUl6Yjx8LDFhjhrhTYNA8JiTA6Vh47yap
+ 4YLK9fs9VpjAA==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4jFGGQ3K9nz9rxN;
+ Wed, 28 Oct 2026 19:33:50 +0100 (CET)
+From: Philip Kaludercic <philipk@posteo.net>
+To: =?utf-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+Cc: emacs-devel <emacs-devel@gnu.org>
+Subject: Re: New refactor.el: code actions, rename and quickfixes, out of Eglot
+In-Reply-To: <CALDnm53zJJ2Lvzyj0TW+_3mF==DBWmCfCUK97cSyw7wK2G7i=g@mail.gmail.com>
+References: <87y0c0vvtf.fsf@gmail.com> <874ie7ijxf.fsf@gmail.com>
+ <87a4nxrala.fsf@posteo.net>
+ <CALDnm53zJJ2Lvzyj0TW+_3mF==DBWmCfCUK97cSyw7wK2G7i=g@mail.gmail.com>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Wed, 28 Oct 2026 18:33:50 +0000
+Message-ID: <875wylr7xu.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=185.67.36.66; envelope-from=philipk@posteo.net;
+ helo=mout02.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 28 Oct 2026 18:34:07 -0000
+
+Jo=C3=A3o T=C3=A1vora <joaotavora@gmail.com> writes:
+
+> Sure. On my mobile right now, but it can be easily described: the patch w=
+as
+> a single line, adding lisp/progmodes/refactor.el as a :core package.
+> Nothing more.
+
+OK, that seems to build fine on my system so I've pushed it upstream!
+
+> Currently, I think Eglot from GNU devel ELPA is broken, because it can't
+> find the "refactor" package. So I'd be great if you could add it, or
+> someone add me to elpa.git when possible, as before.  Not that I write ve=
+ry
+> frequently there, but sometimes I need to.
+
+The NonGNU-devel issue should be resolved in a few hours.
+
+As for Savannah, I think that Stefan or Eli should be able to help you
+get access.
+
+> Jo=C3=A3o
+>
+> On Wed, Oct 28, 2026, 17:36 Philip Kaludercic <philipk@posteo.net> wrote:
+>
+>> Jo=C3=A3o T=C3=A1vora <joaotavora@gmail.com> writes:
+>>
+>> > Hi,
+>> >
+>> > I've pushed refactor.el to master, along with the Eglot changes that
+>> > make it a Refactor backend.
+>> >
+>> > I have the commit making refactor a :core GNU ELPA package ready, but I
+>> > can't push it, I think because I'm not a member of the new Savannah
+>> > group for elpa/gnu.git.  Could someone add savannah user
+>> > 'capitaomorte')?  Until then, Eglot snapshots from GNU-devel ELPA can't
+>> > be installed, since they now require refactor.
+>>
+>> I can't add you, but if you send me the patch I am happy to apply it for
+>> you.
+>>
+>> > The feature/actions branch is now just a historical record: the commits
+>> > on master were rebased and slightly reworked, so don't merge it.  It c=
+an
+>> > be deleted.
+>> >
+>> > Jo=C3=A3o
+>>
+
+
+From MAILER-DAEMON Wed Oct 28 14:39:17 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xM8YP-0002nT-GU
+	for mharc-emacs-devel@gnu.org; Wed, 28 Oct 2026 14:39:17 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xM8YM-0002mz-5l
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 14:39:15 -0400
+Received: from mout01.posteo.de ([185.67.36.65])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xM8YK-0004yA-78
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 14:39:13 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout01.posteo.de (Postfix) with ESMTPS id 8883D240027
+ for <emacs-devel@gnu.org>; Wed, 28 Oct 2026 19:39:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1793212749;
+ bh=ZxmvXjLIyFnN7WtCngzkFgCe3ynVHvdZL5NeGfWscvI=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:From;
+ b=D8kQPDBZlfwz+j+Ou/FT/iwujvIiCyAy8XQQt4UucFfHSJQfoV4Q8FrBM4b4/HivZ
+ MU3k7HiHmTur1CV2Q+iPEOIr9cukiBXCSMih28Rh2lCagx2GNc/ndkxojTOprJ4aEV
+ IdcYeq/16iY8hjmdgIchswVQAiHHj8Vkco4wq9KnP2/PqzknUf48Jjvb5Pzzg3k/UT
+ RtZT04KUm1Ai99R28LsvKEefho3baNNl1k9nTaP8kDU0rs96JCe054az48UtjiYAuc
+ a5ZoMOlyPL6qABKpt4hkMfC+1p02SldPsoOJmD+B2vja1RRXzrNZBqAXKg76cSqEMh
+ KLRvWuMJjSkKA==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4jFGNW681lz6tsg;
+ Wed, 28 Oct 2026 19:39:07 +0100 (CET)
+From: Philip Kaludercic <philipk@posteo.net>
+To: rms@gnu.org
+Cc: qiangsheng@sjtu.edu.cn,  shipmints@gmail.com,  emacs-devel@gnu.org,
+ rahuljuliato@gmail.com,  rahul.juliato@gmail.com,  monnier@umontreal.ca
+Subject: Re: [ELPA] New package: markdown-ts-appear
+In-Reply-To: <E1xKzZ0-000DM6-3C@fencepost.gnu.org>
+References: <520040404.47473814.1788432256599.JavaMail.zimbra@sjtu.edu.cn>
+ <87tso6gwnl.fsf@posteo.net>
+ <FEC1CCEA-8AA8-4040-A8D6-4903CC00F76B@sjtu.edu.cn>
+ <87o6cyvguf.fsf@posteo.net>
+ <CAN+1HbqvwL_XTsNCm6Tr5=b8RJ70RtJyoS0xFTMbJmHeiyK3gw@mail.gmail.com>
+ <9322949A-E6F4-4A36-949C-EC7D97BC74F6@sjtu.edu.cn>
+ <87v775baoi.fsf@posteo.net>
+ <80CB4A3E-D11A-4446-AABD-FB9ACC2C0376@sjtu.edu.cn>
+ <874ieka870.fsf@posteo.net>
+ <3CA666C9-2CE3-40F6-A186-3760C65BE01B@sjtu.edu.cn>
+ <87wlrf7awh.fsf@posteo.net> <E1xKzZ0-000DM6-3C@fencepost.gnu.org>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Wed, 28 Oct 2026 18:39:09 +0000
+Message-ID: <87y0bhpt4k.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=185.67.36.65; envelope-from=philipk@posteo.net;
+ helo=mout01.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 28 Oct 2026 18:39:15 -0000
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > My advice would really just be to handle this feature as a soft
+>   > dependency that your package can enable and integrate if the
+>   > markdown-table-wrap is installed, and otherwise gracefully handle the
+>   > absence
+>
+> Would you please explain more concretely what is being suggested here?
+> I can't get a clear idea from those terse words.
+
+A weak dependency is a dependency on some feature that the package will
+enable and integrate if it is installed and otherwise gracefully
+degrades if not.  Think of a (when (require 'foo nil t) ...) check.
+
+But this point is moot anyway, since the dependency was just replaced
+with a custom implementation of the same functionality.
+
+
+From MAILER-DAEMON Wed Oct 28 16:37:05 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMAOP-0005Vq-BF
+	for mharc-emacs-devel@gnu.org; Wed, 28 Oct 2026 16:37:05 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xMAON-0005UN-EA
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 16:37:03 -0400
+Received: from mout01.posteo.de ([185.67.36.65])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <philipk@posteo.net>)
+ id 1xMAOL-0004IB-NI
+ for emacs-devel@gnu.org; Wed, 28 Oct 2026 16:37:03 -0400
+Received: from submission (posteo.de [185.67.36.169]) 
+ by mout01.posteo.de (Postfix) with ESMTPS id 71EAC240027
+ for <emacs-devel@gnu.org>; Wed, 28 Oct 2026 21:36:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+ s=1984.8680eb; t=1793219819;
+ bh=m7JmKrlTttEHpdN8GheynE+vYBnFMhFkhOYcwYzvcjI=;
+ h=From:To:Cc:Subject:OpenPGP:Date:Message-ID:MIME-Version:
+ Content-Type:From;
+ b=BbVT1W1z4T5EgBZY8MjzwJVlNjcst0Y+cQIXTCm28rs/Q1rm7oE6PzULuzsAX866V
+ 6QmvCmLvkaybyecMF7KJiRV72QS5p04N/Of0bEXPnPiqfn6frHqTuPWBJhW+yA3G67
+ 3C+0+P7lqDbyr+Gu/vMzTvNKrXQZTpjDi7sGxMHcVfmW5FP85n9DrLl2Sdak07kqTS
+ DGgkLQxP74UdhdBdoc7vo8FZvRDutCS/D+lJDpUZVYv+0rSrVe5SvrvLceVRPsRcoK
+ 4IArzkDxE8DGBsbDmAt6fnQTj+bqtfjUuxt5MoMAtMtKo6t05Dt7GwmFfYSvNNX9Fr
+ xbgc9/ALV1yig==
+Received: from customer (localhost [127.0.0.1])
+ by submission (posteo.de) with ESMTPSA id 4jFK0V7311z6tsg;
+ Wed, 28 Oct 2026 21:36:58 +0100 (CET)
+From: Philip Kaludercic <philipk@posteo.net>
+To: Kinney Zhang <vhkdzszh@gmail.com>
+Cc: eliz@gnu.org,  emacs-devel@gnu.org
+Subject: Re: [NonGNU ELPA] New package: ekp
+In-Reply-To: <179265364218.81518.17612804954593858950@gmail.com>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <87y0bqrk3q.fsf@posteo.net>
+ <179260749323.17379.16571524871324292533@gmail.com>
+ <864iee71w3.fsf@gnu.org>
+ <179265364218.81518.17612804954593858950@gmail.com>
+OpenPGP: id=philipk@posteo.net;
+ url="https://keys.openpgp.org/vks/v1/by-email/philipk@posteo.net";
+ preference=signencrypt
+Date: Wed, 28 Oct 2026 20:36:59 +0000
+Message-ID: <87cxstpno5.fsf@posteo.net>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=185.67.36.65; envelope-from=philipk@posteo.net;
+ helo=mout01.posteo.de
+X-Spam_score_int: -43
+X-Spam_score: -4.4
+X-Spam_bar: ----
+X-Spam_report: (-4.4 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_MED=-2.3, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 28 Oct 2026 20:37:04 -0000
+
+Kinney Zhang <vhkdzszh@gmail.com> writes:
+
+> Thank you.  Then I will aim for core.
+>
+> I will rewrite the LLM-generated parts.  That is not a quick job: the
+> affected code is around 800 lines, and doing it properly means
+> re-deriving the logic and re-running the acceptance tests, so I expect
+> weeks rather than days.  The point is not only to satisfy the policy: I
+> want the result to be code that users can read, reason about and change
+> for themselves.
+>
+> I will come back when it is done and the tests pass, and we can talk
+> about how a core contribution should look.
+
+If you decide to go for ELPA, I'd appreciate it if you could CC me in a
+response so that I don't miss the message.  But otherwise I'd recommend
+following Eli's suggestion first and seeing if you could get this into
+the core (and have little reason to doubt that this will go wrong).
+
+
