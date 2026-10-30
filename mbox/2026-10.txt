@@ -83009,3 +83009,2803 @@ And also aid naming other competing filling packages should they come along=
 --000000000000a003d9065f002618--
 
 
+From MAILER-DAEMON Thu Oct 29 22:21:09 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMcEu-0000iO-T9
+	for mharc-emacs-devel@gnu.org; Thu, 29 Oct 2026 22:21:09 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xMcEs-0000i2-6q
+ for emacs-devel@gnu.org; Thu, 29 Oct 2026 22:21:06 -0400
+Received: from flow-a5-smtp.messagingengine.com ([103.168.172.140])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xMcEo-0004Lb-Vq
+ for emacs-devel@gnu.org; Thu, 29 Oct 2026 22:21:05 -0400
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+ by mailflow.phl.internal (Postfix) with ESMTP id D261413804F2
+ for <emacs-devel@gnu.org>; Thu, 29 Oct 2026 22:21:01 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-02.internal (MEProxy); Thu, 29 Oct 2026 22:21:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :cc:content-transfer-encoding:content-type:content-type:date
+ :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm1; t=1793326861;
+ x=1793334061; bh=te8hDSghMp5iexr/6IeIFIdrk8wynuOFEa3Oeyf9/aM=; b=
+ P8swwSV3jX6Nkw+ykr1sctk5Vpsx6JpVAIvztKDxuS7ji6/KGXCKf4kgVRJnHzjF
+ JNWEWooFbNKZTmn54Pa8nJ5H9T/VAiaDMfR1Pxv8kyA4iMo4RAq+6fef+VzRsiDp
+ DV2Ern6Kw0ANdoNpKwUheMARgU3BawOMlkbYjiomHgXX+d3RYYI0huKaR+E01Xgn
+ 1PBQ5EuqYJX6JLDzR48TwM/2n2WnbXDOIZF51qEZVTE7Cd20SF35jQmXe7924V24
+ +E3zMKlnFTjmLZ+G01Y9oeoQ3PscgNg/ItU/B17JYXNWsXAkg1IH4+PrGVTm8Tou
+ ORVdmPphx+OhXbhuaogWog==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793326861; x=
+ 1793334061; bh=te8hDSghMp5iexr/6IeIFIdrk8wynuOFEa3Oeyf9/aM=; b=g
+ KjTkk78ZGG8Jlv/3yZ6c1XXzUSV/yxjaWXwp9SYxeovrhjZlrqN1bolUphCKoLbh
+ HiivMLZXwp2NJqguhw08lT8YjlaKlC34uh0xsbK/TELbTHXsns3lzt4FRRK5D7+m
+ V4dmDvHW8L25bmCumn1VVPo0VBhiKqQgK7Mf/k95mGA5n+4NO/8a9yMHocWiTM0J
+ 32JfakjmcSIg+Uf0AY+JK3FJZOwBLkpi99urQo6b0LwxS3AsbZHsK7JJds2MVkC9
+ lR6gCMmzUeIx4LbfdqNv1s1oy3KoZwPvTuLKfzON4PZuiSyMisoHkX1z71ftOxsQ
+ ShON+cmaAq+p/+ukYYKtg==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=sign d=gutov.dev a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793326861; d=gutov.dev;
+ mf=PGRtaXRyeUBndXRvdi5kZXY+; rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:RVJltqyfo2TLUgNOn6PupmgQ/5YoGugW3yFyyrM1L4WdQqR
+ 7vWl7sQuXfxEfF7BhhbnLDr4h7pqNzU+RhLeONWLTJEa5Fz6ucN4F5D4PoIjiR+v
+ jfNPugFVcpZADtXwlTF6IPcb+cSu2WM0fFCdbUrpLTMkOQ015x4WFaK0JpTKX0WK
+ 1YccThPJMUAqgd4uks5fS9s3kY6TUdVg1lcVvuCXfpX7mqJ9T9hEeI4Vy3AtPHNi
+ /MFz5kac49TSfeQbff1vxw5X9LgNv4qthAdMJvq1NRngLfa6WP5KzMrOad6dhoEw
+ f1eFNlnP06Dyyc8gWkpnNcvf29AoiRtaOD2s/EQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=mi-m=1; hc=14;
+ hn=cc,content-language,content-transfer-encoding,content-type,
+ date,feedback-id,from,in-reply-to,message-id,mime-version,
+ references,subject,to,user-agent;
+Message-Instance: m=1;
+ h=sha256:DL3zRpwj8vy0eoE4VjW2/6Ho5uNRDvl99d6Ju0XsVMc=:kki9v93i/2Rf/tNyNRFh5nWeKaRoD96kcFBKsFLmpXE=;
+X-ME-Sender: <xms:Df_jauCflcuzDa_2NY9UK7j_uSKJ6KEOlJpiUhhjekeuE5pEEDreVQ>
+ <xme:Df_jav9JqnCDZYtF7oI6Lg8yqFV9BNYkPRqHnz7OQcjBqBXo_Tq-mGmSOGGVkxsEp
+ TL3QyBocpcVOPD3NZBDWX-9CDBgKjopqAyCmyx_j83g17RFMb3Eujs>
+X-ME-Received: <xmr:Df_jau-jjoQr0XB4w38TfNKRcF5ZwHnOafgeDMocCZ1J2F9AnxlnXj9yTv_PjkZbg4bp>
+X-ME-Proxy-Cause: dmFkZTGczhjN4qavqnZczKPY/Jc27E/ROfO+asg5mkie9Bag7CAoMgtgmGOJTvFMkZh4Jv
+ vDyZKeQN6Kr7Tz88sbgv20ykdC5TH7gKOy6DM9HIetjE0GwZaqeUiMWSjVF1PgHXxxWnHN
+ O5Xl000gw51SEJ273Ux9S89C+WpDL2SIaE8XyqA1ihVFanS9eR2+eCRi+lGR2vPSziVrXw
+ kwu8HwIZIush4lqHMXlsmWdccDjFzwH47n7OnWJGFHolIMyATE4hSrSEIPL5VpbP0g1yPp
+ Ah+yiMOe/dU6YrR4zZNzY6Ko6MZk4U8ThzrqseqUNS8a/VPnFd5a7AbXlGas93gC3qQhIh
+ zc4JwuLZTAR5Vlkjz1GV71SF+CvliM7QPj1ajzDN/5OnQAMG4ZSJbiMEl8sIyMl4LQ6YWo
+ FgFuhafZ1H/3leWtmehYDhhZTkD45cm1zWfMK3E/bn5oVUALL6Qy/A/4is2QbCXcIgK0+5
+ zCHBd409Q3nYhTqVy/HqMpUnjM2YS3cH90eLK5UehFo3VjGsS0v+6aJXN2FSwjNLCSUvqg
+ D+dKegppke3IuymqDm05AkIqei/SBveY4Z5qcQYLJSMC+rp1bpp5D9qYJElqmV+u7raqr5
+ IEaEK++58VXpkZtD3WADBse17+ZMkhr82GWkx9QJJzvXLHQi/375B27atfLg
+X-ME-Proxy: <xmx:Df_jamcKI-PKqGtt25XfQGtvtKQqkM6fLOUWbul2pWEyjtG8auzrdw>
+ <xmx:Df_janFzmYTZSuldi40XAC_g3yi3wP33YE30DwwpQ2kFPpBJyOCmAw>
+ <xmx:Df_jakcuy8cOaxaZ7YtTfiApze0dqYRMpyHDIC4tD0SdDTo550DZlg>
+ <xmx:Df_jahGIXUa8HQ67Yn5JvoEv66e8MJOZMUIhlA6UV46-GorIzsUJ9w>
+ <xmx:Df_jaux0IR_NuoYe3wO4QNAS3iQ6Z_udsa_DG_gntMoIYyaA9qOmsGlY>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 29 Oct 2026 22:21:00 -0400 (EDT)
+Message-ID: <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev>
+Date: Fri, 30 Oct 2026 04:20:57 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix some
+ recently added docs.
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <86zex0z4k9.fsf@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=103.168.172.140; envelope-from=dmitry@gutov.dev;
+ helo=flow-a5-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 02:21:06 -0000
+
+Hi Eli,
+
+On 29/09/2026 14:21, Eli Zaretskii wrote:
+
+> I've now installed on the master branch the implementation of
+> xref-find-by-kind for the 'etags' backend.  It includes some
+> (hopefully) improvements to the doc strings.
+
+Great!
+
+> Completion, as implemented for this backend, is very slow, especially
+> if you type only a small portion of the identifier's name.  That's
+> because it has quadratic behavior: for each candidate, it examines all
+> the possible completions, and filters the candidate out if none of the
+> completions match KIND.  If you type nothing and just press TAB, it
+> will take forever for a large enough project (such as Emacs).
+> Improvements are welcome.
+
+I have now pushed an update in commit f982de03ff1 which uses a different 
+strategy, seems snappy in Emacs, and somewhat usable even in a larger 
+project (but that might depend on the chosen kind).
+
+The approach is to take the corresponding MUST-MATCH regexp from 
+etags--types-regexp-alist and search for every occurrence of it in the 
+tags file buffer. Whenever matched, apply MUST-NOT-MATCH as well, and 
+extract tag names into a hash table - just one pass over the file. Then 
+use the hash table in the completion predicate.
+
+TBF I've tried a couple of lighter changes first (e.g. skipping some of 
+the heavier parts of your etags--kind-predicate, or stopping at first 
+match), and that didn't work - alg complexity was still prohibitive.
+
+I've also benchmarked this against the alternative of adding KIND to the 
+arguments of the method xref-backend-identifier-completion-table, and 
+the difference seems small enough to keep the current convention.
+
+The new code doesn't include per-file case-fold-seach detection yet, 
+sorry for that step back, but it seems compatible with the solution, to 
+be added later. At least kind identifier completion seems usable now. 
+Feedback welcome.
+
+> Finally, there's one annoyance with this when using it in the Emacs
+> tree: once a reference is found in a Lisp file, the next "C-u M-g M-."
+> will use the elisp backend, and thus show you a completely different
+> list of "kinds".  The only way to work around that is to turn on
+> xref-etags-mode in every buffer (via find-file-hook or similar), and
+> I'm guessing that Dmitry will say it's by design.  But maybe a nicer
+> solution could be found for this particular case (or for Xref in
+> general)?
+
+How about just
+
+   (define-globalized-minor-mode global-xref-etags-mode xref-etags-mode
+     xref--turn-on-etags-mode)
+
+   (defun xref--turn-on-etags-mode ()
+     (when buffer-file-name
+       (xref-etags-mode 1)))
+
+? With the user invoking 'M-x global-xref-etags-mode' first.
+
+Or how much nicer are we talking about? Tracking the previous backend 
+used within the current session/project/etc might be possible (unless it 
+doesn't work in the new file anymore), but it's not always what the user 
+might expect. OT2H opting in via a global mode (or some other approach, 
+with a user option) might address that concern at least.
+
+
+From MAILER-DAEMON Thu Oct 29 22:31:03 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMcOV-0002Ob-JG
+	for mharc-emacs-devel@gnu.org; Thu, 29 Oct 2026 22:31:03 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xMcOU-0002OJ-GW
+ for emacs-devel@gnu.org; Thu, 29 Oct 2026 22:31:02 -0400
+Received: from flow-a5-smtp.messagingengine.com ([103.168.172.140])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xMcOS-00055Y-Tf
+ for emacs-devel@gnu.org; Thu, 29 Oct 2026 22:31:02 -0400
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+ by mailflow.phl.internal (Postfix) with ESMTP id 1F1DA138032C
+ for <emacs-devel@gnu.org>; Thu, 29 Oct 2026 22:31:00 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-03.internal (MEProxy); Thu, 29 Oct 2026 22:31:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :cc:content-transfer-encoding:content-type:content-type:date
+ :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm1; t=1793327459;
+ x=1793334659; bh=EF6rsPqQb/2VaLGbLkAopdcokwBh+FD2E6buvSovk4Y=; b=
+ acnStf0Ws7PGABDk+1K2xk4QvLhTCFnJL0H2AkBVlPGJVK+KZL98oXvHvFPY0dBp
+ aAOsQL+jp5rryyIwII3syImYWVAylXtg19ZmO2Ehllw72zZTFnIAxcZKRXiF7v0c
+ HGtPWtU4CP0++PQS8szajN51Qtx1xY5734QKWrffcNqzdeNcZyHjhQtwjtSSRnTL
+ X/menR3R+NQhHqusVCRlScSmC+1/EGZrwRv61X+JNzUe0MubPpLoXkkD+Z2eRh/W
+ FALnTTwUgaDBwyg3RTMRUpBJa86lJi50DfN41O8iVe7oKi0RucJp6rJPWRYSCZkP
+ c/l2nv+44jtirpB8hbfPIg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793327459; x=
+ 1793334659; bh=EF6rsPqQb/2VaLGbLkAopdcokwBh+FD2E6buvSovk4Y=; b=r
+ idb7lYg+poGEsSynvvjmdAiDTDbuLSzLrHHb+SPqE6BinvV4FPnYjh4aZsU03txq
+ UmtfMNrm1z6yS8YR9u4w8Kn7X0G6PCytEXEBKNIlV7x9cWyuKFGXulXtriESkuJi
+ X55dDcORbP5W220J5vscBLk4mERRGU+/xvl6QcEF8aQEjlFIqanXKTHTyKLV3VeI
+ DxKXLhEL5aePE9BKb4ptncqV+Wd5YkGxJR/kbPJDd/4smfgRUrTMqFDcev3nwBz2
+ VmH7VcMHoNc2wPKE+zHRz1IxT7P6JZL9+07bpQ+OcOzbhV7Gkex61JRXerMu6YGd
+ 5NFVdUlQRRz6u3jKR0F8w==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=sign d=gutov.dev a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793327459; d=gutov.dev;
+ mf=PGRtaXRyeUBndXRvdi5kZXY+; rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:k6PKjyJWkQQNb7/38jS+ZQPBB+Oa7om58s5foIyWnxFeDo6
+ IJn1D8bze/L8JXl38B01jFzkCAeSmpRTPJwCJe6wL+wtCjbBslrRk5pHE45ZVaJC
+ PVCqcfSt5CURGvtwK015nyzxa1rK9qNcuMaVy0j3awpCEp131nR+8sYAFcUcgxm7
+ 4HDu3KGFSg6OYnE+AE2LVFcdjueAfnvdFx+GEgciRYpUvybW/E4av0cUwYWabixs
+ gS+ptJh4587usHeFdv/iY584wJ4+O19E8+UbPJZd8tNCqfRvtZ53OljkgT5MPhG9
+ 8Xyo6GkiuXHx2Rxf6U80iRrBwiaT86Yomz6+LZA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=mi-m=1; hc=14;
+ hn=cc,content-language,content-transfer-encoding,content-type,
+ date,feedback-id,from,in-reply-to,message-id,mime-version,
+ references,subject,to,user-agent;
+Message-Instance: m=1;
+ h=sha256:DG1KjaxrW6nxumFzVwDitaVAPZzQwpnze3Z6jrCv+bE=:q7nTW2uVcNyc7G9DEacEl3x8iPNJ8lveSi2XH+7kn44=;
+X-ME-Sender: <xms:YwHkagnOR4SO_pYznds7RP60qUYjvsEHxG9q5mmzUPfdGL5oWL--JA>
+ <xme:YwHkav9QjJ5IvKuCHnAAh9SAH7EEm-OjzzdyK2Iy9HTismpPEDsWIAi-keX74xzPJ
+ 6mx9dPRGoiWPNIq_L4DALxh4ZR9NkeVEP2xSdkUfBx0L7BZHGN7skb4Hw>
+X-ME-Received: <xmr:YwHkammgas0MExLDKMsBsSg1jLIUFG1b3baC4OGYMLzHaiEZbVCBBbWdTn1nN_tA6ctt>
+X-ME-Proxy-Cause: dmFkZTEa3TLqoxdmYil6Ow4LRg0aApp6S7ARZwnjfcObwshaa7IPnRzLKaQn7HBNb+GZCj
+ 7pp7gpQfr4kP49KA6IEO4KHxFIduX4ROf8lM3+cNitncUvDTKq3HlTrgl5lcnrRVhNtgee
+ HUwvew4gLwAPVTgtCZfWyp8or9iQ8aU9GIJPznEkL8irvzQVbKlATFaeosi2nzcrsBTBRc
+ jsSN/lJwPGR8WXvu85ISWceA82678A+SllUQ9wMbovpGmArEbsiSnVyih1Sq3uFx03nbAg
+ 1ZlorqoOTujn4vsEQnbYOLyhwUmJUiBS72wO0eUcXKL9SCvEpNV7W1CtkZ+TXoCqW08HRg
+ h7lOGjkVSPqiHgFBNrsFUQecrK96DgkzzfL3RL1IpMr0p6vIKKA0sk4GCoKK86xcRLt/tu
+ N1W1U0F5eON8e1n9HJiys5LEGVNbQZEevZmr9uvodnh+jf4S86G/+49UmEIxzVbV2u1sp5
+ 99ryS0WVWPE/Cvxo7V06/ptMY+i0deX3KNG2flKubLp9EaGfW1SBW8FN03ue2ys9gWZYGI
+ r70zm2vvnTZp94X4p4uCrs4n/rcFlHu+2XR+e/GTJ6WNj8SJ8vU3ye0ltUiiHOuMAMz9r1
+ 60hBPKES0kh9MwvFv7QZqgTFvoiyp/uXQPyOfHKeuM/mF8YoIxxWG4tRHgKw
+X-ME-Proxy: <xmx:YwHkak1jf5Txt0CnENZraQ6DtFfya2vmnpA3ZpvjtYCbuGEcEaC68g>
+ <xmx:YwHkapqDWmyfc3OpBHYkEZwC6NcTIKGkL054FiKgnCr-7PE3cChCbA>
+ <xmx:YwHkapdy3it5ekz2Ji0JmGglA_0nEIeSZY7QP7F_5sd7qCrTJCK2YQ>
+ <xmx:YwHkagqqH8u505sN8mShMW3DPAA60C7mkSNUYeoL4seh0wxAiCfw_w>
+ <xmx:YwHkajfmulCETgDncrdY-T4u-iVDI9DPlRFPmu5kOHcnxm4HT3dqlrdc>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 29 Oct 2026 22:30:58 -0400 (EDT)
+Message-ID: <7930a023-9d0d-4c04-9b71-b53f5225c1b1@gutov.dev>
+Date: Fri, 30 Oct 2026 04:30:57 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Need to bump Xref from 1.7.0 to 1.8.0
+To: =?UTF-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+Cc: Sean Whitton <spwhitton@spwhitton.name>, emacs-devel
+ <emacs-devel@gnu.org>, Eli Zaretskii <eliz@gnu.org>
+References: <CALDnm51HFQ7NYqC=2bLLN16oXYgwfik2wNbAfgThk6KATMrJvw@mail.gmail.com>
+ <8733tonc2f.fsf@athena.silentflame.com>
+ <6d2649a4-89c7-43af-a7ea-cd683d70ad19@gutov.dev>
+ <CALDnm53Ud=_FwSwFLXWYvqpG=2fsGmJRuHHajih=Y2y-+U69jw@mail.gmail.com>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <CALDnm53Ud=_FwSwFLXWYvqpG=2fsGmJRuHHajih=Y2y-+U69jw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: pass client-ip=103.168.172.140; envelope-from=dmitry@gutov.dev;
+ helo=flow-a5-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 02:31:02 -0000
+
+On 29/10/2026 13:07, João Távora wrote:
+> Currently anyone upgrading to Eglot 1.25 will be left with a non- 
+> functioning system
+
+Good to know, I have bumped the version now, thanks.
+
+> So, please do let me know if there's something I can do to help speed 
+> this up.  Any concern in particular?
+
+I needed a bit more time to optimize xref-find-by-kind's identifier 
+completion for etags (f982de03ff1), to verify that the choice to add the 
+new method xref-backend-identifier-completion-predicate was reasonable 
+for performance. Seems like it is so.
+
+
+From MAILER-DAEMON Thu Oct 29 22:52:31 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMcjE-0008MB-TH
+	for mharc-emacs-devel@gnu.org; Thu, 29 Oct 2026 22:52:29 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xMcjC-0008Lz-2F
+ for emacs-devel@gnu.org; Thu, 29 Oct 2026 22:52:26 -0400
+Received: from flow-a5-smtp.messagingengine.com ([103.168.172.140])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xMcj8-0006w6-2N
+ for emacs-devel@gnu.org; Thu, 29 Oct 2026 22:52:24 -0400
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+ by mailflow.phl.internal (Postfix) with ESMTP id 96D8C1380523
+ for <emacs-devel@gnu.org>; Thu, 29 Oct 2026 22:52:20 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-03.internal (MEProxy); Thu, 29 Oct 2026 22:52:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :cc:content-transfer-encoding:content-type:content-type:date
+ :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm1; t=1793328740;
+ x=1793335940; bh=BVhtMkVYgBXl6oPFwvLGbCFALdeNYN9od9EIpkEgfb0=; b=
+ AG3DTNl70Sgyl/WepokJ8fzkB+K+9R2svni7oqjk24fM91tEEBTtejTNp/PNIz1b
+ 3+HjJSDI29djPForhBXKsaN0cK0pM8lnjmHXvLjT7D3G9SucGZtEXwO9aWIXq5G/
+ gWpNkFSJXxYHnyZSk1puu0+TpEOXRhP6GN0k+KfjQJMxGy8gyLVRfulkKWJjNF4t
+ dW47OuLC/UjUYFbrxP0CveeLn8al/u1RxBFbLy18dHf/0xplFzeYBvRK5Lrdj93F
+ Q8auC/mlaX2pY6jOQHpF2ZPe3tvXedIu1ljYly4K9blLOYnKSU5z7U0QR3XCXYKT
+ MOcBhwYil/N3I8nDcjgpEQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793328740; x=
+ 1793335940; bh=BVhtMkVYgBXl6oPFwvLGbCFALdeNYN9od9EIpkEgfb0=; b=V
+ BwHNeCQ68DsdbvZDFFsGwaMEoKX9QXxzs9OQG4wcmndoX0sKX2fePv8avOMYm3BQ
+ xepLAxZkmuWXkpGONaRpFuql6/v78scuwJRjS5VYJX+uzASN42eHGDgq4BYEAz1Y
+ Ji9Ee8qp19ntwANtvQCiz8ZA69scj6Z/60pI/JVe+Zv5d/BDq20waA2aEhP4jC5N
+ Zd78UqJ9NO8HGg1uUCykgD7yzrgqKTnlsTCbyay27d/0H92y7dP9d2t7Adsmup8A
+ ik5PeailRXZwP1WqekLY71RVIiS9sYXqTZkYFLK7mba7QrPqSTxgL6pj7/y6ZyfA
+ FJQ1bYR+tHW1UQmwX5OIg==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=sign d=gutov.dev a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793328740; d=gutov.dev;
+ mf=PGRtaXRyeUBndXRvdi5kZXY+; rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:qUzGPO1anbjiwPgxnfM7SesqQBL9sgs2k/Cerq87Nm+vTUP
+ ruieudQNYV7xuxgDk1XCq2rvYMBFEZOVDYOOK6WMVAR4CraNYStCC41VQWGbYHBG
+ jrZ58p/ywN12EzDRh8cCiSoml3EmcSFwiOhBw+xICputbJDO0rztWW5F5ovW6uvQ
+ XcOGYnbX6XjGTbmUlNOJFtNzFgTwpTP5ga8OIHv/NOxTeVlKsCY6/dyqFXihUmcb
+ quXWsK3MtqqWuX5+NNbqH57MePGKdtQeVrWuyq1NYhQZv30RF1UvYObv+MpuM0RP
+ 7zSYULLi/ywqUdPxfgys5tLbQvAxjnf0eHlRcuw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=mi-m=1; hc=14;
+ hn=cc,content-language,content-transfer-encoding,content-type,
+ date,feedback-id,from,in-reply-to,message-id,mime-version,
+ references,subject,to,user-agent;
+Message-Instance: m=1;
+ h=sha256:ZUj9SVib5QneOzasOL0j11o0Z+zoU+RgUsBGF4NhorY=:rptCtEin1H9Ob8r4XAo9ReR7osy49Y9IvesubnTwNu0=;
+X-ME-Sender: <xms:ZAbkamWAinALgUmJsGw3_5zuuduFElxDCyoKiu--kNtelVQExFp2Gg>
+ <xme:ZAbkaqBgQf-39Abuses89tJWZfkBDO0T79z-2msXoGdOHvNzxiFgPRkjjC2ghNqXk
+ p9gVkWq581-UW9fDjO5LZBuJlKcS7JBCP5n9HPEWF1yciYOltaFY8wj>
+X-ME-Received: <xmr:ZAbkanzso3Ouj7s-2u4YMAUk0HyXW97hiuXQ7XeAA-dzsHZkUhxLC0pp6wJXyycuOskt>
+X-ME-Proxy-Cause: dmFkZTF0EViVv6mlLfm8gJkWCAUgBmkmcCXrY261xDbLDfkIHI3SYExHwO0zoOrRNB2qz/
+ oiyatChr+46TicQLPCs/54L3fhY/Js6fUkjkYh/yFUSpi1RKbnjw2oSjr6Rape3L0r8JUD
+ CFjivxRM/JOnoY3JS7PDnQqAkkd5AWW1s6Fg4jsQvb/WFmMJdUuq3iM6NTDQBWVyNAqvKX
+ PNlvImYLHDK44J2RjcpzgeLuVpfS8VJgiQSuFVXZnqYFmBWW6p4BMi+/3mxIGcuI7bnaDC
+ 55OmZUTfaQ2oXtOKQpVpDpr5oKPCn7X5NPheBeX/dGAi+wIhFawkzOeyQ7uqlpRjO/cwAG
+ FK3zEcWbkHxQDQw498y5rfUCfwdNkfNxP9r8osVEoBlBSh8xclBd01eZMjfr/3ZbFMs2K3
+ vyqhZdpSME8BYrWH/Po3xYZW47L/byKss+oqs/GPwDO7F6n/b2rzuX2tcM2W69E0pPkXJy
+ rBNN9qEJvPmMTxs+zR7sb/re/ZPeSbvZ5Je1V22vy/OQ+Q/86jTsjUeEp6tYOUUUr1jtDw
+ +Za5TUf09miGWIuFZAE0TspiZ+KnxRG3Wwhd96R1I8tulIk7o5m3o8VMVet8Jk0UzVUOI4
+ 2QSJa5+WOTIsNX6KuZBPPQpWtHTMbbELNRbX/Bb8BgsYcI5nKr8XxoUCTp9Q
+X-ME-Proxy: <xmx:ZAbkanCcXfYFl7wFBHI0Y5Xyij87qpARMSB6FeUcQsuf_PfvY5wRJA>
+ <xmx:ZAbkaka3CcJ1df9_hJg7X1rEc8cYenu60mT5imz-lvSK3zoVvfAyGQ>
+ <xmx:ZAbkavht5QuJC_Z5jCILal4ujBRHyTJiy426rZFdNzVri6195Gt-Sw>
+ <xmx:ZAbkam6s7w_i6qqMABi4LiY373FtYSg4W0PoB-XT6xT7Hx5-r9B8mA>
+ <xmx:ZAbkapH319GxdrOsQGvQjKwXebAzQ5KTZxxsiY4YQwIgbc0uBCHlAAQh>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 29 Oct 2026 22:52:19 -0400 (EDT)
+Message-ID: <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev>
+Date: Fri, 30 Oct 2026 04:52:17 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <86zex0z4k9.fsf@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=103.168.172.140; envelope-from=dmitry@gutov.dev;
+ helo=flow-a5-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 02:52:27 -0000
+
+On 29/09/2026 14:21, Eli Zaretskii wrote:
+> Finally, there's one annoyance with this when using it in the Emacs
+> tree: once a reference is found in a Lisp file, the next "C-u M-g M-."
+> will use the elisp backend, and thus show you a completely different
+> list of "kinds"
+
+Somewhat relatedly, here's what felt like annoyances in my testing:
+
+- defun behind the label "primitive" was not intuitive to me; I had to 
+jump to the source to find that defuns are supported, and which kind to 
+use for them. YMMV.
+
+- Maybe etags--types-regexp-alist should be called with "kinds" in the 
+name? Just an implementation concern though.
+
+- The list of kinds in etags feels a little too long. Or at least when 
+testing it seemed apparent that the last 3 kinds won't have matches in 
+the current project, so they seemed tacked-on.
+
+At first I was going to suggest per-mode kind->regexp settings, so that 
+the list of kinds is specific to each language, and we don't show 
+elements that won't fit the current file's language. But it seems 
+antithetical to how you intent to use this (one global index for all 
+different languages in a project).
+
+Not sure how to solve this, but perhaps in this backend the method 
+xref-backend-xref-kinds *could* be dynamic, scanning the tags file for 
+what kinds are available, and caching the result. This is not free, though.
+
+
+From MAILER-DAEMON Fri Oct 30 03:10:04 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMgkV-0006UT-U7
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 03:10:03 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xMgkT-0006U5-N2
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 03:10:02 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xMgkT-0003L9-0H; Fri, 30 Oct 2026 03:10:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=9+lnyyU7hsSGIglXyseO6cbm83ApO/9DSwoe304q5s8=; b=XORw4qkdA78Y
+ IeKA4EIrgrOcG4g5u75oCb5Z832/So2Gn79hL/ijVplYsD6BsAPmHr68yi5GT0Oiyis6me4aPWOiM
+ JfUSD7D+8EO09qQFCOvWdcgSV8/LkpSRjY3lNFJNVARcLs7rNnwAFYwxupb7oQ8uMxoDLXkpV7x+u
+ R+9D2ZSCKs2IYmCwUqIOMGyPyjYtoKAkIuwGFMnD1Nw3/QiKyApaTrt8X6GYC5etonjIiM3jsIJ6j
+ cortzP6/auSZvnoanbmnKqY0BMgp+O/p69Apbah3nXlMt+1Rdr9vxZoT48ehiDu1ODuuApcZKNOPg
+ DvFXA/C8Ga2GkJsj+KeGBA==;
+Date: Fri, 30 Oct 2026 09:09:56 +0200
+Message-Id: <86se1nvf3v.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Dmitry Gutov <dmitry@gutov.dev>
+Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+In-Reply-To: <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> (message from
+ Dmitry Gutov on Fri, 30 Oct 2026 04:20:57 +0200)
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ;
+ Fix some recently added docs.
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 07:10:02 -0000
+
+> Date: Fri, 30 Oct 2026 04:20:57 +0200
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> > Completion, as implemented for this backend, is very slow, especially
+> > if you type only a small portion of the identifier's name.  That's
+> > because it has quadratic behavior: for each candidate, it examines all
+> > the possible completions, and filters the candidate out if none of the
+> > completions match KIND.  If you type nothing and just press TAB, it
+> > will take forever for a large enough project (such as Emacs).
+> > Improvements are welcome.
+> 
+> I have now pushed an update in commit f982de03ff1 which uses a different 
+> strategy, seems snappy in Emacs, and somewhat usable even in a larger 
+> project (but that might depend on the chosen kind).
+
+Thanks, will try that soon.
+
+> The new code doesn't include per-file case-fold-seach detection yet, 
+> sorry for that step back, but it seems compatible with the solution, to 
+> be added later. At least kind identifier completion seems usable now. 
+> Feedback welcome.
+
+Case-fold that is consistent with the file's PL is a must, otherwise
+things will break in Fortran and other similar languages.  So I hope
+this will be added soon.
+
+> > Finally, there's one annoyance with this when using it in the Emacs
+> > tree: once a reference is found in a Lisp file, the next "C-u M-g M-."
+> > will use the elisp backend, and thus show you a completely different
+> > list of "kinds".  The only way to work around that is to turn on
+> > xref-etags-mode in every buffer (via find-file-hook or similar), and
+> > I'm guessing that Dmitry will say it's by design.  But maybe a nicer
+> > solution could be found for this particular case (or for Xref in
+> > general)?
+> 
+> How about just
+> 
+>    (define-globalized-minor-mode global-xref-etags-mode xref-etags-mode
+>      xref--turn-on-etags-mode)
+> 
+>    (defun xref--turn-on-etags-mode ()
+>      (when buffer-file-name
+>        (xref-etags-mode 1)))
+> 
+> ? With the user invoking 'M-x global-xref-etags-mode' first.
+
+That's just a variant of turning on xref-etags-mode everywhere, isn't
+it?
+
+> Or how much nicer are we talking about? Tracking the previous backend 
+> used within the current session/project/etc might be possible (unless it 
+> doesn't work in the new file anymore), but it's not always what the user 
+> might expect. OT2H opting in via a global mode (or some other approach, 
+> with a user option) might address that concern at least.
+
+I was thinking about some kind of "memory", whereby if the last "M-g
+M-."  used some backend, the next one will use the same backend, with
+some command to reset the backend to the one that is the default for
+the current buffer's major mode.  The reason is that it happens a lot
+in my workflows that one tag search is followed by another, then
+another, etc., because I'm looking for something and didn't yet find
+it.  For example, I could be looking at a function which calls
+another, which in turns calls another, etc. etc., and I will be going
+down this rabbit hole because I need to understand something buried
+deep in a sequence of calls.  Or I could be looking for something,
+discover that it wasn't what I wanted, then change the symbol name
+slightly and search again, and so on and so forth, until I find what
+I'm looking for.  In these situations, having the backend change
+half-way is unexpected and annoying.
+
+If you think that a minor mode which will allow this is reasonable,
+maybe that's good enough.  Another possibility would be to have a
+special value of prefix arg (e.g., "C-u C-u") to use the same backend
+as previous invocation, with a user option to reverse the meaning of
+"C-u C-u".
+
+
+From MAILER-DAEMON Fri Oct 30 03:29:51 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMh3f-00018q-8b
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 03:29:51 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xMh3d-00018X-Uh
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 03:29:50 -0400
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xMh3d-0005AR-4R; Fri, 30 Oct 2026 03:29:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=N82UiYanJ2ktgAxww1gc+vZJn/7ZoE5n9UEqWkuy7JM=; b=BUG2sWDcFvIO
+ ZZPX4IehG8ybosGSZ5ZxVCtUgWYmRKjI1dtut5OSaBEVNq3I7LhvlWiTMACfCnXoq0jb+6Ug5ioAp
+ yzF+csMPRTDFpyjBNlCBjCJcp6F7MVDTjDxm61vXJNgux+43EuwYwgu2Zjd8BoHwukhq+nsmtvjjj
+ eMWToM31JUwWvCyvMmjZlru6eAx0TViBy2wJr/JcZcD6ccXlR+mCi9rwMF8am5Zu6Ttbe1JkGR1FA
+ XRDE/pTPoqvn/bova2LcvJkTNKKzilWp053QlvRmHClvRdgIqDADKHiJEnEaOa5l8xtmGnxk6vD/B
+ K3Jtgs+RPn1H6VmDIx0B9Q==;
+Date: Fri, 30 Oct 2026 09:29:46 +0200
+Message-Id: <86qzh7ve6t.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Dmitry Gutov <dmitry@gutov.dev>
+Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+In-Reply-To: <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev> (message from
+ Dmitry Gutov on Fri, 30 Oct 2026 04:52:17 +0200)
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 07:29:50 -0000
+
+> Date: Fri, 30 Oct 2026 04:52:17 +0200
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> Somewhat relatedly, here's what felt like annoyances in my testing:
+> 
+> - defun behind the label "primitive" was not intuitive to me; I had to 
+> jump to the source to find that defuns are supported, and which kind to 
+> use for them. YMMV.
+
+Can you explain why this wasn't intuitive?  We call these "primitives"
+all over the ELisp manual.  It's an accepted terminology in Emacs Lisp.
+
+> - Maybe etags--types-regexp-alist should be called with "kinds" in the 
+> name? Just an implementation concern though.
+
+You mean, to have it filter by KIND?  That's possible, but it's used
+elsewhere, so the argument will need to be optional, or with nil
+having a special meaning.  In any case, it will have the function do 2
+related but different jobs, and I didn't think it would be justified.
+But that's me.
+
+> - The list of kinds in etags feels a little too long. Or at least when 
+> testing it seemed apparent that the last 3 kinds won't have matches in 
+> the current project, so they seemed tacked-on.
+
+What is "the current project"?  These kinds are relevant to Ada and
+other languages which etags supports.
+
+> At first I was going to suggest per-mode kind->regexp settings, so that 
+> the list of kinds is specific to each language, and we don't show 
+> elements that won't fit the current file's language. But it seems 
+> antithetical to how you intent to use this (one global index for all 
+> different languages in a project).
+
+Per-mode was how it started, but I quickly realized that it was not
+useful, because the mode of each file is not known to etags and
+determining it is not easy (see the comments I left behind in
+etags--keywords-case-insensitive-p, which suffers from the same
+problem).  So looping over the list of candidate tags will need to
+access the file name of each tag, then look for the relevant regexp.
+Moreover, completion of KINDs would need to construct a single list
+from mode-specific lists, which is extra work.
+
+> Not sure how to solve this, but perhaps in this backend the method 
+> xref-backend-xref-kinds *could* be dynamic, scanning the tags file for 
+> what kinds are available, and caching the result. This is not free, though.
+
+Right.  In the end, simplicity won me, and I don't think the current
+single list is such a bad idea, don't you agree?
+
+
+From MAILER-DAEMON Fri Oct 30 04:27:05 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMhwx-0003yt-QU
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 04:27:02 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xMhwp-0003xt-52
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 04:26:53 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xMhwn-0002cD-PM
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 04:26:50 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1xMhwh-0006TS-9S
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 09:26:43 +0100
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [ELPA] New package: emacs-reader
+Date: Thu, 29 Oct 2026 18:25:30 -0400
+Message-ID: <jwvh5i49mgc.fsf-monnier+emacs@gnu.org>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+ <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+ <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:kybnttgm1nmWFwHUiK0+b7C7lQs=
+In-Reply-To: <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz> (message
+ from Divya Ranjan Pattanaik <divya@dialetheia.xyz> on Thu,
+ 29 Oct 2026 17:09:30 GMT)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 0
+X-Spam_score: -0.1
+X-Spam_bar: /
+X-Spam_report: (-0.1 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_06_12=1.543,
+ GB_FAKE_RF=0.001, HEADER_FROM_DIFFERENT_DOMAINS=0.25, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 08:26:54 -0000
+
+> We have decided, after a lot of discussion, to rename the project to:
+> emureader. Also written as EMuReader (Emacs MuPDF Reader) or EμReader.
+
+Oof!  I had just pushed the spec for `reader` to `gnu.git` an hour ago,
+but luckily the package had not yet been built.
+
+
+=== Stefan
+
+
+[ I think I may have a problem with your email address: one of my
+  previous messages to you bounced, haven't heard any reply to the
+  other, so not sure if it got lost (or is in the process of being
+  bounced)?  ]
+
+
+
+From MAILER-DAEMON Fri Oct 30 04:30:15 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMi07-00055Q-Lj
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 04:30:15 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xMhzx-0004xa-G0
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 04:30:08 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xMhzv-0002un-An
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 04:30:05 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1xMhzu-00008k-3C
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 09:30:02 +0100
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Human Emacs
+Date: Thu, 29 Oct 2026 18:46:07 -0400
+Message-ID: <jwva4nw9m18.fsf-monnier+emacs@gnu.org>
+References: <8733tozesd.fsf@asthra>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cancel-Lock: sha1:5LNWXUtT0nKrrWNaZSW3cyFptaU=
+In-Reply-To: <8733tozesd.fsf@asthra> (message from Phil Hagelberg
+ <phil@hagelb.org> on Thu, 29 Oct 2026 08:50:58 -0700)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 24
+X-Spam_score: 2.4
+X-Spam_bar: ++
+X-Spam_report: (2.4 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_06_12=1.543,
+ GB_FAKE_RF=0.001, HEADER_FROM_DIFFERENT_DOMAINS=0.25, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001, TO_NO_BRKTS_PCNT=2.5 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 08:30:11 -0000
+
+Forks seem to be inevitable.  Between those who want to (re)write
+everything so only agents can be blamed for bugs, those who want to make
+sure all bugs are 100% human-made, those who don't want to deal with
+either of the others, ...
+
+I hope those who can't tolerate agents can still enjoy the ride during
+this "temporary" LLM-ban, and wait for the end of this ban for the
+acrimonious separation (those who insist on the use of agents have
+presumably already silently left us).
+
+Laziness has this virtue that sometimes it ends up saving you the
+trouble to do what you thought would be necessary,
+
+
+=== Stefan
+
+
+> I'm writing on behalf of a group of Emacs developers and users who share
+> concerns about the future of the project. As we see other projects
+> adopting policies which accept LLM contributions, it's encouraged us to
+> see that the current Emacs policy disallows them.
+>
+> Our concerns stem from the temporary nature of the current policy, and its
+> apparent focus on resolving legal uncertainty surrounding the copyright
+> status of LLM-generated source code. Ensuring that the copyright of Emacs is
+> legally defensible is of course important, but the way it appears to form the
+> crux of the decision overlooks the harm posed to users and communities by
+> acceptance of LLM-generated code. It would be a mistake to say that because
+> something is legally allowable it must be acceptable, and for many of us who
+> are deeply invested in Emacs, it's not a mistake we'd expect from this
+> project's leadership.
+>
+> Free Software is more than just code. It's built on a foundation of trust and
+> solidarity. The greatest strength of Emacs is not its technology but the user
+> base which shares and works together. As we watch this discussion play out in
+> other communities which have not taken a strong stance, we've seen the
+> corrosive effect that LLMs have on trust and solidarity as soon as they are
+> allowed in. We still have the chance to avoid that in the Emacs community and
+> learn from the mistakes of others!
+>
+> (At this point I should clarify that an argument about whether these harms
+> are serious is not my interest; so if you are opening your MUA to compose a
+> reply on these lines, please consider that we've heard all the arguments
+> already and remain unmoved by them. We're not interested in arguments about
+> how powerful they are, nor about how local models will some day address the
+> problems, nor about how people can lie about the provenance of their
+> patches; none of these are relevant. You're welcome to discuss this on a
+> separate thread.)
+>
+> In a previous thread[1] that raised the question of the Emacs policy, one of
+> the Emacs maintainers wrote:
+>
+>> Such policy discussions and decisions are not for the Emacs project to
+>> make, they are global for all the GNU packages, and so here is the wrong
+>> place to look for them.
+>
+> While it's true that this mailing list cannot make policy decisions for all
+> of GNU, there is no reason that Emacs could not hold itself to a higher
+> standard than the rest of GNU. If the GNU-wide ban is relaxed, that is not
+> the same thing as GNU demanding that all projects accept LLM-generated
+> contributions; it only means that they *may* if they so decide.
+>
+> Our goal in reaching out is twofold:
+>
+> First, we want the maintainers of Emacs to be aware of our intention to use
+> a version of Emacs which is fully free from LLM contributions regardless of
+> whether the current ban is made permanent or lifted. We invite those making
+> the decision to look beyond copyright and weigh ALL the harms that lifting
+> such a ban would inflict. Our fond hope is that upon consideration of the
+> issues, Emacs maintainers will replace the temporary policy with a
+> commitment to comprehensive prohibition of all LLM contributions including
+> but not limited to code, documentation, commit messages.
+>
+> We consider this a necessity for a piece of software which is central to our
+> freedom and our participation in the technology commons. In the unfortunate
+> event that we cannot get such a commitment from the Emacs maintainers, we
+> will use an LLM-free Emacs regardless; it just won't be GNU Emacs.
+>
+> Forks of Emacs have a poor track record, but this is a case where we are left
+> without much choice. There is too much at stake: giving up using Emacs for
+> many of us would feel tantamount to giving up on computing altogether, or at
+> least giving up on the parts of computing that bring us joy. Therefore we are
+> committed to build and maintain the Emacs we need to exist. We sincerely hope
+> that this will mean a renewed and re-invigorated commitment to GNU Emacs.
+>
+> Our second goal is to reach others who feel this same concern, so you know
+> you are not alone. We have seen too many other communities fail to meet the
+> challenge of this moment, and we can't stand aside and observe the outcome of
+> this policy decision with cool detachment. If you feel the same way, join us
+> in solidarity. Visit https://human-emacs.org where you can read more
+> information and see the list of supporters so far; we would love to add your
+> name to the list or hear your voice in our IRC channel and mailing list.
+>
+> My sincere thanks goes out to everyone who has brought Emacs to where it is
+> today and especially to those who have helped institute the policy that has
+> protected Emacs from LLM contributions so far. Emacs means too much to me to
+> see it share the same fate as Vim, Linux, rsync, and countless other
+> disappointments; we have to do better.
+>
+> -Phil Hagelberg (aka technomancy), on behalf of the Human Emacs signatories
+>
+> 1: https://lists.gnu.org/archive/html/emacs-devel/2026-03/msg00425.html
+
+
+
+From MAILER-DAEMON Fri Oct 30 04:35:06 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMi4o-00064L-QU
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 04:35:06 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xMi4n-00064C-F5
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 04:35:05 -0400
+Received: from ciao.gmane.io ([116.202.254.214])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <ged-emacs-devel@m.gmane-mx.org>)
+ id 1xMi4l-0003RB-Kr
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 04:35:05 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+ (envelope-from <ged-emacs-devel@m.gmane-mx.org>) id 1xMi4j-0005HA-W8
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 09:35:01 +0100
+X-Injected-Via-Gmane: http://gmane.org/
+To: emacs-devel@gnu.org
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: markdown-ts-mode: a plain-text base mode, with editing as a layer
+Date: Thu, 29 Oct 2026 18:20:35 -0400
+Message-ID: <jwvo6cc9nl3.fsf-monnier+emacs@gnu.org>
+References: <27357.63261.512714.425155@gargle.gargle.HOWL>
+Mime-Version: 1.0
+Content-Type: text/plain
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Cc: Rahul Martim Juliato <rahul.juliato@gmail.com>
+Cancel-Lock: sha1:K0sCKFA26S+7hbJaMh84kRdGsmk=
+In-Reply-To: <27357.63261.512714.425155@gargle.gargle.HOWL> (message from Eli
+ Barzilay <eli@barzilay.org> on Sun, 25 Oct 2026 08:33:33 -0400)
+Received-SPF: pass client-ip=116.202.254.214;
+ envelope-from=ged-emacs-devel@m.gmane-mx.org; helo=ciao.gmane.io
+X-Spam_score_int: 0
+X-Spam_score: -0.1
+X-Spam_bar: /
+X-Spam_report: (-0.1 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_06_12=1.543,
+ GB_FAKE_RF=0.001, HEADER_FROM_DIFFERENT_DOMAINS=0.25, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 08:35:05 -0000
+
+> TL;DR: markdown-ts-mode's highlighting is great, but its editing layer
+> fights plain-text editing, which is the whole point of Markdown. I cut
+> it down to a highlighting-only mode in under 300 lines (link below), and
+> I'd like to propose a small base like that as the default .md mode, with
+> the editing machinery as an opt-in layer. Along the way I found a few
+> bugs (one runs arbitrary `*-mode' functions from fence names), a treesit
+> "fast mode" issue that needs a supported opt-out, a grammar bug, and
+> a case for generalizing mhtml's submode code instead of reimplementing
+> it.
+
+As someone who hasn't looked at the detail, I'd vote for a middle-point
+which is to reduce the "magic" of `markdown-ts-mode` so that it doesn't
+get in the way of "plain text editing".
+
+> I've been moving my setup to Emacs 31, and tried `markdown-ts-mode'. The
+> highlighting is very nice -- it follows the actual syntax, and code
+> fences in their own language are a real improvement. But the editing
+> layer got in my way almost everywhere. To actually use this thing, I'd
+> probably need to go over most key bindings, and disable/tweak many of
+> them. I think it's worth discussing now, while the mode is still
+> experimental and its design is open for 32.
+
+Agreed.  Built-in major modes usually try not to get too much in your
+face, using automatic magic only when there's a high chance that the
+users will almost always find it helpful.
+[ `electric-indent-mode` is the main counter example, and it took many
+  years before we decided to enable it by default.  ]
+
+> The main point: Markdown was designed so that the plain text *is* the
+> format, and not needing any tooling is most of its appeal. Emacs is a
+> great text editor, and that's all a Markdown buffer needs, plus
+> highlighting. Typing a `*' on each side of a word is much easier for me
+> than remembering `C-c C-x C-f', and I don't think that's a fringe view.
+
+Agreed, tho many modes have bindings for commands I personally find
+useless, and it's not like users are expected to type `C-c C-x C-f`
+by accident.
+
+> With the default settings, I ran into some problems very quickly:
+>
+> - RET in a table row is the same as <down>; at the last row it adds an
+>   empty row, which the next keystroke misaligns anyway.
+
+Maybe we should move this to M-RET or some such "nearby" key?
+
+> - TAB in a table moves to the next cell after deleting the padding around
+>   all cells. Elsewhere (e.g., in a block quote), TAB is an outline-cycle
+>   command that does nothing visible.
+
+Hmm... TAB is one of the main "DWIM" keys, so I can see the appeal of
+making it move to the next cell to the extent that "reindent" and
+"fold/unfold" don't make much sense at that point (tho I'm not sure how
+I feel about deleting the padding around all cells).
+
+Hmm... what did you expect it to do instead?
+
+> - RET in a list continues the item, so starting a new bullet takes extra
+>   keys (delete spaces, add the bullet).
+
+It sounds consistent with the behavior of `electric-indent-mode`.
+Does it change if you disable `electric-indent-mode`?
+
+>   I'm sure that there's some other key chord that I'll never remember
+>   that I should use -- but the default text editing is what I know in
+>   my bones.
+
+I'd expect `M-RET` to do that (e.g. that's what we have in `latex-mode`
+to insert the `\item` thingies).
+
+> - M-<left>/M-<right> are taken for changing levels -- if you have sexp
+>   navigation on these keys, you get unintended edits of text blocks, and
+>   therefore much frustration.
+
+I guess the author took that behavior from `org-mode`.
+`outline-mode` uses `C-c C-<` and `C-c C->` instead for those operations.
+
+> (it will move to a permanent place later). It is under 300 lines, uses
+> the same two grammars with the same pinned commits, derives from
+> `text-mode', and has no keymap and no commands. It was made as a quick
+> proof of concept, but turned out to be everything I actually need. It
+> has:
+>
+> - full highlighting, with markup visible and full size,
+> - code fences highlighted in their own language (the language's mode is
+>   found through `auto-mode-alist', plus a small alias list),
+> - Outline and Imenu through the standard treesit settings, so plain
+>   `outline-minor-mode' just works,
+> - the real URL as `thing-at-point' (so `browse-url-at-point' works)
+>   anywhere on a link, including reference links and autolinks.
+
+What do the extra 5k lines do (it sounds like the few annoying behaviors
+mentioned above for RET and friends shouldn't require that much code)?
+
+> So I want to propose a small base mode like this as the default for .md
+> files, with the editing machinery as an autoloaded layer that people
+
+It might make sense to move more code to `markdown-ts-mode-x.el`.
+
+> Rather than another private implementation, I think mhtml's code should
+> be generalized into a reusable library, with treesit answering "which
+> language is at point" -- and then Markdown would use it in a few lines.
+
+Indeed, that was the intention when we worked on `mhtml-mode`.
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Fri Oct 30 05:02:22 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMiVC-0001w9-3Y
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 05:02:22 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <joaotavora@gmail.com>)
+ id 1xMiVA-0001ub-6D
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 05:02:20 -0400
+Received: from mail-oo1-xc34.google.com ([2607:f8b0:4864:20::c34])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <joaotavora@gmail.com>)
+ id 1xMiV8-0005u7-KY
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 05:02:19 -0400
+Received: by mail-oo1-xc34.google.com with SMTP id
+ 006d021491bc7-6ddef424972so349393eaf.3
+ for <emacs-devel@gnu.org>; Fri, 30 Oct 2026 02:02:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793350937; cv=none;
+ d=google.com; s=arc-20260327;
+ b=VUPMVLjWLgFhTcD6mA7L8TC8mkDi9FoxmYmcR71rmv3dDyICR7T7PQdfCMUN9bwVFd
+ 6/TST2Bq1xLUtbFXuDr31wILXUWT+Q+iBfmeYNV+6m2ilGgkClMcUK9tSkNKeo02oYHB
+ J6KAt03DS2LQT4kf58D2ceBZ9U8QLns0PNFfqAB/X53KRnM8xup93EoA37XUEIf7dVnF
+ fHmRmjFfKnmTTB8L32jNqlNcQFQIfg92m4/2eVCe1xWjqglvAHAbgwKwyy/fuFEloFLj
+ SRyInu8pwxZZDRySLfvJmfyC+d7qGqMiGAq6YzvPld4BdmxSDWEyfE7Pcwtp3FWR0TGN
+ Liag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=arBITX1M3Gmkh/1d4VgjzE+xncrP1SRv8Vof6a9uQwk=;
+ fh=TJorbgh8SIJ34LHl7j0PKfr2gVH4C1tSuUCVZYiYnRQ=;
+ b=VN/Inx2/9NjJ81AXVVe+MWyDl87hLX9DxZiI5lqKZYzX/9NFxqvcjny3Ur+fstHK8c
+ crTIXtAMVijx/0p1qzfClkb9z0ggQZB/fSbRqGGzO7tfAiHUe601fPpngISPEVLnWjJZ
+ Z+URXzIf2GDDsYnkIyt46yiLeZ5lUrs7Y63uH9zGX8TJ4HIlpX8+uEJIawOgLVSV5FDq
+ /NLpfOQaL35e2q0VV8w+F0CaB4HxI8M6Ai/LAKoqQQgwM1/hiuwG7x8IrP+u4AKME7gQ
+ 4k8eFk0I2g/dMWxOcpbqPpqdby0Y70SPn4aLLlYClip3UIcCNBAHawVzqVLHeU/DUvQ1
+ j/Kw==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1793350937; x=1793955737; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=arBITX1M3Gmkh/1d4VgjzE+xncrP1SRv8Vof6a9uQwk=;
+ b=Veq+DdN6/Jhy/mbKdMw95+4wLvYOF6ciOeVWtGGxFhQSQB1MDAy5X0z+Ih3g6WJTNk
+ J8b+fhBxIOCRlJZnZq/PignnAVpnRHP44VK1P/krnnrSB0g1j6pf/ZPXvCIUsMG6SFOE
+ JFE7tW6nrDKFCV6gsl0q2jOhnrbFNA1ZLYjN87v0pLBe+O7dScyt3NdbvRzC6tGhOSef
+ gmdGahiad6OVw5JjxH3sqRfoGReFgICA/0pw6eFeRdmRj0feejvyOIoMZehJix1Gt1X1
+ p89ESs3g3jBiS1Qx1jT06jAFKQ5PqPWrSC4PnRTwb9+VU8aivEJX6cPKE6pvjawpM4Eu
+ 3+QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1793350937; x=1793955737;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=arBITX1M3Gmkh/1d4VgjzE+xncrP1SRv8Vof6a9uQwk=;
+ b=I74Z0l6+JN/hdA3UfMdxQxIIrUkF5Kt42yb0mMxCRhgZExuHC9i30R7AOv2TJyFJK2
+ JhEnDWrmspFc5zqfo+i9IeMpjSDAcuictnOz2X6WALIuB7Y1fiQMDZ/VdsxaYTYuwCcf
+ wMUaVT+3USLwKMrwL2jnAuQ+fjR7kg8TRuWdXXd4vAAArAn6m4KwWWBNN5zBpnoujx3j
+ SsZ4MuZ0Mg6ApRuWf0HQcYwGS2itSc1DFYa5IdXy3+Q7Q6bLHO7exJ7hI1bg+c14bpVH
+ 7GOnBoIbwwaPM5KbA6FOb6K7rwW6p8MQZT9sJeF7ZmMt9khZHI3LyyG8L8oSrjQMvDyC
+ K/dw==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBx5vtIkVJGgBQohpDKZw3KBMP/W1AzRP7tNM2ztXv7kn07VCsnkx3k7Tp6fQlrQfaQ0PLkapnItnXSetw==@gnu.org
+X-Gm-Message-State: AFq9FYKB0/2pTboLamjYPSAHY7KPsPWuCbsND6g2oxQIbLSFEqcQbPvu
+ OSY2LsDVACif6uEAh1M5qBT7bvYvmBLC6Tm996mtu/RV2KaHZD+3RWM2LKnjSm9f86Z1w8sQuTp
+ 8PXTWm3UBDMUDvozT2z/n2UcUK423I+KcYA==
+X-Gm-Gg: AYBFou26pUSc4e8VZ4V2xXd35zhwi+sHDPBmJPwgZIHUC9/QrBjxJpTIM6wk6zWUD07
+ 5706Q9NTWvug5jk2lm05mdC+iyoCiYQT9PviMLyFnKf1mFOqHCQMuh98ydiLfzz7sOnDM0WciwS
+ yrCgJMEhdGqmYZCQpgMGd1NmeRY+cYMb43jlUahOqlIF2FXBsg6byTo8+scqV1FZhgZDlEEg/nN
+ 1J6MTlepQkBn0yYzOc+Uqzq2p/esNoQZscnAFx4S63hVNg14+KB1sMd+chweS1B2lCeN/5hsyKw
+ bdd3XAggm8Ba+9YMKgV5syqUzCJhW8Krsgib8eBdoSJJXE4LNo6adEHbTyPToC1Fx8hGgOEUx+f
+ MjC6vTZzzWZTT4ZvScCttsMTBOp5crnuz1zLyaR5jSKP8dCVg7qsALkx4dmTZK3mvbWW1INY4od
+ BbhK817VbDyhgpHDjjY2qS
+X-Received: by 2002:a05:6820:1ca5:b0:6fd:e28f:ad38 with SMTP id
+ 006d021491bc7-714f29bce0emr932022eaf.32.1793350936910; Fri, 30 Oct 2026
+ 02:02:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <CALDnm51HFQ7NYqC=2bLLN16oXYgwfik2wNbAfgThk6KATMrJvw@mail.gmail.com>
+ <8733tonc2f.fsf@athena.silentflame.com>
+ <6d2649a4-89c7-43af-a7ea-cd683d70ad19@gutov.dev>
+ <CALDnm53Ud=_FwSwFLXWYvqpG=2fsGmJRuHHajih=Y2y-+U69jw@mail.gmail.com>
+ <7930a023-9d0d-4c04-9b71-b53f5225c1b1@gutov.dev>
+In-Reply-To: <7930a023-9d0d-4c04-9b71-b53f5225c1b1@gutov.dev>
+From: =?UTF-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+Date: Fri, 30 Oct 2026 09:02:04 +0000
+X-Gm-Features: AclHuK-DaDn1NMSH96hcZf_DYclRPi5QkF_u5OT7bwRwzBMUuU013yfbekiAE-A
+Message-ID: <CALDnm52OmbXtEmGFAKUXcwqc35hGOyYHwUm64Q82z=U=w9ZyVA@mail.gmail.com>
+Subject: Re: Need to bump Xref from 1.7.0 to 1.8.0
+To: Dmitry Gutov <dmitry@gutov.dev>
+Cc: Sean Whitton <spwhitton@spwhitton.name>, emacs-devel <emacs-devel@gnu.org>,
+ Eli Zaretskii <eliz@gnu.org>
+Content-Type: multipart/alternative; boundary="0000000000008d60a0065f0b0d95"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::c34;
+ envelope-from=joaotavora@gmail.com; helo=mail-oo1-xc34.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 09:02:20 -0000
+
+--0000000000008d60a0065f0b0d95
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Thanks! With that, Eglot 1.25 is unbroken Even though it Package-Requires
+Xref 1.7.0, the package system gets the newest one. I'll put out Eglot 1.26
+soon to fix a much more minor problem.
+
+Jo=C3=A3o
+
+On Fri, Oct 30, 2026, 02:31 Dmitry Gutov <dmitry@gutov.dev> wrote:
+
+> On 29/10/2026 13:07, Jo=C3=A3o T=C3=A1vora wrote:
+> > Currently anyone upgrading to Eglot 1.25 will be left with a non-
+> > functioning system
+>
+> Good to know, I have bumped the version now, thanks.
+>
+> > So, please do let me know if there's something I can do to help speed
+> > this up.  Any concern in particular?
+>
+> I needed a bit more time to optimize xref-find-by-kind's identifier
+> completion for etags (f982de03ff1), to verify that the choice to add the
+> new method xref-backend-identifier-completion-predicate was reasonable
+> for performance. Seems like it is so.
+>
+
+--0000000000008d60a0065f0b0d95
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto"><div><div>Thanks! With that, Eglot 1.25 is unbroken Even =
+though it Package-Requires Xref 1.7.0, the package system gets the newest o=
+ne. I&#39;ll put out Eglot 1.26 soon to fix a much more minor problem.</div=
+><div><br></div><div data-smartmail=3D"gmail_signature">Jo=C3=A3o</div><br>=
+<div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"=
+gmail_attr">On Fri, Oct 30, 2026, 02:31 Dmitry Gutov &lt;<a href=3D"mailto:=
+dmitry@gutov.dev">dmitry@gutov.dev</a>&gt; wrote:<br></div><blockquote clas=
+s=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid r=
+gb(204,204,204);padding-left:1ex">On 29/10/2026 13:07, Jo=C3=A3o T=C3=A1vor=
+a wrote:<br>
+&gt; Currently anyone upgrading to Eglot 1.25 will be left with a non- <br>
+&gt; functioning system<br>
+<br>
+Good to know, I have bumped the version now, thanks.<br>
+<br>
+&gt; So, please do let me know if there&#39;s something=C2=A0I can do to he=
+lp speed <br>
+&gt; this up.=C2=A0 Any concern in particular?<br>
+<br>
+I needed a bit more time to optimize xref-find-by-kind&#39;s identifier <br=
+>
+completion for etags (f982de03ff1), to verify that the choice to add the <b=
+r>
+new method xref-backend-identifier-completion-predicate was reasonable <br>
+for performance. Seems like it is so.<br>
+</blockquote></div></div></div>
+
+--0000000000008d60a0065f0b0d95--
+
+
+From MAILER-DAEMON Fri Oct 30 06:19:53 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMjiD-000404-6e
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 06:19:53 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xMjiB-0003zr-Uy
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 06:19:51 -0400
+Received: from fout-a1-smtp.messagingengine.com ([103.168.172.144])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xMji9-00059O-90
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 06:19:51 -0400
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+ by mailfout.phl.internal (Postfix) with ESMTP id 02518EC0218
+ for <emacs-devel@gnu.org>; Fri, 30 Oct 2026 06:19:48 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-01.internal (MEProxy); Fri, 30 Oct 2026 06:19:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-transfer-encoding:content-type:content-type
+ :date:date:from:from:in-reply-to:in-reply-to:message-id
+ :mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+ t=1793355587; x=1793441987; bh=sP132jmXFHEpAC18u8MldSBbp/DoYBZ4
+ h380HrjbHwc=; b=UIDP4pIg4EaA6r03uiflo3Zrvn2rMOMVG9ssmIpu1LyVnqm4
+ MlnUJS9O/lawJz3K43h7ybzLos8ys3+vmzVGx9OGFP43Z6W6knrq0uYp8J5GtM5V
+ 3NT1lTPmITAOoSMkJmLI9dnw9hgtXtGRdnF93nsiMVq0U1vDrneMjd1s4R2Dnma6
+ yrxFLw63EYq/ircNvmo+qbfWy5oLI2e6o9S24N6PvxRQHPn2tK8FYwYtJiDroh2a
+ Owy2qxcV+uM05eLd5G4ON4TraJhK0goAy5gDHKblE++MBW3CnTJfn3ukIiVzCucO
+ DWYOPPX8N2LebxkvhV/bNqJVStfbB6ew6+Vxxg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793355587; x=
+ 1793441987; bh=sP132jmXFHEpAC18u8MldSBbp/DoYBZ4h380HrjbHwc=; b=T
+ IB6aMHoQKHGzlB3SuZB83yNSGnsnrrVSTFNphDfBT8HW+Nd7mref488hG+OO28Hm
+ Ot4CiMAtMeZXOPC+vPS9QXX0unlmaMihZd8mQ1a+PeMT/niAKjN9pcSFutTAmM0d
+ h3WXXjI8ymxJR7Xe33U8AFTA7mMZ+B/vzUZ16uJRisYE1pSVSGfJMw9zs1VJHsmd
+ /0FMUqsYTvfC0Fb42f0i/MGgP81jrUWLMIr2JMP/kMwnydrHgepbeam4FpV/lkd7
+ h7FD+jdXaT1J6NSzkFpHJ2uBrADxw3NADwm3Tcl+9GXZnq8lzamMmWiHiZ9jEX3a
+ srRxfwI4SBhyRRvMLMNng==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793355587; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:EcFQLccO54dMifzGkpELuIbYMZBLHsn9titJRxY3jUtjVqU
+ e51niYlA9MrM1eg2Q96mrLNnSlMKVxiQGTwFtrwtPrtfvOD9Qup7xADF4KefNsli
+ OvXECXFBoIVKwz0To5JLu8KTEQPe9Tugv6NfEAOgXm/kEb50DOQz2kseTwQ+/luI
+ Ok9TrxPpXf3054XjMht++A2YSOQfbZP9L7xnGR6VbX7mcmVwKQ0IIVxpX8Ph9uZF
+ XyE3Lq/PT32YH2kt4nhfB/5wSR9/i6kVY3SZxOlS3yaQknz/UjIrpKWbptpiDJMe
+ NdKeEyg5NXmf7K5GohB3AY2g5etw/M+EJQyMukw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=mi-m=1; hc=12;
+ hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+ from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:drrQmToES2AxFXHD455hxN4S03595l6EBG5mv6xCHeA=:UtVaAhwKKYQpxHNWpVGm/xMTvL8/+wdiJpB9OswirCo=;
+X-ME-Sender: <xms:Q2_kau6sKQjxDHkvP87t1UMPV4s2KY_Mr3LXeiLiTvOPav9z-d5QLQ>
+ <xme:Q2_kag3PgL661RDM-4slCgq5qYf0_n0CsYMfO7WLf2wi8N8wKuye5VaMkRg6H1rSg
+ 5ctz1D9ixB2eDeKio6SZGLX7267cA1Gj3XMAsNGbHmAFHP5kgR-f4Lz>
+X-ME-Received: <xmr:Q2_kapAeE1Nhoe-LKwMBf2Udnm0Tfm2svlOgBnzOzB-D4CkOHkArhm7zM20IQUAmYeqgU8_PhP50VFNHeVSXNwcMdHGAjnvmMg>
+X-ME-Proxy-Cause: dmFkZTGhzxnozZQEck28shrFnPiZEd3Amy6a7gIfMdviWW1mn5LPAN/ON9efAmH5d9Jeu5
+ B5odSS6m1auLiItLJMb4A2Nb+sR+NLdTstredu2/CypA8oXktVqOvoUPxzqvdva7iYRBv0
+ Tm766GynsebDHH/aBEMqv4PA2MIyBqwSMuz75hmVvTRXiRLGHkAGYHNFaKL4gExzdWWck9
+ 46zLMjROt7NzCtmMZUDo3TSMpQxHcV8qzHS4QB4p3b83Sez6bovp0uWdZ2gcc3mNjEifcm
+ +7jbL1tuuITvqnGvH5lndiStZc83C06IeBnazvslRHKnpTpJxhuhwamc0lKLfNcyvIK+L/
+ AT3YvbaLDW7c5XLD8B3zNmzZg1ZMlH8Cy8PK5k98N3+hO7+NYbHqsimZS9LU93vqPgzF61
+ LwaUBXE8ISEuORKnlgVzhreLANBrVxsmt5A9A9d8MSiqLauPo0brfXaKQMmPFsNJ3CWaTk
+ K/fetIDTAYguAxwHU0qHST7zobxTtx82JkjSX9GlAyZMk17jw3cKJwUrfAV1opeCwqzt0g
+ 3I4dOXaXEWgftMyyuBl/BQZkDzdEBy4Spk2C53zj6Nnd5Z+zorSEZ0S3j/WRiw/7/MBNO6
+ zP+JhN2oylHk9a0aexhxZtxB3WmZ6ZfIysA8VxArL0xopS3Yy+A3bLt5CqyQ
+X-ME-Proxy: <xmx:Q2_karOkypAp1EEn75Ds9lRniNPtQk8c1lucpE_kb8wy7veOWlUWeg>
+ <xmx:Q2_kauZMCA4DqHLkyvZfhjeQAw3Q9VFxjRfOmw-nV9FFqTqvGjlY1w>
+ <xmx:Q2_kaqvRlKo5lF1csMjB8Abyk4m6VCU9DmK2C4LLdhz0AaH4RMYHDw>
+ <xmx:Q2_kagO31k-S-2Z7ZCCeAtzOS4B_W4FLQAMgCnPDqlL_TWxJEHC3Xw>
+ <xmx:Q2_katoCV5BZLByjN8M2ogwzSP6aCgstS9ggMKe01mFJhVlP-Kg1Oouq>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 30 Oct 2026 06:19:47 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 4EC9727CCA5; Fri, 30 Oct 2026 10:19:46 +0000 (GMT)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Divya Ranjan Pattanaik <divya@dialetheia.xyz>, rms@gnu.org,
+ philipk@posteo.net
+Cc: emacs-devel@gnu.org, tusharhero@sdf.org, eliz@gnu.org
+Subject: Re: [ELPA] New package: emacs-reader
+In-Reply-To: <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+ <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+ <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz>
+Date: Fri, 30 Oct 2026 10:19:46 +0000
+Message-ID: <87ik2jjxrx.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=103.168.172.144;
+ envelope-from=spwhitton@spwhitton.name; helo=fout-a1-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 10:19:52 -0000
+
+Divya Ranjan Pattanaik [29/Oct  5:09pm GMT] wrote:
+> Apologies for the delay. I have been travelling between countries, and ne=
+eded
+> time to think of all the suggestions.
+>
+> We have decided, after a lot of discussion, to rename the project to:
+> emureader. Also written as EMuReader (Emacs MuPDF Reader) or E=CE=BCReade=
+r.
+>
+> I hope this addresses most issues with the previous name.
+
+Cool, creative name, well done :)
+
+--=20
+Sean Whitton
+
+
+From MAILER-DAEMON Fri Oct 30 11:56:37 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMoy5-0004vB-Rb
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 11:56:37 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xMoy3-0004uw-Ly
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 11:56:35 -0400
+Received: from fhigh-a4-smtp.messagingengine.com ([103.168.172.155])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xMoxv-0004NT-V0
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 11:56:32 -0400
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+ by mailfhigh.phl.internal (Postfix) with ESMTP id BEFAE14001D0
+ for <emacs-devel@gnu.org>; Fri, 30 Oct 2026 11:56:24 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-08.internal (MEProxy); Fri, 30 Oct 2026 11:56:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm1; t=1793375784; x=1793462184; bh=9w+O04FBHe
+ j6T/U6b9LQ41K8CkTruLcC33Z49k57aO0=; b=BNoqnz3sF5jSgjUr+97KWO6M30
+ unoAVS/tKqdxh2cOkq3nNLTAgAZIvL4nLijlQmIu6trKbLQJI2ogzCVn9Xms62Ga
+ eOAn0orNE2KiWTlKo174qi3/Xac+jvfpxmLpIwO8WpbfZJP+1ttOExxgBF6yjMRF
+ efn4mS9Im8j2k+b7CrvXFkysWiGY+nloMEbZ23ngkxGdHOTlsEYTLDOYulS5qWT0
+ 8rdRKtBZi0Tpl8JEGobpxPhyH54hP834RQDQNOGnTrK2B81fpnBs7uX2ifD3La+y
+ FP8QD/kawDlEaqiUJwMb+HO/gmIA9NXbR6j5Yf7bxx//41p88tM2F5+8ePmw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1793375784; x=1793462184; bh=9w+O04FBHej6T/U6b9LQ41K8CkTruLcC33Z
+ 49k57aO0=; b=iwmb73Mhkv6RG+DG8F+baOZxtUwdqha75fV5D4ryUYTXinef1VZ
+ pR/rdptSoNZkw5HGhP1NAPsHtCmgHp0JwUXrLRxX3q8ft1AntNLyvS9YQvR1TYEw
+ mlwflBLeUAMFZnzN/0YdQe+/Gh0U43FwAiuYbVLDaJf5DS6Zg1KZJWXE6TpAAEh1
+ e8eMgE/25vlyFCrYmYfpFbEwKIfop40vXmoKBOhSmRXY9UF4kYx05lmfyr+2pcGH
+ Ph9UoPKEr2Sjh87aXIgR5jlqtA1TV7zAlcePZLXXbCQsjJCDiTOFHek57zpAMpgA
+ HxnW4DRZSUgbwTICwCf3e2HHchfp1oNO/Gw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793375784; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:JTBowYYS/EkSb/2+PYLkjHUhCW42H5OiLALPrJ61kZDPj8w
+ 5y6WEoJ8vgvPOjuzd7YcdlN6hbjgw1PNdeYaJ7KIjfpKTGn6crM28xyr45dTpYnM
+ tgx/K7EX1k/NjWo+ZBq/qme2cY1g9NCWUDB8h3i9HR+A9q3Qm/uaBeysxVaVCEBl
+ 2xSVpvgbBQV3VUKjAB5oMYG7xmovQT99f6dgv0FUU3zjiAYzTszLuvstOlrieDK0
+ FdK6PvPd0unZ1TohdP+XWEl8bHPNPgGgY33ptmiczyx+umHvd2jqvBLbnrmdubLy
+ 7bvrGxR2VbAyNo1XbLc3ZIrDrRjRudEfYZkEY5Q==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=mi-m=1; hc=10;
+ hn=content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:VjV2825OrQRO/SuaVfhHwXbm+YCs7VoNWhZtv01vbK4=:eL5dXTWHqoi4r/63CwN6tWPh2NsKexYQDqddm5k3Abc=;
+X-ME-Sender: <xms:KL7kalOpc5dhV8xHUp6a6748bkuTOMVnvqXzvYLTHnZJb8xFZ4SR-A>
+ <xme:KL7kakSXjjqi_wAFk823POlgFHP_T-Y9J13RL0uqKecaz31VHwZomI31qha-VfOLa
+ neUHbcuWyZ581K73_UZP5qrP2eRAcZsoJFT2Xu918HSm9C0zxYui4gK>
+X-ME-Received: <xmr:KL7kanCJTITQYt26ClJxt_Aej3uCRBJTTxEUVEYZC4T9cnZMlMachSXpJrVvLo9ekdp4h7sWAIsNvsxPUylqeWPEO7a7CIaN2w>
+X-ME-Proxy-Cause: dmFkZTGHeK6zJZCOhygc8b41oGU6YZ5le74jPZEhQnr6jrOk98oAHVIEoROBga+NE3zoy4
+ v+gb59zQqFWvoCE4brXpr/c7xq8kDPEXcxZ6m4tBoUNJZELUlxgpOc09t2esmfJiRBkZsf
+ jGiyYzmXRv6mlL6J97gMYdDAfUZpEMl53nNdFTupvuvn//bsISJgXcvw6lPlbczl/OCTb7
+ BARpWprR4u65hznW1cJ4WxnszInPZVUeiSskoxIp4VBrtVGGYJLHZVf+fI09ufzT0Upz6x
+ GH0sTCiVVTxQyA5PPM5k1xCmGPwyjV38y9iflgQuoBPQpQOH2KjBQOGFGSOWVPiRh2lxjp
+ 0pPHCD9Fch9SdepcggyGR4dWPQJ1f6ZAytA/EpZuB/3LPfHyWpLvCBhFHdzs7ts3ZdYY/p
+ HFYbT6L5ZA/TX/wPGC/JCR3pMQ/H/lSZQEOBt5mmoLPD0qzdHV0oRAzwN6KrEme3t+gwn6
+ rUXwADLC2RlACx+6b3mbwmCR0jxVlXiVSLyRFmMO+LKltdCFaFrwkpDC2uvJp5rYmQTfEz
+ t3uJyi4ByPVhZ1lgC/+PCroOBvCqqy+cCB2sLIgY3uLhwDRJeoj53h+NhEgq7lQKmY9UQ7
+ QymNzJyati+T9wIzTAMIkzE44wB6nPsV9Y87R2VGa8HAc45KQ/1rDDBEhH2Q
+X-ME-Proxy: <xmx:KL7kajjE5MOmEBDG4-sOX-Exdxuz41ZIVn_DHRpfKNqEOTMkKjZAWw>
+ <xmx:KL7kagPSmpjWTLjLFFZq-qFcA2dkqJ41_dD7HwgA8-2MCUm6OhyiBw>
+ <xmx:KL7kak5mOG8wxUsXP6liCzJqhJREknvNtQZB33YEN9j9bxjs0vfbPg>
+ <xmx:KL7kau0gnORHgXsAWmcESrWvOCiI1d_u7wGhczNSdtnnQ5CD8jTIig>
+ <xmx:KL7karIx17VSb0OKnQea389Q2UYHoPRPWOT0vvV2lPMlVbvgHJ37Ehar>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 30 Oct 2026 11:56:23 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id 5FC3827CCA5; Fri, 30 Oct 2026 15:56:21 +0000 (GMT)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Eli Zaretskii <eliz@gnu.org>, emacs-devel@gnu.org
+Subject: Re: Implementation of the Kitty Keyboard Protocol for Emacs
+In-Reply-To: <865wykwink.fsf@gnu.org>
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com> <86wlrc7b7b.fsf@gnu.org>
+ <87a4o8h3dh.fsf@athena.silentflame.com>
+ <87wlr0k4md.fsf@athena.silentflame.com> <868q3gwm9e.fsf@gnu.org>
+ <87mrrwjx8w.fsf@athena.silentflame.com> <865wykwink.fsf@gnu.org>
+Date: Fri, 30 Oct 2026 15:56:21 +0000
+Message-ID: <87cxsrji6y.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=-=-="
+Received-SPF: pass client-ip=103.168.172.155;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-a4-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_PASS=-0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 15:56:36 -0000
+
+--=-=-=
+Content-Type: text/plain
+
+Eli Zaretskii [29/Oct  6:55pm +02] wrote:
+> I think it's important, yes.  Especially if we want other terminals to
+> be able to support this without calling themselves xterm.
+>
+> I also think it might be useful to have a user option to disable this.
+> Over the years, almost all of these extensions got in the way of
+> someone, and we could never tell people "if it gets in the way,
+> disable it".  Maybe it's time we did.
+>
+> But please don't make any such changes without hearing what others
+> think, because I might be in a minority.
+
+No, I think these are good points, I've implemented both in the
+attached.  Also fixed shifted punctuation keys which was previously not
+working.
+
+-- 
+Sean Whitton
+
+--=-=-=
+Content-Type: text/x-patch
+Content-Disposition: attachment;
+ filename=v2-0001-Support-Kitty-Keyboard-Protocol-disambiguation-of.patch
+
+>From e6fedb0cf95b56202b03176205b8be8a63ad868d Mon Sep 17 00:00:00 2001
+From: Sean Whitton <spwhitton@spwhitton.name>
+Date: Thu, 29 Oct 2026 13:38:02 +0000
+Subject: [PATCH v2] Support Kitty Keyboard Protocol disambiguation of escape
+ codes
+
+* lisp/frame.el (display-symbol-keys-p): Return non-nil,
+indicating support of symbol keys, on frames using the Kitty
+Keyboard Protocol.  Change the example in the docstring to
+something that's true of both graphical frames and the Kitty
+Keyboard Protocol.
+* lisp/simple.el (normal-erase-is-backspace-setup-frame): Turn
+the mode on for frames using the Kitty Keyboard Protocol.
+(normal-erase-is-backspace, normal-erase-is-backspace-mode):
+Update docstrings accordingly.
+
+* lisp/term/kitty-kbd-proto.el: New file.
+* lisp/term/xterm.el (term/kitty-kbd-proto): Require.
+(xterm--extra-capabilities-type, xterm-extra-capabilities): New
+kittyKeyboardProtocol value.
+(xterm--version-handler): Don't initialize modifyOtherKeys
+support if this terminal uses the Kitty Keyboard Protocol.
+(xterm--init): In the xterm-extra-capabilities `check' branch,
+try to activate the Kitty Keyboard Protocol, and no longer
+initiate a secondary device attributes query from here.  In the
+xterm-extra-capabilities non-`check' branch, handle
+`kittyKeyboardProtocol' in xterm-extra-capabilities.
+(xterm--primary-da-handler): Request the Kitty Keyboard
+Protocol's disambiguation of escape codes and reporting of
+alternate keys progressive enhancements.  Initiate the secondary
+device attributes query from here.
+
+* src/keyboard.c (kitty_kbd_proto_mods_to_emacs_mods)
+(kitty_kbd_proto_consume): New functions.
+(tty_read_avail_input): Use kitty_kbd_proto_consume.
+* src/term.c (syms_of_term): DEFSYM for tty-kitty-kbd-proto.
+
+* doc/emacs/custom.texi (Terminal Init):
+* etc/NEWS: Document the new support.
+* doc/emacs/trouble.texi (Emergency Escape): Mention that
+emergency escape is not available in graphical frames or when
+the Kitty Keyboard Protocol is in use.
+---
+ doc/emacs/custom.texi        |  16 ++
+ doc/emacs/trouble.texi       |   4 +
+ etc/NEWS                     |  10 +
+ lisp/frame.el                |   4 +-
+ lisp/simple.el               |  73 +++---
+ lisp/term/kitty-kbd-proto.el |  79 ++++++
+ lisp/term/xterm.el           |  80 +++++--
+ src/keyboard.c               | 449 ++++++++++++++++++++++++++++++++++-
+ src/term.c                   |   1 +
+ 9 files changed, 652 insertions(+), 64 deletions(-)
+ create mode 100644 lisp/term/kitty-kbd-proto.el
+
+diff --git a/doc/emacs/custom.texi b/doc/emacs/custom.texi
+index 9723f4c9233..5ff6723a517 100644
+--- a/doc/emacs/custom.texi
++++ b/doc/emacs/custom.texi
+@@ -3027,6 +3027,22 @@ Terminal Init
+ libraries and to define initializations for terminals that do not have a
+ library.  @xref{Hooks}.
+ 
++@subsubsection The Kitty Keyboard Protocol
++
++@vindex tty-use-kitty-kbd-proto
++  When your terminal supports the
++@uref{https://sw.kovidgoyal.net/kitty/keyboard-protocol/, Kitty Keyboard
++Protocol}, Emacs detects this and uses the protocol to communicate with
++the terminal.  This enhances keyboard input by allowing Emacs to
++distinguish between key sequences like @kbd{RET} and @kbd{C-<return>},
++which normally can't be distinguished in text-mode frames.  If the Kitty
++Keyboard Protocol causes problems because your terminal emulator's
++support for it is buggy, customize the variable
++@code{tty-use-kitty-kbd-proto} to @code{nil}.  You'll need to restart
++Emacs for this to take effect as changing it does not cause Emacs to
++stop using the Kitty Keyboard Protocol for a terminal once it has turned
++it on.
++
+ @node Find Init
+ @subsection How Emacs Finds Your Init File
+ 
+diff --git a/doc/emacs/trouble.texi b/doc/emacs/trouble.texi
+index dbb1cfd8cdd..5567c9df4e1 100644
+--- a/doc/emacs/trouble.texi
++++ b/doc/emacs/trouble.texi
+@@ -454,6 +454,10 @@ Emergency Escape
+ emergency escape---but there are cases where it won't work, when a
+ system call hangs or when Emacs is stuck in a tight loop in C code.
+ 
++  Emergency escape is not available in graphical frames, or in text-mode
++frames where the terminal emulator supports the Kitty Keyboard Protocol
++and you have not disabled use of that protocol (@pxref{Terminal Init}).
++
+ @node DEL Does Not Delete
+ @subsection If @key{DEL} Fails to Delete
+ @cindex @key{DEL} vs @key{BACKSPACE}
+diff --git a/etc/NEWS b/etc/NEWS
+index 62c6d39eb4d..4c73b023845 100644
+--- a/etc/NEWS
++++ b/etc/NEWS
+@@ -60,6 +60,16 @@ behavior.
+ If this variable is nil, 'tty-cursor-movement-use-TAB-BS' has no effect,
+ and Emacs will never use TABs for any cursor-movement sequences.
+ 
+++++
++** New support for the Kitty Keyboard Protocol.
++If your terminal emulator supports the Kitty Keyboard Protocol,
++text-mode frames now make use of it for keyboard input.
++This means that key chords which previously worked only in graphical
++frames now also work in text-mode frames.  For example, without the
++Kitty Keyboard Protocol active, when you type "C-RET" in a text frame,
++Emacs just receives "RET".  Now it is possible to bind different
++commands to "C-RET" and "RET" in text-mode frames and have both work.
++
+ ---
+ ** File- and directory-local variables respect user option setters.
+ Values of variables that are user options mentioned in file-local
+diff --git a/lisp/frame.el b/lisp/frame.el
+index fca62e24d64..f2530e9e59b 100644
+--- a/lisp/frame.el
++++ b/lisp/frame.el
+@@ -2765,9 +2765,11 @@ display-selections-p
+ (defun display-symbol-keys-p (&optional display)
+   "Return non-nil if DISPLAY supports symbol names as keys.
+ This means that, for example, DISPLAY can differentiate between
+-the keybinding RET and [return]."
++the keybinding DEL and [delete]."
+   (let ((frame-type (framep-on-display display)))
+     (or (memq frame-type '(x w32 ns pc pgtk haiku android))
++        (terminal-parameter (get-device-terminal display)
++                            'tty-kitty-kbd-proto)
+         ;; MS-DOS and MS-Windows terminals have built-in support for
+         ;; function (symbol) keys
+         (memq system-type '(ms-dos windows-nt)))))
+diff --git a/lisp/simple.el b/lisp/simple.el
+index 73ae329adbd..cd3eeae48a8 100644
+--- a/lisp/simple.el
++++ b/lisp/simple.el
+@@ -11135,18 +11135,19 @@ normal-erase-is-backspace
+ 
+ If set to nil, both Delete and Backspace keys delete backward.
+ 
+-If set to `maybe' (which is the default), Emacs automatically
+-selects a behavior.  On window systems, the behavior depends on
+-the keyboard used.  If the keyboard has both a Backspace key and
+-a Delete key, and both are mapped to their usual meanings, the
+-option's default value is set to t, so that Backspace can be used
+-to delete backward, and Delete can be used to delete forward.
+-
+-If not running under a window system, customizing this option
+-accomplishes a similar effect by mapping \\`C-h', which is usually
+-generated by the Backspace key, to \\`DEL', and by mapping \\`DEL' to
+-\\`C-d' via `keyboard-translate'.  The former functionality of \\`C-h'
+-is available on the F1 key.  You should probably not use this
++If set to `maybe' (which is the default), Emacs automatically selects a
++behavior.
++On displays that support symbol keys (see `display-symbol-keys-p'), the
++behavior depends on the keyboard used.  If the keyboard has both a
++Backspace key and a Delete key, and both are mapped to their usual
++meanings, the option's default value is set to t, so that Backspace can
++be used to delete backward, and Delete can be used to delete forward.
++
++If not running on a display that supports symbol keys, customizing this
++option accomplishes a similar effect by mapping \\`C-h', which is
++usually generated by the Backspace key, to \\`DEL', and by mapping
++\\`DEL' to \\`C-d' via `keyboard-translate'.  The former functionality
++of \\`C-h' is available on the F1 key.  You should probably not use this
+ setting if you don't have both Backspace, Delete and F1 keys.
+ 
+ Setting this variable with setq doesn't take effect.  Programmatically,
+@@ -11173,6 +11174,7 @@ normal-erase-is-backspace-setup-frame
+                (and (not noninteractive)
+                     (or (memq system-type '(ms-dos windows-nt))
+ 			(memq window-system '(w32 ns pgtk haiku android))
++                        (terminal-parameter nil 'tty-kitty-kbd-proto)
+                         (and (eq window-system 'x)
+                              (fboundp 'x-backspace-delete-keys-p)
+                              (x-backspace-delete-keys-p))
+@@ -11189,29 +11191,30 @@ normal-erase-is-backspace-setup-frame
+ (define-minor-mode normal-erase-is-backspace-mode
+   "Toggle the Erase and Delete mode of the Backspace and Delete keys.
+ 
+-On window systems, when this mode is on, Delete is mapped to \\`C-d'
+-and Backspace is mapped to \\`DEL'; when this mode is off, both
+-Delete and Backspace are mapped to \\`DEL'.  (The remapping goes via
+-`local-function-key-map', so binding Delete or Backspace in the
+-global or local keymap will override that.)
+-
+-In addition, on window systems, the bindings of C-Delete, M-Delete,
+-C-M-Delete, C-Backspace, M-Backspace, and C-M-Backspace are changed in
+-the global keymap in accordance with the functionality of Delete and
+-Backspace.  For example, if Delete is remapped to \\`C-d', which deletes
+-forward, C-Delete is bound to `kill-word', but if Delete is remapped
+-to \\`DEL', which deletes backward, C-Delete is bound to
+-`backward-kill-word'.
+-
+-If not running on a window system, a similar effect is accomplished by
+-remapping \\`C-h' (normally produced by the Backspace key) and \\`DEL'
+-via `keyboard-translate': if this mode is on, \\`C-h' is mapped to
+-\\`DEL' and \\`DEL' to \\`C-d'; if it's off, the keys are not remapped.
+-
+-When not running on a window system, and this mode is turned on, the
+-former functionality of \\`C-h' is available on the F1 key.  You should
+-probably not turn on this mode on a text-only terminal if you don't
+-have both Backspace, Delete and F1 keys.
++On displays that support symbol keys (see `display-symbol-keys-p'), when
++this mode is on, Delete is mapped to \\`C-d' and Backspace is mapped to
++\\`DEL'; when this mode is off, both Delete and Backspace are mapped to
++\\`DEL'.  (The remapping goes via `local-function-key-map', so binding
++Delete or Backspace in the global or local keymap will override that.)
++
++In addition, on displays that support symbol keys, the bindings of
++C-Delete, M-Delete, C-M-Delete, C-Backspace, M-Backspace, and
++C-M-Backspace are changed in the global keymap in accordance with the
++functionality of Delete and Backspace.  For example, if Delete is
++remapped to \\`C-d', which deletes forward, C-Delete is bound to
++`kill-word', but if Delete is remapped to \\`DEL', which deletes
++backward, C-Delete is bound to `backward-kill-word'.
++
++If running on a display that doesn't support symbol keys, a similar
++effect is accomplished by remapping \\`C-h' (normally produced by the
++Backspace key) and \\`DEL' via `keyboard-translate': if this mode is on,
++\\`C-h' is mapped to \\`DEL' and \\`DEL' to \\`C-d'; if it's off, the
++keys are not remapped.
++
++When running on a display that doesn't support symbol keys, and this
++mode is turned on, the former functionality of \\`C-h' is available on
++the F1 key.  You should probably not turn on this mode on a text-only
++terminal if you don't have both Backspace, Delete and F1 keys.
+ 
+ See also `normal-erase-is-backspace'."
+   :variable ((eq (terminal-parameter nil 'normal-erase-is-backspace) 1)
+diff --git a/lisp/term/kitty-kbd-proto.el b/lisp/term/kitty-kbd-proto.el
+new file mode 100644
+index 00000000000..cf44dc7e8f7
+--- /dev/null
++++ b/lisp/term/kitty-kbd-proto.el
+@@ -0,0 +1,79 @@
++;;; kitty-kbd-proto.el --- support for the Kitty Keyboard Protocol  -*- lexical-binding: t -*-
++
++;; Copyright (C) 2026 Free Software Foundation, Inc.
++
++;; Author: Sean Whitton <spwhitton@spwhitton.name>
++
++;; This file is part of GNU Emacs.
++
++;; GNU Emacs is free software: you can redistribute it and/or modify
++;; it under the terms of the GNU General Public License as published by
++;; the Free Software Foundation, either version 3 of the License, or
++;; (at your option) any later version.
++
++;; GNU Emacs is distributed in the hope that it will be useful,
++;; but WITHOUT ANY WARRANTY; without even the implied warranty of
++;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++;; GNU General Public License for more details.
++
++;; You should have received a copy of the GNU General Public License
++;; along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
++
++;;; Commentary:
++
++;; https://sw.kovidgoyal.net/kitty/keyboard-protocol/
++
++;;; Code:
++
++(defcustom tty-use-kitty-kbd-proto t
++  "Whether to use the Kitty Keyboard Protocol where supported.
++Emacs normally queries whether a terminal emulator supports the Kitty
++Keyboard Protocol, and if it does, it makes use of the protocol.
++This allows Emacs to distinguish between key sequences which would
++otherwise be collapsed, such as \\`RET' and \\`C-<return>'.
++If your terminal emulator's implementation of the Kitty Keyboard
++Protocol is buggy, you can customize this variable to nil to stop Emacs
++trying to activate it."
++  :type 'boolean
++  :group 'terminals
++  :version "32.1")
++
++(defconst kitty-kbd-proto-progressive-enhancements 5
++  "What Kitty Keyboard Protocol progressive enhancements this Emacs uses.
++Encoded as a single integer.
++5 is progressive enhancement 1 (disambiguate escape codes)
++plus progressive enhancement 4 (report alternate keys).")
++
++(defconst kitty-kbd-proto-query
++  (format "\e[>%du\e[?u" kitty-kbd-proto-progressive-enhancements)
++  "Sequence to turn on Kitty Keyboard Protocol and query enhancement level.")
++
++(declare-function x-setup-function-keys "term/common-win")
++
++(defun kitty-kbd-proto-init (already-active)
++  "Terminal initialization for the Kitty Keyboard Protocol.
++ALREADY-ACTIVE non-nil means the escape characters that tell the
++terminal emulator we want to use the Kitty Keyboard Protocol have
++already been sent."
++  (let ((turn-on (format "\e[>%du" kitty-kbd-proto-progressive-enhancements)))
++    (unless already-active (send-string-to-terminal turn-on))
++    (push "\e[<u" (terminal-parameter nil 'tty-mode-reset-strings))
++    (push turn-on (terminal-parameter nil 'tty-mode-set-strings))
++    (set-terminal-parameter nil 'tty-kitty-kbd-proto
++                            kitty-kbd-proto-progressive-enhancements)
++    (require 'term/common-win)
++    (x-setup-function-keys (selected-frame))
++    ;; Force `normal-erase-is-backspace-setup-frame' to recompute,
++    ;; because enabling the Kitty Keyboard Protocol means the frame can
++    ;; now distinguish DEL and [delete].
++    (set-terminal-parameter nil 'normal-erase-is-backspace nil)
++    (normal-erase-is-backspace-setup-frame)))
++
++(defun kitty-kbd-proto-off ()
++  "Send the string that turns off the Kitty Keyboard Protocol.
++This doesn't undo the other effects of `kitty-kbd-proto-init'; that is
++not supported."
++  (send-string-to-terminal "\e[<u"))
++
++(provide 'term/kitty-kbd-proto)
++;;; kitty-kbd-proto.el ends here
+diff --git a/lisp/term/xterm.el b/lisp/term/xterm.el
+index 3bef88d5010..d974c55d51d 100644
+--- a/lisp/term/xterm.el
++++ b/lisp/term/xterm.el
+@@ -24,6 +24,8 @@
+ 
+ ;;; Code:
+ 
++(require 'term/kitty-kbd-proto)
++
+ (defgroup xterm nil
+   "XTerm support."
+   :version "24.1"
+@@ -33,6 +35,7 @@ xterm--extra-capabilities-type
+   ;; NOTE: If you add entries here, make sure to update
+   ;; `terminal-init-xterm' as well.
+   '(set (const :tag "modifyOtherKeys support" modifyOtherKeys)
++        (const :tag "Kitty Keyboard Protocol support" kittyKeyboardProtocol)
+         (const :tag "report background" reportBackground)
+         (const :tag "get X selection" getSelection)
+         (const :tag "set X selection" setSelection)))
+@@ -45,10 +48,15 @@ xterm-extra-capabilities
+ 
+ The relevant features are:
+   modifyOtherKeys  -- if supported, more key bindings work (e.g., \"\\C-,\")
++  kittyKeyboardProtocol  -- if supported, even more key bindings work
+   reportBackground -- if supported, Xterm reports its background color
+   getSelection     -- if supported, Xterm yanks text from the X selection
+-  setSelection     -- if supported, Xterm saves killed text to the X selection"
+-  :version "24.1"
++  setSelection     -- if supported, Xterm saves killed text to the X selection
++
++The Kitty Keyboard Protocol subsumes the functionality of
++modifyOtherKeys and so if you request both,
++Emacs uses only the Kitty Keyboard Protocol."
++  :version "32.1"
+   :type `(choice (const :tag "Check" check)
+                  ,xterm--extra-capabilities-type))
+ 
+@@ -836,7 +844,8 @@ xterm--version-handler
+         ;; If version is 216 (the version when modifyOtherKeys was
+         ;; introduced) or higher, initialize the
+         ;; modifyOtherKeys support.
+-        (when (>= version 216)
++        (when (and (>= version 216)
++                   (null (terminal-parameter nil 'tty-kitty-kbd-proto)))
+           (xterm--init-modify-other-keys))
+         ;; In version 203 support for accessing the X selection was
+         ;; added.  Hterm reports itself as version 256 and supports it
+@@ -850,14 +859,40 @@ xterm--version-handler
+           (xterm--init-activate-set-selection))))))
+ 
+ (defun xterm--primary-da-handler ()
+-  ;; The reply should be: \e [ ? NUMBER1 ; ... ; NUMBER_N c
+   (let ((str (xterm--read-string ?c)))
+-    (when (member "52" (split-string str ";" t))
+-      ;; Many modern terminals include 52 in their primary DA response,
+-      ;; to indicate support for *writing* to the OS clipboard. The
+-      ;; specification does not guarantee the clipboard can be read. See
+-      ;; https://github.com/contour-terminal/vt-extensions/blob/master/clipboard-extension.md
+-      (xterm--init-activate-set-selection))))
++    ;; With a KKP-supporting terminal the reply should be:
++    ;;   \e [ ? 5 u \e [ ? NUMBER1 ; ... ; NUMBER_N c
++    ;; with the leading \e[?1u absent if there is no KKP support.
++    ;; `xterm--query' chops the leading \e[? and `xterm--read-string'
++    ;; the trailing c so we get either
++    ;;   5 u \e [ ? NUMBER1 ; ... ; NUMBER_N
++    ;; if there is KKP support, and just
++    ;;   NUMBER1 ; ... ; NUMBER_N
++    ;; if not.
++    (when (string-match "\\`\\(?:\\([0-9]+\\)u\e\\[\\?\\)?\\([0-9;]+\\)\\'"
++                        str)
++      (when-let* (tty-use-kitty-kbd-proto
++                  (progressive-enhancements (match-string 1 str)))
++        (if (not (eq (string-to-number progressive-enhancements)
++                     kitty-kbd-proto-progressive-enhancements))
++            ;; The terminal ignored our request to turn on exactly
++            ;; progressive enhancements 1 and 4.  Its implementation
++            ;; must be broken, attempt to turn off KKP again.
++            (kitty-kbd-proto-off)
++          (kitty-kbd-proto-init t)))
++      (when (member "52" (split-string (match-string 2 str) ";" t))
++        ;; Many modern terminals include 52 in their primary DA
++        ;; response, to indicate support for *writing* to the OS
++        ;; clipboard.  The specification does not guarantee the
++        ;; clipboard can be read. See
++        ;; https://github.com/contour-terminal/vt-extensions/blob/master/clipboard-extension.md
++        (xterm--init-activate-set-selection))))
++  ;; Now try to find out the type of terminal by sending a "Secondary
++  ;; Device Attributes (DA)" query.  This is done from within this
++  ;; handler in order to force the queries to be done in order, since
++  ;; the results of this second query depend on whether we activated
++  ;; Kitty Keyboard Protocol above.
++  (xterm--query "\e[>0c" '(("\e[>" . xterm--version-handler))))
+ 
+ (defvar xterm-query-timeout 2
+   "Seconds to wait for an answer from the terminal.
+@@ -985,14 +1020,16 @@ xterm--init
+   (tty-set-up-initial-frame-faces)
+ 
+   (if (eq xterm-extra-capabilities 'check)
+-      (progn
+-        ;; Try to find out the type of terminal by sending a "Secondary
+-        ;; Device Attributes (DA)" query.
+-        (xterm--query "\e[>0c"
+-                      '(("\e[>" . xterm--version-handler)))
+-        ;; Check primary DA for OSC-52 support
+-        (xterm--query "\e[c"
+-                      '(("\e[?" . xterm--primary-da-handler))))
++      ;; Send three control sequences: try to activate the Kitty
++      ;; Keyboard Protocol; query for what KKP progressive enhancements
++      ;; are enabled; query the primary DA.  Making two queries is the
++      ;; documented way to detect KKP support, and we also need the
++      ;; primary DA to see whether there is OSC-52 support.
++      ;; See <https://sw.kovidgoyal.net/kitty/keyboard-protocol/>.
++      (xterm--query (concat (and tty-use-kitty-kbd-proto
++                                 kitty-kbd-proto-query)
++                            "\e[c")
++                    '(("\e[?" . xterm--primary-da-handler)))
+ 
+     (when (memq 'reportBackground xterm-extra-capabilities)
+       (xterm--query "\e]11;?\e\\"
+@@ -1000,8 +1037,11 @@ xterm--init
+       (xterm--query "\e]10;?\e\\"
+                     '(("\e]10;" . xterm--report-foreground-handler))))
+ 
+-    (when (memq 'modifyOtherKeys xterm-extra-capabilities)
+-      (xterm--init-modify-other-keys))
++    (cond ((and tty-use-kitty-kbd-proto
++                (memq 'kittyKeyboardProtocol xterm-extra-capabilities))
++           (kitty-kbd-proto-init nil))
++          ((memq 'modifyOtherKeys xterm-extra-capabilities)
++           (xterm--init-modify-other-keys)))
+ 
+     (when (memq 'getSelection xterm-extra-capabilities)
+       (xterm--init-activate-get-selection))
+diff --git a/src/keyboard.c b/src/keyboard.c
+index 00116ad80ea..cd45fe9739b 100644
+--- a/src/keyboard.c
++++ b/src/keyboard.c
+@@ -8160,6 +8160,423 @@ gobble_input (void)
+   return nread;
+ }
+ 
++/* Given a bitmask of Kitty Keyboard Protocol modifiers, return the
++   equivalent Emacs bitmask.  Ignore the caps_lock and num_lock bits.
++   Treat 0x02 as meta, not alt, so that ordinary Emacs usage works.
++   Given that, treat 0x20 as alt in order to make it possible to
++   distinguish the two.  */
++
++static unsigned
++kitty_kbd_proto_mods_to_emacs_mods (unsigned kitty_mods)
++{
++  unsigned ret = 0;
++  if (kitty_mods & 0x01) ret |= shift_modifier;
++  if (kitty_mods & 0x02) ret |= meta_modifier;
++  if (kitty_mods & 0x04) ret |= ctrl_modifier;
++  if (kitty_mods & 0x08) ret |= super_modifier;
++  if (kitty_mods & 0x10) ret |= hyper_modifier;
++  if (kitty_mods & 0x20) ret |= alt_modifier;
++  return ret;
++}
++
++/* If there's a Kitty Keyboard Protocol escape sequence at the beginning
++   of `cbuf', read it into `buf'.
++   Return the number of bytes of `cbuf' consumed.
++   If this function returns zero, it hasn't touched `buf'.  */
++
++static int
++kitty_kbd_proto_consume (struct input_event *buf,
++			 const unsigned char *cbuf, int cbuf_len)
++{
++  /* Look for: CSI <code points> [; <modifiers>] <final>
++     where <code points> is up to three colon-separated integers.  */
++  if (cbuf_len < 2 || !(cbuf[0] == '\033' && cbuf[1] == '['))
++    return 0;
++  unsigned code1 = 0, code2 = 0, code3 = 0, mods = 0, final = 0, i;
++  unsigned *next = &code1;
++  for (i = 2; i < cbuf_len; i++)
++    {
++      if (cbuf[i] >= '0' && cbuf[i] <= '9')
++	{
++	  *next = *next * 10 + cbuf[i] - '0';
++	  if (*next > MAX_UNICODE_CHAR)
++	    return 0;
++	}
++      else if (cbuf[i] == ':')
++	{
++	  if (next == &code1)
++	    next = &code2;
++	  else if (next == &code2)
++	    next = &code3;
++	  else
++	    return 0;
++	}
++      else if (cbuf[i] == ';')
++	break;
++      else
++	{
++	  final = cbuf[i];
++	  break;
++	}
++    }
++  if (i == cbuf_len)
++    return 0;
++  if (!final)
++    for (i++; i < cbuf_len; i++)
++      {
++	if (cbuf[i] >= '0' && cbuf[i] <= '9')
++	  {
++	    mods = mods * 10 + cbuf[i] - '0';
++	    if (mods > 256)
++	      return 0;
++	  }
++	else
++	  {
++	    final = cbuf[i];
++	    break;
++	  }
++      }
++  if (!code1 || !final)
++    return 0;
++
++  /* If there were modifiers, convert them now so that we can refer to
++     them in the branch that decodes an arbitrary Unicode code point.
++     Spec says that if <modifiers> is present, subtract 1 and then look
++     at bits.  */
++  if (mods)
++    mods = kitty_kbd_proto_mods_to_emacs_mods (mods - 1);
++
++  /* Now see if we got a sequence we understand.
++     For all the special cases, these come from the
++     "Functional key definitions" table in the specification:
++     <https://sw.kovidgoyal.net/kitty/keyboard-protocol/#functional-key-definitions>.
++     We should handle everything in that table except for modifier
++     keys, which aren't sent at the base progressive enhancement level.  */
++  if (code1 == 1)
++    {
++      /* These are the ten special cases that use arg1==1, with the
++	 final letter indicating which key it is.  */
++      switch (final)
++	{
++	case 'A':
++	  buf->code = 0xff52;	/* XK_Up */
++	  break;
++	case 'B':
++	  buf->code = 0xff54;	/* XK_Down */
++	  break;
++	case 'C':
++	  buf->code = 0xff53;	/* XK_Right */
++	  break;
++	case 'D':
++	  buf->code = 0xff51;	/* XK_Left */
++	  break;
++	case 'E':
++	  buf->code = 0xff58;	/* XK_Begin */
++	  break;
++	case 'F':
++	  buf->code = 0xff57;	/* XK_End */
++	  break;
++	case 'H':
++	  buf->code = 0xff50;	/* XK_Home */
++	  break;
++	case 'P':
++	  buf->code = 0xffbe;	/* XK_F1 */
++	  break;
++	case 'Q':
++	  buf->code = 0xffbf;	/* XK_F2 */
++	  break;
++	case 'S':
++	  buf->code = 0xffc1;	/* XK_F4 */
++	  break;
++	default:
++	  return 0;
++	}
++      buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++    }
++  else if (final == '~')
++    {
++      /* And these are the twenty special cases that use final=='~',
++	 with the first parameter indicating which key it is.  */
++      switch (code1)
++	{
++	case 2:
++	  buf->code = 0xff63;	/* XK_Insert */
++	  break;
++	case 3:
++	  buf->code = 0xffff;	/* XK_Delete */
++	  break;
++	case 5:
++	  buf->code = 0xff55;	/* XK_Prior */
++	  break;
++	case 6:
++	  buf->code = 0xff56;	/* XK_Next */
++	  break;
++	case 7:
++	  buf->code = 0xff50;	/* XK_Home */
++	  break;
++	case 8:
++	  buf->code = 0xff57;	/* XK_End */
++	  break;
++	case 11:
++	  buf->code = 0xffbe;	/* XK_F1 */
++	  break;
++	case 12:
++	  buf->code = 0xffbf;	/* XK_F2 */
++	  break;
++	case 13:
++	  buf->code = 0xffc0;	/* XK_F3 */
++	  break;
++	case 14:
++	  buf->code = 0xffc1;	/* XK_F4 */
++	  break;
++	case 15:
++	  buf->code = 0xffc2;	/* XK_F5 */
++	  break;
++	case 17:
++	  buf->code = 0xffc3;	/* XK_F6 */
++	  break;
++	case 18:
++	  buf->code = 0xffc4;	/* XK_F7 */
++	  break;
++	case 19:
++	  buf->code = 0xffc5;	/* XK_F8 */
++	  break;
++	case 20:
++	  buf->code = 0xffc6;	/* XK_F9 */
++	  break;
++	case 21:
++	  buf->code = 0xffc7;	/* XK_F10 */
++	  break;
++	case 23:
++	  buf->code = 0xffc8;	/* XK_F11 */
++	  break;
++	case 24:
++	  buf->code = 0xffc9;	/* XK_F12 */
++	  break;
++	case 29:
++	  buf->code = 0xff67;	/* XK_Menu */
++	  break;
++	case 57427:
++	  buf->code = 0xff9d;	/* XK_KP_Begin */
++	  break;
++	default:
++	  return 0;
++	}
++      buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++    }
++  else if (final == 'u')
++    {
++      /* Finally, there are some remaining special cases that use
++	 final=='u', and then everything else is just a Unicode code
++	 point, yay.  */
++      if (code1 >= 57376 && code1 <= 57398)
++	{
++	  buf->code = code1 - 57376 + 0xffca; /* XK_F13--XK_F35 */
++	  buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	}
++      else if (code1 >= 57399 && code1 <= 57408)
++	{
++	  buf->code = code1 - 57399 + 0xffb0; /* XK_KP_0--XK_KP_9 */
++	  buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	}
++      else
++	switch (code1)
++	  {
++	  case 9:
++	    buf->code = 0xff09;	/* XK_Tab */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 13:
++	    buf->code = 0xff0d;	/* XK_Return */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 27:
++	    buf->code = 0xff1b;	/* XK_Escape */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 127:
++	    buf->code = 0xff08;	/* XK_BackSpace */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57358:
++	    buf->code = 0xffe5; /* XK_Caps_Lock */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57359:
++	    buf->code = 0xff14;	/* XK_Scroll_Lock */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57360:
++	    buf->code = 0xff7f; /* XK_Num_Lock */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57361:
++	    buf->code = 0xff61;	/* XK_Print */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57362:
++	    buf->code = 0xff13;	/* XK_Pause */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57363:
++	    buf->code = 0xff67;	/* XK_Menu */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57409:
++	    buf->code = 0xffae; /* XK_KP_Decimal */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57410:
++	    buf->code = 0xffaf;	/* XK_KP_Divide */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57411:
++	    buf->code = 0xffaa;	/* XK_KP_Multiply */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57412:
++	    buf->code = 0xffad;	/* XK_KP_Subtract */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57413:
++	    buf->code = 0xffab;	/* XK_KP_Add */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57414:
++	    buf->code = 0xff8d;	/* XK_KP_Enter */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57415:
++	    buf->code = 0xffbd;	/* XK_KP_Equal */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57416:
++	    buf->code = 0xffac;	/* XK_KP_Separator */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57417:
++	    buf->code = 0xff96;	/* XK_KP_Left */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57418:
++	    buf->code = 0xff98;	/* XK_KP_Right */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57419:
++	    buf->code = 0xff97;	/* XK_KP_Up */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57420:
++	    buf->code = 0xff99;	/* XK_KP_Down */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57421:
++	    buf->code = 0xff9a;	/* XK_KP_Prior */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57422:
++	    buf->code = 0xff9b;	/* XK_KP_Next */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57423:
++	    buf->code = 0xff95;	/* XK_KP_Home */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57424:
++	    buf->code = 0xff9c;	/* XK_KP_End */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57425:
++	    buf->code = 0xff9e;	/* XK_KP_Insert */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57426:
++	    buf->code = 0xff9f;	/* XK_KP_Delete */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57428:
++	    buf->code = 0x1008ff14; /* XF86XK_AudioPlay */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57429:
++	    buf->code = 0x1008ff31; /* XF86XK_AudioPause */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57430:
++	    /* Kitty calls this MEDIA_PLAY_PAUSE,
++	       but there's no XF86 keysym that corresponds.  */
++	    return 0;
++	  case 57431:
++	    /* Kitty calls this MEDIA_REVERSE,
++	       but there's no XF86 keysym that corresponds.  */
++	    return 0;
++	  case 57432:
++	    buf->code = 0x1008ff15; /* XF86XK_AudioStop */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57433:
++	    buf->code = 0x1008ff97; /* XF86XK_AudioForward */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57434:
++	    buf->code = 0x1008ff3e; /* XF86XK_AudioRewind */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57435:
++	    buf->code = 0x1008ff17; /* XF86XK_AudioNext */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57436:
++	    buf->code = 0x1008ff16; /* XF86XK_AudioPrev */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57437:
++	    buf->code = 0x1008ff1c; /* XF86XK_AudioRecord */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57438:
++	    buf->code = 0x1008ff11; /* XF86XK_AudioLowerVolume */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57439:
++	    buf->code = 0x1008ff13; /* XF86XK_AudioRaiseVolume */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  case 57440:
++	    buf->code = 0x1008ff12; /* XF86XK_AudioMute */
++	    buf->kind = NON_ASCII_KEYSTROKE_EVENT;
++	    break;
++	  default:
++	    buf->code = code2 && (mods & shift_modifier)
++	      ? code2
++	      : code1;
++	    buf->kind = buf->code < 128
++	      ? ASCII_KEYSTROKE_EVENT
++	      : MULTIBYTE_CHAR_KEYSTROKE_EVENT;
++	  }
++    }
++  else
++    return 0;
++
++  /* If we got this far we read a key, so we can touch buf.  */
++  buf->modifiers = mods;
++
++  /* Finally, fold ASCII control modifiers back in so that quit_char is
++     still detectable in the usual way.  */
++  if (buf->kind == ASCII_KEYSTROKE_EVENT
++      && (mods & ctrl_modifier) && !(mods & shift_modifier))
++    {
++      int ctrl_char = make_ctrl_char (buf->code);
++      if (ctrl_char < 128)
++	{
++	  buf->code = ctrl_char;
++	  buf->modifiers &= ~ctrl_modifier;
++	}
++    }
++
++  return i + 1;
++}
++
+ /* This is the tty way of reading available input.
+ 
+    Note that each terminal device has its own `struct terminal' object,
+@@ -8298,18 +8715,34 @@ tty_read_avail_input (struct terminal *terminal,
+ #endif /* not MSDOS */
+ #endif /* not WINDOWSNT */
+ 
++  /* Do we expect this terminal emulator to send us Kitty Keyboard
++     Protocol escape codes?
++     (Lisp is responsible for enabling use of the protocol.)  */
++  Lisp_Object kitty_kbd_proto_p
++    = CDR_SAFE (assq_no_quit (Qtty_kitty_kbd_proto, terminal->param_alist));
++
+   for (i = 0; i < nread; i++)
+     {
+       struct input_event buf;
+       EVENT_INIT (buf);
+-      buf.kind = ASCII_KEYSTROKE_EVENT;
+-      buf.modifiers = 0;
+-      if (tty->meta_key == 1 && (cbuf[i] & 0x80))
+-        buf.modifiers = meta_modifier;
+-      if (tty->meta_key < 2)
+-        cbuf[i] &= ~0x80;
+-
+-      buf.code = cbuf[i];
++      int kitty_kbd_proto_consumed = 0;
++      if (!NILP (kitty_kbd_proto_p) && cbuf[i] == '\033')
++	kitty_kbd_proto_consumed
++	  = kitty_kbd_proto_consume (&buf, cbuf + i, nread - i);
++      if (kitty_kbd_proto_consumed)
++	i += kitty_kbd_proto_consumed - 1;
++      else
++	{
++	  buf.kind = ASCII_KEYSTROKE_EVENT;
++	  buf.modifiers = 0;
++	  if (tty->meta_key == 1 && (cbuf[i] & 0x80))
++	    buf.modifiers = meta_modifier;
++	  if (tty->meta_key < 2)
++	    cbuf[i] &= ~0x80;
++
++	  buf.code = cbuf[i];
++	}
++
+       /* Set the frame corresponding to the active tty.  Note that the
+          value of selected_frame is not reliable here, redisplay tends
+          to temporarily change it.  However, if the selected frame is a
+diff --git a/src/term.c b/src/term.c
+index 89a7c1db628..52abfb9c650 100644
+--- a/src/term.c
++++ b/src/term.c
+@@ -5476,4 +5476,5 @@ syms_of_term (void)
+   DEFSYM (Qresume_tty_functions, "resume-tty-functions");
+   DEFSYM (Qtty_menu_disabled_face, "tty-menu-disabled-face");
+   DEFSYM (Qtty_menu_enabled_face, "tty-menu-enabled-face");
++  DEFSYM (Qtty_kitty_kbd_proto, "tty-kitty-kbd-proto");
+ }
+-- 
+2.43.7
+
+
+--=-=-=--
+
+
+From MAILER-DAEMON Fri Oct 30 12:21:54 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMpMY-00048p-As
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 12:21:54 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <rpluim@gmail.com>) id 1xMpMW-00048S-34
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 12:21:52 -0400
+Received: from mail-ej1-x62d.google.com ([2a00:1450:4864:20::62d])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <rpluim@gmail.com>) id 1xMpMU-0007FZ-Mk
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 12:21:51 -0400
+Received: by mail-ej1-x62d.google.com with SMTP id
+ a640c23a62f3a-c34bff61551so172594366b.2
+ for <emacs-devel@gnu.org>; Fri, 30 Oct 2026 09:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1793377309; x=1793982109; darn=gnu.org;
+ h=content-type:mime-version:message-id:date:references:in-reply-to
+ :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=ahw91Dg5fpzFO1cfuhbpIZ88b/SqEILTqpYYU/Oo/9o=;
+ b=EQXOiYlLLzkSLR1Cdn2w0d0U5urQSMdoMtvyx+a3D3H6lwopEJVPaePbWOvxuqKYA1
+ aja3zFmNDj8EMaKG+GK3GEHFb7TYClR2Umesy3/LIj/hsI1sAsbSKklPups6yi4eQCVD
+ XSO4U+ccHZ1yRSvCjvMHEGT08RLLiLCLV1WLrB2QQysaGA1uYdhlrNV6YKp36CqJHTiU
+ PS28wT5uqwedz5vF5JhJ+d2CyWl2xScn1Ak7JXdz9aWnweiPaP3iZMmp05JbaurvsjL4
+ 7weFTPrZmE0Dm/1Z8aWYpuDp3PxEKmkwUG0rew2xxzxtp7CTFcE4fb6ZMU1eVL1rWH25
+ c5jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1793377309; x=1793982109;
+ h=content-type:mime-version:message-id:date:references:in-reply-to
+ :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+ :date:message-id:reply-to:content-type;
+ bh=ahw91Dg5fpzFO1cfuhbpIZ88b/SqEILTqpYYU/Oo/9o=;
+ b=bjPXRgUj9M69FkCJrNtDAY6QSCW/Y50WCc269kvLJkQ5UsNPhyr6YtkMqwTBGp81Le
+ k/kKjUGr/mN5g8SMzXBjuDrW31Mryf7k01eb0s9H2JPF9Rn9jiIN97X3GDhMLKEd1v68
+ +Oyqj2TtsxpK3ZrSP39YNs3JgBryvS6+IaZKZ69c8sXOyf70X76LhIf/P+Elr6rlMtmx
+ dgj+iBhhU3G0iUdkK0P6Y90YCIoLex2eY59vmswGOLBaWSSZzFkzPm8yBVm141EE2O4y
+ 6WETwtSWGFRbLNwV+j2/bhNIhr8ZaB3tBF64OwuxIOpL0t4Byi8gUGHchP3TOKuA92fO
+ 84wA==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBwhPWxGck4W6nZP/6j7C1/CXWTKJWXSo6ihk7/zlCJO45LBEXk+QNuNsOV9AcWr/nb0rF/lU6Tli+n2Ng==@gnu.org
+X-Gm-Message-State: AFq9FYLuK12jYCmNMywwC6uixymU2rVMix1UcWIXeTAZqn+FWrJ9KLRx
+ e4BclK56ZPqsXJn0XJVhJCCTjQ3JYRxqh4MduCk9Qk1H5ojEulMLfplaQ6vLdjyp
+X-Gm-Gg: AYBFou11IQ26tvIhTykiskGbL5EansSISto7/0HfmPXwktw/dGORd6mjSKNVcpHClwm
+ 3ItUuQYbUUr6NcfdH2a6/7sd20tZux2hv7HdVGZ4YDJ/cLMFqbIt0V6Fpz3sMXpSvtJlRwvXV+x
+ MOqiD54UdBbmaJMh9px9u8svY1Dhw2OQXkukuZ//FAoBoUM6IMsuipNWG+DTKr7KnbEHqcHQeSM
+ smG9A2Y3cJ9ZlQ/lZAop2qqUEw0bUAXK1KP2p49UwD7kfJ2JWB6w82m1vww21w7Rcn7ib1op2vO
+ 1dUjJmpKM3LSKv+XyfYh8+3s0LQrxyAOK07SW7iuYamSUy1eukGKCXs4URf4eHzU2IpIN+N8nIl
+ J0ZsmLjwDtVsoa+IoauC+GcyBNsDwu56lgYkdirx10s4ghvrx+B778qXNeMUr1xd1XQBUI76jj/
+ GKfl2w5RXIRi3areHdDOC+juXGvVNHy8R2WWwKtaDrNlOG8qNZxjyQ/62uJxAhCi3xHHCdPhcnY
+ EmtxK3KFltW5cBJ9WoJyl59o7z54tScrJuHPh6AZI1UYGvLhqAIZ4k1byM51L0Vw2+W1Kv2UdzZ
+ 8EB2LXNrT0y914GPB1tft0eoXOBEKAkvdJyURLarOtOIa/tsTPAWgc1r2xVRZnCPlujWRvmShJh
+ XKTad6r60Rt6R3j5q9lrOTsvSaTIcD+6jqDkMvLyBlswyKX3WXrOZ
+X-Received: by 2002:a17:906:9f91:b0:c48:1977:e1bf with SMTP id
+ a640c23a62f3a-c4ca7a71041mr253700766b.24.1793377308842; 
+ Fri, 30 Oct 2026 09:21:48 -0700 (PDT)
+Received: from rlsb ([2a01:e0a:834:daf0:10a2:e1ff:fe2b:113a])
+ by smtp.gmail.com with ESMTPSA id
+ a640c23a62f3a-c4cabcfdc7bsm85261566b.21.2026.10.30.09.21.47
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Fri, 30 Oct 2026 09:21:48 -0700 (PDT)
+From: Robert Pluim <rpluim@gmail.com>
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: Eli Zaretskii <eliz@gnu.org>,  emacs-devel@gnu.org
+Subject: Re: Implementation of the Kitty Keyboard Protocol for Emacs
+In-Reply-To: <87cxsrji6y.fsf@athena.silentflame.com>
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com> <86wlrc7b7b.fsf@gnu.org>
+ <87a4o8h3dh.fsf@athena.silentflame.com>
+ <87wlr0k4md.fsf@athena.silentflame.com> <868q3gwm9e.fsf@gnu.org>
+ <87mrrwjx8w.fsf@athena.silentflame.com> <865wykwink.fsf@gnu.org>
+ <87cxsrji6y.fsf@athena.silentflame.com>
+Date: Fri, 30 Oct 2026 17:21:47 +0100
+Message-ID: <87y0bf9n1g.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=2a00:1450:4864:20::62d;
+ envelope-from=rpluim@gmail.com; helo=mail-ej1-x62d.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 16:21:52 -0000
+
+>>>>> On Fri, 30 Oct 2026 15:56:21 +0000, Sean Whitton <spwhitton@spwhitton.name> said:
+
+    Sean> Eli Zaretskii [29/Oct  6:55pm +02] wrote:
+    >> I think it's important, yes.  Especially if we want other terminals to
+    >> be able to support this without calling themselves xterm.
+    >> 
+    >> I also think it might be useful to have a user option to disable this.
+    >> Over the years, almost all of these extensions got in the way of
+    >> someone, and we could never tell people "if it gets in the way,
+    >> disable it".  Maybe it's time we did.
+    >> 
+    >> But please don't make any such changes without hearing what others
+    >> think, because I might be in a minority.
+
+    Sean> No, I think these are good points, I've implemented both in the
+    Sean> attached.  Also fixed shifted punctuation keys which was previously not
+    Sean> working.
+
+Could you mention the defcustom that allows turning this off in the
+NEWS entry? Many people never read the manual.
+
+Robert
+-- 
+
+
+From MAILER-DAEMON Fri Oct 30 15:14:44 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xMs3n-00061E-UI
+	for mharc-emacs-devel@gnu.org; Fri, 30 Oct 2026 15:14:43 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xMs3k-00060v-Kz
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 15:14:40 -0400
+Received: from fhigh-b7-smtp.messagingengine.com ([202.12.124.158])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xMs3h-00067T-Ag
+ for emacs-devel@gnu.org; Fri, 30 Oct 2026 15:14:39 -0400
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+ by mailfhigh.stl.internal (Postfix) with ESMTP id 386607A00F7
+ for <emacs-devel@gnu.org>; Fri, 30 Oct 2026 15:14:36 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-02.internal (MEProxy); Fri, 30 Oct 2026 15:14:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-type:content-type:date:date:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:subject:subject:to:to; s=fm1; t=1793387675; x=
+ 1793474075; bh=6skeI3NyEmbWzwxobiGBBniOuPbrOeqaYSiNeZYrLvc=; b=X
+ 0kuscDWUafOozcIIBdNFuiBl/JME2adX42qc2EnekSPlSTiRH4hKMts28M5mWsHO
+ LYuI1+uuqvccE+wbhaz953y0zEEbBblB2S7OMqWD3fyPGRzqOpIM6IEYKMirkeq1
+ b/p/QJjCtYcYKRg+kaJbRPYk7GG8MF57XgWNhBqxUjUU0PRax0Fq+U/90ZAZrdkx
+ iI6lKvyd4g8p3f+oQ5l2Lg1WVzOhUkKu40HTwGwhTwbC4HMwlgHmBRuPTdgE8JGr
+ 74CGzu44ajjIiSRGkBA2nK+0kXmFcbU6nQHBwQX4FGzvZMUtQhFV3i8bZ4EPDO3Q
+ fmpYirlVl5SRzZFM7yLzQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+ 1793387675; x=1793474075; bh=6skeI3NyEmbWzwxobiGBBniOuPbrOeqaYSi
+ NeZYrLvc=; b=pvfZ4yaH7uw53i5MZy3GoyDkcPaha8qgLcw4S+MZuB3LYp9OIAR
+ /TXinl4sbOVw+viYuQ0ljLYFn2lBRaKe+JX7S84pcXIbGE+ziqsFP1qaIG0qyDzI
+ DZMbaUacNS4hOvJqzN24ewe3tH2WJR78oxfwoIhwvIA2nC7bI2pFbf6YL9wKQ6lq
+ Q5+LVJ9RdauuTNSv+CzW8FSZtUxoTRay4BzHfcOIh1JKRvKjye0gl1F78puNWcwg
+ Ir9BC4I+js82zLfPf4IgtVeutFyTckUSdfYi94nY1pYrugKWxWsRgy0IjLmfME5h
+ 0aXG92vw8sI7urdEpBOFOoKIzDm/g8poALQ==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793387675; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:kUcP4Aixrhcw8bGLrvLsi4MsXe/R91DSLeQQiUJVbTIOcCM
+ OOpjQTWtHOF6H+496XkByZBLs6pYFUNm3myGZ4MPrPuz9NvdO59nS3n2IVbvpECU
+ 433FX67jygN+07GFjwtoH4IhnZDSAjhoSPYndG6iiukbnwWzVuQxGS9MoOFmy4Ta
+ JTFgkxe8cWe62zTGc1984T3iSQY+woNq8eF3hxCTgyjorx+w01o5dS83JbmLO0iP
+ F9LwyBqWAeUf/gNNngl2Yg6M7J+tlhLeD0mKPanuS0TkJtgmS2xycMENukYvImb+
+ pTtAoAyBBDyCU0XbDcI8HzYqFgfpEYKnZm8EDtg==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=mi-m=1; hc=11;
+ hn=cc,content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:oCSQd7CRHe2yKKPcKcIk4qEljb9hanOMHyYlPeguH+I=:vz9u2j3MIwasfTqu/58zdy/nVvAlQT1LS2IqxIzWoOU=;
+X-ME-Sender: <xms:m-zkagPSpbjHHpqqCM9yMFS47udslzwM1G-pFE1bjnIHFPxRqIcezw>
+ <xme:m-zkarQIpWuCVCO6YXuBZdqSUN-ITw6CfxIpv1DpSExuq0qN3cSAfYy4LLo-0au3T
+ Lnk2shac3HqwrnyT6IvRmYf3K0fBay2R7khqm2z0S-ioefeRoyQBlWs>
+X-ME-Received: <xmr:m-zkamYfmxR3VA1DhCyEkjbt05WHNB-ZmK_Vayky6AguZQlWowgU8T8GE3tGEE_BEwuerKtOAYrjecbBfW7HnaeRjZQZKbYcdA>
+X-ME-Proxy-Cause: dmFkZTGHzjL+7dDxNenaI2s431NIzI0/xX/cHtAuMiqiaa0y3ynlvDZJ8ltV2xsu6Ih4sV
+ JyoSK60dhIACXtb6FPayYylaEgl9pNhBRUZv6nmsG3IcOYQYlWpunaQyhKZLpLCbFIk+Sy
+ vAmtGpegBGF5TlRCDVemxGm3//voMcxRQ24u8X1hMDjcEVSwQgilrrLaTAaUDSwe+099hl
+ hx/PI09y8sa3VAjPW0STSmLr7O4NXL72ZYTPyQib+q7vqaQ7hciqtt/32ZR7EfCcslpQ9n
+ LGeAZnR5Yo6vtXpa7yg2uISzfzBuH1/gXAa3bD2BXMJOk5I95SPypwq14ug9XuIjO000QZ
+ YXpX7XZcNWQUZt3GPZ+NmPO/Lhw/hs6Dft9rLPkTTts0CIwLE8ZzyImrnE1wjwYdrahrUM
+ EsgmxNo7TE5aQS7qA/dKMvUgeV3nbXYqPvPcUHl9y9NxS11p56Oodgf99wlFR+ztu4l6GS
+ Jvv+ZwQF7A9FQwfYeg21aN6asQD0msEwVQIdHlrYZzWZgoaE5UoepE3m6bDIZdJcCJ1lj5
+ KMPgUNNTwqlXZywv+oUAcvFYriZC/pIc8XNjQy4TEcaQjdBf1o2osuQTswMLJicpqfUgfe
+ vXt1SRvWvx+kFMRdhHS44F3y72i2m004f/ntOE5cu2MDmvNlgx4y5iop7toQ
+X-ME-Proxy: <xmx:m-zkag36GzyMWcupdhZxQmsMB9mXAt7jvkoUp5RCdlcI26G2VgJVJA>
+ <xmx:m-zkauUtC7lLo1eTIQ1kBPyKTazCZ59Ivnpq-sz5fjneO6t_o0ikrA>
+ <xmx:m-zkaiXM5KKa3-f-IrALybdMZfgLfFpBziYbdRbQhMmmuujvlX8z3w>
+ <xmx:m-zkalelUZ30H48PvSVu5LsG9XuxyZk3sw3gOFfUAxVd_FdWCfdOCg>
+ <xmx:m-zkaoJp67R1vMmQ4RqJ4tsZR3dTGZQSNKpndfJYzcpbIgm50AQJY7Jm>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 30 Oct 2026 15:14:35 -0400 (EDT)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id D395E27CC59; Fri, 30 Oct 2026 19:14:33 +0000 (GMT)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Robert Pluim <rpluim@gmail.com>
+Cc: Eli Zaretskii <eliz@gnu.org>, emacs-devel@gnu.org
+Subject: Re: Implementation of the Kitty Keyboard Protocol for Emacs
+In-Reply-To: <87y0bf9n1g.fsf@gmail.com>
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com> <86wlrc7b7b.fsf@gnu.org>
+ <87a4o8h3dh.fsf@athena.silentflame.com>
+ <87wlr0k4md.fsf@athena.silentflame.com> <868q3gwm9e.fsf@gnu.org>
+ <87mrrwjx8w.fsf@athena.silentflame.com> <865wykwink.fsf@gnu.org>
+ <87cxsrji6y.fsf@athena.silentflame.com> <87y0bf9n1g.fsf@gmail.com>
+Date: Fri, 30 Oct 2026 19:14:33 +0000
+Message-ID: <87a4nvj90m.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=202.12.124.158;
+ envelope-from=spwhitton@spwhitton.name; helo=fhigh-b7-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 30 Oct 2026 19:14:41 -0000
+
+Robert Pluim [30/Oct  5:21pm +01] wrote:
+>>>>>> On Fri, 30 Oct 2026 15:56:21 +0000, Sean Whitton <spwhitton@spwhitton.name> said:
+>
+>     Sean> Eli Zaretskii [29/Oct  6:55pm +02] wrote:
+>     >> I think it's important, yes.  Especially if we want other terminals to
+>     >> be able to support this without calling themselves xterm.
+>     >>
+>     >> I also think it might be useful to have a user option to disable this.
+>     >> Over the years, almost all of these extensions got in the way of
+>     >> someone, and we could never tell people "if it gets in the way,
+>     >> disable it".  Maybe it's time we did.
+>     >>
+>     >> But please don't make any such changes without hearing what others
+>     >> think, because I might be in a minority.
+>
+>     Sean> No, I think these are good points, I've implemented both in the
+>     Sean> attached.  Also fixed shifted punctuation keys which was previously not
+>     Sean> working.
+>
+> Could you mention the defcustom that allows turning this off in the
+> NEWS entry? Many people never read the manual.
+
+Yes, done, thanks.
+
+-- 
+Sean Whitton
+
+
