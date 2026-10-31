@@ -1,0 +1,1110 @@
+emacs-devel messages from 2026-10-30T18:15:00+01:00 to 2026-10-31T18:15:00+01:00
+
+================================================================================
+Date: 2026-10-30T20:14:33+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Implementation of the Kitty Keyboard Protocol for Emacs
+Message-ID: <87a4nvj90m.fsf@athena.silentflame.com>
+In-Reply-To: <87y0bf9n1g.fsf@gmail.com>
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com> <86wlrc7b7b.fsf@gnu.org>
+ <87a4o8h3dh.fsf@athena.silentflame.com>
+ <87wlr0k4md.fsf@athena.silentflame.com> <868q3gwm9e.fsf@gnu.org>
+ <87mrrwjx8w.fsf@athena.silentflame.com> <865wykwink.fsf@gnu.org>
+ <87cxsrji6y.fsf@athena.silentflame.com> <87y0bf9n1g.fsf@gmail.com>
+
+Robert Pluim [30/Oct  5:21pm +01] wrote:
+>>>>>> On Fri, 30 Oct 2026 15:56:21 +0000, Sean Whitton <spwhitton@spwhitton.name> said:
+>
+>     Sean> Eli Zaretskii [29/Oct  6:55pm +02] wrote:
+>     >> I think it's important, yes.  Especially if we want other terminals to
+>     >> be able to support this without calling themselves xterm.
+>     >>
+>     >> I also think it might be useful to have a user option to disable this.
+>     >> Over the years, almost all of these extensions got in the way of
+>     >> someone, and we could never tell people "if it gets in the way,
+>     >> disable it".  Maybe it's time we did.
+>     >>
+>     >> But please don't make any such changes without hearing what others
+>     >> think, because I might be in a minority.
+>
+>     Sean> No, I think these are good points, I've implemented both in the
+>     Sean> attached.  Also fixed shifted punctuation keys which was previously not
+>     Sean> working.
+>
+> Could you mention the defcustom that allows turning this off in the
+> NEWS entry? Many people never read the manual.
+
+Yes, done, thanks.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-30T23:32:55+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87qzh6om3t.fsf@posteo.net>
+In-Reply-To: <m24ie4misn.fsf@macmutant.fritz.box>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+ <179301336681.7054.17558261044765912242@gmail.com>
+ <E1xMTLz-00Axpw-4V@fencepost.gnu.org>
+ <m24ie4misn.fsf@macmutant.fritz.box>
+
+Arash Esbati <arash@gnu.org> writes:
+
+> Richard Stallman <rms@gnu.org> writes:
+>
+>> "TeX-line-break" is short for "line breaking, as in TeX".
+>> "TeXlike-line-break" is short for "line breaking like the way TeX does
+>> it."  Either of those names describes this package's purpose clearly
+>> to anyone who has a basic awareness of what TeX does and what makes it
+>> so good.  That is a large fraction of our community.
+>>
+>> "TeX-fill" or "TeXlike-fill" would also achieve this.
+>>
+>> By contrast, "ekp-fill" communicates only that it is about filling text.
+>> Hardly anyone, even among TeX users, will know what "ekp" refers to.
+>>
+>> I maintain that the names I propose, because they include "TeX", are
+>> better for communicating what this package does.  That will help show
+>> users what the package can do, and thus encourage its use.
+>>
+>> It's not too late to adopt a name that refers to TeX.  Let's do that!
+>
+> May I ask to use other prefix than TeX?  This is the namespace of tex.el
+> (part of AUCTeX) which uses this as distinction to tex namespace in
+> tex-mode.el (part of Emacs).
+
+The current plan is first to see if the functionality can be added to
+the core, so the issue of naming the package is not important right now
+anyway -- but yes, if we do add this as a package it would be better to
+avoid the TeX- prefix, both to not have the conflict with AUCTeX, but
+also since as we have established in this thread, the package is about
+the Knuth-Plass algorithm, which TeX incidentally uses, but is otherwise
+the package has nothing more to do with TeX.
+
+> TIA.  Best, Arash
+
+================================================================================
+Date: 2026-10-30T23:46:44+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <m2fqxmhkmj.fsf@macmutant.fritz.box>
+In-Reply-To: <87qzh6om3t.fsf@posteo.net>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+ <179301336681.7054.17558261044765912242@gmail.com>
+ <E1xMTLz-00Axpw-4V@fencepost.gnu.org>
+ <m24ie4misn.fsf@macmutant.fritz.box> <87qzh6om3t.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> The current plan is first to see if the functionality can be added to
+> the core, so the issue of naming the package is not important right now
+> anyway -- but yes, if we do add this as a package it would be better to
+> avoid the TeX- prefix, both to not have the conflict with AUCTeX, but
+> also since as we have established in this thread, the package is about
+> the Knuth-Plass algorithm, which TeX incidentally uses, but is otherwise
+> the package has nothing more to do with TeX.
+
+My only concern is that if the package is renamed to TeX-FOO, at some
+point of time it might also provide functions/variables starting with
+'TeX-', and I don't want to get there.  So from my POV, I'm really easy
+about the package name, as long as it doesn't provide symbols starting
+with 'TeX-'.
+
+Best, Arash
+
+================================================================================
+Date: 2026-10-31T00:02:07+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Human Emacs
+Message-ID: <87mrruokr5.fsf@posteo.net>
+In-Reply-To: <8733tozesd.fsf@asthra>
+References: <8733tozesd.fsf@asthra>
+
+Phil Hagelberg <phil@hagelb.org> writes:
+
+[...]
+
+> Forks of Emacs have a poor track record, but this is a case where we are left
+> without much choice. There is too much at stake: giving up using Emacs for
+> many of us would feel tantamount to giving up on computing altogether, or at
+> least giving up on the parts of computing that bring us joy. Therefore we are
+> committed to build and maintain the Emacs we need to exist. We sincerely hope
+> that this will mean a renewed and re-invigorated commitment to GNU Emacs.
+
+I am no fan of this initiative.  As Eli pointed out, you have to state
+clearly what the issues are that you have with LLM generated code.  A
+lot of the criticisms I see floating around are sadly often misinformed
+(e.g. water usage) or outdated (extend of hallucination) which reduces
+the quality of discussions since the two sides of the discussion are
+talking about different things.  I don't sympathize with LLM proponents,
+but the energy of people around initiatives like these are honestly more
+draining for me because of my proximity.
+
+But what interests me more is you could elaborate on what your approach
+to ELPA will be.  I think I've asked you about this before, but I would
+be curious to hear if you have any new plans.  If Emacs will be opened
+to LLM contributions I expect that there will be many features that your
+fork will either have to re-implement (which will not necessarily be
+bug-for-bug complete) or just ignore.  This will inevitably cause
+breakage if packages written for GNU Emacs assume that the functionality
+is available.  Perhaps it would just be easier for you to fork ELPA at
+that point with packages that opt-in and share your values.
+
+> Our second goal is to reach others who feel this same concern, so you know
+> you are not alone. We have seen too many other communities fail to meet the
+> challenge of this moment, and we can't stand aside and observe the outcome of
+> this policy decision with cool detachment. If you feel the same way, join us
+> in solidarity. Visit https://human-emacs.org where you can read more
+> information and see the list of supporters so far; we would love to add your
+> name to the list or hear your voice in our IRC channel and mailing list.
+>
+> My sincere thanks goes out to everyone who has brought Emacs to where it is
+> today and especially to those who have helped institute the policy that has
+> protected Emacs from LLM contributions so far. Emacs means too much to me to
+> see it share the same fate as Vim, Linux, rsync, and countless other
+> disappointments; we have to do better.
+
+I would appreciate it if this discussion could be lead without this
+"cooties"-like approach that just any LLM-generated (or even assisted?)
+contributions are added to the package that all hope is lost for the
+project (again, this is why this discourse is so draining to follow).
+To aid your point, it would be useful if you could point to issues that
+resulted from an absence of an anti-LLM contribution policy which
+couldn't have also been mistakes made by humans.
+
+> -Phil Hagelberg (aka technomancy), on behalf of the Human Emacs signatories
+>
+> 1: https://lists.gnu.org/archive/html/emacs-devel/2026-03/msg00425.html
+
+================================================================================
+Date: 2026-10-31T00:03:39+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Need to bump Xref from 1.7.0 to 1.8.0
+Message-ID: <87ik2iokol.fsf@posteo.net>
+In-Reply-To: <CALDnm53Ud=_FwSwFLXWYvqpG=2fsGmJRuHHajih=Y2y-+U69jw@mail.gmail.com>
+References: <CALDnm51HFQ7NYqC=2bLLN16oXYgwfik2wNbAfgThk6KATMrJvw@mail.gmail.com>
+ <8733tonc2f.fsf@athena.silentflame.com>
+ <6d2649a4-89c7-43af-a7ea-cd683d70ad19@gutov.dev>
+ <CALDnm53Ud=_FwSwFLXWYvqpG=2fsGmJRuHHajih=Y2y-+U69jw@mail.gmail.com>
+
+João Távora <joaotavora@gmail.com> writes:
+
+> On Thu, Oct 29, 2026, 10:41 Dmitry Gutov <dmitry@gutov.dev> wrote:
+>
+>>
+>> >>
+>> >> I seem to remember that you said it's OK to bump Xref if I need to, but
+>> it'd
+>> >> be best if I had confirmation.
+>> >
+>> > Let's give Dmitry a few days to let us know but then otherwise it is
+>> > probably fine.
+>>
+>> Yes, please give me a couple of days, and then we'll bump.
+>
+>
+> Currently anyone upgrading to Eglot 1.25 will be left with a
+> non-functioning system
+
+I must be missing something, but how is this possible?  Shouldn't Eglot
+specify the right version of Xref in its dependency list that would
+prevent the upgrade from happening if the right version of Xref hasn't
+been released yet?
+
+================================================================================
+Date: 2026-10-31T00:09:27+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87ecd6okex.fsf@posteo.net>
+In-Reply-To: <m2fqxmhkmj.fsf@macmutant.fritz.box>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+ <179301336681.7054.17558261044765912242@gmail.com>
+ <E1xMTLz-00Axpw-4V@fencepost.gnu.org>
+ <m24ie4misn.fsf@macmutant.fritz.box> <87qzh6om3t.fsf@posteo.net>
+ <m2fqxmhkmj.fsf@macmutant.fritz.box>
+
+Arash Esbati <arash@gnu.org> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>> The current plan is first to see if the functionality can be added to
+>> the core, so the issue of naming the package is not important right now
+>> anyway -- but yes, if we do add this as a package it would be better to
+>> avoid the TeX- prefix, both to not have the conflict with AUCTeX, but
+>> also since as we have established in this thread, the package is about
+>> the Knuth-Plass algorithm, which TeX incidentally uses, but is otherwise
+>> the package has nothing more to do with TeX.
+>
+> My only concern is that if the package is renamed to TeX-FOO, at some
+> point of time it might also provide functions/variables starting with
+> 'TeX-', and I don't want to get there.  So from my POV, I'm really easy
+> about the package name, as long as it doesn't provide symbols starting
+> with 'TeX-'.
+
+Noted, I think this is a valid point.  I can promise for my own part
+that I won't be adding any packages to ELPA that share this prefix.
+
+> Best, Arash
+
+================================================================================
+Date: 2026-10-31T00:21:04+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <m2bj8ahj1b.fsf@macmutant.fritz.box>
+In-Reply-To: <87ecd6okex.fsf@posteo.net>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+ <179301336681.7054.17558261044765912242@gmail.com>
+ <E1xMTLz-00Axpw-4V@fencepost.gnu.org>
+ <m24ie4misn.fsf@macmutant.fritz.box> <87qzh6om3t.fsf@posteo.net>
+ <m2fqxmhkmj.fsf@macmutant.fritz.box> <87ecd6okex.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> Noted, I think this is a valid point.  I can promise for my own part
+> that I won't be adding any packages to ELPA that share this prefix.
+
+🙏
+
+================================================================================
+Date: 2026-10-31T06:02:25+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev>
+In-Reply-To: <86se1nvf3v.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+
+On 30/10/2026 09:09, Eli Zaretskii wrote:
+>> I have now pushed an update in commit f982de03ff1 which uses a different
+>> strategy, seems snappy in Emacs, and somewhat usable even in a larger
+>> project (but that might depend on the chosen kind).
+> 
+> Thanks, will try that soon.
+
+Feedback most welcome.
+
+> Case-fold that is consistent with the file's PL is a must, otherwise
+> things will break in Fortran and other similar languages.  So I hope
+> this will be added soon.
+
+I'm trying a couple of options.
+
+>> ? With the user invoking 'M-x global-xref-etags-mode' first.
+> 
+> That's just a variant of turning on xref-etags-mode everywhere, isn't
+> it?
+
+It is. Or could be done with an option, if someone's interested.
+
+> I was thinking about some kind of "memory", whereby if the last "M-g
+> M-."  used some backend, the next one will use the same backend, with
+> some command to reset the backend to the one that is the default for
+> the current buffer's major mode.  The reason is that it happens a lot
+> in my workflows that one tag search is followed by another, then
+> another, etc., because I'm looking for something and didn't yet find
+> it.  For example, I could be looking at a function which calls
+> another, which in turns calls another, etc. etc., and I will be going
+> down this rabbit hole because I need to understand something buried
+> deep in a sequence of calls.  Or I could be looking for something,
+> discover that it wasn't what I wanted, then change the symbol name
+> slightly and search again, and so on and so forth, until I find what
+> I'm looking for.  In these situations, having the backend change
+> half-way is unexpected and annoying.
+
+I see. Usually when doing something like that I would jump back each 
+time before next search, or use the Xref buffer to launch searches.
+
+But neither is very intuitive, I guess.
+
+> If you think that a minor mode which will allow this is reasonable,
+> maybe that's good enough.  Another possibility would be to have a
+> special value of prefix arg (e.g., "C-u C-u") to use the same backend
+> as previous invocation, with a user option to reverse the meaning of
+> "C-u C-u".
+
+Would the use of 'C-u C-u' always make the commands prompt for 
+identifier to use.
+
+Can be done, anyway.
+
+================================================================================
+Date: 2026-10-31T06:11:18+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Human Emacs
+Message-ID: <auV4dkJQGTzQcnmN@rtx.louis.club>
+In-Reply-To: <8733tozesd.fsf@asthra>
+References: <8733tozesd.fsf@asthra>
+
+As much as I have been blabbingprotesting about LLM-generated code in
+Emacs packages, my purpose was to highlight potential issues related
+to copyrights, not features, I did not protest against features being
+useful.
+
+My intent was never to make the authors feel bad (though that
+happened). As much as I protested against LLM-generated code, I always
+had sympathy for the authors as initiators of useful features,
+regardless of whether LLM code was used (I just think they could have
+free GPUs, and free LLMs running locally). Although I personally value
+the GNU free software philosophy over technical features in the GNU
+project, I have absolutely no issue with authors publishing their
+packages elsewhere as software freedom is for everyone, with or
+without LLM code and final decisions are on GNU project maintainers,
+not on me as a user of GNU.
+
+Any code, patch, or function generated by an LLM serves a human
+purpose and reflects a human decision, regardless of whether the
+syntax is produced by a neural network or a biological neuron.
+
+If an elegant function solves a user's problem, it embodies
+human-centric values by meeting a human need. Therefore, Phil
+Hagelberg's branding of `Human Emacs' is not a technical standard, but
+a marketing exercise for his anti-AI movement, the one that exhibits
+purist, exclusionary, and even fascist-like traits.
+
+Reference to Phil Hagelberg's statement:
+https://lists.sr.ht/~technomancy/human-emacs/%3C871pcrhrdl.fsf@asthra%3E
+https://lists.sr.ht/~technomancy/human-emacs?search=abrasive+assholes+phil+hagelberg
+
+> It seems like a good sign that the maintainers are serious that the
+> temporary ban needs to be upheld. But this does add some urgency to
+> the question. We're already seeing LLM fans coming out to defend the
+> commit; luckily in this case they're abrasive assholes that are not
+> winning any friends among the Emacs maintainers.
+
+Using LLM generation doesn't make any software author less human.
+
+Calling people "abrasive assholes" is definitely a feature of the
+Human Emacs project, and I would never do that, no matter how heated
+the discussion becomes.
+
+Phil Hagelberg is dismissive and coercive because he decides the
+conversation is over before it begins, declaring he has "heard it all"
+and doesn't care what you say. He uses insults like "abrasive
+assholes" not just to describe people, but to define his group’s
+identity, making him proud to be rude. He then threatens the main
+Emacs project by saying their version isn't "real" GNU Emacs unless it
+follows his stricter rules, forcing his way into the project by acting
+superior and demanding they submit to his moral standards.
+
+Phil is using his private human-emacs list not for genuine discussion,
+but for validation theater.
+
+- He sends his draft to a small group.
+
+- He incorporates minor tweaks (e.g., Bastien Guerry’s suggestion to
+  define "LLM contributions" more broadly).
+
+- He then presents the slightly polished version as the unified voice
+  of "Human Emacs," implying that the group has already debated,
+  refined, and agreed. This creates a false impression of a mature,
+  deliberated movement, when it is largely a solo project with a few
+  rubber stamps.
+
+"Human Emacs" is becoming a lifestyle brand for anti-AI purists, and
+he is the CEO. The signatures of people, the polished letter, the
+targeted emails to Emacs users, it’s all PR. He is using the main
+project’s resources (the mailing list, the maintainers’ attention) to
+validate his movement, while carefully avoiding giving up any actual
+decision-making power. He wants the prestige of being the leader of
+the "real" Emacs.
+
+Everyone else is not human, rather the "abrasive asshole" (just
+quoting Phil Hagelberg).
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-10-31T07:58:12+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Implementation of the Kitty Keyboard Protocol for Emacs
+Message-ID: <86fqxmtkzf.fsf@gnu.org>
+In-Reply-To: <87cxsrji6y.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Fri, 30 Oct 2026 15:56:21 +0000)
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com> <86wlrc7b7b.fsf@gnu.org>
+ <87a4o8h3dh.fsf@athena.silentflame.com>
+ <87wlr0k4md.fsf@athena.silentflame.com> <868q3gwm9e.fsf@gnu.org>
+ <87mrrwjx8w.fsf@athena.silentflame.com> <865wykwink.fsf@gnu.org>
+ <87cxsrji6y.fsf@athena.silentflame.com>
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Date: Fri, 30 Oct 2026 15:56:21 +0000
+> 
+> * doc/emacs/custom.texi (Terminal Init):
+> * etc/NEWS: Document the new support.
+> * doc/emacs/trouble.texi (Emergency Escape): Mention that
+> emergency escape is not available in graphical frames or when
+> the Kitty Keyboard Protocol is in use.
+
+I think the fact that this feature enables more modifies and more keys
+should also be mentioned in several other places in the user manual.
+Some nodes that come to mind:
+
+  Modifier Keys
+  Keymaps
+  Quitting
+
+> +@vindex tty-use-kitty-kbd-proto
+> +  When your terminal supports the
+> +@uref{https://sw.kovidgoyal.net/kitty/keyboard-protocol/, Kitty Keyboard
+> +Protocol}, Emacs detects this and uses the protocol to communicate with
+> +the terminal.  This enhances keyboard input by allowing Emacs to
+> +distinguish between key sequences like @kbd{RET} and @kbd{C-<return>},
+> +which normally can't be distinguished in text-mode frames.  If the Kitty
+> +Keyboard Protocol causes problems because your terminal emulator's
+> +support for it is buggy, customize the variable
+> +@code{tty-use-kitty-kbd-proto} to @code{nil}.  You'll need to restart
+> +Emacs for this to take effect as changing it does not cause Emacs to
+> +stop using the Kitty Keyboard Protocol for a terminal once it has turned
+> +it on.
+
+Is there anything (except filing a bug report) a user can do if Emacs
+doesn't detect the protocol support on his/her terminal?  If so, I
+think the manual should tell what to do in that case.
+
+================================================================================
+Date: 2026-10-31T08:18:17+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <86cxsqtk1y.fsf@gnu.org>
+In-Reply-To: <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev> (message from
+ Dmitry Gutov on Sat, 31 Oct 2026 07:02:25 +0200)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev>
+
+> Date: Sat, 31 Oct 2026 07:02:25 +0200
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 30/10/2026 09:09, Eli Zaretskii wrote:
+> 
+> > I was thinking about some kind of "memory", whereby if the last "M-g
+> > M-."  used some backend, the next one will use the same backend, with
+> > some command to reset the backend to the one that is the default for
+> > the current buffer's major mode.  The reason is that it happens a lot
+> > in my workflows that one tag search is followed by another, then
+> > another, etc., because I'm looking for something and didn't yet find
+> > it.  For example, I could be looking at a function which calls
+> > another, which in turns calls another, etc. etc., and I will be going
+> > down this rabbit hole because I need to understand something buried
+> > deep in a sequence of calls.  Or I could be looking for something,
+> > discover that it wasn't what I wanted, then change the symbol name
+> > slightly and search again, and so on and so forth, until I find what
+> > I'm looking for.  In these situations, having the backend change
+> > half-way is unexpected and annoying.
+> 
+> I see. Usually when doing something like that I would jump back each 
+> time before next search, or use the Xref buffer to launch searches.
+> 
+> But neither is very intuitive, I guess.
+> 
+> > If you think that a minor mode which will allow this is reasonable,
+> > maybe that's good enough.  Another possibility would be to have a
+> > special value of prefix arg (e.g., "C-u C-u") to use the same backend
+> > as previous invocation, with a user option to reverse the meaning of
+> > "C-u C-u".
+> 
+> Would the use of 'C-u C-u' always make the commands prompt for 
+> identifier to use.
+
+It would (and for the KIND as well), but that's usually what I need in
+these workflows, which chases some code until the answer is found.
+And the default for the symbol it offers is the symbol at point, so if
+that's what I want, it's only 2 keystrokes away.
+
+================================================================================
+Date: 2026-10-31T08:27:11+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86a4nutjn4.fsf@gnu.org>
+In-Reply-To: <auV4dkJQGTzQcnmN@rtx.louis.club> (message from Jean Louis on
+ Sat, 31 Oct 2026 08:11:18 +0300)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+
+> Date: Sat, 31 Oct 2026 08:11:18 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: emacs-devel@gnu.org
+> 
+>                                               Therefore, Phil
+> Hagelberg's branding of `Human Emacs' is not a technical standard, but
+> a marketing exercise for his anti-AI movement, the one that exhibits
+> purist, exclusionary, and even fascist-like traits.
+> [...]
+> Phil Hagelberg is dismissive and coercive because he decides the
+> [...]
+> Phil is using his private human-emacs list not for genuine discussion,
+> but for validation theater.
+> [...]
+> "Human Emacs" is becoming a lifestyle brand for anti-AI purists, and
+> he is the CEO.
+
+These personal attacks on people have no place in this list, so please
+don't post anything like that again here.
+
+And I find it futile to have any discussions about this initiative on
+this list anyway, since initiative's proponents made it clear there
+will be no discussion.  So, everybody, let's not waste any more energy
+and bandwidth on this.
+
+================================================================================
+Date: 2026-10-31T08:46:31+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Human Emacs
+Message-ID: <c47d33e706627cc5c69f0b347266cdf2@gnu.support>
+In-Reply-To: <86a4nutjn4.fsf@gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+
+> And I find it futile to have any discussions about this initiative on
+> this list anyway, since initiative's proponents made it clear there
+> will be no discussion.  So, everybody, let's not waste any more energy
+> and bandwidth on this.
+
+👍👍👍
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-10-31T09:09:24+01:00
+From: Divya Ranjan Pattanaik <divya@dialetheia.xyz>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <97c78d61-d96f-4317-b1ee-fc622f780d7e@dialetheia.xyz>
+In-Reply-To: <874ie4pdsy.fsf@posteo.net>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+ <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+ <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz>
+ <874ie4pdsy.fsf@posteo.net>
+
+
+
+================================================================================
+Date: 2026-10-31T09:49:11+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <86pkwqs1a0.fsf@gnu.org>
+In-Reply-To: <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev> (message from
+ Dmitry Gutov on Sat, 31 Oct 2026 07:02:25 +0200)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev>
+
+> Date: Sat, 31 Oct 2026 07:02:25 +0200
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 30/10/2026 09:09, Eli Zaretskii wrote:
+> >> I have now pushed an update in commit f982de03ff1 which uses a different
+> >> strategy, seems snappy in Emacs, and somewhat usable even in a larger
+> >> project (but that might depend on the chosen kind).
+> > 
+> > Thanks, will try that soon.
+> 
+> Feedback most welcome.
+
+Looks and feels very good, thanks.  I tested both with the Emacs TAGS
+file and with ETAGS_good_1 in test/manual/etags, and they both seem to
+work well.
+
+================================================================================
+Date: 2026-10-31T10:25:55+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Byte-compilation warning in org-persist.el
+Message-ID: <86jymyrzks.fsf@gnu.org>
+In-Reply-To: 
+References: 
+
+Ihor,
+
+After merging from the release branch to master, I see the following
+compilation warning:
+
+  In org-persist--write-elisp-file:
+  org/org-persist.el:492:18: Warning: `pp-use-max-width' is an obsolete variable (as of 30.1); use `pp-default-function' instead.
+
+There's no such warning on the release branch.
+
+Could this warning be fixed on master, please?
+
+================================================================================
+Date: 2026-10-31T11:26:10+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Implementation of the Kitty Keyboard Protocol for Emacs
+Message-ID: <87ecd6yxml.fsf@melete.silentflame.com>
+In-Reply-To: <86fqxmtkzf.fsf@gnu.org>
+References: <87v76whhor.fsf@athena.silentflame.com> <86zew87fde.fsf@gnu.org>
+ <87fqy0h8ms.fsf@athena.silentflame.com> <86wlrc7b7b.fsf@gnu.org>
+ <87a4o8h3dh.fsf@athena.silentflame.com>
+ <87wlr0k4md.fsf@athena.silentflame.com> <868q3gwm9e.fsf@gnu.org>
+ <87mrrwjx8w.fsf@athena.silentflame.com> <865wykwink.fsf@gnu.org>
+ <87cxsrji6y.fsf@athena.silentflame.com> <86fqxmtkzf.fsf@gnu.org>
+
+Eli Zaretskii [31/Oct  8:58am +02] wrote:
+>> From: Sean Whitton <spwhitton@spwhitton.name>
+>> Date: Fri, 30 Oct 2026 15:56:21 +0000
+>>
+>> * doc/emacs/custom.texi (Terminal Init):
+>> * etc/NEWS: Document the new support.
+>> * doc/emacs/trouble.texi (Emergency Escape): Mention that
+>> emergency escape is not available in graphical frames or when
+>> the Kitty Keyboard Protocol is in use.
+>
+> I think the fact that this feature enables more modifies and more keys
+> should also be mentioned in several other places in the user manual.
+> Some nodes that come to mind:
+>
+>   Modifier Keys
+>   Keymaps
+>   Quitting
+
+Thanks, will do.
+
+>> +@vindex tty-use-kitty-kbd-proto
+>> +  When your terminal supports the
+>> +@uref{https://sw.kovidgoyal.net/kitty/keyboard-protocol/, Kitty Keyboard
+>> +Protocol}, Emacs detects this and uses the protocol to communicate with
+>> +the terminal.  This enhances keyboard input by allowing Emacs to
+>> +distinguish between key sequences like @kbd{RET} and @kbd{C-<return>},
+>> +which normally can't be distinguished in text-mode frames.  If the Kitty
+>> +Keyboard Protocol causes problems because your terminal emulator's
+>> +support for it is buggy, customize the variable
+>> +@code{tty-use-kitty-kbd-proto} to @code{nil}.  You'll need to restart
+>> +Emacs for this to take effect as changing it does not cause Emacs to
+>> +stop using the Kitty Keyboard Protocol for a terminal once it has turned
+>> +it on.
+>
+> Is there anything (except filing a bug report) a user can do if Emacs
+> doesn't detect the protocol support on his/her terminal?  If so, I
+> think the manual should tell what to do in that case.
+
+You can force it on by customizing xterm-extra-capabilities.  I'll add
+mention of that.  Perhaps it should become its own node.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-31T11:28:18+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Byte-compilation warning in org-persist.el
+Message-ID: <87bj8ayxj1.fsf@melete.silentflame.com>
+In-Reply-To: <86jymyrzks.fsf@gnu.org>
+References: <86jymyrzks.fsf@gnu.org>
+
+Eli Zaretskii [31/Oct 11:25am +02] wrote:
+> Ihor,
+>
+> After merging from the release branch to master, I see the following
+> compilation warning:
+>
+>   In org-persist--write-elisp-file:
+>   org/org-persist.el:492:18: Warning: `pp-use-max-width' is an obsolete variable (as of 30.1); use `pp-default-function' instead.
+>
+> There's no such warning on the release branch.
+>
+> Could this warning be fixed on master, please?
+
+(It's been there for a few months, it's not the result of any recent
+merge.)
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-10-31T12:04:56+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU ELPA] Submission inquiry: clutch,
+ an interactive database client
+Message-ID: <86fqxmruzr.fsf@gnu.org>
+In-Reply-To: <E1xMTHX-00ArRS-Ap@fencepost.gnu.org> (message from Richard
+ Stallman on Thu, 29 Oct 2026 12:47:15 -0400)
+References: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+ <E1xJXxO-0077Vu-KE@fencepost.gnu.org>
+ <CALyaXOiNNDx18hJggwaCDhLY0GDrWc9LY36HNzurfeqxnVB1cg@mail.gmail.com>
+ <86ld7n4noh.fsf@gnu.org>
+ <CA+TD5hgC4wqsQkzyHWARGOn9m29o4efj-CW-h=Sp=J_o5VKpfQ@mail.gmail.com>
+ <E1xMTHX-00ArRS-Ap@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: eliz@gnu.org, chenyh572@gmail.com, emacs-devel@gnu.org
+> Date: Thu, 29 Oct 2026 12:47:15 -0400
+> 
+>   > I think
+>   > the GNU project could do a better job of informing what the policy is. For
+>   > example, the file CONTRIBUTE currently does not mention this at all.
+> 
+> I think you are right.  Thanks for pointing out that this was missing
+> in CONTRIBUTE.  I wrote this text to add there.
+
+Thanks, I've now added it with very minor changes.
+
+================================================================================
+Date: 2026-10-31T14:05:19+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev>
+In-Reply-To: <86qzh7ve6t.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev> <86qzh7ve6t.fsf@gnu.org>
+
+On 30/10/2026 09:29, Eli Zaretskii wrote:
+>> Date: Fri, 30 Oct 2026 04:52:17 +0200
+>> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+>> From: Dmitry Gutov <dmitry@gutov.dev>
+>>
+>> Somewhat relatedly, here's what felt like annoyances in my testing:
+>>
+>> - defun behind the label "primitive" was not intuitive to me; I had to
+>> jump to the source to find that defuns are supported, and which kind to
+>> use for them. YMMV.
+> 
+> Can you explain why this wasn't intuitive?  We call these "primitives"
+> all over the ELisp manual.  It's an accepted terminology in Emacs Lisp.
+
+I think more commonly (outside Emacs), Lisp primitives are said to be 
+the basic blocks of the language (arithmetics, flow control, car/cdr).
+
+But DEFUN allows you to define about any Lisp function, just in C. Like, 
+is 'android-detect-keyboard' a primitive? Possibly not.
+
+>> - Maybe etags--types-regexp-alist should be called with "kinds" in the
+>> name? Just an implementation concern though.
+> 
+> You mean, to have it filter by KIND?
+
+No, just wondering why it's not 'etags--kinds-regexp-alist'.
+
+>> - The list of kinds in etags feels a little too long. Or at least when
+>> testing it seemed apparent that the last 3 kinds won't have matches in
+>> the current project, so they seemed tacked-on.
+> 
+> What is "the current project"?
+
+Whatever body of files the current TAGS correspond do.
+
+> These kinds are relevant to Ada and
+> other languages which etags supports.
+
+Sure.
+
+>> Not sure how to solve this, but perhaps in this backend the method
+>> xref-backend-xref-kinds *could* be dynamic, scanning the tags file for
+>> what kinds are available, and caching the result. This is not free, though.
+> 
+> Right.  In the end, simplicity won me, and I don't think the current
+> single list is such a bad idea, don't you agree?
+
+It feels a little long now, and with new kinds planned to be added, that 
+would likely get more so.
+
+So unless we manage to reclassify the existing ones into a more compact 
+set of kinds, I think we should try that dynamic building of the list.
+
+Two options that I see:
+- Base on the list of files in TAGS, by file extensions. Then you won't 
+see kinds not applicable to file types in the project, but still no 
+guarantee that some kinds won't show 0 identifiers.
+- Scan through TAGS for every regexp. Likely to be slower; the expense 
+would vary by project.
+
+================================================================================
+Date: 2026-10-31T14:16:58+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <861p96rovp.fsf@gnu.org>
+In-Reply-To: <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev> (message from
+ Dmitry Gutov on Sat, 31 Oct 2026 15:05:19 +0200)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev> <86qzh7ve6t.fsf@gnu.org>
+ <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev>
+
+> Date: Sat, 31 Oct 2026 15:05:19 +0200
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 30/10/2026 09:29, Eli Zaretskii wrote:
+> >> Date: Fri, 30 Oct 2026 04:52:17 +0200
+> >> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> >> From: Dmitry Gutov <dmitry@gutov.dev>
+> >>
+> >> Somewhat relatedly, here's what felt like annoyances in my testing:
+> >>
+> >> - defun behind the label "primitive" was not intuitive to me; I had to
+> >> jump to the source to find that defuns are supported, and which kind to
+> >> use for them. YMMV.
+> > 
+> > Can you explain why this wasn't intuitive?  We call these "primitives"
+> > all over the ELisp manual.  It's an accepted terminology in Emacs Lisp.
+> 
+> I think more commonly (outside Emacs), Lisp primitives are said to be 
+> the basic blocks of the language (arithmetics, flow control, car/cdr).
+> 
+> But DEFUN allows you to define about any Lisp function, just in C. Like, 
+> is 'android-detect-keyboard' a primitive? Possibly not.
+
+It is, according to the ELisp manual:
+
+  “primitive”
+       A function which is callable from Lisp but is actually written in
+       C.  Primitives are also called “built-in functions”, or “subrs”.
+       Examples include functions like ‘car’ and ‘append’.  In addition,
+       all special forms (see below) are also considered primitives.
+
+> >> - The list of kinds in etags feels a little too long. Or at least when
+> >> testing it seemed apparent that the last 3 kinds won't have matches in
+> >> the current project, so they seemed tacked-on.
+> > 
+> > What is "the current project"?
+> 
+> Whatever body of files the current TAGS correspond do.
+> 
+> > These kinds are relevant to Ada and
+> > other languages which etags supports.
+> 
+> Sure.
+> 
+> >> Not sure how to solve this, but perhaps in this backend the method
+> >> xref-backend-xref-kinds *could* be dynamic, scanning the tags file for
+> >> what kinds are available, and caching the result. This is not free, though.
+> > 
+> > Right.  In the end, simplicity won me, and I don't think the current
+> > single list is such a bad idea, don't you agree?
+> 
+> It feels a little long now, and with new kinds planned to be added, that 
+> would likely get more so.
+
+Which new kinds are planned?
+
+> So unless we manage to reclassify the existing ones into a more compact 
+> set of kinds, I think we should try that dynamic building of the list.
+> 
+> Two options that I see:
+> - Base on the list of files in TAGS, by file extensions. Then you won't 
+> see kinds not applicable to file types in the project, but still no 
+> guarantee that some kinds won't show 0 identifiers.
+
+I remind you that it is not simple to determine the language from
+file-name extensions alone.  So this might produce false negatives,
+with the result that some kinds are removed from the list when they
+shouldn't be.
+
+> - Scan through TAGS for every regexp. Likely to be slower; the expense 
+> would vary by project.
+
+Yes, and that's just to suggest the list for selecting a kind.  Not
+sure it's worthwhile.
+
+Maybe we should wait until we have some actual user feedback?
+
+================================================================================
+Date: 2026-10-31T14:51:48+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [gnu] externals/org 7e994657f5b 1/3: Fix =xxx= in section headings
+Message-ID: <jwvv76i6kuu.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261030230400.2BD55C111EC@vcs2.savannah.gnu.org>
+References: <179340143959.644.13574080460876933164@vcs2.savannah.gnu.org>
+ <20261030230400.2BD55C111EC@vcs2.savannah.gnu.org>
+
+>    (org-export-create-backend
+>     :parent 'latex
+>     :transcoders
+> -   '((underline . #'(lambda (o c i) (format "\\underline{%s}" c)))
+> +   '((underline . (lambda (o c i) (format "\\underline{%s}" c)))
+>       ;; LaTeX isn't happy when you try to use \verb inside the argument of other
+>       ;; commands (like \section, etc.), and this causes compilation to fail.
+>       ;; So, within headings it's a good idea to replace any instances of \verb
+>       ;; with \texttt.
+> -     (code . #'(lambda (o _ _) (org-latex--protect-texttt (org-element-property :value o))))
+> -     (verbatim . #'(lambda (o _ _) (org-latex--protect-texttt (org-element-property :value o))))))
+> +     (code . (lambda (o _ _) (org-latex--protect-texttt (org-element-property :value o))))
+> +     (verbatim . (lambda (o _ _) (org-latex--protect-texttt (org-element-property :value o))))))
+>    "Export backend that hard-codes \\underline within \\section and alike.")
+
+Even better would be
+
+     (org-export-create-backend
+      :parent 'latex
+      :transcoders
+      `((underline . ,(lambda (o c i) (format "\\underline{%s}" c)))
+        ;; LaTeX isn't happy when you try to use \verb inside the argument of other
+        ;; commands (like \section, etc.), and this causes compilation to fail.
+        ;; So, within headings it's a good idea to replace any instances of \verb
+        ;; with \texttt.
+        (code . ,(lambda (o _ _) (org-latex--protect-texttt (org-element-property :value o))))
+        (verbatim . ,(lambda (o _ _) (org-latex--protect-texttt (org-element-property :value o))))))
+
+so those lambdas don't use the old dynbind dialect of ELisp and so the
+compiler gets to see (and compile) this part of the code.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-10-31T17:29:27+01:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: Human Emacs
+Message-ID: <2d3ad682-038d-4222-82d8-c0a734096048@imayhem.com>
+In-Reply-To: <8733tozesd.fsf@asthra>
+References: <8733tozesd.fsf@asthra>
+
+Everybody has their limit. You put yours exactly where your comfort
+ends. And to justify it, you point at data centers wrecking
+communites, in rich countries: their water! their views! That's your
+exmaple of a wrecked community. Not the poor ones that have carried
+your computers and your internet on their backs for decades, mining,
+assembling and burning them. Name the "harms" you accepted before
+saying "enough".
+
+The machines and the network you can't live without have been doing
+for years what you condemn, EXPLOITATION, always to the same people:
+the poor, those who can't defend. Anywhere.
+
+This isn't "solidarity". This is you guarding your playbox.
+
+
+On 10/29/2026 4:50 PM, Phil Hagelberg wrote:
+> I'm writing on behalf of a group of Emacs developers and users who share
+> concerns about the future of the project. As we see other projects
+> adopting policies which accept LLM contributions, it's encouraged us to
+> see that the current Emacs policy disallows them.
+> 
+> Our concerns stem from the temporary nature of the current policy, and its
+> apparent focus on resolving legal uncertainty surrounding the copyright
+> status of LLM-generated source code. Ensuring that the copyright of Emacs is
+> legally defensible is of course important, but the way it appears to form the
+> crux of the decision overlooks the harm posed to users and communities by
+> acceptance of LLM-generated code. It would be a mistake to say that because
+> something is legally allowable it must be acceptable, and for many of us who
+> are deeply invested in Emacs, it's not a mistake we'd expect from this
+> project's leadership.
+> 
+> Free Software is more than just code. It's built on a foundation of trust and
+> solidarity. The greatest strength of Emacs is not its technology but the user
+> base which shares and works together. As we watch this discussion play out in
+> other communities which have not taken a strong stance, we've seen the
+> corrosive effect that LLMs have on trust and solidarity as soon as they are
+> allowed in. We still have the chance to avoid that in the Emacs community and
+> learn from the mistakes of others!
+> 
+> (At this point I should clarify that an argument about whether these harms
+> are serious is not my interest; so if you are opening your MUA to compose a
+> reply on these lines, please consider that we've heard all the arguments
+> already and remain unmoved by them. We're not interested in arguments about
+> how powerful they are, nor about how local models will some day address the
+> problems, nor about how people can lie about the provenance of their
+> patches; none of these are relevant. You're welcome to discuss this on a
+> separate thread.)
+> 
+> In a previous thread[1] that raised the question of the Emacs policy, one of
+> the Emacs maintainers wrote:
+> 
+>> Such policy discussions and decisions are not for the Emacs project to
+>> make, they are global for all the GNU packages, and so here is the wrong
+>> place to look for them.
+> 
+> While it's true that this mailing list cannot make policy decisions for all
+> of GNU, there is no reason that Emacs could not hold itself to a higher
+> standard than the rest of GNU. If the GNU-wide ban is relaxed, that is not
+> the same thing as GNU demanding that all projects accept LLM-generated
+> contributions; it only means that they *may* if they so decide.
+> 
+> Our goal in reaching out is twofold:
+> 
+> First, we want the maintainers of Emacs to be aware of our intention to use
+> a version of Emacs which is fully free from LLM contributions regardless of
+> whether the current ban is made permanent or lifted. We invite those making
+> the decision to look beyond copyright and weigh ALL the harms that lifting
+> such a ban would inflict. Our fond hope is that upon consideration of the
+> issues, Emacs maintainers will replace the temporary policy with a
+> commitment to comprehensive prohibition of all LLM contributions including
+> but not limited to code, documentation, commit messages.
+> 
+> We consider this a necessity for a piece of software which is central to our
+> freedom and our participation in the technology commons. In the unfortunate
+> event that we cannot get such a commitment from the Emacs maintainers, we
+> will use an LLM-free Emacs regardless; it just won't be GNU Emacs.
+> 
+> Forks of Emacs have a poor track record, but this is a case where we are left
+> without much choice. There is too much at stake: giving up using Emacs for
+> many of us would feel tantamount to giving up on computing altogether, or at
+> least giving up on the parts of computing that bring us joy. Therefore we are
+> committed to build and maintain the Emacs we need to exist. We sincerely hope
+> that this will mean a renewed and re-invigorated commitment to GNU Emacs.
+> 
+> Our second goal is to reach others who feel this same concern, so you know
+> you are not alone. We have seen too many other communities fail to meet the
+> challenge of this moment, and we can't stand aside and observe the outcome of
+> this policy decision with cool detachment. If you feel the same way, join us
+> in solidarity. Visit https://human-emacs.org where you can read more
+> information and see the list of supporters so far; we would love to add your
+> name to the list or hear your voice in our IRC channel and mailing list.
+> 
+> My sincere thanks goes out to everyone who has brought Emacs to where it is
+> today and especially to those who have helped institute the policy that has
+> protected Emacs from LLM contributions so far. Emacs means too much to me to
+> see it share the same fate as Vim, Linux, rsync, and countless other
+> disappointments; we have to do better.
+> 
+> -Phil Hagelberg (aka technomancy), on behalf of the Human Emacs signatories
+> 
+> 1: https://lists.gnu.org/archive/html/emacs-devel/2026-03/msg00425.html
+
