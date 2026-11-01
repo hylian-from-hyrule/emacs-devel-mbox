@@ -88310,3 +88310,114 @@ behavior for some minor modes" that is found in the current wording
 of the manual.
 
 
+From MAILER-DAEMON Sat Oct 31 16:59:10 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xNGAQ-0002uu-3V
+	for mharc-emacs-devel@gnu.org; Sat, 31 Oct 2026 16:59:10 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xNGAM-0002ub-JX
+ for emacs-devel@gnu.org; Sat, 31 Oct 2026 16:59:08 -0400
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xNGAK-0005CF-QF; Sat, 31 Oct 2026 16:59:06 -0400
+Received: from pmg2.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 4D23B8083E;
+ Sat, 31 Oct 2026 16:59:02 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1793480341;
+ bh=Vg6OFgerlFd9AmBvP4wdpqzs58nJHwUmzQ3snd0vkg0=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=W5Pk8lGP/xUD0Ng72r68n5eRTwVoVR35m1aQ0lDI1H5Tx8EveTMg5jOzr41wCVpoq
+ QM5KAwGTJ6cpkFx3YnNObWk8AT1mummZMjZoALEzeHtKa2+3V+xgSup7yEM6lg5kRl
+ 8BoaXg6oPKZbrNfF5jYBEAegYxdLenpmQFFyx17yszAGgo8UahsasJVrocTrVnKwvR
+ 60iSQnlmfaNMof9GwNnHExduORiqjl7/JhF3M7a6Q9/hjFSFdg6URYV0OO+1kjwe8I
+ pusrQPOHb8Qs1uF/HUxDEZf8fx4t57X+lQibWSjGRxT+k6Po7xVFoDR+QdbGnCYhw9
+ Nj3XIqQP2p6UA==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg2.iro.umontreal.ca (Proxmox) with ESMTP id 2A492801A7;
+ Sat, 31 Oct 2026 16:59:01 -0400 (EDT)
+Received: from alfajor (unknown [72.2.26.42])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id C598B120403;
+ Sat, 31 Oct 2026 16:59:00 -0400 (EDT)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Ulrich =?windows-1252?Q?M=FCller?= <ulm@gentoo.org>
+Cc: emacs-devel@gnu.org,  rms@gnu.org
+Subject: Re: font-lock-add-keywords from major modes
+In-Reply-To: <uik2hiw0p@gentoo.org>
+Message-ID: <jwv8q3dy4wt.fsf-monnier+emacs@gnu.org>
+References: <179276412219.6038.803214883139792156@vcs2.savannah.gnu.org>
+ <20261023140203.840A1C0FD72@vcs2.savannah.gnu.org>
+ <jwvjyn7i3jz.fsf-monnier+emacs@gnu.org> <u5wyqq3e7@gentoo.org>
+ <jwvwlr6hi88.fsf-monnier+emacs@gnu.org> <uik2hiw0p@gentoo.org>
+Date: Sat, 31 Oct 2026 16:58:54 -0400
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ AWL 0.132 Adjusted score from AWL reputation of From: address
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 31 Oct 2026 20:59:08 -0000
+
+> I've found this old discussion (long!):
+> https://lists.gnu.org/archive/html/emacs-devel/2005-05/msg01108.html
+>
+> In particular, the following two messages:
+> https://lists.gnu.org/archive/html/emacs-devel/2005-05/msg01372.html
+> https://lists.gnu.org/archive/html/emacs-devel/2005-06/msg00032.html
+
+Thanks.  I indeed remember discussions around that time, linked to the
+introduction of `define-globalized-minor-mode` and `run-mode-hooks`.
+
+> However, nothing in that thread seems to explain the "incorrect
+> behavior for some minor modes" that is found in the current wording
+> of the manual.
+
+Indeed.  I wouldn't be surprised if it was linked to "globalized minor
+modes" (font-lock being the prime example at that time, since
+`define-globalized-minor-mode` tried to generalize (and improve) the
+approach previously used in `global-font-lock-mode`).
+
+But, yes, concrete details would be welcome, because the working of
+`define-globalized-minor-mode` has changed a lot since 2005 (in part
+because `run-mode-hooks` has also changed and has finally become the
+norm so we were able to remove a lot of hacks).
+
+So it's not at all clear that the problems we had in 2005 are still
+with us.
+
+
+=== Stefan
+
+
+

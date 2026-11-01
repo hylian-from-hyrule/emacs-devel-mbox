@@ -1,0 +1,546 @@
+From MAILER-DAEMON Sun Nov 01 01:25:43 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xNO4T-0006fE-Oe
+	for mharc-emacs-devel@gnu.org; Sun, 01 Nov 2026 01:25:39 -0400
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xNO3z-0006UK-V6
+ for emacs-devel@gnu.org; Sun, 01 Nov 2026 01:25:05 -0400
+Received: from fhigh-b6-smtp.messagingengine.com ([202.12.124.157])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xNO3x-00024k-A6
+ for emacs-devel@gnu.org; Sun, 01 Nov 2026 01:25:03 -0400
+Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
+ by mailfhigh.stl.internal (Postfix) with ESMTP id C475C7A00CA
+ for <emacs-devel@gnu.org>; Sun,  1 Nov 2026 01:24:54 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-07.internal (MEProxy); Sun, 01 Nov 2026 01:24:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :cc:content-transfer-encoding:content-type:content-type:date
+ :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm1; t=1793510694;
+ x=1793597094; bh=IJBzJpO1mU0T8YUsLnjZvGbaNaD2y39UzPqXVykD8Gc=; b=
+ nmrEBeW5RsnCDQq4dxBYmSocshQpXwQvevhw5ETZscri1x+uAmXe3F0Wh7oYe70c
+ RSEwKuzaIfw6zWWegZfdcioVcT7Emp10dyastoIPL+QUoheERhB/Pz2fmk7Qc1s5
+ LlGc30JAw9mT02mioF6KkvYyVA/xmxaC6pZsFcGX94FWPvY8s2fNHLnRdlvT94wS
+ wVVCpzt0aPKxj7NmX5GBvFUo1MvoqM6b82Zoryg5zc8LQ/tVKRZkiAAVkPAHXNY8
+ zztvjEEHY6IWyAm4OAc9t9it1Itfrn/Eato/oYA6RwD3JO/8EB3zzRPB66zC7PgY
+ TK8oz2SQ18BrtvKZ31EfmA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793510694; x=
+ 1793597094; bh=IJBzJpO1mU0T8YUsLnjZvGbaNaD2y39UzPqXVykD8Gc=; b=M
+ z/ukaPFAZesHtu81+nPLiniKvML/P9mqGpzzOFUS1jmmvQpmKn+MZWZAbyg1bY8X
+ NbXH/5QYUnbo4ZItUVDsPjQvqnCgvsGjwhxoqfoWcG2aj7on3YYqb7x6bMyoSm8o
+ CmMJIgb+pl9nOJZ3q+0Js5FC0CFNgnYvCojg6r7zToIZQWmZsiJ9kx7fjAtc/oPG
+ 0XdqutEVEJLqabV6U92ExOPYgOaob3m3tV5QEbR6F5zGPasb8xRNXN5zkDfDqVLN
+ 2kvJ3rzBmUJXDc687W6YChY7oPwNTuB8oGDy0q/BnEgxLKdBrG8iBzkc9YH1dSsB
+ ImnRPEEOni1XAWK/09Tsw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=sign d=gutov.dev a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793510694; d=gutov.dev;
+ mf=PGRtaXRyeUBndXRvdi5kZXY+; rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm1:rsa-sha256:ce1Cg03uV9EirAeLqkOU/7wWXhnb9M7IhDPLVgQYoXON9X1
+ eWSvrayI+rcZSV9ErHqEBwOsXtp9q4NMn2/RgwobWWNHv4vdYK/UVPNR5HhENIZ6
+ 4Gn5QpGyAbFK/h17Gu3G7XMs96wV5F09pl/JUY44W02bulr9ncdTpv9oeOfHoDPc
+ W/rINfDzVoyLTlL+lnwgkePIUxyndWtQDJjMBru/Oxx1+K0CkK8Ci1f3mmqVNcSW
+ IpNabvzYuIqy4ZZGQyUvELDXrnHoaL3JaWjqp81RkpB/IpKMBU/ui78FJsMzEWNf
+ g+r+erv58JRBJwN82WLO9AA9XRaaGqelV3juzPw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+ repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+ action=mi-m=1; hc=14;
+ hn=cc,content-language,content-transfer-encoding,content-type,
+ date,feedback-id,from,in-reply-to,message-id,mime-version,
+ references,subject,to,user-agent;
+Message-Instance: m=1;
+ h=sha256:i/K4uYCDE+C80oA1LTiKSskfXdT7N7Sg5mb5mq8yIkM=:MfRxbxwJtAfAQ8tx5nVnsyNcZBL6ONZxxuBCP5MwMl0=;
+X-ME-Sender: <xms:Js3makWsQHn4w_lcLq-Gs1uMVJQs5vGp_Mwwig_CjydBvSt6A-Z6iA>
+ <xme:Js3magBPvRJUEuMV-OVafTkKvcycqBPWOxDPS28eOevo5W5OfHXZRfll7LiWdfaZ5
+ 7zsO4N4SFpz7Cfn99NJ-9zHRY3HK0OI3yRkAUOrEJlMDaD_rbE6De1N>
+X-ME-Received: <xmr:Js3malyrEhjj7778_4JElZ7BBnV8VjRxUVT1PLArkhiRjw8MAr75hmU38W5xgLfXpcEUwZZqsIcgEWEMlWj1WbrtYSUN2YhdxRoLg6CJno-O>
+X-ME-Proxy-Cause: dmFkZTFts2THX84z1HBatT5PYhusEyld29Vkumsx3+XWYZdXfb1nQtH0EYeFTLVmEXS4O5
+ bzd+FjY9db6Rv7mUY+RXpRXZfLQIu+bq/pIh1ejprmnK+44L5JYs5m3LtryYEIqz3YFgD1
+ wJRAYHklVcTU2SVJaTYy1Tc7hKwzS1Astpyif1KZw/iBCfU/ViEKDumIKj126ysAyC8m2d
+ DBEAgqf55B+UFTCiLtoDi6+GlVfGGnPhtMKcPcZizDvFla7bmVWpOa9M5QjTLJsdwxZBIw
+ KQXGVfSAVyBjrISy3E5WUiwtwb9Pou8x9nRY8joizJnPc3xEoyBBzGh9UGuUlH2C7Zhmft
+ rCbw1cmjBsTY2S6lmStb4I704cK1t8QQWWKiip9fLs0r5tpJYDTW5KKaFJD5MTzMKpsinh
+ doQtmD9frHJwWCIQkrdf/xipL2AMDM0bOFplPvhx8vKJUpcbwVPbXOER57YdPhtUjw+aAx
+ 0CnMMu/80QcJBQqCb9de68COOxzG9EG3ZBfPyANCnGRgWvlZrKQ/jSzAwF6LCKxQBsURIY
+ 3d/flEAYxwRXy22GBp+mY8g7Md0rpV5yfu8EGDMIQq9TleocOHq1xY3lK0QtSEMNKTeC+z
+ Hq3M0l0J/Z6k39wR94DUmE7CYqatAVecbE1OeoO+6QAQycKAguEyngnPP2EA
+X-ME-Proxy: <xmx:Js3matAhgq-D-AYGdWtx8AnqpUpCZoiMW0gZ59EW0QLttJrOpSBRCA>
+ <xmx:Js3maibB6pqCYr9a1Ag4WUuNpXClsnghd8ZUb9i4fJBCkNmkJE4U1w>
+ <xmx:Js3maljiFe16WUucGPdGhI-zrvWfxHZpr_dXA_jcNxsIJy-1nsVPTA>
+ <xmx:Js3mak55nwIN1LATIw448UtOlGOx4YkZ6NcpAdZoDKRbF5w-CgP32A>
+ <xmx:Js3maspS3MX9X7cCD7SYuCmRU2cjrNnGj70Ipm0zd06XbPmWJlMas-fN>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 1 Nov 2026 01:24:52 -0400 (EDT)
+Message-ID: <1bd555c8-1cb5-4d99-8c11-902a53099ac1@gutov.dev>
+Date: Sun, 1 Nov 2026 07:24:49 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev> <86qzh7ve6t.fsf@gnu.org>
+ <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev> <861p96rovp.fsf@gnu.org>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <861p96rovp.fsf@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: pass client-ip=202.12.124.157; envelope-from=dmitry@gutov.dev;
+ helo=fhigh-b6-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_MSPIKE_H2=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 01 Nov 2026 05:25:11 -0000
+
+On 31/10/2026 15:16, Eli Zaretskii wrote:
+
+>> But DEFUN allows you to define about any Lisp function, just in C. Like,
+>> is 'android-detect-keyboard' a primitive? Possibly not.
+> 
+> It is, according to the ELisp manual:
+> 
+>    “primitive”
+>         A function which is callable from Lisp but is actually written in
+>         C.  Primitives are also called “built-in functions”, or “subrs”.
+>         Examples include functions like ‘car’ and ‘append’.  In addition,
+>         all special forms (see below) are also considered primitives.
+
+AFAIK outside of Emacs Lisp the term "primitive" is used for a more 
+compact set of functions.
+
+In any case, the user wouldn't necessarily be familiar with the Elisp 
+manual, if they themselves don't write Elisp. Our lisp of kinds has that 
+entry anyway.
+
+>>> Right.  In the end, simplicity won me, and I don't think the current
+>>> single list is such a bad idea, don't you agree?
+>>
+>> It feels a little long now, and with new kinds planned to be added, that
+>> would likely get more so.
+> 
+> Which new kinds are planned?
+
+xref-backend-xref-kinds (etags.el:2286) says:
+
+     ;; FIXME: Add more kinds for other languages:
+     ;; HTML: title, h1, h2, h3, name=, id=
+
+>> So unless we manage to reclassify the existing ones into a more compact
+>> set of kinds, I think we should try that dynamic building of the list.
+>>
+>> Two options that I see:
+>> - Base on the list of files in TAGS, by file extensions. Then you won't
+>> see kinds not applicable to file types in the project, but still no
+>> guarantee that some kinds won't show 0 identifiers.
+> 
+> I remind you that it is not simple to determine the language from
+> file-name extensions alone.  So this might produce false negatives,
+> with the result that some kinds are removed from the list when they
+> shouldn't be.
+
+That issue would both affect the list of kinds (as proposed), but also 
+case-folding for identifier completions with kinds (WIP).
+
+Whatever kinds would be missed due to the above logic, would have empty 
+list of completions already. But that seems possible to improve, for 
+both uses. If at least we could rely on the file-name->major-mode 
+mappings. Just using file extensions would be much faster, though.
+
+>> - Scan through TAGS for every regexp. Likely to be slower; the expense
+>> would vary by project.
+> 
+> Yes, and that's just to suggest the list for selecting a kind.  Not
+> sure it's worthwhile.
+> 
+> Maybe we should wait until we have some actual user feedback?
+
+Okay, sure.
+
+
+From MAILER-DAEMON Sun Nov 01 03:25:04 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xNQsB-0007Qb-Oz
+	for mharc-emacs-devel@gnu.org; Sun, 01 Nov 2026 03:25:03 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <paaguti@gmail.com>) id 1xNQs6-0007Pf-81
+ for emacs-devel@gnu.org; Sun, 01 Nov 2026 03:24:58 -0500
+Received: from mail-wm1-x332.google.com ([2a00:1450:4864:20::332])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <paaguti@gmail.com>) id 1xNQs4-0000ID-GY
+ for emacs-devel@gnu.org; Sun, 01 Nov 2026 03:24:58 -0500
+Received: by mail-wm1-x332.google.com with SMTP id
+ 5b1f17b1804b1-4a35d5d4a20so22837825e9.2
+ for <emacs-devel@gnu.org>; Sun, 01 Nov 2026 01:24:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1793521492; x=1794126292; darn=gnu.org;
+ h=content-transfer-encoding:content-type:subject:from:to
+ :content-language:user-agent:mime-version:date:message-id:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=GvJ7aITEsYRubpLyafZAwkcdrJJM6wZIUCiPe+CudUE=;
+ b=At6XmUWl9MlJgvrLZX0kjwaPMe1jhytFgiN6kPzJNgsplGfSseaVsnFP27HhLXq8Zi
+ daDVyzLHqd7rn1TzxwG+ty+UkSGAGeaLizSVesn1CpBTneth6Qb8q/IPN2K5B1s2bnhv
+ pXA1MQkcatGUhTgF1aJ1iQWnLJIRaeT4uVeOaz2uO8xVgghLCqR/6V+5ePizcpdMmU6f
+ InehLOIBlexP/qxIOy9QWIlcSfhMO26I3uM7FmoJFiKBxncYl9fqbYnqGCOcaB3T7j27
+ BrZyzVJuDv7n2ti4IVSj0kJ1QnE1KO6LvKhAmp9MzeZF16v72riJ9Cb4qiuoOemNJcdU
+ ym8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1793521492; x=1794126292;
+ h=content-transfer-encoding:content-type:subject:from:to
+ :content-language:user-agent:mime-version:date:message-id:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=GvJ7aITEsYRubpLyafZAwkcdrJJM6wZIUCiPe+CudUE=;
+ b=s5Tz1SZ0/A/ORENDSWClXV92v8xQ3phDATg3UZrAE6ZAyVRfLC2YQhx7o+VvOzJkd9
+ 9LY8PojzJOyUrydntb+2fKWQmGaG9Xeb1gQdedCKoX0sKOf2f9GjH/VSh47yfM9JXit2
+ AjTQ0hrqXdsGjryYpagzLZcHLBbJNoyNe+IYbYDwfG0QOerijU014KPyC18lQtUSGuKY
+ Oj1kPiTylLTOUDNNMoyZPoLA31HspbJNJD2BElXX9H6Afc6rOFvDkIOsq9D8KjpTJh5w
+ FkvwirBPppffwWpsrgpIKV0rLJxJsJBP2a5Lh+IMY2hwTkmyj/mb/Ke1q1pI4hRublGv
+ lJMw==
+X-Gm-Message-State: AFq9FYLL7AbyA9cwc2i218ef7tR32nfbN7fqxnLVQYKYGFXkG6984PIL
+ IZt8uV5Ujkb2WwoMCV2zTwdGgEaVDlsOI+0qG0u5D5mSrCt+q1z/O5Bc/NDisQ==
+X-Gm-Gg: AYBFou2lYiXp2i0ogSZ30Dye7c5DjNG4cGFw/Ad7CvqVoszJlXCajwPq+7DyKdciN4b
+ DzL2JxE+fcioTcKviQ/1o2zaY2mAR6iyBvIqXr6AuE2um8umUpfTWpOv4QB0moObbuKLJAFjcWw
+ oma7bVq8jarq3A7c6+ViFBIR9akuBeO4UuNSvgoiFpklyCcvdc9/934vC0EP4cgZP9aF+j17peD
+ ob80dc9d4RzLgLX0V7ToyiF8kktOY1N9mkKzPASSub92dUWze0s5+utFfQCl5VyE9BlaiK1SMmC
+ dYXGsptf4zrEDOvgrbEBiexHWk7R19h2Qv1ivf6qECTfwHCiM3YFunFwyd/N6Wz7r3BcQLq91K7
+ Zy/xPUUS7a1pdzxny9joPeEAlKdYEKFVCy3zh3Sr7TyaaSGfVC2iaqdXmasle+SbW9lpaw53crY
+ myV6dp3/TO0La0WAbjnAnmWTvamj0F0ta8EXKSU21F8sEe9AAks3M1hRCl1Ju12FRmJWL+dsYKz
+ zMOowq9vqZnUnRtWO7HM06/gAQGQ3gBzOJ9xhQ5DDuV+ssQLtdoX5X8HMzEhgBZpc9C6LgNkirw
+ cH0O/oJ0ukWsu4yphCxGut6BTDeOJfJrByUMpeJLy42lJL1IISlHBP2SFZ5FOWKHX0Bv+Ds/K6u
+ fedfXswwIlDZBASDnwdqyxoh7b8ZZ
+X-Received: by 2002:a05:600c:524d:b0:49f:e772:6ddf with SMTP id
+ 5b1f17b1804b1-4ac18993ca7mr162168755e9.32.1793521491753; 
+ Sun, 01 Nov 2026 01:24:51 -0700 (PDT)
+Received: from [192.168.1.37] (182.red-79-148-62.dynamicip.rima-tde.net.
+ [79.148.62.182]) by smtp.gmail.com with ESMTPSA id
+ 5b1f17b1804b1-4abe7706516sm126309115e9.0.2026.11.01.01.24.51
+ for <emacs-devel@gnu.org>
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Sun, 01 Nov 2026 01:24:51 -0700 (PDT)
+Message-ID: <080b8d26-8f48-4b00-9576-916481d7c743@gmail.com>
+Date: Sun, 1 Nov 2026 09:24:50 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-GB, es-ES, it-IT, de-DE
+To: emacs-devel@gnu.org
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Native compilation warnings
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: pass client-ip=2a00:1450:4864:20::332;
+ envelope-from=paaguti@gmail.com; helo=mail-wm1-x332.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 01 Nov 2026 08:24:58 -0000
+
+Hi,
+
+I find the org-present package from nongnu ELPA to be quite useful in 
+discussions and to sort out my thoughts. I'm creating a fork [1] to add 
+some features (like hiding local variables) and to update the code 
+replacing calls to obsolete functions, etc.
+
+When I load the package on my emacs-32 (with native compilation enabled) 
+using use-package :vc, I get a lot of "not known" native compilation 
+warnings, despite using declare-function (which silenced the 
+byte-compile warnings).
+
+I have added no-native-compile: t as a local variable, but continue to 
+get native compile errors.
+
+I'm a bit lost (as you might derive from the message ;-) ) and would 
+appreciate a moment of guidance, because after reading the documentation 
+I feel even more confused...
+
+Thanks, /PA
+
+[1] https://codeberg.org/paaguti/org-present.
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+
+
+From MAILER-DAEMON Sun Nov 01 03:43:46 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xNRAI-0002K1-BY
+	for mharc-emacs-devel@gnu.org; Sun, 01 Nov 2026 03:43:46 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xNRAF-0002Jc-V3
+ for emacs-devel@gnu.org; Sun, 01 Nov 2026 03:43:44 -0500
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xNRAF-0001v9-MS; Sun, 01 Nov 2026 03:43:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=f4q2cVOfEYBTTgmDrXugaOcJZE2S8SV+z5iHE/wOTZk=; b=g2b8/HOzpThP
+ xqV9mC1e180fyjbKXRiNXRPcTt1ThfQZsn3kAdm0FGHayh5C9BplNCApbmwioxXrC2AmPl8dQB9JB
+ i6YZs3PQZgNmM292N5Vd64ZM7z948XxIcnvNJCsbs7Whq3uRWyB/sA9VrnggDNSssFmfWE0f0+QYS
+ MjaTfA9Tj5mT1riKWS8SOh7q7OuiLqbycbvBJ5LdM8Fjo/UUVyIdsZdAkSgW2Qs2JIp3n15r76m/7
+ xXw+ZAiqKTCO62nf7Rf79UAEhjXUlOs/46DkBdiRfv9xmre7myWclOuEQjcxmDecM+41CTsRn1y8A
+ Xxrod+JsnIgvk+pQSizdPw==;
+Date: Sun, 01 Nov 2026 10:43:37 +0200
+Message-Id: <86pkwpq6va.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: "Pedro A. Aranda" <paaguti@gmail.com>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <080b8d26-8f48-4b00-9576-916481d7c743@gmail.com>
+ (paaguti@gmail.com)
+Subject: Re: Native compilation warnings
+References: <080b8d26-8f48-4b00-9576-916481d7c743@gmail.com>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 01 Nov 2026 08:43:44 -0000
+
+> Date: Sun, 1 Nov 2026 09:24:50 +0100
+> From: "Pedro A. Aranda" <paaguti@gmail.com>
+> 
+> I find the org-present package from nongnu ELPA to be quite useful in 
+> discussions and to sort out my thoughts. I'm creating a fork [1] to add 
+> some features (like hiding local variables) and to update the code 
+> replacing calls to obsolete functions, etc.
+> 
+> When I load the package on my emacs-32 (with native compilation enabled) 
+> using use-package :vc, I get a lot of "not known" native compilation 
+> warnings, despite using declare-function (which silenced the 
+> byte-compile warnings).
+> 
+> I have added no-native-compile: t as a local variable, but continue to 
+> get native compile errors.
+> 
+> I'm a bit lost (as you might derive from the message ;-) ) and would 
+> appreciate a moment of guidance, because after reading the documentation 
+> I feel even more confused...
+
+Each warning most probably means that some 'require' is missing.
+Native compilation compiles each Lisp file in a separate fresh
+instance of Emacs, so any dependency packages that are assumed to be
+already loaded, aren't.  If this is the reason, the solution is to add
+the missing 'require's.
+
+I don't see how can we help you more than this general advice, since
+you didn't show a single warning of those you get.
+
+
+From MAILER-DAEMON Sun Nov 01 05:22:03 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xNShP-0002b9-Io
+	for mharc-emacs-devel@gnu.org; Sun, 01 Nov 2026 05:22:03 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <paaguti@gmail.com>) id 1xNShN-0002as-93
+ for emacs-devel@gnu.org; Sun, 01 Nov 2026 05:22:01 -0500
+Received: from mail-wm1-x32d.google.com ([2a00:1450:4864:20::32d])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <paaguti@gmail.com>) id 1xNShL-0001dQ-6l
+ for emacs-devel@gnu.org; Sun, 01 Nov 2026 05:22:00 -0500
+Received: by mail-wm1-x32d.google.com with SMTP id
+ 5b1f17b1804b1-4ac95761c85so12085715e9.2
+ for <emacs-devel@gnu.org>; Sun, 01 Nov 2026 02:21:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1793528517; x=1794133317; darn=gnu.org;
+ h=content-transfer-encoding:content-type:in-reply-to:from
+ :content-language:references:cc:to:subject:user-agent:mime-version
+ :date:message-id:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=w3Foo4z4U6S9zSrHT7Ku0w9cLT7iYHEkZEkfqrhG4Pk=;
+ b=gYAl8SapwAis13+ug0N9GMC10QK1vI2QCdSL7Nky1ou9mF3bOM1RQ9qUUaUPB3R1JX
+ 0/jl4EEqAg2WJlsA529zRqcQsfIrP3X1epL0R8tYZlKkquLHFOIzp8lHWKQ+SZXUcDqU
+ 3MnJJsw26egOdLiN4tjIt/nlWu8QYIXjyfA/xfA2APmGwnGKjeVQx88/d1CYoOJrXVGE
+ h05yHM6PXVM4MialWoRmM3s5d70ZC9Zr9xIeNUCHJKKa3BtvQ5RvSidYAIUzcX16Z4V5
+ ivsyXDxPEeOjTvVBNMedOWCcT/XOeW3h+7niIggYqmrAhY35FVKB7WoY81r9LXV15Z1W
+ L1kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1793528517; x=1794133317;
+ h=content-transfer-encoding:content-type:in-reply-to:from
+ :content-language:references:cc:to:subject:user-agent:mime-version
+ :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+ :message-id:reply-to:content-type;
+ bh=w3Foo4z4U6S9zSrHT7Ku0w9cLT7iYHEkZEkfqrhG4Pk=;
+ b=avQ9q6S61Rj79+FFA6QjYzGF2lGpbsX1VSx2pLSLwXkqy+vp5Kbn72NOiuzvGG+oF4
+ xjFXXk60Au20/SR60tW9w0uzDn5xqPylhP9ueds38fFB/ISCkwV2gDjJIc+ofLgPjOfr
+ eBhdCEs+RGvHNmolTKzCLMAAL1yDhZmVdpR0A5ruFAEM98k3D/2jFcrQyVfkR4J1+6+N
+ 02hgRCAIijtWYyIUWMc1PGhNwr6yQSN6oRIuUzUwnw+/JTsjS6JtrG0jYMwOINRi4nB6
+ MTDaP8ccIw0/RsMkFvWdszU4wPRcejjaStahFJ2tO0HXD6wfYHbnvzt7UVcpzI/NhyzL
+ kMwQ==
+X-Gm-Message-State: AFq9FYIVDGRSOn+3Z6FB4Q3tKo6NEckHu4xfWLtkfD13hdeHwJqQj64B
+ AiCzis84FZtNKqS1fTzrmfcixJ+zLIcJ4AT7rYluRQtsuV4/HhQMJyPP
+X-Gm-Gg: AYBFou3XxboeJ9KazOBeqFCmDahnlNL5+Sr16z1ITW8GD3ynMpmuKR+c3nA97h7QOm2
+ eQEP/qUxyTl0mldS6RB0sZ4Frmop1PPO+H4vF11zOjBznrfPhYQtbGLoZ8kS6nNgYlxvCIhdXYx
+ LTTS7CSEUfGQrQoRRQQ3t8E0Ut1EMjuk13o9D0SeZiE3jzY5zmKH6eTptj/Fr2zkrr+gjUNNfFj
+ 5v2uYX4oszoiyoCDbh46hPFnZngeJuw/ghVvfSmslCHczSARR3wA6Iglo2jh6BwT0+fZ1vj8FV1
+ 11uEWQM14DN6FdQ9W7Zo3zpf5/QOTby6xOY7IfVci20chw0D4fHIk2NyrFKXrVcnKcR6gNmdECv
+ +3Yp73VKB4T/aTtklJN3PRCaR/h61uuyQJVVuzw3qLSjQOteGI/03bqOUIB0LtSSwjGwawN6b5c
+ vycJH2XcYxtJPh2QF4p6L+Zhw4MNFCaU4bPF4R2H+xPAsEMYzSSYntszH18iErGej/K6oaTYZxy
+ af8liRPxcatc1xTiquVY04G8KfNPljm+2c4QxiUBx4iOnlldXZN+KVemmXm6rfE+oVigulcMgIW
+ GLAjqVB+vH5rUM/6HuzSlSxwUooY6a0XGHpOUsKUUFQeq2JCyFEGt/jvlIZ2/xLqWTCT7rRuhzM
+ g7oDwGYAXrsMEJSiMgPXXBIqaJSwj
+X-Received: by 2002:a05:600c:3b2a:b0:4a2:cbe:bec2 with SMTP id
+ 5b1f17b1804b1-4ac18a8882cmr161699775e9.32.1793528517058; 
+ Sun, 01 Nov 2026 02:21:57 -0800 (PST)
+Received: from [192.168.1.37] (182.red-79-148-62.dynamicip.rima-tde.net.
+ [79.148.62.182]) by smtp.gmail.com with ESMTPSA id
+ 5b1f17b1804b1-4aa813d2950sm262364335e9.8.2026.11.01.02.21.56
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Sun, 01 Nov 2026 02:21:56 -0800 (PST)
+Message-ID: <e56f3acf-826c-4efa-8d92-347ecf5bae98@gmail.com>
+Date: Sun, 1 Nov 2026 11:21:56 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Native compilation warnings
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: emacs-devel@gnu.org
+References: <080b8d26-8f48-4b00-9576-916481d7c743@gmail.com>
+ <86pkwpq6va.fsf@gnu.org>
+Content-Language: en-GB, es-ES, it-IT, de-DE
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+In-Reply-To: <86pkwpq6va.fsf@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: pass client-ip=2a00:1450:4864:20::32d;
+ envelope-from=paaguti@gmail.com; helo=mail-wm1-x32d.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sun, 01 Nov 2026 10:22:01 -0000
+
+Hi ELi,
+thanks for taking the time to read and respond!
+
+I have found the root cause:
+
+I wasn't adding :rev :latest to use-package and it didn't take the 
+correct commit.
+
+Maybe highlighting "latest *release* commit" vs "latest commit" in
+
+https://www.gnu.org/software/emacs/manual/html_mono/use-package.html#Install-package
+
+could help "fast readers" ;-)
+
+Thanks again & a new lesson learnt today,
+/PA
+
+On 1/11/26 9:43, Eli Zaretskii wrote:
+>> Date: Sun, 1 Nov 2026 09:24:50 +0100
+>> From: "Pedro A. Aranda" <paaguti@gmail.com>
+>>
+>> I find the org-present package from nongnu ELPA to be quite useful in
+>> discussions and to sort out my thoughts. I'm creating a fork [1] to add
+>> some features (like hiding local variables) and to update the code
+>> replacing calls to obsolete functions, etc.
+>>
+>> When I load the package on my emacs-32 (with native compilation enabled)
+>> using use-package :vc, I get a lot of "not known" native compilation
+>> warnings, despite using declare-function (which silenced the
+>> byte-compile warnings).
+>>
+>> I have added no-native-compile: t as a local variable, but continue to
+>> get native compile errors.
+>>
+>> I'm a bit lost (as you might derive from the message ;-) ) and would
+>> appreciate a moment of guidance, because after reading the documentation
+>> I feel even more confused...
+> 
+> Each warning most probably means that some 'require' is missing.
+> Native compilation compiles each Lisp file in a separate fresh
+> instance of Emacs, so any dependency packages that are assumed to be
+> already loaded, aren't.  If this is the reason, the solution is to add
+> the missing 'require's.
+> 
+> I don't see how can we help you more than this general advice, since
+> you didn't show a single warning of those you get.
+
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+
+
