@@ -1,0 +1,1573 @@
+emacs-devel messages from 2026-11-03T18:15:00+01:00 to 2026-11-04T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-03T18:51:19+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87tslx6bxm.fsf@posteo.net>
+In-Reply-To: <E1xO4ME-00CUak-R2@fencepost.gnu.org>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+ <179301336681.7054.17558261044765912242@gmail.com>
+ <E1xMTLz-00Axpw-4V@fencepost.gnu.org>
+ <m24ie4misn.fsf@macmutant.fritz.box>
+ <E1xO4ME-00CUak-R2@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > > "TeXlike-line-break" is short for "line breaking like the way TeX does
+>   > > it."  Either of those names describes this package's purpose clearly
+>   > > to anyone who has a basic awareness of what TeX does and what makes it
+>   > > so good.  That is a large fraction of our community.
+>   > >
+>   > > "TeX-fill" or "TeXlike-fill" would also achieve this.
+>
+>   > May I ask to use other prefix than TeX?  This is the namespace of tex.el
+>   > (part of AUCTeX) which uses this as distinction to tex namespace in
+>   > tex-mode.el (part of Emacs).
+>
+> Lower case, as in tex-fill or texlike-fill, would be equally good for
+> communicating that this package does line filling the way TeX does.
+
+The current plan is to see if we can upstream the feature, in which case
+the question of naming will be different anyway depending on where in
+emacs.git the feature lands.  We therefore don't have to bikeshed this
+point anymore.
+
+================================================================================
+Date: 2026-11-03T20:04:08+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: Human Emacs
+Message-ID: <87o6c5zqhj.fsf@web.de>
+In-Reply-To: <86ecd2osc3.fsf@gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+> Please at least wait until there's some sign of something like that
+> happening in Emacs.
+
+How the discussions went about whether packages that steer people into /
+suggest using / (insert other wording) proprietary services was such a
+sign for me.
+
+> And I'm most alarmed by the suggestion that we should reject someone's
+> code based on something that is unrelated to the code itself.  
+
+There is a difference in code: people who hand out LLM output do not
+actually write the same code as those who don’t, even when they work on
+the same codebase, because code that works well for LLMs is different
+from code that works well for humans.
+
+To me that does not feel like working on code together, but more like
+someone submitting code generated from UML diagrams and developed via
+these – with comments that ease detangling, but without actually
+including the original source (the diagrams).
+
+And expecting others to read the generated code, but as reply to reviews
+adjusting the UML diagrams and regenerating the code.
+And it’s exhausting to ask them for readability improvements (just to
+see them ignored the next time again, because they don’t read the code).
+
+
+At that point (with code generated from UML) I’d see three main options:
+
+- commit the original source (the diagrams) and accept that parts of the
+  projects require understanding one more language to contribute. The
+  source is then no longer the source of truth.
+
+- accept that the original source is not included and decide what to do
+  with the detangling comments (others can’t maintain them reliably).
+
+- reject the contribution.
+
+
+But the first isn’t actually possible with LLM output, because prompts
+and plans don’t work the same in different models or even versions of
+the same models, and they aren’t meant for humans (else they wouldn’t
+contain the phrases needed only by the LLM) and also not for being run
+multiple times.
+
+When collaborating with LLM-users at work I’ve already had to maintain
+other people’s AGENTS.md file and I’ve been directed to read long-winded
+architecture files that are a kind of code but not really and require
+knowledge of what the LLM of the current quarter makes of them to
+understand what they mean.
+
+And even more than with UML generated code, there’s a power disbalance:
+they expect me to read their generated code to work on the project, but
+they only see my code through the lens of their LLM.
+Not like auto-complete with a rendered docstring, but rather like asking
+“what does this file do?”.
+
+How deep that goes differs by person: I’ve seen a continuum between
+caring for the code itself and not reading any code, but there are only
+two people of whom I know that they started using LLMs and still managed
+not to move towards not caring how the actual code reads for humans.
+
+The extreme end is that someone tells you that their code (they don’t
+understand) is better than yours because they have 10 times as many
+tests (they didn’t read).
+And expecting you to replace your code with theirs due to that or to
+explain why you don’t after being the first who read it – and then to
+argue with them because they trust the LLM more than you.
+
+Therefore I think that opening the door to LLM-generated code only a
+little bit is a path that leads to non-LLM users being pushed out of the
+project.
+
+> Because the next thing we will be requested is to reject code
+> of people with particular views or opinions, or people living under
+> certain regimes, etc. etc.  We never did anything like that, and
+> IMNSHO we shouldn't, ever.
+
+I intended not to write in this thread again, but I very much agree with
+this point.
+
+That’s why I decided to explain why I think that it does not apply to
+contributing LLM output.
+
+And I’m sorry that I couldn’t make that shorter.
+
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-03T21:30:49+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <864idxpshy.fsf@gnu.org>
+In-Reply-To: <87o6c5zqhj.fsf@web.de> (arne_bab@web.de)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: Jim Porter <jporterbugs@gmail.com>,  bugs@gnu.support,  phil@hagelb.org,
+>   emacs-devel@gnu.org
+> Date: Tue, 03 Nov 2026 20:04:08 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> > Please at least wait until there's some sign of something like that
+> > happening in Emacs.
+> 
+> How the discussions went about whether packages that steer people into /
+> suggest using / (insert other wording) proprietary services was such a
+> sign for me.
+
+I don't see the relevance, sorry.  That was a completely unrelated
+issue.  Moreover, it is not yet over, so drawing any conclusions even
+from that is premature.
+
+> > And I'm most alarmed by the suggestion that we should reject someone's
+> > code based on something that is unrelated to the code itself.  
+> 
+> There is a difference in code: people who hand out LLM output do not
+> actually write the same code as those who don’t, even when they work on
+> the same codebase, because code that works well for LLMs is different
+> from code that works well for humans.
+
+It is our job as Emacs maintainers to make sure that code which lands
+in Emacs is written well and tested as thorough as possible.  There's
+enough situations where novice contributors come up with patches that
+need to be redesigned and/or reimplemented because they don't stand to
+our standards, and it is our job to make sure they are improved until
+they do.  And we do this job every day, as you can see here and on the
+bug list.  Readability of the code and elegance of the implementation
+are just two of the aspects we pay attention to, and will continue to
+do so, as that is part of our job.
+
+> And expecting others to read the generated code, but as reply to reviews
+> adjusting the UML diagrams and regenerating the code.
+> And it’s exhausting to ask them for readability improvements (just to
+> see them ignored the next time again, because they don’t read the code).
+
+Once again, this is part of our job.  If you think we don't do it well
+enough, please show examples and we will work as hard as needed to
+improve.
+
+> At that point (with code generated from UML) I’d see three main options:
+> 
+> - commit the original source (the diagrams) and accept that parts of the
+>   projects require understanding one more language to contribute. The
+>   source is then no longer the source of truth.
+> 
+> - accept that the original source is not included and decide what to do
+>   with the detangling comments (others can’t maintain them reliably).
+> 
+> - reject the contribution.
+> 
+> 
+> But the first isn’t actually possible with LLM output, because prompts
+> and plans don’t work the same in different models or even versions of
+> the same models, and they aren’t meant for humans (else they wouldn’t
+> contain the phrases needed only by the LLM) and also not for being run
+> multiple times.
+> 
+> When collaborating with LLM-users at work I’ve already had to maintain
+> other people’s AGENTS.md file and I’ve been directed to read long-winded
+> architecture files that are a kind of code but not really and require
+> knowledge of what the LLM of the current quarter makes of them to
+> understand what they mean.
+
+Here you seem to be assuming some specific conclusions that the GNU
+Project will draw from their discussions of the legal aspects of
+LLM-generated code, like the need to include the prompts and the
+instructions to the model with the code.  This is again premature, and
+we should delay these discussions until we have their decisions and
+understand their practical implications.
+
+This is definitely not something that could justify a fork, or even a
+discussion of its possibility.
+
+> The extreme end is that someone tells you that their code (they don’t
+> understand) is better than yours because they have 10 times as many
+> tests (they didn’t read).
+> And expecting you to replace your code with theirs due to that or to
+> explain why you don’t after being the first who read it – and then to
+> argue with them because they trust the LLM more than you.
+> 
+> Therefore I think that opening the door to LLM-generated code only a
+> little bit is a path that leads to non-LLM users being pushed out of the
+> project.
+
+That will not happen unless the then Emacs maintainers decide to do
+that (and I don't see why they would).  If that becomes a possibility,
+these considerations should be raised then.  Not now, when this is a
+distant potential danger, IMO largely academic.  Personally, I would
+be very surprised if any Emacs maintainer in their right mind would
+ever agree to something like that.  We are not different from you in
+these matters and our experiences with managing software projects are
+also similar.  I don't understand why you and others have such fears
+at all.  Would you have such fears if you were the Emacs maintainer?
+I guess not.
+
+================================================================================
+Date: 2026-11-03T21:51:35+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Human Emacs
+Message-ID: <87fqxh63l6.fsf@posteo.net>
+In-Reply-To: <86ecd2osc3.fsf@gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+[...]
+
+> And I'm most alarmed by the suggestion that we should reject someone's
+> code based on something that is unrelated to the code itself.  This is
+> a step along a slippery slope that I very much hope we will never
+> take.  Because the next thing we will be requested is to reject code
+> of people with particular views or opinions, or people living under
+> certain regimes, etc. etc.  We never did anything like that, and
+> IMNSHO we shouldn't, ever.  The world out there is full of grave
+> problems that need to be solved, but Emacs development is not the
+> right place to solve almost all of these problems.
+
+<perhaps-a-tangent>
+Then again, we have rejected patches because the author hasn't signed
+the FSF copyright assignment -- a practice that some other GNU projects
+have dropped, such as GCC: https://lwn.net/Articles/857791/.
+</perhaps-a-tangent>
+
+================================================================================
+Date: 2026-11-03T22:59:49+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: Human Emacs
+Message-ID: <87cxslzicq.fsf@web.de>
+In-Reply-To: <864idxpshy.fsf@gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> It is our job as Emacs maintainers to make sure that code which lands
+> in Emacs is written well and tested as thorough as possible.
+
+This is not the point.
+
+The point is that producing LLM output uses a different language than
+writing code. So it effectively adds a language to the project.
+
+Not just some language (which would already be risky), but a language
+that does not have a corresponding source that can reproduce its output
+(except if you include the whole model as well as the seed and the
+complete context along with the prompt, of which at least model and seed
+are not available for the big models and the model is not Free Software).
+
+> Would you have such fears if you were the Emacs maintainer?
+
+Yes, I would.
+
+Otherwise I would not write them, because while I think you’re wrong on
+this point, I you and the work you do as maintainer have my highest
+respect.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-03T23:04:03+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: Human Emacs
+Message-ID: <877bitzi5o.fsf@web.de>
+In-Reply-To: <87cxslzicq.fsf@web.de>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> this point, I you and the work you do as maintainer have my highest
+> respect.
+
+Sorry, I rewrote the email once too often. Corrected:
+
+You and the work you do as maintainer have my highest respect.
+
+I maintain a smaller project and know how hard that can be even there.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-03T23:43:45+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [nongnu] elpa/proof-general 31e8a6435b 1/3: Double hit electric
+ terminator made generic.
+Message-ID: <jwvzevpwnaz.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <CAACJUkvYBVPUMK0ta4EHT++w5XYUsP307i_1yiSHqWSN4j9JtA@mail.gmail.com> (message
+ from Pierre Courtieu <pierre.courtieu@gmail.com> on Tue,
+ 3 Nov 2026 11:35:48 +0100)
+References: <179367515530.13297.8794092816920787871@vcs2.savannah.gnu.org>
+ <20261103030557.08ADFC0F000@vcs2.savannah.gnu.org>
+ <jwvqzh21ubx.fsf-monnier+emacs@gnu.org>
+ <CAACJUkvYBVPUMK0ta4EHT++w5XYUsP307i_1yiSHqWSN4j9JtA@mail.gmail.com>
+
+> More than a hundred tests should be renamed then.
+
+Yup, the tests and their auxiliary functions/vars/macros/...
+
+> I will do it in a separate PR in a few days.
+
+There's no hurry, tho.
+
+> Once I finish the current dev of a new backend for rocq that uses
+> coq-lsp and shares as much code as possible with the usual backend
+> (https://github.com/Matafou/PG/tree/new-eglot-backend).
+
+🙂
+
+> Btw I am also currently trying to switch PG to lexical binding, it was
+> quite tricky (a few traps) but I think now it is OK.  See PR
+> https://github.com/ProofGeneral/PG/pull/897 and in particular the
+> pitfalls described there. I guess they are all very standard.
+
+Yes, I was quite pleased to see it.  Looks good.
+Thank you,
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-04T04:26:16+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <8633thp99j.fsf@gnu.org>
+In-Reply-To: <87fqxh63l6.fsf@posteo.net> (message from Philip Kaludercic on
+ Tue, 03 Nov 2026 20:51:35 +0000)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87fqxh63l6.fsf@posteo.net>
+
+> From: Philip Kaludercic <philipk@posteo.net>
+> Cc: Jim Porter <jporterbugs@gmail.com>,  bugs@gnu.support,  phil@hagelb.org,
+>   emacs-devel@gnu.org
+> Date: Tue, 03 Nov 2026 20:51:35 +0000
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> [...]
+> 
+> > And I'm most alarmed by the suggestion that we should reject someone's
+> > code based on something that is unrelated to the code itself.  This is
+> > a step along a slippery slope that I very much hope we will never
+> > take.  Because the next thing we will be requested is to reject code
+> > of people with particular views or opinions, or people living under
+> > certain regimes, etc. etc.  We never did anything like that, and
+> > IMNSHO we shouldn't, ever.  The world out there is full of grave
+> > problems that need to be solved, but Emacs development is not the
+> > right place to solve almost all of these problems.
+> 
+> <perhaps-a-tangent>
+> Then again, we have rejected patches because the author hasn't signed
+> the FSF copyright assignment -- a practice that some other GNU projects
+> have dropped, such as GCC: https://lwn.net/Articles/857791/.
+> </perhaps-a-tangent>
+
+Yes, a tangent: this discussion should not be about legal requirements
+for contributions.  The legal aspects of LLM-generated code are anyway
+the focus of the current consideration by the GNU project lawyers, and
+no one here is a lawyer to contradict what they will advise.
+
+================================================================================
+Date: 2026-11-04T04:32:23+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <861p91p8zc.fsf@gnu.org>
+In-Reply-To: <87cxslzicq.fsf@web.de> (arne_bab@web.de)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: jporterbugs@gmail.com,  bugs@gnu.support,  phil@hagelb.org,
+>   emacs-devel@gnu.org
+> Date: Tue, 03 Nov 2026 22:59:49 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > It is our job as Emacs maintainers to make sure that code which lands
+> > in Emacs is written well and tested as thorough as possible.
+> 
+> This is not the point.
+> 
+> The point is that producing LLM output uses a different language than
+> writing code. So it effectively adds a language to the project.
+
+You will need to explain that, because I really don't understand what
+you are trying to say.  The generated code uses the programming
+language, be it C or Lisp, in which Emacs is written.
+
+> Not just some language (which would already be risky), but a language
+> that does not have a corresponding source that can reproduce its output
+> (except if you include the whole model as well as the seed and the
+> complete context along with the prompt, of which at least model and seed
+> are not available for the big models and the model is not Free Software).
+
+Onmce again, what needs to be documented and recorded as part of
+admitting such contributions is a separate issue.  If it will be
+decided that the prompts etc. need to be added, we will need to learn
+how to review them.  But since we already review similar assets, I see
+no reason to be afraid here.
+
+> > Would you have such fears if you were the Emacs maintainer?
+> 
+> Yes, I would.
+
+I'm surprised, but my faith in the abilities of the Emacs maintainers
+is high enough to not have such fears.
+
+================================================================================
+Date: 2026-11-04T04:59:58+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <77516160-08b0-4cff-823d-33d2fdae0e14@gutov.dev>
+In-Reply-To: <87mrrq9wuk.fsf@mail.linkov.net>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev> <86qzh7ve6t.fsf@gnu.org>
+ <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev> <861p96rovp.fsf@gnu.org>
+ <1bd555c8-1cb5-4d99-8c11-902a53099ac1@gutov.dev>
+ <12d2c40b-a0fb-4700-bba3-8ee44a5b0ae6@gutov.dev>
+ <87mrrrk79d.fsf@mail.linkov.net>
+ <bbae1670-f614-4599-9e2f-69d851cd17d2@gutov.dev>
+ <87mrrq9wuk.fsf@mail.linkov.net>
+
+On 03/11/2026 09:51, Juri Linkov wrote:
+>>> If this restriction can't be lifted, then maybe read-multiple-choice
+>>> could restructure the long menu by leaving only 8 items, and
+>>> moving the rest into a new submenu.
+>>
+>> Maybe x-popup-dialog could provide a next/previous buttons when the total
+>> number is too high.
+> 
+> I can't imagine adding buttons to the menu.
+
+They would work like "regular" options but have labels "Next ..." and 
+"... Previous", or similar.
+
+>> Or read-multiple-choice--short-answers itself could do that, in its use of
+>> x-popup-dialog.
+>>
+>> Maybe that is what you meant by submenu? Otherwise, read-multiple-choice
+>> couldn't use the graphical prompt, IIUC.
+> 
+> I meant something like 'mouse-buffer-menu' that splits
+> a long list of buffers where the rest of buffers are
+> added to the submenu "Others".
+
+But if the list is long enough, then "Others" will also need "Others 
+Other" and so on.
+
+> However, it's strange that
+> 'mouse-buffer-menu-maxlen' is 20 by default, and
+> 'x-popup-menu' accepts more than 9 items.
+> So maybe 'read-multiple-choice--short-answers' could
+> just use 'x-popup-menu' instead of 'x-popup-dialog'.
+
+It is worth a try.
+
+================================================================================
+Date: 2026-11-04T05:02:36+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <c53db0c3-c3ef-4474-9a84-2833cdef3e31@gutov.dev>
+In-Reply-To: <jwvy0ba1uh5.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <86h5k5343a.fsf@gnu.org> <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org> <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org> <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+ <86zex0z4k9.fsf@gnu.org> <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev>
+ <86qzh7ve6t.fsf@gnu.org> <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev>
+ <861p96rovp.fsf@gnu.org> <1bd555c8-1cb5-4d99-8c11-902a53099ac1@gutov.dev>
+ <12d2c40b-a0fb-4700-bba3-8ee44a5b0ae6@gutov.dev>
+ <87mrrrk79d.fsf@mail.linkov.net> <jwvy0ba1uh5.fsf-monnier+emacs@gnu.org>
+
+On 03/11/2026 05:11, Stefan Monnier via Emacs development discussions. 
+wrote:
+>> If this restriction can't be lifted, then maybe read-multiple-choice
+>> could restructure the long menu by leaving only 8 items, and
+>> moving the rest into a new submenu.
+> 
+> But I can't see anything in the calling convention of
+> `read-multiple-choice` that would let it guess which items are more
+> deserving to be in the main dialog, so it risks being occasionally
+> rather awkward with unlikely choices being (unluckily) presented first
+> and the most common ones relegated to a "new submenu"?
+I think the items that are returned closer to the front of the list get 
+the more prioritized treatment and better visibility anyway.
+
+The result is not sorted, so it's up to the backend to choose which 
+kinds are printed first. Those in the tail of the list could be cordoned 
+off in "Others" or behind paging, etc.
+
+As long as the "soft max" is stable, the backend authors can test the 
+result and structure their lists accordingly.
+
+================================================================================
+Date: 2026-11-04T06:59:42+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xOU2A-00DFXB-Vn@fencepost.gnu.org>
+In-Reply-To: <2d3ad682-038d-4222-82d8-c0a734096048@imayhem.com> (message from
+ Cecilio Pardo on Sat, 31 Oct 2026 17:29:27 +0100)
+References: <8733tozesd.fsf@asthra>
+ <2d3ad682-038d-4222-82d8-c0a734096048@imayhem.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+Your response to Hagelberg's posting was harsh and cruel.
+Please follow the Kind Communication Guidelines in discussions here.
+
+See https://gnu.org/philosophy/kind-communication.html.
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-04T07:00:43+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [NonGNU ELPA] Submission inquiry: clutch,
+ an interactive database client
+Message-ID: <E1xOU39-00DGLD-8p@fencepost.gnu.org>
+In-Reply-To: <86fqxmruzr.fsf@gnu.org> (message from Eli Zaretskii on Sat, 31
+ Oct 2026 13:04:56 +0200)
+References: <CALyaXOiXC4ro7eLb4BW11Ns9cxhY6Fn_GZJ-Jm8_JR-yYTo5Vg@mail.gmail.com>
+ <E1xJXxO-0077Vu-KE@fencepost.gnu.org>
+ <CALyaXOiNNDx18hJggwaCDhLY0GDrWc9LY36HNzurfeqxnVB1cg@mail.gmail.com>
+ <86ld7n4noh.fsf@gnu.org>
+ <CA+TD5hgC4wqsQkzyHWARGOn9m29o4efj-CW-h=Sp=J_o5VKpfQ@mail.gmail.com>
+ <E1xMTHX-00ArRS-Ap@fencepost.gnu.org> <86fqxmruzr.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > I think you are right.  Thanks for pointing out that this was missing
+  > > in CONTRIBUTE.  I wrote this text to add there.
+
+  > Thanks, I've now added it with very minor changes.
+
+Thanks.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-04T07:47:24+01:00
+From: <tomas@tuxteam.de>
+Subject: Re: Human Emacs
+Message-ID: <aurU/JY3Ux/YfSdI@tuxteam.de>
+In-Reply-To: <861p91p8zc.fsf@gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org>
+
+On Wed, Nov 04, 2026 at 05:32:23AM +0200, Eli Zaretskii wrote:
+> > From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> > Cc: jporterbugs@gmail.com,  bugs@gnu.support,  phil@hagelb.org,
+> >   emacs-devel@gnu.org
+> > Date: Tue, 03 Nov 2026 22:59:49 +0100
+> > 
+> > Eli Zaretskii <eliz@gnu.org> writes:
+> > 
+> > > It is our job as Emacs maintainers to make sure that code which lands
+> > > in Emacs is written well and tested as thorough as possible.
+> > 
+> > This is not the point.
+> > 
+> > The point is that producing LLM output uses a different language than
+> > writing code. So it effectively adds a language to the project.
+> 
+> You will need to explain that, because I really don't understand what
+> you are trying to say.  The generated code uses the programming
+> language, be it C or Lisp, in which Emacs is written.
+
+If I may chime in here, this is what GNU calls the "preferred form".
+If the C, or the Lisp is just the output of a process (a generatively
+operated LLM, with some random input [aka "temperature"]), this
+"preferred source" would be the model plus the random seed, not its
+output.
+
+Exactly as if some C code had been generated by Lex/Yacc (or, better:
+Bison, but we're biased here ;-)
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-04T07:50:22+01:00
+From: tomas@tuxteam.de
+Subject: Re: Human Emacs
+Message-ID: <aurVrmzY9fN5cKYL@tuxteam.de>
+In-Reply-To: <aurU/JY3Ux/YfSdI@tuxteam.de>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <aurU/JY3Ux/YfSdI@tuxteam.de>
+
+On Wed, Nov 04, 2026 at 07:47:24AM +0100, tomas@tuxteam.de wrote:
+
+[...]
+
+> "preferred source" would be the model plus the random seed [...]
+
+...and the prompts, of course. Gah, sorry.
+
+-- 
+t
+
+================================================================================
+Date: 2026-11-04T08:08:48+01:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <m24idx2hvj.fsf@gmail.com>
+In-Reply-To: <aurVrmzY9fN5cKYL@tuxteam.de>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <aurU/JY3Ux/YfSdI@tuxteam.de>
+ <aurVrmzY9fN5cKYL@tuxteam.de>
+
+tomas@tuxteam.de writes:
+
+> On Wed, Nov 04, 2026 at 07:47:24AM +0100, tomas@tuxteam.de wrote:
+>
+> [...]
+>
+>> "preferred source" would be the model plus the random seed [...]
+>
+> ...and the prompts, of course. Gah, sorry.
+
+...and the difficulty that LLM output is non-determinitic
+
+================================================================================
+Date: 2026-11-04T08:37:28+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: Human Emacs
+Message-ID: <87y0b9xd1j.fsf@web.de>
+In-Reply-To: <861p91p8zc.fsf@gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> The point is that producing LLM output uses a different language than
+>> writing code. So it effectively adds a language to the project.
+>
+> You will need to explain that, because I really don't understand what
+> you are trying to say.  The generated code uses the programming
+> language, be it C or Lisp, in which Emacs is written.
+
+That’s what I tried to do with the UML analogy: when you generate code
+from an UML diagram, you do not actually write in the language of the
+code. You write UML.
+
+Similarly when you write prompts, you do not actually write the code,
+but you write instructions that say something about the code, but to get
+them right, you have to have a feeling for the representation the LLM
+has of the code (which you can’t actually know).
+
+Depending on the usage style, this can be closer to or further away from
+the actual code, but in any way it’s not actually the code. And it’s
+very different from refactoring tools with which you do precise
+manipulations of the code on the level of the code.
+
+An easier to convey example is with AI-art: if you tell an AI model
+“make this blue”, it often doesn’t only make this blue, but adds other
+changes. An art director explained a while back that this makes it
+almost impossible for him to work with people who use those tools. While
+the results seem similar, they don’t actually use the same language to
+produce them.
+
+And that creates a constant pressure to just accept what the model
+outputs today (besides anchoring effects that make this stronger),
+detaching the user from the actual code. Example quote (I heard multiple
+times): “not exactly what I wanted, but doesn’t do harm, right?”.
+
+It also causes pressure to look more at things the tool can check (e.g.
+“the tests are green” or “I can click through”) and less on the code.
+But those are indicators that help catch common errors and not the
+source of truth for correctness (except for programs like sqlite that
+have massive testsuites and are exposed to every strange bug under the
+sun).
+
+>> Not just some language (which would already be risky), but a language
+>> that does not have a corresponding source that can reproduce its output
+
+> Once again, what needs to be documented and recorded as part of
+> admitting such contributions is a separate issue.
+
+It’s not about what to admit: it’s about whether it would actually be
+possible to just say the equivalent of “let the source of this part be
+the UML diagram / XML definition / …”.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-04T08:39:48+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: Human Emacs
+Message-ID: <87se1hxcxn.fsf@web.de>
+In-Reply-To: <aurVrmzY9fN5cKYL@tuxteam.de>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+ <aurU/JY3Ux/YfSdI@tuxteam.de> <aurVrmzY9fN5cKYL@tuxteam.de>
+
+tomas@tuxteam.de writes:
+
+> On Wed, Nov 04, 2026 at 07:47:24AM +0100, tomas@tuxteam.de wrote:
+>
+> [...]
+>
+>> "preferred source" would be the model plus the random seed [...]
+>
+> ...and the prompts, of course. Gah, sorry.
+
+That’s much more concise that my description – thank you!
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-04T09:22:37+01:00
+From: tomas@tuxteam.de
+Subject: Re: Human Emacs
+Message-ID: <aurrTQg+OumB0fjA@tuxteam.de>
+In-Reply-To: <m24idx2hvj.fsf@gmail.com>
+References: <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <aurU/JY3Ux/YfSdI@tuxteam.de>
+ <aurVrmzY9fN5cKYL@tuxteam.de> <m24idx2hvj.fsf@gmail.com>
+
+On Wed, Nov 04, 2026 at 08:08:48AM +0100, Gerd Möllmann wrote:
+> tomas@tuxteam.de writes:
+> 
+> > On Wed, Nov 04, 2026 at 07:47:24AM +0100, tomas@tuxteam.de wrote:
+> >
+> > [...]
+> >
+> >> "preferred source" would be the model plus the random seed [...]
+> >
+> > ...and the prompts, of course. Gah, sorry.
+> 
+> ...and the difficulty that LLM output is non-determinitic
+
+I tried to cover that with the "random seed", which is, admittedly
+pretty sloppy (random generator state might come closer, but all
+bets are off if they use hardware assistance).
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-04T10:37:59+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Human Emacs
+Message-ID: <54a4ad1b17b21202f47b854620449ff9@gnu.support>
+In-Reply-To: <m24idx2hvj.fsf@gmail.com>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+ <aurU/JY3Ux/YfSdI@tuxteam.de> <aurVrmzY9fN5cKYL@tuxteam.de>
+ <m24idx2hvj.fsf@gmail.com>
+
+On 2026-11-04 10:08, Gerd Möllmann wrote:
+
+> ...and the difficulty that LLM output is non-determinitic
+
+ From view point of running local the local LLM inference, the above 
+statement is only true when user sets the temperature to something else 
+then zero. In GNU project we should never discuss running the remote 
+SaaSS API but local computing.
+
+If temperature is zero, the output is deterministic and reproducible. Of 
+course other parameters should be made known as well to get full 
+reproducibility.
+
+Example:
+
+llama-cli --temp 0 -m 
+/mnt/nvme0n1/LLM/quantized/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf 
+--prompt "Who is RMS aka Stallman?"
+
+Try it out. It gives deterministic output each single time. The above 
+prompt will always give totally same output, as the model picks the 
+single most probable token at every step.
+
+It is reproducible. It is alright to use temperature zero in coding, 
+especially in debugging and testing, it is even faster slightly.
+
+In an LLM-allowed programming environment, programmers could use a 
+shared model (with same checksum) to collaborate deterministically, 
+generating Emacs lisp functions sequentially while maintaining full 
+understanding of each function and ensuring a coherent workflow.
+
+Thus, the problems with foundation of not being deterministic can be 
+resolved by establishing a deterministic, local inference workflow using 
+a shared same model with a fixed checksum.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-04T10:51:42+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <5fa71503-a38f-42cc-b4e3-ddc0ef0d91a8@gutov.dev>
+In-Reply-To: <86se1nvf3v.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+
+On 30/10/2026 09:09, Eli Zaretskii wrote:
+>> The new code doesn't include per-file case-fold-seach detection yet,
+>> sorry for that step back, but it seems compatible with the solution, to
+>> be added later. At least kind identifier completion seems usable now.
+>> Feedback welcome.
+> Case-fold that is consistent with the file's PL is a must, otherwise
+> things will break in Fortran and other similar languages.  So I hope
+> this will be added soon.
+
+Commit fd24459905a has now added such support. Feedback welcome, as always.
+
+================================================================================
+Date: 2026-11-04T10:54:23+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: master 9008bf64c33: test/lisp/emacs-lisp/bytecomp-tests.el:
+ Comment out outdated test
+Message-ID: <877bishqgg.fsf@athena.silentflame.com>
+In-Reply-To: <20261101045517.33396C111EE@vcs2.savannah.gnu.org>
+References: <179350891678.2622.3269737708252467041@vcs2.savannah.gnu.org>
+ <20261101045517.33396C111EE@vcs2.savannah.gnu.org>
+
+Stefan Monnier via Mailing list for Emacs changes [01/Nov 12:55am -04] wrote:
+> branch: master
+> commit 9008bf64c3375f63620d9d6f6dc31908b68bf0a0
+> Author: Stefan Monnier <monnier@iro.umontreal.ca>
+> Commit: Stefan Monnier <monnier@iro.umontreal.ca>
+>
+>     test/lisp/emacs-lisp/bytecomp-tests.el: Comment out outdated test
+> ---
+>  test/lisp/emacs-lisp/bytecomp-tests.el | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/test/lisp/emacs-lisp/bytecomp-tests.el b/test/lisp/emacs-lisp/bytecomp-tests.el
+> index ef1fcf26a7a..b554c401458 100644
+> --- a/test/lisp/emacs-lisp/bytecomp-tests.el
+> +++ b/test/lisp/emacs-lisp/bytecomp-tests.el
+> @@ -1144,8 +1144,8 @@ byte-compiled.  Run with dynamic binding."
+>  (bytecomp--define-warning-file-test "error-lexical-var-with-symbol-value.el"
+>                              "symbol-value.*lexical var")
+>
+> -(bytecomp--define-warning-file-test "warn-autoload-not-on-top-level.el"
+> -                            "compiler ignores.*autoload.*")
+> +;; (bytecomp--define-warning-file-test "warn-autoload-not-on-top-level.el"
+> +;;                             "compiler ignores.*autoload.*")
+>
+>  (bytecomp--define-warning-file-test "warn-callargs.el"
+>                              "with 2 arguments, but accepts only 1")
+
+Perhaps we should just delete it?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-04T11:30:48+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Binding ` to context-menu-open in special-mode
+Message-ID: <87y0b8ga7b.fsf@athena.silentflame.com>
+In-Reply-To: 
+References: 
+
+We have various useful context menus but they're somewhat underused.
+
+I'd like to bind ` to context-menu-open in special-mode.
+
+Read-only buffers are a prime candidate for help-at-point that varies
+depending on where point is.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-04T11:58:45+01:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <m2y0b8278a.fsf@gmail.com>
+In-Reply-To: <54a4ad1b17b21202f47b854620449ff9@gnu.support>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <aurU/JY3Ux/YfSdI@tuxteam.de>
+ <aurVrmzY9fN5cKYL@tuxteam.de> <m24idx2hvj.fsf@gmail.com>
+ <54a4ad1b17b21202f47b854620449ff9@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> On 2026-11-04 10:08, Gerd Möllmann wrote:
+>
+>> ...and the difficulty that LLM output is non-determinitic
+>
+> From view point of running local the local LLM inference, the above
+> statement is only true when user sets the temperature to something
+> else then zero. In GNU project we should never discuss running the
+> remote SaaSS API but local computing.
+>
+> If temperature is zero, the output is deterministic and reproducible.
+> Of course other parameters should be made known as well to get full
+> reproducibility.
+>
+> Example:
+>
+> llama-cli --temp 0 -m
+> /mnt/nvme0n1/LLM/quantized/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf
+> --prompt "Who is RMS aka Stallman?"
+>
+> Try it out. It gives deterministic output each single time. The above
+> prompt will always give totally same output, as the model picks the
+> single most probable token at every step.
+>
+> It is reproducible. It is alright to use temperature zero in coding,
+> especially in debugging and testing, it is even faster slightly.
+>
+> In an LLM-allowed programming environment, programmers could use a
+> shared model (with same checksum) to collaborate deterministically,
+> generating Emacs lisp functions sequentially while maintaining full
+> understanding of each function and ensuring a coherent workflow.
+>
+> Thus, the problems with foundation of not being deterministic can be
+> resolved by establishing a deterministic, local inference workflow
+> using a shared same model with a fixed checksum.
+
+Maybe, I'm not an expert in this stuff. But I must say that I've more
+than once seen articles claiming that temperature 0 is not enough, for
+example
+:
+https://iamvera.ai/blog/temperature-zero-reproducible-code-generation/
+
+================================================================================
+Date: 2026-11-04T12:10:28+01:00
+From: Divya Ranjan Pattanaik <divya@dialetheia.xyz>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <87wlqsam3f.fsf@dialetheia.xyz>
+In-Reply-To: <E1xO4KK-00COOX-8m@fencepost.gnu.org>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+ <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+ <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz>
+ <E1xO4KK-00COOX-8m@fencepost.gnu.org>
+
+Hello Emacs Devel,
+
+Finally, we have released v0.4.0 of EMuReader. It is now ready to be packaged for GNU ELPA. All the renaming, building and other issues have been addressed.
+
+The release notes can be found here:
+
+https://codeberg.org/MonadicSheep/emureader/releases/tag/0.4.0
+
+or, the following NEWS file entry:
+
+* Version 0.4.0
+- Rename to EMuReader.
+- Per window pages, zooming, etc. support, which means that it is now
+  possible to view different pages of the same document (from the same
+  buffer) on different windows.
+- Change 'screenful' to 'screen' in command names.
+- Make =emureader-reset-size= interactive.
+- Overall stability improvements when opening files, accessing
+  bookmarks, and outlines.
+- Remove F5 keybinding for =emureader-presentation-mode=.
+- Remove =emureader-mode= as an interactive command.
+- Fix weird page border artifacts when using the mouse.
+- Add =emureader-build= command to automatically build the dynamic module.
+- Fix handling documents with multiple orientations.
+- EMuReader buffers now get automatically reverted via =auto-revert-mode= without crashing.
+
+Thank you everyone for your inputs and cooperation.
+
+Regards,
+-- 
+Divya Ranjan Pattanaik,
+Philosophy, Mathematics, Libre Software.
+
+PGP Fingerprint: F0B3 1A69 8006 8FB8 096A  2F12 B245 10C6 108C 8D4A
+
+================================================================================
+Date: 2026-11-04T13:30:18+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86y0b8ok2t.fsf@gnu.org>
+In-Reply-To: <aurU/JY3Ux/YfSdI@tuxteam.de> (tomas@tuxteam.de)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <aurU/JY3Ux/YfSdI@tuxteam.de>
+
+> Date: Wed, 4 Nov 2026 07:47:24 +0100
+> Cc: "Dr. Arne Babenhauserheide" <arne_bab@web.de>, jporterbugs@gmail.com,
+> 	bugs@gnu.support, phil@hagelb.org, emacs-devel@gnu.org
+> From: <tomas@tuxteam.de>
+> 
+> On Wed, Nov 04, 2026 at 05:32:23AM +0200, Eli Zaretskii wrote:
+> > > From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> > > Cc: jporterbugs@gmail.com,  bugs@gnu.support,  phil@hagelb.org,
+> > >   emacs-devel@gnu.org
+> > > Date: Tue, 03 Nov 2026 22:59:49 +0100
+> > > 
+> > > Eli Zaretskii <eliz@gnu.org> writes:
+> > > 
+> > > > It is our job as Emacs maintainers to make sure that code which lands
+> > > > in Emacs is written well and tested as thorough as possible.
+> > > 
+> > > This is not the point.
+> > > 
+> > > The point is that producing LLM output uses a different language than
+> > > writing code. So it effectively adds a language to the project.
+> > 
+> > You will need to explain that, because I really don't understand what
+> > you are trying to say.  The generated code uses the programming
+> > language, be it C or Lisp, in which Emacs is written.
+> 
+> If I may chime in here, this is what GNU calls the "preferred form".
+> If the C, or the Lisp is just the output of a process (a generatively
+> operated LLM, with some random input [aka "temperature"]), this
+> "preferred source" would be the model plus the random seed, not its
+> output.
+> 
+> Exactly as if some C code had been generated by Lex/Yacc (or, better:
+> Bison, but we're biased here ;-)
+
+So it''s again not relevant to the issue at hand.  We should all wait
+until GNU decides whether LLM-generated code is acceptable, and if so,
+in what form.  The latter guidance is obviously dependent on the
+decision about the former and the conditions for accepting such code,
+if possible, that will emerge from the legal and other aspects of
+that.
+
+It is useless to discuss this here and now, and arguing that the
+(currently completely undefined) form of such code is a reason for a
+threat to fork is...strange (for lack of a better and still polite
+word).
+
+================================================================================
+Date: 2026-11-04T13:31:33+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86wlqsok0q.fsf@gnu.org>
+In-Reply-To: <m24idx2hvj.fsf@gmail.com> (message from Gerd =?utf-8?Q?M?=
+ =?utf-8?Q?=C3=B6llmann?= on Wed, 04 Nov 2026 08:08:48 +0100)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <aurU/JY3Ux/YfSdI@tuxteam.de>
+ <aurVrmzY9fN5cKYL@tuxteam.de> <m24idx2hvj.fsf@gmail.com>
+
+> From: Gerd Möllmann <gerd.moellmann@gmail.com>
+> Cc: Eli Zaretskii <eliz@gnu.org>,  "Dr. Arne Babenhauserheide"
+>  <arne_bab@web.de>,  jporterbugs@gmail.com,  bugs@gnu.support,
+>   phil@hagelb.org,  emacs-devel@gnu.org
+> Date: Wed, 04 Nov 2026 08:08:48 +0100
+> 
+> tomas@tuxteam.de writes:
+> 
+> > On Wed, Nov 04, 2026 at 07:47:24AM +0100, tomas@tuxteam.de wrote:
+> >
+> > [...]
+> >
+> >> "preferred source" would be the model plus the random seed [...]
+> >
+> > ...and the prompts, of course. Gah, sorry.
+> 
+> ...and the difficulty that LLM output is non-determinitic
+
+Again, all this belongs to what GNU should decide and provide
+guidance.  Then we can discuss it meaningfully.
+
+================================================================================
+Date: 2026-11-04T13:53:38+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86tslwoizx.fsf@gnu.org>
+In-Reply-To: <87y0b9xd1j.fsf@web.de> (arne_bab@web.de)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: jporterbugs@gmail.com,  bugs@gnu.support,  phil@hagelb.org,
+>   emacs-devel@gnu.org
+> Date: Wed, 04 Nov 2026 08:37:28 +0100
+> 
+> >> Not just some language (which would already be risky), but a language
+> >> that does not have a corresponding source that can reproduce its output
+> 
+> > Once again, what needs to be documented and recorded as part of
+> > admitting such contributions is a separate issue.
+> 
+> It’s not about what to admit: it’s about whether it would actually be
+> possible to just say the equivalent of “let the source of this part be
+> the UML diagram / XML definition / …”.
+
+Leave this to us the Emacs maintainers, please, for when this is
+clarified.  If and when GNU publishes the guidelines and requirements
+for accepting LLM-generated code, if the decision is to allow that, we
+will study what those guidelines and requirements mean in practice for
+us, and will see how to modify our procedures if needed.  For now,
+this side-bar discussion is completely academic, as we don't have any
+real basis for assessing what that entails and what it will require
+from us the maintainers.  We can argue till Kingdom Come and not make
+any progress, because we don't really know what are we arguing about.
+
+================================================================================
+Date: 2026-11-04T15:14:22+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <878q3865vo.fsf@posteo.net>
+In-Reply-To: <87wlqsam3f.fsf@dialetheia.xyz>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+ <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+ <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz>
+ <E1xO4KK-00COOX-8m@fencepost.gnu.org> <87wlqsam3f.fsf@dialetheia.xyz>
+
+Divya Ranjan Pattanaik <divya@dialetheia.xyz> writes:
+
+> Hello Emacs Devel,
+>
+> Finally, we have released v0.4.0 of EMuReader. It is now ready to be packaged for GNU ELPA. All the renaming, building and other issues have been addressed.
+>
+> The release notes can be found here:
+>
+> https://codeberg.org/MonadicSheep/emureader/releases/tag/0.4.0
+
+Great, I have added the package to gnu.git and it should appear there
+shorty.
+
+> or, the following NEWS file entry:
+>
+> * Version 0.4.0
+> - Rename to EMuReader.
+> - Per window pages, zooming, etc. support, which means that it is now
+>   possible to view different pages of the same document (from the same
+>   buffer) on different windows.
+> - Change 'screenful' to 'screen' in command names.
+> - Make =emureader-reset-size= interactive.
+> - Overall stability improvements when opening files, accessing
+>   bookmarks, and outlines.
+> - Remove F5 keybinding for =emureader-presentation-mode=.
+> - Remove =emureader-mode= as an interactive command.
+> - Fix weird page border artifacts when using the mouse.
+> - Add =emureader-build= command to automatically build the dynamic module.
+> - Fix handling documents with multiple orientations.
+> - EMuReader buffers now get automatically reverted via =auto-revert-mode= without crashing.
+>
+> Thank you everyone for your inputs and cooperation.
+
+Thank you for you and your collaborators for the submission and your
+patience.
+
+> Regards,
+
+================================================================================
+Date: 2026-11-04T15:31:55+01:00
+From: Andrey Listopadov <andreyorst@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> If some contributor decides to use LLMs for developing Emacs code,
+> and they do it in a way that prevents them from learning, that is
+> their business: the harm, such as it is, will be caused to them and
+> no one else.
+
+> Our job is to make sure that code that lands in Emacs is useful,
+> correct, well-designed and well-implemented.  We cannot be held
+> responsible for whatever the contributors do in the privacy of their
+> development environment.
+
+There's one issue with that - after such code gets merged, it can
+become your business.
+
+Say, someone made a contribution to Emacs, a particularly large one.
+They spent tons of tokens on it, made tests and all, and the code
+looks solid.  Maintainers do the review, ask for some changes.  The
+user spends more tokens, changes the code, and eventually it is
+decided that all is good and the code is fine to merge to Emacs.
+
+That person doesn't understand the code they made, because it was done
+by an LLM.  Sure it's their problem.  But once it gets merged, it is
+now problem for the maintainers.  The contributor walks away, and if
+in the future any issues arise, that person may just not respond at
+all.  Now someone else needs to go through all that code and figure
+out the intentions that the LLM had while writing it.  This can get
+out of hand pretty fast.
+
+I sometimes submit bugs to Emacs, and I often see that someone who's
+responsible to the changes that introduced these bugs are called, and
+they come and fix these bugs, as any responsible contributor should.
+Assuming that this will work the same with people who used an LLM to
+make a contribution is problematic, and I've already encountered it in
+the projects I maintain.
+
+Sure, this can happen without LLMs involved - there are irresponsible
+people who would walk away just the same.  But allowing the use of LLM
+opens the door to getting much more of such contributions, and can quickly
+overwhelm a small team with amounts of code they now need to maintain
+without help.
+
+-- 
+Andrey Listopadov
+
+================================================================================
+Date: 2026-11-04T15:50:07+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <m27bismz1c.fsf@macmutant.fritz.box>
+In-Reply-To: <87wlqsam3f.fsf@dialetheia.xyz>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+ <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+ <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz>
+ <E1xO4KK-00COOX-8m@fencepost.gnu.org> <87wlqsam3f.fsf@dialetheia.xyz>
+
+Divya Ranjan Pattanaik <divya@dialetheia.xyz> writes:
+
+> Finally, we have released v0.4.0 of EMuReader. It is now ready to be
+> packaged for GNU ELPA. All the renaming, building and other issues
+> have been addressed.
+
+Congrats!
+
+Just a side note: README.org doesn't contain any information about
+what's needed in order to build the package/module on Windows, basically
+a "Windows specific instructions" section .  Not sure if this on purpose
+or just an oversight.
+
+Best, Arash
+
+================================================================================
+Date: 2026-11-04T15:51:58+01:00
+From: tomas@tuxteam.de
+Subject: Re: Human Emacs
+Message-ID: <autGjkUHAzwQKUFF@tuxteam.de>
+In-Reply-To: <86y0b8ok2t.fsf@gnu.org>
+References: <auV4dkJQGTzQcnmN@rtx.louis.club> <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <aurU/JY3Ux/YfSdI@tuxteam.de>
+ <86y0b8ok2t.fsf@gnu.org>
+
+On Wed, Nov 04, 2026 at 02:30:18PM +0200, Eli Zaretskii wrote:
+
+[...]
+
+> It is useless to discuss this here and now, and arguing that the
+> (currently completely undefined) form of such code is a reason for a
+> threat to fork is...strange (for lack of a better and still polite
+> word).
+
+FWIW, I'm not happy about that fork thing, although I strongly sympathize
+with the initiative itself.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-04T16:22:02+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86qzh0oc4l.fsf@gnu.org>
+In-Reply-To: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ (message from Andrey Listopadov on Wed, 4 Nov 2026 17:31:55 +0300)
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+
+> From: Andrey Listopadov <andreyorst@gmail.com>
+> Date: Wed, 4 Nov 2026 17:31:55 +0300
+> Cc: emacs-devel@gnu.org
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > If some contributor decides to use LLMs for developing Emacs code,
+> > and they do it in a way that prevents them from learning, that is
+> > their business: the harm, such as it is, will be caused to them and
+> > no one else.
+> 
+> > Our job is to make sure that code that lands in Emacs is useful,
+> > correct, well-designed and well-implemented.  We cannot be held
+> > responsible for whatever the contributors do in the privacy of their
+> > development environment.
+> 
+> There's one issue with that - after such code gets merged, it can
+> become your business.
+
+It happens today, quite frequently.  I see nothing new here.
+
+> Say, someone made a contribution to Emacs, a particularly large one.
+> They spent tons of tokens on it, made tests and all, and the code
+> looks solid.  Maintainers do the review, ask for some changes.  The
+> user spends more tokens, changes the code, and eventually it is
+> decided that all is good and the code is fine to merge to Emacs.
+> 
+> That person doesn't understand the code they made, because it was done
+> by an LLM.  Sure it's their problem.  But once it gets merged, it is
+> now problem for the maintainers.  The contributor walks away, and if
+> in the future any issues arise, that person may just not respond at
+> all.  Now someone else needs to go through all that code and figure
+> out the intentions that the LLM had while writing it.  This can get
+> out of hand pretty fast.
+
+As I said, we already do that, quite a lot.  People disappear from
+Emacs, after contributing something, for any number of reasons, and
+leave their code for us to develop and maintain.  I could show quite a
+few examples of this over the years, some of them of significant
+changes in Emacs.
+
+And yes, sometimes it means we have code in Emacs that we are not
+familiar with well enough, and need to tread carefully when we modify
+it.  But it's part of our life in Emacs development, not something new
+with LLMs.
+
+> I sometimes submit bugs to Emacs, and I often see that someone who's
+> responsible to the changes that introduced these bugs are called, and
+> they come and fix these bugs, as any responsible contributor should.
+
+IME, more often than not, the original authors are unavailable, for
+whatever reasons.  The situation where they stay active for many years
+is quite rare.
+
+> Sure, this can happen without LLMs involved - there are irresponsible
+> people who would walk away just the same.
+
+This usually has nothing to do with being irresponsible.  There are
+many reasons why the original authors could be unavailable.
+
+> But allowing the use of LLM opens the door to getting much more of
+> such contributions, and can quickly overwhelm a small team with
+> amounts of code they now need to maintain without help.
+
+As long as the code is well understood when it is accepted, and it's
+clean and designed reasonably well, I don't see why this would be a
+problem any more than what we have now.
+
+================================================================================
+Date: 2026-11-04T17:38:44+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: ELPA submission: readline-completion
+Message-ID: <87a4no3623.fsf@gmail.com>
+In-Reply-To: 
+References: 
+
+Hi,
+
+I would like to submit the following package to GNU ELPA:
+
+  https://codeberg.org/astoff/readline-completion.el
+
+It provides a CAPF that reads completion candidates from GNU Readline.
+Unlike some similar existing packages, it relies on a new(ish) readline
+feature (M-x export-completions) that reduces the amount of guesswork
+involved.
+
+Apparently Spencer was involved in requesting/designing that GNU
+Readline feature, so I've added you in CC.  Perhaps you have comments?
+
+================================================================================
+Date: 2026-11-04T17:41:46+01:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <CA+TD5hjDERi=FDmum+CYj9RJAvxbX1U2uLO=_T8kjZNQZ9xEdQ@mail.gmail.com>
+In-Reply-To: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+
+On Wed, 4 Nov 2026 at 17:15, Andrey Listopadov <andreyorst@gmail.com> wrote:
+
+> Now someone else needs to go through all that code and figure
+> out the intentions that the LLM had while writing it.
+
+
+What makes you think humans can't write cryptic code, too? :)
+
+================================================================================
+Date: 2026-11-04T17:47:24+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: ELPA submission: vibe-spell
+Message-ID: <877bis35nn.fsf@gmail.com>
+In-Reply-To: 
+References: 
+
+Hi,
+
+I would like to submit the following package to Non-GNU ELPA:
+
+  https://github.com/astoff/vibe-spell
+
+It is a slop-rewrite of Hunspell/Nuspell in pure Elisp.  I think it
+might be useful for some users, since currently the only options for
+accessing a spellchecker involve compiling a third-party module (jinx)
+or suffering with the "ispell -a" interface.
+
+Also, I think this package is an interesting experiment in how far Elisp
+can be pushed.  It performs better than I would have guessed.
+
+Once this is online, I will update my jit-spell package to optionally
+make use of vibe-spell (since the latter is just a library, without UI).
+
+================================================================================
+Date: 2026-11-04T17:49:16+01:00
+From: Juri Linkov <juri@linkov.net>
+Subject: Re: Binding ` to context-menu-open in special-mode
+Message-ID: <877biswnyj.fsf@mail.linkov.net>
+In-Reply-To: <87y0b8ga7b.fsf@athena.silentflame.com>
+References: <87y0b8ga7b.fsf@athena.silentflame.com>
+
+> We have various useful context menus but they're somewhat underused.
+>
+> I'd like to bind ` to context-menu-open in special-mode.
+>
+> Read-only buffers are a prime candidate for help-at-point that varies
+> depending on where point is.
+
+When view-read-only is t, it uses view-mode,
+so the same key could be added to view-mode-map as well.
+It has already ' bound to register-to-point, but ` is free.
+
