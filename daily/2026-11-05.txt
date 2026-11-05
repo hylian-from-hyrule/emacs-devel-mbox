@@ -1,0 +1,1453 @@
+emacs-devel messages from 2026-11-04T18:15:00+01:00 to 2026-11-05T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-04T18:39:49+01:00
+From: Spencer Baugh <sbaugh@janestreet.com>
+Subject: Re: ELPA submission: readline-completion
+Message-ID: <CAO=BR8Mb9zFEBVzvOhRHLvjmXv0-cTLR7tFp4OmeV58=PNbGAQ@mail.gmail.com>
+In-Reply-To: <87a4no3623.fsf@gmail.com>
+References: <87a4no3623.fsf@gmail.com>
+
+My main comment is that I'm very happy to see this package.  I never got
+around to finishing the Emacs integration for this readline feature, but
+the readline feature was added for this exact use case (supporting
+completion in Emacs), so thank you for finishing it!
+
+I only did a cursory skim, but I think you might be able to get remote
+support for M-& completion by passing :file-handler to make-process.
+
+On Wed, Nov 4, 2026 at 11:38 AM Augusto Stoffel <arstoffel@gmail.com> wrote:
+
+> Hi,
+>
+> I would like to submit the following package to GNU ELPA:
+>
+>   https://codeberg.org/astoff/readline-completion.el
+>
+> It provides a CAPF that reads completion candidates from GNU Readline.
+> Unlike some similar existing packages, it relies on a new(ish) readline
+> feature (M-x export-completions) that reduces the amount of guesswork
+> involved.
+>
+> Apparently Spencer was involved in requesting/designing that GNU
+> Readline feature, so I've added you in CC.  Perhaps you have comments?
+>
+
+================================================================================
+Date: 2026-11-04T18:56:14+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master ece07ac0e62: Set mouse-wheel-progressive to nil properly
+ on macOS
+Message-ID: <jwvqzh0v637.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261104163349.97A45C10DAD@vcs2.savannah.gnu.org>
+References: <179381002847.22201.1975010572207485156@vcs2.savannah.gnu.org>
+ <20261104163349.97A45C10DAD@vcs2.savannah.gnu.org>
+
+> -;; FIXME: This doesn't look right.  Is there a better way to do this
+> -;; that keeps customize happy?
+>  (when (featurep 'cocoa)
+>    (let ((appkit-version
+>           (progn (string-match "^appkit-\\([^\s-]*\\)" ns-version-string)
+>                  (string-to-number (match-string 1 ns-version-string)))))
+>      ;; Appkit 1138 ~= macOS 10.7.
+> +    ;; macOS 10.7 is ancient.  We could just default this to nil for ns
+> +    ;; in the defcustom in mwheel.el.
+>      (when (>= appkit-version 1138)
+> -      (setq mouse-wheel-progressive-speed nil)
+> -      (put 'mouse-wheel-progressive-speed 'customized-value
+> -           (list (custom-quote
+> -                  (symbol-value 'mouse-wheel-progressive-speed)))))))
+> -
+> +      (put 'mouse-wheel-progressive-speed 'standard-value '(nil))
+> +      (custom-reevaluate-setting 'mouse-wheel-progressive-speed))))
+
+Could we move this code to the definition of
+`mouse-wheel-progressive-speed`?
+
+Something like the patch below?
+
+
+=== Stefan
+
+
+diff --git a/lisp/mwheel.el b/lisp/mwheel.el
+index 47eb236c521..9acc2381e66 100644
+--- a/lisp/mwheel.el
++++ b/lisp/mwheel.el
+@@ -140,7 +140,20 @@ mouse-wheel-scroll-amount
+   :set #'mouse-wheel-change-button
+   :version "28.1")
+ 
+-(defcustom mouse-wheel-progressive-speed t
++(defcustom mouse-wheel-progressive-speed
++  (cond
++   ((featurep 'cocoa)
++    ;; macOS-like defaults for trackpad and mouse wheel scrolling on
++    ;; macOS 10.7+.
++    (defvar ns-version-string)
++    (let ((appkit-version
++           (and (string-match "^appkit-\\([^\s-]*\\)" ns-version-string)
++                (string-to-number (match-string 1 ns-version-string)))))
++     ;; Appkit 1138 ~= macOS 10.7.
++      ;; macOS 10.7 is ancient.  We could just default this to nil for ns
++      ;; in the defcustom in mwheel.el.
++      (< appkit-version 1138)))
++   (t t))
+   "If nil, scrolling speed is proportional to the wheel speed.
+ If non-nil, moving the wheel faster will make scrolling
+ progressively faster.
+diff --git a/lisp/term/ns-win.el b/lisp/term/ns-win.el
+index 1f6eea64f60..fa15f75b244 100644
+--- a/lisp/term/ns-win.el
++++ b/lisp/term/ns-win.el
+@@ -724,24 +724,6 @@ ns-paste-secondary
+ (global-unset-key [horizontal-scroll-bar drag-mouse-1])
+ 
+ 
+-;;;; macOS-like defaults for trackpad and mouse wheel scrolling on
+-;;;; macOS 10.7+.
+-
+-(defvar ns-version-string)
+-(defvar mouse-wheel-scroll-amount)
+-(defvar mouse-wheel-progressive-speed)
+-
+-(when (featurep 'cocoa)
+-  (let ((appkit-version
+-         (progn (string-match "^appkit-\\([^\s-]*\\)" ns-version-string)
+-                (string-to-number (match-string 1 ns-version-string)))))
+-    ;; Appkit 1138 ~= macOS 10.7.
+-    ;; macOS 10.7 is ancient.  We could just default this to nil for ns
+-    ;; in the defcustom in mwheel.el.
+-    (when (>= appkit-version 1138)
+-      (put 'mouse-wheel-progressive-speed 'standard-value '(nil))
+-      (custom-reevaluate-setting 'mouse-wheel-progressive-speed))))
+-
+ ;;;; Color support.
+ 
+ ;; Functions for color panel + drag
+
+================================================================================
+Date: 2026-11-04T19:01:31+01:00
+From: Juri Linkov <juri@linkov.net>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <875wycv5l0.fsf@mail.linkov.net>
+In-Reply-To: <jwvy0ba1uh5.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+ <86zex0z4k9.fsf@gnu.org>
+ <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev>
+ <86qzh7ve6t.fsf@gnu.org>
+ <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev>
+ <861p96rovp.fsf@gnu.org>
+ <1bd555c8-1cb5-4d99-8c11-902a53099ac1@gutov.dev>
+ <12d2c40b-a0fb-4700-bba3-8ee44a5b0ae6@gutov.dev>
+ <87mrrrk79d.fsf@mail.linkov.net>
+ <jwvy0ba1uh5.fsf-monnier+emacs@gnu.org>
+
+>> If this restriction can't be lifted, then maybe read-multiple-choice
+>> could restructure the long menu by leaving only 8 items, and
+>> moving the rest into a new submenu.
+>
+> But I can't see anything in the calling convention of
+> `read-multiple-choice` that would let it guess which items are more
+> deserving to be in the main dialog, so it risks being occasionally
+> rather awkward with unlikely choices being (unluckily) presented first
+> and the most common ones relegated to a "new submenu"?
+
+Then maybe the currently hard-coded number 9
+
+	if (nb_buttons >= 9)
+	  {
+	    *error_name = "Too many dialog items";
+	    return Qnil;
+	  }
+
+should be configurable with a new variable like
+
+  (defvar x-popup-dialog-items-limit 9)
+
+================================================================================
+Date: 2026-11-04T19:47:33+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master ec35554e20d: Restore current buffer on nonlocal exits
+Message-ID: <jwvld78v3l3.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261104103905.D09B0C10DAE@vcs2.savannah.gnu.org>
+References: <179378874547.15187.9776965437266088734@vcs2.savannah.gnu.org>
+ <20261104103905.D09B0C10DAE@vcs2.savannah.gnu.org>
+
+>     Restore current buffer on nonlocal exits
+>     
+>     * src/process.c (read_and_insert_process_output)
+>     (Finternal_default_process_filter): Protect the current buffer
+>     from changes by user hooks (bug#81677).
+
+Hmm...
+
+In the two places where you've put the
+`record_unwind_current_buffer...unbind_to`, AFAICT the code in the `...`
+is not expected to change current-buffer.  Instead, current-buffer is
+set just a bit earlier by `read_process_output_before_insert`.
+
+Any chance you meant to put the `record_unwind_current_buffer` *before*
+the call to `read_process_output_before_insert` rather than after it?
+If not, I think the code deserves extra comment to explain why.
+
+
+=== Stefan
+
+
+>  src/process.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/src/process.c b/src/process.c
+> index 44320b3908e..ec67a83f468 100644
+> --- a/src/process.c
+> +++ b/src/process.c
+> @@ -6515,6 +6515,11 @@ read_and_insert_process_output (struct Lisp_Process *p, char *buf,
+>  				     &before, &before_byte, &opoint,
+>  				     &opoint_byte);
+>  
+> +  /* Record the current buffer before restoring the process state, so
+> +     that we restore the saved state to the right buffer (bug#81677).  */
+> +  specpdl_ref count = SPECPDL_INDEX ();
+> +  record_unwind_current_buffer ();
+> +
+>    /* Adapted from call_process.  */
+>    prepare_to_modify_buffer (PT, PT, NULL);
+>  
+> @@ -6555,6 +6560,7 @@ read_and_insert_process_output (struct Lisp_Process *p, char *buf,
+>  
+>    read_process_output_after_insert (p, &old_read_only, old_begv, old_zv,
+>  				    before, before_byte, opoint, opoint_byte);
+> +  unbind_to (count, Qnil);
+>  }
+>  
+>  static void
+> @@ -6655,6 +6661,12 @@ Otherwise it discards the output.  */)
+>  	text = (STRING_MULTIBYTE (text)
+>  		? Fstring_as_unibyte (text)
+>  		: Fstring_to_multibyte (text));
+> +
+> +      /* Record the current buffer because insert_from_string_before_markers
+> +	 may run a user hook that changes it (bug#81677).  */
+> +      specpdl_ref count = SPECPDL_INDEX ();
+> +      record_unwind_current_buffer ();
+> +
+>        /* Insert before markers in case we are inserting where
+>  	 the buffer's mark is, and the user's next command is Meta-y.  */
+>        insert_from_string_before_markers (text, 0, 0,
+> @@ -6662,6 +6674,7 @@ Otherwise it discards the output.  */)
+>  
+>        read_process_output_after_insert (p, &old_read_only, old_begv, old_zv,
+>  					before, before_byte, opoint, opoint_byte);
+> +      unbind_to (count, Qnil);
+>      }
+>    return Qnil;
+>  }
+
+================================================================================
+Date: 2026-11-04T19:53:00+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: master ece07ac0e62: Set mouse-wheel-progressive to nil properly
+ on macOS
+Message-ID: <87tslwmnsj.fsf@gmail.com>
+In-Reply-To: <jwvqzh0v637.fsf-monnier+emacs@gnu.org>
+References: <179381002847.22201.1975010572207485156@vcs2.savannah.gnu.org>
+ <20261104163349.97A45C10DAD@vcs2.savannah.gnu.org>
+ <jwvqzh0v637.fsf-monnier+emacs@gnu.org>
+
+>>>>> On Wed, 04 Nov 2026 12:56:14 -0500, Stefan Monnier <monnier@iro.umontreal.ca> said:
+
+    >> -;; FIXME: This doesn't look right.  Is there a better way to do this
+    >> -;; that keeps customize happy?
+    >> (when (featurep 'cocoa)
+    >> (let ((appkit-version
+    >> (progn (string-match "^appkit-\\([^\s-]*\\)" ns-version-string)
+    >> (string-to-number (match-string 1 ns-version-string)))))
+    >> ;; Appkit 1138 ~= macOS 10.7.
+    >> +    ;; macOS 10.7 is ancient.  We could just default this to nil for ns
+    >> +    ;; in the defcustom in mwheel.el.
+    >> (when (>= appkit-version 1138)
+    >> -      (setq mouse-wheel-progressive-speed nil)
+    >> -      (put 'mouse-wheel-progressive-speed 'customized-value
+    >> -           (list (custom-quote
+    >> -                  (symbol-value 'mouse-wheel-progressive-speed)))))))
+    >> -
+    >> +      (put 'mouse-wheel-progressive-speed 'standard-value '(nil))
+    >> +      (custom-reevaluate-setting 'mouse-wheel-progressive-speed))))
+
+    Stefan> Could we move this code to the definition of
+    Stefan> `mouse-wheel-progressive-speed`?
+
+We could, but I was thinking more along the lines of deleting the
+whole appkit version checking, since macOS 10.7 is from 2011, and I
+donʼt think emacs runs on it anymore. So more like (untested):
+
+modified   lisp/mwheel.el
+@@ -140,7 +140,7 @@ mouse-wheel-scroll-amount
+   :set #'mouse-wheel-change-button
+   :version "28.1")
+ 
+-(defcustom mouse-wheel-progressive-speed t
++(defcustom mouse-wheel-progressive-speed (not (featurep 'cocoa))
+   "If nil, scrolling speed is proportional to the wheel speed.
+ If non-nil, moving the wheel faster will make scrolling
+ progressively faster.
+modified   lisp/term/ns-win.el
+@@ -723,28 +723,6 @@ ns-paste-secondary
+ (global-unset-key [horizontal-scroll-bar mouse-1])
+ (global-unset-key [horizontal-scroll-bar drag-mouse-1])
+ 
+-
+-;;;; macOS-like defaults for trackpad and mouse wheel scrolling on
+-;;;; macOS 10.7+.
+-
+-(defvar ns-version-string)
+-(defvar mouse-wheel-scroll-amount)
+-(defvar mouse-wheel-progressive-speed)
+-
+-;; FIXME: This doesn't look right.  Is there a better way to do this
+-;; that keeps customize happy?
+-(when (featurep 'cocoa)
+-  (let ((appkit-version
+-         (progn (string-match "^appkit-\\([^\s-]*\\)" ns-version-string)
+-                (string-to-number (match-string 1 ns-version-string)))))
+-    ;; Appkit 1138 ~= macOS 10.7.
+-    (when (>= appkit-version 1138)
+-      (setq mouse-wheel-progressive-speed nil)
+-      (put 'mouse-wheel-progressive-speed 'customized-value
+-           (list (custom-quote
+-                  (symbol-value 'mouse-wheel-progressive-speed)))))))
+-
+-
+ ;;;; Color support.
+ 
+ ;; Functions for color panel + drag
+
+
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-04T20:11:21+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: readline-completion
+Message-ID: <87se1g4dk7.fsf@posteo.net>
+In-Reply-To: <87a4no3623.fsf@gmail.com>
+References: <87a4no3623.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> Hi,
+>
+> I would like to submit the following package to GNU ELPA:
+>
+>   https://codeberg.org/astoff/readline-completion.el
+>
+> It provides a CAPF that reads completion candidates from GNU Readline.
+> Unlike some similar existing packages, it relies on a new(ish) readline
+> feature (M-x export-completions) that reduces the amount of guesswork
+> involved.
+>
+> Apparently Spencer was involved in requesting/designing that GNU
+> Readline feature, so I've added you in CC.  Perhaps you have comments?
+
+This looks really great, looking over the code I just found two minor
+points I wanted to ask:
+
+================================================================================
+Date: 2026-11-04T20:16:17+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87o6c44dbz.fsf@posteo.net>
+In-Reply-To: <877bis35nn.fsf@gmail.com>
+References: <877bis35nn.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> Hi,
+>
+> I would like to submit the following package to Non-GNU ELPA:
+>
+>   https://github.com/astoff/vibe-spell
+>
+> It is a slop-rewrite of Hunspell/Nuspell in pure Elisp.  I think it
+> might be useful for some users, since currently the only options for
+> accessing a spellchecker involve compiling a third-party module (jinx)
+> or suffering with the "ispell -a" interface.
+>
+> Also, I think this package is an interesting experiment in how far Elisp
+> can be pushed.  It performs better than I would have guessed.
+>
+> Once this is online, I will update my jit-spell package to optionally
+> make use of vibe-spell (since the latter is just a library, without UI).
+
+If you wouldn't mind, I think it would be better to wait this one out
+for a bit before adding the package.  There has been the suggestion to
+wait at least a month after a LLM generated package has been written
+before adding it to any archive, just to see how it pans out and if the
+author is interested in maintaining it in the long term.  At almost 3000
+lines of code, it is also a chunk to review.  Are you planning to
+rewrite anything by hand (e.g. I notice that all docstrings are
+comments)?  My recommendation would be to advertise the package in
+communities online and see how people respond to it in day-to-day usage.
+
+================================================================================
+Date: 2026-11-04T20:41:56+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87v76cv0xn.fsf@melete.silentflame.com>
+In-Reply-To: <87o6c44dbz.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+
+Philip Kaludercic [04/Nov  7:16pm GMT] wrote:
+> Augusto Stoffel <arstoffel@gmail.com> writes:
+>
+>> Hi,
+>>
+>> I would like to submit the following package to Non-GNU ELPA:
+>>
+>>   https://github.com/astoff/vibe-spell
+>>
+>> It is a slop-rewrite of Hunspell/Nuspell in pure Elisp.  I think it
+>> might be useful for some users, since currently the only options for
+>> accessing a spellchecker involve compiling a third-party module (jinx)
+>> or suffering with the "ispell -a" interface.
+>>
+>> Also, I think this package is an interesting experiment in how far Elisp
+>> can be pushed.  It performs better than I would have guessed.
+>>
+>> Once this is online, I will update my jit-spell package to optionally
+>> make use of vibe-spell (since the latter is just a library, without UI).
+>
+> If you wouldn't mind, I think it would be better to wait this one out
+> for a bit before adding the package.  There has been the suggestion to
+> wait at least a month after a LLM generated package has been written
+> before adding it to any archive, just to see how it pans out and if the
+> author is interested in maintaining it in the long term.  At almost 3000
+> lines of code, it is also a chunk to review.  Are you planning to
+> rewrite anything by hand (e.g. I notice that all docstrings are
+> comments)?  My recommendation would be to advertise the package in
+> communities online and see how people respond to it in day-to-day usage.
+
++1
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-04T21:05:36+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: ELPA submission: readline-completion
+Message-ID: <87wlqsl5v3.fsf@gmail.com>
+In-Reply-To: <87se1g4dk7.fsf@posteo.net>
+References: <87a4no3623.fsf@gmail.com> <87se1g4dk7.fsf@posteo.net>
+
+On Wed,  4 Nov 2026, Philip Kaludercic wrote:
+
+> Augusto Stoffel <arstoffel@gmail.com> writes:
+>
+>> Hi,
+>>
+>> I would like to submit the following package to GNU ELPA:
+>>
+>>   https://codeberg.org/astoff/readline-completion.el
+>>
+>> It provides a CAPF that reads completion candidates from GNU Readline.
+>> Unlike some similar existing packages, it relies on a new(ish) readline
+>> feature (M-x export-completions) that reduces the amount of guesswork
+>> involved.
+>>
+>> Apparently Spencer was involved in requesting/designing that GNU
+>> Readline feature, so I've added you in CC.  Perhaps you have comments?
+>
+> This looks really great, looking over the code I just found two minor
+> points I wanted to ask:
+>
+> diff --git a/elpa-packages b/elpa-packages
+> index f223c30a7a..86cf0880cf 100644
+> --- a/elpa-packages
+> +++ b/elpa-packages
+> @@ -740,6 +740,7 @@
+>   (rcirc-sqlite		:url "https://codeberg.org/mattof/rcirc-sqlite"
+>    :ignored-files ("LICENSE")
+>    :doc "rcirc-sqlite.texi")
+> + (readline-completion   :url "https://codeberg.org/astoff/readline-completion.el")
+>   (realgud             	:url "https://github.com/realgud/realgud")
+>   (realgud-ipdb        	:url "https://github.com/realgud/realgud-ipdb")
+>   (realgud-jdb         	:url "https://github.com/realgud/realgud-jdb")
+>
+>
+> But you should be able to resolve them in time, so I've already added
+> the package to gnu.git.
+
+I think you didn't include the comments you intended to send.
+
+================================================================================
+Date: 2026-11-04T21:20:16+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Human Emacs
+Message-ID: <87qzh0ic1r.fsf@melete.silentflame.com>
+In-Reply-To: <86tslwoizx.fsf@gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <86tslwoizx.fsf@gnu.org>
+
+Eli Zaretskii [04/Nov  2:53pm +02] wrote:
+> Leave this to us the Emacs maintainers, please, for when this is
+> clarified.  If and when GNU publishes the guidelines and requirements
+> for accepting LLM-generated code, if the decision is to allow that, we
+> will study what those guidelines and requirements mean in practice for
+> us, and will see how to modify our procedures if needed.  For now,
+> this side-bar discussion is completely academic, as we don't have any
+> real basis for assessing what that entails and what it will require
+> from us the maintainers.  We can argue till Kingdom Come and not make
+> any progress, because we don't really know what are we arguing about.
+
+Yes.  I mean, we're talking about a possibility that may not happen at
+all.  Let's get back to other topics.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-04T21:22:55+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87tslwl528.fsf@gmail.com>
+In-Reply-To: <87o6c44dbz.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+
+On Wed,  4 Nov 2026, Philip Kaludercic wrote:
+
+> Augusto Stoffel <arstoffel@gmail.com> writes:
+>
+>> Hi,
+>>
+>> I would like to submit the following package to Non-GNU ELPA:
+>>
+>>   https://github.com/astoff/vibe-spell
+>>
+>> It is a slop-rewrite of Hunspell/Nuspell in pure Elisp.  I think it
+>> might be useful for some users, since currently the only options for
+>> accessing a spellchecker involve compiling a third-party module (jinx)
+>> or suffering with the "ispell -a" interface.
+>>
+>> Also, I think this package is an interesting experiment in how far Elisp
+>> can be pushed.  It performs better than I would have guessed.
+>>
+>> Once this is online, I will update my jit-spell package to optionally
+>> make use of vibe-spell (since the latter is just a library, without UI).
+>
+> If you wouldn't mind, I think it would be better to wait this one out
+> for a bit before adding the package.  There has been the suggestion to
+> wait at least a month after a LLM generated package has been written
+> before adding it to any archive, just to see how it pans out and if the
+> author is interested in maintaining it in the long term.
+
+I don't mind, but I'll mention I've been using this for about a month
+myself, so I'd say the private stage of development has run its course.
+
+> At almost 3000 lines of code, it is also a chunk to review.  Are you
+> planning to rewrite anything by hand (e.g. I notice that all
+> docstrings are comments)?
+
+Here, for better or worse, the perspective must be a bit different.  I
+didn't ask an LLM to help me write some code; I just made it translate
+from C++ to Elisp, and keep iterating until the Hunspell tests pass and
+the obvious performance bottlenecks are fixed.  The code in a way
+doesn't matter, and I only looked cursorily at it.
+
+That's also why I intentionally replaced the docstrings with comments,
+so no user gets their eyes hurt with slop.
+
+On the other hand, the docstrings, readme, etc. are not slop 🙂.
+
+>  My recommendation would be to advertise the package in communities
+> online and see how people respond to it in day-to-day usage.
+
+Okay, maybe some people from this list get interested.
+
+================================================================================
+Date: 2026-11-04T21:34:02+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: readline-completion
+Message-ID: <87jyms49qe.fsf@posteo.net>
+In-Reply-To: <87wlqsl5v3.fsf@gmail.com>
+References: <87a4no3623.fsf@gmail.com> <87se1g4dk7.fsf@posteo.net>
+ <87wlqsl5v3.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> On Wed,  4 Nov 2026, Philip Kaludercic wrote:
+>
+>> Augusto Stoffel <arstoffel@gmail.com> writes:
+>>
+>>> Hi,
+>>>
+>>> I would like to submit the following package to GNU ELPA:
+>>>
+>>>   https://codeberg.org/astoff/readline-completion.el
+>>>
+>>> It provides a CAPF that reads completion candidates from GNU Readline.
+>>> Unlike some similar existing packages, it relies on a new(ish) readline
+>>> feature (M-x export-completions) that reduces the amount of guesswork
+>>> involved.
+>>>
+>>> Apparently Spencer was involved in requesting/designing that GNU
+>>> Readline feature, so I've added you in CC.  Perhaps you have comments?
+>>
+>> This looks really great, looking over the code I just found two minor
+>> points I wanted to ask:
+>>
+>> diff --git a/elpa-packages b/elpa-packages
+>> index f223c30a7a..86cf0880cf 100644
+>> --- a/elpa-packages
+>> +++ b/elpa-packages
+>> @@ -740,6 +740,7 @@
+>>   (rcirc-sqlite		:url "https://codeberg.org/mattof/rcirc-sqlite"
+>>    :ignored-files ("LICENSE")
+>>    :doc "rcirc-sqlite.texi")
+>> + (readline-completion   :url "https://codeberg.org/astoff/readline-completion.el")
+>>   (realgud             	:url "https://github.com/realgud/realgud")
+>>   (realgud-ipdb        	:url "https://github.com/realgud/realgud-ipdb")
+>>   (realgud-jdb         	:url "https://github.com/realgud/realgud-jdb")
+>>
+>>
+>> But you should be able to resolve them in time, so I've already added
+>> the package to gnu.git.
+>
+> I think you didn't include the comments you intended to send.
+
+Yes, once again I have been bitten by attaching the *vc-diff* buffer and
+then doing some other VC operation before sending the message.  Here is
+the intended diff:
+
+================================================================================
+Date: 2026-11-04T21:43:11+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87fqxg49b6.fsf@posteo.net>
+In-Reply-To: <87tslwl528.fsf@gmail.com>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <87tslwl528.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> On Wed,  4 Nov 2026, Philip Kaludercic wrote:
+>
+>> Augusto Stoffel <arstoffel@gmail.com> writes:
+>>
+>>> Hi,
+>>>
+>>> I would like to submit the following package to Non-GNU ELPA:
+>>>
+>>>   https://github.com/astoff/vibe-spell
+>>>
+>>> It is a slop-rewrite of Hunspell/Nuspell in pure Elisp.  I think it
+>>> might be useful for some users, since currently the only options for
+>>> accessing a spellchecker involve compiling a third-party module (jinx)
+>>> or suffering with the "ispell -a" interface.
+>>>
+>>> Also, I think this package is an interesting experiment in how far Elisp
+>>> can be pushed.  It performs better than I would have guessed.
+>>>
+>>> Once this is online, I will update my jit-spell package to optionally
+>>> make use of vibe-spell (since the latter is just a library, without UI).
+>>
+>> If you wouldn't mind, I think it would be better to wait this one out
+>> for a bit before adding the package.  There has been the suggestion to
+>> wait at least a month after a LLM generated package has been written
+>> before adding it to any archive, just to see how it pans out and if the
+>> author is interested in maintaining it in the long term.
+>
+> I don't mind, but I'll mention I've been using this for about a month
+> myself, so I'd say the private stage of development has run its course.
+
+OK, that is a good sign.  What would you argue are the advantages of
+this approach as opposed to using an existing program Hunspell/Nuspell?
+I get that it is interesting, I am just skeptical of the belief that all
+functionality has to be written in Emacs Lisp instead of integrating
+existing and general tooling into Emacs (like what ispell does).
+
+>> At almost 3000 lines of code, it is also a chunk to review.  Are you
+>> planning to rewrite anything by hand (e.g. I notice that all
+>> docstrings are comments)?
+>
+> Here, for better or worse, the perspective must be a bit different.  I
+> didn't ask an LLM to help me write some code; I just made it translate
+> from C++ to Elisp, and keep iterating until the Hunspell tests pass and
+> the obvious performance bottlenecks are fixed.  The code in a way
+> doesn't matter, and I only looked cursorily at it.
+>
+> That's also why I intentionally replaced the docstrings with comments,
+> so no user gets their eyes hurt with slop.
+
+So you would claim that vibe-spell.el is effectively not source code,
+but just the output of a non-conventional compilation process from C++
+to Elisp?
+
+> On the other hand, the docstrings, readme, etc. are not slop 🙂.
+
+I guess that makes sense, but it still feels weird to have so many
+functions without any proper documentation.
+
+>>  My recommendation would be to advertise the package in communities
+>> online and see how people respond to it in day-to-day usage.
+>
+> Okay, maybe some people from this list get interested.
+
+It might make sense to ping Sacha to link the repo on her Emacs News
+Newsletter to attract more attention.
+
+================================================================================
+Date: 2026-11-04T21:56:30+01:00
+From: Gabriel Santos <gabrielsantosdesouza@disroot.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <D970198C-DA4F-4E58-A906-0F25F41777D8@disroot.org>
+In-Reply-To: <87fqxg49b6.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <87tslwl528.fsf@gmail.com> <87fqxg49b6.fsf@posteo.net>
+
+Em 4 de novembro de 2026 17:43:11 BRT, Philip Kaludercic <philipk@posteo.net> escreveu:
+>Augusto Stoffel <arstoffel@gmail.com> writes:
+>
+>> On Wed,  4 Nov 2026, Philip Kaludercic wrote:
+>>
+>>> Augusto Stoffel <arstoffel@gmail.com> writes:
+>>>
+>>>> Hi,
+>>>>
+>>>> I would like to submit the following package to Non-GNU ELPA:
+>>>>
+>>>>   https://github.com/astoff/vibe-spell
+>>>>
+>>>> It is a slop-rewrite of Hunspell/Nuspell in pure Elisp.  I think it
+>>>> might be useful for some users, since currently the only options for
+>>>> accessing a spellchecker involve compiling a third-party module (jinx)
+>>>> or suffering with the "ispell -a" interface.
+>>>>
+>>>> Also, I think this package is an interesting experiment in how far Elisp
+>>>> can be pushed.  It performs better than I would have guessed.
+>>>>
+>>>> Once this is online, I will update my jit-spell package to optionally
+>>>> make use of vibe-spell (since the latter is just a library, without UI).
+>>>
+>>> If you wouldn't mind, I think it would be better to wait this one out
+>>> for a bit before adding the package.  There has been the suggestion to
+>>> wait at least a month after a LLM generated package has been written
+>>> before adding it to any archive, just to see how it pans out and if the
+>>> author is interested in maintaining it in the long term.
+>>
+>> I don't mind, but I'll mention I've been using this for about a month
+>> myself, so I'd say the private stage of development has run its course.
+>
+>OK, that is a good sign.  What would you argue are the advantages of
+>this approach as opposed to using an existing program Hunspell/Nuspell?
+>I get that it is interesting, I am just skeptical of the belief that all
+>functionality has to be written in Emacs Lisp instead of integrating
+>existing and general tooling into Emacs (like what ispell does).
+>
+>>> At almost 3000 lines of code, it is also a chunk to review.  Are you
+>>> planning to rewrite anything by hand (e.g. I notice that all
+>>> docstrings are comments)?
+>>
+>> Here, for better or worse, the perspective must be a bit different.  I
+>> didn't ask an LLM to help me write some code; I just made it translate
+>> from C++ to Elisp, and keep iterating until the Hunspell tests pass and
+>> the obvious performance bottlenecks are fixed.  The code in a way
+>> doesn't matter, and I only looked cursorily at it.
+>>
+>> That's also why I intentionally replaced the docstrings with comments,
+>> so no user gets their eyes hurt with slop.
+>
+>So you would claim that vibe-spell.el is effectively not source code,
+>but just the output of a non-conventional compilation process from C++
+>to Elisp?
+>
+>> On the other hand, the docstrings, readme, etc. are not slop 🙂.
+>
+>I guess that makes sense, but it still feels weird to have so many
+>functions without any proper documentation.
+>
+>>>  My recommendation would be to advertise the package in communities
+>>> online and see how people respond to it in day-to-day usage.
+>>
+>> Okay, maybe some people from this list get interested.
+>
+>It might make sense to ping Sacha to link the repo on her Emacs News
+>Newsletter to attract more attention.
+>
+
+This is just my opinion, but reimplementing things in Elisp can be interesting because it can help
+in the process of reducing dependencies. I like to use reuse[0], for example. But I really only use it to download licenses. So, because I like to have a
+tool for downloading licenses from the Internet, a Rust program I might be writing has this
+passive dependency on Python, which
+it wouls otherwise not have had I reimplemented the license-downloading functionality
+instead.
+
+[0] <https://reuse.software/>
+
+-- 
+Gabriel Santos (https://gs-101.dev)
+
+================================================================================
+Date: 2026-11-05T03:21:46+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master ece07ac0e62: Set mouse-wheel-progressive to nil properly
+ on macOS
+Message-ID: <jwvv76cxblg.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87tslwmnsj.fsf@gmail.com>
+References: <179381002847.22201.1975010572207485156@vcs2.savannah.gnu.org>
+ <20261104163349.97A45C10DAD@vcs2.savannah.gnu.org>
+ <jwvqzh0v637.fsf-monnier+emacs@gnu.org> <87tslwmnsj.fsf@gmail.com>
+
+>     Stefan> Could we move this code to the definition of
+>     Stefan> `mouse-wheel-progressive-speed`?
+>
+> We could, but I was thinking more along the lines of deleting the
+> whole appkit version checking, since macOS 10.7 is from 2011, and I
+> donʼt think emacs runs on it anymore. So more like (untested):
+
+Not objection on my part (tho I'd include a comment explaining why the
+default is nil on macOS).
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-05T03:39:40+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <d25c46ae-1a32-486c-9ea4-c183f7178280@gutov.dev>
+In-Reply-To: <875wycv5l0.fsf@mail.linkov.net>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev> <86qzh7ve6t.fsf@gnu.org>
+ <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev> <861p96rovp.fsf@gnu.org>
+ <1bd555c8-1cb5-4d99-8c11-902a53099ac1@gutov.dev>
+ <12d2c40b-a0fb-4700-bba3-8ee44a5b0ae6@gutov.dev>
+ <87mrrrk79d.fsf@mail.linkov.net> <jwvy0ba1uh5.fsf-monnier+emacs@gnu.org>
+ <875wycv5l0.fsf@mail.linkov.net>
+
+On 04/11/2026 20:01, Juri Linkov wrote:
+>>> If this restriction can't be lifted, then maybe read-multiple-choice
+>>> could restructure the long menu by leaving only 8 items, and
+>>> moving the rest into a new submenu.
+>> But I can't see anything in the calling convention of
+>> `read-multiple-choice` that would let it guess which items are more
+>> deserving to be in the main dialog, so it risks being occasionally
+>> rather awkward with unlikely choices being (unluckily) presented first
+>> and the most common ones relegated to a "new submenu"?
+> Then maybe the currently hard-coded number 9
+> 
+> 	if (nb_buttons >= 9)
+> 	  {
+> 	    *error_name = "Too many dialog items";
+> 	    return Qnil;
+> 	  }
+> 
+> should be configurable with a new variable like
+> 
+>    (defvar x-popup-dialog-items-limit 9)
+
+If I simply change 9 to 21 in xmenu.c and have it called with many 
+arguments (by xref-find-by-kind invoked through menu-bar), Emacs segfaults.
+
+================================================================================
+Date: 2026-11-05T03:46:00+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <jwvpkwkxah5.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <d25c46ae-1a32-486c-9ea4-c183f7178280@gutov.dev>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+ <86zex0z4k9.fsf@gnu.org>
+ <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev>
+ <86qzh7ve6t.fsf@gnu.org>
+ <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev>
+ <861p96rovp.fsf@gnu.org>
+ <1bd555c8-1cb5-4d99-8c11-902a53099ac1@gutov.dev>
+ <12d2c40b-a0fb-4700-bba3-8ee44a5b0ae6@gutov.dev>
+ <87mrrrk79d.fsf@mail.linkov.net>
+ <jwvy0ba1uh5.fsf-monnier+emacs@gnu.org>
+ <875wycv5l0.fsf@mail.linkov.net>
+ <d25c46ae-1a32-486c-9ea4-c183f7178280@gutov.dev>
+
+>> Then maybe the currently hard-coded number 9
+>> 	if (nb_buttons >= 9)
+>> 	  {
+>> 	    *error_name = "Too many dialog items";
+>> 	    return Qnil;
+>> 	  }
+>> should be configurable with a new variable like
+>>    (defvar x-popup-dialog-items-limit 9)
+>
+> If I simply change 9 to 21 in xmenu.c and have it called with many arguments
+> (by xref-find-by-kind invoked through menu-bar), Emacs segfaults.
+
+Even if it worked, I don't think it would be a good idea: the UI of
+`x-popup-dialog` is not well adapted to a large number of options, IMO.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-05T06:10:00+01:00
+From: JUN JIE NAN <nanjunjie@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <m2h6humanemacs3@gmail.com>
+In-Reply-To: <8733tozesd.fsf@asthra>
+References: <8733tozesd.fsf@asthra>
+
+The UNIX way is to treat a new thing as a stranger: the standard doesn't
+change because the face is familiar.
+
+LLMs deserve the same. Not "welcome", not "ban", but review with the same
+standard. If an LLM-generated patch passes review and the contributor can
+answer questions about it, accept it. If not, reject it.
+
+The maintenance-debt concern is real but not unique to LLMs. The problem
+is in review and handover, not in the origin of the code.
+
+JUN JIE NAN
+
+================================================================================
+Date: 2026-11-05T06:39:09+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86ld77on0i.fsf@gnu.org>
+In-Reply-To: <87fqxg49b6.fsf@posteo.net> (message from Philip Kaludercic on
+ Wed, 04 Nov 2026 20:43:11 +0000)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <87tslwl528.fsf@gmail.com> <87fqxg49b6.fsf@posteo.net>
+
+> From: Philip Kaludercic <philipk@posteo.net>
+> Cc: emacs-devel@gnu.org
+> Date: Wed, 04 Nov 2026 20:43:11 +0000
+> 
+> Augusto Stoffel <arstoffel@gmail.com> writes:
+> 
+> > Here, for better or worse, the perspective must be a bit different.  I
+> > didn't ask an LLM to help me write some code; I just made it translate
+> > from C++ to Elisp, and keep iterating until the Hunspell tests pass and
+> > the obvious performance bottlenecks are fixed.  The code in a way
+> > doesn't matter, and I only looked cursorily at it.
+> >
+> > That's also why I intentionally replaced the docstrings with comments,
+> > so no user gets their eyes hurt with slop.
+> 
+> So you would claim that vibe-spell.el is effectively not source code,
+> but just the output of a non-conventional compilation process from C++
+> to Elisp?
+
+If this is the case, then IMO the package should include both the
+original Hunspell code used for conversion and the prompts used to
+generate the final ELisp version.  IOW, the "source code" here is some
+specific version of Hunspell, which thjus should be in the package,
+and the package should also include all the scripts and tools and
+instructions needed to regenerate the ELisp version.  Imagine the
+scenario where someone wants to cherry-pick some change in upstream
+Hunspell to this package: they will need to patch the Hunspell sources
+and then run the LLM to produce the corresponding ELisp changes.  They
+will need everything that this process requires.
+
+I believe this is a basic requirement of GPL, isn't it?
+
+================================================================================
+Date: 2026-11-05T08:30:14+01:00
+From: Juri Linkov <juri@linkov.net>
+Subject: Re: master e630bc4fd72: ; Fix some recently added docs.
+Message-ID: <878q37ag6x.fsf@mail.linkov.net>
+In-Reply-To: <jwvpkwkxah5.fsf-monnier+emacs@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+ <86zex0z4k9.fsf@gnu.org>
+ <dc1a8a07-2de3-4f4e-976a-bf7141483708@gutov.dev>
+ <86qzh7ve6t.fsf@gnu.org>
+ <e55c06c9-ac00-44e5-880e-87de54e27f85@gutov.dev>
+ <861p96rovp.fsf@gnu.org>
+ <1bd555c8-1cb5-4d99-8c11-902a53099ac1@gutov.dev>
+ <12d2c40b-a0fb-4700-bba3-8ee44a5b0ae6@gutov.dev>
+ <87mrrrk79d.fsf@mail.linkov.net>
+ <jwvy0ba1uh5.fsf-monnier+emacs@gnu.org>
+ <875wycv5l0.fsf@mail.linkov.net>
+ <d25c46ae-1a32-486c-9ea4-c183f7178280@gutov.dev>
+ <jwvpkwkxah5.fsf-monnier+emacs@gnu.org>
+
+>> If I simply change 9 to 21 in xmenu.c and have it called with many arguments
+>> (by xref-find-by-kind invoked through menu-bar), Emacs segfaults.
+>
+> Even if it worked, I don't think it would be a good idea: the UI of
+> `x-popup-dialog` is not well adapted to a large number of options, IMO.
+
+Then it needs to fall back to reading from the minibuffer
+instead of signaling an error:
+
+================================================================================
+Date: 2026-11-05T08:35:44+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87qzgzlohb.fsf@gmail.com>
+In-Reply-To: <87fqxg49b6.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <87tslwl528.fsf@gmail.com> <87fqxg49b6.fsf@posteo.net>
+
+On Wed,  4 Nov 2026, Philip Kaludercic wrote:
+
+> OK, that is a good sign.  What would you argue are the advantages of
+> this approach as opposed to using an existing program Hunspell/Nuspell?
+> I get that it is interesting, I am just skeptical of the belief that all
+> functionality has to be written in Emacs Lisp instead of integrating
+> existing and general tooling into Emacs (like what ispell does).
+
+The problem with communicating with Hunspell (or any spellchecker) by
+subprocesses via the standard "ispell -a" interface is that you cannot
+opt out of computing correction suggestions for every incorrect word,
+and that's _very_ slow (3 orders of magnitude slower than just
+checking).
+
+The idea of linking Emacs against some spellchecking library has
+apparently been ruled out (judging by the fact that it never happened),
+and an FFI is also not planned, if I understand correctly.
+
+Then we could debate whether "all users are able to compile an Emacs
+module" is a true and/or desirable fact.  But if we also exclude that
+approach, then really I see no other option open for a good
+spellchecking experience.
+
+>>> At almost 3000 lines of code, it is also a chunk to review.  Are you
+>>> planning to rewrite anything by hand (e.g. I notice that all
+>>> docstrings are comments)?
+>>
+>> Here, for better or worse, the perspective must be a bit different.  I
+>> didn't ask an LLM to help me write some code; I just made it translate
+>> from C++ to Elisp, and keep iterating until the Hunspell tests pass and
+>> the obvious performance bottlenecks are fixed.  The code in a way
+>> doesn't matter, and I only looked cursorily at it.
+>>
+>> That's also why I intentionally replaced the docstrings with comments,
+>> so no user gets their eyes hurt with slop.
+>
+> So you would claim that vibe-spell.el is effectively not source code,
+> but just the output of a non-conventional compilation process from C++
+> to Elisp?
+
+Hum, I don't like the analogy with compilers.  That would force us to
+conclude that the prompts I used to generate the .el files are "source
+code", which clearly they are not...  It's really a rewrite, in my view.
+
+>> On the other hand, the docstrings, readme, etc. are not slop 🙂.
+>
+> I guess that makes sense, but it still feels weird to have so many
+> functions without any proper documentation.
+
+Yes, me too, actually.  What changes things a bit for me is the fact
+that we have a very small interface which is quite well specified in
+terms of Hunspell's test suite.
+
+>>>  My recommendation would be to advertise the package in communities
+>>> online and see how people respond to it in day-to-day usage.
+>>
+>> Okay, maybe some people from this list get interested.
+>
+> It might make sense to ping Sacha to link the repo on her Emacs News
+> Newsletter to attract more attention.
+
+================================================================================
+Date: 2026-11-05T09:09:50+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87bj834s37.fsf@posteo.net>
+In-Reply-To: <D970198C-DA4F-4E58-A906-0F25F41777D8@disroot.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <87tslwl528.fsf@gmail.com> <87fqxg49b6.fsf@posteo.net>
+ <D970198C-DA4F-4E58-A906-0F25F41777D8@disroot.org>
+
+Gabriel Santos <gabrielsantosdesouza@disroot.org> writes:
+
+> Em 4 de novembro de 2026 17:43:11 BRT, Philip Kaludercic <philipk@posteo.net> escreveu:
+>>Augusto Stoffel <arstoffel@gmail.com> writes:
+>>
+>>> On Wed,  4 Nov 2026, Philip Kaludercic wrote:
+>>>
+>>>> Augusto Stoffel <arstoffel@gmail.com> writes:
+>>>>
+>>>>> Hi,
+>>>>>
+>>>>> I would like to submit the following package to Non-GNU ELPA:
+>>>>>
+>>>>>   https://github.com/astoff/vibe-spell
+>>>>>
+>>>>> It is a slop-rewrite of Hunspell/Nuspell in pure Elisp.  I think it
+>>>>> might be useful for some users, since currently the only options for
+>>>>> accessing a spellchecker involve compiling a third-party module (jinx)
+>>>>> or suffering with the "ispell -a" interface.
+>>>>>
+>>>>> Also, I think this package is an interesting experiment in how far Elisp
+>>>>> can be pushed.  It performs better than I would have guessed.
+>>>>>
+>>>>> Once this is online, I will update my jit-spell package to optionally
+>>>>> make use of vibe-spell (since the latter is just a library, without UI).
+>>>>
+>>>> If you wouldn't mind, I think it would be better to wait this one out
+>>>> for a bit before adding the package.  There has been the suggestion to
+>>>> wait at least a month after a LLM generated package has been written
+>>>> before adding it to any archive, just to see how it pans out and if the
+>>>> author is interested in maintaining it in the long term.
+>>>
+>>> I don't mind, but I'll mention I've been using this for about a month
+>>> myself, so I'd say the private stage of development has run its course.
+>>
+>>OK, that is a good sign.  What would you argue are the advantages of
+>>this approach as opposed to using an existing program Hunspell/Nuspell?
+>>I get that it is interesting, I am just skeptical of the belief that all
+>>functionality has to be written in Emacs Lisp instead of integrating
+>>existing and general tooling into Emacs (like what ispell does).
+>>
+>>>> At almost 3000 lines of code, it is also a chunk to review.  Are you
+>>>> planning to rewrite anything by hand (e.g. I notice that all
+>>>> docstrings are comments)?
+>>>
+>>> Here, for better or worse, the perspective must be a bit different.  I
+>>> didn't ask an LLM to help me write some code; I just made it translate
+>>> from C++ to Elisp, and keep iterating until the Hunspell tests pass and
+>>> the obvious performance bottlenecks are fixed.  The code in a way
+>>> doesn't matter, and I only looked cursorily at it.
+>>>
+>>> That's also why I intentionally replaced the docstrings with comments,
+>>> so no user gets their eyes hurt with slop.
+>>
+>>So you would claim that vibe-spell.el is effectively not source code,
+>>but just the output of a non-conventional compilation process from C++
+>>to Elisp?
+>>
+>>> On the other hand, the docstrings, readme, etc. are not slop 🙂.
+>>
+>>I guess that makes sense, but it still feels weird to have so many
+>>functions without any proper documentation.
+>>
+>>>>  My recommendation would be to advertise the package in communities
+>>>> online and see how people respond to it in day-to-day usage.
+>>>
+>>> Okay, maybe some people from this list get interested.
+>>
+>>It might make sense to ping Sacha to link the repo on her Emacs News
+>>Newsletter to attract more attention.
+>>
+>
+> This is just my opinion, but reimplementing things in Elisp can be interesting because it can help
+> in the process of reducing dependencies. I like to use reuse[0], for example. But I really only use it to download licenses. So, because I like to have a
+> tool for downloading licenses from the Internet, a Rust program I might be writing has this
+> passive dependency on Python, which
+> it wouls otherwise not have had I reimplemented the license-downloading functionality
+> instead.
+>
+> [0] <https://reuse.software/>
+
+I am not familiar with the program, but to me it sounds like the kind of
+job you could solve using eww and a simple HTML only website?
+
+================================================================================
+Date: 2026-11-05T09:20:36+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <877bir4rl9.fsf@posteo.net>
+In-Reply-To: <87qzgzlohb.fsf@gmail.com>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <87tslwl528.fsf@gmail.com> <87fqxg49b6.fsf@posteo.net>
+ <87qzgzlohb.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> On Wed,  4 Nov 2026, Philip Kaludercic wrote:
+>
+>> OK, that is a good sign.  What would you argue are the advantages of
+>> this approach as opposed to using an existing program Hunspell/Nuspell?
+>> I get that it is interesting, I am just skeptical of the belief that all
+>> functionality has to be written in Emacs Lisp instead of integrating
+>> existing and general tooling into Emacs (like what ispell does).
+>
+> The problem with communicating with Hunspell (or any spellchecker) by
+> subprocesses via the standard "ispell -a" interface is that you cannot
+> opt out of computing correction suggestions for every incorrect word,
+> and that's _very_ slow (3 orders of magnitude slower than just
+> checking).
+
+I am not familiar with the "ispell -a" interface, but do you know if
+some other interface could also help solve the problem?
+
+> The idea of linking Emacs against some spellchecking library has
+> apparently been ruled out (judging by the fact that it never happened),
+> and an FFI is also not planned, if I understand correctly.
+
+Isn't that what Jinx does?
+
+> Then we could debate whether "all users are able to compile an Emacs
+> module" is a true and/or desirable fact.  But if we also exclude that
+> approach, then really I see no other option open for a good
+> spellchecking experience.
+
+I see, thank you for elaborating the argument for your approach!
+
+>>>> At almost 3000 lines of code, it is also a chunk to review.  Are you
+>>>> planning to rewrite anything by hand (e.g. I notice that all
+>>>> docstrings are comments)?
+>>>
+>>> Here, for better or worse, the perspective must be a bit different.  I
+>>> didn't ask an LLM to help me write some code; I just made it translate
+>>> from C++ to Elisp, and keep iterating until the Hunspell tests pass and
+>>> the obvious performance bottlenecks are fixed.  The code in a way
+>>> doesn't matter, and I only looked cursorily at it.
+>>>
+>>> That's also why I intentionally replaced the docstrings with comments,
+>>> so no user gets their eyes hurt with slop.
+>>
+>> So you would claim that vibe-spell.el is effectively not source code,
+>> but just the output of a non-conventional compilation process from C++
+>> to Elisp?
+>
+> Hum, I don't like the analogy with compilers.  That would force us to
+> conclude that the prompts I used to generate the .el files are "source
+> code", which clearly they are not...  It's really a rewrite, in my view.
+
+What I meant is that the prompt would generate the (throwaway)
+transpiler, which would then translate the original source to the .el
+files.
+
+I guess the question practically boils down to whether or not you expect
+people (including humans ... weird times) to modify the source code
+themselves if they want to make changes or adopt upstream features or if
+it would be "transpiled" again?
+
+>>> On the other hand, the docstrings, readme, etc. are not slop 🙂.
+>>
+>> I guess that makes sense, but it still feels weird to have so many
+>> functions without any proper documentation.
+>
+> Yes, me too, actually.  What changes things a bit for me is the fact
+> that we have a very small interface which is quite well specified in
+> terms of Hunspell's test suite.
+
+Yes, I also just now noticed that lacking docstrings is just the case
+for the internal definitions.
+
+>>>>  My recommendation would be to advertise the package in communities
+>>>> online and see how people respond to it in day-to-day usage.
+>>>
+>>> Okay, maybe some people from this list get interested.
+>>
+>> It might make sense to ping Sacha to link the repo on her Emacs News
+>> Newsletter to attract more attention.
+
+================================================================================
+Date: 2026-11-05T11:49:27+01:00
+From: Thomas Koch <thomas@koch.ro>
+Subject: Re: current-time-list now defaults to nil in Emacs master
+Message-ID: <1436456584.31505.1793875767488@office.mailbox.org>
+In-Reply-To: 
+References: 
+
+The change of current-time-list broke my package rau:
+https://github.com/thkoch2001/rau/issues/9
+
+The break actually happens in the logging library lgr used in rau:
+https://github.com/Fuco1/emacs-lgr/issues/3
+
+I don't think there is anything reasonable for me to do in Rau but to hope that Matus will be so kind to fix this issue in lgr before the release of Emacs 32.
+
+With all due respect, I wonder whether the way this change is done could not be improved. Maybe by introducing a new function and deprecating the old one?
+
+Thank you for your work!
+
+Thomas Koch
+
+================================================================================
+Date: 2026-11-05T11:51:24+01:00
+From: ron li <liyananfamily@gmail.com>
+Subject: Native TTY image support in Emacs
+Message-ID: <CAAVThb3Gwe82_e0K8BBSLhbU1vj+SwArunZZjWZt+HD6bq9K4g@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+Hi,
+
+I'd like to revisit the 2022 discussion on supporting existing Emacs
+image specs on text terminals, starting with Kitty graphics.
+
+In my `image-line` prototype, images are laid out as one-cell-high
+rows. I verified in Kitty that the visible portion stays on screen
+when an image is clipped at either vertical window edge. A separate
+Canvas prototype updates pixels without moving the placement.
+
+Would extending `insert-sliced-image` to a Kitty-capable TTY be a
+reasonable first step?
+
+Previous discussion: https://lists.gnu.org/r/emacs-devel/2022-09/msg00384.html
+
+================================================================================
+Date: 2026-11-05T11:58:26+01:00
+From: Matus Goljer <matus.goljer@gmail.com>
+Subject: Re: current-time-list now defaults to nil in Emacs master
+Message-ID: <CADC3QMWkBbrM7+r_Q7fg0QJB2C4bPSmkxQcTk3M2Ko_E9K65UA@mail.gmail.com>
+In-Reply-To: <1436456584.31505.1793875767488@office.mailbox.org>
+References: <1436456584.31505.1793875767488@office.mailbox.org>
+
+Hello, I fixed it now and pushed the fix to master on github.
+
+On Thu, 5 Nov 2026 at 11:49, Thomas Koch <thomas@koch.ro> wrote:
+
+> The change of current-time-list broke my package rau:
+> https://github.com/thkoch2001/rau/issues/9
+>
+> The break actually happens in the logging library lgr used in rau:
+> https://github.com/Fuco1/emacs-lgr/issues/3
+>
+> I don't think there is anything reasonable for me to do in Rau but to hope
+> that Matus will be so kind to fix this issue in lgr before the release of
+> Emacs 32.
+>
+> With all due respect, I wonder whether the way this change is done could
+> not be improved. Maybe by introducing a new function and deprecating the
+> old one?
+>
+> Thank you for your work!
+>
+> Thomas Koch
+>
+
+================================================================================
+Date: 2026-11-05T13:46:07+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Native TTY image support in Emacs
+Message-ID: <86wlqrmoog.fsf@gnu.org>
+In-Reply-To: <CAAVThb3Gwe82_e0K8BBSLhbU1vj+SwArunZZjWZt+HD6bq9K4g@mail.gmail.com>
+ (message from ron li on Thu, 5 Nov 2026 10:51:24 +0000)
+References: <CAAVThb3Gwe82_e0K8BBSLhbU1vj+SwArunZZjWZt+HD6bq9K4g@mail.gmail.com>
+
+> From: ron li <liyananfamily@gmail.com>
+> Date: Thu, 5 Nov 2026 10:51:24 +0000
+> 
+> I'd like to revisit the 2022 discussion on supporting existing Emacs
+> image specs on text terminals, starting with Kitty graphics.
+> 
+> In my `image-line` prototype, images are laid out as one-cell-high
+> rows. I verified in Kitty that the visible portion stays on screen
+> when an image is clipped at either vertical window edge.
+
+So your prototype basically scales each image to tiny dimensions so
+that they fit on a single line?  Or did I misunderstand?
+
+> Would extending `insert-sliced-image` to a Kitty-capable TTY be a
+> reasonable first step?
+
+Can you tell what problems will implementing insert-sliced-image on a
+TTY solve, as opposed to implementing insert-image?
+
+================================================================================
+Date: 2026-11-05T14:07:23+01:00
+From: "Michael Grant" <mgrant@grant.org>
+Subject: Re: Native TTY image support in Emacs
+Message-ID: <em052e7902-eff9-4dea-8147-87a7ebb32c5d@grant.org>
+In-Reply-To: <CAAVThb3Gwe82_e0K8BBSLhbU1vj+SwArunZZjWZt+HD6bq9K4g@mail.gmail.com>
+References: <CAAVThb3Gwe82_e0K8BBSLhbU1vj+SwArunZZjWZt+HD6bq9K4g@mail.gmail.com>
+
+tmux now supports images, both kitty and sixel images.  If you do this, 
+you should also support sixels which are more widely supported.  What 
+tmux does when it sees an image is upload it into tmux and hold it as an 
+image and on display, output it as either sixel or kitty depending on 
+what's supported.  This way, you can have a sixel image displayed on a 
+kitty terminal and visa versa, tmux insulates you from the format.
+
+I do not know if this will help you in adding this to emacs if emacs 
+handles all the scrolling and clipping.  emacs also puts the tty in 
+alternate screen mode so it would not take advantage of tmux's copy 
+buffer, so emacs would have to handle all of the scrolling and such.  It 
+should be possible.
+
+There are 2 types of kitty images, I think you are thinking of the 
+unicode placeholder type where the image is split into cells (character 
+shaped blocks) which the local terminal knows which bit of the image to 
+put in that space.  What I don't know is what would happen with the 
+other type of kitty image which is called the kitty graphics protocol.
+
+I think what you probably need to do is let people open a file 
+containing an image, either a sixel or jpg or whatever, then, uses 
+whatever image display capability is available in the terminal to 
+display them, handling clipping and scrolling.
+
+
+------ Original Message ------
+>From "ron li" <liyananfamily@gmail.com>
+To emacs-devel@gnu.org
+Date 05/11/2026 11:51:24
+Subject Native TTY image support in Emacs
+
+>Hi,
+>
+>I'd like to revisit the 2022 discussion on supporting existing Emacs
+>image specs on text terminals, starting with Kitty graphics.
+>
+>In my `image-line` prototype, images are laid out as one-cell-high
+>rows. I verified in Kitty that the visible portion stays on screen
+>when an image is clipped at either vertical window edge. A separate
+>Canvas prototype updates pixels without moving the placement.
+>
+>Would extending `insert-sliced-image` to a Kitty-capable TTY be a
+>reasonable first step?
+>
+>Previous discussion: https://lists.gnu.org/r/emacs-devel/2022-09/msg00384.html
+>
+
+================================================================================
+Date: 2026-11-05T15:40:23+01:00
+From: Donjuanplatinum <donplat@barrensea.org>
+Subject: Re: master ec35554e20d: Restore current buffer on nonlocal exits
+Message-ID: <87h5hvnxyg.fsf@DESKTOP-4UP1K6L.lan>
+In-Reply-To: <jwvld78v3l3.fsf-monnier+emacs@gnu.org>
+References: <179378874547.15187.9776965437266088734@vcs2.savannah.gnu.org>
+ <20261104103905.D09B0C10DAE@vcs2.savannah.gnu.org>
+ <jwvld78v3l3.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+
+>
+> Hmm...
+>
+> In the two places where you've put the
+> `record_unwind_current_buffer...unbind_to`, AFAICT the code in the `...`
+> is not expected to change current-buffer.  Instead, current-buffer is
+> set just a bit earlier by `read_process_output_before_insert`.
+>
+> Any chance you meant to put the `record_unwind_current_buffer` *before*
+> the call to `read_process_output_before_insert` rather than after it?
+> If not, I think the code deserves extra comment to explain why.
+>
+
+Thank you Stefan, I'll look into this carefully and give it some thought.
+
