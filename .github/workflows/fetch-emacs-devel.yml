@@ -3,8 +3,10 @@ name: Update emacs-devel archive
 on:
   workflow_dispatch:
   schedule:
-    # Repeated opportunities, covering DST and possible Actions delays.
-    - cron: "20,40 16-21 * * *"
+    # Retry every 10 minutes across both Madrid DST offsets.
+    # The Madrid-time guard below prevents generating before 18:15.
+    # Once daily/YYYY-MM-DD.txt exists, subsequent runs skip generation.
+    - cron: "*/10 16-20 * * *"
 
 permissions:
   contents: write
