@@ -2,6 +2,7 @@ name: Update emacs-devel archive
 
 on:
   workflow_dispatch:
+  workflow_call:
   schedule:
     # Retry every 10 minutes across both Madrid DST offsets.
     # The Madrid-time guard below prevents generating before 18:15.
@@ -23,7 +24,7 @@ jobs:
         id: madrid
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event_name }}" = "workflow_call" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
