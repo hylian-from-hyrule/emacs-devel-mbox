@@ -1,0 +1,34 @@
+name: Generate archive after daily trigger
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/daily-trigger.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: emacs-devel-trigger
+  cancel-in-progress: false
+
+jobs:
+  wait-until-window-closes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait until 18:20 Europe/Madrid
+        shell: bash
+        run: |
+          set -euo pipefail
+          NOW=$(date +%s)
+          TARGET=$(TZ=Europe/Madrid date -d "$(TZ=Europe/Madrid date +%F) 18:20:00" +%s)
+          if (( NOW < TARGET )); then
+            sleep "$(( TARGET - NOW ))"
+          fi
+
+  generate:
+    needs: wait-until-window-closes
+    uses: ./.github/workflows/fetch-emacs-devel.yml
+    permissions:
+      contents: write
