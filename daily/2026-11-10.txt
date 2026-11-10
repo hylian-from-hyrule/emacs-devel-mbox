@@ -1,0 +1,1780 @@
+emacs-devel messages from 2026-11-09T18:15:00+01:00 to 2026-11-10T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-09T18:49:50+01:00
+From: Dan <daanturo@proton.me>
+Subject: Re: master 5112dc5216b 2/3: Add heuristic for VC packages to avoid
+ duplicate dependencies
+Message-ID: <RuGz6KDzWZh6Q-oS7vBHZYtSjFpcHh918UvWVGtULvp9bvaR4UJLrdEYq3ny_W460Aohj41VDuEQeQb1qfayVW1z7k9VTpj3PrJUuSGtPEk=@proton.me>
+In-Reply-To: <jwvfqxaufw3.fsf-monnier+emacs@gnu.org>
+References: <179408406913.25215.17958733940096234832@vcs2.savannah.gnu.org>
+ <20261107204109.A1FDEC1F55B@vcs2.savannah.gnu.org>
+ <jwv5wy6r63c.fsf-monnier+emacs@gnu.org> <87pkwev734.fsf@posteo.net>
+ <jwvfqxaufw3.fsf-monnier+emacs@gnu.org>
+
+> Hmm... why does it perform such a scan?
+> 
+> I'd have expected that it looks at the `Package-Requires:` header of the
+> main file only.
+
+./A
+├── A-1.el      ;; Package-Requires: ((A "0"))
+├── A-2.el      ;; Package-Requires: ((A-1 "0") (B "0"))
+└── A.el        ;; Package-Requires: ()
+
+If we only look at A.el only, A-2.el's dependency on B will be ignored.
+
+
+
+
+----Dan.
+
+================================================================================
+Date: 2026-11-09T19:10:56+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 5112dc5216b 2/3: Add heuristic for VC packages to avoid
+ duplicate dependencies
+Message-ID: <jwva4nhvq56.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <RuGz6KDzWZh6Q-oS7vBHZYtSjFpcHh918UvWVGtULvp9bvaR4UJLrdEYq3ny_W460Aohj41VDuEQeQb1qfayVW1z7k9VTpj3PrJUuSGtPEk=@proton.me>
+References: <179408406913.25215.17958733940096234832@vcs2.savannah.gnu.org>
+ <20261107204109.A1FDEC1F55B@vcs2.savannah.gnu.org>
+ <jwv5wy6r63c.fsf-monnier+emacs@gnu.org> <87pkwev734.fsf@posteo.net>
+ <jwvfqxaufw3.fsf-monnier+emacs@gnu.org>
+ <RuGz6KDzWZh6Q-oS7vBHZYtSjFpcHh918UvWVGtULvp9bvaR4UJLrdEYq3ny_W460Aohj41VDuEQeQb1qfayVW1z7k9VTpj3PrJUuSGtPEk=@proton.me>
+
+>> Hmm... why does it perform such a scan?
+>> I'd have expected that it looks at the `Package-Requires:` header of the
+>> main file only.
+>
+> ./A
+> ├── A-1.el      ;; Package-Requires: ((A "0"))
+> ├── A-2.el      ;; Package-Requires: ((A-1 "0") (B "0"))
+> └── A.el        ;; Package-Requires: ()
+>
+> If we only look at A.el only, A-2.el's dependency on B will be ignored.
+
+I don't see why that's the problem: the users asked to install A only.
+The fact that `A-2.el` happens to end up in the `load-path` is just an
+"internal detail".
+
+If they want to use A-2 as well, they should install it (which
+presumably would add a symlink from directory `A-2` to directory `A`
+and then look at the headers of `A-2.el`, ...).
+
+Of course, we could be more proactive: *after* installing `A` (and hence
+consulting the headers of `A.el`), we could scan the other files and ask
+the users whether they also want to install those.
+
+[ Note also that I've seen files `FOO.el` with headers like
+  `Package-Requires:` even when there's no intention to make a package
+  FOO out of it, so the scan risks finding packages that don't exist.  ]
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-09T20:30:43+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: master 5112dc5216b 2/3: Add heuristic for VC packages to avoid
+ duplicate dependencies
+Message-ID: <87ld71vm3h.fsf@posteo.net>
+In-Reply-To: <jwva4nhvq56.fsf-monnier+emacs@gnu.org>
+References: <179408406913.25215.17958733940096234832@vcs2.savannah.gnu.org>
+ <20261107204109.A1FDEC1F55B@vcs2.savannah.gnu.org>
+ <jwv5wy6r63c.fsf-monnier+emacs@gnu.org> <87pkwev734.fsf@posteo.net>
+ <jwvfqxaufw3.fsf-monnier+emacs@gnu.org>
+ <RuGz6KDzWZh6Q-oS7vBHZYtSjFpcHh918UvWVGtULvp9bvaR4UJLrdEYq3ny_W460Aohj41VDuEQeQb1qfayVW1z7k9VTpj3PrJUuSGtPEk=@proton.me>
+ <jwva4nhvq56.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+>>> Hmm... why does it perform such a scan?
+>>> I'd have expected that it looks at the `Package-Requires:` header of the
+>>> main file only.
+>>
+>> ./A
+>> ├── A-1.el      ;; Package-Requires: ((A "0"))
+>> ├── A-2.el      ;; Package-Requires: ((A-1 "0") (B "0"))
+>> └── A.el        ;; Package-Requires: ()
+>>
+>> If we only look at A.el only, A-2.el's dependency on B will be ignored.
+>
+> I don't see why that's the problem: the users asked to install A only.
+> The fact that `A-2.el` happens to end up in the `load-path` is just an
+> "internal detail".
+>
+> If they want to use A-2 as well, they should install it (which
+> presumably would add a symlink from directory `A-2` to directory `A`
+> and then look at the headers of `A-2.el`, ...).
+>
+> Of course, we could be more proactive: *after* installing `A` (and hence
+> consulting the headers of `A.el`), we could scan the other files and ask
+> the users whether they also want to install those.
+>
+> [ Note also that I've seen files `FOO.el` with headers like
+>   `Package-Requires:` even when there's no intention to make a package
+>   FOO out of it, so the scan risks finding packages that don't exist.  ]
+
+That would certainly also be an option, but my design decision when
+implementing this was to be more careful and install all dependencies in
+case they are necessary.  The change we are discussing just tries to
+improve this overcorrection by a bit.  Another idea would be to prompt
+the user what dependencies they want to have installed.
+
+================================================================================
+Date: 2026-11-09T20:32:52+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: ekp
+Message-ID: <87h5hpvlzw.fsf@posteo.net>
+In-Reply-To: <E1xQQ1p-007jSx-Lm@fencepost.gnu.org>
+References: <179260078509.84898.7507602913885656282@gmail.com>
+ <E1xKzYy-000DLb-HL@fencepost.gnu.org>
+ <179301336681.7054.17558261044765912242@gmail.com>
+ <E1xMTLz-00Axpw-4V@fencepost.gnu.org>
+ <m24ie4misn.fsf@macmutant.fritz.box>
+ <E1xO4ME-00CUak-R2@fencepost.gnu.org> <87tslx6bxm.fsf@posteo.net>
+ <E1xQQ1p-007jSx-Lm@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > The current plan is to see if we can upstream the feature, in which case
+>   > the question of naming will be different anyway depending on where in
+>   > emacs.git the feature lands.
+>
+> Ok.
+>
+>                                   We therefore don't have to bikeshed this
+>   > point anymore.
+>
+> Bikeshedding means fussing about minor details of a feature.  The
+> feature's name is not a minor detail, because a good name is
+> important: it can help the users who could use it to find it.
+>
+> Choosing a name that will help users find it is a significant part of
+> making the feature useful.  If you don't want to participate in it,
+> stand aside and let those who care do the work.
+
+What name makes sense will differ depending on whether this is a core
+feature, which can either be a standalone library or integrated into an
+existing file, or whether this is a package on ELPA.  If we don't know
+this, we are basically having multiple discussions at once.
+
+================================================================================
+Date: 2026-11-09T20:47:08+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87cxsdvlc4.fsf@posteo.net>
+In-Reply-To: <avGnjAjyhTcM0ouK@tuxteam.de>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de>
+
+tomas@tuxteam.de writes:
+
+> On Mon, Nov 09, 2026 at 11:32:03AM +0100, Augusto Stoffel wrote:
+>
+> [on the "preferred source" when porting C++ code to Lisp]
+>
+>> I said somewhere that in order to "backport" new features from the
+>> original programs (Hunspell and/or Nuspell), I would show the LLM the
+>> new version of the said programs, but that's almost tautological.
+>
+> Hold on: by "said program" you refer to the C++ version or the Lisp
+> version?
+
+I read it like that as well, you wouldn't point the LLM at the Lisp
+source to translate it into Lisp.
+
+> In the first case, I see a near-contradiction to...
+>
+>> (Yuri and Dmitry also said pretty much the same thing above, possibly
+>> without even haven read my earlier comments, because what else could one
+>> possibly do differently?)
+>> 
+>> The "preferred form" for modifying vibe-spell.el is clearly the el
+>> files.  They are readable and editable on their own.  There is no need
+>> to touch or look at any C++ files in order to modify vibe-spell.el.
+>
+> ...this.
+>
+> The "preferred form" is the one intended for human consumption, the
+> one you feed to some (extended) compilation/translation machinery, 
+> right?
+>
+> In principle, you also could hand edit the machine code output by
+> a compiler/linker, but why would you want to do that?
+
+Please take a look at the source code of vibe-spell.  I am half way
+through it and it is certainly readable, certainly no worse than that of
+the average ELPA submission.
+
+https://raw.githubusercontent.com/astoff/vibe-spell/refs/heads/main/vibe-spell.el
+
+The "preferred form" question is a category error here, since the
+translation is one between two forms of equal standing and not
+comparable to machine-code output.  My guess is that the LLM would most
+probably be able to recover a fully functional C++ version from the
+Elisp code without much more difficulty in a way that a even a
+decompiler wouldn't be able to do.
+
+I would really appreciate it if we could give this whole business a rest
+because at this point it is just noise.  I am sorry to tell you this,
+but vibe-spell seems to be a good example of responsibly using LLMs that
+doesn't result in so-called "slop" (which I understand to be some
+horrible plague that nobody must ever come into contact with) and would
+most probably never have been attempted without the availability of such
+tools.
+
+> Cheers
+
+================================================================================
+Date: 2026-11-09T21:13:47+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 5112dc5216b 2/3: Add heuristic for VC packages to avoid
+ duplicate dependencies
+Message-ID: <jwvld71u5nd.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87ld71vm3h.fsf@posteo.net>
+References: <179408406913.25215.17958733940096234832@vcs2.savannah.gnu.org>
+ <20261107204109.A1FDEC1F55B@vcs2.savannah.gnu.org>
+ <jwv5wy6r63c.fsf-monnier+emacs@gnu.org> <87pkwev734.fsf@posteo.net>
+ <jwvfqxaufw3.fsf-monnier+emacs@gnu.org>
+ <RuGz6KDzWZh6Q-oS7vBHZYtSjFpcHh918UvWVGtULvp9bvaR4UJLrdEYq3ny_W460Aohj41VDuEQeQb1qfayVW1z7k9VTpj3PrJUuSGtPEk=@proton.me>
+ <jwva4nhvq56.fsf-monnier+emacs@gnu.org> <87ld71vm3h.fsf@posteo.net>
+
+>>>> Hmm... why does it perform such a scan?
+>>>> I'd have expected that it looks at the `Package-Requires:` header of the
+>>>> main file only.
+>>>
+>>> ./A
+>>> ├── A-1.el      ;; Package-Requires: ((A "0"))
+>>> ├── A-2.el      ;; Package-Requires: ((A-1 "0") (B "0"))
+>>> └── A.el        ;; Package-Requires: ()
+>>>
+>>> If we only look at A.el only, A-2.el's dependency on B will be ignored.
+>>
+>> I don't see why that's the problem: the users asked to install A only.
+>> The fact that `A-2.el` happens to end up in the `load-path` is just an
+>> "internal detail".
+>>
+>> If they want to use A-2 as well, they should install it (which
+>> presumably would add a symlink from directory `A-2` to directory `A`
+>> and then look at the headers of `A-2.el`, ...).
+>>
+>> Of course, we could be more proactive: *after* installing `A` (and hence
+>> consulting the headers of `A.el`), we could scan the other files and ask
+>> the users whether they also want to install those.
+>>
+>> [ Note also that I've seen files `FOO.el` with headers like
+>>   `Package-Requires:` even when there's no intention to make a package
+>>   FOO out of it, so the scan risks finding packages that don't exist.  ]
+>
+> That would certainly also be an option, but my design decision when
+> implementing this was to be more careful and install all dependencies in
+> case they are necessary.  The change we are discussing just tries to
+> improve this overcorrection by a bit.  Another idea would be to prompt
+> the user what dependencies they want to have installed.
+
+An intermediate point would be to auto-install the dependencies listed
+in the main file, and then prompt for the ones listed in the
+other files (and, only after the installation of the package is done,
+to avoid the circularity).
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-10T00:24:23+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87se19eggo.fsf@web.de>
+In-Reply-To: <87cxsdvlc4.fsf@posteo.net>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> The "preferred form" question is a category error here
+
+I’m not sure I understand correctly what you want to say with that.
+
+Do you mean it’s impossible to define a preferred form for modifying?
+
+Or that both versions form the preferred form together?
+To make it viable to transfer improvements from the one into the other.
+Can’t do that if you can’t diff to the shared state.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-10T06:54:22+01:00
+From: Ellie <el@horse64.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org>
+In-Reply-To: <86y0b22kkk.fsf@gnu.org>
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org>
+
+Thank you for your repsonse!
+
+On 11/9/26 13:36, Eli Zaretskii wrote:
+> As have been explained, we (and the entire GNU Project) are waiting
+> for lawyers to provide their recommendations, and for the GNU Project
+> leadership to translate them into practical guidance. 
+
+So wouldn't it make sense to wait and not allow LLM contributions until 
+that happened?
+
+Or what's your plan if the recommendation is to not have any LLM code in 
+the project?
+
+> Any policy change should consider potential disagreements, and I'm
+> sure we will do that in this case as well, so no problem here.
+
+That's fair, but my main point was the rejection of any LLM policy due 
+to supposedly splitting the community and/or being too political and out 
+of scope.
+
+I just found that argument confusing and wanted to propose a different 
+way of looking at it.
+
+Regards,
+
+Ellie
+
+================================================================================
+Date: 2026-11-10T06:55:50+01:00
+From: Ellie <el@horse64.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <7348235e-c5fc-4f72-a9a7-08e5e1063362@horse64.org>
+In-Reply-To: <86y0b22kkk.fsf@gnu.org>
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org>
+
+On 11/9/26 13:36, Eli Zaretskii wrote:
+>   as long as the code is
+> correct and useful and clean, we are okay with accepting it.
+
+Surely you also require that the copyright is compatible?
+
+That doesn't seem to be necessarily given for any LLM contributions 
+right now, according to some people smarter than me - I'm not a lawyer, 
+I wouldn't know, but e.g. this article seems to express doubts: 
+https://fsfe.org/news/2026/news-20260825-01.en.html
+
+Regards,
+
+Ellie
+
+================================================================================
+Date: 2026-11-10T07:49:25+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <avK+dbNJHMLI5qmW@tuxteam.de>
+In-Reply-To: <87se19eggo.fsf@web.de>
+References: <E1xPvac-000Me5-3x@fencepost.gnu.org> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+
+On Tue, Nov 10, 2026 at 12:24:23AM +0100, Dr. Arne Babenhauserheide wrote:
+> Philip Kaludercic <philipk@posteo.net> writes:
+> 
+> > The "preferred form" question is a category error here
+> 
+> I’m not sure I understand correctly what you want to say with that.
+> 
+> Do you mean it’s impossible to define a preferred form for modifying?
+
+I think this shows the weakness of the "GNU model" wrt the current
+situation. For Philip it's perfectly OK for "an LLM" working along
+a human. The human fixes and enhances directly the .el file, and
+whenever a change worth backporting arrives in the C++, it tells the
+LLM "please, LLM, backport this fix to me".
+
+(Generative) LLMs and humans peacefully working together (please,
+Philip, don't take this as sarcasm -- it just took me a while to wrap
+my brain around that). Then, of course, there is no "preferred
+source", that would be an anthropocentric view.
+
+Me (and possibly Arne) stand squarely [1] in this anthropocentric place.
+The GNU implicitly does, because it was conceived at a time nothing
+else made sense. It'll have to change.
+
+> Or that both versions form the preferred form together?
+> To make it viable to transfer improvements from the one into the other.
+> Can’t do that if you can’t diff to the shared state.
+
+Not without LLM help. You do create a dependency.
+
+Cheers
+
+[1] I'll do for as long as this tech is dominated by Dark Lords.
+-- 
+t
+
+================================================================================
+Date: 2026-11-10T07:58:59+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <878q31uq8e.fsf@posteo.net>
+In-Reply-To: <87se19eggo.fsf@web.de>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>> The "preferred form" question is a category error here
+>
+> I’m not sure I understand correctly what you want to say with that.
+>
+> Do you mean it’s impossible to define a preferred form for modifying?
+
+No, I am saying it doesn't make sense to talk about a "preferred form",
+since we are not dealing with a compiler.
+
+> Or that both versions form the preferred form together?
+
+No, each version is independently sufficient to make changes.  This has
+nothing to do with LLMs, just imagine any program that was translated
+from language X to language Y.  There is no reason you can't just
+continue developing the program in language Y after it has been
+translated.
+
+> To make it viable to transfer improvements from the one into the other.
+> Can’t do that if you can’t diff to the shared state.
+
+I cannot parse your claim here.  If there is a new feature in program X,
+you take a look at the diff and re-implement the feature in program Y.
+If the translation is faithful, as I understand to be the case with
+vibe-spell, it is easier since you probably can match function names,
+but otherwise you just re-implement the feature.  "OK, so language X now
+also opens the file /etc/foo and check for a flag, sure can write that
+too in language Y".  I really don't get the confusion here?
+
+> Best wishes,
+> Arne
+
+================================================================================
+Date: 2026-11-10T08:06:21+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <874idpupw5.fsf@posteo.net>
+In-Reply-To: <avK+dbNJHMLI5qmW@tuxteam.de>
+References: <E1xPvac-000Me5-3x@fencepost.gnu.org> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de>
+
+tomas@tuxteam.de writes:
+
+> On Tue, Nov 10, 2026 at 12:24:23AM +0100, Dr. Arne Babenhauserheide wrote:
+>> Philip Kaludercic <philipk@posteo.net> writes:
+>> 
+>> > The "preferred form" question is a category error here
+>> 
+>> I’m not sure I understand correctly what you want to say with that.
+>> 
+>> Do you mean it’s impossible to define a preferred form for modifying?
+>
+> I think this shows the weakness of the "GNU model" wrt the current
+> situation. For Philip it's perfectly OK for "an LLM" working along
+> a human. The human fixes and enhances directly the .el file, and
+> whenever a change worth backporting arrives in the C++, it tells the
+> LLM "please, LLM, backport this fix to me".
+
+FWIW I was not under the impression that we were talking about
+backporting.
+
+> (Generative) LLMs and humans peacefully working together (please,
+> Philip, don't take this as sarcasm -- it just took me a while to wrap
+> my brain around that). 
+
+I totally get that, just so you know I am not an advocate of LLMs and do
+not use them for coding myself due to similar concerns as what you and
+Arne presumably share.  I am just trying to be realistic about
+the capabilities that we can observe and how people want/do use them.
+My advocacy is for the developers of ELPA packages to use the tools and
+methods they prefer, as long as these are consistent with the principles
+of free software.
+
+>                        Then, of course, there is no "preferred
+> source", that would be an anthropocentric view.
+>
+> Me (and possibly Arne) stand squarely [1] in this anthropocentric place.
+> The GNU implicitly does, because it was conceived at a time nothing
+> else made sense. It'll have to change.
+>
+>> Or that both versions form the preferred form together?
+>> To make it viable to transfer improvements from the one into the other.
+>> Can’t do that if you can’t diff to the shared state.
+>
+> Not without LLM help. You do create a dependency.
+
+Please see my other message, this concrete discussion is not related to
+LLMs.  They as just accelerators, but in the case of porting or
+backporting changes between translations, they can just as well be done
+by human hand.
+
+> Cheers
+>
+> [1] I'll do for as long as this tech is dominated by Dark Lords.
+
+================================================================================
+Date: 2026-11-10T09:20:38+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <avLT1inBrLB92lbT@tuxteam.de>
+In-Reply-To: <874idpupw5.fsf@posteo.net>
+References: <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <874idpupw5.fsf@posteo.net>
+
+On Tue, Nov 10, 2026 at 07:06:21AM +0000, Philip Kaludercic wrote:
+> tomas@tuxteam.de writes:
+> 
+> > On Tue, Nov 10, 2026 at 12:24:23AM +0100, Dr. Arne Babenhauserheide wrote:
+> >> Philip Kaludercic <philipk@posteo.net> writes:
+> >> 
+> >> > The "preferred form" question is a category error here
+> >> 
+> >> I’m not sure I understand correctly what you want to say with that.
+> >> 
+> >> Do you mean it’s impossible to define a preferred form for modifying?
+> >
+> > I think this shows the weakness of the "GNU model" wrt the current
+> > situation. For Philip it's perfectly OK for "an LLM" working along
+> > a human. The human fixes and enhances directly the .el file, and
+> > whenever a change worth backporting arrives in the C++, it tells the
+> > LLM "please, LLM, backport this fix to me".
+> 
+> FWIW I was not under the impression that we were talking about
+> backporting.
+> 
+> > (Generative) LLMs and humans peacefully working together (please,
+> > Philip, don't take this as sarcasm -- it just took me a while to wrap
+> > my brain around that). 
+> 
+> I totally get that, just so you know I am not an advocate of LLMs and do
+> not use them for coding myself due to similar concerns as what you and
+> Arne presumably share.  I am just trying to be realistic about
+> the capabilities that we can observe and how people want/do use them.
+> My advocacy is for the developers of ELPA packages to use the tools and
+> methods they prefer, as long as these are consistent with the principles
+> of free software.
+
+Oh, sorry for mixing things up and thanks for clearing up (and your
+patience).
+
+> >                        Then, of course, there is no "preferred
+> > source", that would be an anthropocentric view.
+> >
+> > Me (and possibly Arne) stand squarely [1] in this anthropocentric place.
+> > The GNU implicitly does, because it was conceived at a time nothing
+> > else made sense. It'll have to change.
+> >
+> >> Or that both versions form the preferred form together?
+> >> To make it viable to transfer improvements from the one into the other.
+> >> Can’t do that if you can’t diff to the shared state.
+> >
+> > Not without LLM help. You do create a dependency.
+> 
+> Please see my other message, this concrete discussion is not related to
+> LLMs.  They as just accelerators, but in the case of porting or
+> backporting changes between translations, they can just as well be done
+> by human hand.
+
+I see -- probably, not putting "by hand" at a disadvantage would require
+extra effort?
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-10T10:26:43+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <87bj7x2g18.fsf@athena.silentflame.com>
+In-Reply-To: <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org>
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org>
+ <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org>
+
+Ellie [10/Nov  5:54am GMT] wrote:
+> Thank you for your repsonse!
+>
+> On 11/9/26 13:36, Eli Zaretskii wrote:
+>> As have been explained, we (and the entire GNU Project) are waiting
+>> for lawyers to provide their recommendations, and for the GNU Project
+>> leadership to translate them into practical guidance.
+>
+> So wouldn't it make sense to wait and not allow LLM contributions until
+> that happened?
+
+That is exactly what we have been doing.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-10T10:26:57+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <878q312g0u.fsf@athena.silentflame.com>
+In-Reply-To: <7348235e-c5fc-4f72-a9a7-08e5e1063362@horse64.org>
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org>
+ <7348235e-c5fc-4f72-a9a7-08e5e1063362@horse64.org>
+
+Ellie [10/Nov  5:55am GMT] wrote:
+> On 11/9/26 13:36, Eli Zaretskii wrote:
+>>   as long as the code is
+>> correct and useful and clean, we are okay with accepting it.
+>
+> Surely you also require that the copyright is compatible?
+>
+> That doesn't seem to be necessarily given for any LLM contributions
+> right now, according to some people smarter than me - I'm not a lawyer,
+> I wouldn't know, but e.g. this article seems to express doubts:
+> https://fsfe.org/news/2026/news-20260825-01.en.html
+
+This is what we are waiting on, yes.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-10T12:00:37+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87mrrhdk8a.fsf@web.de>
+In-Reply-To: <878q31uq8e.fsf@posteo.net>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+>> To make it viable to transfer improvements from the one into the other.
+>> Can’t do that if you can’t diff to the shared state.
+>
+> I cannot parse your claim here.  If there is a new feature in program X,
+> you take a look at the diff and re-implement the feature in program Y.
+> If the translation is faithful, as I understand to be the case with
+> vibe-spell, it is easier since you probably can match function names,
+> but otherwise you just re-implement the feature.  "OK, so language X now
+> also opens the file /etc/foo and check for a flag, sure can write that
+> too in language Y".  I really don't get the confusion here?
+
+The described process is: "point <tool> at <source diff>".
+
+Not "tell <tool> to implement <described feature>".
+
+That’s why whatever tool is used requires both sources: you need to know
+what C++ the elisp corresponds to to know what changed. At the very
+least you need a reference to the exact commit that got processed.
+
+Sure, you could try another way, but that’s not what Augusto plans to
+do and not how he worked until now, so viability is speculation.
+
+(not to forget in all the details: as long as there are no fully free
+ tools that can do this (there are no fully free LLMs), this intended
+ process adds a dependency on a proprietary tool as requirement to keep
+ sources in sync, as well as deep copyright infringement risks if
+ training data got reproduced with too little obfuscation)
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-10T12:07:28+01:00
+From: Andrey Listopadov <andreyorst@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+In-Reply-To: <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+
+Nov 9, 2026 17:08:22 Richard Stallman <rms@gnu.org>:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > > But allowing the use of LLM opens the door to getting much more 
+> of
+>   > > such contributions, and can quickly overwhelm a small team with
+>   > > amounts of code they now need to maintain without help.
+>
+>   > As long as the code is well understood when it is accepted, and 
+> it's
+>   > clean and designed reasonably well, I don't see why this would be a
+>   > problem any more than what we have now.
+>
+> I agree: just because code was generated by an LLM does not imply it is
+> hard to understand.  Each such patch may be understandable, or not.
+>
+> On that issue, we know how to deal with LLM-written code -- as if it
+> were written by someone we need to supervise.  We would have to be
+> disciplined and do it without fail, not get lulled into taking it for
+> granted.
+
+Cryptic code wasn't my main point of concern that I tried to 
+communicate.  It is the amounts of code team will have to process and 
+maintain - LLMs make it that the act of "writing the code" is the easy 
+part, which allows a lot more code to be submitted (see the recent 
+discussion on vibespell, for an example). Reviewing and maintaining such 
+amounts of code, submitted over the years may become problematic for a 
+small team. And because (as I pointed earlier) authors may not understand 
+the code they sent, expanding the team with new members to manage all 
+that code can become a problem too.
+
+I understand, that Emacs already has a lot of code, and it is already a 
+thing to deal with for the current team. Accepting LLM based 
+contributions just may make it much worse in the long run.
+
+IMO, it's a point to be discussed, hence why I brought it up - if the 
+team is collectively OK with that they will have to deal with code 
+submission rates growing up at the rates LLMs allow for, then this point 
+can be dismissed.
+
+================================================================================
+Date: 2026-11-10T13:50:12+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <8633t83l6j.fsf@gnu.org>
+In-Reply-To: <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org> (message from
+ Ellie on Tue, 10 Nov 2026 05:54:22 +0000)
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org> <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org>
+
+> Date: Tue, 10 Nov 2026 05:54:22 +0000
+> Cc: emacs-devel@gnu.org
+> From: Ellie <el@horse64.org>
+> 
+> On 11/9/26 13:36, Eli Zaretskii wrote:
+> > As have been explained, we (and the entire GNU Project) are waiting
+> > for lawyers to provide their recommendations, and for the GNU Project
+> > leadership to translate them into practical guidance. 
+> 
+> So wouldn't it make sense to wait and not allow LLM contributions until 
+> that happened?
+
+We _are_ waiting, and meanwhile are not allowing.
+
+> Or what's your plan if the recommendation is to not have any LLM code in 
+> the project?
+
+That's simple: we won't accept any.
+
+The other possibilities are not so simple.
+
+> > Any policy change should consider potential disagreements, and I'm
+> > sure we will do that in this case as well, so no problem here.
+> 
+> That's fair, but my main point was the rejection of any LLM policy due 
+> to supposedly splitting the community and/or being too political and out 
+> of scope.
+
+No one rejected "any LLM policy".  If that's your impression, it is
+based on a misunderstanding.
+
+================================================================================
+Date: 2026-11-10T13:51:23+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <861p8s3l4k.fsf@gnu.org>
+In-Reply-To: <7348235e-c5fc-4f72-a9a7-08e5e1063362@horse64.org> (message from
+ Ellie on Tue, 10 Nov 2026 05:55:50 +0000)
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org> <7348235e-c5fc-4f72-a9a7-08e5e1063362@horse64.org>
+
+> Date: Tue, 10 Nov 2026 05:55:50 +0000
+> Cc: emacs-devel@gnu.org
+> From: Ellie <el@horse64.org>
+> 
+> On 11/9/26 13:36, Eli Zaretskii wrote:
+> >   as long as the code is
+> > correct and useful and clean, we are okay with accepting it.
+> 
+> Surely you also require that the copyright is compatible?
+
+Yes.  We all know that.
+
+> That doesn't seem to be necessarily given for any LLM contributions 
+> right now, according to some people smarter than me - I'm not a lawyer, 
+> I wouldn't know, but e.g. this article seems to express doubts: 
+> https://fsfe.org/news/2026/news-20260825-01.en.html
+
+That's exactly why we wait for lawyers to give their recommendations.
+
+================================================================================
+Date: 2026-11-10T14:03:30+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev>
+In-Reply-To: <86cxsqtk1y.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev> <86cxsqtk1y.fsf@gnu.org>
+
+Hi!
+
+On 31/10/2026 09:18, Eli Zaretskii wrote:
+>> Date: Sat, 31 Oct 2026 07:02:25 +0200
+>> Cc:monnier@iro.umontreal.ca,emacs-devel@gnu.org
+>> From: Dmitry Gutov<dmitry@gutov.dev>
+>>
+>> On 30/10/2026 09:09, Eli Zaretskii wrote:
+>>
+>>> I was thinking about some kind of "memory", whereby if the last "M-g
+>>> M-."  used some backend, the next one will use the same backend, with
+>>> some command to reset the backend to the one that is the default for
+>>> the current buffer's major mode.  The reason is that it happens a lot
+>>> in my workflows that one tag search is followed by another, then
+>>> another, etc., because I'm looking for something and didn't yet find
+>>> it.  For example, I could be looking at a function which calls
+>>> another, which in turns calls another, etc. etc., and I will be going
+>>> down this rabbit hole because I need to understand something buried
+>>> deep in a sequence of calls.  Or I could be looking for something,
+>>> discover that it wasn't what I wanted, then change the symbol name
+>>> slightly and search again, and so on and so forth, until I find what
+>>> I'm looking for.  In these situations, having the backend change
+>>> half-way is unexpected and annoying.
+>> I see. Usually when doing something like that I would jump back each
+>> time before next search, or use the Xref buffer to launch searches.
+>>
+>> But neither is very intuitive, I guess.
+>>
+>>> If you think that a minor mode which will allow this is reasonable,
+>>> maybe that's good enough.  Another possibility would be to have a
+>>> special value of prefix arg (e.g., "C-u C-u") to use the same backend
+>>> as previous invocation, with a user option to reverse the meaning of
+>>> "C-u C-u".
+>> Would the use of 'C-u C-u' always make the commands prompt for
+>> identifier to use.
+> It would (and for the KIND as well), but that's usually what I need in
+> these workflows, which chases some code until the answer is found.
+> And the default for the symbol it offers is the symbol at point, so if
+> that's what I want, it's only 2 keystrokes away.
+
+Here is a draft with change that follows your description: 'C-u C-u M-.' 
+uses the last "jump from" location as the origin for backend info.
+
+There are a few rough edges:
+- Unclear if this should work with every xref command. That would mean 
+more potential clashes with others' prefix effects, and a need to 
+document this somewhere in a common place. OT2H the benefits are there too.
+
+- No support for defaulting to the symbol at point (it uses whatever 
+symbol is in the previous buffer). If the command didn't interpret the 
+given prefix convention to always mean "prompt for identifier", this 
+would make a difference, . But I'm not sure how allow to pass both 
+modifiers independently. 'M-- C-u'?
+
+Or this could be a separate command or set of commands. Maybe a keymap. 
+repeat-mode wouldn't help, though, if I understand your usage: any 
+intervening commands would break out of it. So some prefix seems 
+inevitable. Unless we add a command (e.g. a mode) that switches to this 
+way of operation until the mode is disabled.
+
+================================================================================
+Date: 2026-11-10T14:12:09+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86v76425li.fsf@gnu.org>
+In-Reply-To: <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com> (message from
+ Andrey Listopadov on Tue, 10 Nov 2026 14:07:28 +0300)
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+ <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+
+> Date: Tue, 10 Nov 2026 14:07:28 +0300
+> From: Andrey Listopadov <andreyorst@gmail.com>
+> Cc: Eli Zaretskii <eliz@gnu.org>, emacs-devel@gnu.org
+> 
+> Nov 9, 2026 17:08:22 Richard Stallman <rms@gnu.org>:
+> 
+> >   > As long as the code is well understood when it is accepted, and 
+> > it's
+> >   > clean and designed reasonably well, I don't see why this would be a
+> >   > problem any more than what we have now.
+> >
+> > I agree: just because code was generated by an LLM does not imply it is
+> > hard to understand.  Each such patch may be understandable, or not.
+> >
+> > On that issue, we know how to deal with LLM-written code -- as if it
+> > were written by someone we need to supervise.  We would have to be
+> > disciplined and do it without fail, not get lulled into taking it for
+> > granted.
+> 
+> Cryptic code wasn't my main point of concern that I tried to 
+> communicate.  It is the amounts of code team will have to process and 
+> maintain - LLMs make it that the act of "writing the code" is the easy 
+> part, which allows a lot more code to be submitted (see the recent 
+> discussion on vibespell, for an example). Reviewing and maintaining such 
+> amounts of code, submitted over the years may become problematic for a 
+> small team. And because (as I pointed earlier) authors may not understand 
+> the code they sent, expanding the team with new members to manage all 
+> that code can become a problem too.
+
+Please leave this problem to us, the Emacs maintainers.  It is our job
+to make sure code doesn't get installed without proper review.  (An
+exception is changes installed by people who have write access to the
+Git repository and are trusted to install code without review.)  If
+and when we see a problem with the amount of submitted changes, we
+will do whatever is necessary to deal with that: limit submissions,
+look for more reviewers, etc.
+
+> I understand, that Emacs already has a lot of code, and it is already a 
+> thing to deal with for the current team. Accepting LLM based 
+> contributions just may make it much worse in the long run.
+
+There's no reason to assume that we will be unable to cope with this,
+if and when it happens.
+
+> IMO, it's a point to be discussed, hence why I brought it up - if the 
+> team is collectively OK with that they will have to deal with code 
+> submission rates growing up at the rates LLMs allow for, then this point 
+> can be dismissed.
+
+We are okay, at least as long as this issue is just a theory for us.
+Let's wait until something like that actually happens, and take it
+from there.
+
+================================================================================
+Date: 2026-11-10T15:08:45+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <86tslo22z6.fsf@gnu.org>
+In-Reply-To: <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev> (message from
+ Dmitry Gutov on Tue, 10 Nov 2026 15:03:30 +0200)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev> <86cxsqtk1y.fsf@gnu.org>
+ <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev>
+
+> Date: Tue, 10 Nov 2026 15:03:30 +0200
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> >>> If you think that a minor mode which will allow this is reasonable,
+> >>> maybe that's good enough.  Another possibility would be to have a
+> >>> special value of prefix arg (e.g., "C-u C-u") to use the same backend
+> >>> as previous invocation, with a user option to reverse the meaning of
+> >>> "C-u C-u".
+> >> Would the use of 'C-u C-u' always make the commands prompt for
+> >> identifier to use.
+> > It would (and for the KIND as well), but that's usually what I need in
+> > these workflows, which chases some code until the answer is found.
+> > And the default for the symbol it offers is the symbol at point, so if
+> > that's what I want, it's only 2 keystrokes away.
+> 
+> Here is a draft with change that follows your description: 'C-u C-u M-.' 
+> uses the last "jump from" location as the origin for backend info.
+> 
+> There are a few rough edges:
+> - Unclear if this should work with every xref command. That would mean 
+> more potential clashes with others' prefix effects, and a need to 
+> document this somewhere in a common place. OT2H the benefits are there too.
+
+I don't think this should go beyond the particular command we are
+discussing.  As you point out, there are too many potential issues,
+and the need is not clear at all.
+
+> - No support for defaulting to the symbol at point (it uses whatever 
+> symbol is in the previous buffer).
+
+Hmm... why is that? why can't you use the symbol at point as the
+default?  Is this a technical problem or a deeper problem?
+
+================================================================================
+Date: 2026-11-10T15:26:50+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xQmoE-003Lrt-Mo@fencepost.gnu.org>
+In-Reply-To: <86mrrmknn7.fsf@gnu.org> (message from Eli Zaretskii on Fri, 06
+ Nov 2026 17:03:40 +0200)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87jymryxz1.fsf@spork.org>
+ <86ecczm4r9.fsf@gnu.org> <87fqxeysha.fsf@spork.org> <86mrrmknn7.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > as a hypothetical example: if i live in a territory that permits
+  > > slavery, and by law i am granted sole ownership of the products of that
+  > > forced labor, and then i use that to create contributions to gnu emacs,
+  > > complete with copyright assignment, and it is technically correct, and,
+  > > above all, you, the emacs maintainers are aware of how this was
+  > > produced, would it be ethical to accept those contributions?
+
+  > Our answer must be YES.
+
+  > Any other answer is a first step towards splitting our community along
+  > the many lines of political and ideological divides that have nothing
+  > to do with software freedoms.  Right now we have contributors from all
+  > over the world, despite the differences in their regimes and political
+  > systems, differences in ideologies, and even in the very
+  > interpretation of the notion of "freedom".  You are suggesting to
+  > subject the contributors to some examination of the principles they
+  > uphold, the ethics of their day-to-day activities, their views on
+  > matters of policies and important international events, etc.  This
+  > will immediately fracture our community into many different enclaves.
+
+The right not to be a slave is a fundamental human right.  We should
+refuse to participate in activities that involve owning slaves,
+or treating anyone like a slave.
+
+To refuse to use anything whose origin involved forced labor is much
+harder.  If a road was built or is maintained with forced labor (such
+chain gangs do exist in the US), do we have an obligation to refuse to
+drive or ride on it?  I think that relationship is too indirect to
+require rejection.  Also, I don't think that is an effective way to
+campaign to put an end to forced prison labor.
+
+The example that you're responding to is about where to draw the line
+-- it was designed to be a borderline case.  In general, we wouldn't
+know whether the developer of a contribution used slaves in its
+development.  Is rejecting the contributions where we happen to know
+about slaves a wise policy, if it surely goes with accepting a larger
+number of contributions which were developed with slaves but we didn't
+know?
+
+We don't reject contributions from companies such as Google and Amazon
+which are intentionally subjugating users.  These practices are not as
+evil as outright enslavement, but they are plenty nasty nonetheless.
+They don't literally force people to run their nonfree software, but
+most people describe this as "impossible to resist".
+
+Rejecting their useful contributions would not help us fight to stop
+their unjust practices.  We may as well accept the former, as long as
+we don't mute our condemnation of the latter.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-10T15:28:59+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <218e62c4-662a-4fac-9d19-33b173d448dc@gutov.dev>
+In-Reply-To: <86tslo22z6.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev> <86cxsqtk1y.fsf@gnu.org>
+ <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev> <86tslo22z6.fsf@gnu.org>
+
+On 10/11/2026 16:08, Eli Zaretskii wrote:
+>> Date: Tue, 10 Nov 2026 15:03:30 +0200
+>> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+>> From: Dmitry Gutov <dmitry@gutov.dev>
+>>
+>>>>> If you think that a minor mode which will allow this is reasonable,
+>>>>> maybe that's good enough.  Another possibility would be to have a
+>>>>> special value of prefix arg (e.g., "C-u C-u") to use the same backend
+>>>>> as previous invocation, with a user option to reverse the meaning of
+>>>>> "C-u C-u".
+>>>> Would the use of 'C-u C-u' always make the commands prompt for
+>>>> identifier to use.
+>>> It would (and for the KIND as well), but that's usually what I need in
+>>> these workflows, which chases some code until the answer is found.
+>>> And the default for the symbol it offers is the symbol at point, so if
+>>> that's what I want, it's only 2 keystrokes away.
+>>
+>> Here is a draft with change that follows your description: 'C-u C-u M-.'
+>> uses the last "jump from" location as the origin for backend info.
+>>
+>> There are a few rough edges:
+>> - Unclear if this should work with every xref command. That would mean
+>> more potential clashes with others' prefix effects, and a need to
+>> document this somewhere in a common place. OT2H the benefits are there too.
+> 
+> I don't think this should go beyond the particular command we are
+> discussing.  As you point out, there are too many potential issues,
+> and the need is not clear at all.
+
+So far you've mentioned two commands, I think. M-. as the main one but 
+also xref-find-by-kind?
+
+But if we do both of these, then it might make sense for "references" as 
+well, and for other-window and other-frame variations... and then it's 
+not clear which commands to except.
+
+>> - No support for defaulting to the symbol at point (it uses whatever
+>> symbol is in the previous buffer).
+> 
+> Hmm... why is that? why can't you use the symbol at point as the
+> default?  Is this a technical problem or a deeper problem?
+
+Just a technical one - I've looked at which changes it will require in 
+xref-read-identifier, and the results seemed pretty ugly. But there is 
+no hard barrier.
+
+================================================================================
+Date: 2026-11-10T15:31:38+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xQmss-003Q2Y-Mi@fencepost.gnu.org>
+In-Reply-To: <86mrrkik76.fsf@gnu.org> (message from Eli Zaretskii on Sat, 07
+ Nov 2026 20:13:17 +0200)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <87qzgwd4dg.fsf@dustycloud.org> <86mrrkik76.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Anyone who knows something about Emacs development and maintenance for
+  > the past decade or two can immediately see that the projects described
+  > in that blog are very different from what happens in Emacs nowadays.
+  > While the dangers described there are not unimaginable in Emacs, there
+  > are several factors that make them highly improbable.  One of them,
+  > perhaps the most important one, is that Emacs's codebase is very old
+  > and very stable, and that significantly affects the kinds of changes
+  > are being submitted most of the time, in ways that make those dangers
+  > much less likely to happen here.
+
+I'm sure you have seen a real difference, but does that mean Emacs is
+inherently safe from this?  I could imagine a few people deciding to
+rewrite some part or aspect of Emacs in a radical way using nonfree
+tools.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-10T15:31:56+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xQmtA-003QNh-EV@fencepost.gnu.org>
+In-Reply-To: <87qzgwd4dg.fsf@dustycloud.org> (message from Christine
+ Lemmer-Webber on Sat, 07 Nov 2026 10:54:03 -0500)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <87qzgwd4dg.fsf@dustycloud.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > In both cases, Armin and I do agree on something: that codebases which
+  > use these things become incomprehensible to people, who come to rely on
+  > AI agents to instead take over. It's merely whether you consider that
+  > upward progress or downward decline that we disagree on.
+
+I agree we need to avoid this.  I'll forward your message to FSF
+people thinking about the permanent criteria for including LLM output
+in GNU program sources.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-10T15:32:32+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xQmtk-003RnV-7n@fencepost.gnu.org>
+In-Reply-To: <87ik28aody.fsf@posteo.net> (message from Philip Kaludercic on
+ Sat, 07 Nov 2026 11:10:02 +0000)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <87tslwl528.fsf@gmail.com> <87fqxg49b6.fsf@posteo.net>
+ <86ld77on0i.fsf@gnu.org> <875wybdubd.fsf@dustycloud.org>
+ <87jymrkuoq.fsf@posteo.net> <86ld77m7my.fsf@gnu.org>
+ <87fqxfksfb.fsf@posteo.net> <87v76axr5r.fsf@gmail.com>
+ <861p8ymeay.fsf@gnu.org>
+ <CAP_d_8U95ixuyPhsu0ay=A9p_0ixsoRtXCph-ReJ-NtPpsycpw@mail.gmail.com>
+ <86ik2akn1i.fsf@gnu.org> <87bj81bsx8.fsf@posteo.net>
+ <864idtkuf4.fsf@gnu.org> <871p8xarz0.fsf@posteo.net>
+ <86se1dj6j9.fsf@gnu.org> <87ik28aody.fsf@posteo.net>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > And yes, it is easy to write a script around Bison which will produce
+  > > assembly or machine language directly.
+
+I actually worked on Bison.  Generating assembly code or machine code
+_for one target_ instead of C would be far more complex.
+And we would need to port it to each machine architecture.
+That would be enormous multiple duplication of effort.
+
+  >   The fact that Bison produces C
+  > > or C++ is just because of the Unix philosophy of each tool doing a
+  > > single job, that's all.
+
+We don't follow the "Unix philosophy".  In this particular
+case, the modular design is better because it leads to
+less code and requires less work to write, and less maintenance.
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-10T15:42:21+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <86ld7021f6.fsf@gnu.org>
+In-Reply-To: <218e62c4-662a-4fac-9d19-33b173d448dc@gutov.dev> (message from
+ Dmitry Gutov on Tue, 10 Nov 2026 16:28:59 +0200)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev> <86cxsqtk1y.fsf@gnu.org>
+ <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev> <86tslo22z6.fsf@gnu.org>
+ <218e62c4-662a-4fac-9d19-33b173d448dc@gutov.dev>
+
+> Date: Tue, 10 Nov 2026 16:28:59 +0200
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 10/11/2026 16:08, Eli Zaretskii wrote:
+> >> Date: Tue, 10 Nov 2026 15:03:30 +0200
+> >> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> >> From: Dmitry Gutov <dmitry@gutov.dev>
+> >>
+> >>>>> If you think that a minor mode which will allow this is reasonable,
+> >>>>> maybe that's good enough.  Another possibility would be to have a
+> >>>>> special value of prefix arg (e.g., "C-u C-u") to use the same backend
+> >>>>> as previous invocation, with a user option to reverse the meaning of
+> >>>>> "C-u C-u".
+> >>>> Would the use of 'C-u C-u' always make the commands prompt for
+> >>>> identifier to use.
+> >>> It would (and for the KIND as well), but that's usually what I need in
+> >>> these workflows, which chases some code until the answer is found.
+> >>> And the default for the symbol it offers is the symbol at point, so if
+> >>> that's what I want, it's only 2 keystrokes away.
+> >>
+> >> Here is a draft with change that follows your description: 'C-u C-u M-.'
+> >> uses the last "jump from" location as the origin for backend info.
+> >>
+> >> There are a few rough edges:
+> >> - Unclear if this should work with every xref command. That would mean
+> >> more potential clashes with others' prefix effects, and a need to
+> >> document this somewhere in a common place. OT2H the benefits are there too.
+> > 
+> > I don't think this should go beyond the particular command we are
+> > discussing.  As you point out, there are too many potential issues,
+> > and the need is not clear at all.
+> 
+> So far you've mentioned two commands, I think. M-. as the main one but 
+> also xref-find-by-kind?
+
+No, I meant only xref-find-by-kind.  M-. is less of a problem, IME.
+So if the solution works only for xref-find-by-kind, I'm okay with
+that.
+
+> >> - No support for defaulting to the symbol at point (it uses whatever
+> >> symbol is in the previous buffer).
+> > 
+> > Hmm... why is that? why can't you use the symbol at point as the
+> > default?  Is this a technical problem or a deeper problem?
+> 
+> Just a technical one - I've looked at which changes it will require in 
+> xref-read-identifier, and the results seemed pretty ugly. But there is 
+> no hard barrier.
+
+Can you elaborate about the difficulties?
+
+================================================================================
+Date: 2026-11-10T16:05:13+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86jymk20d2.fsf@gnu.org>
+In-Reply-To: <E1xQmss-003Q2Y-Mi@fencepost.gnu.org> (message from Richard
+ Stallman on Tue, 10 Nov 2026 09:31:38 -0500)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de>
+ <864idxpshy.fsf@gnu.org> <87cxslzicq.fsf@web.de>
+ <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <87qzgwd4dg.fsf@dustycloud.org> <86mrrkik76.fsf@gnu.org>
+ <E1xQmss-003Q2Y-Mi@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: cwebber@dustycloud.org, phil@hagelb.org, arne_bab@web.de,
+> 	jporterbugs@gmail.com, bugs@gnu.support, emacs-devel@gnu.org
+> Date: Tue, 10 Nov 2026 09:31:38 -0500
+> 
+>   > Anyone who knows something about Emacs development and maintenance for
+>   > the past decade or two can immediately see that the projects described
+>   > in that blog are very different from what happens in Emacs nowadays.
+>   > While the dangers described there are not unimaginable in Emacs, there
+>   > are several factors that make them highly improbable.  One of them,
+>   > perhaps the most important one, is that Emacs's codebase is very old
+>   > and very stable, and that significantly affects the kinds of changes
+>   > are being submitted most of the time, in ways that make those dangers
+>   > much less likely to happen here.
+> 
+> I'm sure you have seen a real difference, but does that mean Emacs is
+> inherently safe from this?  I could imagine a few people deciding to
+> rewrite some part or aspect of Emacs in a radical way using nonfree
+> tools.
+
+As I said, it isn't unimaginable.  But it is quite rare in Emacs to
+see such radical changes.  Moreover, if someone submits such a
+changeset, we always have a lot of eyes will on it, because we want to
+make sure such changes are in the right direction, well designed and
+maintainable in the long run.  And because Emacs is a very complex
+program with a lot of subtle aspects that no single person knows
+enough about, we usually ask everyone who is an expert in some parts
+of Emacs to review such patches.
+
+You can take the recent example of adding an incremental GC to Emacs:
+all the core developers and maintainers track that branch and
+participate in the relevant discussions.  And because these cases are
+rare in Emacs, it makes it possible for all those people to be part of
+the discussions and provide valuable inputs and ides.
+
+By contrast, the blog references in the message to which I responded
+clearly talks about projects very early in their life cycle and with a
+very different dynamics: they still frequently add major features,
+they are under a constant pressure to put out significant features and
+improvements in order not to "lose the race" to competing packages and
+products, etc. etc. -- all of these things are very different from our
+development dynamics.
+
+I'm not saying the danger doesn't exist, I'm saying that our
+development dynamics and practices make it significantly smaller
+because many factors that urge people to use LLM-generated code more
+and more don't exist here.
+
+================================================================================
+Date: 2026-11-10T16:19:04+01:00
+From: Anoncheg <vitalij@gmx.com>
+Subject: Why we have keys for C-c in built-in major-modes? Keys barrier.
+Message-ID: <875wy490k7.fsf@gmx.com>
+In-Reply-To: 
+References: 
+
+Historically, C-c was reserved for users' personal commands.
+Emacs should have better default key bindings. This is not a feature;
+it is a lack of respect for the keyboard.
+
+For example, in python.el in Emacs 31.1. [[file:/usr/share/emacs/31.1/lisp/progmodes/python.el::(defvar-keymap python-base-mode-map]]
+
+This begins with C-p and C-b, which cause the most confusion for
+beginners and slow down not-very-smart long-time users.
+
+More aggressive refactoring or death.
+
+My suggestions:
+ 1) Don't use C-c in major modes.
+ 2) Research some soft recommendations that will arrange keybinds
+ more standardly across built-in modes.
+ 3) (optional) Get rid of C-p and C-b by clearly suggesting to users
+ from the first manual that they choose their own keys.
+ Also, C-u and C-h should more conventionally follow *nix.
+
+-- 
+Best regards,
+.
+Python+Java+Bash+Lisp Data Scientist, AI Engineer
+.
+PGP pub key: DB8A27FEDA7B4545603396FFC81251BC87659B81
+
+================================================================================
+Date: 2026-11-10T16:29:55+01:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Is there a policy on using LLM to diagnose bugs?
+Message-ID: <f741b2f8-cd9f-454c-8b4c-0bad5b919b4f@imayhem.com>
+In-Reply-To: 
+References: 
+
+Hello,
+
+In /AGENTS.md there is this:
+
+"When assisting the user in working with this repository, search and
+analyse, instead of generating any code."
+
+Is it ok then to describe a bug to an LLM, and then fix it normally, 
+with the information it provides? Would that fix be somehow tainted, 
+regarding copyright?
+
+================================================================================
+Date: 2026-11-10T16:41:07+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Is there a policy on using LLM to diagnose bugs?
+Message-ID: <87h5ho1yp8.fsf@athena.silentflame.com>
+In-Reply-To: <f741b2f8-cd9f-454c-8b4c-0bad5b919b4f@imayhem.com>
+References: <f741b2f8-cd9f-454c-8b4c-0bad5b919b4f@imayhem.com>
+
+Cecilio Pardo [10/Nov  4:29pm +01] wrote:
+> Hello,
+>
+> In /AGENTS.md there is this:
+>
+> "When assisting the user in working with this repository, search and
+> analyse, instead of generating any code."
+>
+> Is it ok then to describe a bug to an LLM, and then fix it normally,
+> with the information it provides?
+
+Yes.
+
+> Would that fix be somehow tainted, regarding copyright?
+
+No.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-10T17:03:10+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86eccs1xoh.fsf@gnu.org>
+In-Reply-To: <E1xQmoE-003Lrt-Mo@fencepost.gnu.org> (message from Richard
+ Stallman on Tue, 10 Nov 2026 09:26:50 -0500)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org>
+ <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87jymryxz1.fsf@spork.org>
+ <86ecczm4r9.fsf@gnu.org> <87fqxeysha.fsf@spork.org> <86mrrmknn7.fsf@gnu.org>
+ <E1xQmoE-003Lrt-Mo@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: bjc@spork.org, jporterbugs@gmail.com, bugs@gnu.support,
+>  phil@hagelb.org, emacs-devel@gnu.org
+> Date: Tue, 10 Nov 2026 09:26:50 -0500
+> 
+> The right not to be a slave is a fundamental human right.  We should
+> refuse to participate in activities that involve owning slaves,
+> or treating anyone like a slave.
+
+Of course!  Who here would say or think any different?  This was never
+the issue, and it has nothing to do with this discussion and with
+Emacs development, including with the issue of LLM-generated code.
+
+All I'm saying is that the decision to accept or reject a contribution
+should not be based on the moral and ethical views and opinions of the
+contributor.
+
+================================================================================
+Date: 2026-11-10T17:15:32+01:00
+From: Benjamin Eskola <ben+lists@eskola.uk>
+Subject: Re: Human Emacs
+Message-ID: <09960726-7033-4bbd-ad27-8a431615cbbf@eskola.uk>
+In-Reply-To: <86eccs1xoh.fsf@gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87jymryxz1.fsf@spork.org> <86ecczm4r9.fsf@gnu.org>
+ <87fqxeysha.fsf@spork.org> <86mrrmknn7.fsf@gnu.org>
+ <E1xQmoE-003Lrt-Mo@fencepost.gnu.org> <86eccs1xoh.fsf@gnu.org>
+
+On 10.11.2026 16.03, Eli Zaretskii wrote:
+>> From: Richard Stallman <rms@gnu.org>
+>> Cc: bjc@spork.org, jporterbugs@gmail.com, bugs@gnu.support,
+>>   phil@hagelb.org, emacs-devel@gnu.org
+>> Date: Tue, 10 Nov 2026 09:26:50 -0500
+>>
+>> The right not to be a slave is a fundamental human right.  We should
+>> refuse to participate in activities that involve owning slaves,
+>> or treating anyone like a slave.
+> 
+> Of course!  Who here would say or think any different?  This was never
+> the issue, and it has nothing to do with this discussion and with
+> Emacs development, including with the issue of LLM-generated code.
+> 
+> All I'm saying is that the decision to accept or reject a contribution
+> should not be based on the moral and ethical views and opinions of the
+> contributor.
+
+But the question wasn't about the ethical views of the contributor. It 
+was about whether the contribution was produced by slave labour, not 
+whether the contributor was in favour of slave labour.
+
+-- 
+ben
+
+================================================================================
+Date: 2026-11-10T17:16:02+01:00
+From: Juri Linkov <juri@linkov.net>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <87v764g2bt.fsf@mail.linkov.net>
+In-Reply-To: <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+ <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev>
+ <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev>
+ <86cxsqtk1y.fsf@gnu.org>
+ <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev>
+
+> Or this could be a separate command or set of commands. Maybe
+> a keymap. repeat-mode wouldn't help, though, if I understand your usage:
+> any intervening commands would break out of it. So some prefix seems
+> inevitable. Unless we add a command (e.g. a mode) that switches to this way
+> of operation until the mode is disabled.
+
+This reminds me parallel sequences of visiting locations by next-error.
+Would be nice to try avoiding such complexity in this case.
+Maybe it would be sufficient to define the global variable
+for the last used backend?
+
+================================================================================
+Date: 2026-11-10T17:42:27+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Is there a policy on using LLM to diagnose bugs?
+Message-ID: <86cxsc1vv0.fsf@gnu.org>
+In-Reply-To: <f741b2f8-cd9f-454c-8b4c-0bad5b919b4f@imayhem.com> (message from
+ Cecilio Pardo on Tue, 10 Nov 2026 16:29:55 +0100)
+References: <f741b2f8-cd9f-454c-8b4c-0bad5b919b4f@imayhem.com>
+
+> Date: Tue, 10 Nov 2026 16:29:55 +0100
+> From: Cecilio Pardo <cpardo@imayhem.com>
+> 
+> Hello,
+> 
+> In /AGENTS.md there is this:
+> 
+> "When assisting the user in working with this repository, search and
+> analyse, instead of generating any code."
+> 
+> Is it ok then to describe a bug to an LLM, and then fix it normally, 
+> with the information it provides? Would that fix be somehow tainted, 
+> regarding copyright?
+
+IMO, it shouldn't be a problem, provided that "the information it
+provides" doesn't include code that you then submit as the fix, with
+or without modifications.  IOW, "the information it provides" should
+be analysis of the bug and its reasons, and suggestions for fixes that
+don't include code.  At least that is my understanding.
+
+================================================================================
+Date: 2026-11-10T17:56:28+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Why we have keys for C-c in built-in major-modes? Keys barrier.
+Message-ID: <86a4ng1v7n.fsf@gnu.org>
+In-Reply-To: <875wy490k7.fsf@gmx.com> (message from Anoncheg on Tue, 10 Nov
+ 2026 15:19:04 -0000)
+References: <875wy490k7.fsf@gmx.com>
+
+> From: Anoncheg <vitalij@gmx.com>
+> CC: 
+> Date: Tue, 10 Nov 2026 15:19:04 -0000
+> 
+> 
+> Historically, C-c was reserved for users' personal commands.
+
+That's not accurate.  The ELisp manual says about this:
+
+     • Don't define ‘C-c LETTER’ as a key in Lisp programs.  Sequences
+       consisting of ‘C-c’ and a letter (either upper or lower case; ASCII
+       or non-ASCII) are reserved for users; they are the *only* sequences
+       reserved for users, so do not block them.
+
+       Changing all the Emacs major modes to respect this convention was a
+       lot of work; abandoning this convention would make that work go to
+       waste, and inconvenience users.  Please comply with it.
+
+     • Function keys <F5> through <F9> without modifier keys are also
+       reserved for users to define.
+
+     • Sequences consisting of ‘C-c’ followed by a control character or a
+       digit are reserved for major modes.
+
+     • Sequences consisting of ‘C-c’ followed by ‘{’, ‘}’, ‘<’, ‘>’, ‘:’
+       or ‘;’ are also reserved for major modes.
+
+     • Sequences consisting of ‘C-c’ followed by any other ASCII
+       punctuation or symbol character are allocated for minor modes.
+       Using them in a major mode is not absolutely prohibited, but if you
+       do that, the major mode binding may be shadowed from time to time
+       by minor modes.
+
+So only "C-c <LETTER>" sequences are reserved for users.
+
+> Emacs should have better default key bindings. This is not a feature;
+> it is a lack of respect for the keyboard.
+> 
+> For example, in python.el in Emacs 31.1. [[file:/usr/share/emacs/31.1/lisp/progmodes/python.el::(defvar-keymap python-base-mode-map]]
+> 
+> This begins with C-p and C-b, which cause the most confusion for
+> beginners and slow down not-very-smart long-time users.
+
+This is in agreement with the above guidelines for major modes.
+
+> My suggestions:
+>  1) Don't use C-c in major modes.
+>  2) Research some soft recommendations that will arrange keybinds
+>  more standardly across built-in modes.
+>  3) (optional) Get rid of C-p and C-b by clearly suggesting to users
+>  from the first manual that they choose their own keys.
+>  Also, C-u and C-h should more conventionally follow *nix.
+
+I think it's too late to change these conventions that are in place
+for several decades, and generations of Emacs users have them burned
+into their muscle memories.  We'd be lynched if we change such basic
+bindings.
+
+================================================================================
+Date: 2026-11-10T18:05:16+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <868q301usz.fsf@gnu.org>
+In-Reply-To: <09960726-7033-4bbd-ad27-8a431615cbbf@eskola.uk> (message from
+ Benjamin Eskola on Tue, 10 Nov 2026 16:15:32 +0000)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87jymryxz1.fsf@spork.org> <86ecczm4r9.fsf@gnu.org>
+ <87fqxeysha.fsf@spork.org> <86mrrmknn7.fsf@gnu.org>
+ <E1xQmoE-003Lrt-Mo@fencepost.gnu.org> <86eccs1xoh.fsf@gnu.org>
+ <09960726-7033-4bbd-ad27-8a431615cbbf@eskola.uk>
+
+> Date: Tue, 10 Nov 2026 16:15:32 +0000
+> Cc: bjc@spork.org, jporterbugs@gmail.com, bugs@gnu.support, phil@hagelb.org,
+>  emacs-devel@gnu.org
+> From: Benjamin Eskola <ben+lists@eskola.uk>
+> 
+> On 10.11.2026 16.03, Eli Zaretskii wrote:
+> >> From: Richard Stallman <rms@gnu.org>
+> >> Cc: bjc@spork.org, jporterbugs@gmail.com, bugs@gnu.support,
+> >>   phil@hagelb.org, emacs-devel@gnu.org
+> >> Date: Tue, 10 Nov 2026 09:26:50 -0500
+> >>
+> >> The right not to be a slave is a fundamental human right.  We should
+> >> refuse to participate in activities that involve owning slaves,
+> >> or treating anyone like a slave.
+> > 
+> > Of course!  Who here would say or think any different?  This was never
+> > the issue, and it has nothing to do with this discussion and with
+> > Emacs development, including with the issue of LLM-generated code.
+> > 
+> > All I'm saying is that the decision to accept or reject a contribution
+> > should not be based on the moral and ethical views and opinions of the
+> > contributor.
+> 
+> But the question wasn't about the ethical views of the contributor. It 
+> was about whether the contribution was produced by slave labour, not 
+> whether the contributor was in favour of slave labour.
+
+Unless you are willing to claim that whoever practices slavery might
+consider it illegitimate, or that someone could condone slavery, but
+object to use its products, I don't see the difference, not for the
+purposes of this discussion.
+
+IOW, if the question _were_ about a contributor who is in favor of
+slave labor, would your answer be different?
+
