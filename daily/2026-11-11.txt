@@ -1,0 +1,1958 @@
+emacs-devel messages from 2026-11-10T18:15:00+01:00 to 2026-11-11T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-10T18:29:54+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [nongnu] elpa/vm 9e079dbb5f 1/4: vm-make-message-id: Handle new
+ return convention of (current-time)
+Message-ID: <jwvqzgsr416.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261110150550.C6754C1CB22@vcs2.savannah.gnu.org>
+References: <179432315030.20502.2619730965507055866@vcs2.savannah.gnu.org>
+ <20261110150550.C6754C1CB22@vcs2.savannah.gnu.org>
+
+> --- a/lisp/vm-misc.el
+> +++ b/lisp/vm-misc.el
+> @@ -1551,10 +1551,15 @@ how it marked its own soft breaks; VM never unwrapped them."
+>  			       (string-match "\\." mail-host-address))
+>  			  mail-host-address)
+>  			 (t "gargle.gargle.HOWL")))
+> -    (format "<%d.%d.%d.%d@%s>"
+> -	    (car time) (nth 1 time) (nth 2 time)
+> -	    (random 1000000)
+> -	    hostname)))
+> +    (if (consp (cdr time))
+> +        (format "<%d.%d.%d.%d@%s>"
+> +	        (car time) (nth 1 time) (nth 2 time)
+> +	        (random 1000000)
+> +	        hostname)
+> +      (format "<%.6f.%d@%s>"
+> +	      (/ (car time) (float (cdr time)))
+> +	      (random 1000000)
+> +	      hostname))))
+
+If you replace
+
+    (/ (car time) (float (cdr time)))
+
+with
+
+    (float-time time)
+
+the code should also work with the old representation.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-10T18:41:00+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87se18twif.fsf@posteo.net>
+In-Reply-To: <avLT1inBrLB92lbT@tuxteam.de>
+References: <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <874idpupw5.fsf@posteo.net>
+ <avLT1inBrLB92lbT@tuxteam.de>
+
+tomas@tuxteam.de writes:
+
+> On Tue, Nov 10, 2026 at 07:06:21AM +0000, Philip Kaludercic wrote:
+>> tomas@tuxteam.de writes:
+>> 
+>> > On Tue, Nov 10, 2026 at 12:24:23AM +0100, Dr. Arne Babenhauserheide wrote:
+>> >> Philip Kaludercic <philipk@posteo.net> writes:
+>> >> 
+>> >> > The "preferred form" question is a category error here
+>> >> 
+>> >> I’m not sure I understand correctly what you want to say with that.
+>> >> 
+>> >> Do you mean it’s impossible to define a preferred form for modifying?
+>> >
+>> > I think this shows the weakness of the "GNU model" wrt the current
+>> > situation. For Philip it's perfectly OK for "an LLM" working along
+>> > a human. The human fixes and enhances directly the .el file, and
+>> > whenever a change worth backporting arrives in the C++, it tells the
+>> > LLM "please, LLM, backport this fix to me".
+>> 
+>> FWIW I was not under the impression that we were talking about
+>> backporting.
+>> 
+>> > (Generative) LLMs and humans peacefully working together (please,
+>> > Philip, don't take this as sarcasm -- it just took me a while to wrap
+>> > my brain around that). 
+>> 
+>> I totally get that, just so you know I am not an advocate of LLMs and do
+>> not use them for coding myself due to similar concerns as what you and
+>> Arne presumably share.  I am just trying to be realistic about
+>> the capabilities that we can observe and how people want/do use them.
+>> My advocacy is for the developers of ELPA packages to use the tools and
+>> methods they prefer, as long as these are consistent with the principles
+>> of free software.
+>
+> Oh, sorry for mixing things up and thanks for clearing up (and your
+> patience).
+
+No problem, and I really appreciate you saying that!
+
+>> >                        Then, of course, there is no "preferred
+>> > source", that would be an anthropocentric view.
+>> >
+>> > Me (and possibly Arne) stand squarely [1] in this anthropocentric place.
+>> > The GNU implicitly does, because it was conceived at a time nothing
+>> > else made sense. It'll have to change.
+>> >
+>> >> Or that both versions form the preferred form together?
+>> >> To make it viable to transfer improvements from the one into the other.
+>> >> Can’t do that if you can’t diff to the shared state.
+>> >
+>> > Not without LLM help. You do create a dependency.
+>> 
+>> Please see my other message, this concrete discussion is not related to
+>> LLMs.  They as just accelerators, but in the case of porting or
+>> backporting changes between translations, they can just as well be done
+>> by human hand.
+>
+> I see -- probably, not putting "by hand" at a disadvantage would require
+> extra effort?
+
+I would guess so, people who have actual experiences with agentic
+systems will be in a better position to comment on this, but I think it
+is reasonable that we want the generated code to still be "people
+sized", so that you can still locally reason about it, it isn't overly
+verbose (remember that GenAI companies are still making money per used
+token so they usually aren't that interested in terseness), uses
+sensible abstractions, etc.
+
+> Cheers
+
+================================================================================
+Date: 2026-11-10T18:54:43+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87o6bwtvvk.fsf@posteo.net>
+In-Reply-To: <87mrrhdk8a.fsf@web.de>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>>> To make it viable to transfer improvements from the one into the other.
+>>> Can’t do that if you can’t diff to the shared state.
+>>
+>> I cannot parse your claim here.  If there is a new feature in program X,
+>> you take a look at the diff and re-implement the feature in program Y.
+>> If the translation is faithful, as I understand to be the case with
+>> vibe-spell, it is easier since you probably can match function names,
+>> but otherwise you just re-implement the feature.  "OK, so language X now
+>> also opens the file /etc/foo and check for a flag, sure can write that
+>> too in language Y".  I really don't get the confusion here?
+>
+> The described process is: "point <tool> at <source diff>".
+>
+> Not "tell <tool> to implement <described feature>".
+
+What described process?  I think that there is some miscommunication
+here.  I am trying to establish that vibe-code.el qualifies as
+"preferred form of the work for making modifications to it" and that it
+is an independent development from nuspell, of which it was initially
+translated, incidentally using LLMs.
+
+> That’s why whatever tool is used requires both sources: you need to know
+> what C++ the elisp corresponds to to know what changed. At the very
+> least you need a reference to the exact commit that got processed.
+
+I don't see why you need the exact commit for any of this.  The source
+code of vibe-spell is sensibly editable as is.  You can add any feature,
+even if someone gives you just a high-level prose specification of the
+feature, directly to vibe-spell without having to make the change to the
+C++ codebase first.  But I strongly suspect that that is not what you
+mean.
+
+> Sure, you could try another way, but that’s not what Augusto plans to
+> do and not how he worked until now, so viability is speculation.
+
+We have to distinguish the questions of what Augusto has done, what he
+plans to do and what anyone is capable of doing.  Only the latter is
+relevant when it comes to the question of preferred source viz-a-viz
+free software.
+
+> (not to forget in all the details: as long as there are no fully free
+>  tools that can do this (there are no fully free LLMs), this intended
+>  process adds a dependency on a proprietary tool as requirement to keep
+>  sources in sync, as well as deep copyright infringement risks if
+>  training data got reproduced with too little obfuscation)
+
+Please, if you are just participating in this thread with the intention
+of presenting unsubstantiated, motivated reasoning to reject a package
+because it was LLM translated, I would kindly ask you to let it be.  I
+have to clarify that there is no dependency on LLMs or any other
+proprietary tools to maintain, build or use the package.  These
+discussions are incredibly tiring and feel like a waste of time if the
+other parties don't even want to participate with their fellow humans in
+an honest manner.
+
+> Best wishes,
+> Arne
+
+================================================================================
+Date: 2026-11-10T18:57:59+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Why we have keys for C-c in built-in major-modes? Keys barrier.
+Message-ID: <87jymktvq3.fsf@posteo.net>
+In-Reply-To: <875wy490k7.fsf@gmx.com>
+References: <875wy490k7.fsf@gmx.com>
+
+Anoncheg <vitalij@gmx.com> writes:
+
+> Historically, C-c was reserved for users' personal commands.
+> Emacs should have better default key bindings. This is not a feature;
+> it is a lack of respect for the keyboard.
+>
+> For example, in python.el in Emacs 31.1. [[file:/usr/share/emacs/31.1/lisp/progmodes/python.el::(defvar-keymap python-base-mode-map]]
+>
+> This begins with C-p and C-b, which cause the most confusion for
+> beginners and slow down not-very-smart long-time users.
+>
+> More aggressive refactoring or death.
+>
+> My suggestions:
+>  1) Don't use C-c in major modes.
+
+Conventionally, C-c C-... prefix has been that of major modes, while C-x
+... is that for global commands.  If you take a look at any larger major
+mode (AucTeX, Proof General, SLIME, ...) they all use C-c
+C-... extensively and it would be a massive undertaking and major
+annoyance to change that.
+
+>  2) Research some soft recommendations that will arrange keybinds
+>  more standardly across built-in modes.
+>  3) (optional) Get rid of C-p and C-b by clearly suggesting to users
+>  from the first manual that they choose their own keys.
+>  Also, C-u and C-h should more conventionally follow *nix.
+
+================================================================================
+Date: 2026-11-10T19:19:30+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: master 5112dc5216b 2/3: Add heuristic for VC packages to avoid
+ duplicate dependencies
+Message-ID: <87fqx8tuq7.fsf@posteo.net>
+In-Reply-To: <jwvld71u5nd.fsf-monnier+emacs@gnu.org>
+References: <179408406913.25215.17958733940096234832@vcs2.savannah.gnu.org>
+ <20261107204109.A1FDEC1F55B@vcs2.savannah.gnu.org>
+ <jwv5wy6r63c.fsf-monnier+emacs@gnu.org> <87pkwev734.fsf@posteo.net>
+ <jwvfqxaufw3.fsf-monnier+emacs@gnu.org>
+ <RuGz6KDzWZh6Q-oS7vBHZYtSjFpcHh918UvWVGtULvp9bvaR4UJLrdEYq3ny_W460Aohj41VDuEQeQb1qfayVW1z7k9VTpj3PrJUuSGtPEk=@proton.me>
+ <jwva4nhvq56.fsf-monnier+emacs@gnu.org> <87ld71vm3h.fsf@posteo.net>
+ <jwvld71u5nd.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+>>>>> Hmm... why does it perform such a scan?
+>>>>> I'd have expected that it looks at the `Package-Requires:` header of the
+>>>>> main file only.
+>>>>
+>>>> ./A
+>>>> ├── A-1.el      ;; Package-Requires: ((A "0"))
+>>>> ├── A-2.el      ;; Package-Requires: ((A-1 "0") (B "0"))
+>>>> └── A.el        ;; Package-Requires: ()
+>>>>
+>>>> If we only look at A.el only, A-2.el's dependency on B will be ignored.
+>>>
+>>> I don't see why that's the problem: the users asked to install A only.
+>>> The fact that `A-2.el` happens to end up in the `load-path` is just an
+>>> "internal detail".
+>>>
+>>> If they want to use A-2 as well, they should install it (which
+>>> presumably would add a symlink from directory `A-2` to directory `A`
+>>> and then look at the headers of `A-2.el`, ...).
+>>>
+>>> Of course, we could be more proactive: *after* installing `A` (and hence
+>>> consulting the headers of `A.el`), we could scan the other files and ask
+>>> the users whether they also want to install those.
+>>>
+>>> [ Note also that I've seen files `FOO.el` with headers like
+>>>   `Package-Requires:` even when there's no intention to make a package
+>>>   FOO out of it, so the scan risks finding packages that don't exist.  ]
+>>
+>> That would certainly also be an option, but my design decision when
+>> implementing this was to be more careful and install all dependencies in
+>> case they are necessary.  The change we are discussing just tries to
+>> improve this overcorrection by a bit.  Another idea would be to prompt
+>> the user what dependencies they want to have installed.
+>
+> An intermediate point would be to auto-install the dependencies listed
+> in the main file, and then prompt for the ones listed in the
+> other files (and, only after the installation of the package is done,
+> to avoid the circularity).
+
+Sure, if there were a need for this, we can implement a user option to
+that effect, but I suspect that it is not really needed.  I am guessing
+it would have the following values:
+
+- no-dependencies
+- manual-selection
+- main-automatic
+- all-automatic
+
+If any further bug reports follow up on this, it would make sense to
+follow up on it, but until then _I_ am fine with the current
+over-approximation that this change will have hopefully improved on.
+
+One thing we also have to keep in mind is that any prompting will annoy
+people who use the :vc keyword for use-package, since I understand
+people want to use this to automatically bootstrap a configuration from
+just an init.el.
+
+================================================================================
+Date: 2026-11-10T20:00:18+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87qzgscy0t.fsf@web.de>
+In-Reply-To: <87o6bwtvvk.fsf@posteo.net>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+>> The described process is: "point <tool> at <source diff>".
+>>
+>> Not "tell <tool> to implement <described feature>".
+>
+> What described process?
+
+The process Augusto wants to use.
+
+> I am trying to establish that vibe-code.el qualifies as
+> "preferred form of the work for making modifications to it"
+
+If the intention is to effectively cherry-pick changes from nuspell
+diffs through LLM, it’s not plausible that changes would preferrably be
+done in vibe-code.el – so it wouldn’t be the preferred form of making
+modifications.
+
+Even more: doing changes in vibe-code.el might break the intended process.
+
+Similar to when you mod games: you can mod software, but mods usually
+break on update or break updates.
+
+>> That’s why whatever tool is used requires both sources: you need to know
+>> what C++ the elisp corresponds to to know what changed. At the very
+>> least you need a reference to the exact commit that got processed.
+>
+> I don't see why you need the exact commit for any of this.
+
+Because the intention is to use the git diffs from nuspell. You don’t
+have them if you don’t have the exact commit.
+
+> You can add any feature, even if someone gives you just a high-level
+> prose specification of the feature, directly to vibe-spell
+
+So why is that not the process Augusto wants to use?
+
+>> Sure, you could try another way, but that’s not what Augusto plans to
+>> do and not how he worked until now, so viability is speculation.
+>
+> We have to distinguish the questions of what Augusto has done, what he
+> plans to do and what anyone is capable of doing.  Only the latter is
+> relevant when it comes to the question of preferred source viz-a-viz
+> free software.
+
+We’re looking at a specific case. Anything you see in the source only
+applies to the exact approach of Augusto.
+
+Whether what Augusto has done is possible by using a different approach
+is speculative.
+
+> I have to clarify that there is no dependency on LLMs or any other
+> proprietary tools to maintain, build or use the package.
+
+And I think that that assertion is wrong, because this is not what
+Augusto wants to do.
+
+> These discussions are incredibly tiring and feel like a waste of time
+> if the other parties don't even want to participate with their fellow
+> humans in an honest manner.
+
+They are, which is why I am open and honest about what I’m talking
+about.
+
+That you don’t like my position doesn’t make my position dishonest.
+
+You are speculating what may be possible in case something different
+were done than what’s intended.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-10T20:20:15+01:00
+From: chad <yandros@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <CAO2hHWZn70WTGSCmkjYp-=rXjY4xSm4GnWg_19h1b0XmscULZA@mail.gmail.com>
+In-Reply-To: <87qzgscy0t.fsf@web.de>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+
+On Tue, Nov 10, 2026 at 2:03 PM Dr. Arne Babenhauserheide <arne_bab@web.de>
+wrote:
+
+>
+> The process Augusto wants to use.
+>
+
+This is a misreading, or perhaps a mis-remembering.
+
+
+> If the intention is to effectively cherry-pick changes from nuspell
+> diffs through LLM,
+
+
+That might be true, but it's not "the intention". What the OP actually said
+was basically "IFF in the future there is some patch to the C version that
+I want to include in the elisp version, I *could* do that by asking an agent
+to absorb both versions and generate an elisp patch, rather than by just
+having the agent start over from scratch".
+
+This is important in the context of agent-assisted coding, because, at
+least in semi-recent practice, it is unfortunately common for coding
+agents to "fix problems" by starting over, at least for large sections of
+a codebase.
+
+I saw no evidence of anyone claiming either an intention or a desire
+to address all, most, or even necessarily any changes to the elisp
+version by reverting partially or wholly to the C version; the poster
+was instead saying that, in the case that there is a specific change
+to the C code, the problem of "rewriting large chunks of the code"
+(a current version of the CADT problem) can be avoided.
+
+This distinction has given rise to different peoples having distinct
+conversations "past" one another, an unfortunately common
+occurrence, especially in on-line conversations. I hope that my
+addition will help defray that; if I am unsuccessful, please
+accept my apologies to all involved for adding to the volume.
+
+I hope this helps,
+~Chad
+
+================================================================================
+Date: 2026-11-10T20:22:06+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87bj7wtrtv.fsf@posteo.net>
+In-Reply-To: <87qzgscy0t.fsf@web.de>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de>
+
+Top-posting to keep this thread from blowing up:
+
+Abstractly speaking, there may be multiple methods to achieve a goal.
+For software freedom we are concerned with the existence of plausible
+method to achieve the goal which doesn't depend on non-free software.
+If a maintainer decides to use another method, that is their choice, but
+that doesn't matter.  Do we at least agree on that?
+
+Concretely speaking, nothing about vibe-spell requires anyone to use
+non-free software to change the software or even to backport changes.
+It is NOT unreasonable to do so by hand, it will just take you
+comparatively more time -- the decision of a maintainer to take this
+path or another is entirely their own, and we cannot force a maintainer
+to use free software as long as their choice doesn't require others to
+not do so.  Are we on the same page on this point as well?
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+>> I don't see why you need the exact commit for any of this.
+>
+> Because the intention is to use the git diffs from nuspell. You don’t
+> have them if you don’t have the exact commit.
+>
+>> You can add any feature, even if someone gives you just a high-level
+>> prose specification of the feature, directly to vibe-spell
+>
+> So why is that not the process Augusto wants to use?
+>
+>>> Sure, you could try another way, but that’s not what Augusto plans to
+>>> do and not how he worked until now, so viability is speculation.
+>>
+>> We have to distinguish the questions of what Augusto has done, what he
+>> plans to do and what anyone is capable of doing.  Only the latter is
+>> relevant when it comes to the question of preferred source viz-a-viz
+>> free software.
+>
+> We’re looking at a specific case. Anything you see in the source only
+> applies to the exact approach of Augusto.
+>
+> Whether what Augusto has done is possible by using a different approach
+> is speculative.
+>
+>> I have to clarify that there is no dependency on LLMs or any other
+>> proprietary tools to maintain, build or use the package.
+>
+> And I think that that assertion is wrong, because this is not what
+> Augusto wants to do.
+>
+>> These discussions are incredibly tiring and feel like a waste of time
+>> if the other parties don't even want to participate with their fellow
+>> humans in an honest manner.
+>
+> They are, which is why I am open and honest about what I’m talking
+> about.
+>
+> That you don’t like my position doesn’t make my position dishonest.
+>
+> You are speculating what may be possible in case something different
+> were done than what’s intended.
+
+================================================================================
+Date: 2026-11-10T22:04:22+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87ld70csa1.fsf@web.de>
+In-Reply-To: <87bj7wtrtv.fsf@posteo.net>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> Top-posting to keep this thread from blowing up:
+
+No need to include the rest below for that. I can look back to previous
+messages. That’s pretty nice with E-Mail.
+
+> Abstractly speaking, there may be multiple methods to achieve a goal.
+> For software freedom we are concerned with the existence of plausible
+> method to achieve the goal which doesn't depend on non-free software.
+
+There’s an important distinction: we don’t just need a plausible, but a
+practical way. A way that has not been shown repeatedly to fail.
+
+> If a maintainer decides to use another method, that is their choice, but
+> that doesn't matter.  Do we at least agree on that?
+
+Only on the condition that that choice does not make it harder for
+people to take over without unfree software.
+
+> Concretely speaking, nothing about vibe-spell requires anyone to use
+> non-free software to change the software or even to backport changes.
+> It is NOT unreasonable to do so by hand, it will just take you
+> comparatively more time -- the decision of a maintainer to take this
+> path or another is entirely their own, and we cannot force a maintainer
+> to use free software as long as their choice doesn't require others to
+> not do so.  Are we on the same page on this point as well?
+
+That depends on the definition of "require". People can mod proprietary
+software, and are doing that every day with games. But we do not
+consider doing only binary releases and locking away the source as
+permissible for GNU maintainers.
+
+Therefore "require" can’t mean "it is in theory possible to use Free
+Software, but it won’t work well". The condition must be stronger. For
+example: The tool the maintainer uses must not make it impractical for
+other people to work on the package with purely Free Software.
+
+Actually still stronger than that: a pure Free Software system should be
+the best-supported one.
+
+We’re talking about GNU packages after all, not just about adhering to
+the GPL’s legal terms.
+
+And in the hermes discussion it was claified that a GNU package must not
+encourage people to use proprietary software.
+
+All LLM code I reviewed to date made usage with Free Software harder
+than the equivalent handwritten code.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-10T22:28:40+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <877biktlyw.fsf@posteo.net>
+In-Reply-To: <87o6c44dbz.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+
+Hi Augusto,
+
+please forgive the noise from the remainder of the thread.
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> Augusto Stoffel <arstoffel@gmail.com> writes:
+>
+>> Hi,
+>>
+>> I would like to submit the following package to Non-GNU ELPA:
+>>
+>>   https://github.com/astoff/vibe-spell
+>>
+>> It is a slop-rewrite of Hunspell/Nuspell in pure Elisp.  I think it
+>> might be useful for some users, since currently the only options for
+>> accessing a spellchecker involve compiling a third-party module (jinx)
+>> or suffering with the "ispell -a" interface.
+>>
+>> Also, I think this package is an interesting experiment in how far Elisp
+>> can be pushed.  It performs better than I would have guessed.
+>>
+>> Once this is online, I will update my jit-spell package to optionally
+>> make use of vibe-spell (since the latter is just a library, without UI).
+>
+> If you wouldn't mind, I think it would be better to wait this one out
+> for a bit before adding the package.  There has been the suggestion to
+> wait at least a month after a LLM generated package has been written
+> before adding it to any archive, just to see how it pans out and if the
+> author is interested in maintaining it in the long term.  At almost 3000
+> lines of code, it is also a chunk to review.  Are you planning to
+> rewrite anything by hand (e.g. I notice that all docstrings are
+> comments)?  My recommendation would be to advertise the package in
+> communities online and see how people respond to it in day-to-day usage.
+
+Returning back to the actual package, I read the entire source and
+collected a few comments and suggestions here:
+
+================================================================================
+Date: 2026-11-10T22:38:02+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <8733t8tlja.fsf@posteo.net>
+In-Reply-To: <87ld70csa1.fsf@web.de>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <87ld70csa1.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+
+[...]
+
+>> Abstractly speaking, there may be multiple methods to achieve a goal.
+>> For software freedom we are concerned with the existence of plausible
+>> method to achieve the goal which doesn't depend on non-free software.
+>
+> There’s an important distinction: we don’t just need a plausible, but a
+> practical way. A way that has not been shown repeatedly to fail.
+
+For all intents and purposes, "practical" and "plausible" are synonyms here.
+
+>> If a maintainer decides to use another method, that is their choice, but
+>> that doesn't matter.  Do we at least agree on that?
+>
+> Only on the condition that that choice does not make it harder for
+> people to take over without unfree software.
+
+Yes.
+
+>> Concretely speaking, nothing about vibe-spell requires anyone to use
+>> non-free software to change the software or even to backport changes.
+>> It is NOT unreasonable to do so by hand, it will just take you
+>> comparatively more time -- the decision of a maintainer to take this
+>> path or another is entirely their own, and we cannot force a maintainer
+>> to use free software as long as their choice doesn't require others to
+>> not do so.  Are we on the same page on this point as well?
+>
+> That depends on the definition of "require". People can mod proprietary
+> software, and are doing that every day with games. But we do not
+> consider doing only binary releases and locking away the source as
+> permissible for GNU maintainers.
+>
+> Therefore "require" can’t mean "it is in theory possible to use Free
+> Software, but it won’t work well". The condition must be stronger. For
+> example: The tool the maintainer uses must not make it impractical for
+> other people to work on the package with purely Free Software.
+>
+> Actually still stronger than that: a pure Free Software system should be
+> the best-supported one.
+
+Yes, but where "best" means "as good as anything else" not "strictly
+better".
+
+> We’re talking about GNU packages after all, not just about adhering to
+> the GPL’s legal terms.
+>
+> And in the hermes discussion it was claified that a GNU package must not
+> encourage people to use proprietary software.
+>
+> All LLM code I reviewed to date made usage with Free Software harder
+> than the equivalent handwritten code.
+
+OK, but that is anecdotal evidence and doesn't entail that LLM generated
+code MUST have bad repercussions on free software.  If you think
+otherwise, please explain why EVERY usage of an LLM to aid a developer
+to write software harms software freedom for people who don't use LLMs.
+
+> Best wishes,
+> Arne
+
+================================================================================
+Date: 2026-11-11T02:56:38+01:00
+From: Ellie <el@horse64.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <a1264310-8adf-4177-99bc-a83ef2f74f4c@horse64.org>
+In-Reply-To: <87bj7x2g18.fsf@athena.silentflame.com>
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org> <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org>
+ <87bj7x2g18.fsf@athena.silentflame.com>
+
+On 11/10/26 09:26, Sean Whitton wrote:
+>> On 11/9/26 13:36, Eli Zaretskii wrote:
+>> So wouldn't it make sense to wait and not allow LLM contributions until
+>> that happened?
+> 
+> That is exactly what we have been doing.
+> 
+
+I don't see how that would be the case unless there's been an LLM ban. 
+(My apologies if that's the case and I missed it.)
+
+A ban might seem like an active option, but I disagree that it is. In 
+terms of waiting for guidance it's to em actually enforcing being 
+passive, since a lot of coders seem to be jumping the gun right now if 
+not stopped.
+
+Regards,
+
+Ellie
+
+================================================================================
+Date: 2026-11-11T08:44:33+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87qzgru80u.fsf@gmail.com>
+In-Reply-To: <877biktlyw.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net>
+
+Thanks!  In due time I'll go over and apply the suggestions that make
+sense to me.
+
+For now, let me comment a bit on generalities below.
+
+On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+
+> @@ -157,6 +159,10 @@ If the check exceeds `vibe-spell-check-time-limit', return `timeout'."
+>    (or (length> word -max-word-length)
+>        (let* ((current-time-list nil)
+>               (-time-limit (-time-limit-from-now vibe-spell-check-time-limit)))
+> +	;; The fact that you are using `throw'+`catch' for non-local
+> +	;; jumps is slightly concerning, at the size of the program it
+> +	;; can easily cause confusion when you make changes and forget
+> +	;; to consider that a function further down could throw something.
+>          (catch '-time-limit
+>            (-spell dict word)))))
+>  
+> @@ -290,6 +296,8 @@ Return non-nil if WORD was actually present and therefore removed."
+>                                 (round (* (- gc-elapsed (cdr -time-limit)) (cdr now)))))
+>          (setcdr -time-limit gc-elapsed)
+>          (when (> (car now) (car -time-limit))
+> +	  ;; Are you planning to use other values to throw?  Otherwise
+> +	  ;; I think you can simplify the `catch' logic above.
+>            (throw '-time-limit 'timeout))))))
+
+No, this is really the single intended use of a throw.  But we do need a
+TAG to catch, and we need a non-local exit in order to quit midway a
+calculation that's taking too long, so I don't know what simplification
+you had in mind.
+
+>  (defun -find-dictionary-base (name)
+> @@ -298,20 +306,26 @@ Return non-nil if WORD was actually present and therefore removed."
+>  ;; both a readable NAME.aff and a readable NAME.dic, and returns that
+>  ;; directory's `expand-file-name' of NAME.  Signals an error if no
+>  ;; directory in the list has both files.
+> -  (or (named-let recur ((tail vibe-spell-dictionary-path))
+> -        (when tail
+> -          (or (let ((dir (car tail)))
+> -                (let ((base (expand-file-name name dir)))
+> -                  (and (file-readable-p (concat base ".aff"))
+> -                       (file-readable-p (concat base ".dic"))
+> -                       base)))
+> -              (recur (cdr tail)))))
+> -      (user-error "\
+> +  
+> +  (catch 'ok
+> +    (dolist (dir vibe-spell-dictionary-path)
+> +      (let ((base (expand-file-name name dir)))
+> +        (and (file-readable-p (concat base ".aff"))
+> +             (file-readable-p (concat base ".dic"))
+> +             (throw 'ok base)))
+> +      (when (let ((dir (car tail)))
+> +              )
+> +        (recur (cdr tail))))
+> +    (user-error "\
+>  vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+> -                  name name)))
+> +                name name)))
+
+Okay, so that's a choice between readability and consistency.
+
+In fact, the first LLM translation of C++ came full of catch/throw and
+cl-block/cl-return (which uses the same internally).  It turns out that
+catch/throw is substantially slower -- but only when native compiled.
+
+So I picked a non-catchy looping construct.
+
+>  ;;;; Data structures
+>  
+> +;; even if :type isn't (currently) respected, it would still be great
+> +;; if you could annotate the fields in these structs to that when
+> +;; reading the source you can have an idea for what kind of values you
+> +;; are dealing with.
+>  (cl-defstruct (-prefix (:constructor -prefix-create))
+>    flag cross-product stripping appending cont-flags condition
+>    (bits (make-bool-vector 9 nil)))      ; see `-affix-bits'
+> @@ -351,6 +365,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>    (fullstrip nil)
+>    (checksharps nil)
+>    (forbid-warn nil)
+> +  ;; Using integers for these flags feels unnatural of C-y, is there
+> +  ;; no way you could use symbols/lists or bitvectors instead?
+
+Since the flags are dictionary-dependent (defined in the .aff file) and
+they are always one byte/character (if I'm not mistaken), I think it
+makes sense to use chars and strings for flags respectively flag lists?
+
+>    (compound-onlyin-flag 0)
+>    (circumfix-flag 0)
+>    (forbiddenword-flag 0)
+> @@ -429,13 +445,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  
+>  (defun -decode-flags-possible-alias (dict str)
+>  ;; Decode a .dic word's flags field STR, honoring flag aliases.
+> -  (let ((aliases (-dict-flag-aliases dict)))
+> -    (if (zerop (length aliases))
+> -        (-decode-flags dict str)
+> +  (if-let* ((aliases (-dict-flag-aliases dict)))
+>        (let ((idx (string-to-number str)))
+>          (if (and (> idx 0) (<= idx (length aliases)))
+>              (aref aliases (1- idx))
+> -          (error "vibe-spell: invalid flag alias %S" str))))))
+> +          (error "vibe-spell: invalid flag alias %S" str)))
+> +    (-decode-flags dict str)))
+>  
+>  (defun -flags-contain (flags flag)
+>  ;; Return non-nil if list of flag integers FLAGS contains FLAG.  A
+> @@ -519,12 +534,11 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; SPECS.
+>    (let ((n (length specs)))
+>      (and (>= (length word) n)
+> -         (let ((idx 0) (ok t))
+> -           (dolist (spec specs)
+> -             (unless (-condition-match-spec spec (aref word idx))
+> -               (setq ok nil))
+> -             (setq idx (1+ idx)))
+> -           ok))))
+> +	 (cl-loop for spec in specs
+> +		  for idx from 0
+> +		  unless (-condition-match-spec spec (aref word idx))
+> +		  return nil
+> +		  finally return t))))
+
+So, cl-loop... It feels like an entirely new PL and I try to avoid it at
+all costs.  Do you think that sentiment is too fringe?
+
+Anyway, I think cl-loop and named-let (which I chose as general looping
+construct) both share the disadvantage of being so flexible that one has
+no idea what they generally do without reading the body.
+
+>  (defun -condition-match-suffix (specs word)
+>  ;; Return non-nil if WORD's last (length SPECS) characters match
+> @@ -532,6 +546,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>    (let* ((n (length specs))
+>           (wlen (length word)))
+>      (and (>= wlen n)
+> +	 ;; here too you can just use `cl-loop'
+>           (let ((idx (- wlen n)) (ok t))
+>             (dolist (spec specs)
+>               (unless (-condition-match-spec spec (aref word idx))
+> @@ -666,12 +681,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; Return the `-prefix'/`-suffix' entries of affix TABLE as a plain
+>  ;; list.  Unlike `-affix-table-find', this does not filter by any
+>  ;; probe word.
+> -  (mapcar #'cdr (append table nil)))
+> +  (mapcar #'cdr (append table nil)))	;it would be better to use
+>  something like `cl-coerge' that avoids consing a new list if TABLE is
+>  already a list, or perhaps just use `seq-map'?
+
+This looks fishy, will check what's up.
+
+>  
+>  (defun -char-alpha-p (ch) (memq (get-char-code-property ch 'general-category)
+>                                  '(Ll Lu Lo Lm Lt)))
+> -(defun -char-upper-p (ch) (/= ch (downcase ch)))
+> +(defun -char-upper-p (ch) (/= ch (downcase ch))) ;why not use `char-uppercase-p'?
+
+There were some discrepancies in ß vs. ẞ or the dotless i, I forget
+which.
+
+>  (defun -char-lower-p (ch) (/= ch (upcase ch)))
+>  
+>  (defun -uppercase-at-compound-boundary-p (word i)
+> @@ -1144,9 +1165,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  
+>  (defun -string-at-p (s word i)
+>  ;; Return non-nil if string S occurs in WORD at index I.
+> -  (let ((end (+ i (length s))))
+> -    (and (<= end (length word))
+> -         (eq t (compare-strings s nil nil word i end)))))
+> +  (eq (string-match-p (regexp-quote s) word i) i))
+
+This allocates a string, and almost surely appears in several hot paths.
+A lot of the ugly and pedestrian code in the package is required for
+performance.
+
+>  (defun -compound-pattern-flag-ok-p (flag flags)
+>  ;; Return non-nil if a pattern's condition FLAG, 0 for none, is in FLAGS.
+> @@ -1233,37 +1252,31 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>    (any (lambda (f) (-flags-contain flags f)) (-dict-compound-rules-all-flags dict)))
+>  
+>  (defun -find-compound-rule-word (dict word)
+> -  (named-let recur ((tail (-homonyms dict word)))
+> -    (when tail
+> -      (or (let ((flags (car tail)))
+> -            (and (not (or (-flags-contain flags (-dict-need-affix-flag dict))
+> -                          (not (-compound-rules-has-any-flag-p dict flags))))
+> -                 (cons word flags)))
+> -          (recur (cdr tail))))))
+> +  (cl-loop for flags in (-homonyms dict word)
+> +	   thereis (and (not (or (-flags-contain flags (-dict-need-affix-flag dict))
+> +				 (not (-compound-rules-has-any-flag-p dict flags))))
+> +			(cons word flags))))
+
+BTW, almost all of the named-lets in this package fit in this shape:
+
+--8<---------------cut here---------------start------------->8---
+(defmacro dolist-until (spec &rest body)
+  "Like `dolist', but stop when BODY first evaluates to a non-nil value.
+When that happens, evaluate RESULT and return it.  If RESULT is omitted,
+return the last body value.
+
+\(fn (VAR LIST [RESULT]) BODY...)"
+  (declare (indent 1) (debug ((symbolp form &optional form) body)))
+  (unless (consp spec)
+    (signal 'wrong-type-argument (list 'consp spec)))
+  (unless (<= 2 (length spec) 3)
+    (signal 'wrong-number-of-arguments (list '(2 . 3) (length spec))))
+  (let ((var (car spec))
+        (tail (make-symbol "tail"))
+        (result (make-symbol "result")))
+    `(let ((,tail ,(nth 1 spec)) ,var ,result)
+       (while ,tail
+         (setq ,var (car ,tail))
+         (setq ,result ,(macroexp-progn body))
+         (setq ,tail (if ,result
+                         ,(when (length= spec 3)
+                            `(prog1 nil
+                               (setq ,result ,(macroexp-progn (cddr spec)))))
+                         (cdr ,tail))))
+       ,result)))
+--8<---------------cut here---------------end--------------->8---
+
+With no RESULT argument it replaces seq-some, and with RESULT = VAR it
+replaces seq-find.
+
+I've used this macro for a while, then decided to just go with a
+standard ELisp construction instead (and chose named-let due to cl-loop
+allergy).
+
+I'm not entirely convinced, but maybe that macro might be generally
+useful?
+
+>  (defun -match-compound-rules (dict words-data)
+> +  ;; It should be more efficient to not involve a closure here and just use `cl-loop'
+>    (any (lambda (pattern) (-match-compound-rule-1 words-data pattern))
+>         (-dict-compound-rules dict)))
+
+I'm pretty sure the closure is optimized away?  I see no make-closure in
+its bytecode.
+
+> @@ -1317,6 +1330,10 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  
+>  ;;;; Casing
+>  
+> +;; This is confusing, since you'd assume this is about title casing
+> +;; whereas it is not actually.  I am guessing this is just for single
+> +;; words?  If this is something that Flyspell/Nuspell do it would be
+> +;; helpful to provide some rationale.
+>  (defun -to-title (s)
+>    (if (string-empty-p s)
+>        s
+
+I replaced this by capitalize and it broke a test...  Good idea, to add
+a comment.
+
+> @@ -1387,11 +1404,16 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>    (or (-check-word dict s t t)
+>        (let* ((s2 (downcase s))
+>               (res (-check-word dict s2 t)))
+> +	;; It seems to me that the check if res is non-nil could be
+> +	;; pulled into `-flags-contain' to reduce duplication.
+>          (if (and res (-flags-contain (cdr res) (-dict-keepcase-flag dict))
+>                   (not (and (-dict-checksharps dict) (string-search "ß" s2))))
+>              nil
+>            res))))
+>  
+> +;; A general thought, would it make sense to have DICT a special
+> +;; variable that you bind above, instead of having to thread it
+> +;; through every function?
+
+Interesting idea, will try.
+
+> +		 ;; This named-let+when pattern occurs a lot, would it
+> +		 ;; make sense to have a macro for this?  I think
+> +		 ;; `cl-doloop'+`cl-return' could also make it more
+> +		 ;; readable (in the sense that you aren't mixing
+> +		 ;; processing of the physical data and the logic of
+> +		 ;; the program).
+
+Did I comment above that cl-return (because of throw/catch) is slower (but
+only on native code)?  That's curious.  But yeah, dolist-until is not an
+uncommon pattern for sure.
+
+>                   (when tail
+>                     (or (let ((pat (car tail)))
+>                           (and (string-suffix-p pat s)
+> @@ -1442,56 +1470,34 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  (defun -number-p (s)
+>  ;; Return non-nil if S looks like a number (possibly with . , -
+>  ;; separators).
+> -  (if (string-empty-p s)
+> -      nil
+> -    (let ((i 0) (n (length s)) (done nil) (result nil))
+> -      (when (eq (aref s 0) ?-) (setq i 1))
+> -      (while (and (< i n) (not done))
+> -        (let ((start i))
+> -          (while (and (< i n) (<= ?0 (aref s i) ?9)) (setq i (1+ i)))
+> -          (cond
+> -           ((= i start) (setq done t result nil))
+> -           ((= i n) (setq done t result t))
+> -           (t
+> -            (let ((c (aref s i)))
+> -              (if (memq c '(?. ?, ?-))
+> -                  (setq i (1+ i))
+> -                (setq done t result nil)))))))
+> -      result)))
+> +  (string-match-p (rx (? "-") (+ digit) (* (or ?. ?, ?-) (+ digit)))
+>                     s))
+
+Hah, that's an interesting one.  That's not allocating but it builds a
+regexp.  Will check if it has performance implications.
+
+>  
+>  (defun -erase-chars (s chars)
+> -  (if (string-empty-p chars)
+> -      s
+> -    (let (result)
+> -      (dotimes (i (length s))
+> -        (let ((c (aref s i)))
+> -          (unless (cl-position c chars) (push c result))))
+> -      (concat (nreverse result)))))
+> +  (replace-regexp-in-string (regexp-opt (mapcar #'string chars)) ""
+>  s))
+
+Same about allocating, so I will stop repeating myself 🙂.
+
+>  (defun -string-last-non-dot (s)
+>  ;; Return 1+ the index of the last non-dot character of S (0 if none).
+> -  (let ((i (length s)))
+> -    (while (and (> i 0) (eq (aref s (1- i)) ?.))
+> -      (setq i (1- i)))
+> -    i))
+> +  (if-let* ((idx (string-match-p (rx (not ".") (* ".") eol) s)))
+> +      (1+ idx)
+> +    0))
+>  
+>  (defun -spell (dict word)
+>    (setq word (-substr-replace (-dict-input-iconv dict) word))
+> -  (if (string-empty-p word)
+> -      t
+> -    (let ((abbreviation (eq (aref word (1- (length word))) ?.)))
+> -      (when abbreviation
+> -        (setq word (substring word 0 (-string-last-non-dot word))))
+> -      (if (string-empty-p word)
+> -          t
+> -        (if (-number-p word)
+> -            t
+> -          (progn
+> -            (setq word (-erase-chars word (-dict-ignored-chars dict)))
+> -            (let ((ret (-spell-break dict word 0)))
+> -              (if (and (not ret) abbreviation)
+> -                  (-spell-break dict (concat word ".") 0)
+> -                ret))))))))
+> +  (or (string-empty-p word)
+> +      (let ((abbreviation (eq (aref word (1- (length word))) ?.)))
+> +	(when abbreviation
+> +	  ;; Looking at how `-string-last-non-dot' is used, it doesn't
+> +	  ;; need to be that general.  It would be more idiomatic to
+> +	  ;; use a match group to extract word without the period IMO.
+> +          (setq word (substring word 0 (-string-last-non-dot word))))
+> +	(or (string-empty-p word)
+> +	    (-number-p word)
+> +	    (progn
+> +              (setq word (-erase-chars word (-dict-ignored-chars dict)))
+> +              (let ((ret (-spell-break dict word 0)))
+> +		(if (and (not ret) abbreviation)
+> +                    (-spell-break dict (concat word ".") 0)
+> +                  ret)))))))
+>  
+>  ;;;; Suggestions
+>  ;;
+> @@ -1566,11 +1572,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; is capped by it let-binds it to `-max-attempts-for-long-algos'.
+>  (defvar -budget 0)
+>  
+> +;; This global state feels iffy.  Why not bind it before calling the
+> +;; internal functions or have it bound by some macro?
+> +
+
+You mean the line above should be (defvar -budget)?  Makes sense.
+
+>  (defun -budget-consume ()
+>  ;; Consume one unit of `-budget'; return non-nil if one was available.
+> -  (when (plusp -budget)
+> -    (decf -budget)
+> -    t))
+> +  (and (plusp -budget) (progn (decf -budget) t)))
+>  
+>  (defun -max-attempts-for-long-algos (dict word)
+>  ;; Return DICT's suggestion-attempt budget for WORD.  A heuristic cap,
+> @@ -1738,13 +1745,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; Nuspell additionally tries.  Mirrors Nuspell's
+>  ;; `Suggester::adjacent_swap_suggest'.
+>    (let ((len (length word)))
+> -    (when (> len 0)
+> -      (dotimes (i (1- len))
+> -        (-add-sug-if-correct dict (-swap-adjacent word i) box))
+> -      (pcase len
+> -        (4 (-add-sug-if-correct dict (-swap-two-pairs word 0 2) box))
+> -        (5 (-add-sug-if-correct dict (-swap-two-pairs word 0 3) box)
+> -           (-add-sug-if-correct dict (-swap-two-pairs word 1 3) box))))))
+> +    (dotimes (i (1- len))
+> +      (-add-sug-if-correct dict (-swap-adjacent word i) box))
+> +    (pcase len
+> +      (4 (-add-sug-if-correct dict (-swap-two-pairs word 0 2) box))
+> +      (5 (-add-sug-if-correct dict (-swap-two-pairs word 0 3) box)
+> +         (-add-sug-if-correct dict (-swap-two-pairs word 1 3) box)))))
+>  
+>  (defun -distant-swap-suggest (dict word box)
+>  ;; Try swapping each pair of non-adjacent characters of WORD.  Mirrors
+> @@ -1801,7 +1807,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>    (let* ((len (length word))
+>           (-budget (-max-attempts-for-long-algos dict word)))
+>      (dotimes (i1 len)
+> -      (dotimes (k (max 0 (- len i1 2)))
+> +      (dotimes (k (max 0 (- len i1 2)))	;`max' not needed, since negative iteration counts do what they should
+>          (when (-budget-consume)
+>            (-add-sug-if-correct dict (-move-char-forward word i1 (+ i1 2 k)) box))))
+>      (dotimes (i1 len)
+> @@ -1842,7 +1848,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>            (let ((candidate (concat w1 " " w2)))
+>              (unless (member candidate (-sugs-list box))
+>                (-sugs-push box candidate)))
+> -          (when (and (> (1+ i) 1) (> (length w2) 1)
+> +          (when (and (>= i 1) (length> w2 1)
+>                       (or (cl-position ?a try-chars) (cl-position ?- try-chars)))
+>              (let ((candidate (concat w1 "-" w2)))
+>                (unless (member candidate (-sugs-list box))
+> @@ -1970,14 +1976,13 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; Return the length of A and B's common prefix.  The first character
+>  ;; is matched case-insensitively; the rest are not.  Mirrors Nuspell's
+>  ;; `left_common_substring_length'.
+> -  (if (or (string-empty-p a) (string-empty-p b))
+> +  (if (or (string-empty-p a) (string-empty-p b)
+> +	  (and (/= (aref a 0) (aref b 0)) (/= (aref a 0) (downcase (aref b 0)))))
+>        0
+> -    (if (and (/= (aref a 0) (aref b 0)) (/= (aref a 0) (downcase (aref b 0))))
+> -        0
+> -      (let ((n (min (length a) (length b))) (i 1))
+> -        (while (and (< i n) (eq (aref a i) (aref b i)))
+> -          (setq i (1+ i)))
+> -        i))))
+> +    (let ((n (min (length a) (length b))) (i 1))
+> +      (while (and (< i n) (eq (aref a i) (aref b i)))
+> +        (setq i (1+ i)))
+> +      i)))
+>  
+>  (defun -longest-common-subsequence-length (a b)
+>  ;; Return the length of the longest common subsequence of A and B.
+> @@ -2000,7 +2005,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; at the same position in both; when A and B are the same length and
+>  ;; exactly 2 positions differ, IS-SWAP says whether those two
+>  ;; differing characters are a transposition of each other.
+> -  (let* ((n (min (length a) (length b))) (count 0))
+> +  (let ((n (min (length a) (length b))) (count 0))
+>      (dotimes (i n)
+>        (when (eq (aref a i) (aref b i)) (setq count (1+ count))))
+>      (let (is-swap m1 m2)
+> @@ -2033,7 +2038,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>            (push (-suffix-from-root sfx root) suffixed)
+>            (push (-suffix-cross-product sfx) cross-ok)))
+>        (setq suffixed (nreverse suffixed) cross-ok (nreverse cross-ok))
+> -      (cl-mapc
+> +      (cl-mapc				;I'd use `cl-loop' to avoid the closure
+>         (lambda (root-sfx ok)
+>           (when ok
+>             (dolist (pfx (-all-affix-table-entries (-dict-prefix-table dict)))
+> @@ -2055,6 +2060,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>                     (or (string-empty-p (-prefix-appending pfx))
+>                         (string-prefix-p (-prefix-appending pfx) wrong)))
+>            (push (-prefix-from-root pfx root) prefixed))))
+> +    ;; Why distinguish combo and prefixed?  If the order element is the list important?
+>      (append base suffixed combo prefixed)))
+>  
+>  (defun -heap-replace (heap entry)
+> @@ -2119,7 +2125,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>      ;; Each root is (SCORE WORD LOWER FLAGS), sharing its tail with the
+>      ;; `-ngram-candidates' entry.
+>      (setq roots (mapcan (lambda (e) (and (cddr e) (list (cons (car e) (cddr e)))))
+> -                        (sort top-roots :reverse t :in-place t)))
+> +			;; The signature was changed in Emacs 30!
+> +			(compat-call sort top-roots :reverse t :in-place t)))
+>  
+>      (let ((threshold 0))
+>        (dolist (k '(1 2 3))
+> @@ -2128,7 +2135,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>              ;; Can't `aset' an arbitrary character in place: Emacs
+>              ;; strings are not necessarily uniform-width internally,
+>              ;; so replacing e.g. a 2-byte-wide character with a
+> -            ;; 1-byte-wide "*" can fail; rebuild instead.
+> +            ;; 1-byte-wide "*" can fail; rebuild instead, see (elisp)
+> +            ;; Modifying Strings.
+
+When are we going to switch ELisp to have immutable strings, by the way? 🙂
+
+>              (setq mangled (concat (substring mangled 0 i) "*" (substring mangled (1+ i))))
+>              (setq i (+ i 4)))
+>            (setq threshold (+ threshold
+> @@ -2147,11 +2155,16 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>                       (score (+ (-left-common-substring-length wrong-word expanded)
+>                                 (-ngram-similarity-any-mismatch
+>                                  (length wrong-word) wrong-word lower wrong-grams))))
+> -                (when (and (>= score threshold)
+> -                           (>= score (car (aref top-guesses 0))))
+> +                (when (>= score (max (car (aref top-guesses 0)) threshold))
+>                    (-heap-replace top-guesses (cons score (cons (incf guess-idx) expanded))))))))
+>          (setq guesses (mapcan (lambda (e) (and (cddr e) (list (cons (car e) (cddr e)))))
+> -                              (sort top-guesses :reverse t :in-place t)))
+> +			      ;; Note that you don't really need the
+> +			      ;; new signature either, since the old
+> +			      ;; calling convention would sort in
+> +			      ;; place and you can just adjust the
+> +			      ;; predicate to reverse the order or
+> +			      ;; call `nreverse'.
+> +                              (compat-call sort top-guesses :reverse t :in-place t)))
+>  
+>          (named-let recur ((tail guesses))
+>            (when tail
+> @@ -2159,8 +2172,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>                    (pcase-let ((`(,score . ,word) g))
+>                      (let* ((lower (downcase word))
+>                             (lcs (-longest-common-subsequence-length wrong-word lower)))
+> -                      (if (and (= (length wrong-word) (length lower))
+> -                               (= (length wrong-word) lcs))
+> +                      (if (= (length wrong-word) (length lower) lcs)
+>                            (progn (setcar g (+ score 2000)) t)
+>                          (let* ((ngram2 (+ (-ngram-similarity-any-mismatch-weighted 2 wrong-word lower wrong-grams)
+>                                            (-ngram-similarity-any-mismatch-weighted 2 lower wrong-word)))
+> @@ -2188,11 +2200,10 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>                (or (let ((g (car tail)))
+>                      (pcase-let ((`(,score . ,word) g))
+>                        (cond
+> -                       ((= (-sugs-box-count box) max-sug) t)
+> -                       ((and more-selective (<= score 1000)) t)
+> +                       ((= (-sugs-box-count box) max-sug))
+> +                       ((and more-selective (<= score 1000)))
+>                         ((and (< score -100)
+> -                             (or (/= old-num-sugs (-sugs-box-count box)) (-dict-only-max-diff dict)))
+> -                        t)
+> +                             (or (/= old-num-sugs (-sugs-box-count box)) (-dict-only-max-diff dict))))
+>                         ((any (lambda (sug) (string-search sug word)) (-sugs-list box))
+>                          (< score -100))
+>                         (t (-sugs-push box word) nil))))
+> @@ -2211,16 +2222,16 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; self near the top of this file).
+>    (let (fixed rest)
+>      (dolist (sug (-sugs-list box))
+> -      (let ((space (string-search " " sug)))
+> -        (if (not space)
+> -            (push sug rest)
+> -          (let* ((i (1+ space)) (len (- (length sug) i)))
+> -            (if (and (<= len (length word))
+> -                     (string= (substring sug i) (substring word (- (length word) len))))
+> -                (push sug rest)
+> -              (push (concat (substring sug 0 i) (-to-title-char-at (substring sug i) 0))
+> -                    fixed))))))
+> -    (-sugs-box-set box (append (nreverse fixed) (nreverse rest)))))
+> +      (if-let* ((space (string-search " " sug))
+> +		(i (1+ space))
+> +		(len (- (length sug) i)))
+> +	  (if (and (<= len (length word))
+> +                   (string= (substring sug i) (substring word (- (length word) len))))
+> +              (push sug rest)
+> +            (push (concat (substring sug 0 i) (-to-title-char-at (substring sug i) 0))
+> +                  fixed))
+> +	(push sug rest)))
+> +    (-sugs-box-set box (nreverse (nconc rest fixed)))))
+>  
+>  (defun -fix-keepcase-sug (dict s)
+>  ;; Return S, possibly lower- or title-cased, or nil to drop it.  Used
+> @@ -2236,12 +2247,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  (defun -dedup-preserve-first (list)
+>  ;; Return LIST with duplicates removed, keeping each value's first
+>  ;; occurrence.
+> -  (let (seen result)
+> -    (dolist (s list)
+> -      (unless (member s seen)
+> -        (push s seen)
+> -        (push s result)))
+> -    (nreverse result)))
+> +  (delete-dups (copy-sequence list)))	;note that there is only one call-site
+>  
+>  (defun -suggest-dash-split (dict box word)
+>  ;; If WORD contains a hyphen, also try correcting it piece by piece.
+> @@ -2332,12 +2338,16 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  
+>      (when (and (memq casing '(init-capital all-capital))
+>                 (or (/= 0 (-dict-keepcase-flag dict)) (/= 0 (-dict-forbiddenword-flag dict))))
+> -      (-sugs-box-set box (delq nil (mapcar (lambda (s) (-fix-keepcase-sug dict s)) (-sugs-list box)))))
+> +      (-sugs-box-set box (mapcan (lambda (s)
+> +				   (and-let* ((x (-fix-keepcase-sug dict s))) (list x)))
+> +				 (-sugs-list box))))
+>  
+>      (-sugs-box-set box (-dedup-preserve-first (-sugs-list box)))
+>  
+> -    ;; OCONV can map a suggestion back to WORD itself (e.g. "románórum"
+> -    ;; to "romanórum"); drop it then, as Hunspell does (its gh#1002).
+> +    ;; OCONV can map a suggestion back to WORD itself
+> +    ;; (e.g. "románórum" to "romanórum"); drop it then, as Hunspell
+> +    ;; does (its gh#1002). (it would make sense to configure
+> +    ;; bug-reference to hyperlink these issue references)
+>      (delete word (mapcar (lambda (s) (-substr-replace (-dict-output-oconv dict) s))
+>                           (-sugs-list box)))))
+>  
+> @@ -2350,7 +2360,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; `Suggester::suggest_priv'.
+>    (unless (string-empty-p word)
+>      (let* ((word (-substr-replace (-dict-input-iconv dict) word))
+> -           (abbreviation (eq (aref word (1- (length word))) ?.))
+> +           (abbreviation (string-match-p (rx "." eos) word))
+>             (word (if abbreviation (substring word 0 (-string-last-non-dot word)) word)))
+>        (unless (string-empty-p word)
+>          (let ((casing (-classify-casing word)))
+> @@ -2472,8 +2482,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>      ;; The first line is an approximate word count; use it to presize the
+>      ;; words table so it isn't repeatedly grown and rehashed as entries
+>      ;; are added below.
+> -    (let ((count (string-to-number (buffer-substring-no-properties
+> -                                    (pos-bol) (pos-eol)))))
+> +    (let ((count (string-to-number (thing-at-point 'line))))
+>        (setf (-dict-words dict) (make-hash-table :test 'equal :size (max count 65))))
+>      (forward-line 1)
+>      (while (not (eobp))
+> @@ -2488,8 +2497,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;;;; Affix (.aff) parsing
+>  
+>  (defun -chomp-cr (line)
+> -  (if (and (> (length line) 0) (eq (aref line (1- (length line))) ?\r))
+> -      (substring line 0 -1)
+> +  (if (string-match (rx (group (* anything)) ?\r) line)
+> +      (match-string 1 line)
+>      line))
+>  
+>  (defun -array-command-step (cmd-counts command count-token)
+> @@ -2585,6 +2594,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>      (dolist (p patterns)
+>        (cond
+>         ((or (string-empty-p p) (string= p "^") (string= p "$")))
+> +       ;; So it is intended that if you start with ^ and end with $
+> +       ;; that ^ takes priority?
+>         ((eq (aref p 0) ?^) (push (substring p 1) start))
+>         ((eq (aref p (1- (length p))) ?$) (push (substring p 0 -1) end))
+>         (t (push p middle))))
+> @@ -2607,7 +2618,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; equivalent string.  Mirrors Nuspell's `Similarity_Group::parse'.
+>    (let ((i 0) (n (length str)) chars strings (done nil))
+>      (while (and (< i n) (not done))
+> -      (let ((open (cl-position ?\( str :start i)))
+> +      (let ((open (cl-position ?\( str :start i))) ;this really messes with my mental parser
+>          (if (not open)
+>              (progn (setq chars (concat chars (substring str i))) (setq done t))
+>            (setq chars (concat chars (substring str i open)))
+> @@ -2681,6 +2692,13 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>  ;; Nuspell's `Substr_Replacer', used for ICONV/OCONV.
+>    (if (null table)
+>        s
+> +    ;; I am not sure, but if feels like this should be something you
+> +    ;; should be able to do with a regular expression,
+> +    ;; `replace-regexp-in-string' and a lambda function as REP that
+> +    ;; looks up in table.  The question is if it is worth the effort
+> +    ;; to construct a large regular expression and have the processing
+> +    ;; take place in the regular expression engine or just to run
+> +    ;; through the string in Lisp...
+
+The ideal (prettiest) implementation would be with peg.el, but it's
+probably not worth introducing the dependency for that (also, dictionary
+loading is not done often but it is slow, can take about a second, so
+speed still matters a bit here).
+
+>      (let ((i 0) (start 0) (len (length s)) parts)
+>        (while (< i len)
+>          (let ((m (-substr-replacer-find table s i)))
+> @@ -2731,9 +2749,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>    (let (edge inner)
+>      (dotimes (i (length wordchars))
+>        (let ((c (aref wordchars i)))
+> -        (cond ((memq c '(?' ?’)) (setq inner (append '(?' ?’) inner)))
+> +        (cond ((memq c '(?' ?\’)) (setq inner (append '(?' ?\’) inner)))
+>                ((eq (get-char-code-property c 'general-category) 'Pd) (push c inner))
+>                (t (push c edge)))))
+> +    ;; You can get away with using `regexp-opt' (like in one of the
+> +    ;; examples I gave above), if you want to avoid loading rx at
+> +    ;; runtime.
+>      (rx-to-string `(seq (any alpha ,@edge)
+>                          (* (any alpha ,@edge ,@inner))
+>                          (any alpha ,@edge))
+> @@ -2792,6 +2813,9 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>                 ((string= command "KEY")
+>                  (setf (-dict-keyboard-closeness dict) (car args)))
+>                 ((string= command "COMPLEXPREFIXES")
+> +		;; Many of these patterns are repetitive, if feels
+> +		;; like you could maintain a few alists that associate
+> +		;; commands with fields that are handled the same way.
+>                  (setf (-dict-complex-prefixes dict) t))
+>                 ((string= command "FULLSTRIP")
+>                  (setf (-dict-fullstrip dict) t))
+> @@ -2859,8 +2883,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>                     (setf (-dict-flag-aliases dict) (vconcat (reverse flag-aliases))))))
+>                 ((string= command "BREAK")
+>                  (setq break-seen t)
+> -                (pcase (-array-command-step cmd-counts command (car args))
+> -                  ('data (push (car args) break-patterns))))
+> +                (when (eq (-array-command-step cmd-counts command (car args)) 'data)
+> +                  (push (car args) break-patterns)))
+>                 ((string= command "COMPOUNDRULE")
+>                  (pcase (-array-command-step cmd-counts command (car args))
+>                    ('data (push (-parse-compound-rule-line dict (car args))
+> @@ -2958,6 +2982,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>          (insert-file-contents file)
+>          (goto-char (point-min))
+>          (while (not (eobp))
+> +	  ;; You always use `-chomp-cr' on the current line, so
+> +	  ;; perhaps you can specialize the function?
+>            (let ((word (-chomp-cr (buffer-substring-no-properties
+>                                    (pos-bol) (pos-eol)))))
+>              (unless (string-empty-p word)
+> @@ -2987,6 +3013,10 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>            (write-region (point-min) (point-max) file))
+>          removed))))
+>  
+> +;; I might even make the shorthand longer and replace "-" with
+> +;; something like "vibe-spell--/generated-" to make it really evident
+> +;; that the internal implementation is not to be relied on.
+> +
+>  ;; Local Variables:
+>  ;; read-symbol-shorthands: (("-" . "vibe-spell--"))
+>  ;; End:
+
+> I understand that some of these questions boil down to your agent
+> instructions.  I don't understand, for instance why you want to prefer
+> named-let over cl-doiter/cl-loop, since the former requires you to
+> iterate over the list and maintain the tail which I think that the
+> latter abstract over.
+
+Okay, I commented above about this.  It is a good point and matter of
+taste...
+
+> I haven't read the C++ code, but it doesn't seem like it is that C++-y.
+> Perhaps in some places it uses `if'-chains where `and' or a `cond' might
+> be more adequate, but that is not always the case and other functions
+> idiomatically use `or' instead of multiple `if' checks that each might
+> return nil.
+
+It definitely is.  There is a case for keeping the translated code still
+close to the original.  And there's a case to Lispify it all the way.  I
+mostly went with what the LLM chose, except notably on the preferred
+looping construct.
+
+> It might be that you are re-implementing existing functionality, and
+> that might also be due to the translation that "proper" Elisp would use
+> a regular expression where you implement the logic in Lisp, but that is
+> a common mistake.
+
+Okay, I've commented about my performance concerns above.
+
+> The flags abstraction wasn't clear to me, or if it even was an
+> abstraction but having a dictionary with some 50 fields feels like there
+> should be some room for improvement.  My guess is that this was a
+> bitfield in C++ that we can replace by a list encoding a set of symbols
+> or a bitvector with some nicer abstraction so that you don't have to
+> check for (/= ... 0) all the time.
+
+To make sure we're on the same page, flags are e.g. the PY in this .dic
+entry:
+
+  amorphous/PY
+
+the meaning of the flags is defined in the .aff file.  I don't know what
+P is, but Y means "out can append ly" to get amorphously.
+
+So yes, this flag handling looks un-idiomatic to me but maybe it's close
+to optimal.  I haven't fully understood it.
+
+> But other than that, there was nothing fishy about the code and I think
+> it would be a nice addition.
+
+Nice!
+
+> To open a can of worms at the end, it might not be a bad idea to use a
+> different name for the package.  My hunch is that some of the attention
+> this thread has attracted is due to the name that has a negative
+> connotation.  The approach to spelling is sound after all, it is not
+> just a "vibe-check".  What do you think of "espell"?
+
+Will reply separately.
+
+================================================================================
+Date: 2026-11-11T09:00:26+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87ld6zu7ad.fsf@gmail.com>
+In-Reply-To: <8733t8tlja.fsf@posteo.net>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <87ld70csa1.fsf@web.de> <8733t8tlja.fsf@posteo.net>
+
+(From the other subthread.)
+
+On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+
+> To open a can of worms at the end, it might not be a bad idea to use a
+> different name for the package.  My hunch is that some of the attention
+> this thread has attracted is due to the name that has a negative
+> connotation.  The approach to spelling is sound after all, it is not
+> just a "vibe-check".  What do you think of "espell"?
+
+Here I would appreciate the opinion from Arne and the others with
+concerns about LLM-generated code.  Do you think I should rename the
+package?
+
+I named it that way 1. as an attempt to be a bit funny, in a
+self-deprecating way, and 2. to not let anybody have the wrong idea
+about the method used to write that large (but not unreasonable large)
+amount of code.  I certainly didn't mean to be provocative.
+
+(I don't want to expound on my opinion about LLMs here, but I have fun
+in actually writing ELisp and I'm not on the Emacs payroll or following
+deadlines, so this package to me is a rather special experiment.  All my
+other packages are and will remain handcrafted.)
+
+================================================================================
+Date: 2026-11-11T10:20:41+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <avQzaaU2qB94crBr@tuxteam.de>
+In-Reply-To: <87ld6zu7ad.fsf@gmail.com>
+References: <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <8733t8tlja.fsf@posteo.net> <87ld6zu7ad.fsf@gmail.com>
+
+On Wed, Nov 11, 2026 at 09:00:26AM +0100, Augusto Stoffel wrote:
+> (From the other subthread.)
+> 
+> On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+> 
+> > To open a can of worms at the end, it might not be a bad idea to use a
+> > different name for the package.  My hunch is that some of the attention
+> > this thread has attracted is due to the name that has a negative
+> > connotation.  The approach to spelling is sound after all, it is not
+> > just a "vibe-check".  What do you think of "espell"?
+> 
+> Here I would appreciate the opinion from Arne and the others with
+> concerns about LLM-generated code.  Do you think I should rename the
+> package?
+> 
+> I named it that way 1. as an attempt to be a bit funny, in a
+> self-deprecating way, and 2. to not let anybody have the wrong idea
+> about the method used to write that large (but not unreasonable large)
+> amount of code.  I certainly didn't mean to be provocative.
+
+[...]
+
+I think it's a good name: in the current situation there might be
+people who care about provenance, and hiding things (as Philip
+suggests) removes transparency, which is almost always a bad idea.
+
+I appreciate that you were willing to weather the storm.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-11T12:49:17+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: emacs-31 205ae0b0583: Fix arbitrary code execution in
+ .dir-locals.el handling
+Message-ID: <87o6bvziyq.fsf@athena.silentflame.com>
+In-Reply-To: <20261111092934.3F90EC1F562@vcs2.savannah.gnu.org>
+References: <179438937379.6285.7085427359828111905@vcs2.savannah.gnu.org>
+ <20261111092934.3F90EC1F562@vcs2.savannah.gnu.org>
+
+Sean Whitton [11/Nov  4:29am -05] wrote:
+> branch: emacs-31
+> commit 205ae0b0583dbfe09e258164adbc49e130645221
+> Author: Stefan Monnier <monnier@iro.umontreal.ca>
+> Commit: Sean Whitton <spwhitton@spwhitton.name>
+>
+>     Fix arbitrary code execution in .dir-locals.el handling
+>     
+>     * lisp/files.el (set-auto-mode--find-matching-alist-entry):
+>     Rename to ...
+>     (set-auto-mode--from-matching-alist-entry): ... this.
+>     (set-auto-mode--from-matching-alist-entry)
+>     (set-auto-mode--apply-alist): Address arbitrary code execution
+>     vulnerability (bug#82213).
+> ---
+>  lisp/files.el | 82 ++++++++++++++++++++++++++---------------------------------
+>  1 file changed, 36 insertions(+), 46 deletions(-)
+
+Found a problem with this.  Touch a file "foo.el.orig" in the Emacs
+source and find-file it.  It gets left in fundamental-mode and there is
+an error: "Ignoring unknown mode `(nil t)'"
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-11T12:50:41+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+In-Reply-To: 
+References: 
+
+Hi again.
+
+Sorry if I'm insisting on this...
+
+I had ten minutes today and wrote a **TOY** (attached) just to learn to 
+do RPC in Python. I took a couple of functions from the API I saw in 
+jinx-mod.c and tried to implement something that would communicate 
+through RPC in a similar way as jinx interacts with the enchant library.
+
+Now the next step would be to write the Emacs part. I think it shouldn't 
+be too difficult, since eglot already has a lot of jsonrpc that could be 
+used to inspire the glue needed. No agent, no nothing.
+
+In this case, we have the additional goodie of offloading the burden of 
+keeping up with the enchant/aspell/hunspell evolution on the libraries 
+used by the toy, not on the toy itself.
+
+This is only a toy and I was using Python because I'm lazy. Now select a 
+set of libraries, languages, etc. with a good old compliant license that 
+cover the major OSes and there you are.
+
+No need for fierce discussions ;-)
+
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-11-11T13:32:14+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <868q2zy2ep.fsf@gnu.org>
+In-Reply-To: <a1264310-8adf-4177-99bc-a83ef2f74f4c@horse64.org> (message from
+ Ellie on Wed, 11 Nov 2026 01:56:38 +0000)
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org> <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org>
+ <87bj7x2g18.fsf@athena.silentflame.com>
+ <a1264310-8adf-4177-99bc-a83ef2f74f4c@horse64.org>
+
+> Date: Wed, 11 Nov 2026 01:56:38 +0000
+> From: Ellie <el@horse64.org>
+> 
+> 
+> 
+> On 11/10/26 09:26, Sean Whitton wrote:
+> >> On 11/9/26 13:36, Eli Zaretskii wrote:
+> >> So wouldn't it make sense to wait and not allow LLM contributions until
+> >> that happened?
+> > 
+> > That is exactly what we have been doing.
+> > 
+> 
+> I don't see how that would be the case unless there's been an LLM ban. 
+> (My apologies if that's the case and I missed it.)
+
+What do you mean by "ban"?
+
+We currently don't accept LLM-generated code, until GNU publishes
+their recommendations and guidelines on these issues.  If that means
+"ban", then yes, there is a temporary "ban".
+
+> A ban might seem like an active option, but I disagree that it is. In 
+> terms of waiting for guidance it's to em actually enforcing being 
+> passive, since a lot of coders seem to be jumping the gun right now if 
+> not stopped.
+
+You lost me here.
+
+================================================================================
+Date: 2026-11-11T15:28:11+01:00
+From: Michael Albinus <michael.albinus@gmx.de>
+Subject: Changes in Tramp
+Message-ID: <87pkwbtpc4.fsf@gmx.de>
+In-Reply-To: 
+References: 
+
+Hi,
+
+I've made some serious changes in Tramp, most notable the removal of
+tramp-archive.el. See commit 2bb764c9291 in master.
+
+Due to complex autoload dependencies it is needed to apply 'make
+bootstrap' if you want to use Tramp.
+
+Best regards, Michael.
+
+================================================================================
+Date: 2026-11-11T16:01:04+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Changes in Tramp
+Message-ID: <865wy3xvin.fsf@gnu.org>
+In-Reply-To: <87pkwbtpc4.fsf@gmx.de> (message from Michael Albinus on Wed, 11
+ Nov 2026 15:28:11 +0100)
+References: <87pkwbtpc4.fsf@gmx.de>
+
+> From: Michael Albinus <michael.albinus@gmx.de>
+> Date: Wed, 11 Nov 2026 15:28:11 +0100
+> 
+> Hi,
+> 
+> I've made some serious changes in Tramp, most notable the removal of
+> tramp-archive.el. See commit 2bb764c9291 in master.
+> 
+> Due to complex autoload dependencies it is needed to apply 'make
+> bootstrap' if you want to use Tramp.
+
+Thanks.
+
+Just removing all lisp/net/tramp*.elc files was enough for a
+successful build.
+
+================================================================================
+Date: 2026-11-11T16:07:22+01:00
+From: Michael Albinus <michael.albinus@gmx.de>
+Subject: Re: Changes in Tramp
+Message-ID: <878q2ztnit.fsf@gmx.de>
+In-Reply-To: <865wy3xvin.fsf@gnu.org>
+References: <87pkwbtpc4.fsf@gmx.de> <865wy3xvin.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+Hi Eli,
+ 
+>> I've made some serious changes in Tramp, most notable the removal of
+>> tramp-archive.el. See commit 2bb764c9291 in master.
+>> 
+>> Due to complex autoload dependencies it is needed to apply 'make
+>> bootstrap' if you want to use Tramp.
+>
+> Thanks.
+>
+> Just removing all lisp/net/tramp*.elc files was enough for a
+> successful build.
+
+Building isn't the problem. Locally, I've experienced that
+tramp-autoloads.el wasn't proper after a rebuild; it still contained
+tramp-archive-* objects. Running 'make -C test tramp-tests' has shown
+errors.
+
+If removing tramp*.elc is sufficient: Fine. Likely for everybody not
+using Tramp. Otherwise, 'make bootstrap' is sane.
+
+Best regards, Michael.
+
+================================================================================
+Date: 2026-11-11T16:15:21+01:00
+From: Michael Albinus <michael.albinus@gmx.de>
+Subject: Re: Changes in Tramp
+Message-ID: <8733t7tn5i.fsf@gmx.de>
+In-Reply-To: <878q2ztnit.fsf@gmx.de>
+References: <87pkwbtpc4.fsf@gmx.de> <865wy3xvin.fsf@gnu.org>
+ <878q2ztnit.fsf@gmx.de>
+
+Michael Albinus <michael.albinus@gmx.de> writes:
+
+> Building isn't the problem. Locally, I've experienced that
+> tramp-autoloads.el wasn't proper after a rebuild; it still contained
+> tramp-archive-* objects. Running 'make -C test tramp-tests' has shown
+> errors.
+
+s/tramp-autoloads/tramp-loaddefs/
+
+> If removing tramp*.elc is sufficient: Fine. Likely for everybody not
+> using Tramp. Otherwise, 'make bootstrap' is sane.
+
+Best regards, Michael.
+
+================================================================================
+Date: 2026-11-11T16:40:45+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Changes in Tramp
+Message-ID: <864idnxtoi.fsf@gnu.org>
+In-Reply-To: <878q2ztnit.fsf@gmx.de> (message from Michael Albinus on Wed, 11
+ Nov 2026 16:07:22 +0100)
+References: <87pkwbtpc4.fsf@gmx.de> <865wy3xvin.fsf@gnu.org>
+ <878q2ztnit.fsf@gmx.de>
+
+> From: Michael Albinus <michael.albinus@gmx.de>
+> Cc: emacs-devel@gnu.org
+> Date: Wed, 11 Nov 2026 16:07:22 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> Hi Eli,
+>  
+> >> I've made some serious changes in Tramp, most notable the removal of
+> >> tramp-archive.el. See commit 2bb764c9291 in master.
+> >> 
+> >> Due to complex autoload dependencies it is needed to apply 'make
+> >> bootstrap' if you want to use Tramp.
+> >
+> > Thanks.
+> >
+> > Just removing all lisp/net/tramp*.elc files was enough for a
+> > successful build.
+> 
+> Building isn't the problem. Locally, I've experienced that
+> tramp-autoloads.el wasn't proper after a rebuild; it still contained
+> tramp-archive-* objects. Running 'make -C test tramp-tests' has shown
+> errors.
+
+Then maybe "make -C lisp autoloads-force" followed by "make" is in
+order.
+
+================================================================================
+Date: 2026-11-11T17:10:29+01:00
+From: Michael Albinus <michael.albinus@gmx.de>
+Subject: Re: Changes in Tramp
+Message-ID: <87y0azs616.fsf@gmx.de>
+In-Reply-To: <864idnxtoi.fsf@gnu.org>
+References: <87pkwbtpc4.fsf@gmx.de> <865wy3xvin.fsf@gnu.org>
+ <878q2ztnit.fsf@gmx.de> <864idnxtoi.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+Hi Eli,
+
+>> > Just removing all lisp/net/tramp*.elc files was enough for a
+>> > successful build.
+>> 
+>> Building isn't the problem. Locally, I've experienced that
+>> tramp-autoloads.el wasn't proper after a rebuild; it still contained
+>> tramp-archive-* objects. Running 'make -C test tramp-tests' has shown
+>> errors.
+>
+> Then maybe "make -C lisp autoloads-force" followed by "make" is in
+> order.
+
+Perhaps. I wasn't aware of this make target. 'make -C lisp autoloads'
+wasn't sufficient.
+
+Best regards, Michael.
+
+================================================================================
+Date: 2026-11-11T17:45:49+01:00
+From: Ellie <el@horse64.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <8d98bc0f-699c-4fd8-9cb1-48ff5345d030@horse64.org>
+In-Reply-To: <868q2zy2ep.fsf@gnu.org>
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org> <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org>
+ <87bj7x2g18.fsf@athena.silentflame.com>
+ <a1264310-8adf-4177-99bc-a83ef2f74f4c@horse64.org> <868q2zy2ep.fsf@gnu.org>
+
+On 11/11/26 12:32, Eli Zaretskii wrote:
+>>> That is exactly what we have been doing.
+>>>
+>>
+>> I don't see how that would be the case unless there's been an LLM ban.
+>> (My apologies if that's the case and I missed it.)
+> 
+> What do you mean by "ban"?
+> 
+> We currently don't accept LLM-generated code, until GNU publishes
+> their recommendations and guidelines on these issues.  If that means
+> "ban", then yes, there is a temporary "ban".
+Ah, good to know! My apologies then for being confused by the discussion.
+
