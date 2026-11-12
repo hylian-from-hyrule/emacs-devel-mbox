@@ -1,0 +1,2290 @@
+emacs-devel messages from 2026-11-11T18:15:00+01:00 to 2026-11-12T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-11T19:41:24+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87fqx7rz1o.fsf@posteo.net>
+In-Reply-To: <87qzgru80u.fsf@gmail.com>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <87qzgru80u.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> Thanks!  In due time I'll go over and apply the suggestions that make
+> sense to me.
+
+1+
+
+> For now, let me comment a bit on generalities below.
+>
+> On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+>
+>> @@ -157,6 +159,10 @@ If the check exceeds `vibe-spell-check-time-limit', return `timeout'."
+>>    (or (length> word -max-word-length)
+>>        (let* ((current-time-list nil)
+>>               (-time-limit (-time-limit-from-now vibe-spell-check-time-limit)))
+>> +	;; The fact that you are using `throw'+`catch' for non-local
+>> +	;; jumps is slightly concerning, at the size of the program it
+>> +	;; can easily cause confusion when you make changes and forget
+>> +	;; to consider that a function further down could throw something.
+>>          (catch '-time-limit
+>>            (-spell dict word)))))
+>>  
+>> @@ -290,6 +296,8 @@ Return non-nil if WORD was actually present and therefore removed."
+>>                                 (round (* (- gc-elapsed (cdr -time-limit)) (cdr now)))))
+>>          (setcdr -time-limit gc-elapsed)
+>>          (when (> (car now) (car -time-limit))
+>> +	  ;; Are you planning to use other values to throw?  Otherwise
+>> +	  ;; I think you can simplify the `catch' logic above.
+>>            (throw '-time-limit 'timeout))))))
+>
+> No, this is really the single intended use of a throw.  But we do need a
+> TAG to catch, and we need a non-local exit in order to quit midway a
+> calculation that's taking too long, so I don't know what simplification
+> you had in mind.
+
+What I had in mind is that you don't have to check that the value
+'timeout has been thrown and you can just inline the "non-timeout" logic
+at the end of the `catch' block.
+
+>>  (defun -find-dictionary-base (name)
+>> @@ -298,20 +306,26 @@ Return non-nil if WORD was actually present and therefore removed."
+>>  ;; both a readable NAME.aff and a readable NAME.dic, and returns that
+>>  ;; directory's `expand-file-name' of NAME.  Signals an error if no
+>>  ;; directory in the list has both files.
+>> -  (or (named-let recur ((tail vibe-spell-dictionary-path))
+>> -        (when tail
+>> -          (or (let ((dir (car tail)))
+>> -                (let ((base (expand-file-name name dir)))
+>> -                  (and (file-readable-p (concat base ".aff"))
+>> -                       (file-readable-p (concat base ".dic"))
+>> -                       base)))
+>> -              (recur (cdr tail)))))
+>> -      (user-error "\
+>> +  
+>> +  (catch 'ok
+>> +    (dolist (dir vibe-spell-dictionary-path)
+>> +      (let ((base (expand-file-name name dir)))
+>> +        (and (file-readable-p (concat base ".aff"))
+>> +             (file-readable-p (concat base ".dic"))
+>> +             (throw 'ok base)))
+>> +      (when (let ((dir (car tail)))
+>> +              )
+>> +        (recur (cdr tail))))
+>> +    (user-error "\
+>>  vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>> -                  name name)))
+>> +                name name)))
+>
+> Okay, so that's a choice between readability and consistency.
+>
+> In fact, the first LLM translation of C++ came full of catch/throw and
+> cl-block/cl-return (which uses the same internally).  It turns out that
+> catch/throw is substantially slower -- but only when native compiled.
+
+Hmm, has this been reported somewhere.  It seems like the compiler
+should be able to figure out how this can be optimized for local tags?
+I guess the difficulty lies in not knowing whether some code below might
+also be throwing the same tag.
+
+> So I picked a non-catchy looping construct.
+
+OK, that makes sense.
+
+>>  ;;;; Data structures
+>>  
+>> +;; even if :type isn't (currently) respected, it would still be great
+>> +;; if you could annotate the fields in these structs to that when
+>> +;; reading the source you can have an idea for what kind of values you
+>> +;; are dealing with.
+>>  (cl-defstruct (-prefix (:constructor -prefix-create))
+>>    flag cross-product stripping appending cont-flags condition
+>>    (bits (make-bool-vector 9 nil)))      ; see `-affix-bits'
+>> @@ -351,6 +365,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>    (fullstrip nil)
+>>    (checksharps nil)
+>>    (forbid-warn nil)
+>> +  ;; Using integers for these flags feels unnatural of C-y, is there
+>> +  ;; no way you could use symbols/lists or bitvectors instead?
+>
+> Since the flags are dictionary-dependent (defined in the .aff file) and
+> they are always one byte/character (if I'm not mistaken), I think it
+> makes sense to use chars and strings for flags respectively flag lists?
+
+I guess, I am not familiar with these details, my point was more that by
+encoding this information in integers and having to check for (/= 0 ...)
+down below it seemed like repetitive busywork that could be avoided.
+
+>>    (compound-onlyin-flag 0)
+>>    (circumfix-flag 0)
+>>    (forbiddenword-flag 0)
+>> @@ -429,13 +445,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  
+>>  (defun -decode-flags-possible-alias (dict str)
+>>  ;; Decode a .dic word's flags field STR, honoring flag aliases.
+>> -  (let ((aliases (-dict-flag-aliases dict)))
+>> -    (if (zerop (length aliases))
+>> -        (-decode-flags dict str)
+>> +  (if-let* ((aliases (-dict-flag-aliases dict)))
+>>        (let ((idx (string-to-number str)))
+>>          (if (and (> idx 0) (<= idx (length aliases)))
+>>              (aref aliases (1- idx))
+>> -          (error "vibe-spell: invalid flag alias %S" str))))))
+>> +          (error "vibe-spell: invalid flag alias %S" str)))
+>> +    (-decode-flags dict str)))
+>>  
+>>  (defun -flags-contain (flags flag)
+>>  ;; Return non-nil if list of flag integers FLAGS contains FLAG.  A
+>> @@ -519,12 +534,11 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; SPECS.
+>>    (let ((n (length specs)))
+>>      (and (>= (length word) n)
+>> -         (let ((idx 0) (ok t))
+>> -           (dolist (spec specs)
+>> -             (unless (-condition-match-spec spec (aref word idx))
+>> -               (setq ok nil))
+>> -             (setq idx (1+ idx)))
+>> -           ok))))
+>> +	 (cl-loop for spec in specs
+>> +		  for idx from 0
+>> +		  unless (-condition-match-spec spec (aref word idx))
+>> +		  return nil
+>> +		  finally return t))))
+>
+> So, cl-loop... It feels like an entirely new PL and I try to avoid it at
+> all costs.  Do you think that sentiment is too fringe?
+
+I have certainly heard of it before, and if you don't like it that is
+fine.  Do note that cl-loop also expands to code without that runs
+without throwing and catching.
+
+> Anyway, I think cl-loop and named-let (which I chose as general looping
+> construct) both share the disadvantage of being so flexible that one has
+> no idea what they generally do without reading the body.
+
+Really, I find cl-loop very straightforward to read, but that might just
+be personal preference.
+
+>>  (defun -condition-match-suffix (specs word)
+>>  ;; Return non-nil if WORD's last (length SPECS) characters match
+>> @@ -532,6 +546,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>    (let* ((n (length specs))
+>>           (wlen (length word)))
+>>      (and (>= wlen n)
+>> +	 ;; here too you can just use `cl-loop'
+>>           (let ((idx (- wlen n)) (ok t))
+>>             (dolist (spec specs)
+>>               (unless (-condition-match-spec spec (aref word idx))
+>> @@ -666,12 +681,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; Return the `-prefix'/`-suffix' entries of affix TABLE as a plain
+>>  ;; list.  Unlike `-affix-table-find', this does not filter by any
+>>  ;; probe word.
+>> -  (mapcar #'cdr (append table nil)))
+>> +  (mapcar #'cdr (append table nil)))	;it would be better to use
+>>  something like `cl-coerge' that avoids consing a new list if TABLE is
+>>  already a list, or perhaps just use `seq-map'?
+>
+> This looks fishy, will check what's up.
+>
+>>  
+>>  (defun -char-alpha-p (ch) (memq (get-char-code-property ch 'general-category)
+>>                                  '(Ll Lu Lo Lm Lt)))
+>> -(defun -char-upper-p (ch) (/= ch (downcase ch)))
+>> +(defun -char-upper-p (ch) (/= ch (downcase ch))) ;why not use `char-uppercase-p'?
+>
+> There were some discrepancies in ß vs. ẞ or the dotless i, I forget
+> which.
+
+OK, would be nice to have this documented close by.
+
+>>  (defun -char-lower-p (ch) (/= ch (upcase ch)))
+>>  
+>>  (defun -uppercase-at-compound-boundary-p (word i)
+>> @@ -1144,9 +1165,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  
+>>  (defun -string-at-p (s word i)
+>>  ;; Return non-nil if string S occurs in WORD at index I.
+>> -  (let ((end (+ i (length s))))
+>> -    (and (<= end (length word))
+>> -         (eq t (compare-strings s nil nil word i end)))))
+>> +  (eq (string-match-p (regexp-quote s) word i) i))
+>
+> This allocates a string, and almost surely appears in several hot paths.
+> A lot of the ugly and pedestrian code in the package is required for
+> performance.
+
+OK, interesting!
+
+>>  (defun -compound-pattern-flag-ok-p (flag flags)
+>>  ;; Return non-nil if a pattern's condition FLAG, 0 for none, is in FLAGS.
+>> @@ -1233,37 +1252,31 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>    (any (lambda (f) (-flags-contain flags f)) (-dict-compound-rules-all-flags dict)))
+>>  
+>>  (defun -find-compound-rule-word (dict word)
+>> -  (named-let recur ((tail (-homonyms dict word)))
+>> -    (when tail
+>> -      (or (let ((flags (car tail)))
+>> -            (and (not (or (-flags-contain flags (-dict-need-affix-flag dict))
+>> -                          (not (-compound-rules-has-any-flag-p dict flags))))
+>> -                 (cons word flags)))
+>> -          (recur (cdr tail))))))
+>> +  (cl-loop for flags in (-homonyms dict word)
+>> +	   thereis (and (not (or (-flags-contain flags (-dict-need-affix-flag dict))
+>> +				 (not (-compound-rules-has-any-flag-p dict flags))))
+>> +			(cons word flags))))
+>
+> BTW, almost all of the named-lets in this package fit in this shape:
+>
+> (defmacro dolist-until (spec &rest body)
+>   "Like `dolist', but stop when BODY first evaluates to a non-nil value.
+> When that happens, evaluate RESULT and return it.  If RESULT is omitted,
+> return the last body value.
+>
+> \(fn (VAR LIST [RESULT]) BODY...)"
+>   (declare (indent 1) (debug ((symbolp form &optional form) body)))
+>   (unless (consp spec)
+>     (signal 'wrong-type-argument (list 'consp spec)))
+>   (unless (<= 2 (length spec) 3)
+>     (signal 'wrong-number-of-arguments (list '(2 . 3) (length spec))))
+>   (let ((var (car spec))
+>         (tail (make-symbol "tail"))
+>         (result (make-symbol "result")))
+>     `(let ((,tail ,(nth 1 spec)) ,var ,result)
+>        (while ,tail
+>          (setq ,var (car ,tail))
+>          (setq ,result ,(macroexp-progn body))
+>          (setq ,tail (if ,result
+>                          ,(when (length= spec 3)
+>                             `(prog1 nil
+>                                (setq ,result ,(macroexp-progn (cddr spec)))))
+>                          (cdr ,tail))))
+>        ,result)))
+>
+> With no RESULT argument it replaces seq-some, and with RESULT = VAR it
+> replaces seq-find.
+>
+> I've used this macro for a while, then decided to just go with a
+> standard ELisp construction instead (and chose named-let due to cl-loop
+> allergy).
+>
+> I'm not entirely convinced, but maybe that macro might be generally
+> useful?
+
+It reminds me somewhat of while-let, but that is currently implemented
+using `catch'.  I would argue that at least for you use-case, it would
+be nice to have this macro so that you can abstract over the list
+management logic.
+
+As for the core itself, my hesitance in championing this macro would be
+that I would imagine you'd have people requesting dolist-when,
+dotimes-when, etc.  If you abstract over all of these special case
+macros you end up with cl-loop :)
+
+>>  (defun -match-compound-rules (dict words-data)
+>> +  ;; It should be more efficient to not involve a closure here and just use `cl-loop'
+>>    (any (lambda (pattern) (-match-compound-rule-1 words-data pattern))
+>>         (-dict-compound-rules dict)))
+>
+> I'm pretty sure the closure is optimized away?  I see no make-closure in
+> its bytecode.
+
+Oh, I didn't check the byte-code, but if that is so disregard my comment.
+
+>> @@ -1317,6 +1330,10 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  
+>>  ;;;; Casing
+>>  
+>> +;; This is confusing, since you'd assume this is about title casing
+>> +;; whereas it is not actually.  I am guessing this is just for single
+>> +;; words?  If this is something that Flyspell/Nuspell do it would be
+>> +;; helpful to provide some rationale.
+>>  (defun -to-title (s)
+>>    (if (string-empty-p s)
+>>        s
+>
+> I replaced this by capitalize and it broke a test...  Good idea, to add
+> a comment.
+>
+>> @@ -1387,11 +1404,16 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>    (or (-check-word dict s t t)
+>>        (let* ((s2 (downcase s))
+>>               (res (-check-word dict s2 t)))
+>> +	;; It seems to me that the check if res is non-nil could be
+>> +	;; pulled into `-flags-contain' to reduce duplication.
+>>          (if (and res (-flags-contain (cdr res) (-dict-keepcase-flag dict))
+>>                   (not (and (-dict-checksharps dict) (string-search "ß" s2))))
+>>              nil
+>>            res))))
+>>  
+>> +;; A general thought, would it make sense to have DICT a special
+>> +;; variable that you bind above, instead of having to thread it
+>> +;; through every function?
+>
+> Interesting idea, will try.
+>
+>> +		 ;; This named-let+when pattern occurs a lot, would it
+>> +		 ;; make sense to have a macro for this?  I think
+>> +		 ;; `cl-doloop'+`cl-return' could also make it more
+>> +		 ;; readable (in the sense that you aren't mixing
+>> +		 ;; processing of the physical data and the logic of
+>> +		 ;; the program).
+>
+> Did I comment above that cl-return (because of throw/catch) is slower (but
+> only on native code)?  That's curious.  But yeah, dolist-until is not an
+> uncommon pattern for sure.
+>
+>>                   (when tail
+>>                     (or (let ((pat (car tail)))
+>>                           (and (string-suffix-p pat s)
+>> @@ -1442,56 +1470,34 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  (defun -number-p (s)
+>>  ;; Return non-nil if S looks like a number (possibly with . , -
+>>  ;; separators).
+>> -  (if (string-empty-p s)
+>> -      nil
+>> -    (let ((i 0) (n (length s)) (done nil) (result nil))
+>> -      (when (eq (aref s 0) ?-) (setq i 1))
+>> -      (while (and (< i n) (not done))
+>> -        (let ((start i))
+>> -          (while (and (< i n) (<= ?0 (aref s i) ?9)) (setq i (1+ i)))
+>> -          (cond
+>> -           ((= i start) (setq done t result nil))
+>> -           ((= i n) (setq done t result t))
+>> -           (t
+>> -            (let ((c (aref s i)))
+>> -              (if (memq c '(?. ?, ?-))
+>> -                  (setq i (1+ i))
+>> -                (setq done t result nil)))))))
+>> -      result)))
+>> +  (string-match-p (rx (? "-") (+ digit) (* (or ?. ?, ?-) (+ digit)))
+>>                     s))
+>
+> Hah, that's an interesting one.  That's not allocating but it builds a
+> regexp.  Will check if it has performance implications.
+
+I hope it is faster, after all compiled regular expressions are cached.
+
+>>  
+>>  (defun -erase-chars (s chars)
+>> -  (if (string-empty-p chars)
+>> -      s
+>> -    (let (result)
+>> -      (dotimes (i (length s))
+>> -        (let ((c (aref s i)))
+>> -          (unless (cl-position c chars) (push c result))))
+>> -      (concat (nreverse result)))))
+>> +  (replace-regexp-in-string (regexp-opt (mapcar #'string chars)) ""
+>>  s))
+>
+> Same about allocating, so I will stop repeating myself 🙂.
+
+Right, I totally understand.  As CHARS are extracted from a dictionary
+they can't be computed at compile time.
+
+I am surprised that using cl-position still makes sense if you are
+concerned about performance, since that is a generic operation that has
+to check the type of chars every time?
+
+>>  (defun -string-last-non-dot (s)
+>>  ;; Return 1+ the index of the last non-dot character of S (0 if none).
+>> -  (let ((i (length s)))
+>> -    (while (and (> i 0) (eq (aref s (1- i)) ?.))
+>> -      (setq i (1- i)))
+>> -    i))
+>> +  (if-let* ((idx (string-match-p (rx (not ".") (* ".") eol) s)))
+>> +      (1+ idx)
+>> +    0))
+>>  
+>>  (defun -spell (dict word)
+>>    (setq word (-substr-replace (-dict-input-iconv dict) word))
+>> -  (if (string-empty-p word)
+>> -      t
+>> -    (let ((abbreviation (eq (aref word (1- (length word))) ?.)))
+>> -      (when abbreviation
+>> -        (setq word (substring word 0 (-string-last-non-dot word))))
+>> -      (if (string-empty-p word)
+>> -          t
+>> -        (if (-number-p word)
+>> -            t
+>> -          (progn
+>> -            (setq word (-erase-chars word (-dict-ignored-chars dict)))
+>> -            (let ((ret (-spell-break dict word 0)))
+>> -              (if (and (not ret) abbreviation)
+>> -                  (-spell-break dict (concat word ".") 0)
+>> -                ret))))))))
+>> +  (or (string-empty-p word)
+>> +      (let ((abbreviation (eq (aref word (1- (length word))) ?.)))
+>> +	(when abbreviation
+>> +	  ;; Looking at how `-string-last-non-dot' is used, it doesn't
+>> +	  ;; need to be that general.  It would be more idiomatic to
+>> +	  ;; use a match group to extract word without the period IMO.
+>> +          (setq word (substring word 0 (-string-last-non-dot word))))
+>> +	(or (string-empty-p word)
+>> +	    (-number-p word)
+>> +	    (progn
+>> +              (setq word (-erase-chars word (-dict-ignored-chars dict)))
+>> +              (let ((ret (-spell-break dict word 0)))
+>> +		(if (and (not ret) abbreviation)
+>> +                    (-spell-break dict (concat word ".") 0)
+>> +                  ret)))))))
+>>  
+>>  ;;;; Suggestions
+>>  ;;
+>> @@ -1566,11 +1572,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; is capped by it let-binds it to `-max-attempts-for-long-algos'.
+>>  (defvar -budget 0)
+>>  
+>> +;; This global state feels iffy.  Why not bind it before calling the
+>> +;; internal functions or have it bound by some macro?
+>> +
+>
+> You mean the line above should be (defvar -budget)?  Makes sense.
+
+Yes!
+
+>>  (defun -budget-consume ()
+>>  ;; Consume one unit of `-budget'; return non-nil if one was available.
+>> -  (when (plusp -budget)
+>> -    (decf -budget)
+>> -    t))
+>> +  (and (plusp -budget) (progn (decf -budget) t)))
+>>  
+>>  (defun -max-attempts-for-long-algos (dict word)
+>>  ;; Return DICT's suggestion-attempt budget for WORD.  A heuristic cap,
+>> @@ -1738,13 +1745,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; Nuspell additionally tries.  Mirrors Nuspell's
+>>  ;; `Suggester::adjacent_swap_suggest'.
+>>    (let ((len (length word)))
+>> -    (when (> len 0)
+>> -      (dotimes (i (1- len))
+>> -        (-add-sug-if-correct dict (-swap-adjacent word i) box))
+>> -      (pcase len
+>> -        (4 (-add-sug-if-correct dict (-swap-two-pairs word 0 2) box))
+>> -        (5 (-add-sug-if-correct dict (-swap-two-pairs word 0 3) box)
+>> -           (-add-sug-if-correct dict (-swap-two-pairs word 1 3) box))))))
+>> +    (dotimes (i (1- len))
+>> +      (-add-sug-if-correct dict (-swap-adjacent word i) box))
+>> +    (pcase len
+>> +      (4 (-add-sug-if-correct dict (-swap-two-pairs word 0 2) box))
+>> +      (5 (-add-sug-if-correct dict (-swap-two-pairs word 0 3) box)
+>> +         (-add-sug-if-correct dict (-swap-two-pairs word 1 3) box)))))
+>>  
+>>  (defun -distant-swap-suggest (dict word box)
+>>  ;; Try swapping each pair of non-adjacent characters of WORD.  Mirrors
+>> @@ -1801,7 +1807,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>    (let* ((len (length word))
+>>           (-budget (-max-attempts-for-long-algos dict word)))
+>>      (dotimes (i1 len)
+>> -      (dotimes (k (max 0 (- len i1 2)))
+>> +      (dotimes (k (max 0 (- len i1 2)))	;`max' not needed, since negative iteration counts do what they should
+>>          (when (-budget-consume)
+>>            (-add-sug-if-correct dict (-move-char-forward word i1 (+ i1 2 k)) box))))
+>>      (dotimes (i1 len)
+>> @@ -1842,7 +1848,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>            (let ((candidate (concat w1 " " w2)))
+>>              (unless (member candidate (-sugs-list box))
+>>                (-sugs-push box candidate)))
+>> -          (when (and (> (1+ i) 1) (> (length w2) 1)
+>> +          (when (and (>= i 1) (length> w2 1)
+>>                       (or (cl-position ?a try-chars) (cl-position ?- try-chars)))
+>>              (let ((candidate (concat w1 "-" w2)))
+>>                (unless (member candidate (-sugs-list box))
+>> @@ -1970,14 +1976,13 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; Return the length of A and B's common prefix.  The first character
+>>  ;; is matched case-insensitively; the rest are not.  Mirrors Nuspell's
+>>  ;; `left_common_substring_length'.
+>> -  (if (or (string-empty-p a) (string-empty-p b))
+>> +  (if (or (string-empty-p a) (string-empty-p b)
+>> +	  (and (/= (aref a 0) (aref b 0)) (/= (aref a 0) (downcase (aref b 0)))))
+>>        0
+>> -    (if (and (/= (aref a 0) (aref b 0)) (/= (aref a 0) (downcase (aref b 0))))
+>> -        0
+>> -      (let ((n (min (length a) (length b))) (i 1))
+>> -        (while (and (< i n) (eq (aref a i) (aref b i)))
+>> -          (setq i (1+ i)))
+>> -        i))))
+>> +    (let ((n (min (length a) (length b))) (i 1))
+>> +      (while (and (< i n) (eq (aref a i) (aref b i)))
+>> +        (setq i (1+ i)))
+>> +      i)))
+>>  
+>>  (defun -longest-common-subsequence-length (a b)
+>>  ;; Return the length of the longest common subsequence of A and B.
+>> @@ -2000,7 +2005,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; at the same position in both; when A and B are the same length and
+>>  ;; exactly 2 positions differ, IS-SWAP says whether those two
+>>  ;; differing characters are a transposition of each other.
+>> -  (let* ((n (min (length a) (length b))) (count 0))
+>> +  (let ((n (min (length a) (length b))) (count 0))
+>>      (dotimes (i n)
+>>        (when (eq (aref a i) (aref b i)) (setq count (1+ count))))
+>>      (let (is-swap m1 m2)
+>> @@ -2033,7 +2038,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>            (push (-suffix-from-root sfx root) suffixed)
+>>            (push (-suffix-cross-product sfx) cross-ok)))
+>>        (setq suffixed (nreverse suffixed) cross-ok (nreverse cross-ok))
+>> -      (cl-mapc
+>> +      (cl-mapc				;I'd use `cl-loop' to avoid the closure
+>>         (lambda (root-sfx ok)
+>>           (when ok
+>>             (dolist (pfx (-all-affix-table-entries (-dict-prefix-table dict)))
+>> @@ -2055,6 +2060,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>                     (or (string-empty-p (-prefix-appending pfx))
+>>                         (string-prefix-p (-prefix-appending pfx) wrong)))
+>>            (push (-prefix-from-root pfx root) prefixed))))
+>> +    ;; Why distinguish combo and prefixed?  If the order element is the list important?
+>>      (append base suffixed combo prefixed)))
+>>  
+>>  (defun -heap-replace (heap entry)
+>> @@ -2119,7 +2125,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>      ;; Each root is (SCORE WORD LOWER FLAGS), sharing its tail with the
+>>      ;; `-ngram-candidates' entry.
+>>      (setq roots (mapcan (lambda (e) (and (cddr e) (list (cons (car e) (cddr e)))))
+>> -                        (sort top-roots :reverse t :in-place t)))
+>> +			;; The signature was changed in Emacs 30!
+>> +			(compat-call sort top-roots :reverse t :in-place t)))
+>>  
+>>      (let ((threshold 0))
+>>        (dolist (k '(1 2 3))
+>> @@ -2128,7 +2135,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>              ;; Can't `aset' an arbitrary character in place: Emacs
+>>              ;; strings are not necessarily uniform-width internally,
+>>              ;; so replacing e.g. a 2-byte-wide character with a
+>> -            ;; 1-byte-wide "*" can fail; rebuild instead.
+>> +            ;; 1-byte-wide "*" can fail; rebuild instead, see (elisp)
+>> +            ;; Modifying Strings.
+>
+> When are we going to switch ELisp to have immutable strings, by the way? 🙂
+
+I know of nothing, and I would assume it would be a hassle to facilitate.
+
+>>              (setq mangled (concat (substring mangled 0 i) "*" (substring mangled (1+ i))))
+>>              (setq i (+ i 4)))
+>>            (setq threshold (+ threshold
+>> @@ -2147,11 +2155,16 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>                       (score (+ (-left-common-substring-length wrong-word expanded)
+>>                                 (-ngram-similarity-any-mismatch
+>>                                  (length wrong-word) wrong-word lower wrong-grams))))
+>> -                (when (and (>= score threshold)
+>> -                           (>= score (car (aref top-guesses 0))))
+>> +                (when (>= score (max (car (aref top-guesses 0)) threshold))
+>>                    (-heap-replace top-guesses (cons score (cons (incf guess-idx) expanded))))))))
+>>          (setq guesses (mapcan (lambda (e) (and (cddr e) (list (cons (car e) (cddr e)))))
+>> -                              (sort top-guesses :reverse t :in-place t)))
+>> +			      ;; Note that you don't really need the
+>> +			      ;; new signature either, since the old
+>> +			      ;; calling convention would sort in
+>> +			      ;; place and you can just adjust the
+>> +			      ;; predicate to reverse the order or
+>> +			      ;; call `nreverse'.
+>> +                              (compat-call sort top-guesses :reverse t :in-place t)))
+>>  
+>>          (named-let recur ((tail guesses))
+>>            (when tail
+>> @@ -2159,8 +2172,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>                    (pcase-let ((`(,score . ,word) g))
+>>                      (let* ((lower (downcase word))
+>>                             (lcs (-longest-common-subsequence-length wrong-word lower)))
+>> -                      (if (and (= (length wrong-word) (length lower))
+>> -                               (= (length wrong-word) lcs))
+>> +                      (if (= (length wrong-word) (length lower) lcs)
+>>                            (progn (setcar g (+ score 2000)) t)
+>>                          (let* ((ngram2 (+ (-ngram-similarity-any-mismatch-weighted 2 wrong-word lower wrong-grams)
+>>                                            (-ngram-similarity-any-mismatch-weighted 2 lower wrong-word)))
+>> @@ -2188,11 +2200,10 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>                (or (let ((g (car tail)))
+>>                      (pcase-let ((`(,score . ,word) g))
+>>                        (cond
+>> -                       ((= (-sugs-box-count box) max-sug) t)
+>> -                       ((and more-selective (<= score 1000)) t)
+>> +                       ((= (-sugs-box-count box) max-sug))
+>> +                       ((and more-selective (<= score 1000)))
+>>                         ((and (< score -100)
+>> -                             (or (/= old-num-sugs (-sugs-box-count box)) (-dict-only-max-diff dict)))
+>> -                        t)
+>> +                             (or (/= old-num-sugs (-sugs-box-count box)) (-dict-only-max-diff dict))))
+>>                         ((any (lambda (sug) (string-search sug word)) (-sugs-list box))
+>>                          (< score -100))
+>>                         (t (-sugs-push box word) nil))))
+>> @@ -2211,16 +2222,16 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; self near the top of this file).
+>>    (let (fixed rest)
+>>      (dolist (sug (-sugs-list box))
+>> -      (let ((space (string-search " " sug)))
+>> -        (if (not space)
+>> -            (push sug rest)
+>> -          (let* ((i (1+ space)) (len (- (length sug) i)))
+>> -            (if (and (<= len (length word))
+>> -                     (string= (substring sug i) (substring word (- (length word) len))))
+>> -                (push sug rest)
+>> -              (push (concat (substring sug 0 i) (-to-title-char-at (substring sug i) 0))
+>> -                    fixed))))))
+>> -    (-sugs-box-set box (append (nreverse fixed) (nreverse rest)))))
+>> +      (if-let* ((space (string-search " " sug))
+>> +		(i (1+ space))
+>> +		(len (- (length sug) i)))
+>> +	  (if (and (<= len (length word))
+>> +                   (string= (substring sug i) (substring word (- (length word) len))))
+>> +              (push sug rest)
+>> +            (push (concat (substring sug 0 i) (-to-title-char-at (substring sug i) 0))
+>> +                  fixed))
+>> +	(push sug rest)))
+>> +    (-sugs-box-set box (nreverse (nconc rest fixed)))))
+>>  
+>>  (defun -fix-keepcase-sug (dict s)
+>>  ;; Return S, possibly lower- or title-cased, or nil to drop it.  Used
+>> @@ -2236,12 +2247,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  (defun -dedup-preserve-first (list)
+>>  ;; Return LIST with duplicates removed, keeping each value's first
+>>  ;; occurrence.
+>> -  (let (seen result)
+>> -    (dolist (s list)
+>> -      (unless (member s seen)
+>> -        (push s seen)
+>> -        (push s result)))
+>> -    (nreverse result)))
+>> +  (delete-dups (copy-sequence list)))	;note that there is only one call-site
+>>  
+>>  (defun -suggest-dash-split (dict box word)
+>>  ;; If WORD contains a hyphen, also try correcting it piece by piece.
+>> @@ -2332,12 +2338,16 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  
+>>      (when (and (memq casing '(init-capital all-capital))
+>>                 (or (/= 0 (-dict-keepcase-flag dict)) (/= 0 (-dict-forbiddenword-flag dict))))
+>> -      (-sugs-box-set box (delq nil (mapcar (lambda (s) (-fix-keepcase-sug dict s)) (-sugs-list box)))))
+>> +      (-sugs-box-set box (mapcan (lambda (s)
+>> +				   (and-let* ((x (-fix-keepcase-sug dict s))) (list x)))
+>> +				 (-sugs-list box))))
+>>  
+>>      (-sugs-box-set box (-dedup-preserve-first (-sugs-list box)))
+>>  
+>> -    ;; OCONV can map a suggestion back to WORD itself (e.g. "románórum"
+>> -    ;; to "romanórum"); drop it then, as Hunspell does (its gh#1002).
+>> +    ;; OCONV can map a suggestion back to WORD itself
+>> +    ;; (e.g. "románórum" to "romanórum"); drop it then, as Hunspell
+>> +    ;; does (its gh#1002). (it would make sense to configure
+>> +    ;; bug-reference to hyperlink these issue references)
+>>      (delete word (mapcar (lambda (s) (-substr-replace (-dict-output-oconv dict) s))
+>>                           (-sugs-list box)))))
+>>  
+>> @@ -2350,7 +2360,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; `Suggester::suggest_priv'.
+>>    (unless (string-empty-p word)
+>>      (let* ((word (-substr-replace (-dict-input-iconv dict) word))
+>> -           (abbreviation (eq (aref word (1- (length word))) ?.))
+>> +           (abbreviation (string-match-p (rx "." eos) word))
+>>             (word (if abbreviation (substring word 0 (-string-last-non-dot word)) word)))
+>>        (unless (string-empty-p word)
+>>          (let ((casing (-classify-casing word)))
+>> @@ -2472,8 +2482,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>      ;; The first line is an approximate word count; use it to presize the
+>>      ;; words table so it isn't repeatedly grown and rehashed as entries
+>>      ;; are added below.
+>> -    (let ((count (string-to-number (buffer-substring-no-properties
+>> -                                    (pos-bol) (pos-eol)))))
+>> +    (let ((count (string-to-number (thing-at-point 'line))))
+>>        (setf (-dict-words dict) (make-hash-table :test 'equal :size (max count 65))))
+>>      (forward-line 1)
+>>      (while (not (eobp))
+>> @@ -2488,8 +2497,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;;;; Affix (.aff) parsing
+>>  
+>>  (defun -chomp-cr (line)
+>> -  (if (and (> (length line) 0) (eq (aref line (1- (length line))) ?\r))
+>> -      (substring line 0 -1)
+>> +  (if (string-match (rx (group (* anything)) ?\r) line)
+>> +      (match-string 1 line)
+>>      line))
+>>  
+>>  (defun -array-command-step (cmd-counts command count-token)
+>> @@ -2585,6 +2594,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>      (dolist (p patterns)
+>>        (cond
+>>         ((or (string-empty-p p) (string= p "^") (string= p "$")))
+>> +       ;; So it is intended that if you start with ^ and end with $
+>> +       ;; that ^ takes priority?
+>>         ((eq (aref p 0) ?^) (push (substring p 1) start))
+>>         ((eq (aref p (1- (length p))) ?$) (push (substring p 0 -1) end))
+>>         (t (push p middle))))
+>> @@ -2607,7 +2618,7 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; equivalent string.  Mirrors Nuspell's `Similarity_Group::parse'.
+>>    (let ((i 0) (n (length str)) chars strings (done nil))
+>>      (while (and (< i n) (not done))
+>> -      (let ((open (cl-position ?\( str :start i)))
+>> +      (let ((open (cl-position ?\( str :start i))) ;this really messes with my mental parser
+>>          (if (not open)
+>>              (progn (setq chars (concat chars (substring str i))) (setq done t))
+>>            (setq chars (concat chars (substring str i open)))
+>> @@ -2681,6 +2692,13 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>  ;; Nuspell's `Substr_Replacer', used for ICONV/OCONV.
+>>    (if (null table)
+>>        s
+>> +    ;; I am not sure, but if feels like this should be something you
+>> +    ;; should be able to do with a regular expression,
+>> +    ;; `replace-regexp-in-string' and a lambda function as REP that
+>> +    ;; looks up in table.  The question is if it is worth the effort
+>> +    ;; to construct a large regular expression and have the processing
+>> +    ;; take place in the regular expression engine or just to run
+>> +    ;; through the string in Lisp...
+>
+> The ideal (prettiest) implementation would be with peg.el, but it's
+> probably not worth introducing the dependency for that (also, dictionary
+> loading is not done often but it is slow, can take about a second, so
+> speed still matters a bit here).
+
+Note that peg is included in Emacs since Emacs 30, so everyone on the
+last two releases of Emacs wouldn't have to install anything.
+
+>>      (let ((i 0) (start 0) (len (length s)) parts)
+>>        (while (< i len)
+>>          (let ((m (-substr-replacer-find table s i)))
+>> @@ -2731,9 +2749,12 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>    (let (edge inner)
+>>      (dotimes (i (length wordchars))
+>>        (let ((c (aref wordchars i)))
+>> -        (cond ((memq c '(?' ?’)) (setq inner (append '(?' ?’) inner)))
+>> +        (cond ((memq c '(?' ?\’)) (setq inner (append '(?' ?\’) inner)))
+>>                ((eq (get-char-code-property c 'general-category) 'Pd) (push c inner))
+>>                (t (push c edge)))))
+>> +    ;; You can get away with using `regexp-opt' (like in one of the
+>> +    ;; examples I gave above), if you want to avoid loading rx at
+>> +    ;; runtime.
+>>      (rx-to-string `(seq (any alpha ,@edge)
+>>                          (* (any alpha ,@edge ,@inner))
+>>                          (any alpha ,@edge))
+>> @@ -2792,6 +2813,9 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>                 ((string= command "KEY")
+>>                  (setf (-dict-keyboard-closeness dict) (car args)))
+>>                 ((string= command "COMPLEXPREFIXES")
+>> +		;; Many of these patterns are repetitive, if feels
+>> +		;; like you could maintain a few alists that associate
+>> +		;; commands with fields that are handled the same way.
+>>                  (setf (-dict-complex-prefixes dict) t))
+>>                 ((string= command "FULLSTRIP")
+>>                  (setf (-dict-fullstrip dict) t))
+>> @@ -2859,8 +2883,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>                     (setf (-dict-flag-aliases dict) (vconcat (reverse flag-aliases))))))
+>>                 ((string= command "BREAK")
+>>                  (setq break-seen t)
+>> -                (pcase (-array-command-step cmd-counts command (car args))
+>> -                  ('data (push (car args) break-patterns))))
+>> +                (when (eq (-array-command-step cmd-counts command (car args)) 'data)
+>> +                  (push (car args) break-patterns)))
+>>                 ((string= command "COMPOUNDRULE")
+>>                  (pcase (-array-command-step cmd-counts command (car args))
+>>                    ('data (push (-parse-compound-rule-line dict (car args))
+>> @@ -2958,6 +2982,8 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>          (insert-file-contents file)
+>>          (goto-char (point-min))
+>>          (while (not (eobp))
+>> +	  ;; You always use `-chomp-cr' on the current line, so
+>> +	  ;; perhaps you can specialize the function?
+>>            (let ((word (-chomp-cr (buffer-substring-no-properties
+>>                                    (pos-bol) (pos-eol)))))
+>>              (unless (string-empty-p word)
+>> @@ -2987,6 +3013,10 @@ vibe-spell: cannot find %s.aff and %s.dic under `vibe-spell-dictionary-path'"
+>>            (write-region (point-min) (point-max) file))
+>>          removed))))
+>>  
+>> +;; I might even make the shorthand longer and replace "-" with
+>> +;; something like "vibe-spell--/generated-" to make it really evident
+>> +;; that the internal implementation is not to be relied on.
+>> +
+>>  ;; Local Variables:
+>>  ;; read-symbol-shorthands: (("-" . "vibe-spell--"))
+>>  ;; End:
+>
+>> I understand that some of these questions boil down to your agent
+>> instructions.  I don't understand, for instance why you want to prefer
+>> named-let over cl-doiter/cl-loop, since the former requires you to
+>> iterate over the list and maintain the tail which I think that the
+>> latter abstract over.
+>
+> Okay, I commented above about this.  It is a good point and matter of
+> taste...
+
+Just to repeat myself, I think that your suggestion of having a
+dolist-until macro would be a nice compromise.
+
+>> I haven't read the C++ code, but it doesn't seem like it is that C++-y.
+>> Perhaps in some places it uses `if'-chains where `and' or a `cond' might
+>> be more adequate, but that is not always the case and other functions
+>> idiomatically use `or' instead of multiple `if' checks that each might
+>> return nil.
+>
+> It definitely is.  There is a case for keeping the translated code still
+> close to the original.  And there's a case to Lispify it all the way.  I
+> mostly went with what the LLM chose, except notably on the preferred
+> looping construct.
+
+What are your arguments for keeping it close to the original?  If you
+plan to have this as a standalone spellchecker implementation and don't
+plan on backporting feaetures too frequently, I would make it more Lispy.
+
+>> It might be that you are re-implementing existing functionality, and
+>> that might also be due to the translation that "proper" Elisp would use
+>> a regular expression where you implement the logic in Lisp, but that is
+>> a common mistake.
+>
+> Okay, I've commented about my performance concerns above.
+
+My guess, but I am no performance expert, is that if you can replace
+custom logic with a static regexp it ought to be faster.  In all other
+cases, I would add a comment explaining why you went with the less
+obvious choice.
+
+>> The flags abstraction wasn't clear to me, or if it even was an
+>> abstraction but having a dictionary with some 50 fields feels like there
+>> should be some room for improvement.  My guess is that this was a
+>> bitfield in C++ that we can replace by a list encoding a set of symbols
+>> or a bitvector with some nicer abstraction so that you don't have to
+>> check for (/= ... 0) all the time.
+>
+> To make sure we're on the same page, flags are e.g. the PY in this .dic
+> entry:
+>
+>   amorphous/PY
+>
+> the meaning of the flags is defined in the .aff file.  I don't know what
+> P is, but Y means "out can append ly" to get amorphously.
+>
+> So yes, this flag handling looks un-idiomatic to me but maybe it's close
+> to optimal.  I haven't fully understood it.
+
+Do you know if the file format is documented somewhere?
+
+>> But other than that, there was nothing fishy about the code and I think
+>> it would be a nice addition.
+>
+> Nice!
+>
+>> To open a can of worms at the end, it might not be a bad idea to use a
+>> different name for the package.  My hunch is that some of the attention
+>> this thread has attracted is due to the name that has a negative
+>> connotation.  The approach to spelling is sound after all, it is not
+>> just a "vibe-check".  What do you think of "espell"?
+>
+> Will reply separately.
+
+================================================================================
+Date: 2026-11-11T19:45:21+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87bj7vryv4.fsf@posteo.net>
+In-Reply-To: <87ld6zu7ad.fsf@gmail.com>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <87ld70csa1.fsf@web.de> <8733t8tlja.fsf@posteo.net>
+ <87ld6zu7ad.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> (From the other subthread.)
+>
+> On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+>
+>> To open a can of worms at the end, it might not be a bad idea to use a
+>> different name for the package.  My hunch is that some of the attention
+>> this thread has attracted is due to the name that has a negative
+>> connotation.  The approach to spelling is sound after all, it is not
+>> just a "vibe-check".  What do you think of "espell"?
+>
+> Here I would appreciate the opinion from Arne and the others with
+> concerns about LLM-generated code.  Do you think I should rename the
+> package?
+>
+> I named it that way 1. as an attempt to be a bit funny, in a
+> self-deprecating way, and 2. to not let anybody have the wrong idea
+> about the method used to write that large (but not unreasonable large)
+> amount of code.  I certainly didn't mean to be provocative.
+
+If it is intentional, then I guess it should be fine.  My concern was
+mostly that "vibe" is nowadays commonly used as a put-down phrase, so
+it sounded to me like calling the package "bad-spell".  But then
+again, packages by the names of "dumb-jump" and "evil" exist :)
+
+I think that if the concern is to indicate that a package is LLM
+generated, we can add metadata to the package itself and have package.el
+respect+indicate it, it doesn't necessarily have to be communicated
+using the name.
+
+> (I don't want to expound on my opinion about LLMs here, but I have fun
+> in actually writing ELisp and I'm not on the Emacs payroll or following
+> deadlines, so this package to me is a rather special experiment.  All my
+> other packages are and will remain handcrafted.)
+
+================================================================================
+Date: 2026-11-11T20:28:41+01:00
+From: Jim Porter <jporterbugs@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <1ac46d91-e943-cb5b-d1a7-b9fb5f89057a@gmail.com>
+In-Reply-To: <E1xQPyd-007gOw-RM@fencepost.gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <E1xQPyd-007gOw-RM@fencepost.gnu.org>
+
+On 11/9/2026 6:04 AM, Richard Stallman wrote:
+> It is plausible that learning to develop software using an LLM will
+> impede learning of how to write (or understand) software without one.
+> But what is the factual basis for asserting that this is inevitable?
+> Are we racing ahead of actual knowledge?
+
+﻿I've followed at a distance some of the research on this over the last 
+few years. From what I've seen, the research consistently concludes that 
+LLMs hurt learning and overall cognition. Here's a selection of papers 
+on the topic.
+
+First is "How AI Impacts Skill Formation" 
+<https://arxiv.org/pdf/2601.20245>. This was published by Anthropic 
+researchers in Feb 2026 and compares users learning a new Python library 
+by themselves or with a chatbot they can query, so it's closely relevant 
+to our situation. (Since it's Anthropic, if there's any bias, it's 
+likely in favor of LLMs as a useful assistant for programming.)
+
+Their top-line results show a statistically-insignificant reduction in 
+task completion time (23min with AI, 25 without, p=0.391), but the 
+reduction in test score *is* statistically-significant (50% with AI, 66% 
+without, p=0.010).
+
+Before I go any farther, I should note that this is a fairly small 
+study, at n=52 (26 each in the AI and no-AI groups). However, there are 
+a few interesting details beyond the top-line results. First, there's 
+almost no difference in task completion time, except for novices (1-3 
+years experience). See Figure 7. Broken down by age, the average test 
+score is the reverse: very close for 1-3 years experience, but wider for 
+other levels (again though, this is statistically weak due to the small 
+population size).
+
+The study also suggests there are a few interaction patterns that can 
+produce better results: "Generation-Then-Comprehension", "Hybrid 
+Code-Explanation", and "Conceptual Inquiry" (see Figure 11 and the 
+nearby text). Compared to the lower-scoring patterns, these ones had 
+greater emphasis on asking questions than having the chatbot do the 
+work. *However*, these groups are n=2, n=3, and n=7 respectively, and 
+I'll additionally note that Fig 11 has no error bars. Statistically 
+speaking, I don't think you can put much weight on this; again, even the 
+full population is quite small at n=52.
+
+Finally, the authors also note in Section 7.1 that, "This should be a 
+lower bound for cognitive offloading since agentic AI coding tools would 
+require even less human participation." A common objection with research 
+like this is that the tools are so much more advanced now, but the 
+authors hypothesize here that these advancements would make it even 
+harder to learn. (And in any case, marketing doesn't override science 
+just because it has a more recent publication date.)
+
+Here are some additional papers with similar results. I haven't looked 
+at these in as much detail, so I'm only providing a quick blurb about each:
+
+----------------------------------------
+
+Endoscopist deskilling risk after exposure to artificial intelligence in 
+colonoscopy: a multicentre, observational study (Oct 2025)
+<https://doi.org/10.1016/S2468-1253(25)00133-5>
+
+This paper observed the endoscopists had worse performance doing 
+non-AI-assisted colonoscopies after having spent 3 months using AI 
+assistance.
+
+----------------------------------------
+
+Thinking—Fast, Slow, and Artificial: How AI is Reshaping Human Reasoning 
+and the Rise of Cognitive Surrender (Feb 2026)
+<https://doi.org/10.31234/osf.io/yk25n_v1>
+
+This paper introduces the idea of "cognitive surrender": when using AI, 
+users "often surrender to its outputs—whether correct or flawed."
+
+----------------------------------------
+
+Sycophantic AI decreases prosocial intentions and promotes dependence 
+(Mar 2026)
+<https://doi.org/10.1126/science.aec8352>
+
+This one is about interpersonal interactions, but the results are quite 
+disturbing: "In our human experiments, even a single interaction with 
+sycophantic AI reduced participants’ willingness to take responsibility 
+and repair interpersonal conflicts, while increasing their own 
+conviction that they were right. Yet despite distorting judgment, 
+sycophantic models were trusted and preferred."
+
+----------------------------------------
+
+AI Tools in Society: Impacts on Cognitive Offloading and the Future of 
+Critical Thinking (Jan 2025)
+<https://doi.org/10.3390/soc15010006>
+
+I believe this paper is mostly based on self-reports from the study 
+participants, so you may want to take it with a grain of salt. Still, 
+the authors conclude: "The findings revealed a significant negative 
+correlation between frequent AI tool usage and critical thinking 
+abilities, mediated by increased cognitive offloading."
+
+----------------------------------------
+
+AI-overdependence and human cognitive decline: Hazards, evidence, and 
+mitigation strategies (May 2026)
+<https://doi.org/10.1016/j.chbr.2026.101102>
+
+This paper reviews the literature on AI's cognitive effects over the 
+last few years, and according to the authors, "reveals that 
+AI-overdependence poses a significant threat to higher-order cognitive 
+skills, especially critical thinking, complex decision-making, and 
+analytical reasoning, while also undermining creativity, memory, and 
+executive functions. These effects stem from well-documented mechanisms 
+such as cognitive offloading, metacognitive laziness, and automation 
+bias, compounded by the perceived authority and convenience of AI systems."
+
+----------------------------------------
+
+ From Offloading to Engagement: An Experimental Study on Structured 
+Prompting and Critical Reasoning with Generative AI (Oct 2025)
+<https://doi.org/10.3390/data10110172>
+
+This is the most-positive paper I could find after a brief search, and 
+suggests that "structured prompting" avoids some of the problems with 
+cognitive offloading. This structured prompting consists of restricting 
+LLM use to looking up contextual or factual information, and then later 
+prompting the LLM to generate counterarguments for their essay. However, 
+the study only uses self-reporting to measure the level of cognitive 
+offloading, so I'd again take this with a grain of salt. Even with the 
+comparatively optimistic views of the author, they note, "The study 
+highlights this risk of an illusion of non-offloading: even individuals 
+with strong critical dispositions may fail to recognise their reliance 
+on AI, accepting outputs as anchors while believing they have remained 
+independent."
+
+----------------------------------------
+
+While it takes a long time to come to true scientific consensus, 
+especially with a technology like LLMs that are seeing such frequent 
+changes, current research is pointing towards LLM use having significant 
+cognitive and learning harms. Given all of that, I prefer to apply the 
+precautionary principle. Maybe in the future, the situation will change, 
+but I'd rather wait until there's a reasonable amount of research that 
+has happier results than the above papers.
+
+================================================================================
+Date: 2026-11-11T20:30:30+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <avTCVo62HrJrU+vd@tuxteam.de>
+In-Reply-To: <87bj7vryv4.fsf@posteo.net>
+References: <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <87ld70csa1.fsf@web.de> <8733t8tlja.fsf@posteo.net>
+ <87ld6zu7ad.fsf@gmail.com> <87bj7vryv4.fsf@posteo.net>
+
+On Wed, Nov 11, 2026 at 06:45:21PM +0000, Philip Kaludercic wrote:
+
+[...]
+
+> I think that if the concern is to indicate that a package is LLM
+> generated, we can add metadata to the package itself and have package.el
+> respect+indicate it, it doesn't necessarily have to be communicated
+> using the name.
+
+"Never put metadata in a name" :-)
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-11T20:55:23+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86v763w3bo.fsf@gnu.org>
+In-Reply-To: <1ac46d91-e943-cb5b-d1a7-b9fb5f89057a@gmail.com> (message from
+ Jim Porter on Wed, 11 Nov 2026 11:28:41 -0800)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <E1xQPyd-007gOw-RM@fencepost.gnu.org>
+ <1ac46d91-e943-cb5b-d1a7-b9fb5f89057a@gmail.com>
+
+> Date: Wed, 11 Nov 2026 11:28:41 -0800
+> Cc: eliz@gnu.org, bugs@gnu.support, phil@hagelb.org, emacs-devel@gnu.org
+> From: Jim Porter <jporterbugs@gmail.com>
+> 
+> On 11/9/2026 6:04 AM, Richard Stallman wrote:
+> > It is plausible that learning to develop software using an LLM will
+> > impede learning of how to write (or understand) software without one.
+> > But what is the factual basis for asserting that this is inevitable?
+> > Are we racing ahead of actual knowledge?
+> 
+> ﻿I've followed at a distance some of the research on this over the last 
+> few years. From what I've seen, the research consistently concludes that 
+> LLMs hurt learning and overall cognition. Here's a selection of papers 
+> on the topic.
+
+I would _really_ like if this discussion didn't become a general
+discussion of LLMs and their effects on people.  If you or anyone else
+must go into these tangents, please just post the pointers and that's
+all.  There's no need to include summaries let alone discussion of
+each article.  All that is way out of scope for us.
+
+Alternatively, move these tangents to where they belong:
+emacs-tangents.
+
+================================================================================
+Date: 2026-11-12T00:46:53+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xRI1l-00AeUK-7C@fencepost.gnu.org>
+In-Reply-To: <87eccxvnyf.fsf@asthra> (message from Phil Hagelberg on Fri, 06
+ Nov 2026 10:01:28 -0800)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Like with many SaaS products, LLM vendors have been caught admitting
+  > that they deliberately design the flow of these systems with the goal of
+  > being addictive, so it's not particularly surprising that this happens.
+  > The only surprise is that people who should know better continue to fall
+  > for it.
+
+Can you send us links to pages about these admissions?
+This is the sort of thing that could be a rumor; before citing it
+as the basis for a conclusion, I'd like to verify it.
+
+  > I know this looks at first glance like a slippery slope fallacy, but I'm
+  > just describing what happened from painful firsthand personal experience.
+  > I have read about the same thing happening in multiple free software
+  > projects as well,
+
+Do you know of any free software project that has faced this problem
+and prevented it?
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-12T00:46:57+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xRI1p-00Aebj-Dz@fencepost.gnu.org>
+In-Reply-To: <86eccxltnc.fsf@gnu.org> (message from Eli Zaretskii on Fri, 06
+ Nov 2026 20:08:39 +0200)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87jymryxz1.fsf@spork.org> <86ecczm4r9.fsf@gnu.org>
+ <CAL6FEzyLwiN7LxXTmrrUM65fYNr4Poz3n6LX2cSMzXpisSAwSQ@mail.gmail.com>
+ <86v76akymx.fsf@gnu.org> <5994de18-bfa2-43da-afbc-1226aac10b35@gmail.com>
+ <86fqxdlxjl.fsf@gnu.org> <80352a7f-8589-455a-b463-631fc6d25ab6@gmail.com>
+ <86eccxltnc.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > I don't see how this is different from reviewing any other
+  > contribution.  When I review a patch, the amount of effort invested by
+  > the contributor has no effect on my efforts.  And I always need to
+  > invest some effort to understand the changes.
+
+The reviewer has no obligation to continue studying the proposed patch
+for however much time it takes to understand it.  If it is hard to
+understand, you can reject it for that reason, or say "It is not clear
+how this code works, so I can't accept it.  Please explain the code
+with clear comments."
+
+If the contributor is unable to write a clear explanation, you don't
+have much more work to do on that patch.
+
+If the only way to understand some a patch is to use an LLM that is
+nonfree or SaaSS, then since morally we reject using that, it follows
+that understanding that patch is impossible for us, so we must reject
+it.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-12T00:47:02+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xRI1u-00AefO-KA@fencepost.gnu.org>
+In-Reply-To: <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ (message from Andrei Sova on Fri, 6 Nov 2026 11:21:46 -0700)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > When we get a submission of code, we almost always ask questions and
+  > > request some changes.  What do you think will happen if in response we
+  > > get "blank stares"?
+
+  > Very likely the maintainers will find themselves indirectly talking to
+  > an LLM. This is just my naive opinion, but to me this doesn't sound
+  > like it would allow for a very healthy community.
+
+  also
+
+  > It's quite difficult to explain if you haven't experienced it firsthand,
+  > but LLM-generated code and explanations are astonishingly good at
+  > *looking* correct and being extremely convincing at first glance in a
+  > way that is completely disconnected to whether it is correct or not.
+
+I suggest that, instead of discussing whether the patch is correct, we
+say that the code lacks explanation to make its meaning clear clear,
+and ask the contributor to add clear explanation.  "Tell us what X
+means here", for instance.
+
+That way we won't get into the kind of argument that LLMs could fool
+people at.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-12T00:47:05+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xRI1x-00Aefk-Jk@fencepost.gnu.org>
+In-Reply-To: <CAN+1HbrJvoYFdG4aYSkkh0sQwT-J7kKdq8hSSo3uULk1GOH3bA@mail.gmail.com>
+ (message from =?iso-8859-1?Q?St=C3=A9phane?= Marks on Fri, 6 Nov 2026
+ 13:30:35 -0500)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <CAN+1HbrJvoYFdG4aYSkkh0sQwT-J7kKdq8hSSo3uULk1GOH3bA@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > That seems to have already happened in a "conversation" with "roelof's
+  > assistent" (if its name is to be believed).  See
+  > https://lists.gnu.org/archive/html/bug-gnu-emacs/2026-11/msg00025.html and
+  > https://lists.gnu.org/archive/html/bug-gnu-emacs/2026-11/msg00017.html for
+  > examples.
+
+I can't make any sense of that.  It looks like Eli rejected the
+offered code because it was not clear.  Eli, can you tell us any more
+of what you were thinking when you read that message?
+
+If we will reject such unclear patches and unclear explanations as Eli
+did this time, does that constitute an adequate way way of handling
+them?
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-12T00:48:27+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <E1xRI3H-00AeyN-Iz@fencepost.gnu.org>
+In-Reply-To: <86y0b22kkk.fsf@gnu.org> (message from Eli Zaretskii on Mon, 09
+ Nov 2026 15:36:27 +0200)
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > 3. Higher risk for long term maintenance also seem pretty clear, since 
+  > > human reviews apparently often can't keep up with the amount of code LLM 
+  > > contributors produce.
+
+In order to maintain human control over the Emacs code base, we must
+refuse to be hurried in dealing with proposed changes.  That means we
+must refuse to feel hurried by whatever would-be contributors say or
+do.  We must set the pace so that we can do the job properly.
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-12T00:48:42+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <E1xRI3W-00Af3X-QX@fencepost.gnu.org>
+In-Reply-To: <87cxsebi4x.fsf@gmail.com> (message from Andrei
+ =?iso-8859-1?Q?=C8=98ova?= on Mon, 09 Nov 2026 00:04:14 -0700)
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <87cxsebi4x.fsf@gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+The GNU Project does not have a code of conduct.
+We have the GNU Kind Communication Guidelines:
+https://gnu.org/philosophy/kind-communication.html.
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-12T06:45:42+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86se16wqk9.fsf@gnu.org>
+In-Reply-To: <E1xRI1p-00Aebj-Dz@fencepost.gnu.org> (message from Richard
+ Stallman on Wed, 11 Nov 2026 18:46:57 -0500)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87jymryxz1.fsf@spork.org> <86ecczm4r9.fsf@gnu.org>
+ <CAL6FEzyLwiN7LxXTmrrUM65fYNr4Poz3n6LX2cSMzXpisSAwSQ@mail.gmail.com>
+ <86v76akymx.fsf@gnu.org> <5994de18-bfa2-43da-afbc-1226aac10b35@gmail.com>
+ <86fqxdlxjl.fsf@gnu.org> <80352a7f-8589-455a-b463-631fc6d25ab6@gmail.com>
+ <86eccxltnc.fsf@gnu.org> <E1xRI1p-00Aebj-Dz@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: davidimagid@gmail.com, bjc@spork.org, jporterbugs@gmail.com,
+> 	bugs@gnu.support, phil@hagelb.org, emacs-devel@gnu.org
+> Date: Wed, 11 Nov 2026 18:46:57 -0500
+> 
+>   > I don't see how this is different from reviewing any other
+>   > contribution.  When I review a patch, the amount of effort invested by
+>   > the contributor has no effect on my efforts.  And I always need to
+>   > invest some effort to understand the changes.
+> 
+> The reviewer has no obligation to continue studying the proposed patch
+> for however much time it takes to understand it.  If it is hard to
+> understand, you can reject it for that reason, or say "It is not clear
+> how this code works, so I can't accept it.  Please explain the code
+> with clear comments."
+
+Right, and that happens from time to time IME with contributions to
+Emacs, even without LLM-generated code.
+
+> If the contributor is unable to write a clear explanation, you don't
+> have much more work to do on that patch.
+
+Right.
+
+> If the only way to understand some a patch is to use an LLM that is
+> nonfree or SaaSS, then since morally we reject using that, it follows
+> that understanding that patch is impossible for us, so we must reject
+> it.
+
+Yes, of course.  It would be unthinkable to install such code in
+Emacs.  Not only for moral reasons, but also because code we don't
+understand cannot be in Emacs since it could then do stuff we don't
+want Emacs to do.
+
+================================================================================
+Date: 2026-11-12T07:06:33+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86qzgqwpli.fsf@gnu.org>
+In-Reply-To: <E1xRI1x-00Aefk-Jk@fencepost.gnu.org> (message from Richard
+ Stallman on Wed, 11 Nov 2026 18:47:05 -0500)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <CAN+1HbrJvoYFdG4aYSkkh0sQwT-J7kKdq8hSSo3uULk1GOH3bA@mail.gmail.com>
+ <E1xRI1x-00Aefk-Jk@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: andreisva2023@gmail.com, eliz@gnu.org, phil@hagelb.org,
+> 	arne_bab@web.de, jporterbugs@gmail.com, bugs@gnu.support,
+> 	emacs-devel@gnu.org
+> Date: Wed, 11 Nov 2026 18:47:05 -0500
+> 
+>   > That seems to have already happened in a "conversation" with "roelof's
+>   > assistent" (if its name is to be believed).  See
+>   > https://lists.gnu.org/archive/html/bug-gnu-emacs/2026-11/msg00025.html and
+>   > https://lists.gnu.org/archive/html/bug-gnu-emacs/2026-11/msg00017.html for
+>   > examples.
+> 
+> I can't make any sense of that.  It looks like Eli rejected the
+> offered code because it was not clear.  Eli, can you tell us any more
+> of what you were thinking when you read that message?
+
+I rejected the explanations of the root cause(s) of the problem
+because they made no sense to me, given my familiarity with how the
+display engine works.  I also pointed out why the explanations made no
+sense.  Since they made no sense, whether to accept patches was never
+on the table, because the patches were based on assumptions and
+conclusions which couldn't be correct, as they disregarded basic
+principles of how the display engine works.
+
+> If we will reject such unclear patches and unclear explanations as Eli
+> did this time, does that constitute an adequate way way of handling
+> them?
+
+I don't see why it won't.
+
+In general, both in my work on Emacs and elsewhere in my life, I never
+completely reject any idea or utterance, because almost always there's
+something useful in there.  Even if the idea is completely false, it
+can frequently give me correct ideas as I think about why and how it
+is false.  The source of the ideas is never too important (except that
+if I know from experience that a particular source has high
+probability of generating false ideas, I will scrutinize ideas from
+such a source with some prejudice).  Therefore, I cannot agree with
+people who say that LLM-generated text should be ignored as garbage,
+because it could include useful parts or lead me to useful ideas as I
+consider what it tells.
+
+That's what I did in this case: rejected the wrong ideas and the
+patches offered based on those wrong ideas after showing with code
+fragments why they cannot be true.  Thus, "talking to LLM" allowed me
+to examine the code in Emacs and attempt to find problems there which
+could explain the issues discussed in that bug report.
+
+Note that, among a lot of incorrect hypotheses and suggestions which
+were posted "from LLM's mouth" in that discussion, one was close to
+the real cause of the problem, but failed to identify the place where
+the code should be corrected.  That place was later identified by
+Sameer Singh and the problem was fixed where it happens.  My
+conclusion from this was that thinking about what LLM tells is useful,
+because some, even if small, part of what it says could give useful
+ideas.  When dealing with code in Emacs we are less familiar with,
+that could help identify and solve problems which otherwise might
+remain unsolved.
+
+================================================================================
+Date: 2026-11-12T07:09:19+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <86pkwawpgw.fsf@gnu.org>
+In-Reply-To: <E1xRI3H-00AeyN-Iz@fencepost.gnu.org> (message from Richard
+ Stallman on Wed, 11 Nov 2026 18:48:27 -0500)
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org> <E1xRI3H-00AeyN-Iz@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: emacs-devel@gnu.org
+> Date: Wed, 11 Nov 2026 18:48:27 -0500
+> 
+>   > > 3. Higher risk for long term maintenance also seem pretty clear, since 
+>   > > human reviews apparently often can't keep up with the amount of code LLM 
+>   > > contributors produce.
+> 
+> In order to maintain human control over the Emacs code base, we must
+> refuse to be hurried in dealing with proposed changes.  That means we
+> must refuse to feel hurried by whatever would-be contributors say or
+> do.  We must set the pace so that we can do the job properly.
+
+Which is what happens already in Emacs, and was always so.
+
+Accepting changes without proper review, just because the author
+hurries us, would be doing a bad job.  When the contributor pings us,
+we try to make more time for reviewing the contribution, but we don't
+do it less thoroughly.
+
+================================================================================
+Date: 2026-11-12T07:33:15+01:00
+From: Phil Hagelberg <phil@hagelb.org>
+Subject: Re: Human Emacs
+Message-ID: <87ld6ytv84.fsf@asthra>
+In-Reply-To: <E1xRI1l-00AeUK-7C@fencepost.gnu.org> (Richard Stallman's message
+ of "Wed, 11 Nov 2026 18:46:53 -0500")
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > Like with many SaaS products, LLM vendors have been caught admitting
+>   > that they deliberately design the flow of these systems with the goal of
+>   > being addictive, so it's not particularly surprising that this happens.
+>   > The only surprise is that people who should know better continue to fall
+>   > for it.
+>
+> Can you send us links to pages about these admissions?
+> This is the sort of thing that could be a rumor; before citing it
+> as the basis for a conclusion, I'd like to verify it.
+
+The primary source is a document that was leaked to 404 media:
+
+https://www.404media.co/microsoft-wants-to-make-people-addicted-to-scout-its-new-ai-assistant-internal-documents-reveal/
+
+This article requires a login to read, but it doesn't require payment. I
+can quote the relevant part:
+
+> The internal Microsoft document, called “ClawPilot: Overview and Plan
+> with Project Lobster,” seen by 404 Media has a subheading called
+> “ClawPilot Overall Plan,” which notes “three phases” to its launch
+> plan. The first phase is “Make people addicted.”
+>
+> “Continue shipping the standalone ClawPilot experience. Pilot the UX,
+> grow the user base, and build the skill and tool ecosystem that makes
+> people depend on it daily. This is already happening organically,” the
+> document says. Omar Shahine, the Microsoft executive leading the
+> project, adds that in its pilot with Microsoft employees, they have
+> seen “Daily Usage with High Retention and intensity of usage (chats,
+> queries, workflows, skills).”
+
+Not particularly surprising behavior coming from Microsoft.
+
+Here's another article on the topic that doesn't require a login:
+
+https://futurism.com/artificial-intelligence/microsoft-plots-addicted-to-its-ai
+
+>   > I know this looks at first glance like a slippery slope fallacy, but I'm
+>   > just describing what happened from painful firsthand personal experience.
+>   > I have read about the same thing happening in multiple free software
+>   > projects as well,
+>
+> Do you know of any free software project that has faced this problem
+> and prevented it?
+
+The only prevention I know to be effective is a clear and unambiguous
+ban on LLM contributions, which I've applied to all the projects I
+run. I don't know of a project which has avoided these problems without
+a ban. I have read about projects like the game engine Bevy where they
+had a ban but then lifted it, and it went very badly:
+
+https://blog.fallible.net/it-breaks-a-village/
+
+Projects like this where they try to find a middle ground and require
+that LLM usage must be "responsible" or "human guided only" don't
+usually end up successful in those criteria over time due to the "vibe
+bobsled" problem I mentioned earlier.
+
+-Phil
+
+================================================================================
+Date: 2026-11-12T08:17:55+01:00
+From: <tomas@tuxteam.de>
+Subject: Re: Human Emacs
+Message-ID: <avVoI5obvftZ72jl@tuxteam.de>
+In-Reply-To: <E1xRI1u-00AefO-KA@fencepost.gnu.org>
+References: <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+ <87y0b9xd1j.fsf@web.de> <E1xPMe5-00ANsN-0E@fencepost.gnu.org>
+ <87eccxvnyf.fsf@asthra> <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org>
+
+On Wed, Nov 11, 2026 at 06:47:02PM -0500, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+[...]
+
+>   > It's quite difficult to explain if you haven't experienced it firsthand,
+>   > but LLM-generated code and explanations are astonishingly good at
+>   > *looking* correct and being extremely convincing at first glance in a
+>   > way that is completely disconnected to whether it is correct or not.
+> 
+> I suggest that, instead of discussing whether the patch is correct, we
+> say that the code lacks explanation to make its meaning clear clear,
+> and ask the contributor to add clear explanation.  "Tell us what X
+> means here", for instance.
+> 
+> That way we won't get into the kind of argument that LLMs could fool
+> people at.
+
+This is *precisely* what generative LLMs are getting pretty good at.
+
+The contributor passes the maintainer's questions to the LLM and sends
+back its answers.
+
+The maintainer is faced to do a constant Turing test which is becoming
+harder and harder.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-12T10:20:03+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: feature/igc3 status
+Message-ID: <878q2yz9rw.fsf@athena.silentflame.com>
+In-Reply-To: <87a4p6angg.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+
+Hello Helmut,
+
+Helmut Eller [24/Sep  1:38pm +02] wrote:
+> On Thu, Sep 24 2026, Sean Whitton wrote:
+>
+>> Hello igc devs,
+>>
+>> I was wondering how things are going, and whether you might have a
+>> better idea about when a merge to master might be possible, to get wider
+>> testing.
+>
+> Currently I'm working on bug#79200, i.e. merging the
+> scratch/igc/weak-undo-list branch into scratch/igc3.
+>
+> As for merging with master:
+>
+> - there is still the scratch/gc-handles branch that I never merged
+>   (bug#80609).  I'm not sure if I should bring that up-to-date and merge
+>   it separately or simply include it in the big merge.
+>
+> - I should probably look over the signal handling code again before the
+>   big merge.
+
+Have you had a chance to look over the signal handling code yet?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-12T10:41:12+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <878q2yqtdz.fsf@gmail.com>
+In-Reply-To: <878q2yz9rw.fsf@athena.silentflame.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com>
+
+On Thu, Nov 12 2026, Sean Whitton wrote:
+
+> Hello Helmut,
+>
+> Helmut Eller [24/Sep  1:38pm +02] wrote:
+>> On Thu, Sep 24 2026, Sean Whitton wrote:
+>>
+>>> Hello igc devs,
+>>>
+>>> I was wondering how things are going, and whether you might have a
+>>> better idea about when a merge to master might be possible, to get wider
+>>> testing.
+>>
+>> Currently I'm working on bug#79200, i.e. merging the
+>> scratch/igc/weak-undo-list branch into scratch/igc3.
+>>
+>> As for merging with master:
+>>
+>> - there is still the scratch/gc-handles branch that I never merged
+>>   (bug#80609).  I'm not sure if I should bring that up-to-date and merge
+>>   it separately or simply include it in the big merge.
+>>
+>> - I should probably look over the signal handling code again before the
+>>   big merge.
+>
+> Have you had a chance to look over the signal handling code yet?
+
+No, not yet.  I guess I should make time for that soon.
+
+Helmut
+
+================================================================================
+Date: 2026-11-12T11:24:07+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86ld6ywdo8.fsf@gnu.org>
+In-Reply-To: <87ld6ytv84.fsf@asthra> (message from Phil Hagelberg on Wed, 11
+ Nov 2026 22:33:15 -0800)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org> <87ld6ytv84.fsf@asthra>
+
+> From: Phil Hagelberg <phil@hagelb.org>
+> Cc: arne_bab@web.de,  eliz@gnu.org,  jporterbugs@gmail.com,
+>   bugs@gnu.support,  emacs-devel@gnu.org
+> Date: Wed, 11 Nov 2026 22:33:15 -0800
+> 
+> > Do you know of any free software project that has faced this problem
+> > and prevented it?
+> 
+> The only prevention I know to be effective is a clear and unambiguous
+> ban on LLM contributions, which I've applied to all the projects I
+> run. I don't know of a project which has avoided these problems without
+> a ban. I have read about projects like the game engine Bevy where they
+> had a ban but then lifted it, and it went very badly:
+> 
+> https://blog.fallible.net/it-breaks-a-village/
+
+AFAICT, there are no technical issues described in that blog, only
+social ones.  They are described very vaguely (probably because the
+audience is supposed to be familiar with the details), but from what I
+could understand, the policy change to allow LLM-generated code was
+done without sufficient discussions and consent, and that and the
+following social dynamics caused severe problems like distrust and
+break of communications between members of the community.
+
+Whether this could happen to us if LLM-generated code is allowed
+depends on us, not on LLMs or the code they generate.  I want to hope
+that we will be wise enough to keep communications channels open,
+good-faith and trustworthy, and to avoid alienating one another
+because of our differing opinions.  I don't see why someone who is
+okay with using LLMs should distrust or despise someone who dislikes
+them, or vice versa.  I also don't see why the differences in opinions
+on these matters could justify a fork, which is an extreme expression
+of breakage in social relationships which hold communities together.
+I've seen this when XEmacs forked, and my conclusions back then was
+that, although the reasons were presented as technical ones, they were
+not.
+
+> Projects like this where they try to find a middle ground and require
+> that LLM usage must be "responsible" or "human guided only" don't
+> usually end up successful in those criteria over time due to the "vibe
+> bobsled" problem I mentioned earlier.
+
+That this is likely to happen, let alone inevitable, has never been
+sufficiently demonstrated in the context of Emacs development or
+anything similar.  So I still don't see why it should be regarded as
+being anywhere near certainty.
+
+================================================================================
+Date: 2026-11-12T11:40:03+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86jymiwcxo.fsf@gnu.org>
+In-Reply-To: <avVoI5obvftZ72jl@tuxteam.de> (tomas@tuxteam.de)
+References: <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+ <87y0b9xd1j.fsf@web.de> <E1xPMe5-00ANsN-0E@fencepost.gnu.org>
+ <87eccxvnyf.fsf@asthra> <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+
+> Date: Thu, 12 Nov 2026 08:17:55 +0100
+> Cc: Andrei Sova <andreisva2023@gmail.com>, eliz@gnu.org, phil@hagelb.org,
+> 	arne_bab@web.de, jporterbugs@gmail.com, bugs@gnu.support,
+> 	emacs-devel@gnu.org
+> From: <tomas@tuxteam.de>
+> 
+> >   > It's quite difficult to explain if you haven't experienced it firsthand,
+> >   > but LLM-generated code and explanations are astonishingly good at
+> >   > *looking* correct and being extremely convincing at first glance in a
+> >   > way that is completely disconnected to whether it is correct or not.
+> > 
+> > I suggest that, instead of discussing whether the patch is correct, we
+> > say that the code lacks explanation to make its meaning clear clear,
+> > and ask the contributor to add clear explanation.  "Tell us what X
+> > means here", for instance.
+> > 
+> > That way we won't get into the kind of argument that LLMs could fool
+> > people at.
+> 
+> This is *precisely* what generative LLMs are getting pretty good at.
+> 
+> The contributor passes the maintainer's questions to the LLM and sends
+> back its answers.
+
+Please read the discussion in bug#82057.  That's what happened there,
+but based on that I cannot say that the particular LLM used is "pretty
+good at" explaining itself.  It didn't take me long to find and expose
+the fallacies in those explanations.  After the 3rd iteration of that,
+I pointed out to the contributor that I'm not willing to continue that
+way anymore, with the result that the next response was much shorter
+and to the point, because it provided an easily followed recipe and
+almost completely dropped the bogus explanations of why the problem
+happens.
+
+> The maintainer is faced to do a constant Turing test which is becoming
+> harder and harder.
+
+I didn't find that to be "harder and harder".  I found it to be very
+similar to talking to some humans around here (which will remain
+unnamed).  So when I faced that bug's discussion, I could draw on
+real-life experience.  When you read some description of what some
+code does, and you are familiar enough with that code, it doesn't take
+long for you to spot fallacies, and then disregard everything based on
+the fallacies.  At least IME, this usually allows to analyze a message
+of several hundred lines very quickly.
+
+And please don't go the way of saying I have some exceptional
+experience or abilities, because I don't.  I've seen Sean and others
+deal with similar situations no less efficiently.
+
+Once again, I think you and others who post similar messages
+underestimate the Emacs maintainers and their abilities.  The need to
+deal with a crowd such as this one, day in and day out, teaches us
+something that can be efficiently applied to the envisioned situations
+with LLM-generated stuff (again, provided that GNU allows that at some
+point).  And neither are we ignorant of what LLMs can and cannot do.
+
+Now, I don't know why the developers of those projects described in
+those blogs were different and let these bad things happen, but I do
+now us, and I'm not afraid.
+
+================================================================================
+Date: 2026-11-12T14:38:24+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87a4netbjj.fsf@gmail.com>
+In-Reply-To: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+
+On Wed, 11 Nov 2026, Pedro A. Aranda wrote:
+
+> Hi again.
+>
+> Sorry if I'm insisting on this...
+>
+> I had ten minutes today and wrote a **TOY** (attached) just to learn
+> to do RPC in Python. I took a couple of functions from the API I saw
+> in jinx-mod.c and tried to implement something that would communicate
+> through RPC in a similar way as jinx interacts with the enchant
+> library.
+>
+> Now the next step would be to write the Emacs part. I think it
+> shouldn't be too difficult, since eglot already has a lot of jsonrpc
+> that could be used to inspire the glue needed. No agent, no nothing.
+
+(I just released jit-spell with support for different backends (at the
+moment vibe-spell and "ispell -a") so you can plug and play your toy if
+you want).
+
+> In this case, we have the additional goodie of offloading the burden
+> of keeping up with the enchant/aspell/hunspell evolution on the
+> libraries used by the toy, not on the toy itself.
+>
+> This is only a toy and I was using Python because I'm lazy. Now select
+> a set of libraries, languages, etc. with a good old compliant license
+> that cover the major OSes and there you are.
+
+Sure this can be done, and if you provided prebuilt binaries for every
+OS you could make it "just work".  But then again, why is that better
+than a pure-ELisp implementation?
+
+(By the way, your toy implementation piggybacks on Python's FFI.  As
+mentioned somewhere upthread, I think an FFI for Emacs would probably be
+the best approach, better than jinx, vibe-spell or your approach.)
+
+> No need for fierce discussions ;-)
+
+Indeed.
+
+================================================================================
+Date: 2026-11-12T14:58:25+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <CAN+1Hbqt8en8RbPc3Szj-U+K1T6uTu0fecCwD=1TyrTSLvR4Ug@mail.gmail.com>
+In-Reply-To: <87a4netbjj.fsf@gmail.com>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com>
+
+On Thu, Nov 12, 2026 at 8:41 AM Augusto Stoffel <arstoffel@gmail.com> wrote:
+
+>
+> (By the way, your toy implementation piggybacks on Python's FFI.  As
+> mentioned somewhere upthread, I think an FFI for Emacs would probably be
+> the best approach, better than jinx, vibe-spell or your approach.)
+>
+
+Having first-class Emacs FFI means I can retire silly things like this
+package https://github.com/shipmints/posacs
+
+================================================================================
+Date: 2026-11-12T16:20:21+01:00
+From: david <davidimagid@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <CAL6FEzzLWzkfz8y4v9y_gSr1jinK-qp88xfWqU62ZkpQeDAetQ@mail.gmail.com>
+In-Reply-To: <86jymiwcxo.fsf@gnu.org>
+References: <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <86jymiwcxo.fsf@gnu.org>
+
+If llm code is ever accepted in Emacs and its packages, which llms would be
+authorized?  From the threads, I gather they should be free and runnable
+locally, but also that it would depend on each contributor, each package
+maintainer, or each user proposing a patch.
+
+And does accepting llm code imply that the maintainers of Emacs and its
+packages would also have to use llms?
+
+On Thu, Nov 12, 2026, 6:42 AM Eli Zaretskii <eliz@gnu.org> wrote:
+
+> > Date: Thu, 12 Nov 2026 08:17:55 +0100
+> > Cc: Andrei Sova <andreisva2023@gmail.com>, eliz@gnu.org, phil@hagelb.org
+> ,
+> >       arne_bab@web.de, jporterbugs@gmail.com, bugs@gnu.support,
+> >       emacs-devel@gnu.org
+> > From: <tomas@tuxteam.de>
+> >
+> > >   > It's quite difficult to explain if you haven't experienced it
+> firsthand,
+> > >   > but LLM-generated code and explanations are astonishingly good at
+> > >   > *looking* correct and being extremely convincing at first glance
+> in a
+> > >   > way that is completely disconnected to whether it is correct or
+> not.
+> > >
+> > > I suggest that, instead of discussing whether the patch is correct, we
+> > > say that the code lacks explanation to make its meaning clear clear,
+> > > and ask the contributor to add clear explanation.  "Tell us what X
+> > > means here", for instance.
+> > >
+> > > That way we won't get into the kind of argument that LLMs could fool
+> > > people at.
+> >
+> > This is *precisely* what generative LLMs are getting pretty good at.
+> >
+> > The contributor passes the maintainer's questions to the LLM and sends
+> > back its answers.
+>
+> Please read the discussion in bug#82057.  That's what happened there,
+> but based on that I cannot say that the particular LLM used is "pretty
+> good at" explaining itself.  It didn't take me long to find and expose
+> the fallacies in those explanations.  After the 3rd iteration of that,
+> I pointed out to the contributor that I'm not willing to continue that
+> way anymore, with the result that the next response was much shorter
+> and to the point, because it provided an easily followed recipe and
+> almost completely dropped the bogus explanations of why the problem
+> happens.
+>
+> > The maintainer is faced to do a constant Turing test which is becoming
+> > harder and harder.
+>
+> I didn't find that to be "harder and harder".  I found it to be very
+> similar to talking to some humans around here (which will remain
+> unnamed).  So when I faced that bug's discussion, I could draw on
+> real-life experience.  When you read some description of what some
+> code does, and you are familiar enough with that code, it doesn't take
+> long for you to spot fallacies, and then disregard everything based on
+> the fallacies.  At least IME, this usually allows to analyze a message
+> of several hundred lines very quickly.
+>
+> And please don't go the way of saying I have some exceptional
+> experience or abilities, because I don't.  I've seen Sean and others
+> deal with similar situations no less efficiently.
+>
+> Once again, I think you and others who post similar messages
+> underestimate the Emacs maintainers and their abilities.  The need to
+> deal with a crowd such as this one, day in and day out, teaches us
+> something that can be efficiently applied to the envisioned situations
+> with LLM-generated stuff (again, provided that GNU allows that at some
+> point).  And neither are we ignorant of what LLMs can and cannot do.
+>
+> Now, I don't know why the developers of those projects described in
+> those blogs were different and let these bad things happen, but I do
+> now us, and I'm not afraid.
+>
+>
+
+================================================================================
+Date: 2026-11-12T16:43:16+01:00
+From: tomas@tuxteam.de
+Subject: Re: Human Emacs
+Message-ID: <avXelNdAyXpNJCBk@tuxteam.de>
+In-Reply-To: <86jymiwcxo.fsf@gnu.org>
+References: <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+ <87y0b9xd1j.fsf@web.de> <E1xPMe5-00ANsN-0E@fencepost.gnu.org>
+ <87eccxvnyf.fsf@asthra> <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <86jymiwcxo.fsf@gnu.org>
+
+On Thu, Nov 12, 2026 at 12:40:03PM +0200, Eli Zaretskii wrote:
+
+[...]
+
+> Please read the discussion in bug#82057 [...]
+
+Thanks for that, makes for a tantalising read :-)
+
+And, of course, for an impressive sample of the job you do.
+
+>                                         That's what happened there,
+> but based on that I cannot say that the particular LLM used is "pretty
+> good at" explaining itself [...]
+
+My hunch is that they're getting better at an alarming rate (because it
+is deception what is this industry's business model). But I won't waste
+more of your time on that -- points have been made and understood.
+
+Even when we disagree on some things, warm thanks for your work and your
+patience.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-12T17:08:21+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <865wy2vxqi.fsf@gnu.org>
+In-Reply-To: <CAL6FEzzLWzkfz8y4v9y_gSr1jinK-qp88xfWqU62ZkpQeDAetQ@mail.gmail.com>
+ (message from david on Thu, 12 Nov 2026 11:20:21 -0400)
+References: <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <86jymiwcxo.fsf@gnu.org>
+ <CAL6FEzzLWzkfz8y4v9y_gSr1jinK-qp88xfWqU62ZkpQeDAetQ@mail.gmail.com>
+
+> From: david <davidimagid@gmail.com>
+> Date: Thu, 12 Nov 2026 11:20:21 -0400
+> Cc: tomas@tuxteam.de, Richard Stallman <rms@gnu.org>, andreisva2023@gmail.com, phil@hagelb.org, 
+> 	arne_bab@web.de, jporterbugs@gmail.com, Jean Louis <bugs@gnu.support>, 
+> 	"Emacs-devel@gnu.org" <emacs-devel@gnu.org>
+> 
+> If llm code is ever accepted in Emacs and its packages, which llms would be authorized?  From the threads, I
+> gather they should be free and runnable locally, but also that it would depend on each contributor, each
+> package maintainer, or each user proposing a patch.
+
+These are very good questions, but IMO they are premature.  The
+answers depend a lot on what the GNU guidance for this will be.
+
+> And does accepting llm code imply that the maintainers of Emacs and its packages would also have to use llms?
+
+No one will _have_ to use LLMs, whatever happens.  At most, it will be
+up to each one of us.
+
+================================================================================
+Date: 2026-11-12T17:10:39+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xRXNn-00B37N-2G@fencepost.gnu.org>
+In-Reply-To: <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com> (message from
+ Andrey Listopadov on Tue, 10 Nov 2026 14:07:28 +0300)
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+ <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  >  It is the amounts of code team will have to process and 
+  > maintain - LLMs make it that the act of "writing the code" is the easy 
+  > part, which allows a lot more code to be submitted
+
+We do the best we can feasibly do, with the pile of bug reports and
+patches we receive.
+
+Just because a person sends us a proposed change, it does not follow
+that we _have to_ look at it.  When we do look at a change, it does
+not follow that we _have to_ study it until we understand it.  We
+could instead let it drop.
+
+If a message shows us there is a bug, and presents a proposed fix, we
+can use that fix if we can understand it and be sure it is correct.
+We also have the possibility of fixing that bug another way, if that
+is easier.  If we can't understand it, we may have to let it drop.
+
+  > IMO, it's a point to be discussed, hence why I brought it up - if the 
+  > team is collectively OK with that they will have to deal with code 
+  > submission rates growing up at the rates LLMs allow for, then this point 
+  > can be dismissed.
+
+I think these are independent issues:
+
+1. Will people send us more proposed patches because THEY use LLMs?
+
+2. Will Emacs get a lot bigger because of OUR installing patches
+made by LLMs?
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-12T17:12:12+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <864idmvxk3.fsf@gnu.org>
+In-Reply-To: <avXelNdAyXpNJCBk@tuxteam.de> (tomas@tuxteam.de)
+References: <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+ <87y0b9xd1j.fsf@web.de> <E1xPMe5-00ANsN-0E@fencepost.gnu.org>
+ <87eccxvnyf.fsf@asthra> <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <86jymiwcxo.fsf@gnu.org> <avXelNdAyXpNJCBk@tuxteam.de>
+
+> Date: Thu, 12 Nov 2026 16:43:16 +0100
+> From: tomas@tuxteam.de
+> Cc: rms@gnu.org, andreisva2023@gmail.com, phil@hagelb.org, arne_bab@web.de,
+> 	jporterbugs@gmail.com, bugs@gnu.support, emacs-devel@gnu.org
+> 
+> >                                         That's what happened there,
+> > but based on that I cannot say that the particular LLM used is "pretty
+> > good at" explaining itself [...]
+> 
+> My hunch is that they're getting better at an alarming rate (because it
+> is deception what is this industry's business model).
+
+Well, I, for one, would love to see that, because while I'm perfectly
+capable of dealing with 400+ line messages like the ones in that
+discussion, I greatly prefer short ones and to the point 😉.  With 200
+email messages I get every day in my inbox, I can really do with less
+noise.
+
+> Even when we disagree on some things, warm thanks for your work and your
+> patience.
+
+You are welcome.
+
+================================================================================
+Date: 2026-11-12T17:21:18+01:00
+From: david <davidimagid@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <CAL6FEzx=GoRSu_a9nuP2Lj5X_+_KRTc7B6LZ9QQmwm7CoVC2WQ@mail.gmail.com>
+In-Reply-To: <864idmvxk3.fsf@gnu.org>
+References: <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+ <87y0b9xd1j.fsf@web.de> <E1xPMe5-00ANsN-0E@fencepost.gnu.org>
+ <87eccxvnyf.fsf@asthra> <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <86jymiwcxo.fsf@gnu.org> <avXelNdAyXpNJCBk@tuxteam.de>
+ <864idmvxk3.fsf@gnu.org>
+
+Thank you, Eli.
+
+On Thu, Nov 12, 2026, 12:13 PM Eli Zaretskii <eliz@gnu.org> wrote:
+
+> > Date: Thu, 12 Nov 2026 16:43:16 +0100
+> > From: tomas@tuxteam.de
+> > Cc: rms@gnu.org, andreisva2023@gmail.com, phil@hagelb.org,
+> arne_bab@web.de,
+> >       jporterbugs@gmail.com, bugs@gnu.support, emacs-devel@gnu.org
+> >
+> > >                                         That's what happened there,
+> > > but based on that I cannot say that the particular LLM used is "pretty
+> > > good at" explaining itself [...]
+> >
+> > My hunch is that they're getting better at an alarming rate (because it
+> > is deception what is this industry's business model).
+>
+> Well, I, for one, would love to see that, because while I'm perfectly
+> capable of dealing with 400+ line messages like the ones in that
+> discussion, I greatly prefer short ones and to the point 😉.  With 200
+> email messages I get every day in my inbox, I can really do with less
+> noise.
+>
+> > Even when we disagree on some things, warm thanks for your work and your
+> > patience.
+>
+> You are welcome.
+>
+>
+
+================================================================================
+Date: 2026-11-12T17:27:42+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <fa19ffb0-ae3c-48d2-aac5-7eeba56e1a49@gmail.com>
+In-Reply-To: <87a4netbjj.fsf@gmail.com>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com>
+
+Hi Augusto
+
+On 12/11/26 14:38, Augusto Stoffel wrote:
+> 
+> On Wed, 11 Nov 2026, Pedro A. Aranda wrote:
+> 
+>> Hi again.
+>>
+>> Sorry if I'm insisting on this...
+>>
+>> I had ten minutes today and wrote a **TOY** (attached) just to learn
+>> to do RPC in Python. I took a couple of functions from the API I saw
+>> in jinx-mod.c and tried to implement something that would communicate
+>> through RPC in a similar way as jinx interacts with the enchant
+>> library.
+>>
+>> Now the next step would be to write the Emacs part. I think it
+>> shouldn't be too difficult, since eglot already has a lot of jsonrpc
+>> that could be used to inspire the glue needed. No agent, no nothing.
+> 
+> (I just released jit-spell with support for different backends (at the
+> moment vibe-spell and "ispell -a") so you can plug and play your toy if
+> you want).
+
+Hmm :-) Don't tempt me ;-)
+
+> 
+>> In this case, we have the additional goodie of offloading the burden
+>> of keeping up with the enchant/aspell/hunspell evolution on the
+>> libraries used by the toy, not on the toy itself.
+>>
+>> This is only a toy and I was using Python because I'm lazy. Now select
+>> a set of libraries, languages, etc. with a good old compliant license
+>> that cover the major OSes and there you are.
+> 
+> Sure this can be done, and if you provided prebuilt binaries for every
+> OS you could make it "just work". 
+
+We already have a nice example with eglot, don't we? I have it running 
+in Linux, FreeBSD and, yes, Windows and macOS....
+
+> But then again, why is that better
+> than a pure-ELisp implementation?
+
+Again, as enchant, hunspell, whoever evolves, keeping up with a pure 
+ELisp implementation seems an awful lot of work.
+> (By the way, your toy implementation piggybacks on Python's FFI.  As
+> mentioned somewhere upthread, I think an FFI for Emacs would probably be
+> the best approach, better than jinx, vibe-spell or your approach.)
+
+Certainly, an FFI shipped in core Emacs would make an awful lot of sense.
+
+> 
+>> No need for fierce discussions ;-)
+> 
+> Indeed.
+
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
