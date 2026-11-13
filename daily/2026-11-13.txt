@@ -1,0 +1,663 @@
+emacs-devel messages from 2026-11-12T18:15:00+01:00 to 2026-11-13T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-12T18:17:36+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: master 1986cf1296b: Enable lexical binding in generated file
+Message-ID: <m2o6buc6kv.fsf@macmutant.fritz.box>
+In-Reply-To: <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+References: <179449642849.7889.7980371373882853514@vcs2.savannah.gnu.org>
+ <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+
+Arash Esbati <arash@gnu.org> writes:
+
+> branch: master
+> commit 1986cf1296bca8cb231394976684f2ec93a72043
+> Author: Arash Esbati <arash@gnu.org>
+> Commit: Arash Esbati <arash@gnu.org>
+>
+>     Enable lexical binding in generated file
+>     
+>     * lisp/textmodes/reftex.el (reftex-access-parse-file): Add the
+>     'lexical-binding' cookie to the generated file containing parsing
+>     information.  (AUCTeX bug#82214)
+> ---
+>  lisp/textmodes/reftex.el | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/lisp/textmodes/reftex.el b/lisp/textmodes/reftex.el
+> index ea6a8b8a111..3214239496f 100644
+> --- a/lisp/textmodes/reftex.el
+> +++ b/lisp/textmodes/reftex.el
+> @@ -1265,7 +1265,7 @@ For non-file buffers, persistence operations are skipped."
+>          (if (file-writable-p file)
+>              (with-temp-file file
+>                (message "Writing parse file %s" (abbreviate-file-name file))
+> -              (insert ";; RefTeX parse info file\n")
+> +              (insert ";; RefTeX parse info file        -*- lexical-binding: t; -*-\n")
+>                (insert (format ";; File: %s\n" master))
+>                (insert (format ";; User: %s (%s)\n\n"
+>                                (user-login-name) (user-full-name)))
+
+@developers: I pushed the change above to master.  Does it make sense to
+have it also in the current release branch?  The change is a fix for
+this entry in NEWS.31:
+
+  *** Loading a file displays a warning if there is no 'lexical-binding' cookie.
+
+If yes, could you please install it there as well?  TIA.
+
+Best, Arash
+
+================================================================================
+Date: 2026-11-12T18:35:09+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 1986cf1296b: Enable lexical binding in generated file
+Message-ID: <86y0ayuf5e.fsf@gnu.org>
+In-Reply-To: <m2o6buc6kv.fsf@macmutant.fritz.box> (message from Arash Esbati
+ on Thu, 12 Nov 2026 18:17:36 +0100)
+References: <179449642849.7889.7980371373882853514@vcs2.savannah.gnu.org>
+ <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+ <m2o6buc6kv.fsf@macmutant.fritz.box>
+
+> From: Arash Esbati <arash@gnu.org>
+> Date: Thu, 12 Nov 2026 18:17:36 +0100
+> 
+> Arash Esbati <arash@gnu.org> writes:
+> 
+> > branch: master
+> > commit 1986cf1296bca8cb231394976684f2ec93a72043
+> > Author: Arash Esbati <arash@gnu.org>
+> > Commit: Arash Esbati <arash@gnu.org>
+> >
+> >     Enable lexical binding in generated file
+> >     
+> >     * lisp/textmodes/reftex.el (reftex-access-parse-file): Add the
+> >     'lexical-binding' cookie to the generated file containing parsing
+> >     information.  (AUCTeX bug#82214)
+> > ---
+> >  lisp/textmodes/reftex.el | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/lisp/textmodes/reftex.el b/lisp/textmodes/reftex.el
+> > index ea6a8b8a111..3214239496f 100644
+> > --- a/lisp/textmodes/reftex.el
+> > +++ b/lisp/textmodes/reftex.el
+> > @@ -1265,7 +1265,7 @@ For non-file buffers, persistence operations are skipped."
+> >          (if (file-writable-p file)
+> >              (with-temp-file file
+> >                (message "Writing parse file %s" (abbreviate-file-name file))
+> > -              (insert ";; RefTeX parse info file\n")
+> > +              (insert ";; RefTeX parse info file        -*- lexical-binding: t; -*-\n")
+> >                (insert (format ";; File: %s\n" master))
+> >                (insert (format ";; User: %s (%s)\n\n"
+> >                                (user-login-name) (user-full-name)))
+> 
+> @developers: I pushed the change above to master.  Does it make sense to
+> have it also in the current release branch?  The change is a fix for
+> this entry in NEWS.31:
+> 
+>   *** Loading a file displays a warning if there is no 'lexical-binding' cookie.
+
+This is okay, but we should also suppress the warning in the code
+which loads these files, because people might have such old files
+lying around.  Can you add that?
+
+================================================================================
+Date: 2026-11-12T18:47:57+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: master 1986cf1296b: Enable lexical binding in generated file
+Message-ID: <m2ik22c56a.fsf@macmutant.fritz.box>
+In-Reply-To: <86y0ayuf5e.fsf@gnu.org>
+References: <179449642849.7889.7980371373882853514@vcs2.savannah.gnu.org>
+ <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+ <m2o6buc6kv.fsf@macmutant.fritz.box> <86y0ayuf5e.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> This is okay, but we should also suppress the warning in the code
+> which loads these files, because people might have such old files
+> lying around.  Can you add that?
+
+I considered that, but didn't add it (yet) because I think the remedy to
+this warning is easy: Just let RefTeX reparse the file with
+
+  M-x reftex-parse-all RET
+
+and RefTeX will update it .rel file when .tex file is killed; no editing
+of the .tex file is needed.
+
+Does this make sense?
+
+Best, Arash
+
+================================================================================
+Date: 2026-11-12T18:52:36+01:00
+From: Kai Ma <justksqsf@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <87cxsaj5sr.fsf@huawei.com>
+In-Reply-To: <E1xRXNn-00B37N-2G@fencepost.gnu.org>
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+ <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+ <E1xRXNn-00B37N-2G@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+>   > IMO, it's a point to be discussed, hence why I brought it up - if the 
+>   > team is collectively OK with that they will have to deal with code 
+>   > submission rates growing up at the rates LLMs allow for, then this point 
+>   > can be dismissed.
+>
+> I think these are independent issues:
+>
+> 1. Will people send us more proposed patches because THEY use LLMs?
+
+This is bound to happen because generating patches with a coding agent
+is basically one prompt, if Emacs allows LLM-generated contributions.
+For example, to fix a bug, you describe the problem to it and ask for a
+patch.  The coding agent will autonomously study the code, change the
+code, and validate that the symptom is fixed (not necessarily the root
+cause).
+
+I co-maintain an open-source project which does not ban LLM-generated
+contributions (only requiring "responsible use"), and I see much more
+pull requests nowadays.  I have very mixed feelings because, while some
+PRs make perfect sense, many don't.
+
+> 2. Will Emacs get a lot bigger because of OUR installing patches
+> made by LLMs?
+
+IME, most LLM-generated patches will be about fixing bugs and improving
+performance.  Patches that add features are rare, and they are most
+likely rejected anyway because they are usually designed badly and don't
+fit into the bigger picture.
+
+================================================================================
+Date: 2026-11-12T19:02:59+01:00
+From: Ihor Radchenko <yantar92@posteo.net>
+Subject: Re: Human Emacs
+Message-ID: <87ik22q66k.fsf@localhost>
+In-Reply-To: <87cxsaj5sr.fsf@huawei.com>
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+ <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+ <E1xRXNn-00B37N-2G@fencepost.gnu.org> <87cxsaj5sr.fsf@huawei.com>
+
+Kai Ma <justksqsf@gmail.com> writes:
+
+> I co-maintain an open-source project which does not ban LLM-generated
+> contributions (only requiring "responsible use"), and I see much more
+> pull requests nowadays.  I have very mixed feelings because, while some
+> PRs make perfect sense, many don't.
+
+That's on github (or other pull-request-based forge), right?
+FYI, in Org mode mailing list, we did not say anything about LLMs for a
+long time, yet receiving just a handful of LLM-generated patches.
+I had to write down the policy long after GNU asked not to accept LLM
+patches. Just because the number of LLM-generated submissions was too
+small to even bother.
+
+My speculation is that mailing list workflow is creating enough entry
+barrier to filter out people who do not want to bother figuring out how
+to send a patch to mailing list. But my evidence is anecdotal (single
+project). We are yet to see what happens with Emacs, where the number of
+contributions is much higher.
+
+-- 
+Ihor Radchenko // yantar92,
+Org mode maintainer,
+Learn more about Org mode at <https://orgmode.org/>.
+Support Org development at <https://liberapay.com/org-mode>,
+or support my work at <https://liberapay.com/yantar92>
+
+================================================================================
+Date: 2026-11-12T20:39:57+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 1986cf1296b: Enable lexical binding in generated file
+Message-ID: <86v761vnxu.fsf@gnu.org>
+In-Reply-To: <m2ik22c56a.fsf@macmutant.fritz.box> (message from Arash Esbati
+ on Thu, 12 Nov 2026 18:47:57 +0100)
+References: <179449642849.7889.7980371373882853514@vcs2.savannah.gnu.org>
+ <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+ <m2o6buc6kv.fsf@macmutant.fritz.box> <86y0ayuf5e.fsf@gnu.org>
+ <m2ik22c56a.fsf@macmutant.fritz.box>
+
+> From: Arash Esbati <arash@gnu.org>
+> Cc: emacs-devel@gnu.org
+> Date: Thu, 12 Nov 2026 18:47:57 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > This is okay, but we should also suppress the warning in the code
+> > which loads these files, because people might have such old files
+> > lying around.  Can you add that?
+> 
+> I considered that, but didn't add it (yet) because I think the remedy to
+> this warning is easy: Just let RefTeX reparse the file with
+> 
+>   M-x reftex-parse-all RET
+> 
+> and RefTeX will update it .rel file when .tex file is killed; no editing
+> of the .tex file is needed.
+> 
+> Does this make sense?
+
+We want to suppress the warning for the files that Emacs itself
+generates.  We've done that in all the other cases we knew about, and
+this one just went unnoticed at the time.  So I think we should plug
+that gap now.
+
+================================================================================
+Date: 2026-11-12T20:43:25+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86tsllvns2.fsf@gnu.org>
+In-Reply-To: <87cxsaj5sr.fsf@huawei.com> (message from Kai Ma on Thu, 12 Nov
+ 2026 18:52:36 +0100)
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+ <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+ <E1xRXNn-00B37N-2G@fencepost.gnu.org> <87cxsaj5sr.fsf@huawei.com>
+
+> From: Kai Ma <justksqsf@gmail.com>
+> Cc: Andrey Listopadov <andreyorst@gmail.com>,  eliz@gnu.org,
+>   emacs-devel@gnu.org
+> Date: Thu, 12 Nov 2026 18:52:36 +0100
+> 
+> Richard Stallman <rms@gnu.org> writes:
+> 
+> >   > IMO, it's a point to be discussed, hence why I brought it up - if the 
+> >   > team is collectively OK with that they will have to deal with code 
+> >   > submission rates growing up at the rates LLMs allow for, then this point 
+> >   > can be dismissed.
+> >
+> > I think these are independent issues:
+> >
+> > 1. Will people send us more proposed patches because THEY use LLMs?
+> 
+> This is bound to happen because generating patches with a coding agent
+> is basically one prompt, if Emacs allows LLM-generated contributions.
+> For example, to fix a bug, you describe the problem to it and ask for a
+> patch.  The coding agent will autonomously study the code, change the
+> code, and validate that the symptom is fixed (not necessarily the root
+> cause).
+
+You assume that someone will set up an LLM to automatically respond to
+all the Emacs bug reports with patches?
+
+If not, then the usual problem with bugs is not to produce a fix, it's
+to take notice of it.  The bug list is routinely read only by the
+Emacs maintainers and not many other people.
+
+> I co-maintain an open-source project which does not ban LLM-generated
+> contributions (only requiring "responsible use"), and I see much more
+> pull requests nowadays.  I have very mixed feelings because, while some
+> PRs make perfect sense, many don't.
+
+What prevents you from rejecting those which don't make sense?
+
+================================================================================
+Date: 2026-11-12T20:56:32+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: master 1986cf1296b: Enable lexical binding in generated file
+Message-ID: <m2cxs9ddsf.fsf@macmutant.fritz.box>
+In-Reply-To: <86v761vnxu.fsf@gnu.org>
+References: <179449642849.7889.7980371373882853514@vcs2.savannah.gnu.org>
+ <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+ <m2o6buc6kv.fsf@macmutant.fritz.box> <86y0ayuf5e.fsf@gnu.org>
+ <m2ik22c56a.fsf@macmutant.fritz.box> <86v761vnxu.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> We want to suppress the warning for the files that Emacs itself
+> generates.  We've done that in all the other cases we knew about, and
+> this one just went unnoticed at the time.  So I think we should plug
+> that gap now.
+
+Ah, I wasn't aware of that, thanks.  So I will push this to master:
+
+```diff
+diff --git a/lisp/textmodes/reftex.el b/lisp/textmodes/reftex.el
+index 3214239496f..158a9707825 100644
+--- a/lisp/textmodes/reftex.el
++++ b/lisp/textmodes/reftex.el
+@@ -1235,7 +1235,10 @@ reftex-access-parse-file
+       (if (file-exists-p file)
+           ;; load the file and return t for success
+           (condition-case nil
+-              (progn (load-file file) t)
++              (progn
++                (let ((warning-inhibit-types '((files missing-lexbind-cookie))))
++                  (load-file file))
++                t)
+             (error (set reftex-docstruct-symbol nil)
+                    (error "Error while loading file %s" file)))
+         ;; Throw an exception if the file does not exist
+@@ -1246,7 +1249,8 @@ reftex-access-parse-file
+           ;; load the file and return t for success
+           (condition-case nil
+               (progn
+-                (load-file file)
++                (let ((warning-inhibit-types '((files missing-lexbind-cookie))))
++                  (load-file file))
+                 (reftex-check-parse-consistency)
+                 t)
+             (error (message "Error while restoring file %s" file)
+```
+
+and you will cherry-pick that to the release branch?
+
+Best, Arash
+
+================================================================================
+Date: 2026-11-12T21:05:26+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 1986cf1296b: Enable lexical binding in generated file
+Message-ID: <86pkw9vmrd.fsf@gnu.org>
+In-Reply-To: <m2cxs9ddsf.fsf@macmutant.fritz.box> (message from Arash Esbati
+ on Thu, 12 Nov 2026 20:56:32 +0100)
+References: <179449642849.7889.7980371373882853514@vcs2.savannah.gnu.org>
+ <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+ <m2o6buc6kv.fsf@macmutant.fritz.box> <86y0ayuf5e.fsf@gnu.org>
+ <m2ik22c56a.fsf@macmutant.fritz.box> <86v761vnxu.fsf@gnu.org>
+ <m2cxs9ddsf.fsf@macmutant.fritz.box>
+
+> From: Arash Esbati <arash@gnu.org>
+> Cc: emacs-devel@gnu.org
+> Date: Thu, 12 Nov 2026 20:56:32 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > We want to suppress the warning for the files that Emacs itself
+> > generates.  We've done that in all the other cases we knew about, and
+> > this one just went unnoticed at the time.  So I think we should plug
+> > that gap now.
+> 
+> Ah, I wasn't aware of that, thanks.  So I will push this to master:
+> 
+> ```diff
+> diff --git a/lisp/textmodes/reftex.el b/lisp/textmodes/reftex.el
+> index 3214239496f..158a9707825 100644
+> --- a/lisp/textmodes/reftex.el
+> +++ b/lisp/textmodes/reftex.el
+> @@ -1235,7 +1235,10 @@ reftex-access-parse-file
+>        (if (file-exists-p file)
+>            ;; load the file and return t for success
+>            (condition-case nil
+> -              (progn (load-file file) t)
+> +              (progn
+> +                (let ((warning-inhibit-types '((files missing-lexbind-cookie))))
+> +                  (load-file file))
+> +                t)
+>              (error (set reftex-docstruct-symbol nil)
+>                     (error "Error while loading file %s" file)))
+>          ;; Throw an exception if the file does not exist
+> @@ -1246,7 +1249,8 @@ reftex-access-parse-file
+>            ;; load the file and return t for success
+>            (condition-case nil
+>                (progn
+> -                (load-file file)
+> +                (let ((warning-inhibit-types '((files missing-lexbind-cookie))))
+> +                  (load-file file))
+>                  (reftex-check-parse-consistency)
+>                  t)
+>              (error (message "Error while restoring file %s" file)
+> ```
+> 
+> and you will cherry-pick that to the release branch?
+
+Yeah, or someone else will.
+
+================================================================================
+Date: 2026-11-12T21:20:51+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: master 1986cf1296b: Enable lexical binding in generated file
+Message-ID: <m25wy1dcnw.fsf@macmutant.fritz.box>
+In-Reply-To: <86pkw9vmrd.fsf@gnu.org>
+References: <179449642849.7889.7980371373882853514@vcs2.savannah.gnu.org>
+ <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+ <m2o6buc6kv.fsf@macmutant.fritz.box> <86y0ayuf5e.fsf@gnu.org>
+ <m2ik22c56a.fsf@macmutant.fritz.box> <86v761vnxu.fsf@gnu.org>
+ <m2cxs9ddsf.fsf@macmutant.fritz.box> <86pkw9vmrd.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> Yeah, or someone else will.
+
+Great, thanks, pushed (9e2351d).
+
+Best, Arash
+
+================================================================================
+Date: 2026-11-12T21:42:38+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Human Emacs
+Message-ID: <87qzgpwzlt.fsf@melete.silentflame.com>
+In-Reply-To: <86tsllvns2.fsf@gnu.org>
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+ <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+ <E1xRXNn-00B37N-2G@fencepost.gnu.org> <87cxsaj5sr.fsf@huawei.com>
+ <86tsllvns2.fsf@gnu.org>
+
+Eli Zaretskii [12/Nov  9:43pm +02] wrote:
+> You assume that someone will set up an LLM to automatically respond to
+> all the Emacs bug reports with patches?
+
+They definitely might!
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-12T22:38:39+01:00
+From: Kai Ma <justksqsf@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <878q2xhgrk.fsf@gmail.com>
+In-Reply-To: <86tsllvns2.fsf@gnu.org>
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+ <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+ <E1xRXNn-00B37N-2G@fencepost.gnu.org> <87cxsaj5sr.fsf@huawei.com>
+ <86tsllvns2.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> Richard Stallman <rms@gnu.org> writes:
+>> 
+>> >   > IMO, it's a point to be discussed, hence why I brought it up - if the 
+>> >   > team is collectively OK with that they will have to deal with code 
+>> >   > submission rates growing up at the rates LLMs allow for, then this point 
+>> >   > can be dismissed.
+>> >
+>> > I think these are independent issues:
+>> >
+>> > 1. Will people send us more proposed patches because THEY use LLMs?
+>> 
+>> This is bound to happen because generating patches with a coding agent
+>> is basically one prompt, if Emacs allows LLM-generated contributions.
+>> For example, to fix a bug, you describe the problem to it and ask for a
+>> patch.  The coding agent will autonomously study the code, change the
+>> code, and validate that the symptom is fixed (not necessarily the root
+>> cause).
+>
+> You assume that someone will set up an LLM to automatically respond to
+> all the Emacs bug reports with patches?
+
+Not at all.  I'm simply predicting that there will be more patches,
+(because they become very cheap).
+
+> If not, then the usual problem with bugs is not to produce a fix, it's
+> to take notice of it.  The bug list is routinely read only by the
+> Emacs maintainers and not many other people.
+
+I agree.  On the other hand, my understanding is that many people here
+are worried that the maintainers would have to spend more time dealing
+with LLM-generated prose and code, and risk burnout.  But of course this
+is up to the maintainers to decide for themselves.
+
+>> I co-maintain an open-source project which does not ban LLM-generated
+>> contributions (only requiring "responsible use"), and I see much more
+>> pull requests nowadays.  I have very mixed feelings because, while some
+>> PRs make perfect sense, many don't.
+>
+> What prevents you from rejecting those which don't make sense?
+
+Nothing.  They are rejected as they should be.  :-)
+
+(Perhaps off-topic) For our project, personally I do not want a ban on
+LLMs because some external contributions are wondrous.  Heck, some
+performance optimization opportunities could easily take a human months
+to find and implement, or maybe never, because no living creature can
+know C++ inside out.  And who doesn't like faster software?
+
+I guess dealing with more nonsense is a price we have to pay?  Or maybe
+something like the vouch system [1] can let us have a sustainable
+community while not turning down every LLM-generated contribution?  I
+really cannot tell.
+
+[1] https://github.com/mitchellh/vouch
+
+================================================================================
+Date: 2026-11-13T07:17:00+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86ld6xuug3.fsf@gnu.org>
+In-Reply-To: <87qzgpwzlt.fsf@melete.silentflame.com> (message from Sean
+ Whitton on Thu, 12 Nov 2026 20:42:38 +0000)
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+ <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+ <E1xRXNn-00B37N-2G@fencepost.gnu.org> <87cxsaj5sr.fsf@huawei.com>
+ <86tsllvns2.fsf@gnu.org> <87qzgpwzlt.fsf@melete.silentflame.com>
+
+> From: Sean Whitton <spwhitton@spwhitton.name>
+> Cc: rms@gnu.org, andreyorst@gmail.com, emacs-devel@gnu.org
+> Date: Thu, 12 Nov 2026 20:42:38 +0000
+> 
+> Eli Zaretskii [12/Nov  9:43pm +02] wrote:
+> > You assume that someone will set up an LLM to automatically respond to
+> > all the Emacs bug reports with patches?
+> 
+> They definitely might!
+
+Bring them on!
+
+================================================================================
+Date: 2026-11-13T07:30:16+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86jymhuttz.fsf@gnu.org>
+In-Reply-To: <878q2xhgrk.fsf@gmail.com> (message from Kai Ma on Thu, 12 Nov
+ 2026 22:38:39 +0100)
+References: <CAAKhXoYQ78PaQademB4qeHKkENd6S7SbyNnq16rLy56VVzhLVg@mail.gmail.com>
+ <86qzh0oc4l.fsf@gnu.org> <E1xQQ2k-007jqc-6C@fencepost.gnu.org>
+ <92910727-6af4-45a5-8f4e-55b8f3682eeb@gmail.com>
+ <E1xRXNn-00B37N-2G@fencepost.gnu.org> <87cxsaj5sr.fsf@huawei.com>
+ <86tsllvns2.fsf@gnu.org> <878q2xhgrk.fsf@gmail.com>
+
+> From: Kai Ma <justksqsf@gmail.com>
+> Cc: rms@gnu.org,  andreyorst@gmail.com,  emacs-devel@gnu.org
+> Date: Thu, 12 Nov 2026 22:38:39 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> This is bound to happen because generating patches with a coding agent
+> >> is basically one prompt, if Emacs allows LLM-generated contributions.
+> >> For example, to fix a bug, you describe the problem to it and ask for a
+> >> patch.  The coding agent will autonomously study the code, change the
+> >> code, and validate that the symptom is fixed (not necessarily the root
+> >> cause).
+> >
+> > You assume that someone will set up an LLM to automatically respond to
+> > all the Emacs bug reports with patches?
+> 
+> Not at all.  I'm simply predicting that there will be more patches,
+> (because they become very cheap).
+> 
+> > If not, then the usual problem with bugs is not to produce a fix, it's
+> > to take notice of it.  The bug list is routinely read only by the
+> > Emacs maintainers and not many other people.
+> 
+> I agree.  On the other hand, my understanding is that many people here
+> are worried that the maintainers would have to spend more time dealing
+> with LLM-generated prose and code, and risk burnout.  But of course this
+> is up to the maintainers to decide for themselves.
+
+People who worry that our workload will increase should consider
+coming aboard to help with that.  This will be greatly appreciated
+even today, before all of the above might happen.
+
+In any case, rejecting a certain class of change proposals without
+reviewing them, just because it helps with the workload, doesn't sound
+like a good strategy to me.
+
+> I guess dealing with more nonsense is a price we have to pay?
+
+Yes.  And that is no different from making contributions easier to
+submit, something that happened when Emacs switched from CVS to Bazaar
+and later to Git.  We should welcome more contributions, and we should
+be (and AFAICT already are) able to quickly recognize nonsense and
+discard it.
+
+> Or maybe something like the vouch system [1] can let us have a
+> sustainable community while not turning down every LLM-generated
+> contribution?  I really cannot tell.
+> 
+> [1] https://github.com/mitchellh/vouch
+
+Personally, I would be against such a system.  It is basically a kind
+of public shaming, and IME shaming based on these criteria is bad for
+the community, as it begets unhealthy social dynamics, with all that
+comes with it.  It is not a coincidence that when we decide to reject
+a contribution, we use very soft language where we try very hard to be
+positive so as not to lose the contributor, and sometimes do that
+off-list.
+
+================================================================================
+Date: 2026-11-13T17:23:47+01:00
+From: Vincenzo Pupillo <v.pupillo@gmail.com>
+Subject: Re: emacs-31 205ae0b0583: Fix arbitrary code execution in
+ .dir-locals.el handling
+Message-ID: <fwlxq6EARNWuEhsxRogPHA@gmail.com>
+In-Reply-To: <87o6bvziyq.fsf@athena.silentflame.com>
+References: <179438937379.6285.7085427359828111905@vcs2.savannah.gnu.org>
+ <20261111092934.3F90EC1F562@vcs2.savannah.gnu.org>
+ <87o6bvziyq.fsf@athena.silentflame.com>
+
+Something similar happens with (find-library “sql”):
+
+uncompressing sql.el.gz...done
+Note: file is write protected
+Ignoring unknown mode ‘(nil jka-compr)’
+
+Vincenzo
+
+In data mercoledì 11 novembre 2026 12:49:17 Ora standard dell’Europa centrale, 
+Sean Whitton ha scritto:
+> Sean Whitton [11/Nov  4:29am -05] wrote:
+> > branch: emacs-31
+> > commit 205ae0b0583dbfe09e258164adbc49e130645221
+> > Author: Stefan Monnier <monnier@iro.umontreal.ca>
+> > Commit: Sean Whitton <spwhitton@spwhitton.name>
+> > 
+> >     Fix arbitrary code execution in .dir-locals.el handling
+> >     
+> >     * lisp/files.el (set-auto-mode--find-matching-alist-entry):
+> >     Rename to ...
+> >     (set-auto-mode--from-matching-alist-entry): ... this.
+> >     (set-auto-mode--from-matching-alist-entry)
+> >     (set-auto-mode--apply-alist): Address arbitrary code execution
+> >     vulnerability (bug#82213).
+> > 
+> > ---
+> > 
+> >  lisp/files.el | 82
+> >  ++++++++++++++++++++++++++--------------------------------- 1 file
+> >  changed, 36 insertions(+), 46 deletions(-)
+> 
+> Found a problem with this.  Touch a file "foo.el.orig" in the Emacs
+> source and find-file it.  It gets left in fundamental-mode and there is
+> an error: "Ignoring unknown mode `(nil t)'"
+
