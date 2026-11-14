@@ -1,0 +1,1042 @@
+emacs-devel messages from 2026-11-13T18:15:00+01:00 to 2026-11-14T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-14T11:15:37+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <864idju3au.fsf@gnu.org>
+In-Reply-To: <5fa71503-a38f-42cc-b4e3-ddc0ef0d91a8@gutov.dev> (message from
+ Dmitry Gutov on Wed, 4 Nov 2026 11:51:42 +0200)
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+ <5fa71503-a38f-42cc-b4e3-ddc0ef0d91a8@gutov.dev>
+
+> Date: Wed, 4 Nov 2026 11:51:42 +0200
+> Cc: monnier@iro.umontreal.ca, emacs-devel@gnu.org
+> From: Dmitry Gutov <dmitry@gutov.dev>
+> 
+> On 30/10/2026 09:09, Eli Zaretskii wrote:
+> >> The new code doesn't include per-file case-fold-seach detection yet,
+> >> sorry for that step back, but it seems compatible with the solution, to
+> >> be added later. At least kind identifier completion seems usable now.
+> >> Feedback welcome.
+> > Case-fold that is consistent with the file's PL is a must, otherwise
+> > things will break in Fortran and other similar languages.  So I hope
+> > this will be added soon.
+> 
+> Commit fd24459905a has now added such support. Feedback welcome, as always.
+
+Thanks, assuming you tested this with the source files in
+test/manual/etags/, LGTM.
+
+================================================================================
+Date: 2026-11-14T13:23:56+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <86qzgnsisj.fsf@gnu.org>
+In-Reply-To: <878q2yqtdz.fsf@gmail.com> (message from Helmut Eller on Thu, 12
+ Nov 2026 10:41:12 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: Pip Cet <pipcet@protonmail.com>,  emacs-devel@gnu.org
+> Date: Thu, 12 Nov 2026 10:41:12 +0100
+> 
+> On Thu, Nov 12 2026, Sean Whitton wrote:
+> 
+> > Hello Helmut,
+> >
+> > Helmut Eller [24/Sep  1:38pm +02] wrote:
+> >> On Thu, Sep 24 2026, Sean Whitton wrote:
+> >>
+> >>> Hello igc devs,
+> >>>
+> >>> I was wondering how things are going, and whether you might have a
+> >>> better idea about when a merge to master might be possible, to get wider
+> >>> testing.
+> >>
+> >> Currently I'm working on bug#79200, i.e. merging the
+> >> scratch/igc/weak-undo-list branch into scratch/igc3.
+> >>
+> >> As for merging with master:
+> >>
+> >> - there is still the scratch/gc-handles branch that I never merged
+> >>   (bug#80609).  I'm not sure if I should bring that up-to-date and merge
+> >>   it separately or simply include it in the big merge.
+> >>
+> >> - I should probably look over the signal handling code again before the
+> >>   big merge.
+> >
+> > Have you had a chance to look over the signal handling code yet?
+> 
+> No, not yet.  I guess I should make time for that soon.
+
+Recent changes related to signals cause trouble in the MS-Windows
+build:
+
+  dispnew.c: In function 'process_sigwinch_async':
+  dispnew.c:6715:1: warning: function might be candidate for attribute 'noreturn' [-Wsuggest-attribute=noreturn]
+   6715 | process_sigwinch_async (void)
+	| ^~~~~~~~~~~~~~~~~~~~~~
+  [...]
+  igc.c:2830:50: warning: ISO C90 forbids variable length array 'array' [-Wvla]
+   2830 | fix_glyph_array (mps_ss_t ss, size_t len, struct glyph array[len])
+	|                                                  ^~~~~
+  igc.c: In function 'igc_xpalloc_exact':
+  igc.c:4243:7: warning: ISO C90 forbids variable length array 'area' [-Wvla]
+   4243 |       volatile mps_word_t area[count];
+	|       ^~~~~~~~
+  igc.c: At top level:
+  igc.c:5896:1: warning: ISO C90 forbids variable length array 'parms' [-Wvla]
+   5896 | read_gens (size_t *ngens, mps_gen_param_s parms[*ngens])
+	| ^~~~~~~~~
+
+The above are just warnings, although it would be good to avoid them.
+But the one below is a real problem:
+
+  gc.c: In function 'igc_defer_sigprof':
+  igc.c:6371:14: warning: implicit declaration of function 'sigdelset'; did you mean 'sigfillset'? [-Wimplicit-function-declaration]
+   6371 |     result = sigdelset (&sa.sa_mask, SIGPROF);
+	|              ^~~~~~~~~
+	|              sigfillset
+  igc.c:6371:14: warning: nested extern declaration of 'sigdelset' [-Wnested-externs]
+
+It later causes a link error:
+
+    CCLD     temacs.exe
+  d:/usr/bin/../lib/gcc/mingw32/9.2.0/../../../../mingw32/bin/ld.exe: igc.o: in function `igc_defer_sigprof':
+  d:\gnu\git\emacs\feature2\src/igc.c:6371:(.text+0x7a62): undefined reference to `sigdelset'
+  collect2.exe: error: ld returned 1 exit status
+  Makefile:716: recipe for target `temacs.exe' failed
+
+I fixed the error so that Emacs at least could be built, but I'm not
+sure whether it's correct, because I don't think I understand the
+strategy.  Can you explain the purpose of calling sigaction for
+SIGSEGV in igc_defer_sigprof?  In particular, is this at all needed on
+MS-Windows, and if so, why?
+
+================================================================================
+Date: 2026-11-14T14:00:44+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Rejecting vibe-spell
+Message-ID: <E1xSDN6-00984b-VC@fencepost.gnu.org>
+In-Reply-To: <avQzaaU2qB94crBr@tuxteam.de> (tomas@tuxteam.de)
+References: <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <8733t8tlja.fsf@posteo.net>
+ <87ld6zu7ad.fsf@gmail.com> <avQzaaU2qB94crBr@tuxteam.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+More important than the name of the package is what it contains and what
+that implies about its further development.
+
+Please correct me if I'm mistaken, but it seems that further
+maintenance of vibe-spell will require running the same LLM on future
+versions of hunspell, to generate new versions of the code in
+vibe-spell.  Not just once, not just five times, but over and over.
+
+That LLM is a SaaSS dis-service, right?
+
+It might turn out ok to use source code that was (past tense)
+generated by an LLM.  (Our interim policy is to refuse.)  But we
+certainly can't have Emacs virtually include, or suggest using, a
+program whose maintenance depends on repeatedly updating its source
+code by running a nonfree or SaaSS LLM again and again.  Emacs
+development would be lastingly dependent on that LLM.
+
+In that scenario, we can't rationally assert that the use of that tool
+was done by someone else in the past and we are not morally
+responsible for it.  We must reject that kind of dependence by
+rejecting vibe-spell.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-14T14:06:33+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 1986cf1296b: Enable lexical binding in generated file
+Message-ID: <86mrrbsgti.fsf@gnu.org>
+In-Reply-To: <86pkw9vmrd.fsf@gnu.org> (message from Eli Zaretskii on Thu, 12
+ Nov 2026 22:05:26 +0200)
+References: <179449642849.7889.7980371373882853514@vcs2.savannah.gnu.org>
+ <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+ <m2o6buc6kv.fsf@macmutant.fritz.box> <86y0ayuf5e.fsf@gnu.org>
+ <m2ik22c56a.fsf@macmutant.fritz.box> <86v761vnxu.fsf@gnu.org>
+ <m2cxs9ddsf.fsf@macmutant.fritz.box> <86pkw9vmrd.fsf@gnu.org>
+
+> Date: Thu, 12 Nov 2026 22:05:26 +0200
+> From: Eli Zaretskii <eliz@gnu.org>
+> Cc: emacs-devel@gnu.org
+> 
+> > From: Arash Esbati <arash@gnu.org>
+> > Cc: emacs-devel@gnu.org
+> > Date: Thu, 12 Nov 2026 20:56:32 +0100
+> > 
+> > Eli Zaretskii <eliz@gnu.org> writes:
+> > 
+> > > We want to suppress the warning for the files that Emacs itself
+> > > generates.  We've done that in all the other cases we knew about, and
+> > > this one just went unnoticed at the time.  So I think we should plug
+> > > that gap now.
+> > 
+> > Ah, I wasn't aware of that, thanks.  So I will push this to master:
+> > 
+> > ```diff
+> > diff --git a/lisp/textmodes/reftex.el b/lisp/textmodes/reftex.el
+> > index 3214239496f..158a9707825 100644
+> > --- a/lisp/textmodes/reftex.el
+> > +++ b/lisp/textmodes/reftex.el
+> > @@ -1235,7 +1235,10 @@ reftex-access-parse-file
+> >        (if (file-exists-p file)
+> >            ;; load the file and return t for success
+> >            (condition-case nil
+> > -              (progn (load-file file) t)
+> > +              (progn
+> > +                (let ((warning-inhibit-types '((files missing-lexbind-cookie))))
+> > +                  (load-file file))
+> > +                t)
+> >              (error (set reftex-docstruct-symbol nil)
+> >                     (error "Error while loading file %s" file)))
+> >          ;; Throw an exception if the file does not exist
+> > @@ -1246,7 +1249,8 @@ reftex-access-parse-file
+> >            ;; load the file and return t for success
+> >            (condition-case nil
+> >                (progn
+> > -                (load-file file)
+> > +                (let ((warning-inhibit-types '((files missing-lexbind-cookie))))
+> > +                  (load-file file))
+> >                  (reftex-check-parse-consistency)
+> >                  t)
+> >              (error (message "Error while restoring file %s" file)
+> > ```
+> > 
+> > and you will cherry-pick that to the release branch?
+> 
+> Yeah, or someone else will.
+
+Done.
+
+================================================================================
+Date: 2026-11-14T14:12:55+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+In-Reply-To: <877biktlyw.fsf@posteo.net> (message from Philip Kaludercic on
+ Tue, 10 Nov 2026 21:28:40 +0000)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Returning back to the actual package, I read the entire source and
+  > collected a few comments and suggestions here:
+
+
+  > [2:text/x-patch Hide]
+
+  > diff --git a/vibe-spell.el b/vibe-spell.el
+  > index e28eb68..aac30da 100644
+  > --- a/vibe-spell.el
+  > +++ b/vibe-spell.el
+  > @@ -97,11 +97,13 @@ Donaudampfschiffahrtselektrizitätenhauptbetriebswerkbauunterbeamtengesellschaft
+  >    "Maximum word length to be processed by the spell checker.
+  >  Longer words are always reported as correct.")
+ 
+  > +;; Shouldn't this be a user option?
+  >  (defvar vibe-spell-check-time-limit 5
+  ...
+
+Some of the changes you suggest are more substantial than mere comments.
+That shows we need to resolve the question of how vibe-spell relates
+to hunspell.  We've considered two paths:
+
+1. vibe-spell is treated as a form of hunspell, and we intend
+to transpose (all, or many) future hunspell changes into vibe-spell.
+
+  a. That will sometimes be done using an LLM.
+
+  b. That will always be done by a human.
+
+2. vibe-spell is an independent program now, and its future development
+will not be tied to that of hunspell, though one might get inspiration
+from new hunspell features.
+
+There could also be a path 1.5 which is a "sometimes 1 and sometimes
+2", but it would raise the same issues as path 1, so we don't need to
+treat it separately.
+
+This is the fundamental moral decision we know of regarding vibe-spell.
+Path 1a (or 1.5a) is unacceptable since it would tie future development
+to a tool it is against our principles to use or recommend.
+
+We could choose path 1b, or path 2, but will people actually follow
+that decision, or would we be fooling ourselves?  I think that only
+with some time can we tell the answer.  We need enough time for their
+to be substantial changes in hunspell that people want to transpose
+into vibe-spell.
+
+Aside from this moral issue, there is also the legal issue of whether
+this code can be copyrighted (and, therefore, copylefted).  We are
+trying to find out, but having an answer may take time.
+
+We must take the time needed for a good final decision.
+We must wait and see.
+
+Therefore, don't install vibe-spell now into NonGNU ELPA (or into GNU
+ELPA).
+
+When enough months have gone by to give us a basis for a thoughtful
+decision, we should consider this question based on what we have seen.
+
+
+
+
+
+
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-14T14:12:56+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xSDYu-009g3H-IS@fencepost.gnu.org>
+In-Reply-To: <87ld70csa1.fsf@web.de> (arne_bab@web.de)
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > And in the hermes discussion it was claified that a GNU package must not
+  > encourage people to use proprietary software.
+
+  > All LLM code I reviewed to date made usage with Free Software harder
+  > than the equivalent handwritten code.
+
+Would you like to check the code of vibe-spell yourself?
+
+We just saw a set of hand-written patches proposed -- perhaps
+it would be wise to check the patched version, as that is probably
+what we would install, and might plausibly be cleaner.
+
+After doing this, you could tell us about whether this particular LLM output
+makes something harder -- and, if so, precisely what that something is.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-14T14:13:06+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xSDZ4-009g5a-V8@fencepost.gnu.org>
+In-Reply-To: <87bj7wtrtv.fsf@posteo.net> (message from Philip Kaludercic on
+ Tue, 10 Nov 2026 19:22:06 +0000)
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > For software freedom we are concerned with the existence of plausible
+  > method to achieve the goal which doesn't depend on non-free software.
+
+That comes fairly close to part of our concerns, but it is not
+complete and not properly formulated.  Don't use that statement's
+wording as a basis for argument.
+
+  > If a maintainer decides to use another method, that is their choice, but
+  > that doesn't matter.  Do we at least agree on that?
+
+In general, no.  That statement is sweepingly broad.  It is valid for
+some issues, but there are others for which it is not valid.
+
+It is valid for personal choices which have no effect on anyone else.
+For instance, if you edit a file with a proprietary text editor, that
+normally has no effect on anyone else, so we don't need to ask what
+you did.
+
+But there are various private actions whose consequences can affect
+the program's other developers, its users, or the project overall.
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-14T14:13:12+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Is there a policy on using LLM to diagnose bugs?
+Message-ID: <E1xSDZA-009g7m-4b@fencepost.gnu.org>
+In-Reply-To: <86cxsc1vv0.fsf@gnu.org> (message from Eli Zaretskii on Tue, 10
+ Nov 2026 18:42:27 +0200)
+References: <f741b2f8-cd9f-454c-8b4c-0bad5b919b4f@imayhem.com>
+ <86cxsc1vv0.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > IMO, it shouldn't be a problem, provided that "the information it
+  > provides" doesn't include code that you then submit as the fix, with
+  > or without modifications.  IOW, "the information it provides" should
+  > be analysis of the bug and its reasons, and suggestions for fixes that
+  > don't include code.  At least that is my understanding.
+
+I agree, but to make it clearer, I'd change "suggestions for fixes that
+don't include code" to "suggestions for approaches to use for fixes, not including code."
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-14T14:14:20+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xSDaG-009gNT-4h@fencepost.gnu.org>
+In-Reply-To: <09960726-7033-4bbd-ad27-8a431615cbbf@eskola.uk> (message from
+ Benjamin Eskola on Tue, 10 Nov 2026 16:15:32 +0000)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87jymryxz1.fsf@spork.org> <86ecczm4r9.fsf@gnu.org>
+ <87fqxeysha.fsf@spork.org> <86mrrmknn7.fsf@gnu.org>
+ <E1xQmoE-003Lrt-Mo@fencepost.gnu.org> <86eccs1xoh.fsf@gnu.org>
+ <09960726-7033-4bbd-ad27-8a431615cbbf@eskola.uk>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > But the question wasn't about the ethical views of the contributor. It 
+  > was about whether the contribution was produced by slave labour, not 
+  > whether the contributor was in favour of slave labour.
+
+People who force others to work as slaves deserve punishment.  In most
+real countries, that is a crime and they can be punished by law.
+
+If they used forced labor in a business, for profit, we can punish
+them in a practical way by boycotting the business, and thus denying
+them the profit they sought.  We should do that.
+
+If they used forced labor to make something generally beneficial, and
+the public did nothing to encourage or reward that use of forced
+labor, they still deserve to be punished, for forcing slaves to work.
+
+But the public does not deserve to be punished on their account.  A
+campaign to reject that beneficial thing would hurt only the innocent
+public.  There is no sense in that.  We should rather campaign to
+properly punish the guilty ones.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-14T14:19:57+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <86jymfsg76.fsf@gnu.org>
+In-Reply-To: <86qzgnsisj.fsf@gnu.org> (message from Eli Zaretskii on Sat, 14
+ Nov 2026 14:23:56 +0200)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org>
+
+> Date: Sat, 14 Nov 2026 14:23:56 +0200
+> From: Eli Zaretskii <eliz@gnu.org>
+> Cc: spwhitton@spwhitton.name, pipcet@protonmail.com,
+> 	emacs-devel@gnu.org
+> 
+>   dispnew.c: In function 'process_sigwinch_async':
+>   dispnew.c:6715:1: warning: function might be candidate for attribute 'noreturn' [-Wsuggest-attribute=noreturn]
+>    6715 | process_sigwinch_async (void)
+> 	| ^~~~~~~~~~~~~~~~~~~~~~
+>   [...]
+>   igc.c:2830:50: warning: ISO C90 forbids variable length array 'array' [-Wvla]
+>    2830 | fix_glyph_array (mps_ss_t ss, size_t len, struct glyph array[len])
+> 	|                                                  ^~~~~
+>   igc.c: In function 'igc_xpalloc_exact':
+>   igc.c:4243:7: warning: ISO C90 forbids variable length array 'area' [-Wvla]
+>    4243 |       volatile mps_word_t area[count];
+> 	|       ^~~~~~~~
+>   igc.c: At top level:
+>   igc.c:5896:1: warning: ISO C90 forbids variable length array 'parms' [-Wvla]
+>    5896 | read_gens (size_t *ngens, mps_gen_param_s parms[*ngens])
+> 	| ^~~~~~~~~
+
+I see those on GNU/Linux as well, so they are not specific to
+MS-Windows.
+
+================================================================================
+Date: 2026-11-14T14:41:07+01:00
+From: Cecilio Pardo <cpardo@imayhem.com>
+Subject: Re: Is there a policy on using LLM to diagnose bugs?
+Message-ID: <faa8aacd-2adb-4a79-826c-4c63b3d97bf0@imayhem.com>
+In-Reply-To: <E1xSDZA-009g7m-4b@fencepost.gnu.org>
+References: <f741b2f8-cd9f-454c-8b4c-0bad5b919b4f@imayhem.com>
+ <86cxsc1vv0.fsf@gnu.org> <E1xSDZA-009g7m-4b@fencepost.gnu.org>
+
+On 11/14/2026 2:13 PM, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+>    > IMO, it shouldn't be a problem, provided that "the information it
+>    > provides" doesn't include code that you then submit as the fix, with
+>    > or without modifications.  IOW, "the information it provides" should
+>    > be analysis of the bug and its reasons, and suggestions for fixes that
+>    > don't include code.  At least that is my understanding.
+> 
+> I agree, but to make it clearer, I'd change "suggestions for fixes that
+> don't include code" to "suggestions for approaches to use for fixes, not including code."
+
+I have been experimenting with this. I suggest putting into AGENTS.md 
+something like this:
+
+"When the user describes a bug to fix or an improvement to implement:
+
+- First, explain why the bug happens, including context about the 
+internals, which the user may not know about.
+- Only then, on the user's request, suggest strategies (approaches) to 
+fix the bug. Don't choose one for the user.
+- Never generate code."
+
+The LMs I've used have a tendency to go all the way on the first call, 
+and talk to me like I am an expert, for my ego I guess. This tames them 
+somehow.
+
+This is not a textual suggestion, I don't have the english.
+
+================================================================================
+Date: 2026-11-14T14:50:06+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: Is there a policy on using LLM to diagnose bugs?
+Message-ID: <CAN+1HboutLHWt9EoT-8-GvJSuNViPyW+yzPXVwdG66y7GULcrw@mail.gmail.com>
+In-Reply-To: <faa8aacd-2adb-4a79-826c-4c63b3d97bf0@imayhem.com>
+References: <f741b2f8-cd9f-454c-8b4c-0bad5b919b4f@imayhem.com>
+ <86cxsc1vv0.fsf@gnu.org> <E1xSDZA-009g7m-4b@fencepost.gnu.org>
+ <faa8aacd-2adb-4a79-826c-4c63b3d97bf0@imayhem.com>
+
+On Sat, Nov 14, 2026 at 8:41 AM Cecilio Pardo <cpardo@imayhem.com> wrote:
+
+> On 11/14/2026 2:13 PM, Richard Stallman wrote:
+> > [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> > [[[ whether defending the US Constitution against all enemies,     ]]]
+> > [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> >
+> >    > IMO, it shouldn't be a problem, provided that "the information it
+> >    > provides" doesn't include code that you then submit as the fix, with
+> >    > or without modifications.  IOW, "the information it provides" should
+> >    > be analysis of the bug and its reasons, and suggestions for fixes
+> that
+> >    > don't include code.  At least that is my understanding.
+> >
+> > I agree, but to make it clearer, I'd change "suggestions for fixes that
+> > don't include code" to "suggestions for approaches to use for fixes, not
+> including code."
+>
+> I have been experimenting with this. I suggest putting into AGENTS.md
+> something like this:
+>
+> "When the user describes a bug to fix or an improvement to implement:
+>
+> - First, explain why the bug happens, including context about the
+> internals, which the user may not know about.
+> - Only then, on the user's request, suggest strategies (approaches) to
+> fix the bug. Don't choose one for the user.
+> - Never generate code."
+>
+> The LMs I've used have a tendency to go all the way on the first call,
+> and talk to me like I am an expert, for my ego I guess. This tames them
+> somehow.
+>
+> This is not a textual suggestion, I don't have the english.
+>
+
+It could be acceptable for a user to ask an LLM to generate a *concise* and
+*correct* report with a standalone *reproducer*, if the bug reporter can't
+(or won't) do that on their own (laziness can be tantamount to
+disrespect).  Many of the LLM submissions I've had to deal with on other
+projects are verbose "brain dumps" and cost a lot of time to read through
+and mine potential gems from the roughs.
+
+================================================================================
+Date: 2026-11-14T15:45:10+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87o6br1ngp.fsf@web.de>
+In-Reply-To: <E1xSDYu-009g3H-IS@fencepost.gnu.org>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <87ld70csa1.fsf@web.de> <E1xSDYu-009g3H-IS@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+>   > And in the hermes discussion it was claified that a GNU package must not
+>   > encourage people to use proprietary software.
+>
+>   > All LLM code I reviewed to date made usage with Free Software harder
+>   > than the equivalent handwritten code.
+>
+> Would you like to check the code of vibe-spell yourself?
+
+I don’t, because the last time I did a long review of AI code, that was
+so draining that I couldn’t work well for two days.
+
+That’s why I try to avoid LLM code at work (can’t completely do so) and
+never review such without being paid.
+
+The mental toll it takes on me is too high for that.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-14T16:23:36+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86bj7rsah3.fsf@gnu.org>
+In-Reply-To: <87o6br1ngp.fsf@web.de> (arne_bab@web.de)
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <87ld70csa1.fsf@web.de> <E1xSDYu-009g3H-IS@fencepost.gnu.org>
+ <87o6br1ngp.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: philipk@posteo.net,  tomas@tuxteam.de,  arstoffel@gmail.com,
+>   joel.reicher@gmail.com,  cwebber@dustycloud.org,  eliz@gnu.org,
+>   emacs-devel@gnu.org
+> Date: Sat, 14 Nov 2026 15:45:10 +0100
+> 
+> Richard Stallman <rms@gnu.org> writes:
+> 
+> >   > And in the hermes discussion it was claified that a GNU package must not
+> >   > encourage people to use proprietary software.
+> >
+> >   > All LLM code I reviewed to date made usage with Free Software harder
+> >   > than the equivalent handwritten code.
+> >
+> > Would you like to check the code of vibe-spell yourself?
+> 
+> I don’t, because the last time I did a long review of AI code, that was
+> so draining that I couldn’t work well for two days.
+> 
+> That’s why I try to avoid LLM code at work (can’t completely do so) and
+> never review such without being paid.
+> 
+> The mental toll it takes on me is too high for that.
+
+If the vibe-spell's code is as difficult to review as you describe, I
+wonder how it could be considered to be a source code of a program.
+
+However, Philip seemed to have no difficulty reviewing the source and
+posting non-trivial comments, so maybe Philip could chime in and share
+hist opinions?
+
+================================================================================
+Date: 2026-11-14T16:38:49+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+In-Reply-To: <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+
+On Sat, Nov 14, 2026 at 8:13 AM Richard Stallman <rms@gnu.org> wrote:
+
+>
+> Some of the changes you suggest are more substantial than mere comments.
+> That shows we need to resolve the question of how vibe-spell relates
+> to hunspell.  We've considered two paths:
+>
+> 1. vibe-spell is treated as a form of hunspell, and we intend
+> to transpose (all, or many) future hunspell changes into vibe-spell.
+>
+>   a. That will sometimes be done using an LLM.
+>
+>   b. That will always be done by a human.
+>
+> 2. vibe-spell is an independent program now, and its future development
+> will not be tied to that of hunspell, though one might get inspiration
+> from new hunspell features.
+>
+> There could also be a path 1.5 which is a "sometimes 1 and sometimes
+> 2", but it would raise the same issues as path 1, so we don't need to
+> treat it separately.
+>
+> This is the fundamental moral decision we know of regarding vibe-spell.
+> Path 1a (or 1.5a) is unacceptable since it would tie future development
+> to a tool it is against our principles to use or recommend.
+>
+> We could choose path 1b, or path 2, but will people actually follow
+> that decision, or would we be fooling ourselves?  I think that only
+> with some time can we tell the answer.  We need enough time for their
+> to be substantial changes in hunspell that people want to transpose
+> into vibe-spell.
+>
+
+I thought Augusto put this to bed already opting for the ELisp source code
+presiding.  See
+https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00228.html
+
+Aside from this moral issue, there is also the legal issue of whether
+> this code can be copyrighted (and, therefore, copylefted).  We are
+> trying to find out, but having an answer may take time.
+>
+> We must take the time needed for a good final decision.
+> We must wait and see.
+>
+> Therefore, don't install vibe-spell now into NonGNU ELPA (or into GNU
+> ELPA).
+>
+
+I thought one purpose of NonGNU ELPA was specifically to avoid copyright
+assignment considerations as the code could be public domain (as all LLM
+output might be considered) or otherwise freely licensed by authors without
+assignment.  It says close to that here https://elpa.nongnu.org/about.html (and
+is silent on other copyright considerations).
+
+================================================================================
+Date: 2026-11-14T17:06:37+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87ik1z1joy.fsf@web.de>
+In-Reply-To: <86bj7rsah3.fsf@gnu.org>
+References: <87fqxg49b6.fsf@posteo.net> <875wybdubd.fsf@dustycloud.org>
+ <E1xPvac-000Me5-3x@fencepost.gnu.org> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <E1xSDYu-009g3H-IS@fencepost.gnu.org> <87o6br1ngp.fsf@web.de>
+ <86bj7rsah3.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> The mental toll it takes on me is too high for that.
+>
+> If the vibe-spell's code is as difficult to review as you describe, I
+> wonder how it could be considered to be a source code of a program.
+
+To clarify: I’m talking about other LLM-generated code I had to review,
+not about vibe-spell. I did not review vibe-spell, because I do not want
+to repeat the experience of reading other LLM-generated code.
+And I don’t expect anyone to be willing to pay me enough to offset the
+mental toll that would likely take out of me – this is not a request for
+payment.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-14T17:17:01+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87cxs71j7m.fsf@web.de>
+In-Reply-To: <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+
+Stéphane Marks <shipmints@gmail.com> writes:
+> On Sat, Nov 14, 2026 at 8:13 AM Richard Stallman <rms@gnu.org> wrote:
+>> 1. vibe-spell is treated as a form of hunspell, and we intend
+>> to transpose (all, or many) future hunspell changes into vibe-spell.
+>>
+>>   a. That will sometimes be done using an LLM.
+>>    …
+>>  Path 1a (or 1.5a) is unacceptable since it would tie future development
+>> to a tool it is against our principles to use or recommend.
+
+> I thought Augusto put this to bed already opting for the ELisp source code presiding.  See
+> https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00228.html
+
+I expected everyone to see the contradiction of both "modify by hand"
+and "point LLM to hunspell sources to backport".
+
+> I thought one purpose of NonGNU ELPA was specifically to avoid copyright assignment considerations as the
+> code could be public domain (as all LLM output might be considered) or otherwise freely licensed by authors
+> without assignment.
+
+The code could also be a copyright violation and everyone propagating it
+could be infringing on the copyright of authors of parts of the training
+data (because it would not have been legal that they got it).
+
+See
+https://www.twobirds.com/en/insights/2025/landmark-ruling-of-the-munich-regional-court-%28gema-v-openai%29-on-copyright-and-ai-training
+and
+https://www.gesetze-bayern.de/Content/Document/Y-300-Z-GRURRS-B-2025-N-30204
+
+The legal situation is currently in flux and we don’t know how it will
+play out.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-14T17:28:41+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <CAN+1HboGKRyKOxjXCgPRauX=FvN9j8N0QpS7djOky-4rpzY0VQ@mail.gmail.com>
+In-Reply-To: <87cxs71j7m.fsf@web.de>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de>
+
+On Sat, Nov 14, 2026 at 11:17 AM Dr. Arne Babenhauserheide <arne_bab@web.de>
+wrote:
+
+> Stéphane Marks <shipmints@gmail.com> writes:
+> > On Sat, Nov 14, 2026 at 8:13 AM Richard Stallman <rms@gnu.org> wrote:
+> >> 1. vibe-spell is treated as a form of hunspell, and we intend
+> >> to transpose (all, or many) future hunspell changes into vibe-spell.
+> >>
+> >>   a. That will sometimes be done using an LLM.
+> >>    …
+> >>  Path 1a (or 1.5a) is unacceptable since it would tie future development
+> >> to a tool it is against our principles to use or recommend.
+>
+> > I thought Augusto put this to bed already opting for the ELisp source
+> code presiding.  See
+> > https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00228.html
+>
+> I expected everyone to see the contradiction of both "modify by hand"
+> and "point LLM to hunspell sources to backport".
+>
+
+Either way, it's his choice, it's his package, and his contributions to
+Emacs and community engagement have been welcome.
+
+> I thought one purpose of NonGNU ELPA was specifically to avoid copyright
+> assignment considerations as the
+> > code could be public domain (as all LLM output might be considered) or
+> otherwise freely licensed by authors
+> > without assignment.
+>
+> The code could also be a copyright violation and everyone propagating it
+> could be infringing on the copyright of authors of parts of the training
+> data (because it would not have been legal that they got it).
+>
+
+It could be but that's irrelevant as the policy is to extend trust to
+authors.  Even if LLM output is not copyrightable, it still can be valuable
+work when shepherded by someone trustworthy with good taste.  Being a
+copyright violation is a separate matter and proving such would require an
+exhaustive search of all code publicly in the wild as published lyrics tend
+to be (private code can never be infringed having never been used for
+training).  Such author trust matters.  I'd rather not be here among this
+crowd if there is distrust among our good contributors.  And let's give
+Augusto some credit for being transparent and willing to subject himself to
+this discussion.
+
+See
+>
+> https://www.twobirds.com/en/insights/2025/landmark-ruling-of-the-munich-regional-court-%28gema-v-openai%29-on-copyright-and-ai-training
+> and
+>
+> https://www.gesetze-bayern.de/Content/Document/Y-300-Z-GRURRS-B-2025-N-30204
+>
+> The legal situation is currently in flux and we don’t know how it will
+> play out.
+>
+
+It's murkier than that, even.  In Singapore, materials used for model
+training are not considered violations and to the degree Augusto chose a
+model that was trained there and perhaps run there (at Megaspeed, for
+example), he could be in the clear.  This is for the FSF lawyers to deal
+with, not us, right?  And as Eli has said many times, let's set these aside
+for now and focus on vibe-spell (or espell whatever it is now called) and
+on Augusto's valuable contribution.
+
+================================================================================
+Date: 2026-11-14T17:31:35+01:00
+From: Stephen Gildea <stepheng+emacs@gildea.com>
+Subject: Re: backup-by-copying-when-privileged-mismatch seems too low
+Message-ID: <118140.1794673895@pental.sg.gildea.net>
+In-Reply-To: Message from eliz@gnu.org of 7 Nov 2026 12:32:32 +0200
+ <86pkwhj5j3.fsf@gnu.org>
+References: 
+
+Eli Zaretskii <eliz@gnu.org> wrote:
+
+>   Ping!  How can we make further progress in thismatter?
+
+I think we have agreement on what the default should be for system
+types other than MS Windows.  So let's look at Windows.
+
+It appears that on Windows, system accounts are in the range
+500 to 999, and user accounts start at 1000.
+
+However, the groups situation appears to be more complicated.
+All accounts, both Administrators and ordinary users, could
+have groups in the 513+ range.  Probably on Windows we need to
+ignore (or have a separate limit for) group ids.  A patch to
+ignore gid on Windows is appended below.
+
+As the simplest way forward now, I think if we changed the
+"privileged" limit on Windows to 500 that it would be no worse
+than the current limit.  Thus
+
+  (if (memq system-type '(darwin cygwin windows-nt)) 500 999)
+
+
+ < Stephen
+
+
+diff --git a/lisp/files.el b/lisp/files.el
+index 4cb1ac67629..09b47e5e7e1 100644
+--- a/lisp/files.el
++++ b/lisp/files.el
+@@ -147,7 +147,8 @@ backup-by-copying-when-mismatch
+   :local 'permanent-only
+   :group 'backup)
+ 
+-(defcustom backup-by-copying-when-privileged-mismatch 200
++(defcustom backup-by-copying-when-privileged-mismatch
++  (if (eq system-type 'darwin) 500 999)
+   "Non-nil means create backups by copying to preserve a privileged owner.
+ Renaming may still be used (subject to control of other variables)
+ when it would not result in changing the owner of the file or if the
+@@ -155,6 +156,9 @@ backup-by-copying-when-privileged-mismatch
+ this variable.  This is useful when low-numbered uid's and gid's are
+ used for special system users (such as root) that must maintain
+ ownership of certain files.
++MS-Windows assigns group ids in a non-contiguous way, so it
++does not have a meaningful privileged/ordinary group id boundary;
++thus, the group id is not checked on MS-Windows systems.
+ This variable is relevant only if `backup-by-copying' and
+ `backup-by-copying-when-mismatch' are nil."
+   :type '(choice (const nil) integer)
+@@ -5501,8 +5505,9 @@ backup-buffer
+ 						   'integer)))
+                                         (or (<= (file-attribute-user-id attr)
+                                                 copy-when-priv-mismatch)
+-                                            (<= (file-attribute-group-id attr)
+-                                                copy-when-priv-mismatch)))))
++                                            (and (not (memq system-type '(cygwin windows-nt)))
++                                                 (<= (file-attribute-group-id attr)
++                                                     copy-when-priv-mismatch))))))
+ 			     (not (file-ownership-preserved-p real-file-name
+ 							      t)))))
+ 		   setmodes)
+
+================================================================================
+Date: 2026-11-14T17:35:59+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <aviN76jMvtiHnpho@tuxteam.de>
+In-Reply-To: <86bj7rsah3.fsf@gnu.org>
+References: <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <87ld70csa1.fsf@web.de> <E1xSDYu-009g3H-IS@fencepost.gnu.org>
+ <87o6br1ngp.fsf@web.de> <86bj7rsah3.fsf@gnu.org>
+
+On Sat, Nov 14, 2026 at 05:23:36PM +0200, Eli Zaretskii wrote:
+> > From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+
+[assessing LLM code]
+
+> > The mental toll it takes on me is too high for that.
+> 
+> If the vibe-spell's code is as difficult to review as you describe, I
+> wonder how it could be considered to be a source code of a program.
+> 
+> However, Philip seemed to have no difficulty reviewing the source and
+> posting non-trivial comments, so maybe Philip could chime in and share
+> hist opinions?
+
+Perhaps the person "making" the code (with gen LLM help) needs to go
+some extra length to make this possible.
+
+Cheers
+-- 
+t
+
