@@ -1,0 +1,1303 @@
+emacs-devel messages from 2026-11-14T18:15:00+01:00 to 2026-11-15T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-14T18:45:59+01:00
+From: Ihor Radchenko <yantar92@posteo.net>
+Subject: Re: Byte-compilation warning in org-persist.el
+Message-ID: <87tsljs3wn.fsf@localhost>
+In-Reply-To: <8633tckiic.fsf@gnu.org>
+References: <86jymyrzks.fsf@gnu.org> <8633tckiic.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> Could this warning be fixed on master, please?
+>
+> Ping!
+
+Fixed on bugfix, as a part of Org 9.8.13 release.
+It will eventually propagate back to master.
+
+-- 
+Ihor Radchenko // yantar92,
+Org mode maintainer,
+Learn more about Org mode at <https://orgmode.org/>.
+Support Org development at <https://liberapay.com/org-mode>,
+or support my work at <https://liberapay.com/yantar92>
+
+================================================================================
+Date: 2026-11-14T19:50:10+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Byte-compilation warning in org-persist.el
+Message-ID: <865wxzs0wt.fsf@gnu.org>
+In-Reply-To: <87tsljs3wn.fsf@localhost> (message from Ihor Radchenko on Sat,
+ 14 Nov 2026 17:45:59 +0000)
+References: <86jymyrzks.fsf@gnu.org> <8633tckiic.fsf@gnu.org>
+ <87tsljs3wn.fsf@localhost>
+
+> From: Ihor Radchenko <yantar92@posteo.net>
+> Cc: emacs-devel@gnu.org
+> Date: Sat, 14 Nov 2026 17:45:59 +0000
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> Could this warning be fixed on master, please?
+> >
+> > Ping!
+> 
+> Fixed on bugfix, as a part of Org 9.8.13 release.
+> It will eventually propagate back to master.
+
+Thanks!
+
+================================================================================
+Date: 2026-11-14T20:50:36+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <87qzgnqjjn.fsf@gmail.com>
+In-Reply-To: <86qzgnsisj.fsf@gnu.org>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org>
+
+On Sat, Nov 14 2026, Eli Zaretskii wrote:
+
+>> From: Helmut Eller <eller.helmut@gmail.com>
+>> Cc: Pip Cet <pipcet@protonmail.com>,  emacs-devel@gnu.org
+>> Date: Thu, 12 Nov 2026 10:41:12 +0100
+>> 
+>> On Thu, Nov 12 2026, Sean Whitton wrote:
+>> 
+>> > Hello Helmut,
+>> >
+>> > Helmut Eller [24/Sep  1:38pm +02] wrote:
+>> >> On Thu, Sep 24 2026, Sean Whitton wrote:
+>> >>
+>> >>> Hello igc devs,
+>> >>>
+>> >>> I was wondering how things are going, and whether you might have a
+>> >>> better idea about when a merge to master might be possible, to get wider
+>> >>> testing.
+>> >>
+>> >> Currently I'm working on bug#79200, i.e. merging the
+>> >> scratch/igc/weak-undo-list branch into scratch/igc3.
+>> >>
+>> >> As for merging with master:
+>> >>
+>> >> - there is still the scratch/gc-handles branch that I never merged
+>> >>   (bug#80609).  I'm not sure if I should bring that up-to-date and merge
+>> >>   it separately or simply include it in the big merge.
+>> >>
+>> >> - I should probably look over the signal handling code again before the
+>> >>   big merge.
+>> >
+>> > Have you had a chance to look over the signal handling code yet?
+>> 
+>> No, not yet.  I guess I should make time for that soon.
+>
+> Recent changes related to signals cause trouble in the MS-Windows
+> build:
+>
+>   dispnew.c: In function 'process_sigwinch_async':
+>   dispnew.c:6715:1: warning: function might be candidate for attribute 'noreturn' [-Wsuggest-attribute=noreturn]
+>    6715 | process_sigwinch_async (void)
+> 	| ^~~~~~~~~~~~~~~~~~~~~~
+>   [...]
+>   igc.c:2830:50: warning: ISO C90 forbids variable length array 'array' [-Wvla]
+>    2830 | fix_glyph_array (mps_ss_t ss, size_t len, struct glyph array[len])
+> 	|                                                  ^~~~~
+>   igc.c: In function 'igc_xpalloc_exact':
+>   igc.c:4243:7: warning: ISO C90 forbids variable length array 'area' [-Wvla]
+>    4243 |       volatile mps_word_t area[count];
+> 	|       ^~~~~~~~
+>   igc.c: At top level:
+>   igc.c:5896:1: warning: ISO C90 forbids variable length array 'parms' [-Wvla]
+>    5896 | read_gens (size_t *ngens, mps_gen_param_s parms[*ngens])
+> 	| ^~~~~~~~~
+>
+> The above are just warnings, although it would be good to avoid them.
+
+Fix those.
+
+> But the one below is a real problem:
+>
+>   gc.c: In function 'igc_defer_sigprof':
+>   igc.c:6371:14: warning: implicit declaration of function 'sigdelset'; did you mean 'sigfillset'? [-Wimplicit-function-declaration]
+>    6371 |     result = sigdelset (&sa.sa_mask, SIGPROF);
+> 	|              ^~~~~~~~~
+> 	|              sigfillset
+>   igc.c:6371:14: warning: nested extern declaration of 'sigdelset' [-Wnested-externs]
+>
+> It later causes a link error:
+>
+>     CCLD     temacs.exe
+>   d:/usr/bin/../lib/gcc/mingw32/9.2.0/../../../../mingw32/bin/ld.exe: igc.o: in function `igc_defer_sigprof':
+>   d:\gnu\git\emacs\feature2\src/igc.c:6371:(.text+0x7a62): undefined reference to `sigdelset'
+>   collect2.exe: error: ld returned 1 exit status
+>   Makefile:716: recipe for target `temacs.exe' failed
+>
+> I fixed the error so that Emacs at least could be built, but I'm not
+> sure whether it's correct, because I don't think I understand the
+> strategy.  Can you explain the purpose of calling sigaction for
+> SIGSEGV in igc_defer_sigprof?
+
+sigaction is called two times: the first call reads the current value;
+the second call sets the value with a modified sa_mask.
+
+> In particular, is this at all needed on
+> MS-Windows, and if so, why?
+
+Probably not.  The problem on GNU/Linux, is that we can have a sequence
+like:
+
+  1. SIGSEGV caused by some ordinary code executes MPS's fault handler
+  2. SIGPROF, caused by the profiler, interrupts the MPS fault handler
+  3. handle_profiler_signal causes another SIGSEGV in trace_hash
+
+at this point Linux terminates the process, because usually receiving a
+SIGSEGV is not allowed while executing a handler for SIGSEGV.  (It could
+be allowed by setting the SA_NODEFER flag, but MPS doesn't set that.)
+
+I don't know what MS-Windows does in the analog situation; maybe it
+allows nested SIGSEGVs by default.
+
+Anyway, I think I found a another way to avoid step 3 so that
+igc_defer_sigprof is no longer needed.
+
+Helmut
+
+================================================================================
+Date: 2026-11-14T23:50:44+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87eccnxc1p.fsf@posteo.net>
+In-Reply-To: <87cxs71j7m.fsf@web.de>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Stéphane Marks <shipmints@gmail.com> writes:
+>> On Sat, Nov 14, 2026 at 8:13 AM Richard Stallman <rms@gnu.org> wrote:
+>>> 1. vibe-spell is treated as a form of hunspell, and we intend
+>>> to transpose (all, or many) future hunspell changes into vibe-spell.
+>>>
+>>>   a. That will sometimes be done using an LLM.
+>>>    …
+>>>  Path 1a (or 1.5a) is unacceptable since it would tie future development
+>>> to a tool it is against our principles to use or recommend.
+>
+>> I thought Augusto put this to bed already opting for the ELisp source code presiding.  See
+>> https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00228.html
+>
+> I expected everyone to see the contradiction of both "modify by hand"
+> and "point LLM to hunspell sources to backport".
+
+Please explain, because I see no contradiction here.  You can make
+changes by hand, you can make changes using an LLM.  It will be faster
+if you do the latter, but that doesn't mean the former isn't possible?
+
+>> I thought one purpose of NonGNU ELPA was specifically to avoid copyright assignment considerations as the
+>> code could be public domain (as all LLM output might be considered) or otherwise freely licensed by authors
+>> without assignment.
+>
+> The code could also be a copyright violation and everyone propagating it
+> could be infringing on the copyright of authors of parts of the training
+> data (because it would not have been legal that they got it).
+>
+> See
+> https://www.twobirds.com/en/insights/2025/landmark-ruling-of-the-munich-regional-court-%28gema-v-openai%29-on-copyright-and-ai-training
+> and
+> https://www.gesetze-bayern.de/Content/Document/Y-300-Z-GRURRS-B-2025-N-30204
+>
+> The legal situation is currently in flux and we don’t know how it will
+> play out.
+>
+> Best wishes,
+> Arne
+
+================================================================================
+Date: 2026-11-15T00:01:26+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87a4nbxbjv.fsf@posteo.net>
+In-Reply-To: <86bj7rsah3.fsf@gnu.org>
+References: <87fqxg49b6.fsf@posteo.net> <875wybdubd.fsf@dustycloud.org>
+ <E1xPvac-000Me5-3x@fencepost.gnu.org> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <E1xSDYu-009g3H-IS@fencepost.gnu.org> <87o6br1ngp.fsf@web.de>
+ <86bj7rsah3.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+>> Cc: philipk@posteo.net,  tomas@tuxteam.de,  arstoffel@gmail.com,
+>>   joel.reicher@gmail.com,  cwebber@dustycloud.org,  eliz@gnu.org,
+>>   emacs-devel@gnu.org
+>> Date: Sat, 14 Nov 2026 15:45:10 +0100
+>> 
+>> Richard Stallman <rms@gnu.org> writes:
+>> 
+>> >   > And in the hermes discussion it was claified that a GNU package must not
+>> >   > encourage people to use proprietary software.
+>> >
+>> >   > All LLM code I reviewed to date made usage with Free Software harder
+>> >   > than the equivalent handwritten code.
+>> >
+>> > Would you like to check the code of vibe-spell yourself?
+>> 
+>> I don’t, because the last time I did a long review of AI code, that was
+>> so draining that I couldn’t work well for two days.
+>> 
+>> That’s why I try to avoid LLM code at work (can’t completely do so) and
+>> never review such without being paid.
+>> 
+>> The mental toll it takes on me is too high for that.
+>
+> If the vibe-spell's code is as difficult to review as you describe, I
+> wonder how it could be considered to be a source code of a program.
+>
+> However, Philip seemed to have no difficulty reviewing the source and
+> posting non-trivial comments, so maybe Philip could chime in and share
+> hist opinions?
+
+I can assure everyone that it is entirely readable and usable code.  I
+shared my comments with Augusto and could have a reasonable discussion
+about the code.  Sure it has domain-specific complexities that are more
+tricky to understand if you aren't familiar with the file formats and
+algorithms employed in spell checking, but that is to be expected.
+
+This discussion and the attitude of those who insist on rejecting the
+code is _far_ more exhausting than the code itself.  Arne and the
+others, if you have any sense of respect for the _human_ effort I put
+into working on ELPA, I beg you to take a look at the code and point out
+concrete examples of what you consider to be problematic in the output
+of the generated code.  In the worst case, you'll just be providing a
+(partial) second review of things we can fix!  But arguing with
+(possibly outdated) anecdotal evidence about this concrete package is
+really too much for me to deal with.
+
+(As I have pointed out elsewhere, I am not pro-AI; but attitudes like
+these have driven me away from identifying myself as anti-AI -- please
+keep this in mind.  Just because you think what you are fighting for is
+reasonable doesn't mean you get to be unreasonable in pursuit of this
+goal.)
+
+================================================================================
+Date: 2026-11-15T00:16:35+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <875wxzxaul.fsf@posteo.net>
+In-Reply-To: <E1xSDZ4-009g5a-V8@fencepost.gnu.org>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <E1xSDZ4-009g5a-V8@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > For software freedom we are concerned with the existence of plausible
+>   > method to achieve the goal which doesn't depend on non-free software.
+>
+> That comes fairly close to part of our concerns, but it is not
+> complete and not properly formulated.  Don't use that statement's
+> wording as a basis for argument.
+
+Can you elaborate on what you mean?
+
+>   > If a maintainer decides to use another method, that is their choice, but
+>   > that doesn't matter.  Do we at least agree on that?
+>
+> In general, no.  That statement is sweepingly broad.  It is valid for
+> some issues, but there are others for which it is not valid.
+>
+> It is valid for personal choices which have no effect on anyone else.
+> For instance, if you edit a file with a proprietary text editor, that
+> normally has no effect on anyone else, so we don't need to ask what
+> you did.
+>
+> But there are various private actions whose consequences can affect
+> the program's other developers, its users, or the project overall.
+
+Yes, so to specialize the claim here, the question is does the usage of
+LLMs in the translation of this package constitute an action that has
+consequences that affect other developers in a way that would require
+these to use proprietary software or some SaaSS?  I, having read and
+reviewed the source code of the proposed package, contend that this is
+note the case.
+
+For me the most reasonable objection would be the 3k lines of code
+(~140K).  Yet I argue it cannot be the size of the package that matters,
+for otherwise just in NonGNU ELPA we would also have the reject the
+following packages that have at least the same file size as vibe-spell:
+
+% find . -size +143k -name '*.el' -not -path '*test*' -ls | sort -k7n
+ 13651226    148 -rw-rw-r--   1 phi      phi        147757 Nov  6  2024 ./packages/magit-section/lisp/magit-diff.el
+ 13523691    148 -rw-rw-r--   1 phi      phi        147926 May 23 13:21 ./packages/clojure-mode/clojure-mode.el
+ 12585465    148 -rw-r--r--   1 phi      phi        150495 Aug 27  2023 ./packages/adoc-mode/adoc-mode.el
+ 12586988    152 -rw-r--r--   1 phi      phi        153022 Apr 14  2022 ./packages/xah-fly-keys/xah-fly-keys.el
+ 13784049    152 -rw-rw-r--   1 phi      phi        153065 May 23 13:23 ./packages/proof-general/coq/coq.el
+ 17068513    156 -rw-rw-r--   1 phi      phi        156769 May 23 13:23 ./packages/lem/lisp/lem-ui.el
+ 13651739    156 -rw-rw-r--   1 phi      phi        158157 May 23 13:23 ./packages/org-drill/org-drill.el
+ 12585909    156 -rw-r--r--   1 phi      phi        158335 Apr  7  2022 ./packages/evil/evil-common.el
+ 12585802    160 -rw-rw-r--   1 phi      phi        162742 May 23 13:22 ./packages/dslide/dslide.el
+ 13651081    164 -rw-rw-r--   1 phi      phi        165846 May 23 13:25 ./packages/magit/lisp/magit-diff.el
+ 12585513    164 -rw-r--r--   1 phi      phi        167344 Oct 31  2022 ./packages/annotate/annotate.el
+ 13785359    168 -rw-rw-r--   1 phi      phi        171671 Nov  6  2024 ./packages/swift-mode/swift-mode-standard-types.el
+ 12585908    168 -rw-r--r--   1 phi      phi        171913 Apr  7  2022 ./packages/evil/evil-commands.el
+ 12585953    172 -rw-r--r--   1 phi      phi        172302 Apr  7  2022 ./packages/evil/lib/undo-tree.el
+ 13652096    176 -rw-rw-r--   1 phi      phi        177566 May 23 13:23 ./packages/pcmpl-args/pcmpl-args.el
+ 13785622    176 -rw-rw-r--   1 phi      phi        179350 May 23 13:24 ./packages/tuareg/tuareg.el
+ 17483725    176 -rw-rw-r--   1 phi      phi        179689 May 23 13:24 ./packages/vm/lisp/vm-imap.el
+ 17435082    180 -rw-rw-r--   1 phi      phi        182912 Sep 10  2024 ./packages/wanderlust/wl/wl-summary.el
+ 13651300    180 -rw-rw-r--   1 phi      phi        183986 May 23 13:23 ./packages/mastodon/lisp/mastodon-tl.el
+ 16671055    200 -rw-rw-r--   1 phi      phi        204293 May 23 13:22 ./packages/fj/fj.el
+ 17483723    204 -rw-rw-r--   1 phi      phi        206692 May 23 13:24 ./packages/vm/lisp/vm-folder.el
+ 17221676    212 -rw-rw-r--   1 phi      phi        216441 May 23 13:23 ./packages/pg/pg.el
+ 13003435    236 -rw-rw-r--   1 phi      phi        238960 Mar  9  2026 ./packages/dumb-jump/dumb-jump.el
+ 17068563    236 -rw-rw-r--   1 phi      phi        240838 May 23 13:25 ./packages/logview/logview.el
+ 12586609    244 -rw-r--r--   1 phi      phi        245839 Apr 13  2022 ./packages/projectile/projectile.el
+ 13784365    244 -rw-rw-r--   1 phi      phi        246977 Nov  6  2024 ./packages/proof-general/lib/unicode-chars.el
+ 12585822    256 -rw-r--r--   1 phi      phi        260176 Apr  5  2023 ./packages/eat/eat.el
+ 13651427    268 -rw-rw-r--   1 phi      phi        270782 May 23 13:23 ./packages/monokai-theme/monokai-theme.el
+ 12586911    276 -rw-r--r--   1 phi      phi        279566 Aug 30  2023 ./packages/sweeprolog/sweeprolog.el
+ 12586235    284 -rw-r--r--   1 phi      phi        286954 Feb  5  2022 ./packages/helm/helm-files.el
+ 12586768    288 -rw-r--r--   1 phi      phi        293627 Feb  6  2024 ./packages/slime/slime.el
+ 17483886    288 -rw-rw-r--   1 phi      phi        294519 May 23 13:24 ./packages/vm/lisp/vm-vars.el
+ 13784831    292 -rw-rw-r--   1 phi      phi        296710 May 23 13:24 ./packages/sly/sly.el
+ 17483733    296 -rw-rw-r--   1 phi      phi        301003 May 23 13:24 ./packages/vm/lisp/vm-mime.el
+ 13650381    316 -rw-rw-r--   1 phi      phi        323527 May 23 13:22 ./packages/helm-core/helm-files.el
+ 12586263    320 -rw-r--r--   1 phi      phi        325545 Feb  5  2022 ./packages/helm/helm.el
+ 13650374    348 -rw-rw-r--   1 phi      phi        353348 May 23 13:22 ./packages/helm-core/helm-core.el
+ 13784941    396 -rw-rw-r--   1 phi      phi        402440 May 23 13:24 ./packages/smartparens/smartparens.el
+ 12586396    396 -rw-r--r--   1 phi      phi        404192 Apr 13  2022 ./packages/markdown-mode/markdown-mode.el
+ 13650735    444 -rw-rw-r--   1 phi      phi        453405 May 23 13:23 ./packages/julia-mode/julia-mode-latexsubs.el
+ 13524678    496 -rw-rw-r--   1 phi      phi        504659 May 23 13:22 ./packages/flycheck/flycheck.el
+ 13786115    576 -rw-rw-r--   1 phi      phi        588299 May 23 13:24 ./packages/web-mode/web-mode.el
+
+Sure I would like it if these files were smaller, but consider the scope
+of their problem of the extent of their customizability is known to blow
+up the size of a package.  If we really want to step back and understand
+the issue more holistically, we ought to discuss the implications of
+software packaging on the ability of a user to exercise the freedoms
+granted by free software licenses, but unless we restrict and redirect
+that discussion towards what technical improvements we can make to
+package.el to remedy these problems, that is a much more general
+discussion that ought to take place on emacs-tangents@.
+
+================================================================================
+Date: 2026-11-15T00:32:21+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <874idjxa4a.fsf@web.de>
+In-Reply-To: <87eccnxc1p.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+>> I expected everyone to see the contradiction of both "modify by hand"
+>> and "point LLM to hunspell sources to backport".
+>
+> Please explain, because I see no contradiction here.  You can make
+> changes by hand, you can make changes using an LLM.  It will be faster
+> if you do the latter, but that doesn't mean the former isn't possible?
+
+If you use LLMs to backport changes, then you don’t do that by hand.
+
+This was not about what’s possible, but about what was explicitly said
+what is intended.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-15T00:46:51+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Rejecting vibe-spell
+Message-ID: <87tsljvuvp.fsf@posteo.net>
+In-Reply-To: <E1xSDN6-00984b-VC@fencepost.gnu.org>
+References: <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <8733t8tlja.fsf@posteo.net> <87ld6zu7ad.fsf@gmail.com>
+ <avQzaaU2qB94crBr@tuxteam.de> <E1xSDN6-00984b-VC@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+> More important than the name of the package is what it contains and what
+> that implies about its further development.
+>
+> Please correct me if I'm mistaken, but it seems that further
+> maintenance of vibe-spell will require running the same LLM on future
+> versions of hunspell, to generate new versions of the code in
+> vibe-spell.  Not just once, not just five times, but over and over.
+
+No, this was never agreed on as necessary for the maintenance of
+vibe-spell.  Even if Augusto wanted to backport changes from Nuspell
+(not Hunspell) to vibe-spell, it wouldn't imply that this would have to
+be done using an LLM.
+
+> That LLM is a SaaSS dis-service, right?
+
+This too is not necessarily the case.  There is nothing inherent to the
+task that you couldn't do it with a local model trained with
+unencumbered data.
+
+> It might turn out ok to use source code that was (past tense)
+> generated by an LLM.  (Our interim policy is to refuse.)  But we
+> certainly can't have Emacs virtually include, or suggest using, a
+> program whose maintenance depends on repeatedly updating its source
+> code by running a nonfree or SaaSS LLM again and again.  Emacs
+> development would be lastingly dependent on that LLM.
+
+I agree; but I am of the position that this is neither the case for this
+package.
+
+> In that scenario, we can't rationally assert that the use of that tool
+> was done by someone else in the past and we are not morally
+> responsible for it.  We must reject that kind of dependence by
+> rejecting vibe-spell.
+
+I think that the burden of proof lies with the critics to demonstrate
+that the claim of depending on an LLM to maintain vibe-spell.  It is a
+tall claim to make, and I am not expecting a mathematical proof but just
+a reasonable yet concrete explanation in regards to the current code
+base why this ought to be the case.  If this is not given, then a
+precedence is created to reject any package where anyone claims that
+future maintenance of the package might necessitate LLMs or any other
+form of non-free software/SaaSS, without the assertion having to have
+any substance.
+
+================================================================================
+Date: 2026-11-15T06:10:59+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <864idismqk.fsf@gnu.org>
+In-Reply-To: <87qzgnqjjn.fsf@gmail.com> (message from Helmut Eller on Sat, 14
+ Nov 2026 20:50:36 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> Date: Sat, 14 Nov 2026 20:50:36 +0100
+> 
+> On Sat, Nov 14 2026, Eli Zaretskii wrote:
+> 
+> > Recent changes related to signals cause trouble in the MS-Windows
+> > build:
+> >
+> >   dispnew.c: In function 'process_sigwinch_async':
+> >   dispnew.c:6715:1: warning: function might be candidate for attribute 'noreturn' [-Wsuggest-attribute=noreturn]
+> >    6715 | process_sigwinch_async (void)
+> > 	| ^~~~~~~~~~~~~~~~~~~~~~
+> >   [...]
+> >   igc.c:2830:50: warning: ISO C90 forbids variable length array 'array' [-Wvla]
+> >    2830 | fix_glyph_array (mps_ss_t ss, size_t len, struct glyph array[len])
+> > 	|                                                  ^~~~~
+> >   igc.c: In function 'igc_xpalloc_exact':
+> >   igc.c:4243:7: warning: ISO C90 forbids variable length array 'area' [-Wvla]
+> >    4243 |       volatile mps_word_t area[count];
+> > 	|       ^~~~~~~~
+> >   igc.c: At top level:
+> >   igc.c:5896:1: warning: ISO C90 forbids variable length array 'parms' [-Wvla]
+> >    5896 | read_gens (size_t *ngens, mps_gen_param_s parms[*ngens])
+> > 	| ^~~~~~~~~
+> >
+> > The above are just warnings, although it would be good to avoid them.
+> 
+> Fix those.
+
+Confirmed, no warnings anymore.
+
+> > I fixed the error so that Emacs at least could be built, but I'm not
+> > sure whether it's correct, because I don't think I understand the
+> > strategy.  Can you explain the purpose of calling sigaction for
+> > SIGSEGV in igc_defer_sigprof?
+> 
+> sigaction is called two times: the first call reads the current value;
+> the second call sets the value with a modified sa_mask.
+> 
+> > In particular, is this at all needed on
+> > MS-Windows, and if so, why?
+> 
+> Probably not.  The problem on GNU/Linux, is that we can have a sequence
+> like:
+> 
+>   1. SIGSEGV caused by some ordinary code executes MPS's fault handler
+>   2. SIGPROF, caused by the profiler, interrupts the MPS fault handler
+>   3. handle_profiler_signal causes another SIGSEGV in trace_hash
+> 
+> at this point Linux terminates the process, because usually receiving a
+> SIGSEGV is not allowed while executing a handler for SIGSEGV.  (It could
+> be allowed by setting the SA_NODEFER flag, but MPS doesn't set that.)
+> 
+> I don't know what MS-Windows does in the analog situation; maybe it
+> allows nested SIGSEGVs by default.
+> 
+> Anyway, I think I found a another way to avoid step 3 so that
+> igc_defer_sigprof is no longer needed.
+
+Thanks, the code now compiles and the igc-tests-profiler test passes.
+
+================================================================================
+Date: 2026-11-15T06:49:20+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Rejecting vibe-spell
+Message-ID: <86y0aur6e7.fsf@gnu.org>
+In-Reply-To: <87tsljvuvp.fsf@posteo.net> (message from Philip Kaludercic on
+ Sat, 14 Nov 2026 23:46:51 +0000)
+References: <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <8733t8tlja.fsf@posteo.net> <87ld6zu7ad.fsf@gmail.com>
+ <avQzaaU2qB94crBr@tuxteam.de> <E1xSDN6-00984b-VC@fencepost.gnu.org>
+ <87tsljvuvp.fsf@posteo.net>
+
+> From: Philip Kaludercic <philipk@posteo.net>
+> Cc: tomas@tuxteam.de,  arstoffel@gmail.com,  arne_bab@web.de,
+>   joel.reicher@gmail.com,  cwebber@dustycloud.org,  eliz@gnu.org,
+>   emacs-devel@gnu.org
+> Date: Sat, 14 Nov 2026 23:46:51 +0000
+> 
+> Richard Stallman <rms@gnu.org> writes:
+> 
+> > More important than the name of the package is what it contains and what
+> > that implies about its further development.
+> >
+> > Please correct me if I'm mistaken, but it seems that further
+> > maintenance of vibe-spell will require running the same LLM on future
+> > versions of hunspell, to generate new versions of the code in
+> > vibe-spell.  Not just once, not just five times, but over and over.
+> 
+> No, this was never agreed on as necessary for the maintenance of
+> vibe-spell.  Even if Augusto wanted to backport changes from Nuspell
+> (not Hunspell) to vibe-spell, it wouldn't imply that this would have to
+> be done using an LLM.
+
+That's not what Augusto himself said up-thread:
+
+  https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00175.html
+  https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00228.html
+
+> > That LLM is a SaaSS dis-service, right?
+> 
+> This too is not necessarily the case.  There is nothing inherent to the
+> task that you couldn't do it with a local model trained with
+> unencumbered data.
+
+Is it a fact that a local model is powerful enough to perform these
+jobs?  Augusto never disclosed the LLM he used to do it; I would
+assume that updating the code by pointing an LLM to the modified
+Nuspell would need a similarly-powerful, if not the same LLM?
+
+> > It might turn out ok to use source code that was (past tense)
+> > generated by an LLM.  (Our interim policy is to refuse.)  But we
+> > certainly can't have Emacs virtually include, or suggest using, a
+> > program whose maintenance depends on repeatedly updating its source
+> > code by running a nonfree or SaaSS LLM again and again.  Emacs
+> > development would be lastingly dependent on that LLM.
+> 
+> I agree; but I am of the position that this is neither the case for this
+> package.
+
+Again, this seems to contradict what Augusto himself wrote, see the
+two messages I quoted above.
+
+> > In that scenario, we can't rationally assert that the use of that tool
+> > was done by someone else in the past and we are not morally
+> > responsible for it.  We must reject that kind of dependence by
+> > rejecting vibe-spell.
+> 
+> I think that the burden of proof lies with the critics to demonstrate
+> that the claim of depending on an LLM to maintain vibe-spell.  It is a
+> tall claim to make, and I am not expecting a mathematical proof but just
+> a reasonable yet concrete explanation in regards to the current code
+> base why this ought to be the case.  If this is not given, then a
+> precedence is created to reject any package where anyone claims that
+> future maintenance of the package might necessitate LLMs or any other
+> form of non-free software/SaaSS, without the assertion having to have
+> any substance.
+
+Does what Augusto wrote constitute such a proof?  If not, why not?
+
+================================================================================
+Date: 2026-11-15T09:51:00+01:00
+From: Bastien <bzg@gnu.org>
+Subject: [PATCH] gnus-icalendar: updating an Org event in a narrowed buffer
+ can overwrite another entry
+Message-ID: <87o6bqh40b.fsf@bzg.fr>
+In-Reply-To: 
+References: 
+
+Hello,
+
+When an iCal event is store in an Org file and an updated invitation for
+the same event arrives, `gnus-icalendar--update-org-event' rewrites the
+existing Org entry. If the buffer happens to be narrowed at that point,
+the update is buggy: `org-find-entry-with-id' returns a position in the
+widened buffer, but the following `goto-char' is limited by the current
+restriction.
+
+Depending on where the restriction, either the function signals
+(search-failed "^\\*+ ") and the entry is left as it was or the point
+lands on the first heading of the narrowed region, and that unrelated
+entry gets its headline replaced.
+
+The attached patch widens buffer in `gnus-icalendar--update-org-event'
+and in `gnus-icalendar--cancel-org-event'.
+
+WDYT?
+
+PS: I tried to first report this as a bug but for some reasons Emacs
+tried to open an external mail client (I'll see why and fix this.)
+
+-- 
+ Bastien
+
+================================================================================
+Date: 2026-11-15T11:21:19+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87mrrawg2o.fsf@web.de>
+In-Reply-To: <87a4nbxbjv.fsf@posteo.net>
+References: <87fqxg49b6.fsf@posteo.net> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <87ld70csa1.fsf@web.de> <E1xSDYu-009g3H-IS@fencepost.gnu.org>
+ <87o6br1ngp.fsf@web.de> <86bj7rsah3.fsf@gnu.org>
+ <87a4nbxbjv.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> Arne and the others, if you have any sense of respect for the _human_
+> effort I put into working on ELPA, I beg you to take a look at the
+> code and point out concrete examples of what you consider to be
+> problematic in the output of the generated code. In the worst case
+
+After I wrote here what experience showed about the toll such a review
+is likely to take on me, I find it extremely disrespectful that you try
+to shame me into doing it anyway.
+
+The short sample I took of it looked like dense code that takes a lot of
+effort to verify in detail. It did not look like other elisp I read. I
+will not do more.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-15T13:13:46+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xSZ7C-001OKx-Ea@fencepost.gnu.org>
+In-Reply-To: <CAL6FEzzLWzkfz8y4v9y_gSr1jinK-qp88xfWqU62ZkpQeDAetQ@mail.gmail.com>
+ (message from david on Thu, 12 Nov 2026 11:20:21 -0400)
+References: <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <86jymiwcxo.fsf@gnu.org>
+ <CAL6FEzzLWzkfz8y4v9y_gSr1jinK-qp88xfWqU62ZkpQeDAetQ@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > If llm code is ever accepted in Emacs and its packages, which llms would be
+  > authorized?  From the threads, I gather they should be free and runnable
+  > locally, but also that it would depend on each contributor, each package
+  > maintainer, or each user proposing a patch.
+
+Nothing should be included in Emacs itself, or in ELPA packages,
+that more or less needs to be maintained using an LLM.  It must
+always be suitable for further development by humans.
+
+  > And does accepting llm code imply that the maintainers of Emacs and its
+  > packages would also have to use llms?
+
+No -- if it would imply that, we can't accept it.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-15T13:14:18+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+In-Reply-To: <87a4netbjj.fsf@gmail.com> (message from Augusto Stoffel on Thu, 
+ 12 Nov 2026 14:38:24 +0100)
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > (By the way, your toy implementation piggybacks on Python's FFI.  As
+  > mentioned somewhere upthread, I think an FFI for Emacs would probably be
+  > the best approach, better than jinx, vibe-spell or your approach.)
+
+Could one of you please spell out the usage scenario you have in mind?
+I'd like to be able to think about it and see what issues it may raise.
+>From this rush of back-and-forth, often with hints that refer to
+unstated conclusions, I can't even start.  And there is no easy
+way for me to find the pertinent messages, since they share
+a Subject field with many other topic.
+
+If you continue this particular discussion, please give it a different
+Subject field.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-15T13:15:04+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+In-Reply-To: <avK+dbNJHMLI5qmW@tuxteam.de> (tomas@tuxteam.de)
+References: <E1xPvac-000Me5-3x@fencepost.gnu.org> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > I think this shows the weakness of the "GNU model" wrt the current
+  > situation. For Philip it's perfectly OK for "an LLM" working along
+  > a human. The human fixes and enhances directly the .el file, and
+  > whenever a change worth backporting arrives in the C++, it tells the
+  > LLM "please, LLM, backport this fix to me".
+
+  > (Generative) LLMs and humans peacefully working together (please,
+  > Philip, don't take this as sarcasm -- it just took me a while to wrap
+  > my brain around that). Then, of course, there is no "preferred
+  > source", that would be an anthropocentric view.
+
+  > Me (and possibly Arne) stand squarely [1] in this anthropocentric place.
+  > The GNU implicitly does, because it was conceived at a time nothing
+  > else made sense. It'll have to change.
+
+Could one of you arguing that a certain change is needed
+please send a self-contained message stating what change that is,
+and the reason you contend it is needed?
+
+What is this "GNU model"?  (Model of what?)  That term implies
+a model of something, advocated or chosen by the GNU Project.
+Is the topic of this subject that sort of thing?
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-15T13:16:46+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xSZA6-001Orq-9L@fencepost.gnu.org>
+In-Reply-To: <avVoI5obvftZ72jl@tuxteam.de> (tomas@tuxteam.de)
+References: <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+ <87y0b9xd1j.fsf@web.de> <E1xPMe5-00ANsN-0E@fencepost.gnu.org>
+ <87eccxvnyf.fsf@asthra> <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > I suggest that, instead of discussing whether the patch is correct, we
+  > > say that the code lacks explanation to make its meaning clear clear,
+  > > and ask the contributor to add clear explanation.  "Tell us what X
+  > > means here", for instance.
+  > > 
+  > > That way we won't get into the kind of argument that LLMs could fool
+  > > people at.
+
+  > This is *precisely* what generative LLMs are getting pretty good at.
+  > The contributor passes the maintainer's questions to the LLM and sends
+  > back its answers.
+
+If they are good at explaining code in human terms, that seems ok.
+The human could write comments that will enable humans to understand
+the code without asking the LLM again.
+
+  > The maintainer is faced to do a constant Turing test which is becoming
+  > harder and harder.
+
+That is a non-sequitur.  I don't follow you.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-15T13:21:58+01:00
+From: tomas@tuxteam.de
+Subject: Re: Human Emacs
+Message-ID: <avmj5o87QthveANO@tuxteam.de>
+In-Reply-To: <E1xSZA6-001Orq-9L@fencepost.gnu.org>
+References: <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org>
+ <87y0b9xd1j.fsf@web.de> <E1xPMe5-00ANsN-0E@fencepost.gnu.org>
+ <87eccxvnyf.fsf@asthra> <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <E1xSZA6-001Orq-9L@fencepost.gnu.org>
+
+On Sun, Nov 15, 2026 at 07:16:46AM -0500, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+[another answer is pending -- this one was easier]
+> 
+>   > > I suggest that, instead of discussing whether the patch is correct, we
+>   > > say that the code lacks explanation to make its meaning clear clear,
+>   > > and ask the contributor to add clear explanation.  "Tell us what X
+>   > > means here", for instance.
+>   > > 
+>   > > That way we won't get into the kind of argument that LLMs could fool
+>   > > people at.
+> 
+>   > This is *precisely* what generative LLMs are getting pretty good at.
+>   > The contributor passes the maintainer's questions to the LLM and sends
+>   > back its answers.
+> 
+> If they are good at explaining code in human terms, that seems ok.
+> The human could write comments that will enable humans to understand
+> the code without asking the LLM again.
+
+No, I was referring to the sentence immediately above -- they are
+getting pretty good at fooling people. Remenber that this is exactly
+what the whole industry's enormous resources are directed at.
+
+>   > The maintainer is faced to do a constant Turing test which is becoming
+>   > harder and harder.
+> 
+> That is a non-sequitur.  I don't follow you.
+
+Machine or human? Of course, if one maintains "it doesn't matter", as, e.g.
+Philip does (my respect to that, I still disagree), then that's irrelevant.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-15T17:08:27+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: master 1986cf1296b: Enable lexical binding in generated file
+Message-ID: <m21p8mulfo.fsf@macmutant.fritz.box>
+In-Reply-To: <86mrrbsgti.fsf@gnu.org>
+References: <179449642849.7889.7980371373882853514@vcs2.savannah.gnu.org>
+ <20261112151349.0F50FC1F55E@vcs2.savannah.gnu.org>
+ <m2o6buc6kv.fsf@macmutant.fritz.box> <86y0ayuf5e.fsf@gnu.org>
+ <m2ik22c56a.fsf@macmutant.fritz.box> <86v761vnxu.fsf@gnu.org>
+ <m2cxs9ddsf.fsf@macmutant.fritz.box> <86pkw9vmrd.fsf@gnu.org>
+ <86mrrbsgti.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> Done.
+
+Thanks!
+
+================================================================================
+Date: 2026-11-15T17:23:26+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Alternatives without running a library's source code through an LLM
+Message-ID: <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+In-Reply-To: <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+
+Hi Richard,
+
+This Was: ELPA submission: vibe-spell
+
+The answer from my personal perspective is after your message
+
+On 15/11/26 13:14, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+>    > (By the way, your toy implementation piggybacks on Python's FFI.  As
+>    > mentioned somewhere upthread, I think an FFI for Emacs would probably be
+>    > the best approach, better than jinx, vibe-spell or your approach.)
+> 
+> Could one of you please spell out the usage scenario you have in mind?
+> I'd like to be able to think about it and see what issues it may raise.
+>  From this rush of back-and-forth, often with hints that refer to
+> unstated conclusions, I can't even start.  And there is no easy
+> way for me to find the pertinent messages, since they share
+> a Subject field with many other topic.
+>
+> If you continue this particular discussion, please give it a different
+> Subject field.
+
+The origin was this proposed module vibe-spell that was generated by 
+running the source code of a library through an LLM to produce ELisp code.
+
+One of the valid issues is that spelling tools based on ispell as 
+suboptimal and alternatives like jinx - of which I'm a happy user- are 
+sometimes difficult to spin up, because they depend on a C module that 
+may be non-trivial to generate on some systems.
+
+I was pointing out that the alternative was to write an external utility 
+similar to a language server that you could interface with using a 
+JSONRPC interface and implement the queries in an equivalent way to how 
+eglot interacts with the language server.
+
+This would isolate Emacs from the library's evolution as opposed to 
+having to run newly released versions of the original library through 
+the LLM to keep up with changes in that codebase.
+
+To make my point, I added a simple toy implementation of the server part 
+with a shell script to demonstrate how it would work.
+
+At that point, the idea of a foreign function interface (FFI) as part of 
+core Emacs to face this kind of situations was brought up.
+Best regards, /PA
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-11-15T17:25:51+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: master 6be4dc9ebc1 1/9: Jsonrpc: don't wait out the whole grace
+ period in jsonrpc-shutdown
+Message-ID: <jwvv75ykqtn.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261115142254.AEEAAC1D070@vcs2.savannah.gnu.org>
+References: <179475257169.10317.1945235398725165523@vcs2.savannah.gnu.org>
+ <20261115142254.AEEAAC1D070@vcs2.savannah.gnu.org>
+
+> diff --git a/lisp/jsonrpc.el b/lisp/jsonrpc.el
+> index edd8c92cc20..33ac5b77e3f 100644
+> --- a/lisp/jsonrpc.el
+> +++ b/lisp/jsonrpc.el
+> @@ -689,11 +689,14 @@ and delete the network process."
+>         for i from 0
+>         while (not (process-get proc 'jsonrpc-sentinel-cleanup-started))
+>         unless (or (zerop i) (< (- (float-time) start) grace)) do
+> +       ;; Force the sentinel to run synchronously, and exit.
+>         (jsonrpc--warn "Sentinel for %s still hasn't run, deleting it!" proc)
+>         (delete-process proc)
+> +       (cl-return)
+>         do
+> -       ;; Let sentinel have a chance to run
+> -       (accept-process-output nil grace))
+> +       ;; Let sentinel have a chance to run, in short intervals as
+> +       ;; `accept-process-output' doesn't return just because PROC died.
+> +       (accept-process-output nil 0.01))
+>      (when cleanup
+>        (kill-buffer (process-buffer (jsonrpc--process conn)))
+>        (kill-buffer (jsonrpc-stderr-buffer conn)))))
+
+I think this code deserves a comment explaining why we pass `nil` instead
+of `proc` to `accept-process-output`.
+
+[ We should keep a table somewhere of such painful "wait for the end of
+  some process thingy" code, BTW, so as to help whoever builds up the
+  courage to try and fix this dire situation.  ]
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-15T17:27:16+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+In-Reply-To: <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+
+On Sun, Nov 15, 2026 at 11:23 AM Pedro A. Aranda <paaguti@gmail.com> wrote:
+
+> Hi Richard,
+>
+> This Was: ELPA submission: vibe-spell
+>
+> The answer from my personal perspective is after your message
+>
+> On 15/11/26 13:14, Richard Stallman wrote:
+> > [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> > [[[ whether defending the US Constitution against all enemies,     ]]]
+> > [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> >
+> >    > (By the way, your toy implementation piggybacks on Python's FFI.  As
+> >    > mentioned somewhere upthread, I think an FFI for Emacs would
+> probably be
+> >    > the best approach, better than jinx, vibe-spell or your approach.)
+> >
+> > Could one of you please spell out the usage scenario you have in mind?
+> > I'd like to be able to think about it and see what issues it may raise.
+> >  From this rush of back-and-forth, often with hints that refer to
+> > unstated conclusions, I can't even start.  And there is no easy
+> > way for me to find the pertinent messages, since they share
+> > a Subject field with many other topic.
+> >
+> > If you continue this particular discussion, please give it a different
+> > Subject field.
+>
+> The origin was this proposed module vibe-spell that was generated by
+> running the source code of a library through an LLM to produce ELisp code.
+>
+> One of the valid issues is that spelling tools based on ispell as
+> suboptimal and alternatives like jinx - of which I'm a happy user- are
+> sometimes difficult to spin up, because they depend on a C module that
+> may be non-trivial to generate on some systems.
+>
+> I was pointing out that the alternative was to write an external utility
+> similar to a language server that you could interface with using a
+> JSONRPC interface and implement the queries in an equivalent way to how
+> eglot interacts with the language server.
+>
+> This would isolate Emacs from the library's evolution as opposed to
+> having to run newly released versions of the original library through
+> the LLM to keep up with changes in that codebase.
+>
+> To make my point, I added a simple toy implementation of the server part
+> with a shell script to demonstrate how it would work.
+>
+> At that point, the idea of a foreign function interface (FFI) as part of
+> core Emacs to face this kind of situations was brought up.
+>
+
+I think when people talk of FFI, they mean this
+https://en.wikipedia.org/wiki/Foreign_function_interface with an
+implementation like this https://sourceware.org/libffi/ and with a couple
+of Emacs wrappers like this (sorry for the gh links but that's where they
+are) https://github.com/tromey/emacs-ffi and
+https://github.com/skeeto/elisp-ffi
+
+-Stéphane
+
+================================================================================
+Date: 2026-11-15T18:01:25+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <86zevaowpm.fsf@gnu.org>
+In-Reply-To: <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+ (message from =?utf-8?Q?St=C3=A9phane?= Marks on Sun, 15 Nov 2026 11:27:16
+ -0500)
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+
+> From: Stéphane Marks <shipmints@gmail.com>
+> Date: Sun, 15 Nov 2026 11:27:16 -0500
+> Cc: rms@gnu.org, Augusto Stoffel <arstoffel@gmail.com>, emacs-devel@gnu.org
+> 
+>  To make my point, I added a simple toy implementation of the server part 
+>  with a shell script to demonstrate how it would work.
+> 
+>  At that point, the idea of a foreign function interface (FFI) as part of 
+>  core Emacs to face this kind of situations was brought up.
+> 
+> I think when people talk of FFI, they mean this https://en.wikipedia.org/wiki/Foreign_function_interface with an
+> implementation like this https://sourceware.org/libffi/ and with a couple of Emacs wrappers like this (sorry for the
+> gh links but that's where they are) https://github.com/tromey/emacs-ffi and https://github.com/skeeto/elisp-ffi
+
+Guys, all this talk about adding FFI to Emacs is pointless, because it
+was decided long ago we don't want that: it will allow linking Emacs
+too easily with non-free libraries, which we want to prevent.  We
+developed the module subsystem as an alternative, which requires the
+author to declare GPL compliance, as a precondition for loading the
+module.
+
+================================================================================
+Date: 2026-11-15T18:10:47+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: gnus-sum.el (gnus-summary-morse-message): raw byte causes trouble
+Message-ID: <87jymem354.fsf@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+This function has a raw byte ("\267") in its body, so Emacs complains
+about not knowing how to save the file. Changing the byte to plain text
+fixes things.
+
+Can somebody please fix this in the repo?
+
+Thank you.
+
+================================================================================
+Date: 2026-11-15T18:13:21+01:00
+From: =?UTF-8?B?Sm/Do28gVMOhdm9yYQ==?= <joaotavora@gmail.com>
+Subject: Re: master 6be4dc9ebc1 1/9: Jsonrpc: don't wait out the whole grace
+ period in jsonrpc-shutdown
+Message-ID: <CALDnm52G7DicXBoN5Rc634nr4KXyXpR59HYCReHRXgiNdptCMw@mail.gmail.com>
+In-Reply-To: <jwvv75ykqtn.fsf-monnier+emacs@gnu.org>
+References: <179475257169.10317.1945235398725165523@vcs2.savannah.gnu.org>
+ <20261115142254.AEEAAC1D070@vcs2.savannah.gnu.org>
+ <jwvv75ykqtn.fsf-monnier+emacs@gnu.org>
+
+I thought I had left a comment on the commit message to explain that.
+Apparently not,. I think I noticed that passing proc is the  obvious choice
+at first sight, but that may starve/block if some other process is pumping
+output. In my approach, starving can still happen, but at least you get to
+re-check the "sentinel has run" status once in a while. Do I explain
+myself? I can recover my notes and measurements if needed.
+
+João
+
+On Sun, Nov 15, 2026, 16:26 Stefan Monnier <monnier@iro.umontreal.ca> wrote:
+
+> > diff --git a/lisp/jsonrpc.el b/lisp/jsonrpc.el
+> > index edd8c92cc20..33ac5b77e3f 100644
+> > --- a/lisp/jsonrpc.el
+> > +++ b/lisp/jsonrpc.el
+> > @@ -689,11 +689,14 @@ and delete the network process."
+> >         for i from 0
+> >         while (not (process-get proc 'jsonrpc-sentinel-cleanup-started))
+> >         unless (or (zerop i) (< (- (float-time) start) grace)) do
+> > +       ;; Force the sentinel to run synchronously, and exit.
+> >         (jsonrpc--warn "Sentinel for %s still hasn't run, deleting it!"
+> proc)
+> >         (delete-process proc)
+> > +       (cl-return)
+> >         do
+> > -       ;; Let sentinel have a chance to run
+> > -       (accept-process-output nil grace))
+> > +       ;; Let sentinel have a chance to run, in short intervals as
+> > +       ;; `accept-process-output' doesn't return just because PROC died.
+> > +       (accept-process-output nil 0.01))
+> >      (when cleanup
+> >        (kill-buffer (process-buffer (jsonrpc--process conn)))
+> >        (kill-buffer (jsonrpc-stderr-buffer conn)))))
+>
+> I think this code deserves a comment explaining why we pass `nil` instead
+> of `proc` to `accept-process-output`.
+>
+> [ We should keep a table somewhere of such painful "wait for the end of
+>   some process thingy" code, BTW, so as to help whoever builds up the
+>   courage to try and fix this dire situation.  ]
+>
+>
+> === Stefan
+>
+>
+
+João Távora
+
+================================================================================
+Date: 2026-11-15T18:13:43+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <3681e4e7-6927-4fdc-af53-0022deab1af6@gmail.com>
+In-Reply-To: <86zevaowpm.fsf@gnu.org>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+ <86zevaowpm.fsf@gnu.org>
+
+Eli, I know. I just didn't want to omit that in the wrap-up.
+
+/PA
+
+On 15/11/26 18:01, Eli Zaretskii wrote:
+>> From: Stéphane Marks <shipmints@gmail.com>
+>> Date: Sun, 15 Nov 2026 11:27:16 -0500
+>> Cc: rms@gnu.org, Augusto Stoffel <arstoffel@gmail.com>, emacs-devel@gnu.org
+>>
+>>   To make my point, I added a simple toy implementation of the server part
+>>   with a shell script to demonstrate how it would work.
+>>
+>>   At that point, the idea of a foreign function interface (FFI) as part of
+>>   core Emacs to face this kind of situations was brought up.
+>>
+>> I think when people talk of FFI, they mean this https://en.wikipedia.org/wiki/Foreign_function_interface with an
+>> implementation like this https://sourceware.org/libffi/ and with a couple of Emacs wrappers like this (sorry for the
+>> gh links but that's where they are) https://github.com/tromey/emacs-ffi and https://github.com/skeeto/elisp-ffi
+> 
+> Guys, all this talk about adding FFI to Emacs is pointless, because it
+> was decided long ago we don't want that: it will allow linking Emacs
+> too easily with non-free libraries, which we want to prevent.  We
+> developed the module subsystem as an alternative, which requires the
+> author to declare GPL compliance, as a precondition for loading the
+> module.
+
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
