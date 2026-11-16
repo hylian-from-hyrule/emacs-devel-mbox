@@ -1,0 +1,793 @@
+emacs-devel messages from 2026-11-15T18:15:00+01:00 to 2026-11-16T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-15T18:36:22+01:00
+From: Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: gnus-sum.el (gnus-summary-morse-message): raw byte causes trouble
+Message-ID: <87ik1yj8tl.fsf@igel.home>
+In-Reply-To: <87jymem354.fsf@mail.gmail.com>
+References: <87jymem354.fsf@mail.gmail.com>
+
+On Nov 15 2026, Nickolai Dobrynin wrote:
+
+> This function has a raw byte ("\267") in its body, so Emacs complains
+> about not knowing how to save the file.
+
+The file is properly UTF-8 encoded, with · encoded as #xC2 #xB7, which
+didn't change since the file was converted to UTF-8.  Emacs should not
+have any reason to complain.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+
+================================================================================
+Date: 2026-11-15T18:49:30+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: gnus-sum.el (gnus-summary-morse-message): raw byte causes trouble
+Message-ID: <87a4nam1cl.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <87jymem354.fsf@mail.gmail.com> <87ik1yj8tl.fsf@igel.home>
+
+Andreas Schwab <schwab@linux-m68k.org> writes:
+
+> On Nov 15 2026, Nickolai Dobrynin wrote:
+>
+>> This function has a raw byte ("\267") in its body, so Emacs complains
+>> about not knowing how to save the file.
+>
+> The file is properly UTF-8 encoded ...
+
+(I replaced the problematic byte with <problematic byte>).
+
+These default coding systems were tried to safely encode the following
+problematic characters in the buffer ‘gnus-sum.el’:
+  Coding System           Pos  Codepoint  Char
+  utf-8-unix           375142  #x3FFFB7   <problematic byte>
+
+However, each of them encountered characters it couldn’t encode safely:
+  utf-8-unix cannot safely encode these: <problematic byte>
+
+Click on a character (or switch to this window by ‘C-x o’
+and select the characters by RET) to jump to the place it appears,
+where ‘C-u C-x =’ will give information about it.
+
+Select one of the safe coding systems listed below,
+or cancel the writing with C-g and edit the buffer
+   to remove or modify the problematic characters,
+or specify any other coding system (and risk losing
+   the problematic characters).
+
+  raw-text no-conversion
+
+================================================================================
+Date: 2026-11-15T19:20:51+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <87ik1yq7lo.fsf@gmail.com>
+In-Reply-To: <864idismqk.fsf@gnu.org>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org>
+
+On Sun, Nov 15 2026, Eli Zaretskii wrote:
+
+> Thanks, the code now compiles and the igc-tests-profiler test passes.
+
+When I try the igc-tests-profiler test on MS-Windows, it sometimes
+hangs.  If I interpret the gdb out correctly, then two threads are
+blocked in SuspendThread; one is the main thread (thw3.c:suspendThread)
+and the other seems to be a timer thread (w32proc.c:timer_loop).  Is it
+possible that those two threads concurrently try to suspend each other
+and end up in a deadlock?
+
+================================================================================
+Date: 2026-11-15T19:37:13+01:00
+From: david dimagid <davidimagid@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <1d2fba3f-137e-4c8f-9657-992adbd6deba@gmail.com>
+In-Reply-To: <E1xSZ7C-001OKx-Ea@fencepost.gnu.org>
+References: <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <86jymiwcxo.fsf@gnu.org>
+ <CAL6FEzzLWzkfz8y4v9y_gSr1jinK-qp88xfWqU62ZkpQeDAetQ@mail.gmail.com>
+ <E1xSZ7C-001OKx-Ea@fencepost.gnu.org>
+
+Thank you, Richard.  I've tried to follow this thread carefully, but it 
+has been hard to keep track of everything. Thank you for your answer, 
+and for Eli's as well.
+
+On 11/15/26 8:13 AM, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>    > If llm code is ever accepted in Emacs and its packages, which llms would be
+>    > authorized?  From the threads, I gather they should be free and runnable
+>    > locally, but also that it would depend on each contributor, each package
+>    > maintainer, or each user proposing a patch.
+>
+> Nothing should be included in Emacs itself, or in ELPA packages,
+> that more or less needs to be maintained using an LLM.  It must
+> always be suitable for further development by humans.
+>
+>    > And does accepting llm code imply that the maintainers of Emacs and its
+>    > packages would also have to use llms?
+>
+> No -- if it would imply that, we can't accept it.
+>
+
+================================================================================
+Date: 2026-11-15T20:08:25+01:00
+From: Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: gnus-sum.el (gnus-summary-morse-message): raw byte causes trouble
+Message-ID: <87ecclkj4m.fsf@igel.home>
+In-Reply-To: <87a4nam1cl.fsf@mail.gmail.com>
+References: <87jymem354.fsf@mail.gmail.com> <87ik1yj8tl.fsf@igel.home>
+ <87a4nam1cl.fsf@mail.gmail.com>
+
+Try 'git checkout HEAD -- lisp/gnus/gnus-sum.el` to fix it.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+
+================================================================================
+Date: 2026-11-15T20:24:13+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: gnus-sum.el (gnus-summary-morse-message): raw byte causes trouble
+Message-ID: <874idhnbj6.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <87jymem354.fsf@mail.gmail.com> <87ik1yj8tl.fsf@igel.home>
+ <87a4nam1cl.fsf@mail.gmail.com> <87ecclkj4m.fsf@igel.home>
+
+Andreas Schwab <schwab@linux-m68k.org> writes:
+
+> Try 'git checkout HEAD -- lisp/gnus/gnus-sum.el` to fix it.
+
+How interesting. That does fix it, even after I re-imported my own
+changes. And the character itself shows up correctly this time. Can you
+tell me what the problem was?
+
+It was happening in the stable version, and I've been switching back and
+forth with the latest repo.
+
+================================================================================
+Date: 2026-11-15T21:10:28+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <86pkw5q2iz.fsf@gnu.org>
+In-Reply-To: <87ik1yq7lo.fsf@gmail.com> (message from Helmut Eller on Sun, 15
+ Nov 2026 19:20:51 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> Date: Sun, 15 Nov 2026 19:20:51 +0100
+> 
+> On Sun, Nov 15 2026, Eli Zaretskii wrote:
+> 
+> > Thanks, the code now compiles and the igc-tests-profiler test passes.
+> 
+> When I try the igc-tests-profiler test on MS-Windows, it sometimes
+> hangs.  If I interpret the gdb out correctly, then two threads are
+> blocked in SuspendThread; one is the main thread (thw3.c:suspendThread)
+> and the other seems to be a timer thread (w32proc.c:timer_loop).  Is it
+> possible that those two threads concurrently try to suspend each other
+> and end up in a deadlock?
+
+The timer thread indeed suspends the main thread when it calls the
+signal handler.  I didn't know MPS calls SuspendThread on Windows.
+
+Let me see what can be done to fix this deadlock.
+
+================================================================================
+Date: 2026-11-15T23:48:15+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+Hi everyone,
+
+I would like to propose adding au-themes to NonGNU ELPA. Attached is
+the patch for elpa-packages.
+
+- Upstream repository: https://github.com/szymonwilczek/au-themes
+- License: GPL-3.0-or-later
+- Description: Sensory-safe, low-glare Emacs colour themes designed
+for autistic individuals and anyone sensitive to visual noise, ocular
+migraine, or photophobia.
+
+The themes are built on ef-themes and modus-themes.
+
+Thank you,
+Szymon Wilczek
+
+================================================================================
+Date: 2026-11-16T00:21:19+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: emacs-31 205ae0b0583: Fix arbitrary code execution in
+ .dir-locals.el handling
+Message-ID: <jwvse11k7fy.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87o6bvziyq.fsf@athena.silentflame.com>
+References: <179438937379.6285.7085427359828111905@vcs2.savannah.gnu.org>
+ <20261111092934.3F90EC1F562@vcs2.savannah.gnu.org>
+ <87o6bvziyq.fsf@athena.silentflame.com>
+
+> Found a problem with this.  Touch a file "foo.el.orig" in the Emacs
+> source and find-file it.  It gets left in fundamental-mode and there is
+> an error: "Ignoring unknown mode `(nil t)'"
+
+Pushed a fix (and a test) for it (and for the broken tests) to
+`emacs-31`.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-16T09:43:06+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <avrCGtAEda8orMWN@tuxteam.de>
+In-Reply-To: <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+References: <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+
+On Sun, Nov 15, 2026 at 07:15:04AM -0500, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+>   > I think this shows the weakness of the "GNU model" wrt the current
+>   > situation. For Philip it's perfectly OK for "an LLM" working along
+>   > a human [...]
+
+[...]
+
+> Could one of you arguing that a certain change is needed
+> please send a self-contained message stating what change that is,
+> and the reason you contend it is needed?
+
+My hunch is that we'll have to start thinking along other lines.
+
+GNU is, at its core a "social" project, in the sense that it tries
+to enable people to exercise their right to freedom. It focuses
+very much on the individual, and uses copyright (a clever hack!)
+to make sure those freedoms aren't hogged by some.
+
+This has served us outstandingly for the last 30 years.
+
+Alas, since around the 2000s, with the advent of surveillance
+capitalism, those who make their profit by curtailing (software)
+freedom have been learning how to do that by targeting not so
+much the individuals, as their social interactions.
+
+The free software movement has, in part, reacted to that: the
+critique of (non-free) SASS, the AGPL, etc are witnesses to this
+reaction.
+
+So-called "AI" (as it is being rolled out currently) is just the
+last, extreme acceleration of the above process (target social
+interactions, not individuals).
+
+In my view, one of the "soft" targets of free software now in
+peril is "software as a conversation between humans", which I
+think lies at the core of software's Freedom 1 (study) and
+Freedom 3 (improve). I sure want to know if I'm talking to
+a human or a machine (especially if the latter is controlled
+by a huge company).
+
+Cheers
+-- 
+tomás
+
+================================================================================
+Date: 2026-11-16T10:24:12+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: emacs-31 205ae0b0583: Fix arbitrary code execution in
+ .dir-locals.el handling
+Message-ID: <87fqx12koz.fsf@athena.silentflame.com>
+In-Reply-To: <jwvse11k7fy.fsf-monnier+emacs@gnu.org>
+References: <179438937379.6285.7085427359828111905@vcs2.savannah.gnu.org>
+ <20261111092934.3F90EC1F562@vcs2.savannah.gnu.org>
+ <87o6bvziyq.fsf@athena.silentflame.com>
+ <jwvse11k7fy.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier [15/Nov  6:21pm -05] wrote:
+>> Found a problem with this.  Touch a file "foo.el.orig" in the Emacs
+>> source and find-file it.  It gets left in fundamental-mode and there is
+>> an error: "Ignoring unknown mode `(nil t)'"
+>
+> Pushed a fix (and a test) for it (and for the broken tests) to
+> `emacs-31`.
+
+Thanks!
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-16T11:21:03+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: Rejecting vibe-spell
+Message-ID: <875wxx13hs.fsf@gmail.com>
+In-Reply-To: <86y0aur6e7.fsf@gnu.org>
+References: <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <8733t8tlja.fsf@posteo.net> <87ld6zu7ad.fsf@gmail.com>
+ <avQzaaU2qB94crBr@tuxteam.de> <E1xSDN6-00984b-VC@fencepost.gnu.org>
+ <87tsljvuvp.fsf@posteo.net> <86y0aur6e7.fsf@gnu.org>
+
+On Sun, 15 Nov 2026, Eli Zaretskii wrote:
+
+>> From: Philip Kaludercic <philipk@posteo.net>
+>> Cc: tomas@tuxteam.de,  arstoffel@gmail.com,  arne_bab@web.de,
+>>   joel.reicher@gmail.com,  cwebber@dustycloud.org,  eliz@gnu.org,
+>>   emacs-devel@gnu.org
+>> Date: Sat, 14 Nov 2026 23:46:51 +0000
+>> 
+>> Richard Stallman <rms@gnu.org> writes:
+>> 
+>> > More important than the name of the package is what it contains and what
+>> > that implies about its further development.
+>> >
+>> > Please correct me if I'm mistaken, but it seems that further
+>> > maintenance of vibe-spell will require running the same LLM on future
+>> > versions of hunspell, to generate new versions of the code in
+>> > vibe-spell.  Not just once, not just five times, but over and over.
+>> 
+>> No, this was never agreed on as necessary for the maintenance of
+>> vibe-spell.  Even if Augusto wanted to backport changes from Nuspell
+>> (not Hunspell) to vibe-spell, it wouldn't imply that this would have to
+>> be done using an LLM.
+>
+> That's not what Augusto himself said up-thread:
+>
+>   https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00175.html
+>   https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00228.html
+
+Philip raised a general and quite valid concerned about packages being
+hastily extruded, then uploaded to ELPA and not getting proper
+maintenance thereafter.
+
+Those messages you link are simply an explanation of how I can maintain
+vibe-spell.el as a small side-project.  They don't imply a morphology
+aficionado couldn't maintain the code without LLM assistance.
+
+>> > That LLM is a SaaSS dis-service, right?
+>> 
+>> This too is not necessarily the case.  There is nothing inherent to the
+>> task that you couldn't do it with a local model trained with
+>> unencumbered data.
+>
+> Is it a fact that a local model is powerful enough to perform these
+> jobs?  Augusto never disclosed the LLM he used to do it; I would
+> assume that updating the code by pointing an LLM to the modified
+> Nuspell would need a similarly-powerful, if not the same LLM?
+
+I used a commercial one, does it matter which?  I'd rather not make free
+advertisement (or paid, for that matter).  You definitely don't need to
+use the same LLM for further edits, since you could e.g. use no LLM.
+
+>> > It might turn out ok to use source code that was (past tense)
+>> > generated by an LLM.  (Our interim policy is to refuse.)  But we
+>> > certainly can't have Emacs virtually include, or suggest using, a
+>> > program whose maintenance depends on repeatedly updating its source
+>> > code by running a nonfree or SaaSS LLM again and again.  Emacs
+>> > development would be lastingly dependent on that LLM.
+>> 
+>> I agree; but I am of the position that this is neither the case for this
+>> package.
+>
+> Again, this seems to contradict what Augusto himself wrote, see the
+> two messages I quoted above.
+>
+>> > In that scenario, we can't rationally assert that the use of that tool
+>> > was done by someone else in the past and we are not morally
+>> > responsible for it.  We must reject that kind of dependence by
+>> > rejecting vibe-spell.
+>> 
+>> I think that the burden of proof lies with the critics to demonstrate
+>> that the claim of depending on an LLM to maintain vibe-spell.  It is a
+>> tall claim to make, and I am not expecting a mathematical proof but just
+>> a reasonable yet concrete explanation in regards to the current code
+>> base why this ought to be the case.  If this is not given, then a
+>> precedence is created to reject any package where anyone claims that
+>> future maintenance of the package might necessitate LLMs or any other
+>> form of non-free software/SaaSS, without the assertion having to have
+>> any substance.
+>
+> Does what Augusto wrote constitute such a proof?  If not, why not?
+
+================================================================================
+Date: 2026-11-16T11:53:07+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <397a621b7615feab31a01f7e5f94cdb4@gnu.support>
+In-Reply-To: <avrCGtAEda8orMWN@tuxteam.de>
+References: <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+ <avrCGtAEda8orMWN@tuxteam.de>
+
+My opinion on your:
+
+> GNU is, at its core a "social" project, in the sense that it tries
+> to enable people to exercise their right to freedom. It focuses
+> very much on the individual, and uses copyright (a clever hack!)
+> to make sure those freedoms aren't hogged by some.
+
+Thanks I fully agree on above, not maybe on few facts below.
+
+> This has served us outstandingly for the last 30 years.
+
+Right. It is the project that has specific politics and pushes that 
+direction for longer than many of world governments.
+
+And because here readers know more or less what is GNU, your statement 
+is clear and to the point.
+
+> Alas, since around the 2000s, with the advent of surveillance
+> capitalism, those who make their profit by curtailing (software)
+> freedom have been learning how to do that by targeting not so
+> much the individuals, as their social interactions.
+
+That all may be true, though sounds as hasty generalization, and me as 
+reader of your message cannot understand what you really mean there. And 
+how could generalization be a "measure" to any standard? You have to 
+have some statistics and pin point what is the problem and then talk 
+about solutions.
+
+I would be happier reading your e-mail if you would give concrete 
+clarity to what such generalization refers to.
+
+Personally, so many good things happened from 2000 up to now, that I 
+cannot relate my feelings to your statement.
+
+> The free software movement has, in part, reacted to that: the
+> critique of (non-free) SASS, the AGPL, etc are witnesses to this
+> reaction.
+
+If I could just know what is "that" to which the free software movement 
+reacted... but I cannot know it. Could you clarify it.
+
+And do you mean with the free software movement the GNU project or the 
+larger group including the GNU project?
+
+> So-called "AI" (as it is being rolled out currently) is just the
+> last, extreme acceleration of the above process (target social
+> interactions, not individuals).
+
+I wish I could relate to above, as that so called "AI" runs in many ways 
+on my computer, like turning my speech to text, converting any text to 
+speech, translating, so me as user and individual, who is also within 
+the GNU project, teaching others from Stuttgart, Germany to Kampala, 
+Uganda, I cannot relate to what you are saying.
+
+Do you mean the SaaSS AI? What is that exactly you mean within the term 
+"as it is being rolled out currently".
+
+You opinion may be quite good for me, though not expressed well, 
+precision isn't there, and while reading it I get lost.
+
+When you tell me "AI", me I think running machine learning systems on 
+computer. It is software in general. How it is currently being rolled 
+out? I think huggingface.co and few other repositories, and that is how 
+I see it "being rolled out". And that is most probably not what you 
+think, am I right?
+
+So try to explain.
+
+How is machine learning system targeting social interactions? I have no 
+idea what you mean with it. Do you mean computers talking as agents? 
+Personally I cannot relate to it, I see no impediment to my individual 
+freedom so far.
+
+> In my view, one of the "soft" targets of free software now in
+> peril is "software as a conversation between humans", which I
+> think lies at the core of software's Freedom 1 (study) and
+> Freedom 3 (improve). I sure want to know if I'm talking to
+> a human or a machine (especially if the latter is controlled
+> by a huge company).
+
+I can well understand you wish to talk to human. That is clear.
+
+I cannot clearly understand what is the soft target of free software and 
+why would free software now be in peril?
+
+I can see now we have most of the free software and it is just coming 
+more and more of it, and so many people learn more about the GNU and 
+free software and publish under free software licenses.
+
+So, is your concern mainly about human agency in software collaboration?
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-16T13:33:47+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <avr4K0FyiCWxmz1j@tuxteam.de>
+In-Reply-To: <397a621b7615feab31a01f7e5f94cdb4@gnu.support>
+References: <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+ <avrCGtAEda8orMWN@tuxteam.de>
+ <397a621b7615feab31a01f7e5f94cdb4@gnu.support>
+
+On Mon, Nov 16, 2026 at 01:53:07PM +0300, Jean Louis wrote:
+> My opinion on your:
+> 
+> > GNU is, at its core a "social" project, in the sense that it tries
+> > to enable people to exercise their right to freedom. It focuses
+> > very much on the individual, and uses copyright (a clever hack!)
+> > to make sure those freedoms aren't hogged by some.
+> 
+> Thanks I fully agree on above, not maybe on few facts below.
+> 
+> > This has served us outstandingly for the last 30 years.
+> 
+> Right. It is the project that has specific politics and pushes that
+> direction for longer than many of world governments.
+> 
+> And because here readers know more or less what is GNU, your statement is
+> clear and to the point.
+> 
+> > Alas, since around the 2000s, with the advent of surveillance
+> > capitalism, those who make their profit by curtailing (software)
+> > freedom have been learning how to do that by targeting not so
+> > much the individuals, as their social interactions.
+> 
+> That all may be true, though sounds as hasty generalization, and me as
+> reader of your message cannot understand what you really mean there. And how
+> could generalization be a "measure" to any standard? You have to have some
+> statistics and pin point what is the problem and then talk about solutions.
+
+Much ink has been spilled on that, from Paulina Borsook "Cyberselfish",
+to Shoshana Shuboff's "The Age of Surveillance Capitalism", passing
+through Sarah Winn-Williams's "Careless People" -- and, fresh from the
+press, Maria Ressa's "The Fight Back" -- and this is just an infinitesimal
+slice. I can't possibly do better than that, sorry.
+
+> I would be happier reading your e-mail if you would give concrete clarity to
+> what such generalization refers to.
+
+See above.
+
+> Personally, so many good things happened from 2000 up to now, that I cannot
+> relate my feelings to your statement.
+
+    "A report published earlier this year by the V-Dem Institute, a
+     Swedish research centre that measures the health of democracies
+     worldwide, found that democracy had fallen back to 1978 levels
+     for the average global citizen, with three-quarters of the world’s
+     population living under autocratic rule." [1]
+
+> > The free software movement has, in part, reacted to that: the
+> > critique of (non-free) SASS, the AGPL, etc are witnesses to this
+> > reaction.
+> 
+> If I could just know what is "that" to which the free software movement
+> reacted... but I cannot know it. Could you clarify it.
+
+"That" == the shift of the "threat model", from targeting the individual
+(e.g. with restrictive licenses, trade secrets and obfuscated code) to
+targeting our social interactions.
+
+> And do you mean with the free software movement the GNU project or the
+> larger group including the GNU project?
+
+Software freedom, in general.
+
+[...]
+
+> So try to explain.
+> 
+> How is machine learning system targeting social interactions? I have no idea
+> what you mean with it. Do you mean computers talking as agents? Personally I
+> cannot relate to it, I see no impediment to my individual freedom so far.
+
+I think it is naive to consider the few "free breadcrumbs" falling from the
+table as disconnected from the Big Ones (OpenAI, Anthropic, etc) and the
+Big Ones Behind (Microsoft, Google/Alphabet, Meta, Apple, Oracle, NVIDIA,
+you name it). I might be wrong (hopefully!).
+
+> > In my view, one of the "soft" targets of free software now in
+> > peril is "software as a conversation between humans", which I
+> > think lies at the core of software's Freedom 1 (study) and
+> > Freedom 3 (improve). I sure want to know if I'm talking to
+> > a human or a machine (especially if the latter is controlled
+> > by a huge company).
+> 
+> I can well understand you wish to talk to human. That is clear.
+> 
+> I cannot clearly understand what is the soft target of free software and why
+> would free software now be in peril?
+
+Code == talk.
+
+> I can see now we have most of the free software and it is just coming more
+> and more of it, and so many people learn more about the GNU and free
+> software and publish under free software licenses.
+> 
+> So, is your concern mainly about human agency in software collaboration?
+
+No, about human interaction/communication being subverted, which, if you
+look closely, is already happening.
+
+Cheers
+
+[1] https://www.theguardian.com/us-news/2026/nov/16/duterte-zuckerberg-maria-ressa-book
+   an interview with Maria Ressa
+-- 
+t
+
+================================================================================
+Date: 2026-11-16T13:37:30+01:00
+From: Dan Jacobson <jidanni@jidanni.org>
+Subject: csv-align-fields should have a toggle
+Message-ID: <87pkw5ar5h.3.fsf@jidanni.org>
+In-Reply-To: 
+References: 
+
+csv-align-fields should have a toggle added, so one doesn't need to
+remember a separate keybinding for csv-unalign-fields.
+
+================================================================================
+Date: 2026-11-16T13:57:32+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <CAN+1HboFMokpL0wJ+zCJidHyHdE2ifJpgC2omDGBQ-nq4-yyqw@mail.gmail.com>
+In-Reply-To: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+
+On Sun, Nov 15, 2026 at 10:21 PM Szymon Wilczek <swilczek.lx@gmail.com>
+wrote:
+
+>  Hi everyone,
+>
+> I would like to propose adding au-themes to NonGNU ELPA. Attached is
+> the patch for elpa-packages.
+>
+> - Upstream repository: https://github.com/szymonwilczek/au-themes
+> - License: GPL-3.0-or-later
+> - Description: Sensory-safe, low-glare Emacs colour themes designed
+> for autistic individuals and anyone sensitive to visual noise, ocular
+> migraine, or photophobia.
+>
+> The themes are built on ef-themes and modus-themes.
+>
+
+Thanks for these, I might wind up using one.  I use only modus themes and
+with a lot of face overrides and add a bunch of missing faces.  I fear I'd
+lose those using your themes if, as you say in the project's README, "We
+plan to move to our own engine later, with no dependency on either package.
+Until then we stay on modus-themes and ef-themes."  I'm unlikely to even
+try an au-theme if there will be a "rug pull" and I lose my modus
+customizations that work for free on your themes.
+
+If there's something wrong with modus, perhaps it can be improved and then
+everyone benefits.
+
+================================================================================
+Date: 2026-11-16T14:16:43+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <86a4n8q5l0.fsf@gnu.org>
+In-Reply-To: <avr4K0FyiCWxmz1j@tuxteam.de> (tomas@tuxteam.de)
+References: <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+ <avrCGtAEda8orMWN@tuxteam.de>
+ <397a621b7615feab31a01f7e5f94cdb4@gnu.support> <avr4K0FyiCWxmz1j@tuxteam.de>
+
+> Date: Mon, 16 Nov 2026 13:33:47 +0100
+> From: tomas@tuxteam.de
+> Cc: Richard Stallman <rms@gnu.org>, arne_bab@web.de, philipk@posteo.net,
+> 	arstoffel@gmail.com, joel.reicher@gmail.com, cwebber@dustycloud.org,
+> 	eliz@gnu.org, emacs-devel@gnu.org
+> 
+> On Mon, Nov 16, 2026 at 01:53:07PM +0300, Jean Louis wrote:
+> > My opinion on your:
+> > 
+> > > GNU is, at its core a "social" project, in the sense that it tries
+> > > to enable people to exercise their right to freedom. It focuses
+> > > very much on the individual, and uses copyright (a clever hack!)
+> > > to make sure those freedoms aren't hogged by some.
+> > 
+> > Thanks I fully agree on above, not maybe on few facts below.
+> > 
+> > > This has served us outstandingly for the last 30 years.
+> > 
+> > Right. It is the project that has specific politics and pushes that
+> > direction for longer than many of world governments.
+> > 
+> > And because here readers know more or less what is GNU, your statement is
+> > clear and to the point.
+> > 
+> > > Alas, since around the 2000s, with the advent of surveillance
+> > > capitalism, those who make their profit by curtailing (software)
+> > > freedom have been learning how to do that by targeting not so
+> > > much the individuals, as their social interactions.
+> > 
+> > That all may be true, though sounds as hasty generalization, and me as
+> > reader of your message cannot understand what you really mean there. And how
+> > could generalization be a "measure" to any standard? You have to have some
+> > statistics and pin point what is the problem and then talk about solutions.
+> 
+> Much ink has been spilled on that, from Paulina Borsook "Cyberselfish",
+> [...]
+
+PLEASE take this to emacs-tangents.
+
+================================================================================
+Date: 2026-11-16T14:21:11+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <CAJRoVwi-b_amuR0UFzE+X_14cBAB1CE=Ufhb2y+L0rjuh-=g_A@mail.gmail.com>
+In-Reply-To: <CAN+1HboFMokpL0wJ+zCJidHyHdE2ifJpgC2omDGBQ-nq4-yyqw@mail.gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <CAN+1HboFMokpL0wJ+zCJidHyHdE2ifJpgC2omDGBQ-nq4-yyqw@mail.gmail.com>
+
+Hi,
+
+Thank you very much for catching this and for the candid feedback.
+
+Please rest assured: there will be absolutely no "rug pull", and we have no
+plans whatsoever to move away from modus-themes.  That note in the README
+was an outdated artifact from the very earliest brainstorming stage of
+the project,
+which we had completely forgotten to prune.  We have now removed it.
+
+Quite the opposite: we are fully committed to staying on modus-themes and
+ef-themes long-term. Prot's framework is phenomenal.  There is truly nothing
+wrong with modus; we rely on it heavily and want all modus face overrides,
+user customizations, and commands (such as `modus-themes-select`) to continue
+working great with au-themes.
+
+To the NonGNU ELPA maintainers: please let me know if there are any other
+aspects of the package, headers, or the patch itself that require adjustments.
+
+Best regards,
+Szymon Wilczek
+
+On Mon, Nov 16, 2026 at 1:57 PM Stéphane Marks <shipmints@gmail.com> wrote:
+>
+> On Sun, Nov 15, 2026 at 10:21 PM Szymon Wilczek <swilczek.lx@gmail.com> wrote:
+>>
+>>  Hi everyone,
+>>
+>> I would like to propose adding au-themes to NonGNU ELPA. Attached is
+>> the patch for elpa-packages.
+>>
+>> - Upstream repository: https://github.com/szymonwilczek/au-themes
+>> - License: GPL-3.0-or-later
+>> - Description: Sensory-safe, low-glare Emacs colour themes designed
+>> for autistic individuals and anyone sensitive to visual noise, ocular
+>> migraine, or photophobia.
+>>
+>> The themes are built on ef-themes and modus-themes.
+>
+>
+> Thanks for these, I might wind up using one.  I use only modus themes and with a lot of face overrides and add a bunch of missing faces.  I fear I'd lose those using your themes if, as you say in the project's README, "We plan to move to our own engine later, with no dependency on either package. Until then we stay on modus-themes and ef-themes."  I'm unlikely to even try an au-theme if there will be a "rug pull" and I lose my modus customizations that work for free on your themes.
+>
+> If there's something wrong with modus, perhaps it can be improved and then everyone benefits.
+
