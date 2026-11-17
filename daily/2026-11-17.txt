@@ -1,0 +1,2305 @@
+emacs-devel messages from 2026-11-16T18:15:00+01:00 to 2026-11-17T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-16T18:36:56+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [PATCH] gnus-icalendar: updating an Org event in a narrowed
+ buffer can overwrite another entry
+Message-ID: <871p8k3cg7.fsf@athena.silentflame.com>
+In-Reply-To: <87o6bqh40b.fsf@bzg.fr>
+References: <87o6bqh40b.fsf@bzg.fr>
+
+Bastien [15/Nov  9:51am +01] wrote:
+> Hello,
+>
+> When an iCal event is store in an Org file and an updated invitation for
+> the same event arrives, `gnus-icalendar--update-org-event' rewrites the
+> existing Org entry. If the buffer happens to be narrowed at that point,
+> the update is buggy: `org-find-entry-with-id' returns a position in the
+> widened buffer, but the following `goto-char' is limited by the current
+> restriction.
+>
+> Depending on where the restriction, either the function signals
+> (search-failed "^\\*+ ") and the entry is left as it was or the point
+> lands on the first heading of the narrowed region, and that unrelated
+> entry gets its headline replaced.
+>
+> The attached patch widens buffer in `gnus-icalendar--update-org-event'
+> and in `gnus-icalendar--cancel-org-event'.
+>
+> WDYT?
+>
+> PS: I tried to first report this as a bug but for some reasons Emacs
+> tried to open an external mail client (I'll see why and fix this.)
+
+It looks like you've attached a copy of gnus-icalendar.el, not a patch.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-16T18:40:00+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: Human Emacs
+Message-ID: <87y0as1xqn.fsf@athena.silentflame.com>
+In-Reply-To: <E1xSZ7C-001OKx-Ea@fencepost.gnu.org>
+References: <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <86jymiwcxo.fsf@gnu.org>
+ <CAL6FEzzLWzkfz8y4v9y_gSr1jinK-qp88xfWqU62ZkpQeDAetQ@mail.gmail.com>
+ <E1xSZ7C-001OKx-Ea@fencepost.gnu.org>
+
+Richard Stallman [15/Nov  7:13am -05] wrote:
+>
+>   > If llm code is ever accepted in Emacs and its packages, which llms would be
+>   > authorized?  From the threads, I gather they should be free and runnable
+>   > locally, but also that it would depend on each contributor, each package
+>   > maintainer, or each user proposing a patch.
+>
+> Nothing should be included in Emacs itself, or in ELPA packages,
+> that more or less needs to be maintained using an LLM.  It must
+> always be suitable for further development by humans.
+
+In the hypothetical future where the copyright questions are all
+resolved, things like this will need writing down somewhere.
+We will need a GNU policy for LLM-generated contributions recording
+ideas like this.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-16T18:51:23+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <8633t0psv8.fsf@gnu.org>
+In-Reply-To: <86pkw5q2iz.fsf@gnu.org> (message from Eli Zaretskii on Sun, 15
+ Nov 2026 22:10:28 +0200)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com> <86pkw5q2iz.fsf@gnu.org>
+
+> Date: Sun, 15 Nov 2026 22:10:28 +0200
+> From: Eli Zaretskii <eliz@gnu.org>
+> Cc: spwhitton@spwhitton.name, pipcet@protonmail.com,
+> 	emacs-devel@gnu.org
+> 
+> > From: Helmut Eller <eller.helmut@gmail.com>
+> > Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> > Date: Sun, 15 Nov 2026 19:20:51 +0100
+> > 
+> > On Sun, Nov 15 2026, Eli Zaretskii wrote:
+> > 
+> > > Thanks, the code now compiles and the igc-tests-profiler test passes.
+> > 
+> > When I try the igc-tests-profiler test on MS-Windows, it sometimes
+> > hangs.  If I interpret the gdb out correctly, then two threads are
+> > blocked in SuspendThread; one is the main thread (thw3.c:suspendThread)
+> > and the other seems to be a timer thread (w32proc.c:timer_loop).  Is it
+> > possible that those two threads concurrently try to suspend each other
+> > and end up in a deadlock?
+> 
+> The timer thread indeed suspends the main thread when it calls the
+> signal handler.  I didn't know MPS calls SuspendThread on Windows.
+> 
+> Let me see what can be done to fix this deadlock.
+
+I wanted to install the fixes, but it involves a change in
+mps/code/thw3.c, and Git doesn't let me commit that.  It says:
+
+  $ git commit
+  Either all or no file should be in mps/
+  9       1       mps/code/thw3.c
+  8       0       src/w32proc.c
+
+What does this mean?  Are we not allowed to make changes in MPS if
+they are required?
+
+================================================================================
+Date: 2026-11-16T18:54:42+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <87qzgkpspp.fsf@gmail.com>
+In-Reply-To: <8633t0psv8.fsf@gnu.org>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+
+On Mon, Nov 16 2026, Eli Zaretskii wrote:
+
+>> Date: Sun, 15 Nov 2026 22:10:28 +0200
+>> From: Eli Zaretskii <eliz@gnu.org>
+>> Cc: spwhitton@spwhitton.name, pipcet@protonmail.com,
+>> 	emacs-devel@gnu.org
+>> 
+>> > From: Helmut Eller <eller.helmut@gmail.com>
+>> > Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+>> > Date: Sun, 15 Nov 2026 19:20:51 +0100
+>> > 
+>> > On Sun, Nov 15 2026, Eli Zaretskii wrote:
+>> > 
+>> > > Thanks, the code now compiles and the igc-tests-profiler test passes.
+>> > 
+>> > When I try the igc-tests-profiler test on MS-Windows, it sometimes
+>> > hangs.  If I interpret the gdb out correctly, then two threads are
+>> > blocked in SuspendThread; one is the main thread (thw3.c:suspendThread)
+>> > and the other seems to be a timer thread (w32proc.c:timer_loop).  Is it
+>> > possible that those two threads concurrently try to suspend each other
+>> > and end up in a deadlock?
+>> 
+>> The timer thread indeed suspends the main thread when it calls the
+>> signal handler.  I didn't know MPS calls SuspendThread on Windows.
+>> 
+>> Let me see what can be done to fix this deadlock.
+>
+> I wanted to install the fixes, but it involves a change in
+> mps/code/thw3.c, and Git doesn't let me commit that.  It says:
+>
+>   $ git commit
+>   Either all or no file should be in mps/
+>   9       1       mps/code/thw3.c
+>   8       0       src/w32proc.c
+>
+> What does this mean?  Are we not allowed to make changes in MPS if
+> they are required?
+
+It means that if you change MPS you should not mix that up with changes
+to Emacs.  So make separate commits for th3w.c and w32proc.c.
+
+Helmut
+
+================================================================================
+Date: 2026-11-16T19:12:05+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <86zev8odca.fsf@gnu.org>
+In-Reply-To: <87qzgkpspp.fsf@gmail.com> (message from Helmut Eller on Mon, 16
+ Nov 2026 18:54:42 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org> <87qzgkpspp.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> Date: Mon, 16 Nov 2026 18:54:42 +0100
+> 
+> On Mon, Nov 16 2026, Eli Zaretskii wrote:
+> 
+> >> Date: Sun, 15 Nov 2026 22:10:28 +0200
+> >> From: Eli Zaretskii <eliz@gnu.org>
+> >> Cc: spwhitton@spwhitton.name, pipcet@protonmail.com,
+> >> 	emacs-devel@gnu.org
+> >> 
+> >> > From: Helmut Eller <eller.helmut@gmail.com>
+> >> > Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> >> > Date: Sun, 15 Nov 2026 19:20:51 +0100
+> >> > 
+> >> > On Sun, Nov 15 2026, Eli Zaretskii wrote:
+> >> > 
+> >> > > Thanks, the code now compiles and the igc-tests-profiler test passes.
+> >> > 
+> >> > When I try the igc-tests-profiler test on MS-Windows, it sometimes
+> >> > hangs.  If I interpret the gdb out correctly, then two threads are
+> >> > blocked in SuspendThread; one is the main thread (thw3.c:suspendThread)
+> >> > and the other seems to be a timer thread (w32proc.c:timer_loop).  Is it
+> >> > possible that those two threads concurrently try to suspend each other
+> >> > and end up in a deadlock?
+> >> 
+> >> The timer thread indeed suspends the main thread when it calls the
+> >> signal handler.  I didn't know MPS calls SuspendThread on Windows.
+> >> 
+> >> Let me see what can be done to fix this deadlock.
+> >
+> > I wanted to install the fixes, but it involves a change in
+> > mps/code/thw3.c, and Git doesn't let me commit that.  It says:
+> >
+> >   $ git commit
+> >   Either all or no file should be in mps/
+> >   9       1       mps/code/thw3.c
+> >   8       0       src/w32proc.c
+> >
+> > What does this mean?  Are we not allowed to make changes in MPS if
+> > they are required?
+> 
+> It means that if you change MPS you should not mix that up with changes
+> to Emacs.  So make separate commits for th3w.c and w32proc.c.
+
+Done.  But why such restrictions?  It almost feels like the old CVS
+days when we committed several files from the same changeset in
+separate commits.
+
+================================================================================
+Date: 2026-11-16T19:18:26+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <87ld6sprm5.fsf@gmail.com>
+In-Reply-To: <86zev8odca.fsf@gnu.org>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+ <87qzgkpspp.fsf@gmail.com> <86zev8odca.fsf@gnu.org>
+
+On Mon, Nov 16 2026, Eli Zaretskii wrote:
+>> > I wanted to install the fixes, but it involves a change in
+>> > mps/code/thw3.c, and Git doesn't let me commit that.  It says:
+>> >
+>> >   $ git commit
+>> >   Either all or no file should be in mps/
+>> >   9       1       mps/code/thw3.c
+>> >   8       0       src/w32proc.c
+>> >
+>> > What does this mean?  Are we not allowed to make changes in MPS if
+>> > they are required?
+>> 
+>> It means that if you change MPS you should not mix that up with changes
+>> to Emacs.  So make separate commits for th3w.c and w32proc.c.
+>
+> Done.  But why such restrictions?  It almost feels like the old CVS
+> days when we committed several files from the same changeset in
+> separate commits.
+
+The intention is to keep the MPS separate from Emacs.
+
+Helmut
+
+================================================================================
+Date: 2026-11-16T19:21:54+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <86y0asocvx.fsf@gnu.org>
+In-Reply-To: <87ld6sprm5.fsf@gmail.com> (message from Helmut Eller on Mon, 16
+ Nov 2026 19:18:26 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+ <87qzgkpspp.fsf@gmail.com> <86zev8odca.fsf@gnu.org> <87ld6sprm5.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> Date: Mon, 16 Nov 2026 19:18:26 +0100
+> 
+> On Mon, Nov 16 2026, Eli Zaretskii wrote:
+> >> > I wanted to install the fixes, but it involves a change in
+> >> > mps/code/thw3.c, and Git doesn't let me commit that.  It says:
+> >> >
+> >> >   $ git commit
+> >> >   Either all or no file should be in mps/
+> >> >   9       1       mps/code/thw3.c
+> >> >   8       0       src/w32proc.c
+> >> >
+> >> > What does this mean?  Are we not allowed to make changes in MPS if
+> >> > they are required?
+> >> 
+> >> It means that if you change MPS you should not mix that up with changes
+> >> to Emacs.  So make separate commits for th3w.c and w32proc.c.
+> >
+> > Done.  But why such restrictions?  It almost feels like the old CVS
+> > days when we committed several files from the same changeset in
+> > separate commits.
+> 
+> The intention is to keep the MPS separate from Emacs.
+
+I'm questioning the wisdom of this.  When a changeset involves changes
+both in MPS and in the rest of Emacs, separating them makes
+understanding the change and future forensics harder.  What is the
+justification for that?
+
+================================================================================
+Date: 2026-11-16T19:23:53+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <87cxs4prd2.fsf@gmail.com>
+In-Reply-To: <86y0asocvx.fsf@gnu.org>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+ <87qzgkpspp.fsf@gmail.com> <86zev8odca.fsf@gnu.org>
+ <87ld6sprm5.fsf@gmail.com> <86y0asocvx.fsf@gnu.org>
+
+>> The intention is to keep the MPS separate from Emacs.
+>
+> I'm questioning the wisdom of this.  When a changeset involves changes
+> both in MPS and in the rest of Emacs, separating them makes
+> understanding the change and future forensics harder.  What is the
+> justification for that?
+
+Then change the policy if you must.  Your project your rules.  I don't
+have to like them.
+ 
+Helmut
+
+================================================================================
+Date: 2026-11-16T19:31:27+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <87tslgiq69.fsf@posteo.net>
+In-Reply-To: <CAN+1HboFMokpL0wJ+zCJidHyHdE2ifJpgC2omDGBQ-nq4-yyqw@mail.gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <CAN+1HboFMokpL0wJ+zCJidHyHdE2ifJpgC2omDGBQ-nq4-yyqw@mail.gmail.com>
+
+Stéphane Marks <shipmints@gmail.com> writes:
+
+> On Sun, Nov 15, 2026 at 10:21 PM Szymon Wilczek <swilczek.lx@gmail.com>
+> wrote:
+>
+>>  Hi everyone,
+>>
+>> I would like to propose adding au-themes to NonGNU ELPA. Attached is
+>> the patch for elpa-packages.
+>>
+>> - Upstream repository: https://github.com/szymonwilczek/au-themes
+>> - License: GPL-3.0-or-later
+>> - Description: Sensory-safe, low-glare Emacs colour themes designed
+>> for autistic individuals and anyone sensitive to visual noise, ocular
+>> migraine, or photophobia.
+>>
+>> The themes are built on ef-themes and modus-themes.
+>>
+>
+> Thanks for these, I might wind up using one.  I use only modus themes and
+> with a lot of face overrides and add a bunch of missing faces.  
+
+Why don't you upstream these?
+
+>                                                                 I fear I'd
+> lose those using your themes if, as you say in the project's README, "We
+> plan to move to our own engine later, with no dependency on either package.
+> Until then we stay on modus-themes and ef-themes."  I'm unlikely to even
+> try an au-theme if there will be a "rug pull" and I lose my modus
+> customizations that work for free on your themes.
+
+I second this point.  Protesilaos is working the last I have heard on
+having modus-themes as a generic framework to transform a color palette
+into a (face) theme, and seeing as it is built-in to Emacs I wouldn't be
+too concerned about the dependency.
+
+> If there's something wrong with modus, perhaps it can be improved and then
+> everyone benefits.
+
+================================================================================
+Date: 2026-11-16T19:56:57+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <87jymciozr.fsf@posteo.net>
+In-Reply-To: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+
+Szymon Wilczek <swilczek.lx@gmail.com> writes:
+
+>  Hi everyone,
+>
+> I would like to propose adding au-themes to NonGNU ELPA. Attached is
+> the patch for elpa-packages.
+
+Would you be interested in having the themes in GNU ELPA?  Or did you
+use LLMs to generate the code?
+
+> - Upstream repository: https://github.com/szymonwilczek/au-themes
+> - License: GPL-3.0-or-later
+> - Description: Sensory-safe, low-glare Emacs colour themes designed
+> for autistic individuals and anyone sensitive to visual noise, ocular
+> migraine, or photophobia.
+
+> The themes are built on ef-themes and modus-themes.
+
+Can you explain why you depend on both, if ef-themes uses modus-themes
+as a framework?
+
+Other than that, I have a few comments here:
+
+================================================================================
+Date: 2026-11-16T19:57:59+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <CAN+1HbqyTRYXoYu0ZfvAubnRrgfibh+hHZmrA2HrE1Rr5wmFrQ@mail.gmail.com>
+In-Reply-To: <87tslgiq69.fsf@posteo.net>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <CAN+1HboFMokpL0wJ+zCJidHyHdE2ifJpgC2omDGBQ-nq4-yyqw@mail.gmail.com>
+ <87tslgiq69.fsf@posteo.net>
+
+On Mon, Nov 16, 2026 at 1:31 PM Philip Kaludercic <philipk@posteo.net>
+wrote:
+
+> Stéphane Marks <shipmints@gmail.com> writes:
+>
+> > On Sun, Nov 15, 2026 at 10:21 PM Szymon Wilczek <swilczek.lx@gmail.com>
+> > wrote:
+> >
+> >>  Hi everyone,
+> >>
+> >> I would like to propose adding au-themes to NonGNU ELPA. Attached is
+> >> the patch for elpa-packages.
+> >>
+> >> - Upstream repository: https://github.com/szymonwilczek/au-themes
+> >> - License: GPL-3.0-or-later
+> >> - Description: Sensory-safe, low-glare Emacs colour themes designed
+> >> for autistic individuals and anyone sensitive to visual noise, ocular
+> >> migraine, or photophobia.
+> >>
+> >> The themes are built on ef-themes and modus-themes.
+> >>
+> >
+> > Thanks for these, I might wind up using one.  I use only modus themes and
+> > with a lot of face overrides and add a bunch of missing faces.
+>
+> Why don't you upstream these?
+>
+
+I just double checked and it's been a while since this was all put
+together.  Most of the package support has been upstreamed.  What remains
+is personal preference overrides and only one third-party package that
+doesn't yet have modus coverage https://melpa.org/#/fountain-mode (though I
+haven't worked on a screenplay in a while, I did review/edit one recently).
+
+================================================================================
+Date: 2026-11-16T19:59:08+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: Rejecting vibe-spell
+Message-ID: <87fqx0iow4.fsf@posteo.net>
+In-Reply-To: <875wxx13hs.fsf@gmail.com>
+References: <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <8733t8tlja.fsf@posteo.net> <87ld6zu7ad.fsf@gmail.com>
+ <avQzaaU2qB94crBr@tuxteam.de> <E1xSDN6-00984b-VC@fencepost.gnu.org>
+ <87tsljvuvp.fsf@posteo.net> <86y0aur6e7.fsf@gnu.org>
+ <875wxx13hs.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> On Sun, 15 Nov 2026, Eli Zaretskii wrote:
+>
+>>> From: Philip Kaludercic <philipk@posteo.net>
+>>> Cc: tomas@tuxteam.de,  arstoffel@gmail.com,  arne_bab@web.de,
+>>>   joel.reicher@gmail.com,  cwebber@dustycloud.org,  eliz@gnu.org,
+>>>   emacs-devel@gnu.org
+>>> Date: Sat, 14 Nov 2026 23:46:51 +0000
+>>> 
+>>> Richard Stallman <rms@gnu.org> writes:
+>>> 
+>>> > More important than the name of the package is what it contains and what
+>>> > that implies about its further development.
+>>> >
+>>> > Please correct me if I'm mistaken, but it seems that further
+>>> > maintenance of vibe-spell will require running the same LLM on future
+>>> > versions of hunspell, to generate new versions of the code in
+>>> > vibe-spell.  Not just once, not just five times, but over and over.
+>>> 
+>>> No, this was never agreed on as necessary for the maintenance of
+>>> vibe-spell.  Even if Augusto wanted to backport changes from Nuspell
+>>> (not Hunspell) to vibe-spell, it wouldn't imply that this would have to
+>>> be done using an LLM.
+>>
+>> That's not what Augusto himself said up-thread:
+>>
+>>   https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00175.html
+>>   https://lists.gnu.org/archive/html/emacs-devel/2026-11/msg00228.html
+>
+> Philip raised a general and quite valid concerned about packages being
+> hastily extruded, then uploaded to ELPA and not getting proper
+> maintenance thereafter.
+>
+> Those messages you link are simply an explanation of how I can maintain
+> vibe-spell.el as a small side-project.  They don't imply a morphology
+> aficionado couldn't maintain the code without LLM assistance.
+>
+>>> > That LLM is a SaaSS dis-service, right?
+>>> 
+>>> This too is not necessarily the case.  There is nothing inherent to the
+>>> task that you couldn't do it with a local model trained with
+>>> unencumbered data.
+>>
+>> Is it a fact that a local model is powerful enough to perform these
+>> jobs?  Augusto never disclosed the LLM he used to do it; I would
+>> assume that updating the code by pointing an LLM to the modified
+>> Nuspell would need a similarly-powerful, if not the same LLM?
+>
+> I used a commercial one, does it matter which?  I'd rather not make free
+> advertisement (or paid, for that matter).  You definitely don't need to
+> use the same LLM for further edits, since you could e.g. use no LLM.
+
+Thank you for clarifying these point Augusto, I feel it was
+misunderstood and misinterpreted in this thread!
+
+================================================================================
+Date: 2026-11-16T20:01:59+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87qzgkzjko.fsf@gmail.com>
+In-Reply-To: <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+
+>>>>> On Sat, 14 Nov 2026 06:25:36 -0500 (EST), Eli Zaretskii <eliz@gnu.org> said:
+    Eli>      (if (string-match-p "[^[:ascii:]]" str)
+    Eli> -	;; If LITERAL+ is available, use it and encode string as
+    Eli> -	;; UTF-8.
+    Eli> -	(if literal-plus
+    Eli> -	    (format "{%d+}\n%s"
+    Eli> -		    (string-bytes str)
+    Eli> -		    (encode-coding-string str 'utf-8))
+    Eli> +	;; If LITERAL+ is available and native UTF-8 isn't,
+    Eli> +	;; use LITERAL+ and encode `str' as UTF-8.
+    Eli> +	(if (and literal-plus (not utf8-native))
+    Eli> +            (let ((ub-str (encode-coding-string str 'utf-8)))
+    Eli> +              (format "{%d+}\n%s" (length ub-str) ub-str))
+    Eli>  	  ;; Otherwise, if the user hasn't already quoted the string,
+    Eli>  	  ;; quote it for them.
+    Eli>  	  (if (string-prefix-p "\"" str)
+    Eli>  	      str
+    Eli>  	    (format "\"%s\"" str)))
+    Eli> -      str)))
+    Eli> +      (if utf8-native
+    Eli> +          (format "\"%s\"" str)
+    Eli> +        str))))
+
+I have a separate change in this area for RFC3501 synchronizing
+literals, and this bit seems strange. If literal-plus and utf8-native,
+and no "" around the string, you add them, and then add them again in
+the third if. Also, `string-bytes' is better than `length' here.
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-16T20:23:27+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <86wlqcoa1c.fsf@gnu.org>
+In-Reply-To: <87cxs4prd2.fsf@gmail.com> (message from Helmut Eller on Mon, 16
+ Nov 2026 19:23:53 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+ <87qzgkpspp.fsf@gmail.com> <86zev8odca.fsf@gnu.org>
+ <87ld6sprm5.fsf@gmail.com> <86y0asocvx.fsf@gnu.org>
+ <87cxs4prd2.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> Date: Mon, 16 Nov 2026 19:23:53 +0100
+> 
+> >> The intention is to keep the MPS separate from Emacs.
+> >
+> > I'm questioning the wisdom of this.  When a changeset involves changes
+> > both in MPS and in the rest of Emacs, separating them makes
+> > understanding the change and future forensics harder.  What is the
+> > justification for that?
+> 
+> Then change the policy if you must.  Your project your rules.  I don't
+> have to like them.
+
+I'm asking because I'd like to understand the rationale.  I don't want
+to force policy without understanding what I'm up against.  So please
+do explain your POV, I'm sure you didn't do that just because you
+could.
+
+================================================================================
+Date: 2026-11-16T20:41:44+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <877bicimx4.fsf@posteo.net>
+In-Reply-To: <874idjxa4a.fsf@web.de>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>> "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+>>> I expected everyone to see the contradiction of both "modify by hand"
+>>> and "point LLM to hunspell sources to backport".
+>>
+>> Please explain, because I see no contradiction here.  You can make
+>> changes by hand, you can make changes using an LLM.  It will be faster
+>> if you do the latter, but that doesn't mean the former isn't possible?
+>
+> If you use LLMs to backport changes, then you don’t do that by hand.
+>
+> This was not about what’s possible, but about what was explicitly said
+> what is intended.
+
+Please elaborate, because in my mind the opposite ought to hold ("It is
+not important what is intended/is done, but what is possible").  This I
+consider all the more important considering Augusto's message for
+earlier this morning.
+
+> Best wishes,
+> Arne
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>> Arne and the others, if you have any sense of respect for the _human_
+>> effort I put into working on ELPA, I beg you to take a look at the
+>> code and point out concrete examples of what you consider to be
+>> problematic in the output of the generated code. In the worst case
+>
+> After I wrote here what experience showed about the toll such a review
+> is likely to take on me, I find it extremely disrespectful that you try
+> to shame me into doing it anyway.
+
+I am trying to make you understand that refusing to substantiate your
+claims is not constructive to this conversation.  If you want to argue
+about the code, argue about the code,
+
+> The short sample I took of it looked like dense code that takes a lot of
+> effort to verify in detail. It did not look like other elisp I read. I
+> will not do more.
+
+I read a lot of Elisp, and there is already a lot of diversity in
+different authors of different levels of experience.  The code of
+vibe-spell doesn't stick out in any notable way to me.  But of course
+that is just my opinion.
+
+> Best wishes,
+> Arne
+
+================================================================================
+Date: 2026-11-16T20:51:15+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87wlqcmu6k.fsf@mail.gmail.com>
+In-Reply-To: <87qzgkzjko.fsf@gmail.com>
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com>
+
+Robert Pluim <rpluim@gmail.com> writes:
+
+>>>>>> On Sat, 14 Nov 2026 06:25:36 -0500 (EST), Eli Zaretskii <eliz@gnu.org> said:
+>     Eli>      (if (string-match-p "[^[:ascii:]]" str)
+>     Eli> -	;; If LITERAL+ is available, use it and encode string as
+>     Eli> -	;; UTF-8.
+>     Eli> -	(if literal-plus
+>     Eli> -	    (format "{%d+}\n%s"
+>     Eli> -		    (string-bytes str)
+>     Eli> -		    (encode-coding-string str 'utf-8))
+>     Eli> +	;; If LITERAL+ is available and native UTF-8 isn't,
+>     Eli> +	;; use LITERAL+ and encode `str' as UTF-8.
+>     Eli> +	(if (and literal-plus (not utf8-native))
+>     Eli> +            (let ((ub-str (encode-coding-string str 'utf-8)))
+>     Eli> +              (format "{%d+}\n%s" (length ub-str) ub-str))
+>     Eli>  	  ;; Otherwise, if the user hasn't already quoted the string,
+>     Eli>  	  ;; quote it for them.
+>     Eli>  	  (if (string-prefix-p "\"" str)
+>     Eli>  	      str
+>     Eli>  	    (format "\"%s\"" str)))
+>     Eli> -      str)))
+>     Eli> +      (if utf8-native
+>     Eli> +          (format "\"%s\"" str)
+>     Eli> +        str))))
+>
+> I have a separate change in this area for RFC3501 synchronizing
+> literals, and this bit seems strange. If literal-plus and utf8-native,
+> and no "" around the string, you add them, and then add them again in
+> the third if.
+
+Assuming that both LITERAL+ and UTF8-NATIVE are present, and str is not
+ASCII-only (which is an implicit assumption here), the else-part of the
+second if executes:
+
+;; Otherwise, if the user hasn't already quoted the string,
+;; quote it for them.
+(if (string-prefix-p "\"" str)
+	      str
+	    (format "\"%s\"" str))
+
+The final if is the else-part of the enclosing if, i.e.
+
+if (string-match-p "[^[:ascii:]]" str)
+
+and cannot execute in this case since then-branch has already been
+chosen. The final if
+
+(if utf8-native
+          (format "\"%s\"" str)
+        str)
+
+executes if and only if str is ASCII-only. Therefore str does not get an
+extra pair of quotes around it.
+
+================================================================================
+Date: 2026-11-16T21:54:29+01:00
+From: Bastien <bzg@gnu.org>
+Subject: Re: [PATCH] gnus-icalendar: updating an Org event in a narrowed
+ buffer can overwrite another entry
+Message-ID: <87jymco5tm.fsf@gnu.org>
+In-Reply-To: <871p8k3cg7.fsf@athena.silentflame.com>
+References: <87o6bqh40b.fsf@bzg.fr> <871p8k3cg7.fsf@athena.silentflame.com>
+
+Sean Whitton <spwhitton@spwhitton.name> writes:
+
+> It looks like you've attached a copy of gnus-icalendar.el, not a
+> patch.
+
+Oops, here it is.
+
+-- 
+ Bastien
+
+================================================================================
+Date: 2026-11-16T22:04:36+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87qzgkmqsb.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com>
+
+By the way, we discussed this piece of logic before. I always want to
+point this out but keep forgetting. If you want to see something that
+*is* strange, look at the final if which gets executed if the query
+string 'str' is ASCII-only:
+
+(if utf8-native
+          (format "\"%s\"" str)
+        str)
+
+str is left unquoted if utf8-native is nil. In the old setup before
+UTF8-native, this generated invalid queries like
+
+288 UID SEARCH TEXT hello
+
+Somehow, they still worked, so I left this remnant alone, not wanting to
+change the old behavior.
+
+================================================================================
+Date: 2026-11-16T23:42:08+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <87o6bocsan.fsf@gmail.com>
+In-Reply-To: <87jymciozr.fsf@posteo.net>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net>
+
+Thank you both for the review and the kind words.
+
+> Would you be interested in having the themes in GNU ELPA?
+
+For now I would like to keep this submission for NonGNU ELPA.
+
+> Can you explain why you depend on both, if ef-themes uses 
+> modus-themes
+> as a framework?
+
+I no longer do. The only thing the themes took from ef-themes was
+`ef-themes-palette-common'. au-themes now carries its own copy of 
+those
+mappings (credited to Protesilaos), and the themes are declared 
+under
+their own `au-themes' family.
+
+On the review comments, all now on the main branch:
+
+- `:group' is dropped from the defcustoms.
+
+- Theme discovery is merged into a single function.
+
+- `au-themes--hex-to-rgb' is gone. I used 
+  `color-values-from-color-spec'
+rather than `color-name-to-rgb', since the latter goes through
+`color-values' and approximates the colour on tty frames, while 
+here I
+need the exact hex value.
+
+- The toggle signals the error inside the target lookup, as you
+suggested.
+
+> I am not sure what linear light is, but this also seems like a 
+> nice
+> feature to have in color.el.
+
+sRGB values are gamma-encoded; "linear light" is the value 
+converted
+back to be proportional to physical light intensity. It is the 
+step
+needed before computing relative luminance. color.el already does 
+this,
+inside `color-srgb-to-xyz', so au-themes now uses that instead of 
+its
+own code.
+
+While doing so I noticed two typos in `color-srgb-to-xyz' (Emacs 
+31.1
+and current master):
+
+- it divides by 12.95 where sRGB specifies 12.92 (the inverse,
+  `color-xyz-to-srgb', correctly multiplies by 12.92, so the two 
+  do not
+  round-trip);
+
+- the red coefficient for Y is 0.21266729 instead of 0.2126729, so 
+  white
+  gives Y = 0.99999449 rather than 1.0.
+
+The effect is small, but I will report it with M-x 
+report-emacs-bug.
+If it would be welcome, I could also send a patch that exposes the
+linearisation (and perhaps relative luminance) as public functions 
+in
+color.el.
+
+> not to be cynical, but isn't this a feature of consult (which 
+> you
+> use)? why re-implement the feature here [...]
+
+You are right that it was half-depending on consult. I would like 
+to
+keep the preview, since it was requested by users (see issue #4 on
+GitHub) and it matters for people picking a low-glare theme, but 
+it no
+longer re-implements anything:
+
+- with consult installed, `au-themes-select' simply calls
+  `consult-theme' with `consult-themes' bound to the au-themes,
+  so nothing private from consult or vertico is used anymore;
+
+- without consult, it is a plain `completing-read'. A theme is 
+  previewed
+  only while the minibuffer contents exactly match its name, 
+  editing the
+  input reverts to the theme that was active before the prompt, 
+  and C-g
+  restores it too, including non-au themes such as modus-vivendi.
+
+I kept the annotation function (it shows the polarity and marks 
+the
+active theme) and the display-sort function (it keeps the themes 
+in
+family order instead of re-sorting them).
+
+Please let me know if anything else is needed before au-themes can 
+be
+added to NonGNU ELPA.
+
+Thanks again,
+Szymon Wilczek
+
+================================================================================
+Date: 2026-11-16T23:43:32+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87cxs4fld7.fsf@web.de>
+In-Reply-To: <877bicimx4.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <877bicimx4.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+>> This was not about what’s possible, but about what was explicitly said
+>> what is intended.
+>
+> Please elaborate, because in my mind the opposite ought to hold ("It is
+> not important what is intended/is done, but what is possible").  This I
+> consider all the more important considering Augusto's message for
+> earlier this morning.
+
+It is possible to mod binaries by hand, but that’s not the way the
+developers of the program use them.
+
+When we ask about the source, we don’t ask what we can work with in
+theory, but what’s the preferred way.
+
+See GPL 3.0 point 1: https://www.gnu.org/licenses/gpl-3.0
+»The “source code” for a work means the preferred form of the work for
+making modifications to it.«
+
+That’s why what matters is not just what’s possible, but what’s intended.
+
+And how I read it, the preferred way to backport changes from hunspell
+is to pipe diffs to hunspell C++ source through a proprietary LLM as
+part of letting the LLM change the source of vibe-spell until it likely
+matches the change in hunspell.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-17T00:03:42+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <m2ecckz8dt.fsf@macmutant.fritz.box>
+In-Reply-To: <86zevaowpm.fsf@gnu.org>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+ <86zevaowpm.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> Guys, all this talk about adding FFI to Emacs is pointless, because it
+> was decided long ago we don't want that: it will allow linking Emacs
+> too easily with non-free libraries, which we want to prevent.  We
+> developed the module subsystem as an alternative, which requires the
+> author to declare GPL compliance, as a precondition for loading the
+> module.
+
+Apologies if my comment is off, but in that case, maybe this item should
+be removed from TODO?
+
+--8<---------------cut here---------------start------------->8---
+** FFI (foreign function interface)
+See e.g. https://lists.gnu.org/r/emacs-devel/2013-10/msg00246.html
+
+One way of doing this is to start with fx's dynamic loading, and use it
+to implement things like auto-loaded buffer parsers and database
+access in cases which need more than Lisp.
+--8<---------------cut here---------------end--------------->8---
+
+Best, Arash
+
+================================================================================
+Date: 2026-11-17T03:57:06+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: feature/igc3 status
+Message-ID: <jwvpkw4i2wj.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86zev8odca.fsf@gnu.org> (message from Eli Zaretskii
+ <eliz@gnu.org> on Mon, 16 Nov 2026 20:12:05 +0200)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+ <87qzgkpspp.fsf@gmail.com> <86zev8odca.fsf@gnu.org>
+
+>> It means that if you change MPS you should not mix that up with changes
+>> to Emacs.  So make separate commits for th3w.c and w32proc.c.
+> Done.  But why such restrictions?
+
+To the extent that MPS is a separate library, which we'd ideally like to
+keep in sync with other repositories, I think it makes a lot of sense to
+try and make sure commits to MPS are separate from commits to Emacs.
+
+[ Admittedly, in practice it currently seems unlikely that we'd have
+  many other MPS repositories with which to sync.  But the principle
+  still stands.  ]
+  
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-17T06:16:43+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87h5hgghqd.fsf@posteo.net>
+In-Reply-To: <87cxs4fld7.fsf@web.de>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <877bicimx4.fsf@posteo.net>
+ <87cxs4fld7.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>>> This was not about what’s possible, but about what was explicitly said
+>>> what is intended.
+>>
+>> Please elaborate, because in my mind the opposite ought to hold ("It is
+>> not important what is intended/is done, but what is possible").  This I
+>> consider all the more important considering Augusto's message for
+>> earlier this morning.
+>
+> It is possible to mod binaries by hand, but that’s not the way the
+> developers of the program use them.
+>
+> When we ask about the source, we don’t ask what we can work with in
+> theory, but what’s the preferred way.
+
+As I have clarified in a response to Eli that you might have gotten, I
+meant "possible" to imply "reasonable" as well.  And I think that it is
+entirely reasonable to read, study and modify the code of vibe-spell.el.
+
+> See GPL 3.0 point 1: https://www.gnu.org/licenses/gpl-3.0
+> »The “source code” for a work means the preferred form of the work for
+> making modifications to it.«
+>
+> That’s why what matters is not just what’s possible, but what’s intended.
+
+There is a jump in your reasoning here, which I do not get.  First of
+all, I think that if you want to make changes to vibe-spell as such, it
+is just outright preferred to edit the Elisp code, secondly we have to
+keep in mind that GPLv3 was not written in consideration of the
+possibility that you could have multiple equally preferable source texts
+that you can automatically translate from one to the other and vice
+versa -- of at least I cannot think of an example where you would have a
+(trans-)compilation where the output of such a process would be human
+editable and back-translatable by automatic means as well.
+
+> And how I read it, the preferred way to backport changes from hunspell
+> is to pipe diffs to hunspell C++ source through a proprietary LLM as
+> part of letting the LLM change the source of vibe-spell until it likely
+> matches the change in hunspell.
+
+First of all, this is all under the hypothetical that Augusto wants to
+backport changes.  As we have established, vibe-spell is a
+fork+translation so this is not necessary since it constitutes an
+independent development.  Then also, we should take care to distinguish
+between "preferred" because it is easier (which may be the case if we
+take LLMs to be good at their job and reliable) and in the sense of
+being the technically sensible and canonical approach.  In the latter
+point too, I think that we have clarified that there is nothing wrong
+with a human reading a diff between releases of nuspell and then making
+the necessary changes to the Elisp code.  This is by far not on the same
+level of difficulty as modding a binary where any change you make could
+break relative offsets and you are fighting against constraints that are
+not related to the actual problem you are solving.  But as I have been
+trying to argue, you ought to see that this is the case if you take a
+minute to get a feeling for the code of vibe-spell -- not necessarily
+study it in details -- but just see that it is regular code that a human
+might just as well have written if they had the energy and time to do
+so (to me it doesn't seem any more or less involved than a package like
+"eat" which is also complex but written by a motivated developer).
+
+> Best wishes,
+> Arne
+
+================================================================================
+Date: 2026-11-17T06:23:55+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <87cxs4ghed.fsf@posteo.net>
+In-Reply-To: <87o6bocsan.fsf@gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+
+Szymon Wilczek <swilczek.lx@gmail.com> writes:
+
+> Thank you both for the review and the kind words.
+>
+>> Would you be interested in having the themes in GNU ELPA?
+>
+> For now I would like to keep this submission for NonGNU ELPA.
+
+No problem, but was the code LLM generated then?  If so, you should
+annotate it.
+
+>> Can you explain why you depend on both, if ef-themes uses
+>> modus-themes
+>> as a framework?
+>
+> I no longer do. The only thing the themes took from ef-themes was
+> `ef-themes-palette-common'. au-themes now carries its own copy of
+> those
+> mappings (credited to Protesilaos), and the themes are declared under
+> their own `au-themes' family.
+>
+> On the review comments, all now on the main branch:
+>
+> - `:group' is dropped from the defcustoms.
+>
+> - Theme discovery is merged into a single function.
+
+(You don't have to list the changes you directly adopt here, I can also
+just git fetch to see them)
+
+> - `au-themes--hex-to-rgb' is gone. I used
+>   `color-values-from-color-spec'
+> rather than `color-name-to-rgb', since the latter goes through
+> `color-values' and approximates the colour on tty frames, while here I
+> need the exact hex value.
+
+That makes sense.
+
+> - The toggle signals the error inside the target lookup, as you
+> suggested.
+>
+>> I am not sure what linear light is, but this also seems like a nice
+>> feature to have in color.el.
+>
+> sRGB values are gamma-encoded; "linear light" is the value converted
+> back to be proportional to physical light intensity. It is the step
+> needed before computing relative luminance. color.el already does
+> this,
+> inside `color-srgb-to-xyz', so au-themes now uses that instead of its
+> own code.
+
+OK, and not knowing much about this stuff, can you explain why you are
+preforming these computations in the physical color space as opposed to
+a perceptual color space like Oklab?
+
+> While doing so I noticed two typos in `color-srgb-to-xyz' (Emacs 31.1
+> and current master):
+>
+> - it divides by 12.95 where sRGB specifies 12.92 (the inverse,
+>  `color-xyz-to-srgb', correctly multiplies by 12.92, so the two   do
+> not
+>  round-trip);
+>
+> - the red coefficient for Y is 0.21266729 instead of 0.2126729, so
+>   white
+>  gives Y = 0.99999449 rather than 1.0.
+>
+> The effect is small, but I will report it with M-x report-emacs-bug.
+> If it would be welcome, I could also send a patch that exposes the
+> linearisation (and perhaps relative luminance) as public functions in
+> color.el.
+
+That sounds useful, please do that!
+
+>> not to be cynical, but isn't this a feature of consult (which you
+>> use)? why re-implement the feature here [...]
+>
+> You are right that it was half-depending on consult. I would like to
+> keep the preview, since it was requested by users (see issue #4 on
+
+For convenience: https://github.com/szymonwilczek/au-themes/issues/4
+
+> GitHub) and it matters for people picking a low-glare theme, but it no
+> longer re-implements anything:
+>
+> - with consult installed, `au-themes-select' simply calls
+>  `consult-theme' with `consult-themes' bound to the au-themes,
+>  so nothing private from consult or vertico is used anymore;
+>
+> - without consult, it is a plain `completing-read'. A theme is
+>   previewed
+>  only while the minibuffer contents exactly match its name,   editing
+> the
+>  input reverts to the theme that was active before the prompt,   and
+> C-g
+>  restores it too, including non-au themes such as modus-vivendi.
+
+I do not understand, isn't that the current state you are describing, or
+what are you trying to say?
+
+> I kept the annotation function (it shows the polarity and marks the
+> active theme) and the display-sort function (it keeps the themes in
+> family order instead of re-sorting them).
+
+OK, but I didn't say anything about these things, my point was really
+just that I wouldn't re-implement the consult feature of changing themes
+according to the current state of the minibuffer.
+
+> Please let me know if anything else is needed before au-themes can be
+> added to NonGNU ELPA.
+
+Probably not, but I will still wait a short bit for further comments by
+anyone else.
+
+> Thanks again,
+> Szymon Wilczek
+
+================================================================================
+Date: 2026-11-17T07:49:32+01:00
+From: GetMediaWall Team <team@getmediawall.com>
+Subject: [NonGNU ELPA] New package: tvwall
+Message-ID: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+In-Reply-To: 
+References: 
+
+Hello,
+
+
+I would like to propose adding the package tvwall to NonGNU ELPA.
+
+
+Repository: https://github.com/getmediawall/tvwall
+Main file:  tvwall.el (Version 1.0.0, requires Emacs 25.1, GPL-3.0-or-later)
+
+
+tvwall is a set of small calculators for planning a wall-mounted TV (lengths in inches):
+
+
+- tvwall-viewing-distance: 16:9 screen size for a diagonal, seating distance for a 30 degree (SMPTE) and 40 degree (THX) viewing angle, and the bottom-edge height that puts the screen centre at seated eye height;
+- tvwall-tv-size-for-distance: the TV size range that fits a seating distance;
+- tvwall-slat-plan: a slat (acoustic) panel wall section: panels across, rows, slats per panel, the real gap when slats are spread evenly, and the order quantity with a spare.
+
+
+Panel, slat and eye-height defaults are user options. The package has no dependencies, byte-compiles without warnings, passes checkdoc, and has ERT tests (tvwall-tests.el).
+
+
+I am the maintainer (GetMediaWall, team@getmediawall.com); the URL header points to our free online planner that uses the same arithmetic.
+
+
+Thank you for considering it.
+
+
+GetMediaWall team
+
+================================================================================
+Date: 2026-11-17T08:15:11+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <87zev8nd34.fsf@gmail.com>
+In-Reply-To: <86wlqcoa1c.fsf@gnu.org>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+ <87qzgkpspp.fsf@gmail.com> <86zev8odca.fsf@gnu.org>
+ <87ld6sprm5.fsf@gmail.com> <86y0asocvx.fsf@gnu.org>
+ <87cxs4prd2.fsf@gmail.com> <86wlqcoa1c.fsf@gnu.org>
+
+On Mon, Nov 16 2026, Eli Zaretskii wrote:
+
+>> From: Helmut Eller <eller.helmut@gmail.com>
+>> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+>> Date: Mon, 16 Nov 2026 19:23:53 +0100
+>> 
+>> >> The intention is to keep the MPS separate from Emacs.
+>> >
+>> > I'm questioning the wisdom of this.  When a changeset involves changes
+>> > both in MPS and in the rest of Emacs, separating them makes
+>> > understanding the change and future forensics harder.  What is the
+>> > justification for that?
+>> 
+>> Then change the policy if you must.  Your project your rules.  I don't
+>> have to like them.
+>
+> I'm asking because I'd like to understand the rationale.  I don't want
+> to force policy without understanding what I'm up against.  So please
+> do explain your POV, I'm sure you didn't do that just because you
+> could.
+
+The man page of git-subtree says this
+
+  Tip
+
+  In order to keep your commit messages clean, we recommend that
+  people split their commits between the subtrees and the main project
+  as much as possible. That is, if you make a change that affects both
+  the library and the main application, commit it in two pieces. That
+  way, when you split the library commits out later, their
+  descriptions will still make sense. But if this isn’t important to
+  you, it’s not necessary. git subtree will simply leave out the
+  non-library-related parts of the commit when it splits it out into
+  the subproject later.
+
+So I think the commit history will be nicer if commits MPS and Emacs are
+not intermixed.  And currently "git log mps" looks pretty good to me.
+
+Helmut
+
+================================================================================
+Date: 2026-11-17T08:17:30+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87h5hg0vw5.fsf@gmail.com>
+In-Reply-To: <87a4nbxbjv.fsf@posteo.net>
+References: <87fqxg49b6.fsf@posteo.net> <875wybdubd.fsf@dustycloud.org>
+ <E1xPvac-000Me5-3x@fencepost.gnu.org> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <E1xSDYu-009g3H-IS@fencepost.gnu.org> <87o6br1ngp.fsf@web.de>
+ <86bj7rsah3.fsf@gnu.org> <87a4nbxbjv.fsf@posteo.net>
+
+On Sat, 14 Nov 2026, Philip Kaludercic wrote:
+
+> Eli Zaretskii <eliz@gnu.org> writes:
+>
+>>> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+>>> Cc: philipk@posteo.net,  tomas@tuxteam.de,  arstoffel@gmail.com,
+>>>   joel.reicher@gmail.com,  cwebber@dustycloud.org,  eliz@gnu.org,
+>>>   emacs-devel@gnu.org
+>>> Date: Sat, 14 Nov 2026 15:45:10 +0100
+>>> 
+>>> Richard Stallman <rms@gnu.org> writes:
+>>> 
+>>> >   > And in the hermes discussion it was claified that a GNU package must not
+>>> >   > encourage people to use proprietary software.
+>>> >
+>>> >   > All LLM code I reviewed to date made usage with Free Software harder
+>>> >   > than the equivalent handwritten code.
+>>> >
+>>> > Would you like to check the code of vibe-spell yourself?
+>>> 
+>>> I don’t, because the last time I did a long review of AI code, that was
+>>> so draining that I couldn’t work well for two days.
+>>> 
+>>> That’s why I try to avoid LLM code at work (can’t completely do so) and
+>>> never review such without being paid.
+>>> 
+>>> The mental toll it takes on me is too high for that.
+>>
+>> If the vibe-spell's code is as difficult to review as you describe, I
+>> wonder how it could be considered to be a source code of a program.
+>>
+>> However, Philip seemed to have no difficulty reviewing the source and
+>> posting non-trivial comments, so maybe Philip could chime in and share
+>> hist opinions?
+>
+> I can assure everyone that it is entirely readable and usable code.  I
+> shared my comments with Augusto and could have a reasonable discussion
+> about the code.  Sure it has domain-specific complexities that are more
+> tricky to understand if you aren't familiar with the file formats and
+> algorithms employed in spell checking, but that is to be expected.
+
+Speaking of which, I've applied most of your suggestions, thanks for
+that!
+
+(And yes, I did it by looking with my own eyes at the old code, the new
+code, and deciding myself which to keep -- or whether to go for a third
+variation.)
+
+> This discussion and the attitude of those who insist on rejecting the
+> code is _far_ more exhausting than the code itself.  Arne and the
+> others, if you have any sense of respect for the _human_ effort I put
+> into working on ELPA, I beg you to take a look at the code and point out
+> concrete examples of what you consider to be problematic in the output
+> of the generated code.  In the worst case, you'll just be providing a
+> (partial) second review of things we can fix!  But arguing with
+> (possibly outdated) anecdotal evidence about this concrete package is
+> really too much for me to deal with.
+>
+> (As I have pointed out elsewhere, I am not pro-AI; but attitudes like
+> these have driven me away from identifying myself as anti-AI -- please
+> keep this in mind.  Just because you think what you are fighting for is
+> reasonable doesn't mean you get to be unreasonable in pursuit of this
+> goal.)
+
+================================================================================
+Date: 2026-11-17T08:22:23+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87fqwz2a8g.fsf@gmail.com>
+In-Reply-To: <87ld6zu7ad.fsf@gmail.com>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <87ld70csa1.fsf@web.de> <8733t8tlja.fsf@posteo.net>
+ <87ld6zu7ad.fsf@gmail.com>
+
+On Wed, 11 Nov 2026, Augusto Stoffel wrote:
+
+> (From the other subthread.)
+>
+> On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+>
+>> To open a can of worms at the end, it might not be a bad idea to use a
+>> different name for the package.  My hunch is that some of the attention
+>> this thread has attracted is due to the name that has a negative
+>> connotation.  The approach to spelling is sound after all, it is not
+>> just a "vibe-check".  What do you think of "espell"?
+>
+> Here I would appreciate the opinion from Arne and the others with
+> concerns about LLM-generated code.  Do you think I should rename the
+> package?
+>
+> I named it that way 1. as an attempt to be a bit funny, in a
+> self-deprecating way, and 2. to not let anybody have the wrong idea
+> about the method used to write that large (but not unreasonable large)
+> amount of code.  I certainly didn't mean to be provocative.
+
+I haven't heard from any of the people I thought I would be benefiting
+by making the nature of the code generation clear from the package name.
+
+I could take the name espell.  If namespaces wee auctioned this one
+would have a high price...  So I could also leave that name for a
+morally purer implementation and take vspell, which at that point would
+be just a random identifier.
+
+> (I don't want to expound on my opinion about LLMs here, but I have fun
+> in actually writing ELisp and I'm not on the Emacs payroll or following
+> deadlines, so this package to me is a rather special experiment.  All my
+> other packages are and will remain handcrafted.)
+
+By the way, we should perhaps have a more precise way to tag packages as
+LLM-assisted.  I for one do have my reservations and would appreciate
+something on those lines.
+
+================================================================================
+Date: 2026-11-17T08:29:48+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87mrr7zzir.fsf@gmail.com>
+In-Reply-To: <87wlqcmu6k.fsf@mail.gmail.com>
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+
+>>>>> On Mon, 16 Nov 2026 20:51:15 +0100, Nickolai Dobrynin <ndobrynin@gmail.com> said:
+    Nickolai> and cannot execute in this case since then-branch has already been
+    Nickolai> chosen. The final if
+
+    Nickolai> (if utf8-native
+    Nickolai>           (format "\"%s\"" str)
+    Nickolai>         str)
+
+    Nickolai> executes if and only if str is ASCII-only. Therefore str does not get an
+    Nickolai> extra pair of quotes around it.
+
+Youʼre right, I misread the code. I do wonder why the quotes are
+needed for ASCII strings when utf8-native is available (and again, what
+if the user has already quoted the string?).
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-17T10:43:52+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87ik1vztbb.fsf@gmail.com>
+In-Reply-To: <87mrr7zzir.fsf@gmail.com>
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com>
+
+>>>>> On Tue, 17 Nov 2026 08:29:48 +0100, Robert Pluim <rpluim@gmail.com> said:
+
+>>>>> On Mon, 16 Nov 2026 20:51:15 +0100, Nickolai Dobrynin <ndobrynin@gmail.com> said:
+    Nickolai> and cannot execute in this case since then-branch has already been
+    Nickolai> chosen. The final if
+
+    Nickolai> (if utf8-native
+    Nickolai> (format "\"%s\"" str)
+    Nickolai> str)
+
+    Nickolai> executes if and only if str is ASCII-only. Therefore str does not get an
+    Nickolai> extra pair of quotes around it.
+
+    Robert> Youʼre right, I misread the code. I do wonder why the quotes are
+    Robert> needed for ASCII strings when utf8-native is available (and again, what
+    Robert> if the user has already quoted the string?).
+
+Anyway, I trust youʼve tested all this. The only thing missing would
+be a NEWS entry describing the new feature.
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-17T11:30:53+01:00
+From: David Ponce <da_vid@orange.fr>
+Subject: Cannot sync with Emacs repos (both master and emacs-31)
+Message-ID: <e70cffb9-9a6d-43a2-b443-09ad5d42e15a@orange.fr>
+In-Reply-To: 
+References: 
+
+Hello,
+
+Since yesterday I no more can sync with Emacs repos (both master and emacs-31)
+
+I keep receiving this error:
+
+fatal: unable to access 'https://git.savannah.gnu.org/git/emacs.git/': The requested URL returned error: 502
+
+Do you know if I need to do somthing on my side, or just wait until the issue is fixed?
+
+Thank you for your help.
+
+David
+
+================================================================================
+Date: 2026-11-17T13:04:13+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <874idfd5qa.fsf@gmail.com>
+In-Reply-To: <87cxs4ghed.fsf@posteo.net>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net>
+
+Hi Philip,
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> No problem, but was the code LLM generated then? If so, you 
+> should
+> annotate it.
+
+No, it was not. Choosing NonGNU ELPA was solely to keep things 
+simple
+and avoid the copyright assignment paperwork for now, but maybe in 
+the
+future.
+
+> OK, and not knowing much about this stuff, can you explain why 
+> you are
+> preforming these computations in the physical color space as 
+> opposed
+> to a perceptual color space like Oklab?
+
+In au-themes the luminance is only used to tell light themes from
+dark ones (comparing bg-main with fg-main) and to show Y in the
+annotation, so a perceptual space would not change anything there.
+
+The contrast checks in the test suite need luminance as well, 
+because
+both WCAG 2 and APCA define contrast on luminance, so I have to 
+compute
+it as the standards do. Where the question is "do these two 
+colours look
+different", the tests use perceptual spaces instead: OKLab/OKLCh 
+for hue
+and lightness steps between syntax roles, and CIEDE2000 for colour
+difference at glyph size.
+
+> That sounds useful, please do that!
+
+Two typos are now bug#82264.
+(https://lists.gnu.org/archive/html/bug-gnu-emacs/2026-11/msg00877.html)
+I will send the patch that adds public functions to color.el 
+separately.
+
+> I do not understand, isn't that the current state you are 
+> describing,
+> or what are you trying to say?
+
+Yeah, that was unclear, my bad. Yes, it is the current state; I 
+was
+describing how I fixed the behaviour you pointed out (the theme 
+stayed
+applied after the input was changed).
+
+> OK, but I didn't say anything about these things, my point was 
+> really
+> just that I wouldn't re-implement the consult feature of 
+> changing
+> themes according to the current state of the minibuffer.
+
+I understand, but I would like to keep the preview. For the people 
+these
+themes are made for, the useful way to choose is to see the 
+candidate on
+their own buffers before committing to it. Without consult there 
+would
+be no preview at all. With consult I now just call consult-theme, 
+so
+nothing is re-implemented there. The fallback is about 30 lines, 
+uses
+only minibuffer-with-setup-hook and a buffer-local 
+post-command-hook,
+and leaves the completion UI alone. If you still think it is too 
+much, I
+could put it behind a user option.
+
+Thanks,
+Szymon
+
+================================================================================
+Date: 2026-11-17T13:43:25+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <86ik1vocgi.fsf@gnu.org>
+In-Reply-To: <m2ecckz8dt.fsf@macmutant.fritz.box> (message from Arash Esbati
+ on Tue, 17 Nov 2026 00:03:42 +0100)
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+ <86zevaowpm.fsf@gnu.org> <m2ecckz8dt.fsf@macmutant.fritz.box>
+
+> From: Arash Esbati <arash@gnu.org>
+> Cc: Stéphane Marks <shipmints@gmail.com>,
+>   paaguti@gmail.com,  rms@gnu.org,
+>   arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Tue, 17 Nov 2026 00:03:42 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > Guys, all this talk about adding FFI to Emacs is pointless, because it
+> > was decided long ago we don't want that: it will allow linking Emacs
+> > too easily with non-free libraries, which we want to prevent.  We
+> > developed the module subsystem as an alternative, which requires the
+> > author to declare GPL compliance, as a precondition for loading the
+> > module.
+> 
+> Apologies if my comment is off, but in that case, maybe this item should
+> be removed from TODO?
+
+Yes, it should be removed (obviously).
+
+================================================================================
+Date: 2026-11-17T13:43:27+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87o6bnd3ww.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com>
+
+Robert Pluim <rpluim@gmail.com> writes:
+
+>>>>>> On Mon, 16 Nov 2026 20:51:15 +0100, Nickolai Dobrynin
+>  <ndobrynin@gmail.com> said:
+>     Nickolai> and cannot execute in this case since then-branch has
+>     already
+>      been
+>     Nickolai> chosen. The final if
+>
+>     Nickolai> (if utf8-native
+>     Nickolai>           (format "\"%s\"" str)
+>     Nickolai>         str)
+>
+>     Nickolai> executes if and only if str is ASCII-only. Therefore str
+>     does not get an
+>     Nickolai> extra pair of quotes around it.
+>
+> You're right, I misread the code. I do wonder why the quotes are
+> needed for ASCII strings when utf8-native is available
+
+The IMAP standard requires strings to be quoted and even calls them
+"quoted strings". Or did I misunderstand your question?
+
+> and again, what if the user has already quoted the string?
+
+Oops, that's a bug. And it is my bug. It wasn't there before. I will
+send in a fix and change "length" to "string-bytes", as you mentioned.
+
+================================================================================
+Date: 2026-11-17T14:03:59+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86cxs3obi8.fsf@gnu.org>
+In-Reply-To: <87h5hgghqd.fsf@posteo.net> (message from Philip Kaludercic on
+ Tue, 17 Nov 2026 05:16:43 +0000)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <877bicimx4.fsf@posteo.net>
+ <87cxs4fld7.fsf@web.de> <87h5hgghqd.fsf@posteo.net>
+
+> From: Philip Kaludercic <philipk@posteo.net>
+> Cc: Stéphane Marks <shipmints@gmail.com>,  rms@gnu.org,
+>  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Tue, 17 Nov 2026 05:16:43 +0000
+> 
+> "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+> 
+> > See GPL 3.0 point 1: https://www.gnu.org/licenses/gpl-3.0
+> > »The “source code” for a work means the preferred form of the work for
+> > making modifications to it.«
+> >
+> > That’s why what matters is not just what’s possible, but what’s intended.
+> 
+> There is a jump in your reasoning here, which I do not get.  First of
+> all, I think that if you want to make changes to vibe-spell as such, it
+> is just outright preferred to edit the Elisp code
+
+Why is it preferable?  If the baseline is the C++ code of Nuspell,
+starting from that would be my first choice, since it avoids the need
+to manually look for the ELisp code corresponding to each and every
+change in C++.  Don't you agree?
+
+> secondly we have to
+> keep in mind that GPLv3 was not written in consideration of the
+> possibility that you could have multiple equally preferable source texts
+> that you can automatically translate from one to the other and vice
+> versa -- of at least I cannot think of an example where you would have a
+> (trans-)compilation where the output of such a process would be human
+> editable and back-translatable by automatic means as well.
+
+I don't see "multiple equally preferable source texts" here, FWIW,
+because what we have is the original C++ code which was translated
+into ELisp.  The relation between them is not symmetrical.
+
+> > And how I read it, the preferred way to backport changes from hunspell
+> > is to pipe diffs to hunspell C++ source through a proprietary LLM as
+> > part of letting the LLM change the source of vibe-spell until it likely
+> > matches the change in hunspell.
+> 
+> First of all, this is all under the hypothetical that Augusto wants to
+> backport changes.
+
+That's not our only worry.  Free Software is about allowing _anyone_
+to rebuild the program, with or without changes.  And that obviously
+includes the use case of following the upstream Nuspell changes,
+because someone might want to do that.
+
+This is why we always prefer to consider the original source as the
+"preferred form".  One immediate example is the Org source of the Org
+manual: we decided not to treat the generated Texinfo as the source,
+but provide the full Org code as the source.
+
+================================================================================
+Date: 2026-11-17T14:17:35+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <868q2roavk.fsf@gnu.org>
+In-Reply-To: <87zev8nd34.fsf@gmail.com> (message from Helmut Eller on Tue, 17
+ Nov 2026 08:15:11 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+ <87qzgkpspp.fsf@gmail.com> <86zev8odca.fsf@gnu.org>
+ <87ld6sprm5.fsf@gmail.com> <86y0asocvx.fsf@gnu.org>
+ <87cxs4prd2.fsf@gmail.com> <86wlqcoa1c.fsf@gnu.org>
+ <87zev8nd34.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> Date: Tue, 17 Nov 2026 08:15:11 +0100
+> 
+> On Mon, Nov 16 2026, Eli Zaretskii wrote:
+> 
+> >> From: Helmut Eller <eller.helmut@gmail.com>
+> >> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> >> Date: Mon, 16 Nov 2026 19:23:53 +0100
+> >> 
+> >> >> The intention is to keep the MPS separate from Emacs.
+> >> >
+> >> > I'm questioning the wisdom of this.  When a changeset involves changes
+> >> > both in MPS and in the rest of Emacs, separating them makes
+> >> > understanding the change and future forensics harder.  What is the
+> >> > justification for that?
+> >> 
+> >> Then change the policy if you must.  Your project your rules.  I don't
+> >> have to like them.
+> >
+> > I'm asking because I'd like to understand the rationale.  I don't want
+> > to force policy without understanding what I'm up against.  So please
+> > do explain your POV, I'm sure you didn't do that just because you
+> > could.
+> 
+> The man page of git-subtree says this
+> 
+>   Tip
+> 
+>   In order to keep your commit messages clean, we recommend that
+>   people split their commits between the subtrees and the main project
+>   as much as possible. That is, if you make a change that affects both
+>   the library and the main application, commit it in two pieces. That
+>   way, when you split the library commits out later, their
+>   descriptions will still make sense. But if this isn’t important to
+>   you, it’s not necessary. git subtree will simply leave out the
+>   non-library-related parts of the commit when it splits it out into
+>   the subproject later.
+
+I wasn't aware that we are treating MPS as a Git subtree.  I thought
+we completely imported MPS into our Git repository.  Am I mistaken?
+
+> So I think the commit history will be nicer if commits MPS and Emacs are
+> not intermixed.  And currently "git log mps" looks pretty good to me.
+
+In most cases I'd expect that to look clean even without the
+restriction.  It is a rare occasion that would need changes both in
+and outside of MPS, but that could well happen.  For example, imagine
+that the changes I installed are not enough, and we will need a more
+strict synchronization between MPS and Emacs to avoid two threads
+suspending each other (e.g., maybe we will need a mutex).  In such
+cases, it makes very little sense to separate changes in two files if
+they use the same mutex.
+
+Anyway, I'm fine with keeping this for now, but let's please document
+this in admin/notes/git-workflow, because people will not expect to be
+unable to commit changes like I tried, and will be surprised (and the
+error message is not very self-explanatory).  And then let's see what
+others think about this restriction when they bump into it.
+
+================================================================================
+Date: 2026-11-17T14:39:55+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Cannot sync with Emacs repos (both master and emacs-31)
+Message-ID: <865wxvo9uc.fsf@gnu.org>
+In-Reply-To: <e70cffb9-9a6d-43a2-b443-09ad5d42e15a@orange.fr> (message from
+ David Ponce on Tue, 17 Nov 2026 11:30:53 +0100)
+References: <e70cffb9-9a6d-43a2-b443-09ad5d42e15a@orange.fr>
+
+> Date: Tue, 17 Nov 2026 11:30:53 +0100
+> From: David Ponce <da_vid@orange.fr>
+> 
+> Hello,
+> 
+> Since yesterday I no more can sync with Emacs repos (both master and emacs-31)
+> 
+> I keep receiving this error:
+> 
+> fatal: unable to access 'https://git.savannah.gnu.org/git/emacs.git/': The requested URL returned error: 502
+> 
+> Do you know if I need to do somthing on my side, or just wait until the issue is fixed?
+
+Try using the git:// protocol instead.
+
+================================================================================
+Date: 2026-11-17T14:48:25+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87a4n7zhzq.fsf@gmail.com>
+In-Reply-To: <87o6bnd3ww.fsf@mail.gmail.com>
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87o6bnd3ww.fsf@mail.gmail.com>
+
+>>>>> On Tue, 17 Nov 2026 13:43:27 +0100, Nickolai Dobrynin <ndobrynin@gmail.com> said:
+
+    Nickolai> The IMAP standard requires strings to be quoted and even calls them
+    Nickolai> "quoted strings". Or did I misunderstand your question?
+
+Yes, but in that case we should do it all the time, but you said in
+your other message that itʼs been like this forever, so perhaps we
+should let sleeping protocols lie.
+
+    >> and again, what if the user has already quoted the string?
+
+    Nickolai> Oops, that's a bug. And it is my bug. It wasn't there before. I will
+    Nickolai> send in a fix and change "length" to "string-bytes", as you mentioned.
+
+OK.
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-17T15:01:03+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <8633szo8v4.fsf@gnu.org>
+In-Reply-To: <86ik1vocgi.fsf@gnu.org> (message from Eli Zaretskii on Tue, 17
+ Nov 2026 14:43:25 +0200)
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+ <86zevaowpm.fsf@gnu.org> <m2ecckz8dt.fsf@macmutant.fritz.box>
+ <86ik1vocgi.fsf@gnu.org>
+
+> Date: Tue, 17 Nov 2026 14:43:25 +0200
+> From: Eli Zaretskii <eliz@gnu.org>
+> Cc: shipmints@gmail.com, paaguti@gmail.com, rms@gnu.org,
+>  arstoffel@gmail.com, emacs-devel@gnu.org
+> 
+> > From: Arash Esbati <arash@gnu.org>
+> > Cc: Stéphane Marks <shipmints@gmail.com>,
+> >   paaguti@gmail.com,  rms@gnu.org,
+> >   arstoffel@gmail.com,  emacs-devel@gnu.org
+> > Date: Tue, 17 Nov 2026 00:03:42 +0100
+> > 
+> > Eli Zaretskii <eliz@gnu.org> writes:
+> > 
+> > > Guys, all this talk about adding FFI to Emacs is pointless, because it
+> > > was decided long ago we don't want that: it will allow linking Emacs
+> > > too easily with non-free libraries, which we want to prevent.  We
+> > > developed the module subsystem as an alternative, which requires the
+> > > author to declare GPL compliance, as a precondition for loading the
+> > > module.
+> > 
+> > Apologies if my comment is off, but in that case, maybe this item should
+> > be removed from TODO?
+> 
+> Yes, it should be removed (obviously).
+
+Alternatively, we could leave it there, but add that any FFI must make
+sure an arbitrary shared library cannot be loaded by Emacs, without
+declaring GPL compliance.  Which will make this requirement an
+integral part of the job to add FFI to Emacs.
+
+Not sure what makes more sense.
+
+================================================================================
+Date: 2026-11-17T15:05:34+01:00
+From: David Ponce <da_vid@orange.fr>
+Subject: Re: Cannot sync with Emacs repos (both master and emacs-31)
+Message-ID: <d18fa973-dbb2-4814-af75-8100936eca94@orange.fr>
+In-Reply-To: <865wxvo9uc.fsf@gnu.org>
+References: <e70cffb9-9a6d-43a2-b443-09ad5d42e15a@orange.fr>
+ <865wxvo9uc.fsf@gnu.org>
+
+Le 2026-11-17 à 14:39, Eli Zaretskii a écrit :
+>> Date: Tue, 17 Nov 2026 11:30:53 +0100
+>> From: David Ponce <da_vid@orange.fr>
+>>
+>> Hello,
+>>
+>> Since yesterday I no more can sync with Emacs repos (both master and emacs-31)
+>>
+>> I keep receiving this error:
+>>
+>> fatal: unable to access 'https://git.savannah.gnu.org/git/emacs.git/': The requested URL returned error: 502
+>>
+>> Do you know if I need to do somthing on my side, or just wait until the issue is fixed?
+> 
+> Try using the git:// protocol instead.
+
+That works :-)
+Thank you very much
+
+================================================================================
+Date: 2026-11-17T15:20:17+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: feature/igc3 status
+Message-ID: <87pkw31qvy.fsf@athena.silentflame.com>
+In-Reply-To: <868q2roavk.fsf@gnu.org>
+References: <87ld8r9bgo.fsf@athena.silentflame.com>
+ <87a4p6angg.fsf@gmail.com> <878q2yz9rw.fsf@athena.silentflame.com>
+ <878q2yqtdz.fsf@gmail.com> <86qzgnsisj.fsf@gnu.org>
+ <87qzgnqjjn.fsf@gmail.com> <864idismqk.fsf@gnu.org>
+ <87ik1yq7lo.fsf@gmail.com> <86pkw5q2iz.fsf@gnu.org>
+ <8633t0psv8.fsf@gnu.org> <87qzgkpspp.fsf@gmail.com>
+ <86zev8odca.fsf@gnu.org> <87ld6sprm5.fsf@gmail.com>
+ <86y0asocvx.fsf@gnu.org> <87cxs4prd2.fsf@gmail.com>
+ <86wlqcoa1c.fsf@gnu.org> <87zev8nd34.fsf@gmail.com>
+ <868q2roavk.fsf@gnu.org>
+
+Eli Zaretskii [17/Nov  3:17pm +02] wrote:
+>> The man page of git-subtree says this
+>>
+>>   Tip
+>>
+>>   In order to keep your commit messages clean, we recommend that
+>>   people split their commits between the subtrees and the main project
+>>   as much as possible. That is, if you make a change that affects both
+>>   the library and the main application, commit it in two pieces. That
+>>   way, when you split the library commits out later, their
+>>   descriptions will still make sense. But if this isn’t important to
+>>   you, it’s not necessary. git subtree will simply leave out the
+>>   non-library-related parts of the commit when it splits it out into
+>>   the subproject later.
+>
+> I wasn't aware that we are treating MPS as a Git subtree.  I thought
+> we completely imported MPS into our Git repository.  Am I mistaken?
+
+There isn't a distinction between a Git subtree and performing a
+complete import of something.  This is one of the nice properties of Git
+subtrees.
+
+On balance it seems to me wise to follow the git-subtree man page's
+advice here.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-17T15:27:12+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: [PATCH] gnus-icalendar: updating an Org event in a narrowed
+ buffer can overwrite another entry
+Message-ID: <87ld6r1qkf.fsf@athena.silentflame.com>
+In-Reply-To: <87jymco5tm.fsf@gnu.org>
+References: <87o6bqh40b.fsf@bzg.fr> <871p8k3cg7.fsf@athena.silentflame.com>
+ <87jymco5tm.fsf@gnu.org>
+
+Bastien [16/Nov  9:54pm +01] wrote:
+> Sean Whitton <spwhitton@spwhitton.name> writes:
+>
+>> It looks like you've attached a copy of gnus-icalendar.el, not a
+>> patch.
+>
+> Oops, here it is.
+
+Thanks.  I note you could use without-restriction instead.
+
+Could you file this as a bug X-debbugs-cc'ing Richard Lawrence
+<rwl@recursewithless.net>?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-17T15:33:24+01:00
+From: pinmacs <pinmacs@cas.cat>
+Subject: Re: Cannot sync with Emacs repos (both master and emacs-31)
+Message-ID: <a66c4eca-f02f-49a1-9dcf-3735fe9684a5@cas.cat>
+In-Reply-To: <d18fa973-dbb2-4814-af75-8100936eca94@orange.fr>
+References: <e70cffb9-9a6d-43a2-b443-09ad5d42e15a@orange.fr>
+ <865wxvo9uc.fsf@gnu.org> <d18fa973-dbb2-4814-af75-8100936eca94@orange.fr>
+
+On 2026-11-17 15:05, David Ponce wrote:
+> Le 2026-11-17 à 14:39, Eli Zaretskii a écrit :
+>>> Date: Tue, 17 Nov 2026 11:30:53 +0100
+>>> From: David Ponce <da_vid@orange.fr>
+>>>
+>>> Hello,
+>>>
+>>> Since yesterday I no more can sync with Emacs repos (both master and 
+>>> emacs-31)
+>>>
+>>> I keep receiving this error:
+>>>
+>>> fatal: unable to access 
+>>> 'https://git.savannah.gnu.org/git/emacs.git/': The requested URL 
+>>> returned error: 502
+>>>
+>>> Do you know if I need to do somthing on my side, or just wait until 
+>>> the issue is fixed?
+>>
+>> Try using the git:// protocol instead.
+>
+> That works :-)
+> Thank you very much
+>
+Yes but
+
+"Due to the lack of TLS or other cryptography, cloning over git:// might 
+lead to an arbitrary code execution vulnerability, and should therefore 
+be avoided unless you know what you are doing."
+
+source https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols
+
+================================================================================
+Date: 2026-11-17T15:47:05+01:00
+From: David Ponce <da_vid@orange.fr>
+Subject: Re: *** SPAM *** Re: Cannot sync with Emacs repos (both master and
+ emacs-31)
+Message-ID: <8980b54f-bcb0-4191-a995-3a67467c94b8@orange.fr>
+In-Reply-To: <a66c4eca-f02f-49a1-9dcf-3735fe9684a5@cas.cat>
+References: <e70cffb9-9a6d-43a2-b443-09ad5d42e15a@orange.fr>
+ <865wxvo9uc.fsf@gnu.org> <d18fa973-dbb2-4814-af75-8100936eca94@orange.fr>
+ <a66c4eca-f02f-49a1-9dcf-3735fe9684a5@cas.cat>
+
+Le 2026-11-17 à 15:33, pinmacs a écrit :
+> On 2026-11-17 15:05, David Ponce wrote:
+>> Le 2026-11-17 à 14:39, Eli Zaretskii a écrit :
+>>>> Date: Tue, 17 Nov 2026 11:30:53 +0100
+>>>> From: David Ponce <da_vid@orange.fr>
+>>>>
+>>>> Hello,
+>>>>
+>>>> Since yesterday I no more can sync with Emacs repos (both master and emacs-31)
+>>>>
+>>>> I keep receiving this error:
+>>>>
+>>>> fatal: unable to access 'https://git.savannah.gnu.org/git/emacs.git/': The requested URL returned error: 502
+>>>>
+>>>> Do you know if I need to do somthing on my side, or just wait until the issue is fixed?
+>>>
+>>> Try using the git:// protocol instead.
+>>
+>> That works :-)
+>> Thank you very much
+>>
+> Yes but
+> 
+> "Due to the lack of TLS or other cryptography, cloning over git:// might lead to an arbitrary code execution vulnerability, and should therefore be avoided unless you know what you are doing."
+> 
+> source https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols
+
+Thanks for the info.
+I will switch back to HTTPS as soon as it’s working again ;-)
+
+================================================================================
+Date: 2026-11-17T17:20:43+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <m2a4n7fmzo.fsf@macmutant.fritz.box>
+In-Reply-To: <8633szo8v4.fsf@gnu.org>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+ <86zevaowpm.fsf@gnu.org> <m2ecckz8dt.fsf@macmutant.fritz.box>
+ <86ik1vocgi.fsf@gnu.org> <8633szo8v4.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> Date: Tue, 17 Nov 2026 14:43:25 +0200
+>> From: Eli Zaretskii <eliz@gnu.org>
+>> Cc: shipmints@gmail.com, paaguti@gmail.com, rms@gnu.org,
+>>  arstoffel@gmail.com, emacs-devel@gnu.org
+>> 
+>> > From: Arash Esbati <arash@gnu.org>
+>> > Cc: Stéphane Marks <shipmints@gmail.com>,
+>> >   paaguti@gmail.com,  rms@gnu.org,
+>> >   arstoffel@gmail.com,  emacs-devel@gnu.org
+>> > Date: Tue, 17 Nov 2026 00:03:42 +0100
+>> > 
+>> > Eli Zaretskii <eliz@gnu.org> writes:
+>> > 
+>> > > Guys, all this talk about adding FFI to Emacs is pointless, because it
+>> > > was decided long ago we don't want that: it will allow linking Emacs
+>> > > too easily with non-free libraries, which we want to prevent.  We
+>> > > developed the module subsystem as an alternative, which requires the
+>> > > author to declare GPL compliance, as a precondition for loading the
+>> > > module.
+>> > 
+>> > Apologies if my comment is off, but in that case, maybe this item should
+>> > be removed from TODO?
+>> 
+>> Yes, it should be removed (obviously).
+>
+> Alternatively, we could leave it there, but add that any FFI must make
+> sure an arbitrary shared library cannot be loaded by Emacs, without
+> declaring GPL compliance.  Which will make this requirement an
+> integral part of the job to add FFI to Emacs.
+>
+> Not sure what makes more sense.
+
+I think your second suggestion makes more sense: If someone wants to
+work on it, she/he knows right away about that requirement.
+
+Personal note: I presume this point was discussed thoroughly as the
+decision was made, and I'm not familiar enough with how FFI's in general
+work, but to me, the requirement sounds like: The Lisp interpreter
+should recognize if the user is loading a lisp-library which talks to a
+non-free, SaaS LLM, so Emacs should block that library.  I fail to see
+why Emacs shouldn't support a free library like libffi (Expat License),
+and then give users the freedom to decide how to use that interface.
+
+Not sure if that decision should be reconsidered from a different POV,
+someday.
+
+P.S.: I do hope this one opinion doesn't produce large volume of mails
+and discussions in this group.
+
+Best, Arash
+
+================================================================================
+Date: 2026-11-17T17:52:04+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <86qzgjmmdn.fsf@gnu.org>
+In-Reply-To: <m2a4n7fmzo.fsf@macmutant.fritz.box> (message from Arash Esbati
+ on Tue, 17 Nov 2026 17:20:43 +0100)
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+ <86zevaowpm.fsf@gnu.org> <m2ecckz8dt.fsf@macmutant.fritz.box>
+ <86ik1vocgi.fsf@gnu.org> <8633szo8v4.fsf@gnu.org>
+ <m2a4n7fmzo.fsf@macmutant.fritz.box>
+
+> From: Arash Esbati <arash@gnu.org>
+> Cc: shipmints@gmail.com,  paaguti@gmail.com,  rms@gnu.org,
+>   arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Tue, 17 Nov 2026 17:20:43 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> Date: Tue, 17 Nov 2026 14:43:25 +0200
+> >> From: Eli Zaretskii <eliz@gnu.org>
+> >> Cc: shipmints@gmail.com, paaguti@gmail.com, rms@gnu.org,
+> >>  arstoffel@gmail.com, emacs-devel@gnu.org
+> >> 
+> >> > From: Arash Esbati <arash@gnu.org>
+> >> > Cc: Stéphane Marks <shipmints@gmail.com>,
+> >> >   paaguti@gmail.com,  rms@gnu.org,
+> >> >   arstoffel@gmail.com,  emacs-devel@gnu.org
+> >> > Date: Tue, 17 Nov 2026 00:03:42 +0100
+> >> > 
+> >> > Eli Zaretskii <eliz@gnu.org> writes:
+> >> > 
+> >> > > Guys, all this talk about adding FFI to Emacs is pointless, because it
+> >> > > was decided long ago we don't want that: it will allow linking Emacs
+> >> > > too easily with non-free libraries, which we want to prevent.  We
+> >> > > developed the module subsystem as an alternative, which requires the
+> >> > > author to declare GPL compliance, as a precondition for loading the
+> >> > > module.
+> >> > 
+> >> > Apologies if my comment is off, but in that case, maybe this item should
+> >> > be removed from TODO?
+> >> 
+> >> Yes, it should be removed (obviously).
+> >
+> > Alternatively, we could leave it there, but add that any FFI must make
+> > sure an arbitrary shared library cannot be loaded by Emacs, without
+> > declaring GPL compliance.  Which will make this requirement an
+> > integral part of the job to add FFI to Emacs.
+> >
+> > Not sure what makes more sense.
+> 
+> I think your second suggestion makes more sense: If someone wants to
+> work on it, she/he knows right away about that requirement.
+> 
+> Personal note: I presume this point was discussed thoroughly as the
+> decision was made, and I'm not familiar enough with how FFI's in general
+> work, but to me, the requirement sounds like: The Lisp interpreter
+> should recognize if the user is loading a lisp-library which talks to a
+> non-free, SaaS LLM, so Emacs should block that library.  I fail to see
+> why Emacs shouldn't support a free library like libffi (Expat License),
+> and then give users the freedom to decide how to use that interface.
+
+Because FFI is not used to perform some stand-alone functionality, it
+is used to directly interface Lisp with any arbitrary library.  The
+module interface was invented as a replacement, and it requires the
+library to declare GPL compatibility, but otherwise can do whatever
+FFI can do, albeit less easily, perhaps.
+
+> Not sure if that decision should be reconsidered from a different POV,
+> someday.
+
+Feel free to raise this with RMS, but I personally don't see what POV
+could significantly affect the decision.
+
+> P.S.: I do hope this one opinion doesn't produce large volume of mails
+> and discussions in this group.
+
+Ha!
+
+================================================================================
+Date: 2026-11-17T18:00:49+01:00
+From: Arash Esbati <arash@gnu.org>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <m25wxvfl4u.fsf@macmutant.fritz.box>
+In-Reply-To: <86qzgjmmdn.fsf@gnu.org>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ <CAN+1HbrVJ6JmE0ZLA5-GwQzVqmK-sAaz8zq45K=8mbchQxfQfg@mail.gmail.com>
+ <86zevaowpm.fsf@gnu.org> <m2ecckz8dt.fsf@macmutant.fritz.box>
+ <86ik1vocgi.fsf@gnu.org> <8633szo8v4.fsf@gnu.org>
+ <m2a4n7fmzo.fsf@macmutant.fritz.box> <86qzgjmmdn.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> Because FFI is not used to perform some stand-alone functionality, it
+> is used to directly interface Lisp with any arbitrary library.  The
+> module interface was invented as a replacement, and it requires the
+> library to declare GPL compatibility, but otherwise can do whatever
+> FFI can do, albeit less easily, perhaps.
+
+Thanks.  So let's go on with other things we have on our plates.
+
+> Feel free to raise this with RMS, but I personally don't see what POV
+> could significantly affect the decision.
+
+I have to pass that to others who are more knowledgable than I am in
+this area.
+
+> Ha!
+
+:-)
+
+Best, Arash
+
