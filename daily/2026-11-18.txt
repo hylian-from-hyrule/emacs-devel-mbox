@@ -1,0 +1,1372 @@
+emacs-devel messages from 2026-11-17T18:15:00+01:00 to 2026-11-18T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-17T18:55:28+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: csv-align-fields should have a toggle
+Message-ID: <jwvjymbjqbn.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87pkw5ar5h.3.fsf@jidanni.org> (message from Dan Jacobson
+ <jidanni@jidanni.org> on Mon, 16 Nov 2026 20:37:30 +0800)
+References: <87pkw5ar5h.3.fsf@jidanni.org>
+
+> csv-align-fields should have a toggle added, so one doesn't need to
+> remember a separate keybinding for csv-unalign-fields.
+
+Are you looking for `csv-align-mode` by any chance?
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-17T23:00:11+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87cxs3yv84.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87o6bnd3ww.fsf@mail.gmail.com>
+ <87a4n7zhzq.fsf@gmail.com>
+
+Robert Pluim <rpluim@gmail.com> writes:
+
+>>>>>> On Tue, 17 Nov 2026 13:43:27 +0100, Nickolai Dobrynin
+> <ndobrynin@gmail.com> said:
+>
+>     Nickolai> The IMAP standard requires strings to be quoted and even
+>     calls them
+>     Nickolai> "quoted strings". Or did I misunderstand your question?
+>
+> Yes, but in that case we should do it all the time, but you said in
+> your other message that it's been like this forever, so perhaps we
+> should let sleeping protocols lie.
+>
+>     >> and again, what if the user has already quoted the string?
+>
+>     Nickolai> Oops, that's a bug. And it is my bug. It wasn't there
+>     before. I will
+>     Nickolai> send in a fix and change "length" to "string-bytes", as
+>     you mentioned.
+>
+> OK.
+
+How is this for a solution? (See attached).
+
+Also, since we are having this discussion, another quirk from the past
+is that a non-ASCII query string is sent out verbatim, e.g.
+
+288 UID SEARCH TEXT "äößü"
+
+when neither LITERAL+ nor UTF8-NATIVE is available. (!) I did not change
+this behavior, even through it's practically guaranteed to fail. That's
+also why Gmail search broke down after Google stopped offering LITERAL+,
+allegedly for security reasons.
+
+Yet another quirk is a lack of consistency between the way double quotes
+are treated. When the string is sent as a binary literal, the IMAP
+server seems to treat the quotes as part of the string, but not if the
+same string is sent in quotes as in the example above. It's, obviously,
+up to the client to reconcile the two.
+
+All in all, we will never get tired going down this IMAP rabbit hole.
+
+================================================================================
+Date: 2026-11-17T23:31:31+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <875wxvgke5.fsf@posteo.net>
+In-Reply-To: <874idfd5qa.fsf@gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+
+Szymon Wilczek <swilczek.lx@gmail.com> writes:
+
+> Hi Philip,
+>
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>> No problem, but was the code LLM generated then? If so, you should
+>> annotate it.
+>
+> No, it was not. Choosing NonGNU ELPA was solely to keep things simple
+> and avoid the copyright assignment paperwork for now, but maybe in the
+> future.
+
+Thanks for the clarification.
+
+>> OK, and not knowing much about this stuff, can you explain why you
+>> are
+>> preforming these computations in the physical color space as opposed
+>> to a perceptual color space like Oklab?
+>
+> In au-themes the luminance is only used to tell light themes from
+> dark ones (comparing bg-main with fg-main) and to show Y in the
+> annotation, so a perceptual space would not change anything there.
+>
+> The contrast checks in the test suite need luminance as well, because
+> both WCAG 2 and APCA define contrast on luminance, so I have to
+> compute
+> it as the standards do. Where the question is "do these two colours
+> look
+> different", the tests use perceptual spaces instead: OKLab/OKLCh for
+> hue
+> and lightness steps between syntax roles, and CIEDE2000 for colour
+> difference at glyph size.
+
+Thanks for the explanation.
+
+>> That sounds useful, please do that!
+>
+> Two typos are now bug#82264.
+> (https://lists.gnu.org/archive/html/bug-gnu-emacs/2026-11/msg00877.html)
+> I will send the patch that adds public functions to color.el
+> separately.
+
+1+
+
+>> I do not understand, isn't that the current state you are
+>> describing,
+>> or what are you trying to say?
+>
+> Yeah, that was unclear, my bad. Yes, it is the current state; I was
+> describing how I fixed the behaviour you pointed out (the theme stayed
+> applied after the input was changed).
+
+OK, the technical details of the changes aren't relevant here, I think
+we can trust you to know best how to implement this within your package.
+
+>> OK, but I didn't say anything about these things, my point was
+>> really
+>> just that I wouldn't re-implement the consult feature of changing
+>> themes according to the current state of the minibuffer.
+>
+> I understand, but I would like to keep the preview. For the people
+> these
+> themes are made for, the useful way to choose is to see the candidate
+> on
+> their own buffers before committing to it. Without consult there would
+> be no preview at all. With consult I now just call consult-theme, so
+> nothing is re-implemented there. The fallback is about 30 lines, uses
+> only minibuffer-with-setup-hook and a buffer-local post-command-hook,
+> and leaves the completion UI alone. If you still think it is too much,
+> I
+> could put it behind a user option.
+
+OK, if that if your preference we can work with it.  My comments are
+just that, comments, not hard requirements.  After all, as nobody has to
+use these commands, it is just as fine if you decide to have custom
+additional behaviour in these commands.
+
+> Thanks,
+> Szymon
+
+================================================================================
+Date: 2026-11-17T23:32:46+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <871p8jgkc2.fsf@posteo.net>
+In-Reply-To: <87h5hg0vw5.fsf@gmail.com>
+References: <87fqxg49b6.fsf@posteo.net> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <E1xSDYu-009g3H-IS@fencepost.gnu.org> <87o6br1ngp.fsf@web.de>
+ <86bj7rsah3.fsf@gnu.org> <87a4nbxbjv.fsf@posteo.net>
+ <87h5hg0vw5.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> On Sat, 14 Nov 2026, Philip Kaludercic wrote:
+>
+>> Eli Zaretskii <eliz@gnu.org> writes:
+>>
+>>>> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+>>>> Cc: philipk@posteo.net,  tomas@tuxteam.de,  arstoffel@gmail.com,
+>>>>   joel.reicher@gmail.com,  cwebber@dustycloud.org,  eliz@gnu.org,
+>>>>   emacs-devel@gnu.org
+>>>> Date: Sat, 14 Nov 2026 15:45:10 +0100
+>>>> 
+>>>> Richard Stallman <rms@gnu.org> writes:
+>>>> 
+>>>> >   > And in the hermes discussion it was claified that a GNU package must not
+>>>> >   > encourage people to use proprietary software.
+>>>> >
+>>>> >   > All LLM code I reviewed to date made usage with Free Software harder
+>>>> >   > than the equivalent handwritten code.
+>>>> >
+>>>> > Would you like to check the code of vibe-spell yourself?
+>>>> 
+>>>> I don’t, because the last time I did a long review of AI code, that was
+>>>> so draining that I couldn’t work well for two days.
+>>>> 
+>>>> That’s why I try to avoid LLM code at work (can’t completely do so) and
+>>>> never review such without being paid.
+>>>> 
+>>>> The mental toll it takes on me is too high for that.
+>>>
+>>> If the vibe-spell's code is as difficult to review as you describe, I
+>>> wonder how it could be considered to be a source code of a program.
+>>>
+>>> However, Philip seemed to have no difficulty reviewing the source and
+>>> posting non-trivial comments, so maybe Philip could chime in and share
+>>> hist opinions?
+>>
+>> I can assure everyone that it is entirely readable and usable code.  I
+>> shared my comments with Augusto and could have a reasonable discussion
+>> about the code.  Sure it has domain-specific complexities that are more
+>> tricky to understand if you aren't familiar with the file formats and
+>> algorithms employed in spell checking, but that is to be expected.
+>
+> Speaking of which, I've applied most of your suggestions, thanks for
+> that!
+
+Great.
+
+> (And yes, I did it by looking with my own eyes at the old code, the new
+> code, and deciding myself which to keep -- or whether to go for a third
+> variation.)
+
+Go figure :)
+
+>> This discussion and the attitude of those who insist on rejecting the
+>> code is _far_ more exhausting than the code itself.  Arne and the
+>> others, if you have any sense of respect for the _human_ effort I put
+>> into working on ELPA, I beg you to take a look at the code and point out
+>> concrete examples of what you consider to be problematic in the output
+>> of the generated code.  In the worst case, you'll just be providing a
+>> (partial) second review of things we can fix!  But arguing with
+>> (possibly outdated) anecdotal evidence about this concrete package is
+>> really too much for me to deal with.
+>>
+>> (As I have pointed out elsewhere, I am not pro-AI; but attitudes like
+>> these have driven me away from identifying myself as anti-AI -- please
+>> keep this in mind.  Just because you think what you are fighting for is
+>> reasonable doesn't mean you get to be unreasonable in pursuit of this
+>> goal.)
+
+================================================================================
+Date: 2026-11-17T23:40:12+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87wlqbf5f8.fsf@posteo.net>
+In-Reply-To: <87fqwz2a8g.fsf@gmail.com>
+References: <87fqxg49b6.fsf@posteo.net> <875wybdubd.fsf@dustycloud.org>
+ <E1xPvac-000Me5-3x@fencepost.gnu.org> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <87ld70csa1.fsf@web.de>
+ <8733t8tlja.fsf@posteo.net> <87ld6zu7ad.fsf@gmail.com>
+ <87fqwz2a8g.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> On Wed, 11 Nov 2026, Augusto Stoffel wrote:
+>
+>> (From the other subthread.)
+>>
+>> On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+>>
+>>> To open a can of worms at the end, it might not be a bad idea to use a
+>>> different name for the package.  My hunch is that some of the attention
+>>> this thread has attracted is due to the name that has a negative
+>>> connotation.  The approach to spelling is sound after all, it is not
+>>> just a "vibe-check".  What do you think of "espell"?
+>>
+>> Here I would appreciate the opinion from Arne and the others with
+>> concerns about LLM-generated code.  Do you think I should rename the
+>> package?
+>>
+>> I named it that way 1. as an attempt to be a bit funny, in a
+>> self-deprecating way, and 2. to not let anybody have the wrong idea
+>> about the method used to write that large (but not unreasonable large)
+>> amount of code.  I certainly didn't mean to be provocative.
+>
+> I haven't heard from any of the people I thought I would be benefiting
+> by making the nature of the code generation clear from the package name.
+>
+> I could take the name espell.  If namespaces wee auctioned this one
+> would have a high price...  So I could also leave that name for a
+> morally purer implementation and take vspell, which at that point would
+> be just a random identifier.
+
+It is really up to you in the end, I think all the suggestions are fine,
+it would be nice to hear some more opinions... a good old "how to name
+this package" discussion would be a nice change of pace.
+
+>> (I don't want to expound on my opinion about LLMs here, but I have fun
+>> in actually writing ELisp and I'm not on the Emacs payroll or following
+>> deadlines, so this package to me is a rather special experiment.  All my
+>> other packages are and will remain handcrafted.)
+>
+> By the way, we should perhaps have a more precise way to tag packages as
+> LLM-assisted.  I for one do have my reservations and would appreciate
+> something on those lines.
+
+The MELPA people suggest using an "Assisted-by" pseudo-header, see
+https://yhetil.org/emacs-devel/8733w7bipe.fsf@bernoul.li/.  They
+explicitly annotate what LLM was used, but I don't know if that is
+reasonable as IIUC some people use a whole combination of different
+models, or some (like you mentioned) don't see why they should advertise
+their services.  For most SaaSS providers the information isn't that
+useful after all for some weak notion of reproducability, since they can
+just revoke availability of the model.  The long term solution is to add
+this to the list of thing that an updated ELPA protocol would formally
+declare about a package.
+
+================================================================================
+Date: 2026-11-17T23:52:38+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <87o6bnf4ui.fsf@posteo.net>
+In-Reply-To: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+
+GetMediaWall Team via "Emacs development discussions."
+<emacs-devel@gnu.org> writes:
+
+> Hello,
+>
+>
+> I would like to propose adding the package tvwall to NonGNU ELPA.
+>
+>
+> Repository: https://github.com/getmediawall/tvwall
+> Main file:  tvwall.el (Version 1.0.0, requires Emacs 25.1, GPL-3.0-or-later)
+>
+>
+> tvwall is a set of small calculators for planning a wall-mounted TV (lengths in inches):
+>
+>
+> - tvwall-viewing-distance: 16:9 screen size for a diagonal, seating
+> distance for a 30 degree (SMPTE) and 40 degree (THX) viewing angle,
+> and the bottom-edge height that puts the screen centre at seated eye
+> height;
+> - tvwall-tv-size-for-distance: the TV size range that fits a seating distance;
+> - tvwall-slat-plan: a slat (acoustic) panel wall section: panels
+> across, rows, slats per panel, the real gap when slats are spread
+> evenly, and the order quantity with a spare.
+>
+>
+> Panel, slat and eye-height defaults are user options. The package has
+> no dependencies, byte-compiles without warnings, passes checkdoc, and
+> has ERT tests (tvwall-tests.el).
+>
+>
+> I am the maintainer (GetMediaWall, team@getmediawall.com); the URL header points to our free online planner that uses the same arithmetic.
+>
+>
+> Thank you for considering it.
+
+I took a look at the package, and my first impression is that this seems
+like a very specific calculation that doesn't really have anything to do
+with Emacs itself.  Can you perhaps elaborate why you think that it
+would be a good idea to add it to ELPA with a general audience in mind?
+Just FTR that is not a criticism of the idea or the code, I am for now
+trying to better understand the motivation behind the motivation of
+having this as a package.
+
+================================================================================
+Date: 2026-11-18T00:31:02+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <87y0aravd5.fsf@gmail.com>
+In-Reply-To: <875wxvgke5.fsf@posteo.net>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+>
+> OK, the technical details of the changes aren't relevant here, I think
+> we can trust you to know best how to implement this within your package.
+>
+> OK, if that if your preference we can work with it.  My comments are
+> just that, comments, not hard requirements.  After all, as nobody has to
+> use these commands, it is just as fine if you decide to have custom
+> additional behaviour in these commands.
+
+Thanks for the review and all the constructive feedback!
+
+As a quick side note, Eli has already applied the bug#82264 patch on the
+master branch.
+
+Thanks,
+Szymon
+
+================================================================================
+Date: 2026-11-18T00:49:07+01:00
+From: GetMediaWall Team <team@getmediawall.com>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <1a1ebea1084.4e8a24b2678649.3638077663489033588@getmediawall.com>
+In-Reply-To: <87o6bnf4ui.fsf@posteo.net>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+
+Fair point: it's a niche calculator rather than an Emacs tool, so I'm withdrawing the proposal. Thanks for taking a look.
+
+
+
+GetMediaWall Team
+
+
+
+
+
+
+
+
+
+From: Philip Kaludercic <philipk@posteo.net>
+To: "GetMediaWall Team"<team@getmediawall.com>
+Cc: "emacs-devel"<emacs-devel@gnu.org>
+Date: Tue, 17 Nov 2026 14:52:38 -0800
+Subject: Re: [NonGNU ELPA] New package: tvwall
+
+
+
+GetMediaWall Team via "Emacs development discussions." 
+< mailto:emacs-devel@gnu.org > writes: 
+ 
+> Hello, 
+> 
+> 
+> I would like to propose adding the package tvwall to NonGNU ELPA. 
+> 
+> 
+> Repository: https://github.com/getmediawall/tvwall  
+> Main file:  tvwall.el (Version 1.0.0, requires Emacs 25.1, GPL-3.0-or-later) 
+> 
+> 
+> tvwall is a set of small calculators for planning a wall-mounted TV (lengths in inches): 
+> 
+> 
+> - tvwall-viewing-distance: 16:9 screen size for a diagonal, seating 
+> distance for a 30 degree (SMPTE) and 40 degree (THX) viewing angle, 
+> and the bottom-edge height that puts the screen centre at seated eye 
+> height; 
+> - tvwall-tv-size-for-distance: the TV size range that fits a seating distance; 
+> - tvwall-slat-plan: a slat (acoustic) panel wall section: panels 
+> across, rows, slats per panel, the real gap when slats are spread 
+> evenly, and the order quantity with a spare. 
+> 
+> 
+> Panel, slat and eye-height defaults are user options. The package has 
+> no dependencies, byte-compiles without warnings, passes checkdoc, and 
+> has ERT tests (tvwall-tests.el). 
+> 
+> 
+> I am the maintainer (GetMediaWall, mailto:team@getmediawall.com ); the URL header points to our free online planner that uses the same arithmetic. 
+> 
+> 
+> Thank you for considering it. 
+ 
+I took a look at the package, and my first impression is that this seems 
+like a very specific calculation that doesn't really have anything to do 
+with Emacs itself.  Can you perhaps elaborate why you think that it 
+would be a good idea to add it to ELPA with a general audience in mind? 
+Just FTR that is not a criticism of the idea or the code, I am for now 
+trying to better understand the motivation behind the motivation of 
+having this as a package.
+
+================================================================================
+Date: 2026-11-18T01:21:31+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xTTQZ-004oSQ-9e@fencepost.gnu.org>
+In-Reply-To: <87ld6ytv84.fsf@asthra> (message from Phil Hagelberg on Wed, 11
+ Nov 2026 22:33:15 -0800)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org> <87ld6ytv84.fsf@asthra>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  >  I have read about projects like the game engine Bevy where they
+  > had a ban but then lifted it, and it went very badly:
+
+  > https://blog.fallible.net/it-breaks-a-village/
+
+I looked at that.  It is 500 lines long, and written for people in the
+Bevy community, taking for granted knowledge of things and experiences
+I never head of.  The matter might be important, but I can't afford to
+read and study that text.
+
+Would someone like to summarize the crucial events and conclusions?
+
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-18T01:23:01+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+In-Reply-To: <874idjxa4a.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net> <874idjxa4a.fsf@web.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+  > >> I expected everyone to see the contradiction of both "modify by hand"
+  > >> and "point LLM to hunspell sources to backport".
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+  > > Please explain, because I see no contradiction here.  You can make
+  > > changes by hand, you can make changes using an LLM.  It will be faster
+  > > if you do the latter, but that doesn't mean the former isn't possible?
+
+(Someone mentioned a program called Nuspell, but I don't know
+what that is or how it relates.  As far as I recall, vibe-spell is
+an LLM translation of Hunspell.)
+
+If it is clearly tempting to use an LLM to port changes in Hunspell
+into vibe-spell, we cannot sensibly treat vibe-spell as independent
+source code.  We would betray our goal if we installed code whose
+maintenance depends on a nonfree program or SaaSS server.
+
+That would also add to the general pressure to yield to LLMs.  We will
+certainly face such general pressure, as people who don't feel concern
+about this issue try to insist we become dependent on LLMs.  We will
+face a struggle to refuse.  It would be foolish to choose to make that
+struggle harder.
+
+I am convinced that one requirement for including LLM-generated
+material in GNU Programs must be that the LLM-generated material be
+completely divorced from the LLM that generated it.  In other words,
+we must insist there be no reason to anticipate pressure to use LLMs
+to update it.  It must be source code, pure and simple, to be
+maintained like the rest of Emacs.
+
+In particular, LLM output should not be a machine translation of a
+source for which we expect further development.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-18T01:23:02+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xTTS2-004ogJ-4i@fencepost.gnu.org>
+In-Reply-To: <875wxzxaul.fsf@posteo.net> (message from Philip Kaludercic on
+ Sat, 14 Nov 2026 23:16:35 +0000)
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <E1xSDZ4-009g5a-V8@fencepost.gnu.org> <875wxzxaul.fsf@posteo.net>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > Yes, so to specialize the claim here, the question is does the usage
+  > of LLMs in the translation of this package constitute an action that
+  > has consequences that affect other developers in a way that would
+  > require these to use proprietary software or some SaaSS?
+
+It can.  There are several ways it could.
+
+1. It could bring in copyright infringement and we might have to
+remove that file.
+
+2. It could create a situation where we face temptation, even pressure,
+to continue development of that program with LLMs, thus becoming
+a permanent dependence on LLMs.
+
+  > For me the most reasonable objection would be the 3k lines of code
+  > (~140K).  Yet I argue it cannot be the size of the package that
+  > matters, for otherwise just in NonGNU ELPA we would also have the
+  > reject the following packages that have at least the same file size as
+  > vibe-spell:
+
+You are trying to argue by reductio ad absurdam, but you haven't stated
+what position you are arguing against, so the argument is too vague to
+be valid.
+
+Please don't do that.  From now on, always state each position that
+you try to refute.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-18T01:28:41+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87y0arx9s6.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+
+Robert Pluim <rpluim@gmail.com> writes:
+
+> The only thing missing would be a NEWS entry describing the new
+> feature.
+
+Would the following work? (See attached).
+
+================================================================================
+Date: 2026-11-18T09:05:20+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <871p8izhrz.fsf@gmail.com>
+In-Reply-To: <87cxs3yv84.fsf@mail.gmail.com>
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87o6bnd3ww.fsf@mail.gmail.com>
+ <87a4n7zhzq.fsf@gmail.com> <87cxs3yv84.fsf@mail.gmail.com>
+
+>>>>> On Tue, 17 Nov 2026 23:00:11 +0100, Nickolai Dobrynin <ndobrynin@gmail.com> said:
+
+    Nickolai> How is this for a solution? (See attached).
+
+Iʼll look at it, at first glance it seems good.
+
+    Nickolai> Also, since we are having this discussion, another quirk from the past
+    Nickolai> is that a non-ASCII query string is sent out verbatim, e.g.
+
+    Nickolai> 288 UID SEARCH TEXT "äößü"
+
+    Nickolai> when neither LITERAL+ nor UTF8-NATIVE is available. (!) I did not change
+    Nickolai> this behavior, even through it's practically guaranteed to fail. That's
+    Nickolai> also why Gmail search broke down after Google stopped offering LITERAL+,
+    Nickolai> allegedly for security reasons.
+
+I have a patch that uses RFC3501 synchronizing literals for that case,
+thus fixing Gmail. Iʼll push that once your changes are stable.
+
+    Nickolai> Yet another quirk is a lack of consistency between the way double quotes
+    Nickolai> are treated. When the string is sent as a binary literal, the IMAP
+    Nickolai> server seems to treat the quotes as part of the string, but not if the
+    Nickolai> same string is sent in quotes as in the example above. It's, obviously,
+    Nickolai> up to the client to reconcile the two.
+
+Yes, thatʼs why my patch is needed, that way we can send ASCII strings
+as-is, and non-ASCII in the right format.
+
+    Nickolai> All in all, we will never get tired going down this IMAP rabbit hole.
+
+All the other protocols are worse 🙂
+
+    Nickolai> From 6a66f2b2e2fb23a30e54c443404df04377f362ab Mon Sep 17 00:00:00 2001
+    Nickolai> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+    Nickolai> Date: Tue, 17 Nov 2026 21:41:31 +0100
+    Nickolai> Subject: [PATCH] IMAP search: do not double-quote query strings.
+
+    Nickolai> This is a follow-up to 6ffa3a5bc738306cfcaed28784f8fcdac49773dc.
+    Nickolai> * lisp/gnus/gnus-search.el (gnus-search-imap-handle-string):
+    Nickolai> re-factored and simplified.
+    Nickolai> ---
+    Nickolai>  lisp/gnus/gnus-search.el | 26 ++++++++++++--------------
+    Nickolai>  1 file changed, 12 insertions(+), 14 deletions(-)
+
+    Nickolai> diff --git a/lisp/gnus/gnus-search.el b/lisp/gnus/gnus-search.el
+    Nickolai> index c7bf75359fa..0753d36e085 100644
+    Nickolai> --- a/lisp/gnus/gnus-search.el
+    Nickolai> +++ b/lisp/gnus/gnus-search.el
+    Nickolai> @@ -1361,20 +1361,18 @@ gnus-search-imap-handle-string
+    Nickolai>      ;; do not accept any CHARSET but US-ASCII, but they do report
+    Nickolai>      ;; Literal+ capability.  So what do we do?  Will quoted strings
+    Nickolai>      ;; always work?
+    Nickolai> -    (if (string-match-p "[^[:ascii:]]" str)
+    Nickolai> -	;; If LITERAL+ is available and native UTF-8 isn't,
+    Nickolai> -	;; use LITERAL+ and encode `str' as UTF-8.
+    Nickolai> -	(if (and literal-plus (not utf8-native))
+    Nickolai> -            (let ((ub-str (encode-coding-string str 'utf-8)))
+    Nickolai> -              (format "{%d+}\n%s" (length ub-str) ub-str))
+    Nickolai> -	  ;; Otherwise, if the user hasn't already quoted the string,
+    Nickolai> -	  ;; quote it for them.
+    Nickolai> -	  (if (string-prefix-p "\"" str)
+    Nickolai> -	      str
+    Nickolai> -	    (format "\"%s\"" str)))
+    Nickolai> -      (if utf8-native
+    Nickolai> -          (format "\"%s\"" str)
+    Nickolai> -        str))))
+    Nickolai> +    (if (or
+    Nickolai> +         utf8-native
+    Nickolai> +         (not (string-match-p "[^[:ascii:]]" str))
+    Nickolai> +         (not literal-plus))
+    Nickolai> +        ;; Quote the `str' if the user hasn't:
+    Nickolai> +        (if (and
+    Nickolai> +             (string-prefix-p "\"" str)
+    Nickolai> +             (string-suffix-p "\"" str))
+    Nickolai> +            str
+    Nickolai> +          (format "\"%s\"" str))
+    Nickolai> +      (let ((ub-str (encode-coding-string str 'utf-8)))
+    Nickolai> +        (format "{%d+}\n%s" (string-bytes ub-str) ub-str)))))
+
+I think I prefer distinguishing ascii from non-ascii first, thus
+avoiding the double negation with string-match-p. Weʼll see what it
+looks like after I merge it with my changes.
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-18T09:22:52+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87wlqay2eb.fsf@gmail.com>
+In-Reply-To: <87y0arx9s6.fsf@mail.gmail.com>
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com>
+
+>>>>> On Wed, 18 Nov 2026 01:28:41 +0100, Nickolai Dobrynin <ndobrynin@gmail.com> said:
+
+    Nickolai> diff --git a/etc/NEWS b/etc/NEWS
+    Nickolai> index 640e27281f4..bb89a2d9558 100644
+    Nickolai> --- a/etc/NEWS
+    Nickolai> +++ b/etc/NEWS
+    Nickolai> @@ -755,6 +755,12 @@ natively compiled.
+    Nickolai>  Lisp programs may let-bind this variable to specify conditional actions
+    Nickolai>  for nested 'display-buffer' calls.
+ 
+    Nickolai> ++++
+
+'+++' means you updated the manuals, but I canʼt see it there. Did you
+mean '---'? A patch to the Gnus manual would be great.
+
+The bits below are fine, except that they should be in the
+'Specialized Modes' section rather than 'Lisp Changes', although I
+admit the line between the two can be fuzzy at times. I can fix that
+up for you.
+
+    Nickolai> +** New variable 'nnimap-native-utf8'.
+    Nickolai> +If non-'nil', enables native UTF-8 support in nnimap via RFC 9755
+    Nickolai> +(Bug#81684).  The variable is set per server and has no effect if
+    Nickolai> +the remote IMAP server lacks the "UTF8=ACCEPT" extension.
+    Nickolai> +
+    Nickolai>  +++
+    Nickolai>  ** New button to diff failed erts-file test output in ERT.
+    Nickolai>  When a test fails, the erts-file tests buffer displayed by
+    Nickolai> @@ -788,6 +794,13 @@ These functions convert between numbers and their Roman numeral forms.
+    Nickolai>  They were previously part of 'rst-mode' (as 'rst-arabic-to-roman' and
+    Nickolai>  'rst-roman-to-arabic'), but are now available as autoloaded functions.
+ 
+    Nickolai> +** Gnus
+    Nickolai> +*** Support for non-ASCII IMAP search queries
+    Nickolai> +Historically, making non-ASCII search queries relied on vendor-specific
+    Nickolai> +extensions.  The partial implementation of RFC 9755 (Bug#81684) adds
+    Nickolai> +unified support for arbitrary UTF-8 characters in search queries.  The
+    Nickolai> +"UTF8=ACCEPT" extension is necessary for this to work.
+    Nickolai> +
+    Nickolai>  
+    Nickolai>  * Changes in Emacs 32.1 on Non-Free Operating Systems
+ 
+    Nickolai> -- 
+    Nickolai> 2.55.0
+
+
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-18T09:36:47+01:00
+From: =?UTF-8?Q?Johan_Myr=C3=A9en?= <johan.myreen@gmail.com>
+Subject: Re: Cannot sync with Emacs repos (both master and emacs-31)
+Message-ID: <CA+TD5hj5e=nsG8mct60zaui3hecGbWcmOK9vUryjxt8AETXQrw@mail.gmail.com>
+In-Reply-To: <865wxvo9uc.fsf@gnu.org>
+References: <e70cffb9-9a6d-43a2-b443-09ad5d42e15a@orange.fr>
+ <865wxvo9uc.fsf@gnu.org>
+
+On Tue, 17 Nov 2026 at 15:42, Eli Zaretskii <eliz@gnu.org> wrote:
+
+> > I keep receiving this error:
+> >
+> > fatal: unable to access 'https://git.savannah.gnu.org/git/emacs.git/':
+> The requested URL returned error: 502
+> >
+> > Do you know if I need to do somthing on my side, or just wait until the
+> issue is fixed?
+>
+> Try using the git:// protocol instead.
+
+
+Just changing the protocol from https:// to git:// does not work without
+first removing the git/ part of the URL.
+
+Cloning with "git clone https://git.savannah.gnu.org/git/emacs.git" returns
+"fatal: remote error: access denied or repository not exported:
+/git/emacs.git"
+
+"git clone git://git.savannah.gnu.org/emacs.git" works.
+
+================================================================================
+Date: 2026-11-18T10:51:00+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+In-Reply-To: <87o6bnf4ui.fsf@posteo.net>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+
+Hello Philip,
+
+Thank you for taking the time to review the package and for your 
+thoughtful feedback. I appreciate your consideration.
+
+I’m curious to learn more about the standards or criteria you use when 
+evaluating whether a package is suitable for ELPA. Could you perhaps 
+share some insights on what you consider to be a good fit for the ELPA 
+repository? This would help me better understand the rationale behind 
+your initial impression.
+
+Author is doing calculations for TV stands. And you say it is not 
+related to Emacs. So what is the standard for packages? They must relate 
+to editor?
+
+I have here packages for mathematics, specific density, excavator 
+production, construction and mining, and manufacturing, so is there 
+standard that such subjects would be rejected as they do not improve the 
+editor itself but packages give external utility?
+
+Thank you again for your time and guidance.
+
+For the reference:
+
+On 2026-11-18 01:52, Philip Kaludercic wrote:
+>> Thank you for considering it.
+> 
+> I took a look at the package, and my first impression is that this 
+> seems
+> like a very specific calculation that doesn't really have anything to 
+> do
+> with Emacs itself.  Can you perhaps elaborate why you think that it
+> would be a good idea to add it to ELPA with a general audience in mind?
+> Just FTR that is not a criticism of the idea or the code, I am for now
+> trying to better understand the motivation behind the motivation of
+> having this as a package.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-18T15:00:45+01:00
+From: =?utf-8?Q?=C3=93scar?= Fuentes <oscarfv@eclipso.eu>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <874idejl2q.fsf@hiperboreo.eu>
+In-Reply-To: <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> Hello Philip,
+>
+> Thank you for taking the time to review the package and for your
+> thoughtful feedback. I appreciate your consideration.
+>
+> I’m curious to learn more about the standards or criteria you use when
+> evaluating whether a package is suitable for ELPA. Could you perhaps
+> share some insights on what you consider to be a good fit for the ELPA
+> repository? This would help me better understand the rationale behind
+> your initial impression.
+>
+> Author is doing calculations for TV stands. And you say it is not
+> related to Emacs. So what is the standard for packages? They must
+> relate to editor?
+>
+> I have here packages for mathematics, specific density, excavator
+> production, construction and mining, and manufacturing, so is there
+> standard that such subjects would be rejected as they do not improve
+> the editor itself but packages give external utility?
+
+I took a look at the package and then at the OP's github repo. Here are
+some observations:
+
+* The package implements a few trigonometric simple formulas for a very
+  specific application, with some magic numbers thrown there.
+
+* The package was LLM-generated, as its README says.
+
+* The OP's github site contains multiple implementations of this package
+  on various programming languages, all LLM generated.
+
+* Apparently the OP is targeting languages with official or widely
+  recognized repositories (the equivalent of our ELPAs.) Looks like each
+  implementation meets the requirements (on terms of structure and
+  metainfo) to be submitted to its respective repository.
+
+* There are no implementations for popular languages that lack that type
+  of standardized repository system, such as C and C++.
+
+* The submitter's identity is a business. They offer a free online tool
+  to do this type of calculations, which also acts as an entry to the
+  sevices this business sells. The READMEs and other files of each
+  package mentions the name of the business and contain links to the web
+  site of the business or to the online tool or to both.
+
+This looks to me as a SEO operation.
+
+As this can be 100% automated, I'm afraid this type of submissions will
+be a new kind of spam from now on for the ELPA maintainers.
+
+On a more general note, it is a good thing to reject packages which are
+low-effort *and* for a niche application, IMHO.
+
+================================================================================
+Date: 2026-11-18T15:06:45+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <86jymamdxm.fsf@gnu.org>
+In-Reply-To: <87y0arx9s6.fsf@mail.gmail.com> (message from Nickolai Dobrynin
+ on Wed, 18 Nov 2026 01:28:41 +0100)
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com>
+
+> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+> Date: Wed, 18 Nov 2026 01:28:41 +0100
+> 
+> Robert Pluim <rpluim@gmail.com> writes:
+> 
+> > The only thing missing would be a NEWS entry describing the new
+> > feature.
+> 
+> Would the following work? (See attached).
+
+I think both new entries should be under "Gnus".
+
+================================================================================
+Date: 2026-11-18T15:14:25+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87v75u4472.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <86jymamdxm.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+>> Date: Wed, 18 Nov 2026 01:28:41 +0100
+>> 
+>> Robert Pluim <rpluim@gmail.com> writes:
+>> 
+>> > The only thing missing would be a NEWS entry describing the new
+>> > feature.
+>> 
+>> Would the following work? (See attached).
+>
+> I think both new entries should be under "Gnus".
+
+This seems to be what Robert's message is implying, at least by my
+reading of it. I am already working on this.
+
+================================================================================
+Date: 2026-11-18T15:44:54+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87o6bm42s9.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <87wlqay2eb.fsf@gmail.com>
+
+Robert Pluim <rpluim@gmail.com> writes:
+
+> '+++' means you updated the manuals, but I can't see it there. Did you
+> mean '---'?
+
+I tried to mimic what other entries in that file did. Your explanation
+shows that I was mistaken.
+
+> The bits below are fine, except that they should be in the
+> 'Specialized Modes' section rather than 'Lisp Changes', although I
+> admit the line between the two can be fuzzy at times. I can fix that
+> up for you.
+
+Please see attached. (I also re-phrased it just a tiny bit).
+
+================================================================================
+Date: 2026-11-18T15:56:01+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <86cxs2mbni.fsf@gnu.org>
+In-Reply-To: <87o6bm42s9.fsf@mail.gmail.com> (message from Nickolai Dobrynin
+ on Wed, 18 Nov 2026 15:44:54 +0100)
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <87wlqay2eb.fsf@gmail.com>
+ <87o6bm42s9.fsf@mail.gmail.com>
+
+> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+> Date: Wed, 18 Nov 2026 15:44:54 +0100
+> 
+> Robert Pluim <rpluim@gmail.com> writes:
+> 
+> > '+++' means you updated the manuals, but I can't see it there. Did you
+> > mean '---'?
+> 
+> I tried to mimic what other entries in that file did. Your explanation
+> shows that I was mistaken.
+
+The explanation what "+++" and "---" mean is at the beginning of NEWS.
+
+================================================================================
+Date: 2026-11-18T16:42:07+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87ecci404w.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <87wlqay2eb.fsf@gmail.com>
+ <87o6bm42s9.fsf@mail.gmail.com> <86cxs2mbni.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+>> Date: Wed, 18 Nov 2026 15:44:54 +0100
+>> 
+>> Robert Pluim <rpluim@gmail.com> writes:
+>> 
+>> > '+++' means you updated the manuals, but I can't see it there. Did you
+>> > mean '---'?
+>> 
+>> I tried to mimic what other entries in that file did. Your explanation
+>> shows that I was mistaken.
+>
+> The explanation what "+++" and "---" mean is at the beginning of NEWS.
+
+Thanks. I can see them now. But the explanation does not say if the
+'+++' or '---' mark should go before or after the entry.
+
+================================================================================
+Date: 2026-11-18T17:22:05+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87o6bmxg7m.fsf@gmail.com>
+In-Reply-To: <87ecci404w.fsf@mail.gmail.com>
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <87wlqay2eb.fsf@gmail.com>
+ <87o6bm42s9.fsf@mail.gmail.com> <86cxs2mbni.fsf@gnu.org>
+ <87ecci404w.fsf@mail.gmail.com>
+
+>>>>> On Wed, 18 Nov 2026 16:42:07 +0100, Nickolai Dobrynin <ndobrynin@gmail.com> said:
+
+    Nickolai> Eli Zaretskii <eliz@gnu.org> writes:
+    >>> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+    >>> Date: Wed, 18 Nov 2026 15:44:54 +0100
+    >>> 
+    >>> Robert Pluim <rpluim@gmail.com> writes:
+    >>> 
+    >>> > '+++' means you updated the manuals, but I can't see it there. Did you
+    >>> > mean '---'?
+    >>> 
+    >>> I tried to mimic what other entries in that file did. Your explanation
+    >>> shows that I was mistaken.
+    >> 
+    >> The explanation what "+++" and "---" mean is at the beginning of NEWS.
+
+    Nickolai> Thanks. I can see them now. But the explanation does not say if the
+    Nickolai> '+++' or '---' mark should go before or after the entry.
+
+Before. One nit: the single-line summary should end in a '.' (and not
+be too long).
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-18T17:28:13+01:00
+From: <tomas@tuxteam.de>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <av3SHVcQPKhPAp0j@tuxteam.de>
+In-Reply-To: <87ecci404w.fsf@mail.gmail.com>
+References: <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <87wlqay2eb.fsf@gmail.com>
+ <87o6bm42s9.fsf@mail.gmail.com> <86cxs2mbni.fsf@gnu.org>
+ <87ecci404w.fsf@mail.gmail.com>
+
+On Wed, Nov 18, 2026 at 04:42:07PM +0100, Nickolai Dobrynin wrote:
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+> >> Date: Wed, 18 Nov 2026 15:44:54 +0100
+> >> 
+> >> Robert Pluim <rpluim@gmail.com> writes:
+> >> 
+> >> > '+++' means you updated the manuals, but I can't see it there. Did you
+> >> > mean '---'?
+> >> 
+> >> I tried to mimic what other entries in that file did. Your explanation
+> >> shows that I was mistaken.
+> >
+> > The explanation what "+++" and "---" mean is at the beginning of NEWS.
+> 
+> Thanks. I can see them now. But the explanation does not say if the
+> '+++' or '---' mark should go before or after the entry.
+
+The '+++' typically marks the "new" file name, the "---" the "old",
+corresponding to the line prefixes further down -- space meaning
+no change (those are so-called "context lines", to help ensuring
+that one is looking at the right thing) "-" means "delete this line"
+(or "old"), "+" meaning "add". Then there are those "@@...@" to
+denotate where in the file the action is. See, for example
+
+  https://en.wikipedia.org/wiki/Diff#Unified_format
+
+The whole thing is called "unified diff format", and you get that
+with
+
+  diff -u <oldfile> <newfile>
+
+(or just with "git diff").
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-18T17:28:50+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <87ld6qnlx9.fsf@gmail.com>
+In-Reply-To: <868q2roavk.fsf@gnu.org>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+ <87qzgkpspp.fsf@gmail.com> <86zev8odca.fsf@gnu.org>
+ <87ld6sprm5.fsf@gmail.com> <86y0asocvx.fsf@gnu.org>
+ <87cxs4prd2.fsf@gmail.com> <86wlqcoa1c.fsf@gnu.org>
+ <87zev8nd34.fsf@gmail.com> <868q2roavk.fsf@gnu.org>
+
+On Tue, Nov 17 2026, Eli Zaretskii wrote:
+
+>> From: Helmut Eller <eller.helmut@gmail.com>
+>> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+>> Date: Tue, 17 Nov 2026 08:15:11 +0100
+>> 
+>> On Mon, Nov 16 2026, Eli Zaretskii wrote:
+>> 
+>> >> From: Helmut Eller <eller.helmut@gmail.com>
+>> >> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+>> >> Date: Mon, 16 Nov 2026 19:23:53 +0100
+>> >> 
+>> >> >> The intention is to keep the MPS separate from Emacs.
+>> >> >
+>> >> > I'm questioning the wisdom of this.  When a changeset involves changes
+>> >> > both in MPS and in the rest of Emacs, separating them makes
+>> >> > understanding the change and future forensics harder.  What is the
+>> >> > justification for that?
+>> >> 
+>> >> Then change the policy if you must.  Your project your rules.  I don't
+>> >> have to like them.
+>> >
+>> > I'm asking because I'd like to understand the rationale.  I don't want
+>> > to force policy without understanding what I'm up against.  So please
+>> > do explain your POV, I'm sure you didn't do that just because you
+>> > could.
+>> 
+>> The man page of git-subtree says this
+>> 
+>>   Tip
+>> 
+>>   In order to keep your commit messages clean, we recommend that
+>>   people split their commits between the subtrees and the main project
+>>   as much as possible. That is, if you make a change that affects both
+>>   the library and the main application, commit it in two pieces. That
+>>   way, when you split the library commits out later, their
+>>   descriptions will still make sense. But if this isn’t important to
+>>   you, it’s not necessary. git subtree will simply leave out the
+>>   non-library-related parts of the commit when it splits it out into
+>>   the subproject later.
+>
+> I wasn't aware that we are treating MPS as a Git subtree.  I thought
+> we completely imported MPS into our Git repository.  Am I mistaken?
+
+No, but the recommendation applies in is the same way.
+
+>> So I think the commit history will be nicer if commits MPS and Emacs are
+>> not intermixed.  And currently "git log mps" looks pretty good to me.
+>
+> In most cases I'd expect that to look clean even without the
+> restriction.  It is a rare occasion that would need changes both in
+> and outside of MPS, but that could well happen.  For example, imagine
+> that the changes I installed are not enough, and we will need a more
+> strict synchronization between MPS and Emacs to avoid two threads
+> suspending each other (e.g., maybe we will need a mutex).  In such
+> cases, it makes very little sense to separate changes in two files if
+> they use the same mutex.
+>
+> Anyway, I'm fine with keeping this for now, but let's please document
+> this in admin/notes/git-workflow, because people will not expect to be
+> unable to commit changes like I tried, and will be surprised (and the
+> error message is not very self-explanatory).  And then let's see what
+> others think about this restriction when they bump into it.
+
+I added this:
+
+  Changes to the MPS
+  ==================
+  
+  Try to keep commits to MPS apart from commits to Emacs.  If you make a
+  change that affects files in the mps/ directory and files outside of the
+  mps/ directory, split the change and commit it in two pieces.  Write the
+  log message for the MPS part so that it makes sense without referencing
+  Emacs code.
+
+and the error message now is:
+
+  "Please keep commits to MPS apart from commits to Emacs.  Split the
+  change and commit it in two pieces.  Either all or no files should
+  affect the mps/ directory:\n%s\n" "$stats"
+
+================================================================================
+Date: 2026-11-18T18:07:48+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <871p8i3w63.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87o6bnd3ww.fsf@mail.gmail.com>
+ <87a4n7zhzq.fsf@gmail.com> <87cxs3yv84.fsf@mail.gmail.com>
+ <871p8izhrz.fsf@gmail.com>
+
+Robert Pluim <rpluim@gmail.com> writes:
+
+>>>>>> On Tue, 17 Nov 2026 23:00:11 +0100, Nickolai Dobrynin
+>> <ndobrynin@gmail.com> said:
+>> Also, since we are having this discussion, another quirk from the past
+>> is that a non-ASCII query string is sent out verbatim, e.g.
+>>
+>> 288 UID SEARCH TEXT "äößü"
+>>
+>> when neither LITERAL+ nor UTF8-NATIVE is available. (!) I did not change
+>> this behavior, even through it's practically guaranteed to fail. That's
+>> also why Gmail search broke down after Google stopped offering LITERAL+,
+>> allegedly for security reasons.
+>
+> I have a patch that uses RFC3501 synchronizing literals for that case,
+> thus fixing Gmail. I'll push that once your changes are stable.
+>
+>> Yet another quirk is a lack of consistency between the way double quotes
+>> are treated. When the string is sent as a binary literal, the IMAP
+>> server seems to treat the quotes as part of the string, but not if the
+>> same string is sent in quotes as in the example above. It's, obviously,
+>> up to the client to reconcile the two.
+>
+> Yes, that's why my patch is needed, that way we can send ASCII strings
+> as-is, and non-ASCII in the right format.
+
+As I was starting out on RFC 9755, I asked myself if I should go with
+*that* or synchronizing literals? I chose the first since that would
+kill two birds with one stone, sort of speak: move nnimap forward AND
+bring the search back. I know, I'm not killing the same exact birds your
+patch would. In many ways, your patch is even more relevant now that
+UTF8=ACCEPT is still uncommon.
+
+>> All in all, we will never get tired going down this IMAP rabbit hole.
+>
+> All the other protocols are worse
+
+True, although JMAP looks promising.
+
+================================================================================
+Date: 2026-11-18T18:13:23+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <86a4n6m5ak.fsf@gnu.org>
+In-Reply-To: <87ecci404w.fsf@mail.gmail.com> (message from Nickolai Dobrynin
+ on Wed, 18 Nov 2026 16:42:07 +0100)
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <87wlqay2eb.fsf@gmail.com>
+ <87o6bm42s9.fsf@mail.gmail.com> <86cxs2mbni.fsf@gnu.org>
+ <87ecci404w.fsf@mail.gmail.com>
+
+> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+> Date: Wed, 18 Nov 2026 16:42:07 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+> >> Date: Wed, 18 Nov 2026 15:44:54 +0100
+> >> 
+> >> Robert Pluim <rpluim@gmail.com> writes:
+> >> 
+> >> > '+++' means you updated the manuals, but I can't see it there. Did you
+> >> > mean '---'?
+> >> 
+> >> I tried to mimic what other entries in that file did. Your explanation
+> >> shows that I was mistaken.
+> >
+> > The explanation what "+++" and "---" mean is at the beginning of NEWS.
+> 
+> Thanks. I can see them now. But the explanation does not say if the
+> '+++' or '---' mark should go before or after the entry.
+
+That's because it explains what you actually see in the file, so the
+answer to that question should be clear...
+
