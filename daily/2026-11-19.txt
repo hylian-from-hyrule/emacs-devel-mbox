@@ -1,0 +1,3496 @@
+emacs-devel messages from 2026-11-18T18:15:00+01:00 to 2026-11-19T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-18T18:22:04+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <865wxum4w3.fsf@gnu.org>
+In-Reply-To: <87ld6qnlx9.fsf@gmail.com> (message from Helmut Eller on Wed, 18
+ Nov 2026 17:28:50 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <86qzgnsisj.fsf@gnu.org> <87qzgnqjjn.fsf@gmail.com>
+ <864idismqk.fsf@gnu.org> <87ik1yq7lo.fsf@gmail.com>
+ <86pkw5q2iz.fsf@gnu.org> <8633t0psv8.fsf@gnu.org>
+ <87qzgkpspp.fsf@gmail.com> <86zev8odca.fsf@gnu.org>
+ <87ld6sprm5.fsf@gmail.com> <86y0asocvx.fsf@gnu.org>
+ <87cxs4prd2.fsf@gmail.com> <86wlqcoa1c.fsf@gnu.org>
+ <87zev8nd34.fsf@gmail.com> <868q2roavk.fsf@gnu.org>
+ <87ld6qnlx9.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: spwhitton@spwhitton.name,  pipcet@protonmail.com,  emacs-devel@gnu.org
+> Date: Wed, 18 Nov 2026 17:28:50 +0100
+> 
+> On Tue, Nov 17 2026, Eli Zaretskii wrote:
+> 
+> >> The man page of git-subtree says this
+> >> 
+> >>   Tip
+> >> 
+> >>   In order to keep your commit messages clean, we recommend that
+> >>   people split their commits between the subtrees and the main project
+> >>   as much as possible. That is, if you make a change that affects both
+> >>   the library and the main application, commit it in two pieces. That
+> >>   way, when you split the library commits out later, their
+> >>   descriptions will still make sense. But if this isn’t important to
+> >>   you, it’s not necessary. git subtree will simply leave out the
+> >>   non-library-related parts of the commit when it splits it out into
+> >>   the subproject later.
+> >
+> > I wasn't aware that we are treating MPS as a Git subtree.  I thought
+> > we completely imported MPS into our Git repository.  Am I mistaken?
+> 
+> No, but the recommendation applies in is the same way.
+> 
+> >> So I think the commit history will be nicer if commits MPS and Emacs are
+> >> not intermixed.  And currently "git log mps" looks pretty good to me.
+> >
+> > In most cases I'd expect that to look clean even without the
+> > restriction.  It is a rare occasion that would need changes both in
+> > and outside of MPS, but that could well happen.  For example, imagine
+> > that the changes I installed are not enough, and we will need a more
+> > strict synchronization between MPS and Emacs to avoid two threads
+> > suspending each other (e.g., maybe we will need a mutex).  In such
+> > cases, it makes very little sense to separate changes in two files if
+> > they use the same mutex.
+> >
+> > Anyway, I'm fine with keeping this for now, but let's please document
+> > this in admin/notes/git-workflow, because people will not expect to be
+> > unable to commit changes like I tried, and will be surprised (and the
+> > error message is not very self-explanatory).  And then let's see what
+> > others think about this restriction when they bump into it.
+> 
+> I added this:
+> 
+>   Changes to the MPS
+>   ==================
+>   
+>   Try to keep commits to MPS apart from commits to Emacs.  If you make a
+>   change that affects files in the mps/ directory and files outside of the
+>   mps/ directory, split the change and commit it in two pieces.  Write the
+>   log message for the MPS part so that it makes sense without referencing
+>   Emacs code.
+> 
+> and the error message now is:
+> 
+>   "Please keep commits to MPS apart from commits to Emacs.  Split the
+>   change and commit it in two pieces.  Either all or no files should
+>   affect the mps/ directory:\n%s\n" "$stats"
+
+Thanks!
+
+================================================================================
+Date: 2026-11-18T18:23:18+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <864idem4u1.fsf@gnu.org>
+In-Reply-To: <av3SHVcQPKhPAp0j@tuxteam.de> (tomas@tuxteam.de)
+References: <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <87wlqay2eb.fsf@gmail.com>
+ <87o6bm42s9.fsf@mail.gmail.com> <86cxs2mbni.fsf@gnu.org>
+ <87ecci404w.fsf@mail.gmail.com> <av3SHVcQPKhPAp0j@tuxteam.de>
+
+> Date: Wed, 18 Nov 2026 17:28:13 +0100
+> Cc: emacs-devel@gnu.org
+> From: <tomas@tuxteam.de>
+> 
+> On Wed, Nov 18, 2026 at 04:42:07PM +0100, Nickolai Dobrynin wrote:
+> > Eli Zaretskii <eliz@gnu.org> writes:
+> > 
+> > >> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+> > >> Date: Wed, 18 Nov 2026 15:44:54 +0100
+> > >> 
+> > >> Robert Pluim <rpluim@gmail.com> writes:
+> > >> 
+> > >> > '+++' means you updated the manuals, but I can't see it there. Did you
+> > >> > mean '---'?
+> > >> 
+> > >> I tried to mimic what other entries in that file did. Your explanation
+> > >> shows that I was mistaken.
+> > >
+> > > The explanation what "+++" and "---" mean is at the beginning of NEWS.
+> > 
+> > Thanks. I can see them now. But the explanation does not say if the
+> > '+++' or '---' mark should go before or after the entry.
+> 
+> The '+++' typically marks the "new" file name, the "---" the "old",
+> corresponding to the line prefixes further down -- space meaning
+> no change (those are so-called "context lines", to help ensuring
+> that one is looking at the right thing) "-" means "delete this line"
+> (or "old"), "+" meaning "add". Then there are those "@@...@" to
+> denotate where in the file the action is. See, for example
+> 
+>   https://en.wikipedia.org/wiki/Diff#Unified_format
+> 
+> The whole thing is called "unified diff format", and you get that
+> with
+> 
+>   diff -u <oldfile> <newfile>
+> 
+> (or just with "git diff").
+
+Thanks, but I think you answered the wrong question.  This was about
+the markings in NEWS, not about unified diffs...
+
+================================================================================
+Date: 2026-11-18T18:34:24+01:00
+From: Nickolai Dobrynin <ndobrynin@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87tsle2gdb.fsf@mail.gmail.com>
+In-Reply-To: 
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <87wlqay2eb.fsf@gmail.com>
+ <87o6bm42s9.fsf@mail.gmail.com> <86cxs2mbni.fsf@gnu.org>
+ <87ecci404w.fsf@mail.gmail.com> <87o6bmxg7m.fsf@gmail.com>
+
+Robert Pluim <rpluim@gmail.com> writes:
+
+>>>>>> On Wed, 18 Nov 2026 16:42:07 +0100, Nickolai Dobrynin
+>>>>>> <ndobrynin@gmail.com> said:
+>
+>     Nickolai> Eli Zaretskii <eliz@gnu.org> writes:
+>     >>> From: Nickolai Dobrynin <ndobrynin@gmail.com>
+>     >>> Date: Wed, 18 Nov 2026 15:44:54 +0100
+>     >>> 
+>     >>> Robert Pluim <rpluim@gmail.com> writes:
+>     >>> 
+>     >>> > '+++' means you updated the manuals, but I can't see it
+>     >>> there. Did you
+>     >>> > mean '---'?
+>     >>> 
+>     >>> I tried to mimic what other entries in that file did. Your
+>     >>> explanation shows that I was mistaken.
+>     >> 
+>     >> The explanation what "+++" and "---" mean is at the beginning
+>     >> of NEWS.
+>
+>     Nickolai> Thanks. I can see them now. But the explanation does not
+>     say if the
+>     Nickolai> '+++' or '---' mark should go before or after the entry.
+>
+> Before. One nit: the single-line summary should end in a '.' (and not
+> be too long).
+
+Fixed.
+
+================================================================================
+Date: 2026-11-18T19:04:04+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: curl getting called by configure
+Message-ID: <CAN+1HbqGqYJ4vx_jo0+yAaXv_rUjvLq7XSNXpXp0HOuhp-e44A@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+I've ignored asking this for a while.  I use a firewall [1] on macOS that
+alerts me to IP connections being made that are not whitelisted.  Running
+configure calls curl several times and I get pop-ups asking for approval.
+
+Can someone who knows explain why configure does this and if there's a way
+to avoid it?
+
+TIA,
+
+-Stéphane
+
+[1] It's the excellent open source
+https://objective-see.org/products/lulu.html
+https://github.com/objective-see/lulu
+
+================================================================================
+Date: 2026-11-18T19:12:18+01:00
+From: Richard Lawrence <rwl@recursewithless.net>
+Subject: Re: [PATCH] gnus-icalendar: updating an Org event in a narrowed
+ buffer can overwrite another entry
+Message-ID: <87v75uf1q5.fsf@recursewithless.net>
+In-Reply-To: <87ld6r1qkf.fsf@athena.silentflame.com>
+References: <87o6bqh40b.fsf@bzg.fr> <871p8k3cg7.fsf@athena.silentflame.com>
+ <87jymco5tm.fsf@gnu.org> <87ld6r1qkf.fsf@athena.silentflame.com>
+
+Sean Whitton <spwhitton@spwhitton.name> writes:
+
+> Bastien [16/Nov  9:54pm +01] wrote:
+>> Sean Whitton <spwhitton@spwhitton.name> writes:
+>>
+>>> It looks like you've attached a copy of gnus-icalendar.el, not a
+>>> patch.
+>>
+>> Oops, here it is.
+>
+> Thanks.  I note you could use without-restriction instead.
+>
+> Could you file this as a bug X-debbugs-cc'ing Richard Lawrence
+> <rwl@recursewithless.net>?
+
+FYI, I'm happy to take a look but I'm not sure I'll have much insight.
+This sounds to me like a longer-standing issue in gnus-icalendar, not
+something that would have been affected by the recent changes, at least
+AFAICT.
+
+Bastien, do you know if this issue is reproducible in versions prior to
+Emacs 31?  I wonder too if anything relevant might have changed in Org
+recently.
+
+Best,
+Richard
+
+================================================================================
+Date: 2026-11-18T19:40:41+01:00
+From: Benjamin Leis <benleis1@gmail.com>
+Subject: speedbar
+Message-ID: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+In-Reply-To: 
+References: 
+
+Hi
+I was playing around with the new speedbar window-mode in emacs 31 and had
+some questions about further development.
+
+1. Right now it leaves the window in fundamental mode rather than
+speedbar-mode so many of the regular key mappings don't function.
+
+2. There is no standard help for it when you press h unlike the convention
+for most dedicated windows - even when speedbar-mode is on.
+
+3. If you do a describe-mode several of the key bindings are lambdas that
+don't display anything descriptive other than the bytecode and there are no
+docstring help texts supplied.
+
+(The theme here is the order in which i was investigating the UI)
+
+There are further behaviors that are less basic that I think could be
+improved. For example, the keymap shouldn't offer an option to kill the
+frame when it's not in frame mode, hover text should work regardless of
+whether the window is active etc.
+
+For experimentation purposes, I ended up writing about 200 lines of code to
+do enough wiring so it behaved more conventionally like other sidebars in
+my own config.
+
+The point of all this is I'm curious if I misunderstood how it's supposed
+to work or if this is still in development,  and improvements are on tap
+for version 32. Or is this an area where contributions would be helpful
+Thanks
+Ben
+
+================================================================================
+Date: 2026-11-18T21:02:16+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <d071372a3111da7c57629de3ca06dd81@gnu.support>
+In-Reply-To: <874idejl2q.fsf@hiperboreo.eu>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net> <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+
+Hello Oscar,
+
+Philip said package is not for Emacs (which I do not know what he 
+means), and I see it as useful for some people.
+
+That it is LLM generated, does not mean it is less useful. I have 
+reported LLM packages and yet no work or analysis was done on that, they 
+are in ELPA already. I don't think that is yet clear criteria for 
+rejection or acceptance. But if it is -- please point to reference by 
+GNU standard.
+
+On 2026-11-18 17:00, Óscar Fuentes wrote:
+> * The OP's github site contains multiple implementations of this 
+> package
+>   on various programming languages, all LLM generated.
+
+Yes, why not, let people create software. It reads like you imply 
+something is wrong with it.
+
+> * Apparently the OP is targeting languages with official or widely
+>   recognized repositories (the equivalent of our ELPAs.) Looks like 
+> each
+>   implementation meets the requirements (on terms of structure and
+>   metainfo) to be submitted to its respective repository.
+
+You are here implying bad faith or bad intentions with "targeting". It 
+is better to assume good faith.
+
+> * The submitter's identity is a business. They offer a free online tool
+>   to do this type of calculations, which also acts as an entry to the
+>   sevices this business sells. The READMEs and other files of each
+>   package mentions the name of the business and contain links to the 
+> web
+>   site of the business or to the online tool or to both.
+
+Yes, so what if his identity is business? GNU was never against 
+business. All of the Internet runs GNU/Linux systems and their 
+identities are business too.
+
+Online services are SaaSS, so such should not be promoted from GNU Emacs 
+package.
+
+Just argument that identity is business seems unwelcoming. When did you 
+see many businesses even applying to Emacs Devel mailing list? Why not 
+be welcoming and happy, and point to exact standards.
+
+So if there is GNU standard that holds same level as your arguments, 
+please reference it.
+
+> This looks to me as a SEO operation.
+
+SEO operation? Is there any GNU standard saying that Emacs package 
+should be rejected if it is SEO operation? And what is problem with 
+that?
+
+Should I also start being envious that someone is doing business?
+
+> As this can be 100% automated, I'm afraid this type of submissions will
+> be a new kind of spam from now on for the ELPA maintainers.
+
+And it is not spam.
+
+> On a more general note, it is a good thing to reject packages which are
+> low-effort *and* for a niche application, IMHO.
+
+You say low effort, but please point out to exact GNU standard saying 
+that. I see plethora of packages in Emacs ELPA for which I could say low 
+effort.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-18T21:13:27+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87jym9gaoq.fsf@posteo.net>
+In-Reply-To: <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > > "Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+>   > >> I expected everyone to see the contradiction of both "modify by hand"
+>   > >> and "point LLM to hunspell sources to backport".
+>
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>   > > Please explain, because I see no contradiction here.  You can make
+>   > > changes by hand, you can make changes using an LLM.  It will be faster
+>   > > if you do the latter, but that doesn't mean the former isn't possible?
+>
+> (Someone mentioned a program called Nuspell, but I don't know
+> what that is or how it relates.  As far as I recall, vibe-spell is
+> an LLM translation of Hunspell.)
+
+% apt show nuspell
+Package: nuspell
+Version: 5.1.6-1+b1
+Priority: optional
+Section: text
+Source: nuspell (5.1.6-1)
+Maintainer: Thorsten Alteholz <debian@alteholz.de>
+Installed-Size: 78.8 kB
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libicu76 (>= 76.1-1~), libnuspell5 (>= 5.1.6), libstdc++6 (>= 13.1)
+Homepage: http://nuspell.github.io/
+Download-Size: 29.1 kB
+APT-Sources: http://deb.debian.org/debian trixie/main amd64 Packages
+Description: spell checker (program)
+ Nuspell is a free and open source spell checker that is written in modern C++.
+ It is designed for languages with rich morphology and complex word compounding.
+ .
+ Main features are:
+  - Full unicode support backed by ICU
+  - Backward compatibility with Hunspell dictionary file format
+  - Twofold affix stripping (for agglutinative languages, like Azeri,
+    Basque, Estonian, Finnish, Hungarian, Turkish, etc.)
+  - Support complex compounds (for example, Hungarian, German and Dutch)
+  - Support language specific features (for example, special casing of
+    Azeri and Turkish dotted i, or German sharp s)
+  - Handle conditional affixes, circumfixes, fogemorphemes, forbidden
+    words, pseudoroots and homonyms.
+ .
+ This package contains the command-line program.
+
+> If it is clearly tempting to use an LLM to port changes in Hunspell
+> into vibe-spell, we cannot sensibly treat vibe-spell as independent
+> source code.  We would betray our goal if we installed code whose
+> maintenance depends on a nonfree program or SaaSS server.
+
+I have reviewed the code and Augusto has applied my changes and others,
+both by hand without the assistance of any LLMs.  For me, this
+constitutes a proof that maintenance of the program does not rely on
+LLMs.
+
+> That would also add to the general pressure to yield to LLMs.  We will
+> certainly face such general pressure, as people who don't feel concern
+> about this issue try to insist we become dependent on LLMs.  We will
+> face a struggle to refuse.  It would be foolish to choose to make that
+> struggle harder.
+
+I do not understand how this makes the struggle harder or easier?
+
+> I am convinced that one requirement for including LLM-generated
+> material in GNU Programs must be that the LLM-generated material be
+> completely divorced from the LLM that generated it.  In other words,
+> we must insist there be no reason to anticipate pressure to use LLMs
+> to update it.  It must be source code, pure and simple, to be
+> maintained like the rest of Emacs.
+
+Just as a reminder, we are talking about a package to be added to NonGNU
+ELPA, so this is not a GNU program, just by name.  And again, there is
+no inherent reason why anyone would have to use an LLM to maintain
+vibe-spell.
+
+> In particular, LLM output should not be a machine translation of a
+> source for which we expect further development.
+
+* AND where we expect that it would be imperative to port changes from
+the original in the translation AND where this job couldn't feasibly be
+done by hand.
+
+================================================================================
+Date: 2026-11-18T21:17:25+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87fqwxgai4.fsf@posteo.net>
+In-Reply-To: <E1xTTS2-004ogJ-4i@fencepost.gnu.org>
+References: <87fqxg49b6.fsf@posteo.net> <86ld77on0i.fsf@gnu.org>
+ <875wybdubd.fsf@dustycloud.org> <E1xPvac-000Me5-3x@fencepost.gnu.org>
+ <86v767vfxb.fsf@gmail.com> <87o6bzws6n.fsf@posteo.net>
+ <avBOldXug3j60n7C@tuxteam.de> <87jymnwpt5.fsf@posteo.net>
+ <87zevifndy.fsf@web.de> <87wlqmpa70.fsf@gmail.com>
+ <avGnjAjyhTcM0ouK@tuxteam.de> <87cxsdvlc4.fsf@posteo.net>
+ <87se19eggo.fsf@web.de> <878q31uq8e.fsf@posteo.net>
+ <87mrrhdk8a.fsf@web.de> <87o6bwtvvk.fsf@posteo.net>
+ <87qzgscy0t.fsf@web.de> <87bj7wtrtv.fsf@posteo.net>
+ <E1xSDZ4-009g5a-V8@fencepost.gnu.org> <875wxzxaul.fsf@posteo.net>
+ <E1xTTS2-004ogJ-4i@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+>
+>   > Yes, so to specialize the claim here, the question is does the usage
+>   > of LLMs in the translation of this package constitute an action that
+>   > has consequences that affect other developers in a way that would
+>   > require these to use proprietary software or some SaaSS?
+>
+> It can.  There are several ways it could.
+>
+> 1. It could bring in copyright infringement and we might have to
+> remove that file.
+
+Can you elaborate this point?  What infringements are you talking about?
+
+> 2. It could create a situation where we face temptation, even pressure,
+> to continue development of that program with LLMs, thus becoming
+> a permanent dependence on LLMs.
+
+Where is the boundary?  There are plenty of people that face the
+temptation with any program, but we don't claim that the act of
+maintaining software itself could create a permanent dependence.  What
+if you use it to generate select boilerplate code?
+
+>   > For me the most reasonable objection would be the 3k lines of code
+>   > (~140K).  Yet I argue it cannot be the size of the package that
+>   > matters, for otherwise just in NonGNU ELPA we would also have the
+>   > reject the following packages that have at least the same file size as
+>   > vibe-spell:
+>
+> You are trying to argue by reductio ad absurdam, but you haven't stated
+> what position you are arguing against, so the argument is too vague to
+> be valid.
+>
+> Please don't do that.  From now on, always state each position that
+> you try to refute.
+
+The claim here is that a common objection, one I have made myself in the
+past, is that LLM generated code has a tendency to be overly verbose,
+inlining functionality and lacking abstractions that would be intuitive
+for humans.
+
+================================================================================
+Date: 2026-11-18T21:24:02+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <87bj7lga71.fsf@posteo.net>
+In-Reply-To: <87y0aravd5.fsf@gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+
+Szymon Wilczek <swilczek.lx@gmail.com> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>>
+>> OK, the technical details of the changes aren't relevant here, I think
+>> we can trust you to know best how to implement this within your package.
+>>
+>> OK, if that if your preference we can work with it.  My comments are
+>> just that, comments, not hard requirements.  After all, as nobody has to
+>> use these commands, it is just as fine if you decide to have custom
+>> additional behaviour in these commands.
+>
+> Thanks for the review and all the constructive feedback!
+
+As there have been no more comments, I wanted to add the package, but
+while building I ran into these build errors that occur when trying to
+compile the README.org file caused by the HTML blocks you have for the
+GitHub page:
+
+--8<---------------cut here---------------start------------->8---
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+found match for: "<img src="
+False positive?  Skipping: "<img src="
+--8<---------------cut here---------------end--------------->8---
+
+It seems to me that the file isn't necessarily the best candidate for a
+description of the package, so my suggestion would be to use the
+contents of the "Commentary" section in the main file instead.  Would
+you be OK with that?
+
+>
+> As a quick side note, Eli has already applied the bug#82264 patch on the
+> master branch.
+>
+> Thanks,
+> Szymon
+
+================================================================================
+Date: 2026-11-18T21:32:05+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <87se0xc24a.fsf@gmail.com>
+In-Reply-To: <87bj7lga71.fsf@posteo.net>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> It seems to me that the file isn't necessarily the best candidate for a
+> description of the package, so my suggestion would be to use the
+> contents of the "Commentary" section in the main file instead.  Would
+> you be OK with that?
+
+Absolutely! Thanks for taking care of this.
+
+Best,
+Szymon
+
+================================================================================
+Date: 2026-11-18T22:06:23+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: curl getting called by configure
+Message-ID: <86y0aplui8.fsf@gnu.org>
+In-Reply-To: <CAN+1HbqGqYJ4vx_jo0+yAaXv_rUjvLq7XSNXpXp0HOuhp-e44A@mail.gmail.com>
+ (message from =?utf-8?Q?St=C3=A9phane?= Marks on Wed, 18 Nov 2026 13:04:04
+ -0500)
+References: <CAN+1HbqGqYJ4vx_jo0+yAaXv_rUjvLq7XSNXpXp0HOuhp-e44A@mail.gmail.com>
+
+> From: Stéphane Marks <shipmints@gmail.com>
+> Date: Wed, 18 Nov 2026 13:04:04 -0500
+> 
+> I've ignored asking this for a while.  I use a firewall [1] on macOS that alerts me to IP connections being made
+> that are not whitelisted.  Running configure calls curl several times and I get pop-ups asking for approval.
+> 
+> Can someone who knows explain why configure does this and if there's a way to avoid it?
+
+I'm confused, because "grep -w curl configure" brings no hits.
+
+================================================================================
+Date: 2026-11-18T22:10:34+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: curl getting called by configure
+Message-ID: <CAN+1HbpGGbbFG5JgzUejx8gVO=4x7jCOA0gFb15940sCGCa3tQ@mail.gmail.com>
+In-Reply-To: <86y0aplui8.fsf@gnu.org>
+References: <CAN+1HbqGqYJ4vx_jo0+yAaXv_rUjvLq7XSNXpXp0HOuhp-e44A@mail.gmail.com>
+ <86y0aplui8.fsf@gnu.org>
+
+On Wed, Nov 18, 2026 at 4:06 PM Eli Zaretskii <eliz@gnu.org> wrote:
+
+> > From: Stéphane Marks <shipmints@gmail.com>
+> > Date: Wed, 18 Nov 2026 13:04:04 -0500
+> >
+> > I've ignored asking this for a while.  I use a firewall [1] on macOS
+> that alerts me to IP connections being made
+> > that are not whitelisted.  Running configure calls curl several times
+> and I get pop-ups asking for approval.
+> >
+> > Can someone who knows explain why configure does this and if there's a
+> way to avoid it?
+>
+> I'm confused, because "grep -w curl configure" brings no hits.
+>
+
+I did the same and came up empty.  configure is calling something on macOS
+that invokes curl.  If anyone knows what that is, I'd like to know.  I
+guess I can try to debug it in some way.
+
+================================================================================
+Date: 2026-11-18T22:14:18+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <8733sxg7va.fsf@posteo.net>
+In-Reply-To: <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> Hello Philip,
+>
+> Thank you for taking the time to review the package and for your
+> thoughtful feedback. I appreciate your consideration.
+>
+> I’m curious to learn more about the standards or criteria you use when
+> evaluating whether a package is suitable for ELPA. Could you perhaps
+> share some insights on what you consider to be a good fit for the ELPA
+> repository? This would help me better understand the rationale behind
+> your initial impression.
+
+First of all, I am not the only person who can add packages to ELPA, so
+this is just my rationale.
+
+Further than that, I would refer to the following two soft criteria from
+https://elpa.gnu.org/contributing.html:
+
+  Is a new package the right approach?
+
+      If you are extending the functionality of an existing package, have
+      you contacted the maintainer of said package to hear if they think
+      your contribution would be worth upstreaming? Perhaps adding the
+      feature directly to Emacs can simplify the implementation?
+
+  Does the package constitute a significant contribution?
+
+      If your package only defines a single, small function of a few
+      lines, it might not be worth the effort to package. Keep in mind
+      that every package constitutes a security risk if the maintainer's
+      access to the repository gets compromised.
+
+> Author is doing calculations for TV stands. And you say it is not
+> related to Emacs. So what is the standard for packages? They must
+> relate to editor?
+
+I don't know if we can give a formal definition for the concern here,
+namely is it an interesting contribution.  For me, the question is what
+does this functionality have from being an Emacs package as opposed to
+just a general, standalone executable that you can also just invoke from
+Emacs -- M-x or M-! aren't that radically different, especially if the
+package just prints the result using `message'.
+
+> I have here packages for mathematics, specific density, excavator
+> production, construction and mining, and manufacturing, so is there
+> standard that such subjects would be rejected as they do not improve
+> the editor itself but packages give external utility?
+
+I would pose you the same question, why do you think it is interesting
+as a package for a general audience, or do you think that it is the sort
+of deal where you could publish the Lisp files on your own and tell
+people, if you want to use them you can just drop them in your User Lisp
+directory and that's it.  Especially considering the increasing risk of
+supply chain issues, I think that the notion of having simple,
+reviewable, hackable scripts that you can just adopt without having to
+worry about upgrading is worth thinking about.
+
+> Thank you again for your time and guidance.
+>
+> For the reference:
+>
+> On 2026-11-18 01:52, Philip Kaludercic wrote:
+>>> Thank you for considering it.
+>> I took a look at the package, and my first impression is that this
+>> seems
+>> like a very specific calculation that doesn't really have anything
+>> to do
+>> with Emacs itself.  Can you perhaps elaborate why you think that it
+>> would be a good idea to add it to ELPA with a general audience in mind?
+>> Just FTR that is not a criticism of the idea or the code, I am for now
+>> trying to better understand the motivation behind the motivation of
+>> having this as a package.
+
+================================================================================
+Date: 2026-11-18T22:16:37+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <874iddyh56.fsf@web.de>
+In-Reply-To: <87fqwxgai4.fsf@posteo.net>
+References: <87fqxg49b6.fsf@posteo.net> <875wybdubd.fsf@dustycloud.org>
+ <E1xPvac-000Me5-3x@fencepost.gnu.org> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <E1xSDZ4-009g5a-V8@fencepost.gnu.org>
+ <875wxzxaul.fsf@posteo.net> <E1xTTS2-004ogJ-4i@fencepost.gnu.org>
+ <87fqwxgai4.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> Richard Stallman <rms@gnu.org> writes:
+>> 1. It could bring in copyright infringement and we might have to
+>> remove that file.
+>
+> Can you elaborate this point?  What infringements are you talking about?
+
+I can provide one answer about risks: the Munich Court decided[1][2]
+that for song lyrics, even if the use of some material as training data
+is legal, it is still a copyrigt infringement if material generated by
+an LLM reproduces a (potentially modified) version of parts of the
+training data.
+
+With the decision that the party responsible for that generation had to
+pay a penalty and that it is not legal to exploit the generated
+material (e.g. for money).
+
+The responsible party as by the Munich decision was either the one
+providing the model, or the one using it, or both to some degree,
+depending on the complexity of the prompts. The more complex the
+prompts, the more responsibility shifts to the user.
+
+It is not clear, how courts will decide in the case of software. If they
+follow the Munich decision, then any substantial part of code that’s too
+similar to code in the training data violates the copyright of that part
+of the training data (if no permission to reuse that material is given).
+
+In a recent telecon by FSFE and nlnet[3], an FSFE lawyer said that the
+legal situation is currently very much in flux, so no one knows what
+the legal situation will be in a few years.
+
+[1] the court decision (in German):
+    https://www.gesetze-bayern.de/Content/Document/Y-300-Z-GRURRS-B-2025-N-30204
+[2] article about the decision:
+    https://www.twobirds.com/en/insights/2025/landmark-ruling-of-the-munich-regional-court-(gema-v-openai)-on-copyright-and-ai-training
+[3] telecon held by nlnet in cooperasiot with FSFE (with recording and slides):
+    https://nlnet.nl/events/20261029/index.html
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-18T22:46:13+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <87v75tertn.fsf@posteo.net>
+In-Reply-To: <d071372a3111da7c57629de3ca06dd81@gnu.support>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> Hello Oscar,
+>
+> Philip said package is not for Emacs (which I do not know what he
+> means), and I see it as useful for some people.
+
+I didn't say that, I said that the package didn't seem to have anything
+to do with Emacs, as in is not utilizing Emacs in any specific way.
+With Oscar's analysis in mind (thanks for that!), this seems to just be
+a generic "algorithm" written in a library/standard-input-output style
+that constitutes a lowest common denominator of most programming
+languages.
+
+> That it is LLM generated, does not mean it is less useful. I have
+> reported LLM packages and yet no work or analysis was done on that,
+> they are in ELPA already. I don't think that is yet clear criteria for
+> rejection or acceptance. But if it is -- please point to reference by
+> GNU standard.
+>
+> On 2026-11-18 17:00, Óscar Fuentes wrote:
+>> * The OP's github site contains multiple implementations of this
+>> package
+>>   on various programming languages, all LLM generated.
+>
+> Yes, why not, let people create software. It reads like you imply
+> something is wrong with it.
+
+That is independent of the question whether we should package and
+distribute the software.  I think it is fair to ask the question what
+the motivation is of re-implementing basically the same, rather simple
+logic in so many languages as micro-libraries.
+
+>> * Apparently the OP is targeting languages with official or widely
+>>   recognized repositories (the equivalent of our ELPAs.) Looks like
+>> each
+>>   implementation meets the requirements (on terms of structure and
+>>   metainfo) to be submitted to its respective repository.
+>
+> You are here implying bad faith or bad intentions with "targeting". It
+> is better to assume good faith.
+
+In general perhaps yes, but this does sound suspicious in a way that I
+don't think we should ignore.  The "bad intentions" being assumed here
+is that they want to publish these packages as a means of distributing
+malware in the long term.
+
+>> * The submitter's identity is a business. They offer a free online tool
+>>   to do this type of calculations, which also acts as an entry to the
+>>   sevices this business sells. The READMEs and other files of each
+>>   package mentions the name of the business and contain links to the
+>> web
+>>   site of the business or to the online tool or to both.
+>
+> Yes, so what if his identity is business? GNU was never against
+> business. All of the Internet runs GNU/Linux systems and their
+> identities are business too.
+>
+> Online services are SaaSS, so such should not be promoted from GNU
+> Emacs package.
+>
+> Just argument that identity is business seems unwelcoming. When did
+> you see many businesses even applying to Emacs Devel mailing list? Why
+> not be welcoming and happy, and point to exact standards.
+>
+> So if there is GNU standard that holds same level as your arguments,
+> please reference it.
+
+I don't think that Oscar is making the argument "the package ought to be
+rejected because it is maintained by a business", but rather to paint a
+picture of who is behind the package.
+
+>> This looks to me as a SEO operation.
+>
+> SEO operation? Is there any GNU standard saying that Emacs package
+> should be rejected if it is SEO operation? And what is problem with
+> that?
+
+Again, this is not just an enumeration of facts to be taken on their
+own.
+
+> Should I also start being envious that someone is doing business?
+>
+>> As this can be 100% automated, I'm afraid this type of submissions will
+>> be a new kind of spam from now on for the ELPA maintainers.
+>
+> And it is not spam.
+>
+>> On a more general note, it is a good thing to reject packages which are
+>> low-effort *and* for a niche application, IMHO.
+>
+> You say low effort, but please point out to exact GNU standard saying
+> that. I see plethora of packages in Emacs ELPA for which I could say
+> low effort.
+
+We don't have to restrict ourselves to GNU standards, but also what
+low-effort packages do you have in mind?
+
+================================================================================
+Date: 2026-11-18T22:56:59+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <87mrr5erbp.fsf@posteo.net>
+In-Reply-To: <87se0xc24a.fsf@gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <87se0xc24a.fsf@gmail.com>
+
+Szymon Wilczek <swilczek.lx@gmail.com> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>> It seems to me that the file isn't necessarily the best candidate for a
+>> description of the package, so my suggestion would be to use the
+>> contents of the "Commentary" section in the main file instead.  Would
+>> you be OK with that?
+>
+> Absolutely! Thanks for taking care of this.
+
+OK, I have added the package and it ought to appear sooner or later on
+the archive.  I hope you have otherwise seen
+https://elpa.gnu.org/contributing.html and understand how to release new
+versions of the package?  Regardless, if you have any further questions
+or issues ping the list or me directly, whatever you prefer.
+
+> Best,
+> Szymon
+
+================================================================================
+Date: 2026-11-18T23:06:05+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: Re: [PATCH] [NonGNU ELPA] Add au-themes
+Message-ID: <87mrr5bxrm.fsf@gmail.com>
+In-Reply-To: <87mrr5erbp.fsf@posteo.net>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <87se0xc24a.fsf@gmail.com>
+ <87mrr5erbp.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> OK, I have added the package and it ought to appear sooner or later on
+> the archive.  I hope you have otherwise seen
+> https://elpa.gnu.org/contributing.html and understand how to release new
+> versions of the package?  Regardless, if you have any further questions
+> or issues ping the list or me directly, whatever you prefer.
+
+Thank you so much! I appreciate the guidance and help throughout review
+process.
+
+I know and understand the release flow. I will reach out if anything
+comes up.
+
+Thanks again,
+Szymon
+
+================================================================================
+Date: 2026-11-18T23:12:19+01:00
+From: Brad Howes <bradhowes@mac.com>
+Subject: Re: curl getting called by configure
+Message-ID: <87E42E93-7DA6-4C4B-A59D-5797F99094B5@mac.com>
+In-Reply-To: <CAN+1HbqGqYJ4vx_jo0+yAaXv_rUjvLq7XSNXpXp0HOuhp-e44A@mail.gmail.com>
+References: <CAN+1HbqGqYJ4vx_jo0+yAaXv_rUjvLq7XSNXpXp0HOuhp-e44A@mail.gmail.com>
+
+> On 18 Nov 2026, at 19:04, Stéphane Marks <shipmints@gmail.com> wrote:
+> 
+> I've ignored asking this for a while.  I use a firewall [1] on macOS that alerts me to IP connections being made that are not whitelisted.  Running configure calls curl several times and I get pop-ups asking for approval.
+> 
+> Can someone who knows explain why configure does this and if there's a way to avoid it?
+> 
+> TIA,
+> 
+> -Stéphane
+> 
+> [1] It's the excellent open source https://objective-see.org/products/lulu.html https://github.com/objective-see/lulu
+
+I installed LuLu and then searched the device log via the Console app. The curl queries may be checks with brew.sh to resolve dependencies in pkg-config or perhaps to check versions. Not quite sure. 
+However, there are telemetry calls related to this that go to analytics.brew.sh. To disable the analytics, one can run `brew analytics off` in a shell.
+I reran ./configure after disabling and did not get any prompts, but I’m not sure if that is a valid check. One can also execute
+
+export HOMEBREW_NO_ANALYTICS=1
+
+Before running ./configure to keep brew from emitting analytics. 
+
+Regards,
+
+Brad
+
+================================================================================
+Date: 2026-11-18T23:14:23+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: speedbar
+Message-ID: <875wxtu6rl.fsf@posteo.net>
+In-Reply-To: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+
+Benjamin Leis <benleis1@gmail.com> writes:
+
+> Hi
+> I was playing around with the new speedbar window-mode in emacs 31 and had
+> some questions about further development.
+>
+> 1. Right now it leaves the window in fundamental mode rather than
+> speedbar-mode so many of the regular key mappings don't function.
+>
+> 2. There is no standard help for it when you press h unlike the convention
+> for most dedicated windows - even when speedbar-mode is on.
+>
+> 3. If you do a describe-mode several of the key bindings are lambdas that
+> don't display anything descriptive other than the bytecode and there are no
+> docstring help texts supplied.
+>
+> (The theme here is the order in which i was investigating the UI)
+>
+> There are further behaviors that are less basic that I think could be
+> improved. For example, the keymap shouldn't offer an option to kill the
+> frame when it's not in frame mode, hover text should work regardless of
+> whether the window is active etc.
+>
+> For experimentation purposes, I ended up writing about 200 lines of code to
+> do enough wiring so it behaved more conventionally like other sidebars in
+> my own config.
+>
+> The point of all this is I'm curious if I misunderstood how it's supposed
+> to work or if this is still in development,  and improvements are on tap
+> for version 32. Or is this an area where contributions would be helpful
+> Thanks
+> Ben
+
+No comments, just want to add Vincenzo who contributed the feature.
+
+================================================================================
+Date: 2026-11-18T23:35:31+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: curl getting called by configure
+Message-ID: <CAN+1Hbr4Ex98r=wHbs74=KBJTnq4rpdAW5qiQECUA21OpQNeMA@mail.gmail.com>
+In-Reply-To: <87E42E93-7DA6-4C4B-A59D-5797F99094B5@mac.com>
+References: <CAN+1HbqGqYJ4vx_jo0+yAaXv_rUjvLq7XSNXpXp0HOuhp-e44A@mail.gmail.com>
+ <87E42E93-7DA6-4C4B-A59D-5797F99094B5@mac.com>
+
+On Wed, Nov 18, 2026 at 5:12 PM Brad Howes <bradhowes@mac.com> wrote:
+
+>
+> On 18 Nov 2026, at 19:04, Stéphane Marks <shipmints@gmail.com> wrote:
+>
+> I've ignored asking this for a while.  I use a firewall [1] on macOS that
+> alerts me to IP connections being made that are not whitelisted.  Running
+> configure calls curl several times and I get pop-ups asking for approval.
+>
+> Can someone who knows explain why configure does this and if there's a way
+> to avoid it?
+>
+> TIA,
+>
+> -Stéphane
+>
+> [1] It's the excellent open source
+> https://objective-see.org/products/lulu.html
+> https://github.com/objective-see/lulu
+>
+>
+> I installed LuLu and then searched the device log via the Console app. The
+> curl queries may be checks with brew.sh to resolve dependencies in
+> pkg-config or perhaps to check versions. Not quite sure.
+> However, there are telemetry calls related to this that go to
+> analytics.brew.sh. To disable the analytics, one can run `brew analytics
+> off` in a shell.
+> I reran ./configure after disabling and did not get any prompts, but I’m
+> not sure if that is a valid check. One can also execute
+>
+> export HOMEBREW_NO_ANALYTICS=1
+>
+> Before running ./configure to keep brew from emitting analytics.
+>
+
+Dang, that was it.  Didn't occur to me because I never run brew commands
+under my own id.  I have a separate admin-ish id for that and 100% with
+analytics disabled.  It's kinda crappy that one disables analytics id by id
+instead of for the whole system as I assumed it did.  And disabling
+analytics under an id that doesn't own the files, errors out.  Thanks
+homebrew developers.
+
+Thanks, Brad.
+
+================================================================================
+Date: 2026-11-18T23:47:40+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <CAN+1HbqHRcC7mHovu2zuPmtwjOc720WWK_DATCb3+3wZ2c6Log@mail.gmail.com>
+In-Reply-To: <87v75tertn.fsf@posteo.net>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net> <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu> <d071372a3111da7c57629de3ca06dd81@gnu.support>
+ <87v75tertn.fsf@posteo.net>
+
+On Wed, Nov 18, 2026 at 4:47 PM Philip Kaludercic <philipk@posteo.net>
+wrote:
+
+> >
+> >> On a more general note, it is a good thing to reject packages which are
+> >> low-effort *and* for a niche application, IMHO.
+> >
+> > You say low effort, but please point out to exact GNU standard saying
+> > that. I see plethora of packages in Emacs ELPA for which I could say
+> > low effort.
+>
+> We don't have to restrict ourselves to GNU standards, but also what
+> low-effort packages do you have in mind?
+
+
+In the end, this doesn't support metric measurements and seems very tied to
+the originating company's product/service and the quantities are all hard
+coded.  This does not seem sufficiently useful to anyone but its author.
+It could just be an ELisp calc script with no packaging.  Or a Google Sheet
+with a URL.
+
+================================================================================
+Date: 2026-11-19T00:44:20+01:00
+From: =?utf-8?Q?=C3=93scar_Fuentes?= <oscarfv@eclipso.eu>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <87wlq9iu23.fsf@hiperboreo.eu>
+In-Reply-To: <87v75tertn.fsf@posteo.net>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support>
+ <87v75tertn.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+>>> * Apparently the OP is targeting languages with official or widely
+>>>   recognized repositories (the equivalent of our ELPAs.) Looks like
+>>> each
+>>>   implementation meets the requirements (on terms of structure and
+>>>   metainfo) to be submitted to its respective repository.
+>>
+>> You are here implying bad faith or bad intentions with "targeting". It
+>> is better to assume good faith.
+>
+> In general perhaps yes, but this does sound suspicious in a way that I
+> don't think we should ignore.  The "bad intentions" being assumed here
+> is that they want to publish these packages as a means of distributing
+> malware in the long term.
+
+I don't think so. As you know, the dirty part of SEO (Search Engine
+Optimization) is to place links to your site together with the key words
+related to it on as many other sites as possible. But not all places are
+equal: for sure elpa.(non)gnu.org adds more points to the page rank than
+some abandoned forum full of spam (which actually can subtract points!)
+Same can be said about the package repositories of those other
+programming languages that the OP targets.
+
+On this specific case, I'm pretty sure that the intention is to use elpa
+for boosting their web site on the search engines.
+
+Thanks to LLMs, doing this now is pretty trivial. The only obstacule for
+them is the repositories' gatekeepers (thanks!) so they have to submit
+something minimally credible, but still related to their bussines for
+the relevant words being present on the same context as the links.
+
+Your concerns about malware are justified, but that's a diferent kind of
+operation. For starters, the submitted package that acts as a trojan
+horse needs to be as attractive as possible for the target population.
+Which now also can be achieved at a tiny fraction of the cost that used
+to have.
+
+This is related to the other discussion about accepting LLM-generated
+packages. It is very easy to produce a working, useful package that is
+very hard to review, because of a combination of size, complexity and
+obfuscation.
+
+================================================================================
+Date: 2026-11-19T03:28:20+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <E1xTrsq-000rug-Nh@fencepost.gnu.org>
+In-Reply-To: <avrCGtAEda8orMWN@tuxteam.de> (tomas@tuxteam.de)
+References: <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+ <avrCGtAEda8orMWN@tuxteam.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > In my view, one of the "soft" targets of free software now in
+  > peril is "software as a conversation between humans", which I
+  > think lies at the core of software's Freedom 1 (study) and
+  > Freedom 3 (improve). I sure want to know if I'm talking to
+  > a human or a machine (especially if the latter is controlled
+  > by a huge company).
+
+I see your point.  It is a different point from the concern about
+the bobsled of surrender to digital agents.
+
+What is not clear to me is how we could prevent that.  Without strict
+secrecy, these huge companies will be able to read our public mailing
+lists.  And humans can also be agents of a huge company, passing along
+what they see.  But strict secrecy would damage our community even
+worse.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-19T03:29:39+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <E1xTru7-000ugU-5C@fencepost.gnu.org>
+In-Reply-To: <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ (paaguti@gmail.com)
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > One of the valid issues is that spelling tools based on ispell as 
+  > suboptimal and alternatives like jinx - of which I'm a happy user- are 
+  > sometimes difficult to spin up, because they depend on a C module that 
+  > may be non-trivial to generate on some systems.
+
+Could you please state which systems those are?  I have a hunch that
+they are non-GNU systems, and another hunch that they are nonfree.
+Are my hunches correct?
+
+I explained recently that we encourage people to port GNU software to
+non-GNU systems if they want to.  But this issue raises a different
+issue: how much importance should the GNU Project give to supporting
+non-GNU systems, and non-free systems?
+
+Specifically, should we go to extra trouble to make it easier to support
+those systems?  Should we subject ourselves to burdens in our own work
+(such as, maintaining with LLM-generated code) for the sake of that support?
+For instance, features that affect whether jinx can be used on them?
+
+You've proposed reimplementing jinx with a new interace to make it
+less work to support those systems.  So far, it sounds ok to me, if
+someone volunteers to do that work.  It would only affect jinx, which
+is rather localized, so it wouldn't be a major design change or
+a major distraction.
+
+A new general "foreign function interface" could be a lot more work,
+and has the major drawback that Eli just pointed out.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-19T03:30:47+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xTrvD-000wc3-Bg@fencepost.gnu.org>
+In-Reply-To: <87ld6ytv84.fsf@asthra> (message from Phil Hagelberg on Wed, 11
+ Nov 2026 22:33:15 -0800)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org> <87ld6ytv84.fsf@asthra>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+This seems like a big concern.
+
+  > I don't know of a project which has avoided these problems without
+  > a ban. I have read about projects like the game engine Bevy where they
+  > had a ban but then lifted it, and it went very badly:
+
+  > https://blog.fallible.net/it-breaks-a-village/
+
+  > Projects like this where they try to find a middle ground and require
+  > that LLM usage must be "responsible" or "human guided only" don't
+  > usually end up successful in those criteria over time due to the "vibe
+  > bobsled" problem I mentioned earlier.
+
+I wonder if a free LLM, usable locally, could make it possible to
+adapt the LLM such that it won't do this.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-19T06:11:10+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: Human Emacs
+Message-ID: <8fb095607a4bdade3decb6785be83bcb@gnu.support>
+In-Reply-To: <E1xTrvD-000wc3-Bg@fencepost.gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org> <87ld6ytv84.fsf@asthra>
+ <E1xTrvD-000wc3-Bg@fencepost.gnu.org>
+
+On 2026-11-19 05:30, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+> This seems like a big concern.
+> 
+>   > I don't know of a project which has avoided these problems without
+>   > a ban. I have read about projects like the game engine Bevy where 
+> they
+>   > had a ban but then lifted it, and it went very badly:
+> 
+>   > https://blog.fallible.net/it-breaks-a-village/
+> 
+>   > Projects like this where they try to find a middle ground and 
+> require
+>   > that LLM usage must be "responsible" or "human guided only" don't
+>   > usually end up successful in those criteria over time due to the 
+> "vibe
+>   > bobsled" problem I mentioned earlier.
+> 
+> I wonder if a free LLM, usable locally, could make it possible to
+> adapt the LLM such that it won't do this.
+
+Yes, a free LLM that runs locally could absolutely be adapted so it does 
+not do this, and that is exactly why the problem should be solved at the 
+model level instead of just banning contributions. The failures 
+mentioned happened with proprietary, hosted models, where the community 
+could not inspect, change, or constrain the tool at all. A genuinely 
+free local model is different: you can fine-tune it, audit it, configure 
+it, and under collective control in a way no commercial service ever is. 
+The real catch is that today's models like Qwen are not truly free 
+because their training data isn't, and that tells us what the 
+free-software movement should actually do: push to build the free LLM, 
+not treat LLMs as inherently corrosive. That is the same move GNU made 
+with proprietary tools — build the free replacement instead of banning 
+the use.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-19T06:18:02+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <265ee713d6babfe6e71e2fd1d33dc2e4@gnu.support>
+In-Reply-To: <874iddyh56.fsf@web.de>
+References: <87fqxg49b6.fsf@posteo.net> <875wybdubd.fsf@dustycloud.org>
+ <E1xPvac-000Me5-3x@fencepost.gnu.org> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <E1xSDZ4-009g5a-V8@fencepost.gnu.org>
+ <875wxzxaul.fsf@posteo.net> <E1xTTS2-004ogJ-4i@fencepost.gnu.org>
+ <87fqwxgai4.fsf@posteo.net> <874iddyh56.fsf@web.de>
+
+On 2026-11-19 00:16, Dr. Arne Babenhauserheide wrote:
+> In a recent telecon by FSFE and nlnet[3], an FSFE lawyer said that the
+> legal situation is currently very much in flux, so no one knows what
+> the legal situation will be in a few years.
+
+Legal situation related to copyrights will not change.
+
+LLM is not relevant there. Court is finding facts and judging by the 
+law. People can argue and try to shift responsibilities, but if there 
+was unauthorized reproduction of another's protected expression, that is 
+infringement.
+
+The court doesn't help/support/rejects situation with LLMs, but decided 
+on infringements as by law it is prohibited to do unauthorized 
+reproductions. LLM is not much relevant there.
+
+What is relevant is who published it, and if it the work is unauthorized 
+reproduction. Court finds facts.
+
+LLM not relevant, even though it can be used as "defense" but will fail, 
+as author is always responsible one.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-19T06:21:41+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <748c88d6f4c0a84581d1193efdab7e54@gnu.support>
+In-Reply-To: <87v75tertn.fsf@posteo.net>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net> <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support> <87v75tertn.fsf@posteo.net>
+
+Hello Philip,
+
+I have asked twice for standard to justify rejection criteria such as 
+SEO, low-effort, business identity and instead of answering what is the 
+standard you just reframe position, deflect (that you do not need to 
+restrict to GNU standard), and turn the question back on me.
+
+So the standard is your discretionary judgment.
+
+I don't find it welcoming.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-19T06:35:38+01:00
+From: Joel Reicher <joel.reicher@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86se0xs7rp.fsf@gmail.com>
+In-Reply-To: <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+[...]
+
+> I am convinced that one requirement for including LLM-generated 
+> material in GNU Programs must be that the LLM-generated material 
+> be completely divorced from the LLM that generated it.  In other 
+> words, we must insist there be no reason to anticipate pressure 
+> to use LLMs to update it.
+
+I've thought for some time this is a key point, but unfortunately 
+subjective. Emacs maintainers, being proficient in elisp, would 
+probably not feel pressure to use an LLM, assuming the initial use 
+produced decent code (as Philip seems to be saying is the case 
+with this package).
+
+But someone less proficient who wishes to use a package like 
+vibe-spell as an opportunity to contribute, and to enter the 
+community, on hearing that it was originally authored by an LLM 
+would, I believe, be inclined to ease their own entry to the 
+community by also using an LLM.
+
+I believe this constitutes "pressure", and is a danger to the 
+wider (potential) community, even though it is probably not a 
+feeling experienced by maintainers in the same position.
+
+Thanks and regards,
+
+       - Joel
+
+================================================================================
+Date: 2026-11-19T06:50:53+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87zev5v076.fsf@web.de>
+In-Reply-To: <265ee713d6babfe6e71e2fd1d33dc2e4@gnu.support>
+References: <87fqxg49b6.fsf@posteo.net> <86v767vfxb.fsf@gmail.com>
+ <87o6bzws6n.fsf@posteo.net> <avBOldXug3j60n7C@tuxteam.de>
+ <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <878q31uq8e.fsf@posteo.net> <87mrrhdk8a.fsf@web.de>
+ <87o6bwtvvk.fsf@posteo.net> <87qzgscy0t.fsf@web.de>
+ <87bj7wtrtv.fsf@posteo.net> <E1xSDZ4-009g5a-V8@fencepost.gnu.org>
+ <875wxzxaul.fsf@posteo.net> <E1xTTS2-004ogJ-4i@fencepost.gnu.org>
+ <87fqwxgai4.fsf@posteo.net> <874iddyh56.fsf@web.de>
+ <265ee713d6babfe6e71e2fd1d33dc2e4@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> On 2026-11-19 00:16, Dr. Arne Babenhauserheide wrote:
+>> In a recent telecon by FSFE and nlnet[3], an FSFE lawyer said that the
+>> legal situation is currently very much in flux, so no one knows what
+>> the legal situation will be in a few years.
+>
+> Legal situation related to copyrights will not change.
+
+Since a lawyer begs to differ, I would not bet on that.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-19T06:52:09+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <87se0xs708.fsf@posteo.net>
+In-Reply-To: <87wlq9iu23.fsf@hiperboreo.eu>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support>
+ <87v75tertn.fsf@posteo.net> <87wlq9iu23.fsf@hiperboreo.eu>
+
+Óscar Fuentes <oscarfv@eclipso.eu> writes:
+
+> Philip Kaludercic <philipk@posteo.net> writes:
+>
+>>>> * Apparently the OP is targeting languages with official or widely
+>>>>   recognized repositories (the equivalent of our ELPAs.) Looks like
+>>>> each
+>>>>   implementation meets the requirements (on terms of structure and
+>>>>   metainfo) to be submitted to its respective repository.
+>>>
+>>> You are here implying bad faith or bad intentions with "targeting". It
+>>> is better to assume good faith.
+>>
+>> In general perhaps yes, but this does sound suspicious in a way that I
+>> don't think we should ignore.  The "bad intentions" being assumed here
+>> is that they want to publish these packages as a means of distributing
+>> malware in the long term.
+>
+> I don't think so. As you know, the dirty part of SEO (Search Engine
+> Optimization) is to place links to your site together with the key words
+> related to it on as many other sites as possible. But not all places are
+> equal: for sure elpa.(non)gnu.org adds more points to the page rank than
+> some abandoned forum full of spam (which actually can subtract points!)
+> Same can be said about the package repositories of those other
+> programming languages that the OP targets.
+>
+> On this specific case, I'm pretty sure that the intention is to use elpa
+> for boosting their web site on the search engines.
+>
+> Thanks to LLMs, doing this now is pretty trivial. The only obstacule for
+> them is the repositories' gatekeepers (thanks!) so they have to submit
+> something minimally credible, but still related to their bussines for
+> the relevant words being present on the same context as the links.
+
+Thanks for clarifying what you mean, I agree that this sounds sensible. 
+
+> Your concerns about malware are justified, but that's a diferent kind of
+> operation. For starters, the submitted package that acts as a trojan
+> horse needs to be as attractive as possible for the target population.
+> Which now also can be achieved at a tiny fraction of the cost that used
+> to have.
+
+My guess would have been that this would target the type of user who
+tends to accumulate a large number of packages and auto-update them.
+But I have no further substance to the claim than that this could be
+possible, so it not a strong argument by any means.
+
+> This is related to the other discussion about accepting LLM-generated
+> packages. It is very easy to produce a working, useful package that is
+> very hard to review, because of a combination of size, complexity and
+> obfuscation.
+
+This certainly wasn't hard to review :)
+
+================================================================================
+Date: 2026-11-19T07:00:11+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <87o6bls6mt.fsf@posteo.net>
+In-Reply-To: <748c88d6f4c0a84581d1193efdab7e54@gnu.support>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support>
+ <87v75tertn.fsf@posteo.net>
+ <748c88d6f4c0a84581d1193efdab7e54@gnu.support>
+
+Jean Louis <bugs@gnu.support> writes:
+
+> Hello Philip,
+>
+> I have asked twice for standard to justify rejection criteria such as
+> SEO, low-effort, business identity and instead of answering what is
+> the standard you just reframe position, deflect (that you do not need
+> to restrict to GNU standard), and turn the question back on me.
+>
+> So the standard is your discretionary judgment.
+>
+> I don't find it welcoming.
+
+First of all, for the concrete package, the submitter themselves has
+retracted their proposal, so that should close the case.
+
+Second of all, I didn't directly reject the package, but just asked the
+submitter to explain why they thought that the package was a good
+addition to the archive.
+
+Everyone who helps maintain and curate ELPA has different standards by
+necessity, and to some degree they are a matter of taste.  I don't know
+what Stefan would have said about the package, for instance, and if we
+were to be OK with it, I wouldn't have made that into a problem.
+
+I think that Oscar makes a valid point of that this is a package that
+seems to have such a limited and specific utility that it doesn't appear
+to be interesting _as_ a package, but just exists to improve the SEO
+rating of some other website -- and we have no responsibility to help
+with that.
+
+But technically, my main concern was that this just felt too small to be
+a package.  I have explained my position on this in a previous message
+in this thread.  And yes, this is a judgment call, not some formal rule.
+
+================================================================================
+Date: 2026-11-19T07:11:48+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87jym9s63g.fsf@posteo.net>
+In-Reply-To: <86se0xs7rp.fsf@gmail.com>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com>
+
+Joel Reicher <joel.reicher@gmail.com> writes:
+
+> Richard Stallman <rms@gnu.org> writes:
+>
+> [...]
+>
+>> I am convinced that one requirement for including LLM-generated
+>> material in GNU Programs must be that the LLM-generated material be
+>> completely divorced from the LLM that generated it.  In other words,
+>> we must insist there be no reason to anticipate pressure to use LLMs
+>> to update it.
+>
+> I've thought for some time this is a key point, but unfortunately
+> subjective. Emacs maintainers, being proficient in elisp, would
+> probably not feel pressure to use an LLM, assuming the initial use
+> produced decent code (as Philip seems to be saying is the case with
+> this package).
+>
+> But someone less proficient who wishes to use a package like
+> vibe-spell as an opportunity to contribute, and to enter the
+> community, on hearing that it was originally authored by an LLM would,
+> I believe, be inclined to ease their own entry to the community by
+> also using an LLM.
+
+I would be interested to hear your opinion of the source code and
+whether or not you find it to be understandable, setting aside the fine
+technicalities of spell checking (which I understand aren't easy to do).
+
+Initially I wanted to suggest some low hanging feature that you could
+hack on as an exercise to see how easy or difficult it is for you, and
+perhaps Augusto has an idea, but it also occured to me that by using
+LLMs in the first draft of the package, it might very well me that this
+fact just takes care of most "low hanging" features -- and I think it is
+important that we don't confuse the relative exhaustiveness of the code
+generation with the inability to maintain the code.
+
+> I believe this constitutes "pressure", and is a danger to the wider
+> (potential) community, even though it is probably not a feeling
+> experienced by maintainers in the same position.
+
+I am not that convinced that this is "pressure" in the strong sense that
+would be necessary to substantiate the argument.  If you have reasons or
+principles against using LLMs for code generation (as I do), then this
+pressure will not make you change your mind.  And I don't see why
+inexperience of uncertainty wouldn't generally create the same sense of
+"pressure" to use LLMs for other packages as well.  I think your point
+is that "if LLMs have been used it the past, then it doesn't matter if I
+use them in the future", right?
+
+Perhaps a far out idea, but what would you say if Augusto added a "no
+(further) LLM contributions" clause to the package?
+
+> Thanks and regards,
+>
+>       - Joel
+
+================================================================================
+Date: 2026-11-19T07:14:16+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: speedbar
+Message-ID: <86v75tl553.fsf@gnu.org>
+In-Reply-To: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ (message from Benjamin Leis on Wed, 18 Nov 2026 10:40:41 -0800)
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+
+> From: Benjamin Leis <benleis1@gmail.com>
+> Date: Wed, 18 Nov 2026 10:40:41 -0800
+> 
+> I was playing around with the new speedbar window-mode in emacs 31 and had
+> some questions about further development.
+> 
+> 1. Right now it leaves the window in fundamental mode rather than
+> speedbar-mode so many of the regular key mappings don't function.
+
+This is fixed in the current pretest of Emacs 31.2.
+
+> 2. There is no standard help for it when you press h unlike the convention
+> for most dedicated windows - even when speedbar-mode is on.
+
+"C-h m" and "C-h b" do work.  But we could add a binding for "h",
+indeed, "h" is currently unbound.  Vincenzo, WDYT?
+
+> 3. If you do a describe-mode several of the key bindings are lambdas that
+> don't display anything descriptive other than the bytecode and there are no
+> docstring help texts supplied.
+
+Indeed, having bindings run anonymous functions without doc strings is
+not a good practice.  However, this is not specific to
+speedbar-window-mode, the original speedbar-mode has the same bindings
+AFAICT.  We should give those functions names and doc strings, IMO.
+
+> There are further behaviors that are less basic that I think could be
+> improved. For example, the keymap shouldn't offer an option to kill the
+> frame when it's not in frame mode, hover text should work regardless of
+> whether the window is active etc.
+
+This is fixed in Emacs 31.2, but "C-h m" still shows the incorrect
+binding of the original speedbar-mode ("C-h b" shows correct
+bindings).  Vincenzo, can you fix this?
+
+Btw, it seems there's a way to start the speedbar window display by
+invoking speedbar-window-mode interactively (as opposed to customizing
+speedbar-prefer-window and invoking "M-x speedbar").  The problem with
+that is that speedbar-prefer-window is left at its default nil value,
+so all kinds of bindings specific to this variant of Speedbar are not
+done.  Vincenzo, can we fix that, please?
+
+> The point of all this is I'm curious if I misunderstood how it's supposed
+> to work or if this is still in development,  and improvements are on tap
+> for version 32. Or is this an area where contributions would be helpful
+
+I think it's supposed to be ready for prime time, but as with any new
+feature, there could be rough edges.  Thank you for taking time to
+report your findings.
+
+================================================================================
+Date: 2026-11-19T07:29:02+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: Alternatives without running a library's source code through an
+ LLM
+Message-ID: <ff2c4570-2e3c-44b2-8b8b-f8d1b9a34a63@gmail.com>
+In-Reply-To: <E1xTru7-000ugU-5C@fencepost.gnu.org>
+References: <8b8a0779-aea1-4aae-99b4-89cdf644be14@gmail.com>
+ <87a4netbjj.fsf@gmail.com> <E1xSZ7i-001OSM-OX@fencepost.gnu.org>
+ <85f04d1a-67e8-4f94-bcdd-7fd413b956ce@gmail.com>
+ <E1xTru7-000ugU-5C@fencepost.gnu.org>
+
+Hi Richard,
+
+Answers inline...
+
+On 19/11/26 3:29, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+>    > One of the valid issues is that spelling tools based on ispell as
+>    > suboptimal and alternatives like jinx - of which I'm a happy user- are
+>    > sometimes difficult to spin up, because they depend on a C module that
+>    > may be non-trivial to generate on some systems.
+> 
+> Could you please state which systems those are?  I have a hunch that
+> they are non-GNU systems, and another hunch that they are nonfree.
+> Are my hunches correct?
+
+To a certain extent, they are (mea culpa).  But this is not my main 
+motivation.
+> You've proposed reimplementing jinx with a new interace to make it
+> less work to support those systems.  So far, it sounds ok to me, if
+> someone volunteers to do that work.  It would only affect jinx, which
+> is rather localized, so it wouldn't be a major design change or
+> a major distraction.
+
+Let's step back one step: if aspell/ispell was fast enough, there 
+wouldn't be any need to start talking about other spellchecking 
+strategies. But, unfortunately, they aren't.
+
+This is, how I understand it, why some people look into other 
+strategies, jinx being one of them. JINX implies compiling a module, 
+which requires a gcc infrastructure to be installed.
+
+On older, more constrained systems I'm keeping alive to use when on the 
+move (I use Linux or FreeBSD on those), this means less space for my data.
+
+So, as a challenge to myself, I've been looking at something based on a 
+JSONRPC using libenchant. And when the whole LLM thing came up, I 
+suggested this alternative path.
+> A new general "foreign function interface" could be a lot more work,
+> and has the major drawback that Eli just pointed out.
+And I wholeheartedly agree with him.
+
+Best, /PA
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-11-19T07:54:58+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <86o6bll399.fsf@gnu.org>
+In-Reply-To: <8fb095607a4bdade3decb6785be83bcb@gnu.support> (message from Jean
+ Louis on Thu, 19 Nov 2026 08:11:10 +0300)
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org> <87ld6ytv84.fsf@asthra>
+ <E1xTrvD-000wc3-Bg@fencepost.gnu.org>
+ <8fb095607a4bdade3decb6785be83bcb@gnu.support>
+
+> Date: Thu, 19 Nov 2026 08:11:10 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: Phil Hagelberg <phil@hagelb.org>, arne_bab@web.de, eliz@gnu.org,
+>  jporterbugs@gmail.com, emacs-devel@gnu.org
+> 
+> > I wonder if a free LLM, usable locally, could make it possible to
+> > adapt the LLM such that it won't do this.
+> 
+> Yes, a free LLM that runs locally could absolutely be adapted so it does 
+> not do this, and that is exactly why the problem should be solved at the 
+> model level instead of just banning contributions.
+
+Only if LLM is supposed to be used as part of future development or
+maintenance of some package or part of Emacs.  If an LLM was used for
+a change or a package, but is not supposed to be used thereafter to
+maintain the change/package, which tools the author used for producing
+the code is none of our concern.  Exactly like we don't reject code
+produced by a proprietary editor or compiled and tested using
+proprietary compiler, as long as after we accept the code, we use free
+tools for its further development and maintenance.
+
+> The real catch is that today's models like Qwen are not truly free 
+> because their training data isn't, and that tells us what the 
+> free-software movement should actually do: push to build the free LLM, 
+> not treat LLMs as inherently corrosive. That is the same move GNU made 
+> with proprietary tools — build the free replacement instead of banning 
+> the use.
+
+Training data will unlikely to ever become completely free, because
+any decent model needs extremely large quantities of training data,
+and there's no practical way of having that if being free is a
+constraint.  Most publicly accessible data on the Internet is not
+free, in the legal sense pertinent to this discussion.  So IMO the
+industry and the GNU project will have to find a way of living with
+this caveat, if the decision is that LLM-generated code is acceptable
+by GNU.
+
+================================================================================
+Date: 2026-11-19T08:02:15+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <86mrr5l2x4.fsf@gnu.org>
+In-Reply-To: <748c88d6f4c0a84581d1193efdab7e54@gnu.support> (message from Jean
+ Louis on Thu, 19 Nov 2026 08:21:41 +0300)
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net> <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support> <87v75tertn.fsf@posteo.net>
+ <748c88d6f4c0a84581d1193efdab7e54@gnu.support>
+
+> Date: Thu, 19 Nov 2026 08:21:41 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: Óscar Fuentes <oscarfv@eclipso.eu>, GetMediaWall Team
+>  <team@getmediawall.com>, emacs-devel <emacs-devel@gnu.org>
+> 
+> Hello Philip,
+> 
+> I have asked twice for standard to justify rejection criteria such as 
+> SEO, low-effort, business identity and instead of answering what is the 
+> standard you just reframe position, deflect (that you do not need to 
+> restrict to GNU standard), and turn the question back on me.
+> 
+> So the standard is your discretionary judgment.
+> 
+> I don't find it welcoming.
+
+This is gone too far, to the point of being rude and even hostile.
+
+Excuse me for being blunt, but it is Philip's prerogative to use his
+best judgment in these decisions, and no one outside of the project's
+development team is entitled to post such harsh assessments of the way
+he does his job in this case.  From where I stand, Philip (and others
+who curate ELPA) do a wonderful job; if you want to change any of its
+aspects, you need to volunteer to be part of the team, accept some of
+their responsibilities, and do some of the job they do.  Until then,
+you are not entitled to demand Philip to give you detailed report
+about his criteria and decisions.  It's an accepted rule in volunteer
+projects that whoever does a job is entitled to decide on its aspects
+where those need a judgment call.
+
+================================================================================
+Date: 2026-11-19T08:22:16+01:00
+From: Bastien Guerry <bzg@gnu.org>
+Subject: Re: [PATCH] gnus-icalendar: updating an Org event in a narrowed
+ buffer can overwrite another entry
+Message-ID: <8733sxwajb.fsf@gnu.org>
+In-Reply-To: <87v75uf1q5.fsf@recursewithless.net>
+References: <87o6bqh40b.fsf@bzg.fr> <871p8k3cg7.fsf@athena.silentflame.com>
+ <87jymco5tm.fsf@gnu.org> <87ld6r1qkf.fsf@athena.silentflame.com>
+ <87v75uf1q5.fsf@recursewithless.net>
+
+Hi Richard,
+
+Richard Lawrence <rwl@recursewithless.net> writes:
+
+> FYI, I'm happy to take a look but I'm not sure I'll have much insight.
+> This sounds to me like a longer-standing issue in gnus-icalendar, not
+> something that would have been affected by the recent changes, at least
+> AFAICT.
+
+Yes, this is a longstanding issue, it occurred to me a while ago (I'd
+say more than 2 years ago), it's just now that I had some time to find
+out the cause: and it is quite straightforward, when the Org agenda
+buffer is narrowed, gnus-icalendar.el update is confused.
+
+> Bastien, do you know if this issue is reproducible in versions prior to
+> Emacs 31?  I wonder too if anything relevant might have changed in Org
+> recently.
+
+I believe this has nothing to do with Org, it's really about temporarily
+widening the buffer while gnus-icalendar is updating the entry.
+
+Sean, Richard, let me know if I still need to create a format bug report
+on emacs-bugs@ or if we can move forward with applying the fix.
+
+Thanks!
+
+-- 
+ Bastien
+
+================================================================================
+Date: 2026-11-19T08:29:49+01:00
+From: zhaodaniu <zhaodaniu1@gmail.com>
+Subject: About overlay rendering, whitespace-mode display issues.
+Message-ID: <86ik1tcm8i.fsf@gmail.com>
+In-Reply-To: 
+References: 
+
+I'm not sure whether this is a bug, so I wanted to ask. In places where
+an overlay is displayed, if whitespace-mode is enabled, the
+whitespace-mode face gets overridden by the overlay's face. Please see
+the image for details.
+
+To reproduce the effect in the image, please enable eglot and 
+(setq flymake-show-diagnostics-at-end-of-line 'fancy).
+
+
+
+Or you can run the following code.
+
+test code
+```emacs-lisp
+(let ((ov (make-overlay (point-max) (point-max))))
+  (overlay-put ov 'after-string
+               (propertize "test test" 'face '(:foreground "red"))))
+```
+
+1. emacs -Q
+2. C-x C-e
+3. M-x whitespace-mode RET
+
+================================================================================
+Date: 2026-11-19T08:53:02+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86ld6pl0kh.fsf@gnu.org>
+In-Reply-To: <86se0xs7rp.fsf@gmail.com> (message from Joel Reicher on Thu, 19
+ Nov 2026 16:35:38 +1100)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com>
+
+> From: Joel Reicher <joel.reicher@gmail.com>
+> Cc: "Dr. Arne Babenhauserheide" <arne_bab@web.de>,  philipk@posteo.net,
+>  shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Thu, 19 Nov 2026 16:35:38 +1100
+> 
+> Richard Stallman <rms@gnu.org> writes:
+> 
+> [...]
+> 
+> > I am convinced that one requirement for including LLM-generated 
+> > material in GNU Programs must be that the LLM-generated material 
+> > be completely divorced from the LLM that generated it.  In other 
+> > words, we must insist there be no reason to anticipate pressure 
+> > to use LLMs to update it.
+> 
+> I've thought for some time this is a key point, but unfortunately 
+> subjective. Emacs maintainers, being proficient in elisp, would 
+> probably not feel pressure to use an LLM, assuming the initial use 
+> produced decent code (as Philip seems to be saying is the case 
+> with this package).
+> 
+> But someone less proficient who wishes to use a package like 
+> vibe-spell as an opportunity to contribute, and to enter the 
+> community, on hearing that it was originally authored by an LLM 
+> would, I believe, be inclined to ease their own entry to the 
+> community by also using an LLM.
+
+I think you've misunderstood what Richard wanted to convey.  Note that
+he explicitly said "divorced from the LLM that generated it".  My
+interpretation of this is that we should not be _forced_ to use the
+_same_ LLM to continue developing such code.
+
+However, it is quite possible that someone other than the person who
+submitted the code will, at some future date, submit further changes
+and improvements for that code, and that other person could use LLM to
+produce or assist in production of these further changes.  If
+LLM-generated code is acceptable at all, there's no practical way to
+ensure this will not happen, because, once admitted into Emacs, the
+original LLM-generated code is not different from any other code in
+Emacs.  And it is unreasonable to expect the Emacs project to track,
+for each line of Emacs sources, whether they were at some point in the
+past modified by LLM-generated changes, and then disallow any further
+LLM-generated changes for those lines.
+
+IOW, what I think Richard says is that we should not accept the
+situation where some code in Emacs _must_ be developed or maintained
+using LLMs, but there's no objection to _allow_ such LLM-generated
+changes if that's one of the alternatives, alongside changes produced
+entirely by humans.
+
+> I believe this constitutes "pressure", and is a danger to the 
+> wider (potential) community, even though it is probably not a 
+> feeling experienced by maintainers in the same position.
+
+I don't see how a possibility (but not necessity) of using LLMs could
+be considered "pressure".  Such a conclusion is against my intuitive
+understanding of what constitutes "pressure".  For any aspect like
+this to constitute "pressure", the alternatives must be either
+forbidden or at least punitive or much less attractive to _everyone_.
+Like, for example, our clear preference to extend Emacs in Lisp rather
+than in C.  That some people might decide, given their personal
+situations and preferences, to use this or that alternative, does not
+come close to "pressure" in my book.
+
+================================================================================
+Date: 2026-11-19T09:25:36+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: About overlay rendering, whitespace-mode display issues.
+Message-ID: <86h5hdkz27.fsf@gnu.org>
+In-Reply-To: <86ik1tcm8i.fsf@gmail.com> (message from zhaodaniu on Thu, 19 Nov
+ 2026 15:29:49 +0800)
+References: <86ik1tcm8i.fsf@gmail.com>
+
+> From: zhaodaniu <zhaodaniu1@gmail.com>
+> Date: Thu, 19 Nov 2026 15:29:49 +0800
+> 
+> I'm not sure whether this is a bug, so I wanted to ask. In places where
+> an overlay is displayed, if whitespace-mode is enabled, the
+> whitespace-mode face gets overridden by the overlay's face. Please see
+> the image for details.
+
+This is the intended and well-documented behavior.  See the beginning
+of the node "Displaying Faces" in the ELisp manual, which describes
+the order and priority used by Emacs to decide which face information
+to use, and this part of the "Overlay Properties" node:
+
+     Currently, all overlays take priority over text properties.
+
+> To reproduce the effect in the image, please enable eglot and 
+> (setq flymake-show-diagnostics-at-end-of-line 'fancy).
+> 
+> 
+> 
+> Or you can run the following code.
+> 
+> test code
+> ```emacs-lisp
+> (let ((ov (make-overlay (point-max) (point-max))))
+>   (overlay-put ov 'after-string
+>                (propertize "test test" 'face '(:foreground "red"))))
+> ```
+> 
+> 1. emacs -Q
+> 2. C-x C-e
+> 3. M-x whitespace-mode RET
+
+Would you mind explaining which aspects of the Emacs behavior in these
+cases cause trouble in the scenarios you describe above?  I don't
+think I understand the specific complaint for these specific cases.
+
+Thanks.
+
+================================================================================
+Date: 2026-11-19T09:40:12+01:00
+From: <tomas@tuxteam.de>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <av617Bp5tIwvz1Nh@tuxteam.de>
+In-Reply-To: <748c88d6f4c0a84581d1193efdab7e54@gnu.support>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support>
+ <87v75tertn.fsf@posteo.net>
+ <748c88d6f4c0a84581d1193efdab7e54@gnu.support>
+
+On Thu, Nov 19, 2026 at 08:21:41AM +0300, Jean Louis wrote:
+> Hello Philip,
+> 
+> I have asked twice for standard to justify rejection criteria such as SEO,
+> low-effort, business identity and instead of answering what is the standard
+> you just reframe position, deflect (that you do not need to restrict to GNU
+> standard), and turn the question back on me.
+
+This is not nice.
+
+> So the standard is your discretionary judgment.
+
+Yes, that's why we have human maintainers. You cannot cover everything
+with rules, that's where discretion kicks in. And if Philip stands out
+in one thing (apart from his technical skills) is in his patience trying
+to explain what he does.
+
+> I don't find it welcoming.
+
+Don't do that.
+
+(FWIW, I do agree with Philip's action here -- if the original motivation
+was SEO, the risk of NonGNU ELPA turning into a dumpster of useless stuff
+is high, so at least a "proof of work" in answering a couple of questions
+seems in order)
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-19T09:55:09+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <av65bWl/gQQqpbJN@tuxteam.de>
+In-Reply-To: <E1xTrsq-000rug-Nh@fencepost.gnu.org>
+References: <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+ <avrCGtAEda8orMWN@tuxteam.de> <E1xTrsq-000rug-Nh@fencepost.gnu.org>
+
+On Wed, Nov 18, 2026 at 09:28:20PM -0500, Richard Stallman wrote:
+> [[[ To any NSA and FBI agents reading my email: please consider    ]]]
+> [[[ whether defending the US Constitution against all enemies,     ]]]
+> [[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+> 
+>   > In my view, one of the "soft" targets of free software now in
+>   > peril is "software as a conversation between humans" [...]
+
+> I see your point.  It is a different point from the concern about
+> the bobsled of surrender to digital agents.
+
+Yes and no: no hacker can exist alone, so the "bobsled" is (also)
+powered by a shift in society around her/him.
+
+> What is not clear to me is how we could prevent that.  Without strict
+> secrecy, these huge companies will be able to read our public mailing
+> lists.  And humans can also be agents of a huge company, passing along
+> what they see.  But strict secrecy would damage our community even
+> worse.
+
+Nor is it to me, alas. Except to "proceed with care". Quite a bit of
+thinking and discussion is necessary, I guess.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-19T09:59:07+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87ld6purhg.fsf@web.de>
+In-Reply-To: <86ld6pl0kh.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> IOW, what I think Richard says is that we should not accept the
+> situation where some code in Emacs _must_ be developed or maintained
+> using LLMs, but there's no objection to _allow_ such LLM-generated
+> changes if that's one of the alternatives, alongside changes produced
+> entirely by humans.
+
+What I thought I understood is that there need not only be one
+alternative to contribute without an LLM, but that this alternative
+should be the preferred one.
+
+If that’s not the case, there’s a problem, because it incentivizes
+people into using proprietary software and/or SaaSS.
+
+>> I believe this constitutes "pressure", and is a danger to the 
+>> wider (potential) community, even though it is probably not a 
+>> feeling experienced by maintainers in the same position.
+>
+> I don't see how a possibility (but not necessity) of using LLMs could
+> be considered "pressure".  Such a conclusion is against my intuitive
+> understanding of what constitutes "pressure".  For any aspect like
+> this to constitute "pressure", the alternatives must be either
+> forbidden or at least punitive or much less attractive to _everyone_.
+
+A possibility could be that most of the code gets rewritten again and
+again (while having only little progress in features), such that humans
+cannot incrementally get an understanding of the code. That way they
+have no mental model they can build upon and cannot work with
+the code efficiently.
+
+This is from the experience that I received a huge commit for review
+this summer with the note by the contributor that they didn’t split it
+into individual, clean commits, because every added step of the LLM
+caused unrelated changes, so in the end they squashed it all.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-19T10:08:26+01:00
+From: zhaodaniu <zhaodaniu1@gmail.com>
+Subject: Re: About overlay rendering, whitespace-mode display issues.
+Message-ID: <86cxs1ur1x.fsf@gmail.com>
+In-Reply-To: <86h5hdkz27.fsf@gnu.org>
+References: <86ik1tcm8i.fsf@gmail.com> <86h5hdkz27.fsf@gnu.org>
+
+whitespace-mode defines its own face for whitespace characters
+(whitespace-space), but the overlay’s face takes precedence over the
+face set by whitespace-mode. For example, if the overlay’s face is red,
+spaces in the text created by the overlay are still rendered as the
+markers specified by whitespace-display-mappings, but they retain the
+overlay’s face. That’s the part I’m unsure about: the overlay’s face
+overrides the face from whitespace-mode. I’ll read the
+“Overlay Properties” section and related documentation in more detail.
+
+
+My understanding was that the behavior would be one of the following:
+
+1. Spaces in the overlay would not be rendered by whitespace-mode.
+2. Spaces in the overlay would be rendered by whitespace-mode and
+retain the whitespace-mode face.
+
+But what actually happens is that spaces in the overlay are rendered by
+whitespace-mode, while their face is overridden by the overlay.  I’ll
+read the relevant documentation to confirm how overlays are rendered
+and how face priority works.
+
+-- 
+zhaodaniu
+
+================================================================================
+Date: 2026-11-19T10:17:53+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <86fqwxkwn2.fsf@gnu.org>
+In-Reply-To: <av65bWl/gQQqpbJN@tuxteam.de> (tomas@tuxteam.de)
+References: <87jymnwpt5.fsf@posteo.net> <87zevifndy.fsf@web.de>
+ <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+ <avrCGtAEda8orMWN@tuxteam.de>
+ <E1xTrsq-000rug-Nh@fencepost.gnu.org> <av65bWl/gQQqpbJN@tuxteam.de>
+
+> Date: Thu, 19 Nov 2026 09:55:09 +0100
+> From: tomas@tuxteam.de
+> Cc: arne_bab@web.de, philipk@posteo.net, arstoffel@gmail.com,
+> 	joel.reicher@gmail.com, cwebber@dustycloud.org, eliz@gnu.org,
+> 	emacs-devel@gnu.org
+> 
+> > What is not clear to me is how we could prevent that.  Without strict
+> > secrecy, these huge companies will be able to read our public mailing
+> > lists.  And humans can also be agents of a huge company, passing along
+> > what they see.  But strict secrecy would damage our community even
+> > worse.
+> 
+> Nor is it to me, alas. Except to "proceed with care". Quite a bit of
+> thinking and discussion is necessary, I guess.
+
+More than we already invested? 😉
+
+================================================================================
+Date: 2026-11-19T10:24:44+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86ecchkwbn.fsf@gnu.org>
+In-Reply-To: <87ld6purhg.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org> <87ld6purhg.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: Joel Reicher <joel.reicher@gmail.com>,  rms@gnu.org,
+>   philipk@posteo.net,  shipmints@gmail.com,  arstoffel@gmail.com,
+>   emacs-devel@gnu.org
+> Date: Thu, 19 Nov 2026 09:59:07 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > IOW, what I think Richard says is that we should not accept the
+> > situation where some code in Emacs _must_ be developed or maintained
+> > using LLMs, but there's no objection to _allow_ such LLM-generated
+> > changes if that's one of the alternatives, alongside changes produced
+> > entirely by humans.
+> 
+> What I thought I understood is that there need not only be one
+> alternative to contribute without an LLM, but that this alternative
+> should be the preferred one.
+
+We prefer a clean, well-designed and implemented code that is well
+documented and tested.  Why is that not enough?
+
+> If that’s not the case, there’s a problem, because it incentivizes
+> people into using proprietary software and/or SaaSS.
+
+How is this different from people who use proprietary editors to edit
+code they submit to us?  We have no enforced preferences there as
+well, although our recommendations to everyone is to use Emacs.
+
+> >> I believe this constitutes "pressure", and is a danger to the 
+> >> wider (potential) community, even though it is probably not a 
+> >> feeling experienced by maintainers in the same position.
+> >
+> > I don't see how a possibility (but not necessity) of using LLMs could
+> > be considered "pressure".  Such a conclusion is against my intuitive
+> > understanding of what constitutes "pressure".  For any aspect like
+> > this to constitute "pressure", the alternatives must be either
+> > forbidden or at least punitive or much less attractive to _everyone_.
+> 
+> A possibility could be that most of the code gets rewritten again and
+> again (while having only little progress in features), such that humans
+> cannot incrementally get an understanding of the code.
+
+Why do you assume the Emacs maintainers will agree to that?  We don't
+agree to that today, when the submissions are from humans, so there
+should be no reason to assume we will agree in the future.
+
+In general, as I already pointed out, these discussions are replete
+with assumptions that Emacs maintainers don't do their job well
+enough, to put it mildly.  There's no basis for such assumptions, and
+the 40+ years of Emacs should be an ample evidence to the contrary.
+
+> This is from the experience that I received a huge commit for review
+> this summer with the note by the contributor that they didn’t split it
+> into individual, clean commits, because every added step of the LLM
+> caused unrelated changes, so in the end they squashed it all.
+
+I hope you rejected that submission, as is appropriate in such cases.
+And if so, why do you assume we will not do the same?  There examples
+in the archives that we do this already when necessary.
+
+================================================================================
+Date: 2026-11-19T10:24:54+01:00
+From: Richard Lawrence <rwl@recursewithless.net>
+Subject: Re: [PATCH] gnus-icalendar: updating an Org event in a narrowed
+ buffer can overwrite another entry
+Message-ID: <87se0xfa1l.fsf@recursewithless.net>
+In-Reply-To: <8733sxwajb.fsf@gnu.org>
+References: <87o6bqh40b.fsf@bzg.fr> <871p8k3cg7.fsf@athena.silentflame.com>
+ <87jymco5tm.fsf@gnu.org> <87ld6r1qkf.fsf@athena.silentflame.com>
+ <87v75uf1q5.fsf@recursewithless.net> <8733sxwajb.fsf@gnu.org>
+
+Bastien Guerry <bzg@gnu.org> writes:
+
+> Yes, this is a longstanding issue, it occurred to me a while ago (I'd
+> say more than 2 years ago), it's just now that I had some time to find
+> out the cause: and it is quite straightforward, when the Org agenda
+> buffer is narrowed, gnus-icalendar.el update is confused.
+> ...
+> Sean, Richard, let me know if I still need to create a format bug report
+> on emacs-bugs@ or if we can move forward with applying the fix.
+
+Then the actual change looks fine to me, for what that's worth (probably
+not much!).
+
+I had a bit of trouble applying the patch though.  `git am ...' (run via
+magit) errored out with "patch format detection failed" so I had to
+apply it manually with `patch'.  It probably needs to be regenerated from
+an actual commit, with a proper Changelog message, etc.
+
+Best,
+Richard
+
+================================================================================
+Date: 2026-11-19T10:26:36+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: About overlay rendering, whitespace-mode display issues.
+Message-ID: <86cxs1kw8j.fsf@gnu.org>
+In-Reply-To: <86cxs1ur1x.fsf@gmail.com> (message from zhaodaniu on Thu, 19 Nov
+ 2026 17:08:26 +0800)
+References: <86ik1tcm8i.fsf@gmail.com> <86h5hdkz27.fsf@gnu.org>
+ <86cxs1ur1x.fsf@gmail.com>
+
+> From: zhaodaniu <zhaodaniu1@gmail.com>
+> Cc: emacs-devel@gnu.org
+> Date: Thu, 19 Nov 2026 17:08:26 +0800
+> 
+> 
+> whitespace-mode defines its own face for whitespace characters
+> (whitespace-space), but the overlay’s face takes precedence over the
+> face set by whitespace-mode. For example, if the overlay’s face is red,
+> spaces in the text created by the overlay are still rendered as the
+> markers specified by whitespace-display-mappings, but they retain the
+> overlay’s face. That’s the part I’m unsure about: the overlay’s face
+> overrides the face from whitespace-mode. I’ll read the
+> “Overlay Properties” section and related documentation in more detail.
+> 
+> 
+> My understanding was that the behavior would be one of the following:
+> 
+> 1. Spaces in the overlay would not be rendered by whitespace-mode.
+> 2. Spaces in the overlay would be rendered by whitespace-mode and
+> retain the whitespace-mode face.
+> 
+> But what actually happens is that spaces in the overlay are rendered by
+> whitespace-mode, while their face is overridden by the overlay.
+
+This is the expected behavior.  Emacs must select one of the sources
+for face information, and the way it does so is documented in the
+manual to which I pointed.
+
+> I’ll read the relevant documentation to confirm how overlays are
+> rendered and how face priority works.
+
+Thank you.
+
+================================================================================
+Date: 2026-11-19T10:38:26+01:00
+From: zhaodaniu <zhaodaniu1@gmail.com>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <86ik1t9n59.fsf@gmail.com>
+In-Reply-To: <m27bismz1c.fsf@macmutant.fritz.box>
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+ <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+ <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz>
+ <E1xO4KK-00COOX-8m@fencepost.gnu.org> <87wlqsam3f.fsf@dialetheia.xyz>
+ <m27bismz1c.fsf@macmutant.fritz.box>
+
+I was able to build and run it successfully on Windows, so I’ll add the
+instructions here:
+
+1. Use the MSYS2 toolchain.
+2. Run pacman -S mingw-w64-ucrt-x86_64-pkgconf mingw-w64-ucrt-x86_64-libmupdf.
+3. In Emacs, run M-x emureader-build RET.
+
+Here’s a summary of the issues I ran into:
+
+1. If .dll is not included in load-suffixes, Emacs won’t find
+emureader-dyn.dll.
+2. The native Windows sort command takes precedence over MSYS2’s sort.
+The Windows version is located at /c/Windows/system32/sort.
+
+ldd output:
+```text
+ldd ~/.emacs.d/elpa/emureader-0.4.0/emureader-dyn.dll
+  ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x7ffd5afb0000)
+  KERNEL32.DLL => /c/Windows/System32/KERNEL32.DLL (0x7ffd5ad10000)
+  KERNELBASE.dll => /c/Windows/System32/KERNELBASE.dll (0x7ffd58ca0000)
+  msvcrt.dll => /c/Windows/System32/msvcrt.dll (0x7ffd5aed0000)
+  ucrtbase.dll => /c/Windows/System32/ucrtbase.dll (0x7ffd586e0000)
+  libwinpthread-1.dll => /ucrt64/bin/libwinpthread-1.dll (0x7ffd53f20000)
+  libmupdf.dll => /ucrt64/bin/libmupdf.dll (0x7ffcef740000)
+  ADVAPI32.dll => /c/Windows/System32/ADVAPI32.dll (0x7ffd5ade0000)
+  sechost.dll => /c/Windows/System32/sechost.dll (0x7ffd59b00000)
+  RPCRT4.dll => /c/Windows/System32/RPCRT4.dll (0x7ffd598b0000)
+  bcrypt.dll => /c/Windows/System32/bcrypt.dll (0x7ffd58fa0000)
+  libbrotlidec.dll => /ucrt64/bin/libbrotlidec.dll (0x7ffd53c10000)
+  libbrotlienc.dll => /ucrt64/bin/libbrotlienc.dll (0x7ffd30650000)
+  libfreetype-6.dll => /ucrt64/bin/libfreetype-6.dll (0x7ffd47080000)
+  libharfbuzz-0.dll => /ucrt64/bin/libharfbuzz-0.dll (0x7ffd47150000)
+  libjbig2dec-0.dll => /ucrt64/bin/libjbig2dec-0.dll (0x7ffd3bbd0000)
+  libgumbo-4.dll => /ucrt64/bin/libgumbo-4.dll (0x7ffd2ff90000)
+  GDI32.dll => /c/Windows/System32/GDI32.dll (0x7ffd5a310000)
+  win32u.dll => /c/Windows/System32/win32u.dll (0x7ffd58b10000)
+  gdi32full.dll => /c/Windows/System32/gdi32full.dll (0x7ffd587e0000)
+  libjpeg-8.dll => /ucrt64/bin/libjpeg-8.dll (0x7ffd37d80000)
+  msvcp_win.dll => /c/Windows/System32/msvcp_win.dll (0x7ffd58640000)
+  libopenjp2-7.dll => /ucrt64/bin/libopenjp2-7.dll (0x7ffd2ff00000)
+  USER32.dll => /c/Windows/System32/USER32.dll (0x7ffd59650000)
+  libbrotlicommon.dll => /ucrt64/bin/libbrotlicommon.dll (0x7ffd513d0000)
+  libz-1.dll => /ucrt64/bin/libz-1.dll (0x7ffd39160000)
+  libbrotlicommon.dll => /ucrt64/bin/libbrotlicommon.dll (0x570000)
+  libbz2-1.dll => /ucrt64/bin/libbz2-1.dll (0x7ffd53e30000)
+  zlib1.dll => /ucrt64/bin/zlib1.dll (0x7ffd53580000)
+  DWrite.dll => /c/Windows/SYSTEM32/DWrite.dll (0x7ffd3fef0000)
+  libpng16-16.dll => /ucrt64/bin/libpng16-16.dll (0x7ffd51420000)
+  libgcc_s_seh-1.dll => /ucrt64/bin/libgcc_s_seh-1.dll (0x7ffd53e50000)
+  libgcc_s_seh-1.dll => /ucrt64/bin/libgcc_s_seh-1.dll (0x570000)
+  USP10.dll => /c/Windows/SYSTEM32/USP10.dll (0x7ffd53ec0000)
+  libglib-2.0-0.dll => /ucrt64/bin/libglib-2.0-0.dll (0x7ffd44420000)
+  libgraphite2.dll => /ucrt64/bin/libgraphite2.dll (0x7ffd53c30000)
+  ole32.dll => /c/Windows/System32/ole32.dll (0x7ffd59db0000)
+  combase.dll => /c/Windows/System32/combase.dll (0x7ffd59fb0000)
+  SHELL32.dll => /c/Windows/System32/SHELL32.dll (0x7ffd5a3f0000)
+  libintl-8.dll => /ucrt64/bin/libintl-8.dll (0x7ffd30440000)
+  libstdc++-6.dll => /ucrt64/bin/libstdc++-6.dll (0x7ffd31f60000)
+  WS2_32.dll => /c/Windows/System32/WS2_32.dll (0x7ffd59d40000)
+  libiconv-2.dll => /ucrt64/bin/libiconv-2.dll (0x7ffcf2a90000)
+  libpcre2-8-0.dll => /ucrt64/bin/libpcre2-8-0.dll (0x7ffcf2bb0000)
+  CRYPTBASE.DLL => /c/Windows/System32/CRYPTBASE.DLL (0x7ffd57e20000)
+  bcryptPrimitives.dll => /c/Windows/System32/bcryptPrimitives.dll (0x7ffd589b0000)
+  IMM32.DLL => /c/Windows/System32/IMM32.DLL (0x7ffd599d0000)
+```
+
+Finally, here’s a preview image of the PDF I opened. It runs very
+smoothly for me.
+
+================================================================================
+Date: 2026-11-19T10:46:43+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: master 6ffa3a5bc73: IMAP: allow non-ASCII search queries
+Message-ID: <87jym9xif0.fsf@gmail.com>
+In-Reply-To: <87tsle2gdb.fsf@mail.gmail.com>
+References: <179465553592.25888.352928717224779799@vcs2.savannah.gnu.org>
+ <20261114112536.5653BC1CB08@vcs2.savannah.gnu.org>
+ <87qzgkzjko.fsf@gmail.com> <87wlqcmu6k.fsf@mail.gmail.com>
+ <87mrr7zzir.fsf@gmail.com> <87ik1vztbb.fsf@gmail.com>
+ <87y0arx9s6.fsf@mail.gmail.com> <87wlqay2eb.fsf@gmail.com>
+ <87o6bm42s9.fsf@mail.gmail.com> <86cxs2mbni.fsf@gnu.org>
+ <87ecci404w.fsf@mail.gmail.com> <87o6bmxg7m.fsf@gmail.com>
+ <87tsle2gdb.fsf@mail.gmail.com>
+
+>>>>> On Wed, 18 Nov 2026 18:34:24 +0100, Nickolai Dobrynin <ndobrynin@gmail.com> said:
+
+    Nickolai> Fixed.
+
+Thanks, pushed to master in 5b057aace29.
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-19T10:58:39+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <av7IT4Kp7qDtWKjo@tuxteam.de>
+In-Reply-To: <86fqwxkwn2.fsf@gnu.org>
+References: <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+ <avrCGtAEda8orMWN@tuxteam.de> <E1xTrsq-000rug-Nh@fencepost.gnu.org>
+ <av65bWl/gQQqpbJN@tuxteam.de> <86fqwxkwn2.fsf@gnu.org>
+
+On Thu, Nov 19, 2026 at 11:17:53AM +0200, Eli Zaretskii wrote:
+> > From: tomas@tuxteam.de
+
+[...]
+
+> > Nor is it to me, alas. Except to "proceed with care". Quite a bit of
+> > thinking and discussion is necessary, I guess.
+> 
+> More than we already invested? 😉
+
+I fear we are just at the beginning. In any case, thank you for your
+patience and your humour (we'll all need tons of those :)
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-19T11:11:44+01:00
+From: Joel Reicher <joel.reicher@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86v75tb067.fsf@gmail.com>
+In-Reply-To: <86ld6pl0kh.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+[...]
+
+(Going to respond to the elided part separately, at a later time)
+
+>> I believe this constitutes "pressure", and is a danger to the 
+>> wider (potential) community, even though it is probably not a 
+>> feeling experienced by maintainers in the same position.
+>
+> I don't see how a possibility (but not necessity) of using LLMs 
+> could be considered "pressure".  Such a conclusion is against my 
+> intuitive understanding of what constitutes "pressure".
+
+This is why I mentioned the subjectivity of it.
+
+My own experience of this kind of "pressure" is in a slightly 
+different area: use of Emacs's Info pages. I know from experience 
+that not only are many (newish) Emacs users unaware of the Info 
+pages; they resist using the Info pages once becoming aware. There 
+are various factors to this, but perhaps the biggest is the 
+availability of the documents on the web.
+
+The web is a familiar form of access (viewing, and somewhat more 
+significantly, searching) and although it's an unusual way to view 
+the behaviour I would suggest the availability of the web 
+constitutes "pressure" to use it INSTEAD of the Info pages.
+
+I myself use the Info pages heavily - almost exclusively - and I 
+do not feel this "pressure" at all. But I see it clearly in the 
+behaviour of other users (and regularly try to change their minds 
+about it).
+
+I am quite convinced the availability of using an LLM to write 
+elisp will do the same; users will feel "pressure" not to write 
+elisp themselves. This is so clear to me that I don't even think 
+it's a point that needs to be established; I regard it as fact.
+
+Rather I think the main argument is whether increasing dependence 
+on LLMs in the Emacs community, and a decrease in actual 
+understanding of elisp, constitutes harm to the community.
+
+> For any aspect like this to constitute "pressure", the 
+> alternatives must be either forbidden or at least punitive or 
+> much less attractive to _everyone_.
+
+I think a weakening of the last possibility is both true and 
+sufficient; the alternatives must be "much less attractive" to 
+"enough people". The question here (IMO) is harm to the community 
+at large; not harm to "everyone".
+
+And this is where I think the contentious "outright ban" stance 
+comes from: to prevent LLMs being "too attractive" for SOME 
+people, they need to be disallowed (or somesuch) for 
+everyone. That is (if you don't mind me putting it so crudely), 
+the negation of a "some" is the "all" of a negation.
+
+Thanks and regards,
+
+       - Joel
+
+================================================================================
+Date: 2026-11-19T11:25:52+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <594cca008d7da4fd0d7ea651a199f17f@gnu.support>
+In-Reply-To: <86mrr5l2x4.fsf@gnu.org>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net> <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support> <87v75tertn.fsf@posteo.net>
+ <748c88d6f4c0a84581d1193efdab7e54@gnu.support> <86mrr5l2x4.fsf@gnu.org>
+
+I understand your feelings, though I think you are generalizing while I 
+asked for particulars. So correct me if wrong:
+
+- "Prerogative" — curation decisions are the maintainer's call, not 
+governed by published standards I or any other non-maintainer can 
+demand.
+
+- Standing argument — outsiders aren't "entitled" to demand 
+justification; only team members are.
+
+- You are free to frame my statement as hostile and rude, answering the 
+tone, not argument?
+
+- Volunteer-project norm — "whoever does a job decides how to do it."
+
+My original question was if there is any written standard related to 
+business (so far many many companies do business with GNU software) or 
+any written standard related to rejecting "low-effort", SEO -- simple 
+question about policies.
+
+If it is private sole discretion making, that is not what I agree to. I 
+was thinking maintainers follow the GNU standard.
+
+You are basically saying it is discretionary.  No need to follow 
+standard.
+
+I understood. Now I also understand better why MELPA is there. I did not 
+research the history.
+
+Allow me to say again that new people giving you new Emacs packages 
+should be welcomed, even if they made a mistake in something, and not by 
+discretionary capricious decisions, which I never heard of before (like 
+business identity) get unwelcomed! That stops people from contributing.
+
+Jean Louis
+
+
+On 2026-11-19 10:02, Eli Zaretskii wrote:
+>> Hello Philip,
+>> 
+>> I have asked twice for standard to justify rejection criteria such as
+>> SEO, low-effort, business identity and instead of answering what is 
+>> the
+>> standard you just reframe position, deflect (that you do not need to
+>> restrict to GNU standard), and turn the question back on me.
+>> 
+>> So the standard is your discretionary judgment.
+>> 
+>> I don't find it welcoming.
+> 
+> This is gone too far, to the point of being rude and even hostile.
+> 
+> Excuse me for being blunt, but it is Philip's prerogative to use his
+> best judgment in these decisions, and no one outside of the project's
+> development team is entitled to post such harsh assessments of the way
+> he does his job in this case.  From where I stand, Philip (and others
+> who curate ELPA) do a wonderful job; if you want to change any of its
+> aspects, you need to volunteer to be part of the team, accept some of
+> their responsibilities, and do some of the job they do.  Until then,
+> you are not entitled to demand Philip to give you detailed report
+> about his criteria and decisions.  It's an accepted rule in volunteer
+> projects that whoever does a job is entitled to decide on its aspects
+> where those need a judgment call.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-19T11:33:46+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <c6041a1bf36d2bceb4ee192ccb4c5989@gnu.support>
+In-Reply-To: <av617Bp5tIwvz1Nh@tuxteam.de>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net> <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support> <87v75tertn.fsf@posteo.net>
+ <748c88d6f4c0a84581d1193efdab7e54@gnu.support> <av617Bp5tIwvz1Nh@tuxteam.de>
+
+On 2026-11-19 11:40, tomas@tuxteam.de wrote:
+>> I don't find it welcoming.
+> 
+> Don't do that.
+> 
+> (FWIW, I do agree with Philip's action here -- if the original 
+> motivation
+> was SEO, the risk of NonGNU ELPA turning into a dumpster of useless 
+> stuff
+> is high, so at least a "proof of work" in answering a couple of 
+> questions
+> seems in order)
+
+Is that now my mind polishing? I should not have the opinion? I find it 
+unwelcoming and I said for which reasons: lack of standard, 
+discretionary decision making, and author even agreed not to push any 
+more. My God, I even wonder how he could stay there reading all that 
+over his package. Package I cannot even find on Github anymore.
+
+- somebody contributed the package
+- he faced questions that are nowhere written as a GNU standard
+- when asked for standard there is solely defense, none maintainer 
+addressed the issue of lacking standard
+- conclusion is that it is discretionary, each maintainer decides how 
+they wish and want
+
+Yet in GNU project:
+
+- free software is for every business! Business identity? Why it should 
+matter. If you have standard for individuals or people not doing 
+business, then publish it. Otherwise the GPL is for all types, business 
+or not.
+
+- useless stuff -- I simply do not believe it. Somebody may need it. 
+What is standard for useless stuff in Emacs? How many packages in Emacs 
+I could say they are useless, just because personally I do not use it. 
+That is not any standard. Maybe you should start deleting projects like 
+"ed" from GNU because it is useless? Forgive the sarcasm, I actually use 
+ed from time to time.
+
+- SEO?? That really is not relevant, what is relevant is if it is free 
+software. Sure, many people receive SEO kudos from whatever packages, 
+but that is not benefit for Emacs community.
+
+No standard, mind control, and yet people love Emacs. Respect users 
+more.
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-19T11:52:07+01:00
+From: tomas@tuxteam.de
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <av7U18a9D/DsUzIY@tuxteam.de>
+In-Reply-To: <c6041a1bf36d2bceb4ee192ccb4c5989@gnu.support>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support>
+ <87v75tertn.fsf@posteo.net>
+ <748c88d6f4c0a84581d1193efdab7e54@gnu.support>
+ <av617Bp5tIwvz1Nh@tuxteam.de>
+ <c6041a1bf36d2bceb4ee192ccb4c5989@gnu.support>
+
+On Thu, Nov 19, 2026 at 01:33:46PM +0300, Jean Louis wrote:
+> On 2026-11-19 11:40, tomas@tuxteam.de wrote:
+> > > I don't find it welcoming.
+> > 
+> > Don't do that.
+> > 
+> > (FWIW, I do agree with Philip's action here -- if the original
+> > motivation
+> > was SEO, the risk of NonGNU ELPA turning into a dumpster of useless
+> > stuff
+> > is high, so at least a "proof of work" in answering a couple of
+> > questions
+> > seems in order)
+> 
+> Is that now my mind polishing? I should not have the opinion? I find it
+
+[...]
+
+I don't think so. I wouldn't have complained if you just had argued for a
+more formal criterion. I'm pretty sure Philip would have even engaged in
+a discussion.
+
+It sure make sense to "formalize" things, especially when it's some
+recurring pattern.
+
+But your post came across as value judgement about Philip's decision (which
+you, BTW, misrepresented: shit happens, but then an apology might make
+things nicer). And that part was, IMHO, not OK.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-19T11:53:29+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [ELPA] New package: emacs-reader
+Message-ID: <868q2pks7q.fsf@gnu.org>
+In-Reply-To: <86ik1t9n59.fsf@gmail.com> (message from zhaodaniu on Thu, 19 Nov
+ 2026 17:38:26 +0800)
+References: <87jynkjv37.fsf@dialetheia.xyz> <877bjkavmd.fsf@posteo.net>
+ <E1xHZnI-00743h-Rg@fencepost.gnu.org> <87jyni59n2.fsf@dialetheia.xyz>
+ <E1xIIwV-009igA-1H@fencepost.gnu.org> <871p9n8pmy.fsf@posteo.net>
+ <E1xKzYz-000DLo-6M@fencepost.gnu.org>
+ <ab9691b3-af0e-42c9-85ac-85ef247b9071@dialetheia.xyz>
+ <E1xO4KK-00COOX-8m@fencepost.gnu.org> <87wlqsam3f.fsf@dialetheia.xyz>
+ <m27bismz1c.fsf@macmutant.fritz.box> <86ik1t9n59.fsf@gmail.com>
+
+> From: zhaodaniu <zhaodaniu1@gmail.com>
+> Cc: Divya Ranjan Pattanaik <divya@dialetheia.xyz>,  rms@gnu.org,
+>   philipk@posteo.net,  emacs-devel@gnu.org,  tusharhero@sdf.org,
+>   eliz@gnu.org,  spwhitton@spwhitton.name
+> Date: Thu, 19 Nov 2026 17:38:26 +0800
+> 
+> 1. If .dll is not included in load-suffixes, Emacs won’t find
+> emureader-dyn.dll.
+
+More accurately, one needs Emacs with module support (in which case
+".dll" will automatically be in load-suffixes, at least by default).
+
+> 2. The native Windows sort command takes precedence over MSYS2’s sort.
+> The Windows version is located at /c/Windows/system32/sort.
+
+If the package uses the 'sort' command, it's a good idea to try
+'gsort' as well, because people frequently rename the GNU 'sort' to
+'gsort' to avoid this problem.  I suggest to report this to the
+package developers.
+
+================================================================================
+Date: 2026-11-19T12:01:03+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <867bi9krv4.fsf@gnu.org>
+In-Reply-To: <86v75tb067.fsf@gmail.com> (message from Joel Reicher on Thu, 19
+ Nov 2026 21:11:44 +1100)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com>
+
+> From: Joel Reicher <joel.reicher@gmail.com>
+> Cc: rms@gnu.org,  arne_bab@web.de,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Thu, 19 Nov 2026 21:11:44 +1100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > For any aspect like this to constitute "pressure", the 
+> > alternatives must be either forbidden or at least punitive or 
+> > much less attractive to _everyone_.
+> 
+> I think a weakening of the last possibility is both true and 
+> sufficient; the alternatives must be "much less attractive" to 
+> "enough people". The question here (IMO) is harm to the community 
+> at large; not harm to "everyone".
+
+I see no harm here, except to people who harm themselves.
+
+With all due respect, we are not a kindergarten.  Moreover, playing
+the role of "the Big Brother" is not something GNU should ever do,
+IMNSHO.
+
+> And this is where I think the contentious "outright ban" stance 
+> comes from: to prevent LLMs being "too attractive" for SOME 
+> people, they need to be disallowed (or somesuch) for 
+> everyone. That is (if you don't mind me putting it so crudely), 
+> the negation of a "some" is the "all" of a negation.
+
+The stance that "we know better what's good for you" is IMO a
+disservice to our users.  I hope GNU will never go there.  If it ever
+does, I'll be outta here, given some firsthand experience I have with
+such regimes.
+
+================================================================================
+Date: 2026-11-19T12:11:25+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <865wxtkrdu.fsf@gnu.org>
+In-Reply-To: <594cca008d7da4fd0d7ea651a199f17f@gnu.support> (message from Jean
+ Louis on Thu, 19 Nov 2026 13:25:52 +0300)
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net> <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support> <87v75tertn.fsf@posteo.net>
+ <748c88d6f4c0a84581d1193efdab7e54@gnu.support> <86mrr5l2x4.fsf@gnu.org>
+ <594cca008d7da4fd0d7ea651a199f17f@gnu.support>
+
+> Date: Thu, 19 Nov 2026 13:25:52 +0300
+> From: Jean Louis <bugs@gnu.support>
+> Cc: philipk@posteo.net, oscarfv@eclipso.eu, team@getmediawall.com,
+>  emacs-devel@gnu.org
+> 
+> I understand your feelings, though I think you are generalizing while I 
+> asked for particulars. So correct me if wrong:
+> 
+> - "Prerogative" — curation decisions are the maintainer's call, not 
+> governed by published standards I or any other non-maintainer can 
+> demand.
+
+You can ask, but not demand.  Certainly when you received an answer,
+you are not entitled to push your requests further.
+
+> - Standing argument — outsiders aren't "entitled" to demand 
+> justification; only team members are.
+
+Team members don't need to demand justifications, because they are
+part of the team which does the job.  Again, you can ask, politely,
+but once your questions are answered, please respect the team members
+by taking the answer and living with it.
+
+> - You are free to frame my statement as hostile and rude, answering the 
+> tone, not argument?
+
+Of course, it's the tone!  You have been given the answer, but you
+don't accept it and go one criticizing Philip for his judgment calls,
+something that he does as part of his job, and does very well.  You
+can disagree, but once the disagreement is clear, please keep it to
+yourself.
+
+> - Volunteer-project norm — "whoever does a job decides how to do it."
+
+YES!!
+
+> My original question was if there is any written standard related to 
+> business (so far many many companies do business with GNU software) or 
+> any written standard related to rejecting "low-effort", SEO -- simple 
+> question about policies.
+
+Philip pointed to the standards we have.  The rest is judgment calls,
+as always.
+
+> If it is private sole discretion making, that is not what I agree to. I 
+> was thinking maintainers follow the GNU standard.
+
+We do.  But the GNU standards don't codify each and every minor detail
+of each and every decision.  In particular, there's nothing against
+GNU standards in deciding that a given package or feature is not
+useful to enough Emacs users to justify its inclusion and following
+maintenance.  I'm astonished that you are even arguing about that.
+
+> You are basically saying it is discretionary.  No need to follow 
+> standard.
+
+No, that's not what I'm saying.  See above.  There's nothing in that
+decision that contradicts the GNU standards.
+
+> Allow me to say again that new people giving you new Emacs packages 
+> should be welcomed, even if they made a mistake in something, and not by 
+> discretionary capricious decisions, which I never heard of before (like 
+> business identity) get unwelcomed! That stops people from contributing.
+
+They are very welcome, but that doesn't mean any code they submit will
+be automatically accepted.
+
+And if you still disagree, let's leave it at that.  Please don't
+respond with further arguments about these aspects.
+
+================================================================================
+Date: 2026-11-19T12:21:46+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell and "GNU model"
+Message-ID: <87fqwxukvp.fsf@web.de>
+In-Reply-To: <av7IT4Kp7qDtWKjo@tuxteam.de>
+References: <87wlqmpa70.fsf@gmail.com> <avGnjAjyhTcM0ouK@tuxteam.de>
+ <87cxsdvlc4.fsf@posteo.net> <87se19eggo.fsf@web.de>
+ <avK+dbNJHMLI5qmW@tuxteam.de> <E1xSZ8S-001OcS-My@fencepost.gnu.org>
+ <avrCGtAEda8orMWN@tuxteam.de> <E1xTrsq-000rug-Nh@fencepost.gnu.org>
+ <av65bWl/gQQqpbJN@tuxteam.de> <86fqwxkwn2.fsf@gnu.org>
+ <av7IT4Kp7qDtWKjo@tuxteam.de>
+
+tomas@tuxteam.de writes:
+
+> On Thu, Nov 19, 2026 at 11:17:53AM +0200, Eli Zaretskii wrote:
+>> > Nor is it to me, alas. Except to "proceed with care". Quite a bit of
+>> > thinking and discussion is necessary, I guess.
+>> 
+>> More than we already invested? 😉
+>
+> I fear we are just at the beginning. In any case, thank you for your
+> patience and your humour (we'll all need tons of those :)
+
+I’d like to second that! Thank you!
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-19T12:26:23+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87a4n5uko0.fsf@web.de>
+In-Reply-To: <86ecchkwbn.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <87ld6purhg.fsf@web.de> <86ecchkwbn.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> A possibility could be that most of the code gets rewritten again and
+>> again (while having only little progress in features), such that humans
+>> cannot incrementally get an understanding of the code.
+>
+> Why do you assume the Emacs maintainers will agree to that?  We don't
+> agree to that today, when the submissions are from humans, so there
+> should be no reason to assume we will agree in the future.
+
+In the context of Emacs itself I don’t think you’d agree to merge such.
+
+But I’m thinking in the context of vibe-spell here: are all changes to
+ELPA packages reviewed by a core dev?
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-19T12:26:35+01:00
+From: Joel Reicher <joel.reicher@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86bj7lawpg.fsf@gmail.com>
+In-Reply-To: <87jym9s63g.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <87jym9s63g.fsf@posteo.net>
+
+Philip Kaludercic <philipk@posteo.net> writes:
+
+> Joel Reicher <joel.reicher@gmail.com> writes:
+
+[...]
+
+>> But someone less proficient who wishes to use a package like 
+>> vibe-spell as an opportunity to contribute, and to enter the 
+>> community, on hearing that it was originally authored by an LLM 
+>> would, I believe, be inclined to ease their own entry to the 
+>> community by also using an LLM.
+>
+> I would be interested to hear your opinion of the source code 
+> and whether or not you find it to be understandable, setting 
+> aside the fine technicalities of spell checking (which I 
+> understand aren't easy to do).
+
+There are some relatively large boolean expressions that stand out 
+to me as sufficiently difficult to understand that a human would 
+have written them differently.
+
+It doesn't mean they can't be understood; rather it adds to the 
+fatigue of the code being harder to understand than is necessary 
+(in my opinion).
+
+[...]
+
+>> I believe this constitutes "pressure", and is a danger to the 
+>> wider (potential) community, even though it is probably not a 
+>> feeling experienced by maintainers in the same position.
+>
+> I am not that convinced that this is "pressure" in the strong 
+> sense that would be necessary to substantiate the argument.  If 
+> you have reasons or principles against using LLMs for code 
+> generation (as I do), then this pressure will not make you 
+> change your mind.  And I don't see why inexperience of 
+> uncertainty wouldn't generally create the same sense of 
+> "pressure" to use LLMs for other packages as well.
+
+In my experience it's a fairly consistent aspect of human nature 
+that if a person is uncertain how to proceed in their own work, 
+they will take their cue from their community.
+
+I think inexperience and uncertainly does not create a sense of 
+"pressure"; rather it makes a person vulnerable to influences they 
+can't judge the merit of. So it's the presence and immediacy of 
+that influence or example that matters, which is why something 
+like this package might be more influential than exposure to code 
+not authored by an LLM.
+
+> I think your point is that "if LLMs have been used it the past, 
+> then it doesn't matter if I use them in the future", right?
+
+No, a bit stronger than that. "I'm struggling to do this, but it 
+seemed when they used an LLM it was easier for them, so I think I 
+should try that too."
+
+> Perhaps a far out idea, but what would you say if Augusto added 
+> a "no (further) LLM contributions" clause to the package?
+
+I think that would address a lot of what I'm describing, for this 
+package. Not sure it's practical as a general rule though.
+
+Thanks and regards,
+
+       - Joel
+
+================================================================================
+Date: 2026-11-19T12:36:35+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <861p8hkq7w.fsf@gnu.org>
+In-Reply-To: <87a4n5uko0.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <87ld6purhg.fsf@web.de> <86ecchkwbn.fsf@gnu.org> <87a4n5uko0.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Thu, 19 Nov 2026 12:26:23 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> A possibility could be that most of the code gets rewritten again and
+> >> again (while having only little progress in features), such that humans
+> >> cannot incrementally get an understanding of the code.
+> >
+> > Why do you assume the Emacs maintainers will agree to that?  We don't
+> > agree to that today, when the submissions are from humans, so there
+> > should be no reason to assume we will agree in the future.
+> 
+> In the context of Emacs itself I don’t think you’d agree to merge such.
+> 
+> But I’m thinking in the context of vibe-spell here: are all changes to
+> ELPA packages reviewed by a core dev?
+
+I'll let them answer.  I do see quite a few of them being reviewed,
+albeit not always in advance.
+
+================================================================================
+Date: 2026-11-19T12:37:22+01:00
+From: Joel Reicher <joel.reicher@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <861p8haw7h.fsf@gmail.com>
+In-Reply-To: <867bi9krv4.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> Eli Zaretskii <eliz@gnu.org> writes:
+>>
+>>> For any aspect like this to constitute "pressure", the 
+>>> alternatives must be either forbidden or at least punitive or 
+>>> much less attractive to _everyone_.
+>>
+>> I think a weakening of the last possibility is both true and 
+>> sufficient; the alternatives must be "much less attractive" to 
+>> "enough people". The question here (IMO) is harm to the 
+>> community  at large; not harm to "everyone".
+>
+> I see no harm here, except to people who harm themselves.
+>
+> With all due respect, we are not a kindergarten.
+
+Yes, but there is still such a thing as a newcomer to Emacs, and 
+to the community.
+
+> Moreover, playing the role of "the Big Brother" is not something 
+> GNU should ever do, IMNSHO.
+
+Agreed, but there has always been the setting of examples.
+
+>> And this is where I think the contentious "outright ban" stance 
+>> comes from: to prevent LLMs being "too attractive" for SOME 
+>> people, they need to be disallowed (or somesuch) for 
+>> everyone. That is (if you don't mind me putting it so crudely), 
+>> the negation of a "some" is the "all" of a negation.
+>
+> The stance that "we know better what's good for you" is IMO a 
+> disservice to our users.  I hope GNU will never go there.  If it 
+> ever does, I'll be outta here, given some firsthand experience I 
+> have with such regimes.
+
+I have a lot of sympathy for that, and I'm no fan of paternalism 
+(or worse), but I'm convinced there is such a thing as leadership 
+that doesn't fall afoul of the kinds of concerns you describe.
+
+I'm not sure how I'd flesh that out though, and even less sure how 
+I'd do it without drifting seriously off-topic.
+
+Thanks and regards,
+
+       - Joel
+
+================================================================================
+Date: 2026-11-19T12:58:33+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86zev5jamu.fsf@gnu.org>
+In-Reply-To: <861p8haw7h.fsf@gmail.com> (message from Joel Reicher on Thu, 19
+ Nov 2026 22:37:22 +1100)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com>
+
+> From: Joel Reicher <joel.reicher@gmail.com>
+> Cc: rms@gnu.org,  arne_bab@web.de,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Thu, 19 Nov 2026 22:37:22 +1100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> Eli Zaretskii <eliz@gnu.org> writes:
+> >>
+> >>> For any aspect like this to constitute "pressure", the 
+> >>> alternatives must be either forbidden or at least punitive or 
+> >>> much less attractive to _everyone_.
+> >>
+> >> I think a weakening of the last possibility is both true and 
+> >> sufficient; the alternatives must be "much less attractive" to 
+> >> "enough people". The question here (IMO) is harm to the 
+> >> community  at large; not harm to "everyone".
+> >
+> > I see no harm here, except to people who harm themselves.
+> >
+> > With all due respect, we are not a kindergarten.
+> 
+> Yes, but there is still such a thing as a newcomer to Emacs, and 
+> to the community.
+
+And they are very welcome, and receive our support and guidance.  But
+telling them not to harm themselves is not our job.
+
+> > Moreover, playing the role of "the Big Brother" is not something 
+> > GNU should ever do, IMNSHO.
+> 
+> Agreed, but there has always been the setting of examples.
+
+And we are okay in the examples department.
+
+> >> And this is where I think the contentious "outright ban" stance 
+> >> comes from: to prevent LLMs being "too attractive" for SOME 
+> >> people, they need to be disallowed (or somesuch) for 
+> >> everyone. That is (if you don't mind me putting it so crudely), 
+> >> the negation of a "some" is the "all" of a negation.
+> >
+> > The stance that "we know better what's good for you" is IMO a 
+> > disservice to our users.  I hope GNU will never go there.  If it 
+> > ever does, I'll be outta here, given some firsthand experience I 
+> > have with such regimes.
+> 
+> I have a lot of sympathy for that, and I'm no fan of paternalism 
+> (or worse), but I'm convinced there is such a thing as leadership 
+> that doesn't fall afoul of the kinds of concerns you describe.
+
+Cannot agree more, but where's the evidence that we don't provide
+exactly such kind of leadership?
+
+================================================================================
+Date: 2026-11-19T15:12:27+01:00
+From: Mekeor Melire <mekeor@posteo.de>
+Subject: Re: Human Emacs
+Message-ID: <87fqwwhpvd.fsf@posteo.de>
+In-Reply-To: <E1xTrvD-000wc3-Bg@fencepost.gnu.org>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org> <87ld6ytv84.fsf@asthra>
+ <E1xTrvD-000wc3-Bg@fencepost.gnu.org>
+
+On 2026-11-18 at 21:30, <rms@gnu.org> wrote:
+
+> I wonder if a free LLM, usable locally, could make it possible to
+> adapt the LLM such that it won't do this.
+
+There is no such thing as a “free LLM”. LLMs are made out of:
+
+(0) Program. The model as an executable might be gratis, i.e.
+downloadable without charge. Nice.
+
+(1) Code. The source code might be free. Nice!
+
+(2) Expertise. Big Tech increasingly isolates their respective AI
+research and does not share it publicly. Still, for the clever
+hacker community, this might be the least of problems.
+
+(3) Data. The amount of data needed to train an LLM to a usable
+level of intelligence is not available to the public. There are
+public datasets to download but they are too small. You could
+scrape the web but nowadays many websites require proof of work,
+cookies and Javascript, i.e. a full browser, which makes it
+unscrapable without a data centers or botnets. Big Tech companies
+like Meta and Google (which cooperates with Reddit) do their best
+to prevent scraping of their walled gardens so that they can keep
+their data to train their own *large* language models.
+
+A model might be pre-trained and ‘open weight’, but if the
+training and post-training data is missing, you cannot bootstrap
+the weights yourself. You'll still dependent on the actor that has
+trained the model with the data.
+
+(4) Compute. To train a model on the data, you need enormous
+amount of compute that is only possible with giant data centers.
+You cannot do this as a loosely organized collective of hackers.
+But you'll depend on data centers of Big Tech.
+
+Note that the compute power you need for inference, i.e. to ‘run
+the model locally’ is something different: Many models run on
+computers that cost around 5000 USD (if you buy graphics cards
+second hand) and are thus affordable for some well-earning, senior
+software engineers in the Global North.
+
+
+“Free LLM” is a hypothetical, utopian term. Questions like ‘if we
+had a free, local LLM, would ...?’ thus don't make sense to me.
+
+================================================================================
+Date: 2026-11-19T15:51:51+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: Human Emacs
+Message-ID: <874idcvpq0.fsf@web.de>
+In-Reply-To: <87fqwwhpvd.fsf@posteo.de>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org> <87ld6ytv84.fsf@asthra>
+ <E1xTrvD-000wc3-Bg@fencepost.gnu.org> <87fqwwhpvd.fsf@posteo.de>
+
+Mekeor Melire <mekeor@posteo.de> writes:
+
+> On 2026-11-18 at 21:30, <rms@gnu.org> wrote:
+>
+>> I wonder if a free LLM, usable locally, could make it possible to
+>> adapt the LLM such that it won't do this.
+>
+> (4) Compute. To train a model on the data, you need enormous
+> amount of compute that is only possible with giant data centers.
+> You cannot do this as a loosely organized collective of hackers.
+> But you'll depend on data centers of Big Tech.
+
+If someone could
+
+1. collect and tag Free Software and Free Culture material for model
+   training and then
+
+2. adapt the training process to ensure that attribution is preserved
+   (which parts of the training data informed the neurons that get
+   activated by a given request), then
+
+3. it could be possible to build something like a SETI@home to train a
+   truly free LLM that does not only generate output but also provides
+   attribution to its sources and ensures license compliance (if (A)GPL
+   code is included in the training data that influenced the activated
+   neurons, then the project must be licensed under (A)GPL and each part
+   must be (A)GPL-compatible).
+
+But until 1 and 2 are fulfilled, there’s no reason to take into account
+the theoretical viability of 3 when discussing project policy.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
