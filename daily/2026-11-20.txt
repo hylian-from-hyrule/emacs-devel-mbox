@@ -1,0 +1,1773 @@
+emacs-devel messages from 2026-11-19T18:15:00+01:00 to 2026-11-20T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-19T18:26:44+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: Re: Weird HTML generated from README.org (was: [PATCH] [NonGNU
+ ELPA] Add au-themes)
+Message-ID: <87h5hcbuln.fsf@gmail.com>
+In-Reply-To: <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+
+Hi Stefan,
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+>     [...]
+> and Org seems to generate the following from it:
+>     [...]
+
+Sorry for the trouble. The cause is on my side: `#+BEGIN_HTML' has not
+been an export block since Org 8.0. Current Org reads it as a special
+block named "HTML", so its contents are parsed as Org text, which gives
+the escaped tags and the bare image URLs turned into <img> that you saw.
+
+> Github happily displays this Org's content as a table of screenshots
+> (https://github.com/szymonwilczek/au-themes/blob/main/README.org), but
+> my Org/HTML-fu is not strong enough to understand why.
+
+GitHub renders Org with org-ruby, which still knows only the old syntax.
+It treats `#+BEGIN_HTML' as raw HTML, but it would hide a
+`#+BEGIN_EXPORT html' block, so the modern form would remove the gallery
+from GitHub. The single-line `#+HTML:' keyword works in both, so I have
+switched the README to it, and also gave the headings the internal links
+point to a CUSTOM_ID. It is now in the repo.
+
+> Can someone shed some light on this (so I can improve `elpa-admin.el` to
+> fix the false positives above)?
+
+The messages come from the regexp in `elpaa--doc-html-adjust-auxfiles',
+which matched ` src="<img src="' inside the escaped text.
+
+I've attached the patch that requires the attribute to be inside a real
+tag (the FIXME next to that loop). With my old README it goes from 18
+matches to none, and it still finds relative `src' attributes, including
+in tags over several lines. It also stops the old regexp from rewriting
+escaped text such as `&lt;img src="foo.png"' when a file of that name
+exists. Hope this helps.
+
+Thanks,
+Szymon
+
+================================================================================
+Date: 2026-11-19T22:08:04+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [gnu] externals/gtags-mode 3cf3904a30 02/29: Fix imenu
+ integration never being called
+Message-ID: <jwv33swh6o4.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261119205838.C3CA4C1F575@vcs2.savannah.gnu.org>
+References: <179512191676.757.3104471270417318441@vcs2.savannah.gnu.org>
+ <20261119205838.C3CA4C1F575@vcs2.savannah.gnu.org>
+
+> +  ;; The check avoids creating a local binding in untouched buffers.
+> +  (when (local-variable-p 'imenu-create-index-function)
+> +    (remove-function (local 'imenu-create-index-function)
+> +		     #'gtags-mode--imenu-advice)))
+
+Could you `M-x report-emacs-bug` about this unneeded creation of
+a local binding?
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-19T22:27:43+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Weird HTML generated from README.org
+Message-ID: <jwvqzggfria.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87h5hcbuln.fsf@gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+ <87h5hcbuln.fsf@gmail.com>
+
+>>     [...]
+>> and Org seems to generate the following from it:
+>>     [...]
+>
+> Sorry for the trouble. The cause is on my side: `#+BEGIN_HTML' has not
+> been an export block since Org 8.0. Current Org reads it as a special
+> block named "HTML", so its contents are parsed as Org text, which gives
+> the escaped tags and the bare image URLs turned into <img> that you saw.
+
+Ah, so your Org code was written for Github's implementation and not for
+Emacs', I see.
+
+>> Can someone shed some light on this (so I can improve `elpa-admin.el` to
+>> fix the false positives above)?
+> The messages come from the regexp in `elpaa--doc-html-adjust-auxfiles',
+> which matched ` src="<img src="' inside the escaped text.
+
+Yup.
+
+> I've attached the patch that requires the attribute to be inside a real
+> tag (the FIXME next to that loop). With my old README it goes from 18
+> matches to none, and it still finds relative `src' attributes, including
+> in tags over several lines. It also stops the old regexp from rewriting
+> escaped text such as `&lt;img src="foo.png"' when a file of that name
+> exists. Hope this helps.
+
+Thanks.  So far I've kept the current simplistic approach while waiting
+for some real false positive to tighten the code.  Sadly, your false
+positives were "not real" (the HTML code was not the intended one in the
+first place: with the new version of your `README.org`, Emacs generates
+an HTML file without those weird thingies and doesn't trigger false
+positives).
+
+>    (let* ((docdir (if (stringp docfile) (file-name-directory docfile)))
+> -         (regexp " \\(?:src\\)=\"\\([^#/.\"][^:\"#]+\\)\""))
+> +         (regexp "<[[:alpha:]][^<>]*[ \t\n]src=\"\\([^#/.\"<>][^:\"#<>]*\\)\""))
+
+This can cost O(N²) 🙁
+[ Admittedly, not on `master` any more, but `elpa.gnu.org` won't run
+  Emacs-32 for a few more years.  ]
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-19T22:46:47+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Weird HTML generated from README.org
+Message-ID: <jwvfqwwfqdd.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <jwvqzggfria.fsf-monnier+emacs@gnu.org>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+ <87h5hcbuln.fsf@gmail.com> <jwvqzggfria.fsf-monnier+emacs@gnu.org>
+
+>>    (let* ((docdir (if (stringp docfile) (file-name-directory docfile)))
+>> -         (regexp " \\(?:src\\)=\"\\([^#/.\"][^:\"#]+\\)\""))
+>> +         (regexp "<[[:alpha:]][^<>]*[ \t\n]src=\"\\([^#/.\"<>][^:\"#<>]*\\)\""))
+>
+> This can cost O(N²) 🙁
+> [ Admittedly, not on `master` any more, but `elpa.gnu.org` won't run
+>   Emacs-32 for a few more years.  ]
+
+Actually, no, this is still O(N²) on `master` as well, still (the regexp
+search causes O(N) calls to `re_match` and *that* one is reduced to
+O(N)).
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-19T22:59:33+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: Re: Weird HTML generated from README.org
+Message-ID: <87bj7kbhyy.fsf@gmail.com>
+In-Reply-To: <jwvfqwwfqdd.fsf-monnier+emacs@gnu.org>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+ <87h5hcbuln.fsf@gmail.com> <jwvqzggfria.fsf-monnier+emacs@gnu.org>
+ <jwvfqwwfqdd.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+> Actually, no, this is still O(N²) on `master` as well, still (the regexp
+> search causes O(N) calls to `re_match` and *that* one is reduced to
+> O(N)).
+
+Ah, thanks for the explanation, I had missed that. On Emacs 31 my
+timings grew linearly for the inputs I tried, but I can't rule out a
+worse case.
+
+I also found another problem with my regexp: on a tag longer than about
+300 KB the [^<>]* part fails with "Stack overflow in regexp matcher".
+So please drop that patch.
+
+An alternative that avoids both problems is to stop matching attributes
+with a regexp and walk the tags instead: find "<" followed by a letter,
+then read the attributes one by one (name, optional =, then a "..." or
+'...' or bare value) until ">". Each character is looked at once and
+none of the regexps can backtrack over a long span, so it's linear and
+doesn't overflow the stack. In my tests it:
+
+- finds nothing in the HTML from my old README and nothing in the new
+  one,
+- still finds relative src values in tags spanning several lines, with
+  single quotes or no quotes, and when another attribute's value
+  contains ">",
+- skips escaped text like &lt;img src="foo.png", and src= inside another
+  attribute's value,
+- takes 0.01 s on a 1.6 MB data: URI and grows linearly elsewhere.
+
+But of course, it has some limits:
+
+- it's about maybe 20 lines of code instead of one regexp,
+- it isn't a real HTML parser: it doesn't skip the contents of <script>,
+  <style> or <!-- comments --> (but neither does the current code),
+- as you said, nobody has hit a real false positive yet, so it only
+  fixes a problem that doesn't exist in practice so far.
+
+If you think it's worth it now, or once a real case shows up, I'm happy
+to send it as a patch. If not, no problem.
+
+Thanks,
+Szymon
+
+================================================================================
+Date: 2026-11-19T23:08:23+01:00
+From: Joel Reicher <joel.reicher@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <864idca2zs.fsf@gmail.com>
+In-Reply-To: <86zev5jamu.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> Eli Zaretskii <eliz@gnu.org> writes:
+
+[...]
+
+>>> I see no harm here, except to people who harm themselves.
+>>>
+>>> With all due respect, we are not a kindergarten.
+>>
+>> Yes, but there is still such a thing as a newcomer to Emacs, 
+>> and  to the community.
+>
+> And they are very welcome, and receive our support and guidance. 
+> But telling them not to harm themselves is not our job.
+
+I think this might overstate the potential problem to an extent 
+that misses the point.
+
+If I see someone using bash and pressing the up arrow 20 times to 
+get back to something they know is in their history and want to 
+use, I will almost certainly let them know about the "history" 
+command and the "!..." expansions.
+
+I'm not sure it's accurate to say they have done themselves harm 
+not seeking this out previously - it is more like a lost 
+opportunity - and that is probably why I see an obligation for 
+myself to point it out.
+
+If it was indeed deliberate self-harm, I might agree with you and 
+not feel such an obligation, but I'm not sure it is.
+
+[...]
+
+>>> The stance that "we know better what's good for you" is IMO a 
+>>> disservice to our users.  I hope GNU will never go there.  If 
+>>> it ever does, I'll be outta here, given some firsthand 
+>>> experience I have with such regimes.
+>>
+>> I have a lot of sympathy for that, and I'm no fan of 
+>> paternalism  (or worse), but I'm convinced there is such a 
+>> thing as leadership  that doesn't fall afoul of the kinds of 
+>> concerns you describe.
+>
+> Cannot agree more, but where's the evidence that we don't 
+> provide exactly such kind of leadership?
+
+You absolutely do provide leadership on matters you believe to be 
+relevant to Emacs.
+
+So I think this debate is about relevance. For example we can 
+agree that various forms of deliberate "self-harm" by some users 
+is not relevant. (That's a weird example but I hope it makes 
+sense.)
+
+But I think the lost opportunity to learn elisp by instead 
+favouring LLM use is less clear. In my experience learning elisp 
+is a large and invaluable part of the Emacs experience, and I say 
+that as someone who avoided learning elisp for the first 5 years 
+of my own use. The fact I now regard that as a great shame is a 
+large part of why I'm now arguing against LLMs.
+
+Thanks and regards,
+
+       - Joel
+
+================================================================================
+Date: 2026-11-19T23:43:46+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Weird HTML generated from README.org
+Message-ID: <jwvy0aoe9ek.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87bj7kbhyy.fsf@gmail.com>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+ <87h5hcbuln.fsf@gmail.com> <jwvqzggfria.fsf-monnier+emacs@gnu.org>
+ <jwvfqwwfqdd.fsf-monnier+emacs@gnu.org> <87bj7kbhyy.fsf@gmail.com>
+
+>> Actually, no, this is still O(N²) on `master` as well, still (the regexp
+>> search causes O(N) calls to `re_match` and *that* one is reduced to
+>> O(N)).
+> Ah, thanks for the explanation, I had missed that. On Emacs 31 my
+> timings grew linearly for the inputs I tried, but I can't rule out
+> a worse case.
+
+In normal circumstances it's linear, indeed.
+
+> - as you said, nobody has hit a real false positive yet, so it only
+>   fixes a problem that doesn't exist in practice so far.
+
+Also, IIRC the code is fairly safe in that false positives are harmless
+because we detect them "reliably" by checking for the presence of the
+corresponding file, so they simply emit a warning message.
+
+> If you think it's worth it now, or once a real case shows up, I'm
+> happy to send it as a patch.  If not, no problem.
+
+I think I'll keep the current simplistic search for now.
+Maybe the only real fix we need is to make sure we don't let a false
+positive hide a real positive (which we could do by going back to (1+
+(match-beginning 0)) before the next iteration of the search).
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-20T00:13:48+01:00
+From: chad <yandros@gmail.com>
+Subject: Re: Human Emacs
+Message-ID: <CAO2hHWb8OUZaSujci1FuaV=dVbTskKNk3G6LJZysyaWY9uWnLQ@mail.gmail.com>
+In-Reply-To: <874idcvpq0.fsf@web.de>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org> <87ld6ytv84.fsf@asthra>
+ <E1xTrvD-000wc3-Bg@fencepost.gnu.org> <87fqwwhpvd.fsf@posteo.de>
+ <874idcvpq0.fsf@web.de>
+
+On Thu, Nov 19, 2026 at 10:02 AM Dr. Arne Babenhauserheide <arne_bab@web.de>
+wrote:
+
+> If someone could
+>
+> 1. collect and tag Free Software and Free Culture material for model
+>    training and then
+>
+
+I believe I understand your post, and I agree with it. There is a
+further important "wrinkle" that, based on current technology, there
+are quite strong reasons to believe that there is insufficient
+material to, let's say "use as input for point one above" currently in
+existence, and it's not close. This suggests either a big revision to
+point one, or a necessary (and potentially difficult, on practical and
+political spectra, as well as technical) point zero.
+
+Probably, most people in this conversation understand this to some
+degree, but _as I read the conversations_, it seems like some of
+those messages are ignoring or skipping this point. Perhaps those
+messages' authors mean to imply some sort of future development
+that overcomes this hurdle. Sadly, there is not much effort on that
+front at the moment, at least as far as I can tell. (Lots of people agree
+that it would be good if "someone" could do this, but basically nobody
+is seriously trying it themselves. "Why" is a different conversation.)
+
+It seems (again, to me) highly likely that a more-or-less global change
+in copyright policy is *more* likely, at least in the next decade or so. (I
+would go farther and speculate that the most likely path involves another
+AI Winter, but that's also a different conversation.)
+
+I hope that helps get some assumptions out in the open.
+~Chad
+
+================================================================================
+Date: 2026-11-20T00:50:52+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: Human Emacs
+Message-ID: <87mrr4tm77.fsf@web.de>
+In-Reply-To: <CAO2hHWb8OUZaSujci1FuaV=dVbTskKNk3G6LJZysyaWY9uWnLQ@mail.gmail.com>
+References: <8733tozesd.fsf@asthra> <auV4dkJQGTzQcnmN@rtx.louis.club>
+ <86a4nutjn4.fsf@gnu.org> <0aa7f150-9d9a-66e5-9a40-1c906dfbb9ff@gmail.com>
+ <86ecd2osc3.fsf@gnu.org> <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <E1xRI1l-00AeUK-7C@fencepost.gnu.org> <87ld6ytv84.fsf@asthra>
+ <E1xTrvD-000wc3-Bg@fencepost.gnu.org> <87fqwwhpvd.fsf@posteo.de>
+ <874idcvpq0.fsf@web.de>
+ <CAO2hHWb8OUZaSujci1FuaV=dVbTskKNk3G6LJZysyaWY9uWnLQ@mail.gmail.com>
+
+chad <yandros@gmail.com> writes:
+
+> are quite strong reasons to believe that there is insufficient
+> material to, let's say "use as input for point one above" currently in
+> existence, and it's not close. This suggests either a big revision to
+> point one, or a necessary (and potentially difficult, on practical and
+> political spectra, as well as technical) point zero.
+
+Or it needs more development on efficient training in point 2 (adapt
+training to preserve attribution).
+
+It may need quite a bit of research.
+
+I list the training data as point 1, because having collected and
+properly tagged (with author, copyright holder, and license) training
+data is a requirement for any path towards a Free LLM.
+
+If working LLM code generation should prove to be impossible with
+legally reproducable training data, this training data could still be
+useful as a base for a search index to locate existing free licensed
+code or patches which can solve a problem at hand.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-20T05:46:26+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Human Emacs
+Message-ID: <E1xUGW2-00DMwn-0n@fencepost.gnu.org>
+In-Reply-To: <87y0as1xqn.fsf@athena.silentflame.com> (message from Sean
+ Whitton on Mon, 16 Nov 2026 17:40:00 +0000)
+References: <87o6c5zqhj.fsf@web.de> <864idxpshy.fsf@gnu.org>
+ <87cxslzicq.fsf@web.de> <861p91p8zc.fsf@gnu.org> <87y0b9xd1j.fsf@web.de>
+ <E1xPMe5-00ANsN-0E@fencepost.gnu.org> <87eccxvnyf.fsf@asthra>
+ <86cxshlta1.fsf@gnu.org>
+ <CAErXf6YSodFq_QkdxgD1CX6rpV9vapnanc-FKzQxYP8u+G2t=Q@mail.gmail.com>
+ <E1xRI1u-00AefO-KA@fencepost.gnu.org> <avVoI5obvftZ72jl@tuxteam.de>
+ <86jymiwcxo.fsf@gnu.org>
+ <CAL6FEzzLWzkfz8y4v9y_gSr1jinK-qp88xfWqU62ZkpQeDAetQ@mail.gmail.com>
+ <E1xSZ7C-001OKx-Ea@fencepost.gnu.org> <87y0as1xqn.fsf@athena.silentflame.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > In the hypothetical future where the copyright questions are all
+  > resolved, things like this will need writing down somewhere.
+
+Yes, indeed.  I've sent this point to the people who are working
+on writing a policy for using LLM output.  The LLM habituation bobsled
+could be a grave problem -- but I don't yet see a basis to know for certain.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-20T08:15:58+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: FR: Promote (completion--selected-candidate)
+Message-ID: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+In-Reply-To: 
+References: 
+
+Hi
+
+I would like to request that the function 
+(completion--selected-candidate) is "promoted" to 
+(completion-selected-candidate).
+
+The use case:
+
+I'm using it to put my currently selected candidate in the *Completions* 
+buffer in the kill ring for further usage.
+
+It's handy when hacking Elisp:
+You can use describe-variable, function, face, you name it;
+use the completions framework to search for your candidate;
+and then put the selected candidate in the kill ring.
+
+All the magic in the attached video is a simple interactive function 
+that implements this workflow.
+
+Thanks, /PA
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-11-20T08:41:25+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86o6bkj6fu.fsf@gnu.org>
+In-Reply-To: <864idca2zs.fsf@gmail.com> (message from Joel Reicher on Fri, 20
+ Nov 2026 09:08:23 +1100)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com>
+
+> From: Joel Reicher <joel.reicher@gmail.com>
+> Cc: rms@gnu.org,  arne_bab@web.de,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Fri, 20 Nov 2026 09:08:23 +1100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> [...]
+> 
+> >>> I see no harm here, except to people who harm themselves.
+> >>>
+> >>> With all due respect, we are not a kindergarten.
+> >>
+> >> Yes, but there is still such a thing as a newcomer to Emacs, 
+> >> and  to the community.
+> >
+> > And they are very welcome, and receive our support and guidance. 
+> > But telling them not to harm themselves is not our job.
+> 
+> I think this might overstate the potential problem to an extent 
+> that misses the point.
+> 
+> If I see someone using bash and pressing the up arrow 20 times to 
+> get back to something they know is in their history and want to 
+> use, I will almost certainly let them know about the "history" 
+> command and the "!..." expansions.
+
+"Let them know", sure.  We do that here when we have chance (we might
+not have chance if we don't know what people do in the privacy of
+their homes).  Telling them "it's verboten to press the up-arrow 20
+times" is something very different.  I hope you see the difference,
+which is the point I'm trying to make.
+
+> I'm not sure it's accurate to say they have done themselves harm 
+> not seeking this out previously - it is more like a lost 
+> opportunity - and that is probably why I see an obligation for 
+> myself to point it out.
+
+"Obligation to point it out", sure.  But that's a far cry form
+forbidding them to do that if they insist, or stopping to receive
+patches from them because they do.
+
+And please note that even the Bash example is not necessarily
+relevant, because this mailing list is not about using Bash.  So
+people who expect to see such trivial advice about Bash here have
+wrong expectations.  Similarly with stuff only remotely related to
+Emacs development, or not at all.  How to use LLMs wisely is such a
+topic.
+
+> >>> The stance that "we know better what's good for you" is IMO a 
+> >>> disservice to our users.  I hope GNU will never go there.  If 
+> >>> it ever does, I'll be outta here, given some firsthand 
+> >>> experience I have with such regimes.
+> >>
+> >> I have a lot of sympathy for that, and I'm no fan of 
+> >> paternalism  (or worse), but I'm convinced there is such a 
+> >> thing as leadership  that doesn't fall afoul of the kinds of 
+> >> concerns you describe.
+> >
+> > Cannot agree more, but where's the evidence that we don't 
+> > provide exactly such kind of leadership?
+> 
+> You absolutely do provide leadership on matters you believe to be 
+> relevant to Emacs.
+> 
+> So I think this debate is about relevance. For example we can 
+> agree that various forms of deliberate "self-harm" by some users 
+> is not relevant. (That's a weird example but I hope it makes 
+> sense.)
+> 
+> But I think the lost opportunity to learn elisp by instead 
+> favouring LLM use is less clear. In my experience learning elisp 
+> is a large and invaluable part of the Emacs experience, and I say 
+> that as someone who avoided learning elisp for the first 5 years 
+> of my own use. The fact I now regard that as a great shame is a 
+> large part of why I'm now arguing against LLMs.
+
+People who want to submit changes without learning ELisp will soon
+enough get negative feedback from us, whose purpose, among others, it
+to lead them towards learning.  So I don't think I see the problem in
+this part of our leadership.  I certainly don't see how refusing to
+accept patches from them (assuming the patches pass our multilevel QA)
+is TRT.
+
+================================================================================
+Date: 2026-11-20T10:43:41+01:00
+From: Joel Reicher <joel.reicher@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86se0v3kj6.fsf@gmail.com>
+In-Reply-To: <86o6bkj6fu.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Joel Reicher <joel.reicher@gmail.com>
+
+[...]
+
+>> If I see someone using bash and pressing the up arrow 20 times 
+>> to  get back to something they know is in their history and 
+>> want to  use, I will almost certainly let them know about the 
+>> "history"  command and the "!..." expansions.
+>
+> "Let them know", sure.  We do that here when we have chance (we 
+> might not have chance if we don't know what people do in the 
+> privacy of their homes).  Telling them "it's verboten to press 
+> the up-arrow 20 times" is something very different.  I hope you 
+> see the difference, which is the point I'm trying to make.
+
+Absolutely, yes.
+
+[...]
+
+>>> Cannot agree more, but where's the evidence that we don't 
+>>> provide exactly such kind of leadership?
+>>
+>> You absolutely do provide leadership on matters you believe to 
+>> be  relevant to Emacs.
+>>
+>> So I think this debate is about relevance. For example we can 
+>> agree that various forms of deliberate "self-harm" by some 
+>> users  is not relevant. (That's a weird example but I hope it 
+>> makes  sense.)
+>>
+>> But I think the lost opportunity to learn elisp by instead 
+>> favouring LLM use is less clear. In my experience learning 
+>> elisp  is a large and invaluable part of the Emacs experience, 
+>> and I say  that as someone who avoided learning elisp for the 
+>> first 5 years  of my own use. The fact I now regard that as a 
+>> great shame is a  large part of why I'm now arguing against 
+>> LLMs.
+>
+> People who want to submit changes without learning ELisp will 
+> soon enough get negative feedback from us, whose purpose, among 
+> others, it to lead them towards learning.  So I don't think I 
+> see the problem in this part of our leadership.
+
+Speaking for myself, I appreciate finding this common ground, and 
+it may indeed be sufficient as a guiding principle to guard 
+against many of my concerns. So I don't think it's appropriate for 
+me to argue for anything more at this stage.
+
+> I certainly don't see how refusing to accept patches from them 
+> (assuming the patches pass our multilevel QA) is TRT.
+
+I can understand that.
+
+Many thanks for the discussion.
+
+Regards,
+
+        - Joel
+
+================================================================================
+Date: 2026-11-20T11:00:00+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87y0anrffj.fsf@web.de>
+In-Reply-To: <86o6bkj6fu.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> But I think the lost opportunity to learn elisp by instead 
+>> favouring LLM use is less clear.
+>
+> People who want to submit changes without learning ELisp will soon
+> enough get negative feedback from us, whose purpose, among others, it
+> to lead them towards learning.  
+
+If we accepted their patches after they re-prompted their LLM a few
+times, how would that be negative feedback about not learning?
+
+They wouldn’t have learnt any elisp (just pasted comments into their LLM
+interface) but would have had their changes accepted (which is positive
+feedback).
+
+Or do you mean that no LLM-generated code can pass the QA?
+
+> I certainly don't see how refusing to accept patches from them
+> (assuming the patches pass our multilevel QA) is TRT.
+
+What does TRT mean?
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-20T12:45:19+01:00
+From: <tomas@tuxteam.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <awAyz7ncyQxVcN8P@tuxteam.de>
+In-Reply-To: <87y0anrffj.fsf@web.de>
+References: <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+
+On Fri, Nov 20, 2026 at 11:00:00AM +0100, Dr. Arne Babenhauserheide wrote:
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> But I think the lost opportunity to learn elisp by instead 
+> >> favouring LLM use is less clear.
+> >
+> > People who want to submit changes without learning ELisp will soon
+> > enough get negative feedback from us, whose purpose, among others, it
+> > to lead them towards learning.  
+> 
+> If we accepted their patches after they re-prompted their LLM a few
+> times, how would that be negative feedback about not learning?
+
+That's what I'm mulling about. But I'm still not sure...
+My hunch is that you can't isolate the code (as a social
+artifact it is) from its connections). But I'm not sure
+I'm right.
+
+If you view the code as a "product" ("commodity"), OTOH...
+But I think /this/ is definitely antitethical to the
+spirit of Free Software. But...
+
+[...]
+
+> Or do you mean that no LLM-generated code can pass the QA?
+> 
+> > I certainly don't see how refusing to accept patches from them
+> > (assuming the patches pass our multilevel QA) is TRT.
+> 
+> What does TRT mean?
+
+TRT == "The Right Thing" (hah, at least I knew this one :)
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-20T13:05:04+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: [PATCH]: Add move-lines-up and move-lines-down
+Message-ID: <dc95849a-4d84-41f2-844a-02181847036d@gmail.com>
+In-Reply-To: <4F487F5A-0981-487F-ACB6-BCAD473695AC@gmail.com>
+References: <87jyo9p6m8.fsf@posteo.net>
+ <4F487F5A-0981-487F-ACB6-BCAD473695AC@gmail.com>
+
+Hi,
+
+all the "LLaMe" ;-) discussions buried this too deep in my Inbox.
+
+Attached is a first attempt at including move-lines-up and 
+move-lines-down in misc.el.
+
+Best, /PA
+
+On 25/9/26 21:02, Pedro Andres Aranda Gutierrez wrote:
+> will do, thx
+> 
+> PA
+> Enviado desde mi iPad
+> 
+>> El 25 sept 2026, a las 19:45, Philip Kaludercic <philipk@posteo.net> escribió:
+>>
+>> ﻿"Pedro A. Aranda" <paaguti@gmail.com> writes:
+>>
+>> [...]
+>>
+>>>>> However, I don't know how to write a forward-op function, since I
+>>>>> can't picture what the next (or previous) thing would be for this
+>>>>> extended selection thing.
+>>>> I agree that it doesn't make sense in this case.  My guess is that
+>>>> you
+>>>> want to find the next "thing" that contains the selected region or point
+>>>> and move that?
+>>>
+>>> Yes, and I think we agree that makes little sense here.
+>>>
+>>> So I don't know if we want to go the generic transpose way here if
+>>> possible or we want to try to integrate the move-lines stuff with the
+>>> indent/de-indent lines stuff into something that can move a line or
+>>> group of lines up, down, left and right.
+>>
+>> Yeah, perhaps these are two separate concepts, since we want to be able
+>> to select a region and move it line-wise, and not thing-wise.  My
+>> recommendation would be to take a look at indent-rigidly and see how you
+>> can re-implement it -- or even integrate <up>/<down> movement into that
+>> command!
+
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-11-20T13:07:17+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86ik1rk8p6.fsf@gnu.org>
+In-Reply-To: <87y0anrffj.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: Joel Reicher <joel.reicher@gmail.com>,  rms@gnu.org,
+>   philipk@posteo.net,  shipmints@gmail.com,  arstoffel@gmail.com,
+>   emacs-devel@gnu.org
+> Date: Fri, 20 Nov 2026 11:00:00 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> But I think the lost opportunity to learn elisp by instead 
+> >> favouring LLM use is less clear.
+> >
+> > People who want to submit changes without learning ELisp will soon
+> > enough get negative feedback from us, whose purpose, among others, it
+> > to lead them towards learning.  
+> 
+> If we accepted their patches after they re-prompted their LLM a few
+> times, how would that be negative feedback about not learning?
+> 
+> They wouldn’t have learnt any elisp (just pasted comments into their LLM
+> interface) but would have had their changes accepted (which is positive
+> feedback).
+
+We provide the feedback.  It is up to the contributors to decide what
+to do with it and how (or whether) to learn from it.  This is how
+things are today, and I don't see how the potential use of LLM could
+or would change anything in this regard.  Learning from experience is
+the responsibility of the contributors, not ours.  We just need to
+provide our inputs and encouragement, which we do.
+
+> Or do you mean that no LLM-generated code can pass the QA?
+
+I don't know.  If it does, why should we the Emacs developers care?
+
+> > I certainly don't see how refusing to accept patches from them
+> > (assuming the patches pass our multilevel QA) is TRT.
+> 
+> What does TRT mean?
+
+The Right Thing.
+
+================================================================================
+Date: 2026-11-20T13:10:04+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86h5hbk8kj.fsf@gnu.org>
+In-Reply-To: <awAyz7ncyQxVcN8P@tuxteam.de> (tomas@tuxteam.de)
+References: <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <awAyz7ncyQxVcN8P@tuxteam.de>
+
+> Date: Fri, 20 Nov 2026 12:45:19 +0100
+> Cc: Eli Zaretskii <eliz@gnu.org>, Joel Reicher <joel.reicher@gmail.com>,
+> 	rms@gnu.org, philipk@posteo.net, shipmints@gmail.com,
+> 	arstoffel@gmail.com, emacs-devel@gnu.org
+> From: <tomas@tuxteam.de>
+> 
+> On Fri, Nov 20, 2026 at 11:00:00AM +0100, Dr. Arne Babenhauserheide wrote:
+> > Eli Zaretskii <eliz@gnu.org> writes:
+> > 
+> > >> But I think the lost opportunity to learn elisp by instead 
+> > >> favouring LLM use is less clear.
+> > >
+> > > People who want to submit changes without learning ELisp will soon
+> > > enough get negative feedback from us, whose purpose, among others, it
+> > > to lead them towards learning.  
+> > 
+> > If we accepted their patches after they re-prompted their LLM a few
+> > times, how would that be negative feedback about not learning?
+> 
+> That's what I'm mulling about. But I'm still not sure...
+> My hunch is that you can't isolate the code (as a social
+> artifact it is) from its connections). But I'm not sure
+> I'm right.
+> 
+> If you view the code as a "product" ("commodity"), OTOH...
+> But I think /this/ is definitely antitethical to the
+> spirit of Free Software. But...
+
+Sorry, I have absolutely no idea what you are talking about here.
+
+> > > I certainly don't see how refusing to accept patches from them
+> > > (assuming the patches pass our multilevel QA) is TRT.
+> > 
+> > What does TRT mean?
+> 
+> TRT == "The Right Thing" (hah, at least I knew this one :)
+
+I do understand what you mean here.
+
+================================================================================
+Date: 2026-11-20T13:24:12+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87bj7jr8r7.fsf@web.de>
+In-Reply-To: <86ik1rk8p6.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> > People who want to submit changes without learning ELisp will soon
+>> > enough get negative feedback from us, whose purpose, among others, is
+>> > to lead them towards learning.  
+…
+>> Or do you mean that no LLM-generated code can pass the QA?
+>
+> I don't know.  If it does, why should we the Emacs developers care?
+
+Because if it does, then the feedback given to people who use an LLM
+does not lead to learning, voiding one of the purposes of the feedback.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-20T13:25:53+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [PATCH]: Add move-lines-up and move-lines-down
+Message-ID: <86fqwvk7u6.fsf@gnu.org>
+In-Reply-To: <dc95849a-4d84-41f2-844a-02181847036d@gmail.com>
+ (paaguti@gmail.com)
+References: <87jyo9p6m8.fsf@posteo.net>
+ <4F487F5A-0981-487F-ACB6-BCAD473695AC@gmail.com>
+ <dc95849a-4d84-41f2-844a-02181847036d@gmail.com>
+
+> Date: Fri, 20 Nov 2026 13:05:04 +0100
+> From: "Pedro A. Aranda" <paaguti@gmail.com>
+> Cc: emacs-devel@gnu.org
+> 
+> Attached is a first attempt at including move-lines-up and 
+> move-lines-down in misc.el.
+
+Thanks, comments below.
+
+> +** New functions 'move-lines-up' and 'move-lines-down'.
+> +These functions move the current line or region up or down. When a
+> +region is selected, it will be extended to full lines. These functions
+> +don't use the kill ring.
+
+The last sentence doesn't belong to NEWS.  Also, this entry doesn't
+mention the fact that one can move the stuff by ARG lines.
+
+> +(defun move-lines-up (arg beg end)
+> +  "Move region or line ARG times up when ARG > 0 or down when ARG < 0.
+
+"ARG times" is not the best way of putting this.  I'd use
+
+  Move current line up ARG lines.
+  ARG is the prefix numeric argument and defaults to 1.
+  Negative values move down.
+
+> +Use the current line when nothing is selected.
+
+I'd rephrase:
+
+  If region is active, move the lines in the region instead.
+
+> +Move full lines: if the mark or the point are
+                                   ^^^^^^^^^
+"point", not "the point".
+
+> +not at the beginning or end of line, extend the region
+> +automatically.
+
+"Extend the region" is misleading, because the region is not affected.
+Instead, I'd say
+
+  ... if the mark or point are not at the beginning or end of a line,
+  move the line(s) which include the mark and point positions.
+
+> +    (let ((deactivate-mark nil)
+> +          ;; Store the column when moving just one line
+> +          (curcol (and (not (use-region-p)) (current-column))))
+
+AFAIU, this comment is inaccurate because the column will be recorded
+when the region is not active, but ARG is non-zero.
+
+And why not try preserving the column in that other case as well?
+
+> +	(unless (= 0 (forward-line arg))
+> +	  (signal (if (< arg 0)
+> +                      'beginning-of-buffer
+> +                    'end-of-buffer))))
+
+So in this case we don't move anything?  Why not move what we can
+instead?
+
+Thanks again for working on this.
+
+================================================================================
+Date: 2026-11-20T13:29:16+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86eccfk7oj.fsf@gnu.org>
+In-Reply-To: <87bj7jr8r7.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org> <87bj7jr8r7.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Fri, 20 Nov 2026 13:24:12 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> > People who want to submit changes without learning ELisp will soon
+> >> > enough get negative feedback from us, whose purpose, among others, is
+> >> > to lead them towards learning.  
+> …
+> >> Or do you mean that no LLM-generated code can pass the QA?
+> >
+> > I don't know.  If it does, why should we the Emacs developers care?
+> 
+> Because if it does, then the feedback given to people who use an LLM
+> does not lead to learning, voiding one of the purposes of the feedback.
+
+Once again, it is not our responsibility to force contributors to
+learn.  No one should expect that from us.  OTOH, we shouldn't avoid
+providing the feedback due to suspicions that it will not be used.
+
+================================================================================
+Date: 2026-11-20T13:35:13+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <awA+gcJa9CQu7hIl@tuxteam.de>
+In-Reply-To: <86h5hbk8kj.fsf@gnu.org>
+References: <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <awAyz7ncyQxVcN8P@tuxteam.de> <86h5hbk8kj.fsf@gnu.org>
+
+On Fri, Nov 20, 2026 at 02:10:04PM +0200, Eli Zaretskii wrote:
+> > Date: Fri, 20 Nov 2026 12:45:19 +0100
+> > Cc: Eli Zaretskii <eliz@gnu.org>, Joel Reicher <joel.reicher@gmail.com>,
+> > 	rms@gnu.org, philipk@posteo.net, shipmints@gmail.com,
+> > 	arstoffel@gmail.com, emacs-devel@gnu.org
+> > From: <tomas@tuxteam.de>
+
+[code as "product", code as "communication"]
+
+> Sorry, I have absolutely no idea what you are talking about here.
+
+I don't know whether I should waste more of your bandwidth by trying
+harder.
+
+To me, code is, first and foremost, a way of communicating with
+fellow programmers, a bit in the sense of Knuth.
+
+As much as I don't feel at ease trying to engage in a conversation
+with a machine [1] (I strongly prefer to reserve the few cycles
+I've left for fellow humans) -- especially when/if the machine is
+trying to pass as a human, I strongly dislike reading code not
+produced by a sentient being.
+
+> > > > I certainly don't see how refusing to accept patches from them
+> > > > (assuming the patches pass our multilevel QA) is TRT.
+> > > 
+> > > What does TRT mean?
+> > 
+> > TRT == "The Right Thing" (hah, at least I knew this one :)
+> 
+> I do understand what you mean here.
+
+At least one ;-)
+
+thanks & cheers
+
+[1] except when fooling around
+-- 
+t
+
+================================================================================
+Date: 2026-11-20T13:56:04+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <875wxrr7a3.fsf@web.de>
+In-Reply-To: <86eccfk7oj.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org> <87bj7jr8r7.fsf@web.de>
+ <86eccfk7oj.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> >> Or do you mean that no LLM-generated code can pass the QA?
+>> >
+>> > I don't know.  If it does, why should we the Emacs developers care?
+>> 
+>> Because if it does, then the feedback given to people who use an LLM
+>> does not lead to learning, voiding one of the purposes of the feedback.
+>
+> Once again, it is not our responsibility to force contributors to
+> learn.  No one should expect that from us.  OTOH, we shouldn't avoid
+> providing the feedback due to suspicions that it will not be used.
+
+That isn’t the point I wanted to make. The point is that by stating as a
+project that LLM-generated code is not accepted, the problem that
+feedback doesn’t reach a person is much less likely.
+
+Feeding feedback into an LLM is a problem, because if people do that
+it’s so corrosive that even a friend of mine who took a deep dive into
+agentic AI and has been using it to build software for production for
+over a year now said that he stops working together with someone who
+just feeds his reviews into a machine and sends the generated answers.
+
+I know that’s an anecdote. Here’s some actual research on the topic:
+https://arxiv.org/html/2603.27249v2#S4
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-20T14:31:23+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86cxrzk4t0.fsf@gnu.org>
+In-Reply-To: <awA+gcJa9CQu7hIl@tuxteam.de> (tomas@tuxteam.de)
+References: <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <awAyz7ncyQxVcN8P@tuxteam.de>
+ <86h5hbk8kj.fsf@gnu.org> <awA+gcJa9CQu7hIl@tuxteam.de>
+
+> Date: Fri, 20 Nov 2026 13:35:13 +0100
+> From: tomas@tuxteam.de
+> Cc: arne_bab@web.de, joel.reicher@gmail.com, rms@gnu.org,
+> 	philipk@posteo.net, shipmints@gmail.com, arstoffel@gmail.com,
+> 	emacs-devel@gnu.org
+> 
+> On Fri, Nov 20, 2026 at 02:10:04PM +0200, Eli Zaretskii wrote:
+> > > Date: Fri, 20 Nov 2026 12:45:19 +0100
+> > > Cc: Eli Zaretskii <eliz@gnu.org>, Joel Reicher <joel.reicher@gmail.com>,
+> > > 	rms@gnu.org, philipk@posteo.net, shipmints@gmail.com,
+> > > 	arstoffel@gmail.com, emacs-devel@gnu.org
+> > > From: <tomas@tuxteam.de>
+> 
+> To me, code is, first and foremost, a way of communicating with
+> fellow programmers, a bit in the sense of Knuth.
+> 
+> As much as I don't feel at ease trying to engage in a conversation
+> with a machine [1] (I strongly prefer to reserve the few cycles
+> I've left for fellow humans) -- especially when/if the machine is
+> trying to pass as a human, I strongly dislike reading code not
+> produced by a sentient being.
+
+Seems like some kind of gut feeling that has no rational explanation.
+We all have those, but why should we discuss them in public, let alone
+call (or demand) others to do the same?
+
+FWIW, when I want to communicate with fellow programmers, I use a
+phone or email or just talk to them in person.  IME, that's much more
+efficient than "talking" with code, even when the subject of the
+discussion is some code.  YMMV.
+
+================================================================================
+Date: 2026-11-20T14:39:03+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86bj7jk4g8.fsf@gnu.org>
+In-Reply-To: <875wxrr7a3.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org> <87bj7jr8r7.fsf@web.de>
+ <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Fri, 20 Nov 2026 13:56:04 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> >> Or do you mean that no LLM-generated code can pass the QA?
+> >> >
+> >> > I don't know.  If it does, why should we the Emacs developers care?
+> >> 
+> >> Because if it does, then the feedback given to people who use an LLM
+> >> does not lead to learning, voiding one of the purposes of the feedback.
+> >
+> > Once again, it is not our responsibility to force contributors to
+> > learn.  No one should expect that from us.  OTOH, we shouldn't avoid
+> > providing the feedback due to suspicions that it will not be used.
+> 
+> That isn’t the point I wanted to make. The point is that by stating as a
+> project that LLM-generated code is not accepted, the problem that
+> feedback doesn’t reach a person is much less likely.
+
+Good luck with that assumption!  I had more than enough experiences
+with real humans disregarding my feedback, if not responding in harsh
+words centered on my personality.
+
+> Feeding feedback into an LLM is a problem, because if people do that
+> it’s so corrosive that even a friend of mine who took a deep dive into
+> agentic AI and has been using it to build software for production for
+> over a year now said that he stops working together with someone who
+> just feeds his reviews into a machine and sends the generated answers.
+
+I prefer to decide whether or not to work with someone depending on
+the answers, not on their source, real or imaginary.  See bug#82057 to
+understand what I'm talking about.
+
+> I know that’s an anecdote. Here’s some actual research on the topic:
+> https://arxiv.org/html/2603.27249v2#S4
+
+If I show you 100 Free Software projects that dwindled and died before
+they were 10 years old, would you then claim that there's high
+probability that Emacs will soon die similar death?  If not, why not?
+
+================================================================================
+Date: 2026-11-20T14:40:14+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <awBNvq1tc0cNv9VR@tuxteam.de>
+In-Reply-To: <86cxrzk4t0.fsf@gnu.org>
+References: <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <awAyz7ncyQxVcN8P@tuxteam.de> <86h5hbk8kj.fsf@gnu.org>
+ <awA+gcJa9CQu7hIl@tuxteam.de> <86cxrzk4t0.fsf@gnu.org>
+
+On Fri, Nov 20, 2026 at 03:31:23PM +0200, Eli Zaretskii wrote:
+> > Date: Fri, 20 Nov 2026 13:35:13 +0100
+> > From: tomas@tuxteam.de
+> > Cc: arne_bab@web.de, joel.reicher@gmail.com, rms@gnu.org,
+> > 	philipk@posteo.net, shipmints@gmail.com, arstoffel@gmail.com,
+> > 	emacs-devel@gnu.org
+> > 
+> > On Fri, Nov 20, 2026 at 02:10:04PM +0200, Eli Zaretskii wrote:
+> > > > Date: Fri, 20 Nov 2026 12:45:19 +0100
+> > > > Cc: Eli Zaretskii <eliz@gnu.org>, Joel Reicher <joel.reicher@gmail.com>,
+> > > > 	rms@gnu.org, philipk@posteo.net, shipmints@gmail.com,
+> > > > 	arstoffel@gmail.com, emacs-devel@gnu.org
+> > > > From: <tomas@tuxteam.de>
+> > 
+> > To me, code is, first and foremost, a way of communicating with
+> > fellow programmers, a bit in the sense of Knuth.
+> > 
+> > As much as I don't feel at ease trying to engage in a conversation
+> > with a machine [1] (I strongly prefer to reserve the few cycles
+> > I've left for fellow humans) -- especially when/if the machine is
+> > trying to pass as a human, I strongly dislike reading code not
+> > produced by a sentient being.
+> 
+> Seems like some kind of gut feeling that has no rational explanation.
+> We all have those, but why should we discuss them in public, let alone
+> call (or demand) others to do the same?
+
+It's more than a gut feeling, no need to get dismissive here (and,
+BTW, not nice either).
+
+It's the realisation that we humans are made to communicate with
+other humans. I'll skip the literature list, that'd be off-topic
+
+> FWIW, when I want to communicate with fellow programmers, I use a
+> phone or email or just talk to them in person.  IME, that's much more
+> efficient than "talking" with code, even when the subject of the
+> discussion is some code.  YMMV.
+
+Humans invented writing aeons ago -- I can enjoy some (one-way)
+communication with Socrates or D.E.Knth without picking up the
+phone. Yes, that's nearly magic.
+
+IMHO, /this/ is what software freedoms 1 and 3 are about.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-20T14:52:27+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <868q2nk3tw.fsf@gnu.org>
+In-Reply-To: <awBNvq1tc0cNv9VR@tuxteam.de> (tomas@tuxteam.de)
+References: <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <awAyz7ncyQxVcN8P@tuxteam.de> <86h5hbk8kj.fsf@gnu.org>
+ <awA+gcJa9CQu7hIl@tuxteam.de>
+ <86cxrzk4t0.fsf@gnu.org> <awBNvq1tc0cNv9VR@tuxteam.de>
+
+> Date: Fri, 20 Nov 2026 14:40:14 +0100
+> From: tomas@tuxteam.de
+> Cc: arne_bab@web.de, joel.reicher@gmail.com, rms@gnu.org,
+> 	philipk@posteo.net, shipmints@gmail.com, arstoffel@gmail.com,
+> 	emacs-devel@gnu.org
+> 
+> > > To me, code is, first and foremost, a way of communicating with
+> > > fellow programmers, a bit in the sense of Knuth.
+> > > 
+> > > As much as I don't feel at ease trying to engage in a conversation
+> > > with a machine [1] (I strongly prefer to reserve the few cycles
+> > > I've left for fellow humans) -- especially when/if the machine is
+> > > trying to pass as a human, I strongly dislike reading code not
+> > > produced by a sentient being.
+> > 
+> > Seems like some kind of gut feeling that has no rational explanation.
+> > We all have those, but why should we discuss them in public, let alone
+> > call (or demand) others to do the same?
+> 
+> It's more than a gut feeling, no need to get dismissive here (and,
+> BTW, not nice either).
+> 
+> It's the realisation that we humans are made to communicate with
+> other humans. I'll skip the literature list, that'd be off-topic
+
+Not everything is about communications with others.  When I drive a
+car, I don't communicate with anyone, at least not by driving.  Same
+when I write code: I want to create or improve a program, not to
+communicate.
+
+> > FWIW, when I want to communicate with fellow programmers, I use a
+> > phone or email or just talk to them in person.  IME, that's much more
+> > efficient than "talking" with code, even when the subject of the
+> > discussion is some code.  YMMV.
+> 
+> Humans invented writing aeons ago -- I can enjoy some (one-way)
+> communication with Socrates or D.E.Knth without picking up the
+> phone. Yes, that's nearly magic.
+
+I wonder how this is relevant to the issues at hand.  I don't think it
+is.
+
+> IMHO, /this/ is what software freedoms 1 and 3 are about.
+
+Then let's disagree and move on.  (I think you misunderstand what
+those freedoms are about.  Yes, they can be interpreted as you do,
+given that you have these ideas, but they are not about your ideas,
+they are about freedom of using software to our benefits.)
+
+================================================================================
+Date: 2026-11-20T16:33:08+01:00
+From: tomas@tuxteam.de
+Subject: Software as communication [was: ELPA submission: vibe-spell]
+Message-ID: <awBoND1tU03Mr40Q@tuxteam.de>
+In-Reply-To: <868q2nk3tw.fsf@gnu.org>
+References: <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <awAyz7ncyQxVcN8P@tuxteam.de> <86h5hbk8kj.fsf@gnu.org>
+ <awA+gcJa9CQu7hIl@tuxteam.de> <86cxrzk4t0.fsf@gnu.org>
+ <awBNvq1tc0cNv9VR@tuxteam.de> <868q2nk3tw.fsf@gnu.org>
+
+On Fri, Nov 20, 2026 at 03:52:27PM +0200, Eli Zaretskii wrote:
+
+[...]
+
+> Not everything is about communications with others.  When I drive a
+> car, I don't communicate with anyone, at least not by driving.
+
+[veering dangerously off-topic] I sure hope you do! In fact (I don't
+drive cars, but cycle a lot), realising this has made a much more
+peaceful driver of me.
+
+>                                    Same
+> when I write code: I want to create or improve a program, not to
+> communicate.
+
+But you value clarity. And this is not for the compiler's benefit,
+is it?
+
+> > > FWIW, when I want to communicate with fellow programmers, I use a
+> > > phone or email or just talk to them in person.  IME, that's much more
+> > > efficient than "talking" with code, even when the subject of the
+> > > discussion is some code.  YMMV.
+> > 
+> > Humans invented writing aeons ago -- I can enjoy some (one-way)
+> > communication with Socrates or D.E.Knth without picking up the
+> > phone. Yes, that's nearly magic.
+> 
+> I wonder how this is relevant to the issues at hand.  I don't think it
+> is.
+
+That's a standpoint thing. I now understand we don't share this one
+(we do share many others, mind you).
+
+> > IMHO, /this/ is what software freedoms 1 and 3 are about.
+> 
+> Then let's disagree and move on.  (I think you misunderstand what
+> those freedoms are about.  Yes, they can be interpreted as you do,
+> given that you have these ideas, but they are not about your ideas,
+> they are about freedom of using software to our benefits.)
+
+So let's disagree. Friendly :)
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-20T16:40:49+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: Software as communication [was: ELPA submission: vibe-spell]
+Message-ID: <861p8fjyta.fsf@gnu.org>
+In-Reply-To: <awBoND1tU03Mr40Q@tuxteam.de> (tomas@tuxteam.de)
+References: <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <awAyz7ncyQxVcN8P@tuxteam.de> <86h5hbk8kj.fsf@gnu.org>
+ <awA+gcJa9CQu7hIl@tuxteam.de> <86cxrzk4t0.fsf@gnu.org>
+ <awBNvq1tc0cNv9VR@tuxteam.de>
+ <868q2nk3tw.fsf@gnu.org> <awBoND1tU03Mr40Q@tuxteam.de>
+
+> Date: Fri, 20 Nov 2026 16:33:08 +0100
+> From: tomas@tuxteam.de
+> Cc: arne_bab@web.de, joel.reicher@gmail.com, rms@gnu.org,
+> 	philipk@posteo.net, shipmints@gmail.com, arstoffel@gmail.com,
+> 	emacs-devel@gnu.org
+> 
+> > when I write code: I want to create or improve a program, not to
+> > communicate.
+> 
+> But you value clarity. And this is not for the compiler's benefit,
+> is it?
+
+It's so the program is as close to perfect as possible.  Similar to
+why I wash my car when it becomes dirty.
+
+Also, clarity helps me to make sure the program is correct, since any
+logical bugs will stand out.
+
+================================================================================
+Date: 2026-11-20T17:33:13+01:00
+From: Vincenzo Pupillo <v.pupillo@gmail.com>
+Subject: Re: speedbar
+Message-ID: <VW9moXlRSOyh7w4c3YUV9g@gmail.com>
+In-Reply-To: <86v75tl553.fsf@gnu.org>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <86v75tl553.fsf@gnu.org>
+
+Ciao Eli,
+
+In data giovedì 19 novembre 2026 07:14:16 Ora standard dell’Europa centrale, 
+Eli Zaretskii ha scritto:
+> > From: Benjamin Leis <benleis1@gmail.com>
+> > Date: Wed, 18 Nov 2026 10:40:41 -0800
+> > 
+> > I was playing around with the new speedbar window-mode in emacs 31 and had
+> > some questions about further development.
+> > 
+> > 1. Right now it leaves the window in fundamental mode rather than
+> > speedbar-mode so many of the regular key mappings don't function.
+> 
+> This is fixed in the current pretest of Emacs 31.2.
+> 
+> > 2. There is no standard help for it when you press h unlike the convention
+> > for most dedicated windows - even when speedbar-mode is on.
+> 
+> "C-h m" and "C-h b" do work.  But we could add a binding for "h",
+> indeed, "h" is currently unbound.  Vincenzo, WDYT?
+
+Ok. In the patch I'm writing, I've mapped 'h' to 'describe-mode' for both 
+'speedbar-frame-mode' and 'speedbar-window-mode'.
+> 
+> > 3. If you do a describe-mode several of the key bindings are lambdas that
+> > don't display anything descriptive other than the bytecode and there are
+> > no
+> > docstring help texts supplied.
+> 
+> Indeed, having bindings run anonymous functions without doc strings is
+> not a good practice.  However, this is not specific to
+> speedbar-window-mode, the original speedbar-mode has the same bindings
+> AFAICT.  We should give those functions names and doc strings, IMO.
+
+Ok.
+
+> 
+> > There are further behaviors that are less basic that I think could be
+> > improved. For example, the keymap shouldn't offer an option to kill the
+> > frame when it's not in frame mode, hover text should work regardless of
+> > whether the window is active etc.
+> 
+> This is fixed in Emacs 31.2, but "C-h m" still shows the incorrect
+> binding of the original speedbar-mode ("C-h b" shows correct
+> bindings).  Vincenzo, can you fix this?
+> 
+> Btw, it seems there's a way to start the speedbar window display by
+> invoking speedbar-window-mode interactively (as opposed to customizing
+> speedbar-prefer-window and invoking "M-x speedbar").  The problem with
+> that is that speedbar-prefer-window is left at its default nil value,
+> so all kinds of bindings specific to this variant of Speedbar are not
+> done.  Vincenzo, can we fix that, please?
+
+I'm not quite sure how to do this. In the docstring for 'speedbar-mode', 
+there's "\\{speedbar-mode-map}", which is always different from what 
+'describe-binding' returns because some of the key bindings are dynamic.
+See 'speedbar-reconfigure-keymaps'.
+
+> 
+> > The point of all this is I'm curious if I misunderstood how it's supposed
+> > to work or if this is still in development,  and improvements are on tap
+> > for version 32. Or is this an area where contributions would be helpful
+> 
+> I think it's supposed to be ready for prime time, but as with any new
+> feature, there could be rough edges.  Thank you for taking time to
+> report your findings.
+
+Thanks.
+
+Vincenzo
+
+================================================================================
+Date: 2026-11-20T17:48:58+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: speedbar
+Message-ID: <86y0anih39.fsf@gnu.org>
+In-Reply-To: <VW9moXlRSOyh7w4c3YUV9g@gmail.com> (message from Vincenzo Pupillo
+ on Fri, 20 Nov 2026 17:33:13 +0100)
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <86v75tl553.fsf@gnu.org> <VW9moXlRSOyh7w4c3YUV9g@gmail.com>
+
+> From: Vincenzo Pupillo <v.pupillo@gmail.com>
+> Cc: emacs-devel@gnu.org
+> Date: Fri, 20 Nov 2026 17:33:13 +0100
+> 
+> Ciao Eli,
+> 
+> In data giovedì 19 novembre 2026 07:14:16 Ora standard dell’Europa centrale, 
+> Eli Zaretskii ha scritto:
+> > > From: Benjamin Leis <benleis1@gmail.com>
+> > > Date: Wed, 18 Nov 2026 10:40:41 -0800
+> > > 
+> > > I was playing around with the new speedbar window-mode in emacs 31 and had
+> > > some questions about further development.
+> > > 
+> > > 1. Right now it leaves the window in fundamental mode rather than
+> > > speedbar-mode so many of the regular key mappings don't function.
+> > 
+> > This is fixed in the current pretest of Emacs 31.2.
+> > 
+> > > 2. There is no standard help for it when you press h unlike the convention
+> > > for most dedicated windows - even when speedbar-mode is on.
+> > 
+> > "C-h m" and "C-h b" do work.  But we could add a binding for "h",
+> > indeed, "h" is currently unbound.  Vincenzo, WDYT?
+> 
+> Ok. In the patch I'm writing, I've mapped 'h' to 'describe-mode' for both 
+> 'speedbar-frame-mode' and 'speedbar-window-mode'.
+> > 
+> > > 3. If you do a describe-mode several of the key bindings are lambdas that
+> > > don't display anything descriptive other than the bytecode and there are
+> > > no
+> > > docstring help texts supplied.
+> > 
+> > Indeed, having bindings run anonymous functions without doc strings is
+> > not a good practice.  However, this is not specific to
+> > speedbar-window-mode, the original speedbar-mode has the same bindings
+> > AFAICT.  We should give those functions names and doc strings, IMO.
+> 
+> Ok.
+> 
+> > 
+> > > There are further behaviors that are less basic that I think could be
+> > > improved. For example, the keymap shouldn't offer an option to kill the
+> > > frame when it's not in frame mode, hover text should work regardless of
+> > > whether the window is active etc.
+> > 
+> > This is fixed in Emacs 31.2, but "C-h m" still shows the incorrect
+> > binding of the original speedbar-mode ("C-h b" shows correct
+> > bindings).  Vincenzo, can you fix this?
+> > 
+> > Btw, it seems there's a way to start the speedbar window display by
+> > invoking speedbar-window-mode interactively (as opposed to customizing
+> > speedbar-prefer-window and invoking "M-x speedbar").  The problem with
+> > that is that speedbar-prefer-window is left at its default nil value,
+> > so all kinds of bindings specific to this variant of Speedbar are not
+> > done.  Vincenzo, can we fix that, please?
+> 
+> I'm not quite sure how to do this. In the docstring for 'speedbar-mode', 
+> there's "\\{speedbar-mode-map}", which is always different from what 
+> 'describe-binding' returns because some of the key bindings are dynamic.
+> See 'speedbar-reconfigure-keymaps'.
+
+Maybe Stefan (CC'ed) could help here.
+
+================================================================================
+Date: 2026-11-20T17:52:07+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: [PATCH]: Add move-lines-up and move-lines-down
+Message-ID: <c23f1fb1-35a4-479d-9585-f8651556c4a5@gmail.com>
+In-Reply-To: <86fqwvk7u6.fsf@gnu.org>
+References: <87jyo9p6m8.fsf@posteo.net>
+ <4F487F5A-0981-487F-ACB6-BCAD473695AC@gmail.com>
+ <dc95849a-4d84-41f2-844a-02181847036d@gmail.com> <86fqwvk7u6.fsf@gnu.org>
+
+Thanks for looking into this. Attached is a new version of the patch.
+
+On 20/11/26 13:25, Eli Zaretskii wrote:
+>> Date: Fri, 20 Nov 2026 13:05:04 +0100
+>> From: "Pedro A. Aranda" <paaguti@gmail.com>
+>> Cc: emacs-devel@gnu.org
+>>
+>> Attached is a first attempt at including move-lines-up and
+>> move-lines-down in misc.el.
+> 
+> Thanks, comments below.
+> 
+>> +** New functions 'move-lines-up' and 'move-lines-down'.
+>> +These functions move the current line or region up or down. When a
+>> +region is selected, it will be extended to full lines. These functions
+>> +don't use the kill ring.
+> 
+> The last sentence doesn't belong to NEWS.  Also, this entry doesn't
+> mention the fact that one can move the stuff by ARG lines.
+
+Fixed.
+>> +(defun move-lines-up (arg beg end)
+>> +  "Move region or line ARG times up when ARG > 0 or down when ARG < 0.
+> 
+> "ARG times" is not the best way of putting this.  I'd use
+> 
+>    Move current line up ARG lines.
+>    ARG is the prefix numeric argument and defaults to 1.
+>    Negative values move down.
+> 
+>> +Use the current line when nothing is selected.
+> 
+> I'd rephrase:
+> 
+>    If region is active, move the lines in the region instead.
+> 
+>> +Move full lines: if the mark or the point are
+>                                     ^^^^^^^^^
+> "point", not "the point".
+> 
+>> +not at the beginning or end of line, extend the region
+>> +automatically.
+> 
+> "Extend the region" is misleading, because the region is not affected.
+> Instead, I'd say
+> 
+>    ... if the mark or point are not at the beginning or end of a line,
+>    move the line(s) which include the mark and point positions.
+
+I've rephrased the docstring completely.
+
+>> +    (let ((deactivate-mark nil)
+>> +          ;; Store the column when moving just one line
+>> +          (curcol (and (not (use-region-p)) (current-column))))>
+> AFAIU, this comment is inaccurate because the column will be recorded
+> when the region is not active, but ARG is non-zero.
+
+No, it says precisely what it does. I'm moving one line (the current 
+line) when the region is not active and that's when I want to preserve 
+the current column.
+> And why not try preserving the column in that other case as well?
+
+When selecting several lines, I would normally be working somewhere 
+inside the region I move, while when I move just one line, it's more 
+likely that I want to continue where I left it before moving the line.
+  >> +	(unless (= 0 (forward-line arg))
+>> +	  (signal (if (< arg 0)
+>> +                      'beginning-of-buffer
+>> +                    'end-of-buffer))))
+> 
+> So in this case we don't move anything?  Why not move what we can
+> instead?
+
+I don't use these functions programmatically, but I would, I'd rather 
+stop a function from moving text beyond the limits of the buffer, 
+because that is a sign that it is not calculating things correctly (IMHO).
+
+> Thanks again for working on this.
+
+Nest, /PA
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
