@@ -1,0 +1,1046 @@
+emacs-devel messages from 2026-11-20T18:15:00+01:00 to 2026-11-21T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-20T21:23:35+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <877bi7p7zs.fsf@web.de>
+In-Reply-To: <86bj7jk4g8.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org> <87bj7jr8r7.fsf@web.de>
+ <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de> <86bj7jk4g8.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> That isn’t the point I wanted to make. The point is that by stating as a
+>> project that LLM-generated code is not accepted, the problem that
+>> feedback doesn’t reach a person is much less likely.
+>
+> Good luck with that assumption!  I had more than enough experiences
+> with real humans disregarding my feedback, if not responding in harsh
+> words centered on my personality.
+
+I know that rejecting LLM-generated code doesn’t solve other problems.
+
+> I prefer to decide whether or not to work with someone depending on
+> the answers, not on their source, real or imaginary.  See bug#82057 to
+> understand what I'm talking about.
+
+I prefer to talk to people, even where machines can talk smooth.
+
+>> I know that’s an anecdote. Here’s some actual research on the topic:
+>> https://arxiv.org/html/2603.27249v2#S4
+>
+> If I show you 100 Free Software projects that dwindled and died before
+> they were 10 years old, would you then claim that there's high
+> probability that Emacs will soon die similar death?  If not, why not?
+
+I didn’t talk about dying.
+
+Emacs already had a few lull years where its future was unclear (you’re
+one of the people who helped solve that), but I’m sure something will
+survive – and be it because I need it to keep working (though I would be
+a bad maintainer for it, mainly needing it to continue to compile and
+run so I don’t have to replace my 20 years of learning and tooling).
+
+But there’s a big difference between a program not dying and it having
+an active and welcoming development community that moves it forward
+without causing endless breakage to people using it.
+
+It is awesome that this is working at the moment, even for a huge change
+like native compilation. It’s something  I don’t take for granted.
+
+While I don’t think that Emacs will die easily, I also don’t think that
+it’s immune against getting damaged by problems that already destroyed
+other projects. While I do think Emacs is special, I don’t think it is
+special enough to be unaffected.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-20T21:55:10+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: speedbar
+Message-ID: <jwvik1rmdvg.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <86y0anih39.fsf@gnu.org>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <86v75tl553.fsf@gnu.org> <VW9moXlRSOyh7w4c3YUV9g@gmail.com>
+ <86y0anih39.fsf@gnu.org>
+
+>> > Btw, it seems there's a way to start the speedbar window display by
+>> > invoking speedbar-window-mode interactively (as opposed to customizing
+>> > speedbar-prefer-window and invoking "M-x speedbar").  The problem with
+>> > that is that speedbar-prefer-window is left at its default nil value,
+>> > so all kinds of bindings specific to this variant of Speedbar are not
+>> > done.  Vincenzo, can we fix that, please?
+>> 
+>> I'm not quite sure how to do this. In the docstring for 'speedbar-mode', 
+>> there's "\\{speedbar-mode-map}", which is always different from what 
+>> 'describe-binding' returns because some of the key bindings are dynamic.
+>> See 'speedbar-reconfigure-keymaps'.
+>
+> Maybe Stefan (CC'ed) could help here.
+
+I'm not very familiar with `speedbar.el`, but based on a quick look at
+`speedbar-reconfigure-keymaps` I think we have two options:
+
+- Write the bindings "by hand" in the docstring (along with explanation
+  about when which binding can be used) instead of relying on
+  `\{speedbar-mode-map}`.
+  That's upfront work and more maintenance work to keep it up-to-date
+  when the code is changed.
+
+- Try and get rid of `speedbar-reconfigure-keymaps`, maybe by relying on
+  `:filter` to "statically" describe the dynamic part of the keymap and by creating
+  two separate derived modes (one for the "frame" case and another for
+  the "window" case).
+
+Also in that function, I can't see why we do such a complicated dance
+to compute `localmap`.  Would the patch below be correct, or are there
+cases where the buffer of the frame we end up selecting is not
+`speedbar-buffer` (or do we really want to run
+`dframe-after-select-attached-frame-hook` here)?
+
+
+=== Stefan
+
+
+diff --git a/lisp/speedbar.el b/lisp/speedbar.el
+index bf476e277c6..dff0fa985ab 100644
+--- a/lisp/speedbar.el
++++ b/lisp/speedbar.el
+@@ -1349,6 +1349,7 @@ speedbar-reconfigure-keymaps
+   "Reconfigure the menu-bar in a speedbar frame.
+ Different menu items are displayed depending on the current display mode
+ and the existence of packages."
++  ;; FIXME: Use `:filter' for the dynamic part of the menu?
+   (let ((md (append
+ 	     speedbar-easymenu-definition-base
+ 	     (if speedbar-shown-directories
+@@ -1380,26 +1381,19 @@ speedbar-reconfigure-keymaps
+ 			     (setq alist (cdr alist)))
+ 			   displays)))
+ 	     ;; The trailer
+-	     (speedbar-easymenu-definition-trailer)))
+-	(localmap (save-excursion
+-		    (let ((cf (selected-frame)))
+-		      (prog2
+-			  (dframe-select-attached-frame speedbar-frame)
+-			  (if (local-variable-p
+-			       'speedbar-special-mode-key-map
+-			       (current-buffer))
+-			      speedbar-special-mode-key-map)
+-			(select-frame cf))))))
++	     (speedbar-easymenu-definition-trailer))))
+     (with-current-buffer speedbar-buffer
+-      (let ((local-keymap (or localmap
++      (let ((local-keymap (or (if (local-variable-p
++			           'speedbar-special-mode-key-map)
++			          speedbar-special-mode-key-map)
+                               (speedbar-initial-keymap)
+                               ;; This creates a small keymap we can glom the
+                               ;; menu adjustments into.
+                               (speedbar-make-specialized-keymap))))
+         (if speedbar-prefer-window
+             (progn
+-              (keymap-set local-keymap "q" 'speedbar-window-close)
+-              (keymap-set local-keymap "Q" 'speedbar-window-close))
++              (keymap-set local-keymap "q" #'speedbar-window-close)
++              (keymap-set local-keymap "Q" #'speedbar-window-close))
+           (dframe-update-keymap local-keymap))
+ 
+         (use-local-map local-keymap)
+
+================================================================================
+Date: 2026-11-20T23:30:06+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: Weird HTML generated from README.org
+Message-ID: <jwv1p8fkugy.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <jwvy0aoe9ek.fsf-monnier+emacs@gnu.org>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+ <87h5hcbuln.fsf@gmail.com> <jwvqzggfria.fsf-monnier+emacs@gnu.org>
+ <jwvfqwwfqdd.fsf-monnier+emacs@gnu.org> <87bj7kbhyy.fsf@gmail.com>
+ <jwvy0aoe9ek.fsf-monnier+emacs@gnu.org>
+
+Looks like the new README.org renders well in
+https://elpa.nongnu.org/nongnu-devel/au-themes.html
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-20T23:35:24+01:00
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+Subject: Re: Weird HTML generated from README.org
+Message-ID: <875wxrb07n.fsf@gmail.com>
+In-Reply-To: <jwv1p8fkugy.fsf-monnier+emacs@gnu.org>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+ <87h5hcbuln.fsf@gmail.com> <jwvqzggfria.fsf-monnier+emacs@gnu.org>
+ <jwvfqwwfqdd.fsf-monnier+emacs@gnu.org> <87bj7kbhyy.fsf@gmail.com>
+ <jwvy0aoe9ek.fsf-monnier+emacs@gnu.org>
+ <jwv1p8fkugy.fsf-monnier+emacs@gnu.org>
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+> Looks like the new README.org renders well in
+> https://elpa.nongnu.org/nongnu-devel/au-themes.html
+
+Nice! Thanks for checking.
+
+Cheers,
+Szymon
+
+================================================================================
+Date: 2026-11-21T07:37:06+01:00
+From: arthur miller <arthur.miller@live.com>
+Subject: copy-file onto itself truncates the file
+Message-ID: <VI1PR09MB2496B47245DCE1639C8421E096472@VI1PR09MB2496.eurprd09.prod.outlook.com>
+In-Reply-To: 
+References: 
+
+Was porting some of fileio to CL and found this; don't know if
+It is a bug or a feature. Patch attached. If you don't like it or don't want it
+Just ignore it.
+
+================================================================================
+Date: 2026-11-21T08:10:23+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86tslairs0.fsf@gnu.org>
+In-Reply-To: <877bi7p7zs.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org> <87bj7jr8r7.fsf@web.de>
+ <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Fri, 20 Nov 2026 21:23:35 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> That isn’t the point I wanted to make. The point is that by stating as a
+> >> project that LLM-generated code is not accepted, the problem that
+> >> feedback doesn’t reach a person is much less likely.
+> >
+> > Good luck with that assumption!  I had more than enough experiences
+> > with real humans disregarding my feedback, if not responding in harsh
+> > words centered on my personality.
+> 
+> I know that rejecting LLM-generated code doesn’t solve other problems.
+
+My point is that this problem already exists, and is not limited to
+incorrect use of LLMs.  We are already dealing with it, and I see no
+reason to think we won't be able to continue dealing with it.
+
+> > I prefer to decide whether or not to work with someone depending on
+> > the answers, not on their source, real or imaginary.  See bug#82057 to
+> > understand what I'm talking about.
+> 
+> I prefer to talk to people, even where machines can talk smooth.
+
+That's a tangent not relevant to the point I was making above.  But
+since you bring this up: there are some people on our lists with whom
+I prefer not to talk, but I do, because they contribute to Emacs.  I'm
+sure every one of us has these experiences, where our personal
+preferences take a back seat to our duties as Emacs maintainers and
+developers.
+
+> >> I know that’s an anecdote. Here’s some actual research on the topic:
+> >> https://arxiv.org/html/2603.27249v2#S4
+> >
+> > If I show you 100 Free Software projects that dwindled and died before
+> > they were 10 years old, would you then claim that there's high
+> > probability that Emacs will soon die similar death?  If not, why not?
+> 
+> I didn’t talk about dying.
+
+That was an analogy, aimed at asking you why you believe that
+conclusions of an academic paper which is based on researching other
+projects are necessarily valid for us.
+
+> While I don’t think that Emacs will die easily, I also don’t think that
+> it’s immune against getting damaged by problems that already destroyed
+> other projects. While I do think Emacs is special, I don’t think it is
+> special enough to be unaffected.
+
+I didn't say "unaffected" or "immune".  The issue here is whether we
+will be able to deal with these effects.  Assuming the legal issues
+are resolved, a complete ban is only justified if we are sure we
+cannot deal with that without sacrificing something important.
+There's no evidence of that in sight.  All the evidence you and others
+have brought up until now are either irrelevant or something we
+already deal with, and deal successfully.
+
+================================================================================
+Date: 2026-11-21T09:13:33+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: copy-file onto itself truncates the file
+Message-ID: <86ld6miouq.fsf@gnu.org>
+In-Reply-To: <VI1PR09MB2496B47245DCE1639C8421E096472@VI1PR09MB2496.eurprd09.prod.outlook.com>
+ (message from arthur miller on Sat, 21 Nov 2026 06:37:06 +0000)
+References: <VI1PR09MB2496B47245DCE1639C8421E096472@VI1PR09MB2496.eurprd09.prod.outlook.com>
+
+> From: arthur miller <arthur.miller@live.com>
+> Date: Sat, 21 Nov 2026 06:37:06 +0000
+> 
+> Was porting some of fileio to CL and found this; don't know if
+> It is a bug or a feature. Patch attached. If you don't like it or don't want it
+> Just ignore it.
+> 
+
+Paul, any comments?
+
+> From e8842642702d17213761380cbecdff57d35fe440 Mon Sep 17 00:00:00 2001
+> From: arthur <arthur.miller@live.com>
+> Date: Sat, 21 Nov 2026 07:24:36 +0100
+> Subject: [PATCH] Fix copy-file onto itself emptying the file
+> 
+> Since ffd65be2277 (2025-01-22) an existing output file was opened
+> with O_TRUNC, which empties it before we find out that it is also
+> the input file.  (copy-file F F t) signaled the error but F was
+> already empty.
+> * src/fileio.c (Fcopy_file): Open an existing output without
+> O_TRUNC.  After the check that input and output are different
+> files, truncate the output if it is a regular file.
+> * test/src/fileio-tests.el (fileio-tests--copy-file-to-itself)
+> (fileio-tests--copy-file-replaces-longer-file): New tests.
+> ---
+>  src/fileio.c             |  6 +++++-
+>  test/src/fileio-tests.el | 32 ++++++++++++++++++++++++++++++++
+>  2 files changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/src/fileio.c b/src/fileio.c
+> index 5cf9ad76280..dc855a093f6 100644
+> --- a/src/fileio.c
+> +++ b/src/fileio.c
+> @@ -2390,7 +2390,9 @@ DEFUN ("copy-file", Fcopy_file, Scopy_file, 2, 6,
+>  	barf_or_query_if_file_exists (newname, true, "copy to it",
+>  				      FIXNUMP (ok_if_already_exists), false);
+>        already_exists = true;
+> -      ofd = emacs_open (SSDATA (encoded_newname), O_WRONLY | O_TRUNC, 0);
+> +      /* Do not use O_TRUNC here: if the output is also the input,
+> +	 that would empty it before we notice.  Truncate below.  */
+> +      ofd = emacs_open (SSDATA (encoded_newname), O_WRONLY, 0);
+>      }
+>    if (ofd < 0)
+>      report_file_error ("Opening output file", newname);
+> @@ -2405,6 +2407,8 @@ DEFUN ("copy-file", Fcopy_file, Scopy_file, 2, 6,
+>        if (st.st_dev == out_st.st_dev && st.st_ino == out_st.st_ino)
+>  	report_file_errno ("Input and output files are the same",
+>  			   list2 (file, newname), 0);
+> +      if (S_ISREG (out_st.st_mode) && ftruncate (ofd, 0) != 0)
+> +	report_file_error ("Truncating output file", newname);
+>      }
+>  
+>    maybe_quit ();
+> diff --git a/test/src/fileio-tests.el b/test/src/fileio-tests.el
+> index 2c27ef35701..77ff6b1e44c 100644
+> --- a/test/src/fileio-tests.el
+> +++ b/test/src/fileio-tests.el
+> @@ -278,4 +278,36 @@ fileio-tests--insert-file-contents-supersession
+>        (should asked))))
+>  
+>  
+> +(ert-deftest fileio-tests--copy-file-to-itself ()
+> +  "Copying a file onto itself is an error and leaves the file alone."
+> +  (ert-with-temp-file file
+> +    :text "contents"
+> +    (should-error (copy-file file file t) :type 'file-error)
+> +    (should (equal (with-temp-buffer
+> +                     (insert-file-contents-literally file)
+> +                     (buffer-string))
+> +                   "contents"))
+> +    ;; The same goes for another name of the same file.
+> +    (ert-with-temp-file link
+> +      :suffix "-link"
+> +      (delete-file link)
+> +      (add-name-to-file file link)
+> +      (should-error (copy-file file link t) :type 'file-error)
+> +      (should (equal (with-temp-buffer
+> +                       (insert-file-contents-literally file)
+> +                       (buffer-string))
+> +                     "contents")))))
+> +
+> +(ert-deftest fileio-tests--copy-file-replaces-longer-file ()
+> +  "Copying over a longer file leaves only the new contents."
+> +  (ert-with-temp-file from
+> +    :text "new"
+> +    (ert-with-temp-file to
+> +      :text "old and longer"
+> +      (copy-file from to t)
+> +      (should (equal (with-temp-buffer
+> +                       (insert-file-contents-literally to)
+> +                       (buffer-string))
+> +                     "new")))))
+> +
+>  ;;; fileio-tests.el ends here
+> -- 
+> 2.56.1
+>
+
+================================================================================
+Date: 2026-11-21T10:06:26+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: igc-tests-thread-incremental-gc hangs in MinGW build
+Message-ID: <86ik1qimel.fsf@gnu.org>
+In-Reply-To: 
+References: 
+
+This new test intermittently hangs in the MS-Windows build.  When it
+hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+execution unit.
+
+Let me know if I can provide more information.
+
+Thanks.
+
+================================================================================
+Date: 2026-11-21T10:09:18+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+Message-ID: <86h5haim9t.fsf@gnu.org>
+In-Reply-To: <86ik1qimel.fsf@gnu.org> (message from Eli Zaretskii on Sat, 21
+ Nov 2026 11:06:26 +0200)
+References: <86ik1qimel.fsf@gnu.org>
+
+> Date: Sat, 21 Nov 2026 11:06:26 +0200
+> From: Eli Zaretskii <eliz@gnu.org>
+> Cc: emacs-devel@gnu.org
+> 
+> This new test intermittently hangs in the MS-Windows build.  When it
+> hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+> execution unit.
+> 
+> Let me know if I can provide more information.
+
+More info: if I run only the last 2 tests, like this:
+
+  $ make -C test src/igc-tests SELECTOR='"thread"'
+
+it seems to _never_ hang.  So maybe it's some left-over from previous
+tests, perhaps due to how large is the MPS arena?
+
+================================================================================
+Date: 2026-11-21T13:02:24+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+Message-ID: <87zev2mlyn.fsf@gmail.com>
+In-Reply-To: <86h5haim9t.fsf@gnu.org>
+References: <86ik1qimel.fsf@gnu.org> <86h5haim9t.fsf@gnu.org>
+
+On Sat, Nov 21 2026, Eli Zaretskii wrote:
+
+>> Date: Sat, 21 Nov 2026 11:06:26 +0200
+>> From: Eli Zaretskii <eliz@gnu.org>
+>> Cc: emacs-devel@gnu.org
+>> 
+>> This new test intermittently hangs in the MS-Windows build.  When it
+>> hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+>> execution unit.
+>> 
+>> Let me know if I can provide more information.
+>
+> More info: if I run only the last 2 tests, like this:
+>
+>   $ make -C test src/igc-tests SELECTOR='"thread"'
+>
+> it seems to _never_ hang.  So maybe it's some left-over from previous
+> tests, perhaps due to how large is the MPS arena?
+
+Does it also hang for:
+
+ make -C test src/igc-tests SELECTOR='(not "largest")' ?
+
+I think there is a bug in the policy that decides when to start a
+collection.  It sometimes seems to start a collection for every
+allocation even if there is plenty of room left.  At that point
+everything becomes very slow.  Maybe that's the case here and test does
+not actually hang, it's just very slow.  It think the tests that
+allocate very large objects can trigger that bug.  On Linux, I can use
+
+   ulimit -S -d $((1024 * 1024 * 4))
+
+to make the "largest" tests complete faster.  Is there something like
+ulimit for MS-Windows?
+
+================================================================================
+Date: 2026-11-21T13:33:42+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+Message-ID: <86mrr2gy8p.fsf@gnu.org>
+In-Reply-To: <87zev2mlyn.fsf@gmail.com> (message from Helmut Eller on Sat, 21
+ Nov 2026 13:02:24 +0100)
+References: <86ik1qimel.fsf@gnu.org> <86h5haim9t.fsf@gnu.org>
+ <87zev2mlyn.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: emacs-devel@gnu.org
+> Date: Sat, 21 Nov 2026 13:02:24 +0100
+> 
+> On Sat, Nov 21 2026, Eli Zaretskii wrote:
+> 
+> >> Date: Sat, 21 Nov 2026 11:06:26 +0200
+> >> From: Eli Zaretskii <eliz@gnu.org>
+> >> Cc: emacs-devel@gnu.org
+> >> 
+> >> This new test intermittently hangs in the MS-Windows build.  When it
+> >> hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+> >> execution unit.
+> >> 
+> >> Let me know if I can provide more information.
+> >
+> > More info: if I run only the last 2 tests, like this:
+> >
+> >   $ make -C test src/igc-tests SELECTOR='"thread"'
+> >
+> > it seems to _never_ hang.  So maybe it's some left-over from previous
+> > tests, perhaps due to how large is the MPS arena?
+> 
+> Does it also hang for:
+> 
+>  make -C test src/igc-tests SELECTOR='(not "largest")' ?
+
+No, that runs without hanging and succeeds.
+
+> I think there is a bug in the policy that decides when to start a
+> collection.  It sometimes seems to start a collection for every
+> allocation even if there is plenty of room left.  At that point
+> everything becomes very slow.  Maybe that's the case here and test does
+> not actually hang, it's just very slow.
+
+How slow can it legitimately be?  I've waited for 5 - 10 minutes
+before deciding that it hung.  (Should I wait longer?)  After that,
+attaching GDB produces the backtraces shown below for the main thread
+and for the other thread (which seems to run the igc collection), in
+case that helps.
+
+> It think the tests that allocate very large objects can trigger that
+> bug.  On Linux, I can use
+> 
+>    ulimit -S -d $((1024 * 1024 * 4))
+> 
+> to make the "largest" tests complete faster.  Is there something like
+> ulimit for MS-Windows?
+
+Not AFAIK, no.
+
+Here's the backtrace I mentioned above.
+
+  (gdb) info threads
+    Id   Target Id          Frame
+  * 1    Thread 3772.0x7824 0x7760890c in ntdll!ZwWaitForMultipleObjects ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    2    Thread 3772.0x898c 0x7760869c in ntdll!ZwDelayExecution ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    3    Thread 3772.0x6170 0x7760869c in ntdll!ZwDelayExecution ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    4    Thread 3772.0x7294 TreeFind (treeReturn=treeReturn@entry=0x1d4cf600,
+      root=0x3ca10014, key=0xf6bcb8 <lispsym+56>,
+      compare=compare@entry=0xd26690 <ChunkCompare>) at ../mps/code/tree.c:100
+    5    Thread 3772.0x1c50 0x7760a1cc in ntdll!ZwWaitForWorkViaWorkerFactory ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    6    Thread 3772.0x3a98 0x7760a1cc in ntdll!ZwWaitForWorkViaWorkerFactory ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    7    Thread 3772.0x69d4 0x7760a5d1 in ntdll!DbgBreakPoint ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+  (gdb) bt
+  #0  0x7760890c in ntdll!ZwWaitForMultipleObjects ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+  #1  0x75800f3f in WaitForMultipleObjectsEx ()
+     from C:/WINDOWS/SysWOW64/KernelBase.dll
+  #2  0x00000002 in ?? ()
+  #3  0x0b0a7c84 in ?? ()
+  #4  0x75800d98 in WaitForMultipleObjects ()
+     from C:/WINDOWS/SysWOW64/KernelBase.dll
+  #5  0x00c8db94 in sys_cond_wait (cond=0xb0a7c68,
+      mutex=mutex@entry=0xf9a248 <global_lock>) at systhread.c:345
+  #6  0x00c8c59e in thread_join_callback (arg=0xcbdcb60) at thread.c:1157
+  #7  0x00ba7353 in flush_stack_call_func1 (
+      func=func@entry=0xc8c529 <thread_join_callback>, arg=arg@entry=0xcbdcb60)
+      at alloc.c:5365
+  #8  0x00c8d095 in flush_stack_call_func (arg=0xcbdcb60,
+      func=0xc8c529 <thread_join_callback>) at lisp.h:4896
+  #9  Fthread_join (thread=213764965) at thread.c:1184
+  #10 0x00bde496 in eval_sub (form=288194587) at eval.c:2739
+  #11 0x00bde5d3 in Fprogn (body=<optimized out>) at eval.c:459
+  #12 0x00bdea78 in funcall_lambda (fun=<optimized out>, nargs=nargs@entry=0,
+      arg_vector=0x1b1e1490) at eval.c:3506
+  #13 0x00bdef18 in funcall_general (fun=<optimized out>,
+      numargs=numargs@entry=0, args=args@entry=0x1b1e1490) at eval.c:3211
+  #14 0x00c3c75c in exec_byte_code (fun=<optimized out>,
+      args_template=args_template@entry=0, nargs=nargs@entry=0, args=0x1b1e1490,
+      args@entry=0x7bfef20) at bytecode.c:842
+  #15 0x00bdeab0 in funcall_lambda (fun=<optimized out>, nargs=nargs@entry=0,
+      arg_vector=0x7bfef20) at eval.c:3408
+  #16 0x00bdef18 in funcall_general (fun=<optimized out>,
+      numargs=numargs@entry=0, args=args@entry=0x7bfef20) at eval.c:3211
+  #17 0x00bdbed2 in Ffuncall (args=0x7bfef18, nargs=1) at eval.c:3249
+  #18 Ffuncall (nargs=1, args=0x7bfef18) at eval.c:3223
+  #19 0x00bdc2eb in call0 (fn=187743885) at lisp.h:3849
+  #20 Fhandler_bind_1 (nargs=3, args=0x1b1e1448) at eval.c:1600
+  #21 0x00c3c825 in exec_byte_code (fun=<optimized out>, args_template=513,
+      args_template@entry=256, nargs=3, nargs@entry=1, args=0x1b1e1448,
+      args@entry=0x7bff120) at lisp.h:750
+  #22 0x00bdeab0 in funcall_lambda (fun=<optimized out>, nargs=1,
+      arg_vector=arg_vector@entry=0x7bff120) at eval.c:3408
+  #23 0x00bdec10 in apply_lambda (fun=<optimized out>, args=<optimized out>,
+      count=<optimized out>, count@entry=384) at eval.c:3371
+  #24 0x00bdd9a0 in eval_sub (form=213522075) at eval.c:2828
+  #25 0x00be0a06 in Feval (form=213522075, lexical=56) at eval.c:2592
+  #26 0x00bdb832 in funcall_subr (subr=<optimized out>, numargs=<optimized out>,
+      numargs@entry=2, args=<optimized out>, args@entry=0x1b1e11b8) at eval.c:3319
+  #27 0x00c3c825 in exec_byte_code (fun=<optimized out>, args_template=769,
+      args_template@entry=0, nargs=2, nargs@entry=0, args=0x1b1e11b8,
+      args@entry=0x7bff560) at lisp.h:750
+  #28 0x00bdeab0 in funcall_lambda (fun=<optimized out>, nargs=0,
+      arg_vector=arg_vector@entry=0x7bff560) at eval.c:3408
+  #29 0x00bdec10 in apply_lambda (fun=<optimized out>, args=<optimized out>,
+      count=<optimized out>, count@entry=128) at eval.c:3371
+  #30 0x00bdd9a0 in eval_sub (form=202480835) at eval.c:2828
+  #31 0x00be0a06 in Feval (form=202480835, lexical=56) at eval.c:2592
+  #32 0x00b10a67 in top_level_2 () at lisp.h:1183
+  #33 0x00bd6fef in internal_condition_case (
+      bfun=bfun@entry=0xb109d0 <top_level_2>, handlers=168,
+      hfun=hfun@entry=0xb1e383 <cmd_error>) at eval.c:1734
+  #34 0x00b1237c in top_level_1 (ignore=0) at lisp.h:1183
+  #35 top_level_1 (ignore=0) at keyboard.c:1204
+  #36 0x00bd6ed8 in internal_catch (tag=90944,
+      func=func@entry=0xb12314 <top_level_1>, arg=0) at eval.c:1414
+  #37 0x00b10866 in command_loop () at lisp.h:1183
+  #38 0x00b1de91 in recursive_edit_1 () at keyboard.c:766
+  #39 0x00b1e1bc in Frecursive_edit () at keyboard.c:849
+  #40 0x00dc2f87 in main (argc=<optimized out>, argv=<optimized out>)
+      at emacs.c:2655
+  (gdb) thread 4
+  [Switching to thread 4 (Thread 3772.0x7294)]
+  #0  TreeFind (treeReturn=treeReturn@entry=0x1d4cf600, root=0x3ca10014,
+      key=0xf6bcb8 <lispsym+56>, compare=compare@entry=0xd26690 <ChunkCompare>)
+      at ../mps/code/tree.c:100
+  100         switch (cmp) {
+  (gdb) bt
+  #0  TreeFind (treeReturn=treeReturn@entry=0x1d4cf600, root=0x3ca10014,
+      key=0xf6bcb8 <lispsym+56>, compare=compare@entry=0xd26690 <ChunkCompare>)
+      at ../mps/code/tree.c:100
+  #1  0x00d4c54a in ChunkOfAddr (addr=<optimized out>, arena=<optimized out>,
+      chunkReturn=<synthetic pointer>) at ../mps/code/tract.c:330
+  #2  _mps_fix2 (mps_ss=mps_ss@entry=0x1d4cf76c,
+      mps_ref_io=mps_ref_io@entry=0x1d4cf650) at ../mps/code/trace.c:1494
+  #3  0x00c83ea8 in fix_lisp_obj (ss=ss@entry=0x1d4cf76c,
+      pobj=pobj@entry=0xd7f6168) at igc.c:1308
+  #4  0x00c87853 in fix_cons (cons=0xd7f6160, ss=0x1d4cf76c) at igc.c:2190
+  #5  dflt_scan_obj (ss=ss@entry=0x1d4cf76c, start=start@entry=0xd7f6160)
+      at igc.c:2618
+  #6  0x00c881d1 in dflt_scan (ss=0x1d4cf76c, start=0xd7f5e08, limit=0xd7f62d0)
+      at igc.c:2739
+  #7  0x00d66c39 in TraceScanFormat (limit=0xd7f62d0, base=0xd7f5e08,
+      ss=0x1d4cf768) at ../mps/code/trace.c:1633
+  #8  amcSegScan (totalReturn=0x1d4cf764, seg=0xd06e9e8, ss=0x1d4cf768)
+      at ../mps/code/poolamc.c:1432
+  #9  0x00d8853d in traceScanSegRes (ts=ts@entry=1, rank=rank@entry=1,
+      arena=arena@entry=0x7d10000, seg=seg@entry=0xd06e9e8)
+      at ../mps/code/trace.c:1285
+  #10 0x00d88829 in traceScanSeg (ts=1, rank=1, arena=0x7d10000, seg=0xd06e9e8)
+      at ../mps/code/trace.c:1361
+  #11 0x00d89537 in TraceAdvance (trace=<optimized out>)
+      at ../mps/code/trace.c:1822
+  #12 0x00d969ef in TracePoll (workReturn=workReturn@entry=0x1d4cf8b0,
+      collectWorldReturn=collectWorldReturn@entry=0x1d4cf8ac,
+      globals=globals@entry=0x7d10008, collectWorldAllowed=1)
+      at ../mps/code/trace.c:1943
+  #13 0x00d96bb7 in ArenaPoll (globals=globals@entry=0x7d10008)
+      at ../mps/code/global.c:745
+  #14 0x00d97347 in mps_ap_fill (p_o=p_o@entry=0x1d4cf980,
+      mps_ap=mps_ap@entry=0xb2c19a4, size=size@entry=24)
+      at ../mps/code/mpsi.c:1101
+  #15 0x00c84acb in alloc_impl (size=size@entry=24, type=type@entry=IGC_OBJ_CONS,
+      ap=0xb2c19a4) at igc.c:5177
+  #16 0x00c8a257 in alloc (type=IGC_OBJ_CONS, size=24) at igc.c:5205
+  #17 igc_make_cons (car=0, cdr=187621347) at igc.c:5241
+  #18 0x00ba8351 in Fcons (cdr=<optimized out>, car=0) at alloc.c:2638
+  #19 Fmake_list (length=64000002, init=0) at alloc.c:2765
+  #20 0x00bde288 in eval_sub (form=282776227) at eval.c:2742
+  #21 0x00bdebcc in apply_lambda (fun=<optimized out>, args=<optimized out>,
+      count=<optimized out>, count@entry=64) at eval.c:3366
+  #22 0x00bdd9a0 in eval_sub (form=282768323) at eval.c:2828
+  #23 0x00bde5d3 in Fprogn (body=<optimized out>) at eval.c:459
+  #24 0x00bdea78 in funcall_lambda (fun=<optimized out>, nargs=nargs@entry=0,
+      arg_vector=0x1d4cfda4) at eval.c:3506
+  #25 0x00bdef18 in funcall_general (fun=<optimized out>,
+      numargs=numargs@entry=0, args=args@entry=0x1d4cfda4) at eval.c:3211
+  #26 0x00bdbed2 in Ffuncall (args=0x1d4cfd9c, nargs=1) at eval.c:3249
+  #27 Ffuncall (nargs=nargs@entry=1, args=args@entry=0x1d4cfd9c) at eval.c:3223
+  #28 0x00c8beff in invoke_thread_function () at thread.c:763
+  #29 0x00bd6fef in internal_condition_case (
+      bfun=bfun@entry=0xc8becc <invoke_thread_function>, handlers=56,
+      hfun=hfun@entry=0xc8bc34 <record_thread_error>) at eval.c:1734
+  #30 0x00c8c08a in run_thread (state=0xcbdcb60) at lisp.h:1183
+  #31 0x761f8aed in msvcrt!_beginthread () from C:/WINDOWS/SysWOW64/msvcrt.dll
+  #32 0x761f8bc1 in msvcrt!_endthread () from C:/WINDOWS/SysWOW64/msvcrt.dll
+  #33 0x75d75d49 in KERNEL32!BaseThreadInitThunk ()
+     from C:/WINDOWS/SysWOW64/kernel32.dll
+  Backtrace stopped: frame did not save the PC
+  (gdb)
+
+================================================================================
+Date: 2026-11-21T13:50:48+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+Message-ID: <87h5hamjpz.fsf@gmail.com>
+In-Reply-To: <86mrr2gy8p.fsf@gnu.org>
+References: <86ik1qimel.fsf@gnu.org> <86h5haim9t.fsf@gnu.org>
+ <87zev2mlyn.fsf@gmail.com> <86mrr2gy8p.fsf@gnu.org>
+
+On Sat, Nov 21 2026, Eli Zaretskii wrote:
+
+>> From: Helmut Eller <eller.helmut@gmail.com>
+>> Cc: emacs-devel@gnu.org
+>> Date: Sat, 21 Nov 2026 13:02:24 +0100
+>> 
+>> On Sat, Nov 21 2026, Eli Zaretskii wrote:
+>> 
+>> >> Date: Sat, 21 Nov 2026 11:06:26 +0200
+>> >> From: Eli Zaretskii <eliz@gnu.org>
+>> >> Cc: emacs-devel@gnu.org
+>> >> 
+>> >> This new test intermittently hangs in the MS-Windows build.  When it
+>> >> hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+>> >> execution unit.
+>> >> 
+>> >> Let me know if I can provide more information.
+>> >
+>> > More info: if I run only the last 2 tests, like this:
+>> >
+>> >   $ make -C test src/igc-tests SELECTOR='"thread"'
+>> >
+>> > it seems to _never_ hang.  So maybe it's some left-over from previous
+>> > tests, perhaps due to how large is the MPS arena?
+>> 
+>> Does it also hang for:
+>> 
+>>  make -C test src/igc-tests SELECTOR='(not "largest")' ?
+>
+> No, that runs without hanging and succeeds.
+>
+>> I think there is a bug in the policy that decides when to start a
+>> collection.  It sometimes seems to start a collection for every
+>> allocation even if there is plenty of room left.  At that point
+>> everything becomes very slow.  Maybe that's the case here and test does
+>> not actually hang, it's just very slow.
+>
+> How slow can it legitimately be?
+
+Very :-)
+
+> I've waited for 5 - 10 minutes
+> before deciding that it hung.  (Should I wait longer?)
+
+No.
+
+> attaching GDB produces the backtraces shown below for the main thread
+> and for the other thread (which seems to run the igc collection), in
+> case that helps.
+>
+>> It think the tests that allocate very large objects can trigger that
+>> bug.  On Linux, I can use
+>> 
+>>    ulimit -S -d $((1024 * 1024 * 4))
+>> 
+>> to make the "largest" tests complete faster.  Is there something like
+>> ulimit for MS-Windows?
+>
+> Not AFAIK, no.
+
+OK, I will try to set a commit limit.
+
+The "largest" tests are also problematic on MacOS, because of the
+"automatic memory compression" feature or whatever it's called.  The
+large objects contain only zeros and presumably can be compressed very
+well.  There the tests also become very slow even though one can
+allocate huge objects.
+
+> Here's the backtrace I mentioned above.
+[...]
+>   (gdb) bt
+>   #0  TreeFind (treeReturn=treeReturn@entry=0x1d4cf600, root=0x3ca10014,
+>       key=0xf6bcb8 <lispsym+56>, compare=compare@entry=0xd26690 <ChunkCompare>)
+>       at ../mps/code/tree.c:100
+>   #1  0x00d4c54a in ChunkOfAddr (addr=<optimized out>, arena=<optimized out>,
+>       chunkReturn=<synthetic pointer>) at ../mps/code/tract.c:330
+>   #2  _mps_fix2 (mps_ss=mps_ss@entry=0x1d4cf76c,
+>       mps_ref_io=mps_ref_io@entry=0x1d4cf650) at ../mps/code/trace.c:1494
+>   #3  0x00c83ea8 in fix_lisp_obj (ss=ss@entry=0x1d4cf76c,
+>       pobj=pobj@entry=0xd7f6168) at igc.c:1308
+>   #4  0x00c87853 in fix_cons (cons=0xd7f6160, ss=0x1d4cf76c) at igc.c:2190
+>   #5  dflt_scan_obj (ss=ss@entry=0x1d4cf76c, start=start@entry=0xd7f6160)
+>       at igc.c:2618
+>   #6  0x00c881d1 in dflt_scan (ss=0x1d4cf76c, start=0xd7f5e08, limit=0xd7f62d0)
+>       at igc.c:2739
+>   #7  0x00d66c39 in TraceScanFormat (limit=0xd7f62d0, base=0xd7f5e08,
+>       ss=0x1d4cf768) at ../mps/code/trace.c:1633
+>   #8  amcSegScan (totalReturn=0x1d4cf764, seg=0xd06e9e8, ss=0x1d4cf768)
+>       at ../mps/code/poolamc.c:1432
+>   #9  0x00d8853d in traceScanSegRes (ts=ts@entry=1, rank=rank@entry=1,
+>       arena=arena@entry=0x7d10000, seg=seg@entry=0xd06e9e8)
+>       at ../mps/code/trace.c:1285
+>   #10 0x00d88829 in traceScanSeg (ts=1, rank=1, arena=0x7d10000, seg=0xd06e9e8)
+>       at ../mps/code/trace.c:1361
+>   #11 0x00d89537 in TraceAdvance (trace=<optimized out>)
+>       at ../mps/code/trace.c:1822
+>   #12 0x00d969ef in TracePoll (workReturn=workReturn@entry=0x1d4cf8b0,
+>       collectWorldReturn=collectWorldReturn@entry=0x1d4cf8ac,
+>       globals=globals@entry=0x7d10008, collectWorldAllowed=1)
+>       at ../mps/code/trace.c:1943
+>   #13 0x00d96bb7 in ArenaPoll (globals=globals@entry=0x7d10008)
+>       at ../mps/code/global.c:745
+>   #14 0x00d97347 in mps_ap_fill (p_o=p_o@entry=0x1d4cf980,
+>       mps_ap=mps_ap@entry=0xb2c19a4, size=size@entry=24)
+>       at ../mps/code/mpsi.c:1101
+>   #15 0x00c84acb in alloc_impl (size=size@entry=24, type=type@entry=IGC_OBJ_CONS,
+>       ap=0xb2c19a4) at igc.c:5177
+>   #16 0x00c8a257 in alloc (type=IGC_OBJ_CONS, size=24) at igc.c:5205
+>   #17 igc_make_cons (car=0, cdr=187621347) at igc.c:5241
+>   #18 0x00ba8351 in Fcons (cdr=<optimized out>, car=0) at alloc.c:2638
+
+I don't see anything suspicious.  Just the usual GC work.
+
+Helmut
+
+================================================================================
+Date: 2026-11-21T14:48:36+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87jym6nvm3.fsf@web.de>
+In-Reply-To: <86tslairs0.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87cxs71j7m.fsf@web.de>
+ <87eccnxc1p.fsf@posteo.net> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> incorrect use of LLMs.  We are already dealing with it, and I see no
+> reason to think we won't be able to continue dealing with it.
+>
+>> > I prefer to decide whether or not to work with someone depending on
+>> > the answers, not on their source, real or imaginary.  See bug#82057 to
+>> > understand what I'm talking about.
+>> 
+>> I prefer to talk to people, even where machines can talk smooth.
+>
+> since you bring this up: there are some people on our lists with whom
+> I prefer not to talk, but I do, because they contribute to Emacs.  I'm
+> sure every one of us has these experiences, where our personal
+> preferences take a back seat to our duties as Emacs maintainers and
+> developers.
+
+I think we’re getting closer to a core difference in the view on this.
+
+You’re saying “we can manage, because we already sometimes see similar
+problems”.
+
+Sometimes there’s a contributor who doesn’t learn from reviews. And
+sometimes such a contributor has more time than maintainers, sapping
+time that could be spent on more productive things.¹ That’s a disbalance
+that must not become too big to keep the project maintainable.
+
+¹ I see the irony of writing this in a thread that saps time. I’m trying
+  to keep it short.
+
+LLM-code is similar to that, but vastly different in scale. While the
+contributor who doesn’t learn still has to type all text themselves, the
+amount of text an LLM produces is only limited by the money thrown at
+it. So the disbalance becomes much worse and LLM contributions can drown
+out contributions written by hand while a lower and lower fraction of
+reviews you write is read by people who learn from them.
+
+At which fraction do the first maintainers say that that’s no longer
+worth it, requesting to change procedures in a way that also makes it
+harder to contribute hand-written code?
+
+>> other projects. While I do think Emacs is special, I don’t think it is
+>> special enough to be unaffected.
+>
+> There's no evidence of that in sight.  All the evidence you and others
+> have brought up until now are either irrelevant or something we
+> already deal with, and deal successfully.
+
+Regarding that I’m watching vibe-spell. If that gets accepted into ELPA
+despite even RMS saying twice it shouldn’t be, I see that as evidence
+that we don’t deal with that successfully. Not yet failing like projects
+that already crumbled, but still no longer successfully.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-21T15:30:08+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86ld6mgsun.fsf@gnu.org>
+In-Reply-To: <87jym6nvm3.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <87cxs71j7m.fsf@web.de>
+ <87eccnxc1p.fsf@posteo.net> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de>
+ <86tslairs0.fsf@gnu.org> <87jym6nvm3.fsf@web.de>
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Sat, 21 Nov 2026 14:48:36 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > incorrect use of LLMs.  We are already dealing with it, and I see no
+> > reason to think we won't be able to continue dealing with it.
+> >
+> >> > I prefer to decide whether or not to work with someone depending on
+> >> > the answers, not on their source, real or imaginary.  See bug#82057 to
+> >> > understand what I'm talking about.
+> >> 
+> >> I prefer to talk to people, even where machines can talk smooth.
+> >
+> > since you bring this up: there are some people on our lists with whom
+> > I prefer not to talk, but I do, because they contribute to Emacs.  I'm
+> > sure every one of us has these experiences, where our personal
+> > preferences take a back seat to our duties as Emacs maintainers and
+> > developers.
+> 
+> I think we’re getting closer to a core difference in the view on this.
+> 
+> You’re saying “we can manage, because we already sometimes see similar
+> problems”.
+> 
+> Sometimes there’s a contributor who doesn’t learn from reviews. And
+> sometimes such a contributor has more time than maintainers, sapping
+> time that could be spent on more productive things.¹ That’s a disbalance
+> that must not become too big to keep the project maintainable.
+> 
+> ¹ I see the irony of writing this in a thread that saps time. I’m trying
+>   to keep it short.
+> 
+> LLM-code is similar to that, but vastly different in scale. While the
+> contributor who doesn’t learn still has to type all text themselves, the
+> amount of text an LLM produces is only limited by the money thrown at
+> it. So the disbalance becomes much worse and LLM contributions can drown
+> out contributions written by hand while a lower and lower fraction of
+> reviews you write is read by people who learn from them.
+
+Once again, please have more faith in our abilities to detect and
+reject this, if and when it happens.  There's definitely no reason to
+fear it before it happens.
+
+> At which fraction do the first maintainers say that that’s no longer
+> worth it, requesting to change procedures in a way that also makes it
+> harder to contribute hand-written code?
+
+I don't think I understand what you are asking about.  Why would we
+change procedures in a way that make it harder to write code?
+
+> >> other projects. While I do think Emacs is special, I don’t think it is
+> >> special enough to be unaffected.
+> >
+> > There's no evidence of that in sight.  All the evidence you and others
+> > have brought up until now are either irrelevant or something we
+> > already deal with, and deal successfully.
+> 
+> Regarding that I’m watching vibe-spell. If that gets accepted into ELPA
+> despite even RMS saying twice it shouldn’t be, I see that as evidence
+> that we don’t deal with that successfully.
+
+Deal with what, exactly? what did vibe-spell do to Emacs that is
+harmful?
+
+================================================================================
+Date: 2026-11-21T17:44:18+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87tslam8wt.fsf@web.de>
+In-Reply-To: <86ld6mgsun.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org>
+ <87jym6nvm3.fsf@web.de> <86ld6mgsun.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> At which fraction do the first maintainers say that that’s no longer
+>> worth it, requesting to change procedures in a way that also makes it
+>> harder to contribute hand-written code?
+>
+> I don't think I understand what you are asking about.  Why would we
+> change procedures in a way that make it harder to write code?
+
+Because if LLM-code contributions overload maintainers, either
+procedures are changed to reject LLM-code, or procedures are changed to
+raise the bar for contributing, or maintainers can’t keep up which also
+raises the bar for contributing.
+
+>> Regarding that I’m watching vibe-spell. If that gets accepted into ELPA
+>> despite even RMS saying twice it shouldn’t be, I see that as evidence
+>> that we don’t deal with that successfully.
+>
+> Deal with what, exactly? what did vibe-spell do to Emacs that is
+> harmful?
+
+I already wrote my arguments on that (except for those that others had
+written already) and don’t want to run in circles by rehashing them.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+

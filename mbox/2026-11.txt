@@ -89110,3 +89110,2565 @@ dGlvbiBvZiBgemFwLXRvLWNoYXInLgogCiA7OzsjIyNhdXRvbG9hZAotLSAKMi41My4wCgo=
 --------------40zRDkGf3hTDA350oVHYlYjb--
 
 
+From MAILER-DAEMON Fri Nov 20 15:23:48 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUV9A-0002BR-55
+	for mharc-emacs-devel@gnu.org; Fri, 20 Nov 2026 15:23:48 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>) id 1xUV98-0002B9-CI
+ for emacs-devel@gnu.org; Fri, 20 Nov 2026 15:23:46 -0500
+Received: from mout.web.de ([212.227.17.12])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>) id 1xUV96-0002Gr-K6
+ for emacs-devel@gnu.org; Fri, 20 Nov 2026 15:23:46 -0500
+DKIM2-Signature: i=1; m=1; t=1795206223; mf=PGFybmVfYmFiQHdlYi5kZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+; d=web.de;
+ s=s29768273:rsa-sha256:C9uDtjDn4sAyjAwChgq7yECIb0QI
+ 9BMYJapszl6xYBL5IfJLPGgdrWrwDEU18owOZVOMJP9/FqBUaswSq2HtNQwCQ51iyAaXKkWoZ23
+ 0mHGfnX57TXJ3wGWhHEiwhJE46I2uV8x5yPrl8Avy5h0H9NMhy0NOzHrzVkR77YTPlwpnYIxFOA
+ NuYOBZxSMxA+DufJ0gwQsmSvqq9sQJ6fw/AuTlpEwVkmJ6QN0Pll6UHrsMDsszXJDHmEAdKRT+P
+ whBGTGNFtIzUO25g0TKSEouG3+xBRd414wDQjIP7VMhy4RC8tHmYDUyPoUhec1vrrLW2jt3X17q
+ 6K4n1wS2GwBu+w==;
+Message-Instance: m=1; h=sha256: pa3vovfH7bgbZG7W9hTDloR6qRrKPKzFBO0j6ev2vjA=:
+ FSX/7to+MitChshfkkrIRHqnQ9UcVVWfueue1b83PA4=, sha512:
+ Q5Hk9soRREukELYLmFSnNeYxvOLdMcWsmsoMdc2+1XlUD7L8M4KLtlQf1lUrXUp77sD/2GXxOJahyKnDYdkiYQ==:
+ 6jtjmPUFXuUFZ+gY2my8NPNOSlAN0/nqrFFZIw7Gk+ZYBDZYqKTXNckAB3wRWjVSZJFzGD+g4iKgxY1v967+YQ==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+ s=s29768273; t=1795206217; x=1795811017; i=arne_bab@web.de;
+ bh=5sxYcuoC/j5t+I98OeEVMmykscA30a1JH4BJozE7l50=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:cc:content-transfer-encoding:
+ content-type:date:from:message-id:mime-version:reply-to:subject:
+ to;
+ b=P4hNU948P4/mXAAOyPaKJeFp04nnw+jvmSHqwuW4HSS3opNo627PCSzkfp813pin
+ uln9Xr6WMkqEtZVAv9g4P4NoyyLYLhhApyIg5srJ1T5SdEw2OhX5QISPqxHeT8UTW
+ XCGlZTg/MyCHtW3tyhLTHi444TcfAcBdAYC53cM3yCqnrbXol0SPFKSEAvDG4jX5K
+ mRiO6cdPJr55biT2o5FCFKfj7QBVXXpfgrBP5mdvtNZqRALLCEkPWOkCoJk2FocbX
+ UltrQtJgroF/56Shhwni7UvWkp1QrvhgVW7WtO9SXnG1Fz43eDKUCuT6IdoEgXMzG
+ Z69z+WTrhmVjBObUGw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MlbHE-1yCsaR0Tg2-00hBSF; Fri, 20
+ Nov 2026 21:23:37 +0100
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+ shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+Subject: Re: ELPA submission: vibe-spell
+In-Reply-To: <86bj7jk4g8.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org> <87bj7jr8r7.fsf@web.de>
+ <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de> <86bj7jk4g8.fsf@gnu.org>
+User-Agent: mu4e 1.14.4; emacs 31.1
+Date: Fri, 20 Nov 2026 21:23:35 +0100
+Message-ID: <877bi7p7zs.fsf@web.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Provags-ID: V03:K1:9TC540PpoluxTQktNw6Dn11HRMYMdDAAYe/d9E5tv3RhNBvHfUe
+ 46/fYAYbyTuQEL2Mw3QWYOuzy/I9A2w+yJNPn+c3u8EJC3QXvqI2ny2HWlp9ATQ2l3OirFx
+ fqDKL1IvwKsKD58ivxU6PKDHDeqG5FxE7RMtpo5Pu/uSrxbaws84/86dZerzieU4X7JqFug
+ j8OCEjT0KriyCbJ/Hh+6w==
+UI-OutboundReport: notjunk:1;M01:P0:jwaCvjd+jpk=;UWWmb98YNFpW+M0ekee8u1lTwJ0
+ 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
+Received-SPF: pass client-ip=212.227.17.12; envelope-from=arne_bab@web.de;
+ helo=mout.web.de
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 20 Nov 2026 20:23:46 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> That isn=E2=80=99t the point I wanted to make. The point is that by stat=
+ing as a
+>> project that LLM-generated code is not accepted, the problem that
+>> feedback doesn=E2=80=99t reach a person is much less likely.
+>
+> Good luck with that assumption!  I had more than enough experiences
+> with real humans disregarding my feedback, if not responding in harsh
+> words centered on my personality.
+
+I know that rejecting LLM-generated code doesn=E2=80=99t solve other proble=
+ms.
+
+> I prefer to decide whether or not to work with someone depending on
+> the answers, not on their source, real or imaginary.  See bug#82057 to
+> understand what I'm talking about.
+
+I prefer to talk to people, even where machines can talk smooth.
+
+>> I know that=E2=80=99s an anecdote. Here=E2=80=99s some actual research o=
+n the topic:
+>> https://arxiv.org/html/2603.27249v2#S4
+>
+> If I show you 100 Free Software projects that dwindled and died before
+> they were 10 years old, would you then claim that there's high
+> probability that Emacs will soon die similar death?  If not, why not?
+
+I didn=E2=80=99t talk about dying.
+
+Emacs already had a few lull years where its future was unclear (you=E2=80=
+=99re
+one of the people who helped solve that), but I=E2=80=99m sure something wi=
+ll
+survive =E2=80=93 and be it because I need it to keep working (though I wou=
+ld be
+a bad maintainer for it, mainly needing it to continue to compile and
+run so I don=E2=80=99t have to replace my 20 years of learning and tooling).
+
+But there=E2=80=99s a big difference between a program not dying and it hav=
+ing
+an active and welcoming development community that moves it forward
+without causing endless breakage to people using it.
+
+It is awesome that this is working at the moment, even for a huge change
+like native compilation. It=E2=80=99s something  I don=E2=80=99t take for g=
+ranted.
+
+While I don=E2=80=99t think that Emacs will die easily, I also don=E2=80=99=
+t think that
+it=E2=80=99s immune against getting damaged by problems that already destro=
+yed
+other projects. While I do think Emacs is special, I don=E2=80=99t think it=
+ is
+special enough to be unaffected.
+
+Best wishes,
+Arne
+=2D-=20
+Unpolitisch sein
+hei=C3=9Ft politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJgBAEBCABKFiEE801qEjXQSQPNItXAE++NRSQDw+sFAmsArEgbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyEBxhcm5lX2JhYkB3ZWIuZGUACgkQE++NRSQDw+uC
+1w//WlrZu1pJdDZa4Y6Gh0JlOiAag4n4TBWS/SfcxebX123AvITyv/yEqEzde4Ll
+D7WK1b2z/rTV0ke1rBlGn3I34OjMrftOlFakg0qd4h+vZRFq/x1yThkKmvMQpFSI
+crDKpKJDNsDd8Sn44H8Ixhjs5QGZNSCkpJ9fZipNsvC8NAX/eNWp4f+K+zj6gTrx
+rqqu45mJ3cb82h9ZvUecyy/eImVzrrE6YaxCSnafFaiTJFN8dVPIdksb6G1a5ezG
+RpNMrGa4lEnwUU/Cx/uwY5DpdusuaF5jgqfxZmKFyL804hwiMr80YsU7MzoMR4Zx
+t7VPv6nV2QPOtGpyg4RRfXWar1Xbz/laizY7I0+wNCLX3B8RKIeIyuC00CDXdo+p
++bViswlkZ9rCz1bAzvyx/x9MfueEud1iU/NXnJwqVE+GrAoCwAymPsAJVMWBzNEB
+imm93iY9PNoVOTO3C14xhFVLq1chX9M8v4+MxgEWTEXIqQSa2iSmCCI7+IdvaZ3L
+5nFqqFa0oB9lJvhT8uxIUdQtmL1Sf3Z+1AIyHSJxDCYqfaDnqDcc3IlCbjBfYtU5
+DNHfY/zTaMfWO6HqsmzcG6yb2XNifFPbQWQHdtZG/NBsKGbmNtggDKDOPhDE142+
+S2iWJpLMa5A4GUNx+xNkfHUyACNJFw/M+VlvhQhuHLx43rCI4AQBAQgAShYhBN0o
+vebZh1yrzkqLHdzPDbMLwQVIBQJrAKxIGxSAAAAAAAQADm1hbnUyLDIuNSsxLjEy
+LDIsMhAcYXJuZV9iYWJAd2ViLmRlAAoJENzPDbMLwQVIXgUD/RoFdt5eprqkzkq1
+Jsp2WThKrCyYOcayxh4FhXHEIlwpxUnV4B/maoXuqYNhiQ3p3UA2RIVGBYcPYRtB
+NEv+N6jH6TKzLSHajwHursb6FucMUy7rMTkQTtsEU3I+wB4qcZV1Ns6mC7C9QKc4
+37TP9PaekfcRQqPKrx1u99mvycUU
+=cVnb
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+From MAILER-DAEMON Fri Nov 20 15:55:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUVdn-0002BM-At
+	for mharc-emacs-devel@gnu.org; Fri, 20 Nov 2026 15:55:28 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xUVdk-0002B1-P8
+ for emacs-devel@gnu.org; Fri, 20 Nov 2026 15:55:24 -0500
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xUVdc-0007p9-Ch; Fri, 20 Nov 2026 15:55:19 -0500
+Received: from pmg3.iro.umontreal.ca (localhost [127.0.0.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id 001A444204C;
+ Fri, 20 Nov 2026 15:55:12 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1795208111;
+ bh=pVg1vXOsORLmFmLyXuUlOoduew/+/EvJ8pHoeuyki2g=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=kyScN8ecctgjIayNPuaYKdeZ8oroVcTGNFEOasSxv4EHzKaviY8gXZEZ9Y+HhZGIv
+ A8JQpIVbPgCb7WSQCCmDyI2gYeoky34l6irW4Nnb50gXLXYj4qe5JGECubY0f46ENh
+ /8CLL8EZJJjU6Vs0fDC5MjC4FtHHARzwI6v/PYSDmSyBgTNqc2uloX7UMs0V4j2WEF
+ AjtSYTAAbX3++YGFHA233tEgVjjhN+9nLWzWnjq7VDSlgh7K0xQHmRR3WHgeodwX2g
+ N0FqImW+jV13Zu6AIOLL5Sd7bSA3CfKpAelC3Y8XSnnS4acxh1DqPl5braWxE8Mv8F
+ 3rllXejrKIQww==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg3.iro.umontreal.ca (Proxmox) with ESMTP id 64C284420E0;
+ Fri, 20 Nov 2026 15:55:11 -0500 (EST)
+Received: from alfajor (modemcable181.99-80-70.mc.videotron.ca [70.80.99.181])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 3E1D8120280;
+ Fri, 20 Nov 2026 15:55:11 -0500 (EST)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: Vincenzo Pupillo <v.pupillo@gmail.com>,  benleis1@gmail.com,
+ emacs-devel@gnu.org
+Subject: Re: speedbar
+In-Reply-To: <86y0anih39.fsf@gnu.org>
+Message-ID: <jwvik1rmdvg.fsf-monnier+emacs@gnu.org>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <86v75tl553.fsf@gnu.org> <VW9moXlRSOyh7w4c3YUV9g@gmail.com>
+ <86y0anih39.fsf@gnu.org>
+Date: Fri, 20 Nov 2026 15:55:10 -0500
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 20 Nov 2026 20:55:25 -0000
+
+>> > Btw, it seems there's a way to start the speedbar window display by
+>> > invoking speedbar-window-mode interactively (as opposed to customizing
+>> > speedbar-prefer-window and invoking "M-x speedbar").  The problem with
+>> > that is that speedbar-prefer-window is left at its default nil value,
+>> > so all kinds of bindings specific to this variant of Speedbar are not
+>> > done.  Vincenzo, can we fix that, please?
+>> 
+>> I'm not quite sure how to do this. In the docstring for 'speedbar-mode', 
+>> there's "\\{speedbar-mode-map}", which is always different from what 
+>> 'describe-binding' returns because some of the key bindings are dynamic.
+>> See 'speedbar-reconfigure-keymaps'.
+>
+> Maybe Stefan (CC'ed) could help here.
+
+I'm not very familiar with `speedbar.el`, but based on a quick look at
+`speedbar-reconfigure-keymaps` I think we have two options:
+
+- Write the bindings "by hand" in the docstring (along with explanation
+  about when which binding can be used) instead of relying on
+  `\{speedbar-mode-map}`.
+  That's upfront work and more maintenance work to keep it up-to-date
+  when the code is changed.
+
+- Try and get rid of `speedbar-reconfigure-keymaps`, maybe by relying on
+  `:filter` to "statically" describe the dynamic part of the keymap and by creating
+  two separate derived modes (one for the "frame" case and another for
+  the "window" case).
+
+Also in that function, I can't see why we do such a complicated dance
+to compute `localmap`.  Would the patch below be correct, or are there
+cases where the buffer of the frame we end up selecting is not
+`speedbar-buffer` (or do we really want to run
+`dframe-after-select-attached-frame-hook` here)?
+
+
+=== Stefan
+
+
+diff --git a/lisp/speedbar.el b/lisp/speedbar.el
+index bf476e277c6..dff0fa985ab 100644
+--- a/lisp/speedbar.el
++++ b/lisp/speedbar.el
+@@ -1349,6 +1349,7 @@ speedbar-reconfigure-keymaps
+   "Reconfigure the menu-bar in a speedbar frame.
+ Different menu items are displayed depending on the current display mode
+ and the existence of packages."
++  ;; FIXME: Use `:filter' for the dynamic part of the menu?
+   (let ((md (append
+ 	     speedbar-easymenu-definition-base
+ 	     (if speedbar-shown-directories
+@@ -1380,26 +1381,19 @@ speedbar-reconfigure-keymaps
+ 			     (setq alist (cdr alist)))
+ 			   displays)))
+ 	     ;; The trailer
+-	     (speedbar-easymenu-definition-trailer)))
+-	(localmap (save-excursion
+-		    (let ((cf (selected-frame)))
+-		      (prog2
+-			  (dframe-select-attached-frame speedbar-frame)
+-			  (if (local-variable-p
+-			       'speedbar-special-mode-key-map
+-			       (current-buffer))
+-			      speedbar-special-mode-key-map)
+-			(select-frame cf))))))
++	     (speedbar-easymenu-definition-trailer))))
+     (with-current-buffer speedbar-buffer
+-      (let ((local-keymap (or localmap
++      (let ((local-keymap (or (if (local-variable-p
++			           'speedbar-special-mode-key-map)
++			          speedbar-special-mode-key-map)
+                               (speedbar-initial-keymap)
+                               ;; This creates a small keymap we can glom the
+                               ;; menu adjustments into.
+                               (speedbar-make-specialized-keymap))))
+         (if speedbar-prefer-window
+             (progn
+-              (keymap-set local-keymap "q" 'speedbar-window-close)
+-              (keymap-set local-keymap "Q" 'speedbar-window-close))
++              (keymap-set local-keymap "q" #'speedbar-window-close)
++              (keymap-set local-keymap "Q" #'speedbar-window-close))
+           (dframe-update-keymap local-keymap))
+ 
+         (use-local-map local-keymap)
+
+
+
+From MAILER-DAEMON Fri Nov 20 17:30:24 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUX7g-0003Pu-3q
+	for mharc-emacs-devel@gnu.org; Fri, 20 Nov 2026 17:30:24 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xUX7e-0003PT-36; Fri, 20 Nov 2026 17:30:22 -0500
+Received: from mailscanner.iro.umontreal.ca ([132.204.25.50])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <monnier@iro.umontreal.ca>)
+ id 1xUX7Z-0007Wl-5G; Fri, 20 Nov 2026 17:30:21 -0500
+Received: from pmg1.iro.umontreal.ca (localhost.localdomain [127.0.0.1])
+ by pmg1.iro.umontreal.ca (Proxmox) with ESMTP id 363141000A6;
+ Fri, 20 Nov 2026 17:30:15 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iro.umontreal.ca;
+ s=mail; t=1795213807;
+ bh=ea2w9BM4PvLYJ8iWu6NFpWXLLuMSHXcxdzUig4LY6m4=;
+ h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+ b=N16QMRJhZAQUcBMNN2/ucyyLJeJ1KGJalgHSw4qYambmql77GIuk3yLolBZGXVxUz
+ GTdCiLpdoGWFt6ouURrghvFvK6e5mVy9gVMEDzYe/T6RrkR6vfipPUIzu42T1b88QB
+ gAMvx7WCHekx0dSXROx1OPv/t7PmWjMUYsnfxFr1FLZ3Qn42F93C3Xip/OJBjVV7ZL
+ 80Pm5XyUrw+nGead+5bFEcE7ADDOzbRtUeEbtSeV6HR9iSG0aGQNENblXkb5x7svLq
+ THJTGi9+pYc1qsL8THqhpo3WZQ3jRMvQAZoNkKLYmNcCMCOyhqx1HP1W+x7MZ4UYPV
+ cpJ6zYRcdjXjQ==
+Received: from mail01.iro.umontreal.ca (unknown [172.31.2.1])
+ by pmg1.iro.umontreal.ca (Proxmox) with ESMTP id 4D203100070;
+ Fri, 20 Nov 2026 17:30:07 -0500 (EST)
+Received: from alfajor (modemcable181.99-80-70.mc.videotron.ca [70.80.99.181])
+ by mail01.iro.umontreal.ca (Postfix) with ESMTPSA id 1D60F1206CB;
+ Fri, 20 Nov 2026 17:30:07 -0500 (EST)
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+To: Szymon Wilczek <swilczek.lx@gmail.com>
+Cc: emacs-orgmode@gnu.org,  emacs-devel@gnu.org,  Philip Kaludercic
+ <philipk@posteo.net>
+Subject: Re: Weird HTML generated from README.org
+In-Reply-To: <jwvy0aoe9ek.fsf-monnier+emacs@gnu.org>
+Message-ID: <jwv1p8fkugy.fsf-monnier+emacs@gnu.org>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+ <87h5hcbuln.fsf@gmail.com> <jwvqzggfria.fsf-monnier+emacs@gnu.org>
+ <jwvfqwwfqdd.fsf-monnier+emacs@gnu.org> <87bj7kbhyy.fsf@gmail.com>
+ <jwvy0aoe9ek.fsf-monnier+emacs@gnu.org>
+Date: Fri, 20 Nov 2026 17:30:06 -0500
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SPAM-INFO: Spam detection results:  0
+ ALL_TRUSTED                -1 Passed through trusted hosts only via SMTP
+ BAYES_00                 -1.9 Bayes spam probability is 0 to 1%
+ DKIM_SIGNED               0.1 Message has a DKIM or DK signature,
+ not necessarily valid
+ DKIM_VALID -0.1 Message has at least one valid DKIM or DK signature
+ DKIM_VALID_AU -0.1 Message has a valid DKIM or DK signature from author's
+ domain
+ DKIM_VALID_EF -0.1 Message has a valid DKIM or DK signature from envelope-from
+ domain
+Received-SPF: pass client-ip=132.204.25.50;
+ envelope-from=monnier@iro.umontreal.ca; helo=mailscanner.iro.umontreal.ca
+X-Spam_score_int: -42
+X-Spam_score: -4.3
+X-Spam_bar: ----
+X-Spam_report: (-4.3 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, RCVD_IN_DNSWL_MED=-2.3,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 20 Nov 2026 22:30:22 -0000
+
+Looks like the new README.org renders well in
+https://elpa.nongnu.org/nongnu-devel/au-themes.html
+
+
+=== Stefan
+
+
+
+From MAILER-DAEMON Sat Nov 21 01:50:05 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUevE-0002JQ-Vo
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 01:50:05 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <swilczek.lx@gmail.com>)
+ id 1xUXCf-0005ZA-Ky
+ for emacs-devel@gnu.org; Fri, 20 Nov 2026 17:35:33 -0500
+Received: from mail-ej1-x631.google.com ([2a00:1450:4864:20::631])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <swilczek.lx@gmail.com>)
+ id 1xUXCZ-0002yn-Pc
+ for emacs-devel@gnu.org; Fri, 20 Nov 2026 17:35:33 -0500
+Received: by mail-ej1-x631.google.com with SMTP id
+ a640c23a62f3a-c5133831027so212758466b.2
+ for <emacs-devel@gnu.org>; Fri, 20 Nov 2026 14:35:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1795214126; x=1795818926; darn=gnu.org;
+ h=content-type:mime-version:message-id:date:user-agent:references
+ :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+ :reply-to:content-type;
+ bh=Xp7sXJ44WHFhsDkwEBG/x9i9L9w++56eZNyKXwaIaGI=;
+ b=HxcNpozzgRUhwtOxcELKlqWVwQTNWUiauOK+uml0lWUxrBnwOFnoTZB4jU45ZgsbTu
+ 2BcUuFHx40drxwQeA24b+tOWPyXERQi3Q/+/hqQ6YzFFhPf13LCH1HmCnitj1a9g04p+
+ 8wao7UrY6Ya8FvQ6+ZDIYdyKXHC9Ea43g6tVuE+JbdKzDCDFGU3RcB7hagz82pFvjQGI
+ 92Rf/Gk96hQPtQ/uwUFINiGCvXJOheSV2Vct7fAaA804pIsvgIwNGmz1QKr2jTunKrnh
+ CVYIwU3CTv7ODNa27AX32YIPSXLNA1UdveZthbg5nrwkf2PW3ItX6Sa0Hc038MfNdj1f
+ 85rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1795214126; x=1795818926;
+ h=content-type:mime-version:message-id:date:user-agent:references
+ :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=Xp7sXJ44WHFhsDkwEBG/x9i9L9w++56eZNyKXwaIaGI=;
+ b=jNDXL/C6vjz+2HMoywN8ejEcApV70G9X7SIrQw30soKIv3Gw1DW3C9tGcXTa4McbZh
+ O1VWsKjDC8Rj6SXgGa0csTIxq41THOwq69kgGpTs/jYIu5GYg+48jTpNti2gcNDlr6/f
+ h3WnxhySfliES4XThcia6mXkrn5waWTw2A2UfoDAhYW1nGjMoUqtJaiI3B5lPbZ5wOkQ
+ 1Y59zT6n52RvnsORs9cFO2iS3G49j1MdWItFvVCHsvq0Lx8i5Y3tQUahtGlAcQgfPEwt
+ tRtFnC7GpIMhBcaE61UdjuGW4e7Qv6lCTLM1GHcMz0EK4UY2moKcuwzrIWVORZZl2blI
+ EIKA==
+X-Forwarded-Encrypted: i=1;
+ AL+hErEAxeXLfCnpDWtlAiCdeyTL7Z8Nx4jhXPjWXZBjFMpUhROim5H69m/5LViIYyQp40mldaQhhdGWfjeCYQ==@gnu.org
+X-Gm-Message-State: APuU4Z+d3/llGG5ExlwOrVkH4dVQtKk6r6+2TsGsRhjkyHxuQlPybNiq
+ 9I+/KYcXOwBBrXVl5Zp0eoHrnjY9GuUwHUmqZvo/sq79fdeXaeLwwwii
+X-Gm-Gg: AYBFou3gibw1YYmSH7KZPqGWNzJ0fV1Dy5OmVHZ+VVUtNwJwnd7NIo8fvY7/Syf8pgK
+ cAsI9DYh/aj07rZAw2edBscoXFQFR4HH5DXxH+1gJs+IAQOMoRGnHv3RfokzcGEJIxkEC6fV8bj
+ Lnz7UzkcD4Owkphwv8Zml2dSkMBaw6RLo1CHlBRVnakRAt3qcBtrzlclKvl9ySZrerLNWjx03AC
+ sycYlB2l/FvokGu6VjyuIylZ83Ik2t9GMzkRZkRt1b9PcAUHBQhrsmqfcTc0g7t9AMPBu7EIufN
+ u6JKu0UBq+LvqyB7ZCUGKdZOA4fPhR8nc9wTKhXE2u5NT8Gy/TZjSBGoN9qkZd9LhIVq97d8h4s
+ 0WxNh4w1WVibk5oWvu/MN2Upj2krRP/Ws+YqbZPcjJKH5UAjbyhr2MW89scOrADkl/CZXdEza10
+ pBbhI/QeHbr/p/SyTp4z2GIPBrqbIED5m7hruE+fFSUAPoun9K6BuKFZDbAc28IfT01EnnkksXF
+ NJQaURJXkd0j2peXtX7xvL7vC8dphiII04WLtmSfNkY6Kh9HpSYULakeZ49ZMjGgzpilXKqYlR+
+ zZscxhGFQRjuDpT/F3dB3jsFt11YGf057Sqf8wu3GyPlBHKAQxID1qcCP1DhfkOqN5xarlY30x9
+ ji0yYfg06DOephffH0L62P7QbeHvscff1sVzYQnyNMc9rzU8=
+X-Received: by 2002:a17:906:9fd0:b0:c50:a2f1:f200 with SMTP id
+ a640c23a62f3a-c513a5da8e7mr448947966b.16.1795214125456; 
+ Fri, 20 Nov 2026 14:35:25 -0800 (PST)
+Received: from localhost ([85.11.110.37]) by smtp.gmail.com with ESMTPSA id
+ a640c23a62f3a-c513ad01ae8sm147383466b.9.2026.11.20.14.35.24
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Fri, 20 Nov 2026 14:35:24 -0800 (PST)
+From: Szymon Wilczek <swilczek.lx@gmail.com>
+To: Stefan Monnier <monnier@iro.umontreal.ca>
+Cc: emacs-orgmode@gnu.org,  emacs-devel@gnu.org,  Philip Kaludercic
+ <philipk@posteo.net>
+Subject: Re: Weird HTML generated from README.org
+In-Reply-To: <jwv1p8fkugy.fsf-monnier+emacs@gnu.org>
+References: <CAJRoVwhWcEJAF-VUXiXPRgRhG9e+2d2_MPx2W4tb1K9zm+XN2Q@mail.gmail.com>
+ <87jymciozr.fsf@posteo.net> <87o6bocsan.fsf@gmail.com>
+ <87cxs4ghed.fsf@posteo.net> <874idfd5qa.fsf@gmail.com>
+ <875wxvgke5.fsf@posteo.net> <87y0aravd5.fsf@gmail.com>
+ <87bj7lga71.fsf@posteo.net> <jwvjym8hlvt.fsf-monnier+emacs@gnu.org>
+ <87h5hcbuln.fsf@gmail.com> <jwvqzggfria.fsf-monnier+emacs@gnu.org>
+ <jwvfqwwfqdd.fsf-monnier+emacs@gnu.org> <87bj7kbhyy.fsf@gmail.com>
+ <jwvy0aoe9ek.fsf-monnier+emacs@gnu.org>
+ <jwv1p8fkugy.fsf-monnier+emacs@gnu.org>
+User-Agent: mu4e 1.12.12; emacs 31.1
+Date: Fri, 20 Nov 2026 23:35:24 +0100
+Message-ID: <875wxrb07n.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=2a00:1450:4864:20::631;
+ envelope-from=swilczek.lx@gmail.com; helo=mail-ej1-x631.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Sat, 21 Nov 2026 01:50:03 -0500
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Fri, 20 Nov 2026 22:35:34 -0000
+
+Stefan Monnier <monnier@iro.umontreal.ca> writes:
+
+> Looks like the new README.org renders well in
+> https://elpa.nongnu.org/nongnu-devel/au-themes.html
+
+Nice! Thanks for checking.
+
+Cheers,
+Szymon
+
+
+From MAILER-DAEMON Sat Nov 21 01:50:05 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUevF-0002Jh-KN
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 01:50:05 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arthur.miller@live.com>)
+ id 1xUend-0001td-IY
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 01:42:13 -0500
+Received: from mail-francesouthazolkn19011024.outbound.protection.outlook.com
+ ([52.103.39.24] helo=MRWPR03CU001.outbound.protection.outlook.com)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arthur.miller@live.com>)
+ id 1xUenb-00063l-I3
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 01:42:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XG/eYTxksceby4C600k3FfRlAtIB4l7nQ+bGJvAT+b+pNoB4CTShNvj6mfPXOIgE1wCXf12OAaZC5ZjLDTQPxcX7/s12npOZuX3xxWf1V3Qitvt/o/mXCGXWf6Toc+UDDifPLV951STfuJAlxI53VfAwwoXkMzk7plk4eT1AitzUKKHdGzIuSvO9xabH6n/eNS7szra4DjptuA3IDg7k+62dchIgSwxRRdfFWDxNbxWWWOgKIYeF8TOkfERz19IBNdymBs7AuGM05QkUsQyeIz5Sq2RKRtJ+IW6eLiwqze49Wd1o26eVCWtFXPDs3WpgWxBTPzES2zIfn+PWk1LjCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ue8QsqQAcucWWsGwg6gojDcC6RjhEAN3sO+0zcGohrQ=;
+ b=CZdqey/9agvZOCfxVQoGQbiXaSq7M66o7mpafBTnp2c2zAKI48R3aASqTp8vL1j6yhgHgPMUaJ4yEcP62L3lBSAE6xNLuU3wb+ZxNXhno0mFxc6KDsgdDZOnu+w2cqRhpD3I5cqZS/XazkhP9fFjIos6H+QUObN8xfr1DEF9+K5gemO3+Plu3KuUsx4CLdxISUeELttFj1VsisSgYBAZ7xPOZKPCfOOgFhakwcTmTvuU4xODuoIahnaMUHmRWwm149dF8CDRNEhi/tloD+ZLDnhfwbgjdhIjRGKshp0tSM/bahSEOtbn+USFpQMnIImXgyuybyaH6cr8XSpPjo01Pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1; 
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ue8QsqQAcucWWsGwg6gojDcC6RjhEAN3sO+0zcGohrQ=;
+ b=OIbqVF0AlJnqRk/clUz/Dbjo8NVCEB4VHe8OFd7B8q+L9Br1hX9/r5ZINe32xL/A3pxJQjI1+I9B/dQcwI0O5p8KnX39R02EhLVMKFBKlqDAHR0n8mXC+Kf46oDBl83I7PbIDJPSgqJHpCZ2dS/92Y9yvzv8ssGfOTxHysK2BbJyTfbwkvWj7A12zfz8H8QOa7S4Wqo9rIMiJT1zSlpOpEcvpYAjvl7TcqvDumqvUGpVMseWoTsbwSAlpp0koMuQmYIZjznjAMaKRkOjHtXShI3qY6rblQasReasn8z3Sl0v6VPlQI81aryGAEfFmG840cnqZ8Yy9LVDW+Kcu2NOuw==
+Received: from VI1PR09MB2496.eurprd09.prod.outlook.com (2603:10a6:803:7a::11)
+ by DB8PR09MB4011.eurprd09.prod.outlook.com (2603:10a6:10:fe::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.13; Sat, 21 Nov
+ 2026 06:37:06 +0000
+Received: from VI1PR09MB2496.eurprd09.prod.outlook.com
+ ([fe80::17a8:a463:6f62:7bdd]) by VI1PR09MB2496.eurprd09.prod.outlook.com
+ ([fe80::17a8:a463:6f62:7bdd%6]) with mapi id 15.21.0639.010; Sat, 21 Nov 2026
+ 06:37:06 +0000
+From: arthur miller <arthur.miller@live.com>
+To: "emacs-devel@gnu.org" <emacs-devel@gnu.org>
+Subject: copy-file onto itself truncates the file
+Thread-Topic: copy-file onto itself truncates the file
+Thread-Index: AQHdeYImiyXB5/bA+0uj7tclVBhXug==
+Date: Sat, 21 Nov 2026 06:37:06 +0000
+Message-ID: <VI1PR09MB2496B47245DCE1639C8421E096472@VI1PR09MB2496.eurprd09.prod.outlook.com>
+Accept-Language: sv-SE, en-US
+Content-Language: sv-SE
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+msip_labels: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: VI1PR09MB2496:EE_|DB8PR09MB4011:EE_
+x-ms-office365-filtering-correlation-id: 27be1320-1608-48a6-a260-08df4799dc69
+x-microsoft-antispam: BCL:0;
+ ARA:14566002|4140399003|31061999003|24021099003|25031999004|55001999006|22091999003|24121999003|15080799012|15030799006|6092099016|24071999003|39105399006|8062599012|19110799012|8060799015|25010399006|20031999006|26115399003|40105399003|102099032|440099028|3412199025|25131999003;
+x-microsoft-antispam-message-info: =?iso-8859-1?Q?+55xeMRX2o5pEnWXQbZ0eFwXkbI/IscL4aeA1q2k44ZAUxfvqxjtGCL7pe?=
+ =?iso-8859-1?Q?rH4KikkHIsgSQZjpN7fEWQv3cGJc/2JEzfKut3A3kfKHIl3a3Jm1QmHDnE?=
+ =?iso-8859-1?Q?Cr/CYdE0eaqhJ/02RAy9E32loiKj/1+ftGAiJnRadAySW0QVRh5TyxV/yy?=
+ =?iso-8859-1?Q?ez+uz92s5zvm8FmD3WoRb/05a9v7B8eFyTbuz19BRv23DPzpUIVIg/GuL2?=
+ =?iso-8859-1?Q?Hy3QWvoaL13KCBKjuICxjGbyV3nR8JfYhCEI9Igk0lx+c/6Zlb1MfQnAP+?=
+ =?iso-8859-1?Q?yciwAxYT/CcWP2e+aNnCm2667YTaOHyiXmXDGW7i42uIruBEOV/CZfD1D7?=
+ =?iso-8859-1?Q?tvJT39L/LLzm2twNyTqjTvPDniUqKFnQyyjQt87lNn4NBpVwlrYm2GPBnn?=
+ =?iso-8859-1?Q?hDwhXrqRv6ahtEtR7PY7xxI0isI2vE9bcyagiIRhCsNJMslZjjXVzYlGXE?=
+ =?iso-8859-1?Q?b8O/+6zAD4azyH9VYfWf2ohSe3uc8vbqEU9WFPLMIsJhZ+7sWCPluu0DrI?=
+ =?iso-8859-1?Q?yM2JT5hMnHVuiNVV9OkAPvwS7usXXeL+LE8yZljTpA9QLTq2W0gfRLZYjz?=
+ =?iso-8859-1?Q?mDiTwblQcfDCjUsaRpXEY31frfIsl+ddkt8rbuG6YDuN5Mal2UnGWZF6es?=
+ =?iso-8859-1?Q?MRVl88OlZvZWqXZPwIT+9kwNWl3KmER0tvScWvhAEpuF9VqzkZSzhe9ReD?=
+ =?iso-8859-1?Q?C1ukrDeliylvjiGmZpQSmU2NvnfTzRa/w9Q9S00QDlj+zqPpav6lD6glft?=
+ =?iso-8859-1?Q?+x562k7aAUUGuUMuoqQNfvaWduz0ifwRcdqWAVekBI0yZujJk4jtWduHKZ?=
+ =?iso-8859-1?Q?xSBN3W7n9z/YcAygsnZpTSl5ziFpaTLiyQLBaD4RgoFrm5OY9YnijgnVTp?=
+ =?iso-8859-1?Q?m4L5OSQx6owub8BUs0KdrRGNFq0ltTSl2rZL/6OTS1mRcY9pNPYA3ZaXvK?=
+ =?iso-8859-1?Q?hLG6u3fhA4NkctTFzVIfQa3fdzRA1ds+LHNLYQKRG7aa4hbQortQQbAojD?=
+ =?iso-8859-1?Q?ZiT0EpRzp5X52biVJQ23DvW4uynoWnt6BJtfIjNzP6Idj209zp1nhveX5A?=
+ =?iso-8859-1?Q?/Qw2CLTDezjfJ3lIl1P8rwbLRolhywcXm/IbhiCop4XESWlUizjB1PKVw/?=
+ =?iso-8859-1?Q?vYUubqcfR3fTwO7b1MQMHhOhFlO89vjxpwmu8cNpbB5WcEard6eHNgh0Vk?=
+ =?iso-8859-1?Q?KtEwIeDlz2TbcNH617Wwi6NViZOZRV6ilvBB91gE58DnVDCfkBkdWU+f79?=
+ =?iso-8859-1?Q?jdVPNXFQ47DyJM5FsbXvFkcnrE8BK74ZoSiYQzXztJehQrXQrtJ2FMlspD?=
+ =?iso-8859-1?Q?tm2a?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?u7IhG9B8DrsW1WL8vA8XaIyyT1MQZm3iY9v7urwXs0m5sdHitZ1SD44jJX?=
+ =?iso-8859-1?Q?HI6Eh82t6qHFL/QvtzRx2v2oK+wlhfjr7PqaxICDy89DzhECKGEc7vqwaF?=
+ =?iso-8859-1?Q?i6/uDW/bpvaTVay0EkBWAMZ4fR7CDireo5u6/1pWaDu83okwBEbTX09oco?=
+ =?iso-8859-1?Q?feltUakLsQQZ744qVOpUjuxYFviXdcTKMAFrp7FVmA7W6Fq/dCX/91uv5R?=
+ =?iso-8859-1?Q?WaSqN9VEXwapUfBrpkvKppsn850IB8mdPrGugwaNIJ1Bz9cQeYZLuP0MZP?=
+ =?iso-8859-1?Q?bcJNcprMcLqRtWk0BCopNiv4rKOwIUQUPpWFpvIiHuFkiwTj3DcUsMH6wP?=
+ =?iso-8859-1?Q?ZdsMJaknKAkMb/glodAR0wQEHwylEIutofp64n7kDvPfz7NNsypx1LN7+z?=
+ =?iso-8859-1?Q?XaHTQvmv2ixubc9ZYjZYKqSVPutpRK79Ex/85/cqSZh6dYKEwcegCErtBP?=
+ =?iso-8859-1?Q?n01ZmPHiiZnqhup14igwCIj7EXoqoNdxKYD3hJ4Jka13F26tON0vDIcWA0?=
+ =?iso-8859-1?Q?//x65/e51HZiM20V9mcg27VRAKDdARfOi+1KIPCWy8pp3HHFKze6NOOy8+?=
+ =?iso-8859-1?Q?LNkwnHXN2Boof+yMxVXFDYyNc3pLJ96uvsc8x+7viwWeYTJDroyiyk5cBI?=
+ =?iso-8859-1?Q?zPAox3kpv8mEZOT3Fzs2hsipA+7J8jU3RdrE5TtBpJB2jChIM6QfLTzUVw?=
+ =?iso-8859-1?Q?0COOZPKJrvwTavelhWBHbNz0c1t4EINwNQa86t+ppGTujQ4GhECemmGxNh?=
+ =?iso-8859-1?Q?x4yuxCxdpNBp+gIljQo/fnVIQvZYYip+/MpmLMAeS6QRCikF52NkQiJN7E?=
+ =?iso-8859-1?Q?XkjH/bKYLzlJpfuAf1UeeJ7pbQWQu4cHXZYoHSOFJU0OKEnJ41SlipSE2V?=
+ =?iso-8859-1?Q?vhEgFcdpSA/6I6m19iDG/OHn6lKn1EiqRDO5jBIu/y3fw5DEKZIM3SNRF4?=
+ =?iso-8859-1?Q?8ZREo7AJRiK9b82AqDUN0DDcJkvgZvW+lrNEtNoPvPBN1JsjXUYeEl/54y?=
+ =?iso-8859-1?Q?jWfZI1DkwoiA4vVZ/B6L7VsCYp0P/SogwWrhjPKxs8tT5jq/c/vgY1m5h/?=
+ =?iso-8859-1?Q?PmBcdz3w55swodMIqTsvh1Unl4tuDV1+USarkFa4p/sHHbAF3GgTm8q5OY?=
+ =?iso-8859-1?Q?rIDmAyB1mdZBalmBv3ph/PfKF92sY13Db5jcL8uTT99aMbjDnH1SPzaxbJ?=
+ =?iso-8859-1?Q?8r7eeRRNWet5+W0KwjztaxcVYnWH0McuRhf8ntljlA5zvG3KQBGo3dHTF2?=
+ =?iso-8859-1?Q?8tf4btg4tbvXtp1G36dCPdfjL5DviW5Tjyi45h48nk7tJxeubUz1oR4bLD?=
+ =?iso-8859-1?Q?qUPIDRKKBr+QiJeRkVxu5H5vXApcRIdmJUnOVXLVwv8as5GZ7Abz8Q60X9?=
+ =?iso-8859-1?Q?l0WkvL/Ar4nXHWeO9PlEOF75JOsFGSCfAhST73rAFQoZ1lDRvXUNVlK8JN?=
+ =?iso-8859-1?Q?iKTtt+XMOgNjX2whF0iiYM84p+I+t8rGrB8dVAurzUEhiSk3DWyKdqbhQi?=
+ =?iso-8859-1?Q?MRHNzWmLiBnHF5ArA37sT8?=
+Content-Type: multipart/mixed;
+ boundary="_004_VI1PR09MB2496B47245DCE1639C8421E096472VI1PR09MB2496eurp_"
+MIME-Version: 1.0
+X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-e4bba.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR09MB2496.eurprd09.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27be1320-1608-48a6-a260-08df4799dc69
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2026 06:37:06.3229 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR09MB4011
+Received-SPF: pass client-ip=52.103.39.24; envelope-from=arthur.miller@live.com;
+ helo=MRWPR03CU001.outbound.protection.outlook.com
+X-Spam_score_int: -7
+X-Spam_score: -0.8
+X-Spam_bar: /
+X-Spam_report: (-0.8 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_BL_SPAMCOP_NET=1.347, RCVD_IN_DNSWL_NONE=-0.0001,
+ RCVD_IN_MSPIKE_H2=0.001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-Mailman-Approved-At: Sat, 21 Nov 2026 01:50:03 -0500
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 06:42:13 -0000
+
+--_004_VI1PR09MB2496B47245DCE1639C8421E096472VI1PR09MB2496eurp_
+Content-Type: multipart/alternative;
+	boundary="_000_VI1PR09MB2496B47245DCE1639C8421E096472VI1PR09MB2496eurp_"
+
+--_000_VI1PR09MB2496B47245DCE1639C8421E096472VI1PR09MB2496eurp_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+Was porting some of fileio to CL and found this; don't know if
+It is a bug or a feature. Patch attached. If you don't like it or don't wan=
+t it
+Just ignore it.
+
+--_000_VI1PR09MB2496B47245DCE1639C8421E096472VI1PR09MB2496eurp_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
+ttom:0;} </style>
+</head>
+<body dir=3D"ltr">
+<div class=3D"elementToProof" style=3D"font-family: Calibri, Helvetica, san=
+s-serif; font-size: 12pt; color: rgb(0, 0, 0);">
+Was porting some of fileio to CL and found this; don't know if</div>
+<div class=3D"elementToProof" style=3D"font-family: Calibri, Helvetica, san=
+s-serif; font-size: 12pt; color: rgb(0, 0, 0);">
+It is a bug or a feature. Patch attached. If you don't like it or don't wan=
+t it</div>
+<div class=3D"elementToProof" style=3D"font-family: Calibri, Helvetica, san=
+s-serif; font-size: 12pt; color: rgb(0, 0, 0);">
+Just ignore it.</div>
+</body>
+</html>
+
+--_000_VI1PR09MB2496B47245DCE1639C8421E096472VI1PR09MB2496eurp_--
+
+--_004_VI1PR09MB2496B47245DCE1639C8421E096472VI1PR09MB2496eurp_
+Content-Type: text/x-patch;
+	name="0001-Fix-copy-file-onto-itself-emptying-the-file.patch"
+Content-Description: 0001-Fix-copy-file-onto-itself-emptying-the-file.patch
+Content-Disposition: attachment;
+	filename="0001-Fix-copy-file-onto-itself-emptying-the-file.patch"; size=3499;
+	creation-date="Sat, 21 Nov 2026 06:34:31 GMT";
+	modification-date="Sat, 21 Nov 2026 06:34:58 GMT"
+Content-Transfer-Encoding: base64
+
+RnJvbSBlODg0MjY0MjcwMmQxNzIxMzc2MTM4MGNiZWNkZmY1N2QzNWZlNDQwIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBhcnRodXIgPGFydGh1ci5taWxsZXJAbGl2ZS5jb20+CkRhdGU6
+IFNhdCwgMjEgTm92IDIwMjYgMDc6MjQ6MzYgKzAxMDAKU3ViamVjdDogW1BBVENIXSBGaXggY29w
+eS1maWxlIG9udG8gaXRzZWxmIGVtcHR5aW5nIHRoZSBmaWxlCgpTaW5jZSBmZmQ2NWJlMjI3NyAo
+MjAyNS0wMS0yMikgYW4gZXhpc3Rpbmcgb3V0cHV0IGZpbGUgd2FzIG9wZW5lZAp3aXRoIE9fVFJV
+TkMsIHdoaWNoIGVtcHRpZXMgaXQgYmVmb3JlIHdlIGZpbmQgb3V0IHRoYXQgaXQgaXMgYWxzbwp0
+aGUgaW5wdXQgZmlsZS4gIChjb3B5LWZpbGUgRiBGIHQpIHNpZ25hbGVkIHRoZSBlcnJvciBidXQg
+RiB3YXMKYWxyZWFkeSBlbXB0eS4KKiBzcmMvZmlsZWlvLmMgKEZjb3B5X2ZpbGUpOiBPcGVuIGFu
+IGV4aXN0aW5nIG91dHB1dCB3aXRob3V0Ck9fVFJVTkMuICBBZnRlciB0aGUgY2hlY2sgdGhhdCBp
+bnB1dCBhbmQgb3V0cHV0IGFyZSBkaWZmZXJlbnQKZmlsZXMsIHRydW5jYXRlIHRoZSBvdXRwdXQg
+aWYgaXQgaXMgYSByZWd1bGFyIGZpbGUuCiogdGVzdC9zcmMvZmlsZWlvLXRlc3RzLmVsIChmaWxl
+aW8tdGVzdHMtLWNvcHktZmlsZS10by1pdHNlbGYpCihmaWxlaW8tdGVzdHMtLWNvcHktZmlsZS1y
+ZXBsYWNlcy1sb25nZXItZmlsZSk6IE5ldyB0ZXN0cy4KLS0tCiBzcmMvZmlsZWlvLmMgICAgICAg
+ICAgICAgfCAgNiArKysrKy0KIHRlc3Qvc3JjL2ZpbGVpby10ZXN0cy5lbCB8IDMyICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDM3IGluc2VydGlvbnMo
+KyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9zcmMvZmlsZWlvLmMgYi9zcmMvZmlsZWlv
+LmMKaW5kZXggNWNmOWFkNzYyODAuLmRjODU1YTA5M2Y2IDEwMDY0NAotLS0gYS9zcmMvZmlsZWlv
+LmMKKysrIGIvc3JjL2ZpbGVpby5jCkBAIC0yMzkwLDcgKzIzOTAsOSBAQCBERUZVTiAoImNvcHkt
+ZmlsZSIsIEZjb3B5X2ZpbGUsIFNjb3B5X2ZpbGUsIDIsIDYsCiAJYmFyZl9vcl9xdWVyeV9pZl9m
+aWxlX2V4aXN0cyAobmV3bmFtZSwgdHJ1ZSwgImNvcHkgdG8gaXQiLAogCQkJCSAgICAgIEZJWE5V
+TVAgKG9rX2lmX2FscmVhZHlfZXhpc3RzKSwgZmFsc2UpOwogICAgICAgYWxyZWFkeV9leGlzdHMg
+PSB0cnVlOwotICAgICAgb2ZkID0gZW1hY3Nfb3BlbiAoU1NEQVRBIChlbmNvZGVkX25ld25hbWUp
+LCBPX1dST05MWSB8IE9fVFJVTkMsIDApOworICAgICAgLyogRG8gbm90IHVzZSBPX1RSVU5DIGhl
+cmU6IGlmIHRoZSBvdXRwdXQgaXMgYWxzbyB0aGUgaW5wdXQsCisJIHRoYXQgd291bGQgZW1wdHkg
+aXQgYmVmb3JlIHdlIG5vdGljZS4gIFRydW5jYXRlIGJlbG93LiAgKi8KKyAgICAgIG9mZCA9IGVt
+YWNzX29wZW4gKFNTREFUQSAoZW5jb2RlZF9uZXduYW1lKSwgT19XUk9OTFksIDApOwogICAgIH0K
+ICAgaWYgKG9mZCA8IDApCiAgICAgcmVwb3J0X2ZpbGVfZXJyb3IgKCJPcGVuaW5nIG91dHB1dCBm
+aWxlIiwgbmV3bmFtZSk7CkBAIC0yNDA1LDYgKzI0MDcsOCBAQCBERUZVTiAoImNvcHktZmlsZSIs
+IEZjb3B5X2ZpbGUsIFNjb3B5X2ZpbGUsIDIsIDYsCiAgICAgICBpZiAoc3Quc3RfZGV2ID09IG91
+dF9zdC5zdF9kZXYgJiYgc3Quc3RfaW5vID09IG91dF9zdC5zdF9pbm8pCiAJcmVwb3J0X2ZpbGVf
+ZXJybm8gKCJJbnB1dCBhbmQgb3V0cHV0IGZpbGVzIGFyZSB0aGUgc2FtZSIsCiAJCQkgICBsaXN0
+MiAoZmlsZSwgbmV3bmFtZSksIDApOworICAgICAgaWYgKFNfSVNSRUcgKG91dF9zdC5zdF9tb2Rl
+KSAmJiBmdHJ1bmNhdGUgKG9mZCwgMCkgIT0gMCkKKwlyZXBvcnRfZmlsZV9lcnJvciAoIlRydW5j
+YXRpbmcgb3V0cHV0IGZpbGUiLCBuZXduYW1lKTsKICAgICB9CiAKICAgbWF5YmVfcXVpdCAoKTsK
+ZGlmZiAtLWdpdCBhL3Rlc3Qvc3JjL2ZpbGVpby10ZXN0cy5lbCBiL3Rlc3Qvc3JjL2ZpbGVpby10
+ZXN0cy5lbAppbmRleCAyYzI3ZWYzNTcwMS4uNzdmZjZiMWU0NGMgMTAwNjQ0Ci0tLSBhL3Rlc3Qv
+c3JjL2ZpbGVpby10ZXN0cy5lbAorKysgYi90ZXN0L3NyYy9maWxlaW8tdGVzdHMuZWwKQEAgLTI3
+OCw0ICsyNzgsMzYgQEAgZmlsZWlvLXRlc3RzLS1pbnNlcnQtZmlsZS1jb250ZW50cy1zdXBlcnNl
+c3Npb24KICAgICAgIChzaG91bGQgYXNrZWQpKSkpCiAKIAorKGVydC1kZWZ0ZXN0IGZpbGVpby10
+ZXN0cy0tY29weS1maWxlLXRvLWl0c2VsZiAoKQorICAiQ29weWluZyBhIGZpbGUgb250byBpdHNl
+bGYgaXMgYW4gZXJyb3IgYW5kIGxlYXZlcyB0aGUgZmlsZSBhbG9uZS4iCisgIChlcnQtd2l0aC10
+ZW1wLWZpbGUgZmlsZQorICAgIDp0ZXh0ICJjb250ZW50cyIKKyAgICAoc2hvdWxkLWVycm9yIChj
+b3B5LWZpbGUgZmlsZSBmaWxlIHQpIDp0eXBlICdmaWxlLWVycm9yKQorICAgIChzaG91bGQgKGVx
+dWFsICh3aXRoLXRlbXAtYnVmZmVyCisgICAgICAgICAgICAgICAgICAgICAoaW5zZXJ0LWZpbGUt
+Y29udGVudHMtbGl0ZXJhbGx5IGZpbGUpCisgICAgICAgICAgICAgICAgICAgICAoYnVmZmVyLXN0
+cmluZykpCisgICAgICAgICAgICAgICAgICAgImNvbnRlbnRzIikpCisgICAgOzsgVGhlIHNhbWUg
+Z29lcyBmb3IgYW5vdGhlciBuYW1lIG9mIHRoZSBzYW1lIGZpbGUuCisgICAgKGVydC13aXRoLXRl
+bXAtZmlsZSBsaW5rCisgICAgICA6c3VmZml4ICItbGluayIKKyAgICAgIChkZWxldGUtZmlsZSBs
+aW5rKQorICAgICAgKGFkZC1uYW1lLXRvLWZpbGUgZmlsZSBsaW5rKQorICAgICAgKHNob3VsZC1l
+cnJvciAoY29weS1maWxlIGZpbGUgbGluayB0KSA6dHlwZSAnZmlsZS1lcnJvcikKKyAgICAgIChz
+aG91bGQgKGVxdWFsICh3aXRoLXRlbXAtYnVmZmVyCisgICAgICAgICAgICAgICAgICAgICAgIChp
+bnNlcnQtZmlsZS1jb250ZW50cy1saXRlcmFsbHkgZmlsZSkKKyAgICAgICAgICAgICAgICAgICAg
+ICAgKGJ1ZmZlci1zdHJpbmcpKQorICAgICAgICAgICAgICAgICAgICAgImNvbnRlbnRzIikpKSkp
+CisKKyhlcnQtZGVmdGVzdCBmaWxlaW8tdGVzdHMtLWNvcHktZmlsZS1yZXBsYWNlcy1sb25nZXIt
+ZmlsZSAoKQorICAiQ29weWluZyBvdmVyIGEgbG9uZ2VyIGZpbGUgbGVhdmVzIG9ubHkgdGhlIG5l
+dyBjb250ZW50cy4iCisgIChlcnQtd2l0aC10ZW1wLWZpbGUgZnJvbQorICAgIDp0ZXh0ICJuZXci
+CisgICAgKGVydC13aXRoLXRlbXAtZmlsZSB0bworICAgICAgOnRleHQgIm9sZCBhbmQgbG9uZ2Vy
+IgorICAgICAgKGNvcHktZmlsZSBmcm9tIHRvIHQpCisgICAgICAoc2hvdWxkIChlcXVhbCAod2l0
+aC10ZW1wLWJ1ZmZlcgorICAgICAgICAgICAgICAgICAgICAgICAoaW5zZXJ0LWZpbGUtY29udGVu
+dHMtbGl0ZXJhbGx5IHRvKQorICAgICAgICAgICAgICAgICAgICAgICAoYnVmZmVyLXN0cmluZykp
+CisgICAgICAgICAgICAgICAgICAgICAibmV3IikpKSkpCisKIDs7OyBmaWxlaW8tdGVzdHMuZWwg
+ZW5kcyBoZXJlCi0tIAoyLjU2LjEKCg==
+
+--_004_VI1PR09MB2496B47245DCE1639C8421E096472VI1PR09MB2496eurp_--
+
+
+From MAILER-DAEMON Sat Nov 21 02:10:57 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUfFQ-0006Ih-5F
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 02:10:57 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xUfFE-0006EX-3w
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 02:10:45 -0500
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xUfF6-0002ov-PZ; Sat, 21 Nov 2026 02:10:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-version:References:Subject:In-Reply-To:To:From:
+ Date; bh=FrhYL/cppl4ty5bvenbGolxni7Bdbw8Gg30mKXgp47o=; b=AP4+id4uvc2XGTZCnb6Q
+ Ys5uobVoKOVd2BZSJfNjbF8m1dn9oLNk111IHa2u58DwLoWiXfJFfHZKcRGVejoWRzo+E8jHflKiP
+ qstOHMoW8Gy446kh9qg+N0bFJTwCSz4HoQV5BZoJkADkvlKdgJzr/OLdBHouex4vIxBT4faBRPfEp
+ nfH14mcHg9oeLjQAqu6HLUT3OLYbBo+OlIlWrs5ag5tE39k4n33MsdFxp2x4uuUCsaVxLOAJXYzfu
+ Yd6myTwTWf5lsLsxYKguPlxsmr1wqMIRfQzCHW3mKPf62tGyNgmzqhAI7MV80VWnQV9THj6HEyuNR
+ b2nfn5BChillqw==;
+Date: Sat, 21 Nov 2026 09:10:23 +0200
+Message-Id: <86tslairs0.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Cc: joel.reicher@gmail.com, rms@gnu.org, philipk@posteo.net,
+ shipmints@gmail.com, arstoffel@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <877bi7p7zs.fsf@web.de> (arne_bab@web.de)
+Subject: Re: ELPA submission: vibe-spell
+References: <877bis35nn.fsf@gmail.com> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org> <87bj7jr8r7.fsf@web.de>
+ <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 07:10:46 -0000
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Fri, 20 Nov 2026 21:23:35 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> That isn’t the point I wanted to make. The point is that by stating as a
+> >> project that LLM-generated code is not accepted, the problem that
+> >> feedback doesn’t reach a person is much less likely.
+> >
+> > Good luck with that assumption!  I had more than enough experiences
+> > with real humans disregarding my feedback, if not responding in harsh
+> > words centered on my personality.
+> 
+> I know that rejecting LLM-generated code doesn’t solve other problems.
+
+My point is that this problem already exists, and is not limited to
+incorrect use of LLMs.  We are already dealing with it, and I see no
+reason to think we won't be able to continue dealing with it.
+
+> > I prefer to decide whether or not to work with someone depending on
+> > the answers, not on their source, real or imaginary.  See bug#82057 to
+> > understand what I'm talking about.
+> 
+> I prefer to talk to people, even where machines can talk smooth.
+
+That's a tangent not relevant to the point I was making above.  But
+since you bring this up: there are some people on our lists with whom
+I prefer not to talk, but I do, because they contribute to Emacs.  I'm
+sure every one of us has these experiences, where our personal
+preferences take a back seat to our duties as Emacs maintainers and
+developers.
+
+> >> I know that’s an anecdote. Here’s some actual research on the topic:
+> >> https://arxiv.org/html/2603.27249v2#S4
+> >
+> > If I show you 100 Free Software projects that dwindled and died before
+> > they were 10 years old, would you then claim that there's high
+> > probability that Emacs will soon die similar death?  If not, why not?
+> 
+> I didn’t talk about dying.
+
+That was an analogy, aimed at asking you why you believe that
+conclusions of an academic paper which is based on researching other
+projects are necessarily valid for us.
+
+> While I don’t think that Emacs will die easily, I also don’t think that
+> it’s immune against getting damaged by problems that already destroyed
+> other projects. While I do think Emacs is special, I don’t think it is
+> special enough to be unaffected.
+
+I didn't say "unaffected" or "immune".  The issue here is whether we
+will be able to deal with these effects.  Assuming the legal issues
+are resolved, a complete ban is only justified if we are sure we
+cannot deal with that without sacrificing something important.
+There's no evidence of that in sight.  All the evidence you and others
+have brought up until now are either irrelevant or something we
+already deal with, and deal successfully.
+
+
+From MAILER-DAEMON Sat Nov 21 03:13:40 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUgE8-0000IV-B6
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 03:13:40 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xUgE7-0000IH-1V
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 03:13:39 -0500
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xUgE5-0007sR-CG; Sat, 21 Nov 2026 03:13:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=FvqsolPFT8yp4EClK9/JsWtI6xv42wAb8JTjpqVrosk=; b=d+0qhbS0nzSb
+ 53k3+ISdOEyCVWLecjXEqq+O5IZyg8vWvJv9rMrtiBeITbuDh4DiCdIxhZnSJdmCCSSwpyZy/dt01
+ H6jZ1JM0wjJLGSdFH1e+kDJgZCz6/9bCp0KDS2cs1vdhJMFzwm7mdrrgVKNj+Pu0tk5vQWLUXGBzG
+ 0fdzORY++a4OdkTlPEYge8WCA7s15nS+N0nfAxkjpkAcVoFDbQDs03mFPE+xSEYF8E50thXyi+YlK
+ XBYOUmAi0S25GDFjVXC8bVl5KJxe880RWp/NlMVgp2d/jY6Z4/jU3ToYzlAfCZj/rthjHFeHnNmJY
+ aEVaTE0hPd88JGV0yF3htA==;
+Date: Sat, 21 Nov 2026 10:13:33 +0200
+Message-Id: <86ld6miouq.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: arthur miller <arthur.miller@live.com>,
+ Paul Eggert <eggert@cs.ucla.edu>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <VI1PR09MB2496B47245DCE1639C8421E096472@VI1PR09MB2496.eurprd09.prod.outlook.com>
+ (message from arthur miller on Sat, 21 Nov 2026 06:37:06 +0000)
+Subject: Re: copy-file onto itself truncates the file
+References: <VI1PR09MB2496B47245DCE1639C8421E096472@VI1PR09MB2496.eurprd09.prod.outlook.com>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 08:13:39 -0000
+
+> From: arthur miller <arthur.miller@live.com>
+> Date: Sat, 21 Nov 2026 06:37:06 +0000
+> 
+> Was porting some of fileio to CL and found this; don't know if
+> It is a bug or a feature. Patch attached. If you don't like it or don't want it
+> Just ignore it.
+> 
+
+Paul, any comments?
+
+> From e8842642702d17213761380cbecdff57d35fe440 Mon Sep 17 00:00:00 2001
+> From: arthur <arthur.miller@live.com>
+> Date: Sat, 21 Nov 2026 07:24:36 +0100
+> Subject: [PATCH] Fix copy-file onto itself emptying the file
+> 
+> Since ffd65be2277 (2025-01-22) an existing output file was opened
+> with O_TRUNC, which empties it before we find out that it is also
+> the input file.  (copy-file F F t) signaled the error but F was
+> already empty.
+> * src/fileio.c (Fcopy_file): Open an existing output without
+> O_TRUNC.  After the check that input and output are different
+> files, truncate the output if it is a regular file.
+> * test/src/fileio-tests.el (fileio-tests--copy-file-to-itself)
+> (fileio-tests--copy-file-replaces-longer-file): New tests.
+> ---
+>  src/fileio.c             |  6 +++++-
+>  test/src/fileio-tests.el | 32 ++++++++++++++++++++++++++++++++
+>  2 files changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/src/fileio.c b/src/fileio.c
+> index 5cf9ad76280..dc855a093f6 100644
+> --- a/src/fileio.c
+> +++ b/src/fileio.c
+> @@ -2390,7 +2390,9 @@ DEFUN ("copy-file", Fcopy_file, Scopy_file, 2, 6,
+>  	barf_or_query_if_file_exists (newname, true, "copy to it",
+>  				      FIXNUMP (ok_if_already_exists), false);
+>        already_exists = true;
+> -      ofd = emacs_open (SSDATA (encoded_newname), O_WRONLY | O_TRUNC, 0);
+> +      /* Do not use O_TRUNC here: if the output is also the input,
+> +	 that would empty it before we notice.  Truncate below.  */
+> +      ofd = emacs_open (SSDATA (encoded_newname), O_WRONLY, 0);
+>      }
+>    if (ofd < 0)
+>      report_file_error ("Opening output file", newname);
+> @@ -2405,6 +2407,8 @@ DEFUN ("copy-file", Fcopy_file, Scopy_file, 2, 6,
+>        if (st.st_dev == out_st.st_dev && st.st_ino == out_st.st_ino)
+>  	report_file_errno ("Input and output files are the same",
+>  			   list2 (file, newname), 0);
+> +      if (S_ISREG (out_st.st_mode) && ftruncate (ofd, 0) != 0)
+> +	report_file_error ("Truncating output file", newname);
+>      }
+>  
+>    maybe_quit ();
+> diff --git a/test/src/fileio-tests.el b/test/src/fileio-tests.el
+> index 2c27ef35701..77ff6b1e44c 100644
+> --- a/test/src/fileio-tests.el
+> +++ b/test/src/fileio-tests.el
+> @@ -278,4 +278,36 @@ fileio-tests--insert-file-contents-supersession
+>        (should asked))))
+>  
+>  
+> +(ert-deftest fileio-tests--copy-file-to-itself ()
+> +  "Copying a file onto itself is an error and leaves the file alone."
+> +  (ert-with-temp-file file
+> +    :text "contents"
+> +    (should-error (copy-file file file t) :type 'file-error)
+> +    (should (equal (with-temp-buffer
+> +                     (insert-file-contents-literally file)
+> +                     (buffer-string))
+> +                   "contents"))
+> +    ;; The same goes for another name of the same file.
+> +    (ert-with-temp-file link
+> +      :suffix "-link"
+> +      (delete-file link)
+> +      (add-name-to-file file link)
+> +      (should-error (copy-file file link t) :type 'file-error)
+> +      (should (equal (with-temp-buffer
+> +                       (insert-file-contents-literally file)
+> +                       (buffer-string))
+> +                     "contents")))))
+> +
+> +(ert-deftest fileio-tests--copy-file-replaces-longer-file ()
+> +  "Copying over a longer file leaves only the new contents."
+> +  (ert-with-temp-file from
+> +    :text "new"
+> +    (ert-with-temp-file to
+> +      :text "old and longer"
+> +      (copy-file from to t)
+> +      (should (equal (with-temp-buffer
+> +                       (insert-file-contents-literally to)
+> +                       (buffer-string))
+> +                     "new")))))
+> +
+>  ;;; fileio-tests.el ends here
+> -- 
+> 2.56.1
+> 
+
+
+From MAILER-DAEMON Sat Nov 21 04:06:42 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUh3S-0008KH-1j
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 04:06:42 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xUh3I-0008JW-IZ
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 04:06:33 -0500
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xUh3G-0005uR-OT; Sat, 21 Nov 2026 04:06:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=Subject:To:From:Date:mime-version:in-reply-to:
+ references; bh=Gs5qmGkiXZDBhPxeZkmxWNvbBSF0wRJfbPwJbgExBwg=; b=Ri7GjpyXnHWXrK
+ p5EGxpMOsq0p1nulfxiOoW45SIy63R0e/yxHFwfXWRqC76SCxsgV4gakiZH1jKlhzlhsMGRzi3TVo
+ 7YJCsIqVohTyyRfu4duYEB+xjAFVN+ZIqIjgFXPIFVQscZht/PyPZC8N6D2MMwQV7yBiDfF7yt3Ig
+ IWvAni1CWNU9y7mqcDMu+QG+T2iIvqvXMJ2zabeq3pQW+TADjJ1zkcm+G/u9MBMKnK9uyGgzIFFPX
+ jzAWyvBlvuLS3h1XcYKnrkaJLzhTOmR3rrMkLmavES8+iN6aW8L6Pf0o472gZO6B5xLHDBIkDGrCm
+ SDvq8JGW/P2WChzs8iaw==;
+Date: Sat, 21 Nov 2026 11:06:26 +0200
+Message-Id: <86ik1qimel.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Helmut Eller <eller.helmut@gmail.com>
+Cc: emacs-devel@gnu.org
+Subject: igc-tests-thread-incremental-gc hangs in MinGW build
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 09:06:36 -0000
+
+This new test intermittently hangs in the MS-Windows build.  When it
+hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+execution unit.
+
+Let me know if I can provide more information.
+
+Thanks.
+
+
+From MAILER-DAEMON Sat Nov 21 04:09:39 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUh6H-0000db-8q
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 04:09:39 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xUh68-0000d4-QW
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 04:09:30 -0500
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xUh67-0002rm-78; Sat, 21 Nov 2026 04:09:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=RndnyacjOf8P7EqKUO7bxgy1hUjd/YSUwOjRchiJxAs=; b=pHEvhv7a8zAe
+ nJmVmtPLuea7a37am+F8Szo1cGKPqpPKKt8UEl5f8BDSFZ9OJIl1Yz3OjgHmvV04Uyr3un/S7VGYC
+ h17p8kao36xRurhVvjwCqFJHSGyvq9yAtYFLJ3I+BsU5DEHnQ6fr3H0Xk9ArdOnTkoYQcrgvxmFAi
+ MlvN6o64G/PFKe+yOHrTNFFj28Ps+hvVQQLNVafFT4e5YSGYZjWagVdsWAJnz5DyKzD4A7kryLfeP
+ FI5aquc8G3jtdYDFWqtJVMc5/kKRgIpaocGU/ppBHEwS8qK4QwUSfbZgoRP0aHVoUOPuzpO992MAH
+ SUTY+M5PPA51j2tKdRWl8A==;
+Date: Sat, 21 Nov 2026 11:09:18 +0200
+Message-Id: <86h5haim9t.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: eller.helmut@gmail.com
+Cc: emacs-devel@gnu.org
+In-Reply-To: <86ik1qimel.fsf@gnu.org> (message from Eli Zaretskii on Sat, 21
+ Nov 2026 11:06:26 +0200)
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+References: <86ik1qimel.fsf@gnu.org>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 09:09:30 -0000
+
+> Date: Sat, 21 Nov 2026 11:06:26 +0200
+> From: Eli Zaretskii <eliz@gnu.org>
+> Cc: emacs-devel@gnu.org
+> 
+> This new test intermittently hangs in the MS-Windows build.  When it
+> hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+> execution unit.
+> 
+> Let me know if I can provide more information.
+
+More info: if I run only the last 2 tests, like this:
+
+  $ make -C test src/igc-tests SELECTOR='"thread"'
+
+it seems to _never_ hang.  So maybe it's some left-over from previous
+tests, perhaps due to how large is the MPS arena?
+
+
+From MAILER-DAEMON Sat Nov 21 07:02:35 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUjne-0000Y7-ML
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 07:02:34 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eller.helmut@gmail.com>)
+ id 1xUjnb-0000W0-LW
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 07:02:31 -0500
+Received: from mail-wm1-x32f.google.com ([2a00:1450:4864:20::32f])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <eller.helmut@gmail.com>)
+ id 1xUjnZ-0002Zo-A4
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 07:02:31 -0500
+Received: by mail-wm1-x32f.google.com with SMTP id
+ 5b1f17b1804b1-4a5177d78c7so16894665e9.2
+ for <emacs-devel@gnu.org>; Sat, 21 Nov 2026 04:02:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1795262547; x=1795867347; darn=gnu.org;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+ :reply-to:content-type;
+ bh=xxaro3qsfHrpTk3ZkWwTA9z4WDiHhGFwzhdmrW6+ERQ=;
+ b=su40og4NCzwZclW8f3AaE7uCR+yF3hrJERkZ0LVVaxKbUBThB2CiB3yXAcHfzSPPqS
+ r4Vspo/IKHcdMC4yLHqwyTaPFyJQGVTKjrmQ6WBHbQ9pgO045YP0IT7roCjcELlqiB5n
+ 3v3aOYAqjIDbWF7Re4PHe+pMyyCkwRsqvv62lje5ENPFYCbzG+ZvTUsh74oEZJENifJq
+ hKMTMqEuHwkUvPmM69fs9h2T/UYQZkV+22BeyIg9PjpXAhyYsASapCKPHZbDr2O5xdhD
+ Q37ieanLalGaLic0Y5eh6CGmr9IEnL+qReT73+ywwBOyDOKm+KkC0z7j89gJQnVjkSMK
+ O8GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1795262547; x=1795867347;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=xxaro3qsfHrpTk3ZkWwTA9z4WDiHhGFwzhdmrW6+ERQ=;
+ b=sPUrbXTOuvPHtNOtaI9yONKzehgctmlESHUhstnXrUut49Q4NNkZ2nDgGCTql4dXVp
+ pkZzAs3CH/weRbvlrf29yLffCURADQjBEleSYcXIUC8RuG1bS68FGx82xuxvul1EXZgy
+ YIerT0wPjsIu5G35rGob9g/0bZyNbjQWsT42jdsclEvokmh0dI9zJVDbjgiTAtQd50QL
+ VnZpKeZVPZz3y8nZu6RYhR+z8lwDOHCTyTVSCU/evhJdvsgoodL4ZWSpQRGjdS3Sldak
+ rsLVMNJEqnPCHNZULpGbwh8+CLdy7jY7axVZO6u9gnrDUtKO1aGPheec/d1r59h0l0hK
+ D2SQ==
+X-Gm-Message-State: APuU4Z++gX+0ikK9tobA4BGvoT+5NaGOEtMzrL7pok9KEdoH3PPZ6WCm
+ PMXye8m+BQJ8OToRlJlp24ElrLxWZWZUC3s8TeJxWYXIxx4FFyae/nPEtH9iMA==
+X-Gm-Gg: AZFdTZd3NuOdpa9n2j7d/0NPEC92S9r4I3+CiJIqzDsqYtWJlLKht4VFspoY4bn3Vo2
+ MR5PXzR9MZNf8atPeaTGmlo1pIFdmXgtA128BGYL0GwO3pZ9ideDdoGsKuZW+xra899wK4quVIM
+ hQe1wq+p7ZmPU+envooNKlXY8ETjTxTYIL/apO2F05OXZt8KgciAp64M9Vw7Uc1xmyQDomXwr+c
+ fN7jrfUtPYS+lFOi84X9BowElgmYss7DEAiz9/wBDAnriISezf3oJsS3AaDvrlI8d/k6tgdeoeV
+ KWd+t+gtwebZRgrSuKWexIYu8Aq+/j7IxXRdfSLyPksV7NGfhqLHcqKYgGi+8vX9phGl+nV6og/
+ GETY0N9BAvxAaSkeE3iosT/azcBaBGOmjevdTwiDCcmnGanNQUY7pHk2EMYgILe1KCHtrCXRVQH
+ KhZY32y53xXrsOldsCD+mzJyh02uICpLeWQT+rKkHprOCUgpk0fYBe2czQ5npR4rRDLUTNLElqs
+ YnPZq1MKL42IZ3j5jZFowiRObT6T/VtJ+MdDnXeDx+K7hR/X2HaQkfRdyZnVOFkg7UgoJZOqvnP
+ cD5kGUGDu+3utzVtwMHdYy4efcIqzDT0UDdxJ/0bmEN7twUwC1bLcTlEFSqBatUBTX6I6tNiTp4
+ C78higQ==
+X-Received: by 2002:a05:600c:46c4:b0:4bb:6a5a:7834 with SMTP id
+ 5b1f17b1804b1-4bb888106damr136028545e9.20.1795262546559; 
+ Sat, 21 Nov 2026 04:02:26 -0800 (PST)
+Received: from hessra (dial-189137.pool.broadband44.net. [212.46.189.137])
+ by smtp.gmail.com with ESMTPSA id
+ 5b1f17b1804b1-4bb884b8429sm268522125e9.14.2026.11.21.04.02.25
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Sat, 21 Nov 2026 04:02:25 -0800 (PST)
+From: Helmut Eller <eller.helmut@gmail.com>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: emacs-devel@gnu.org
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+In-Reply-To: <86h5haim9t.fsf@gnu.org>
+References: <86ik1qimel.fsf@gnu.org> <86h5haim9t.fsf@gnu.org>
+Date: Sat, 21 Nov 2026 13:02:24 +0100
+Message-ID: <87zev2mlyn.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=2a00:1450:4864:20::32f;
+ envelope-from=eller.helmut@gmail.com; helo=mail-wm1-x32f.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 12:02:32 -0000
+
+On Sat, Nov 21 2026, Eli Zaretskii wrote:
+
+>> Date: Sat, 21 Nov 2026 11:06:26 +0200
+>> From: Eli Zaretskii <eliz@gnu.org>
+>> Cc: emacs-devel@gnu.org
+>> 
+>> This new test intermittently hangs in the MS-Windows build.  When it
+>> hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+>> execution unit.
+>> 
+>> Let me know if I can provide more information.
+>
+> More info: if I run only the last 2 tests, like this:
+>
+>   $ make -C test src/igc-tests SELECTOR='"thread"'
+>
+> it seems to _never_ hang.  So maybe it's some left-over from previous
+> tests, perhaps due to how large is the MPS arena?
+
+Does it also hang for:
+
+ make -C test src/igc-tests SELECTOR='(not "largest")' ?
+
+I think there is a bug in the policy that decides when to start a
+collection.  It sometimes seems to start a collection for every
+allocation even if there is plenty of room left.  At that point
+everything becomes very slow.  Maybe that's the case here and test does
+not actually hang, it's just very slow.  It think the tests that
+allocate very large objects can trigger that bug.  On Linux, I can use
+
+   ulimit -S -d $((1024 * 1024 * 4))
+
+to make the "largest" tests complete faster.  Is there something like
+ulimit for MS-Windows?
+
+
+From MAILER-DAEMON Sat Nov 21 07:34:02 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUkI5-0006oQ-Vg
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 07:34:02 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xUkHs-0006fG-W0
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 07:33:49 -0500
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xUkHs-0004Ky-NO; Sat, 21 Nov 2026 07:33:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=References:Subject:In-Reply-To:To:From:Date:
+ mime-version; bh=wyKLKSBpw0yoKAi5wLExnX1I/2xPjDzrnpzeJIhEBZo=; b=g16hfS+kubCB
+ 7wMdVTfF2v8TcjXXsQj2AS/NG3xE5SKP1tjStMWN+5POhQUL+kWLeAWr5CO8EZtWBAbHF3cTlR2Iy
+ Gq9ModiUJME7CBk0JLBrfq2Z7MYpqPBeLj29nK1dKcBNn3j5kQwNZ6y6rCI3NuwdU3Bhi4OHWPs8Q
+ 48tWCZv/tJaGf1di1XeNPcaPdr4MkD1Q2gB98swdVuWQUsZPWx1GIphyOnGRwkTwKuozDkbcQa+Vc
+ JBTY/SDWdiay2p6i+K+HBwyByNyeyhm9rPfVqUPAYTvpOy2dk2cYHcWzHKbtn2tuxfOfHALLDMvSb
+ 36Dm8pgoavZTvuFJtKENaQ==;
+Date: Sat, 21 Nov 2026 14:33:42 +0200
+Message-Id: <86mrr2gy8p.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: Helmut Eller <eller.helmut@gmail.com>
+Cc: emacs-devel@gnu.org
+In-Reply-To: <87zev2mlyn.fsf@gmail.com> (message from Helmut Eller on Sat, 21
+ Nov 2026 13:02:24 +0100)
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+References: <86ik1qimel.fsf@gnu.org> <86h5haim9t.fsf@gnu.org>
+ <87zev2mlyn.fsf@gmail.com>
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 12:33:50 -0000
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: emacs-devel@gnu.org
+> Date: Sat, 21 Nov 2026 13:02:24 +0100
+> 
+> On Sat, Nov 21 2026, Eli Zaretskii wrote:
+> 
+> >> Date: Sat, 21 Nov 2026 11:06:26 +0200
+> >> From: Eli Zaretskii <eliz@gnu.org>
+> >> Cc: emacs-devel@gnu.org
+> >> 
+> >> This new test intermittently hangs in the MS-Windows build.  When it
+> >> hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+> >> execution unit.
+> >> 
+> >> Let me know if I can provide more information.
+> >
+> > More info: if I run only the last 2 tests, like this:
+> >
+> >   $ make -C test src/igc-tests SELECTOR='"thread"'
+> >
+> > it seems to _never_ hang.  So maybe it's some left-over from previous
+> > tests, perhaps due to how large is the MPS arena?
+> 
+> Does it also hang for:
+> 
+>  make -C test src/igc-tests SELECTOR='(not "largest")' ?
+
+No, that runs without hanging and succeeds.
+
+> I think there is a bug in the policy that decides when to start a
+> collection.  It sometimes seems to start a collection for every
+> allocation even if there is plenty of room left.  At that point
+> everything becomes very slow.  Maybe that's the case here and test does
+> not actually hang, it's just very slow.
+
+How slow can it legitimately be?  I've waited for 5 - 10 minutes
+before deciding that it hung.  (Should I wait longer?)  After that,
+attaching GDB produces the backtraces shown below for the main thread
+and for the other thread (which seems to run the igc collection), in
+case that helps.
+
+> It think the tests that allocate very large objects can trigger that
+> bug.  On Linux, I can use
+> 
+>    ulimit -S -d $((1024 * 1024 * 4))
+> 
+> to make the "largest" tests complete faster.  Is there something like
+> ulimit for MS-Windows?
+
+Not AFAIK, no.
+
+Here's the backtrace I mentioned above.
+
+  (gdb) info threads
+    Id   Target Id          Frame
+  * 1    Thread 3772.0x7824 0x7760890c in ntdll!ZwWaitForMultipleObjects ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    2    Thread 3772.0x898c 0x7760869c in ntdll!ZwDelayExecution ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    3    Thread 3772.0x6170 0x7760869c in ntdll!ZwDelayExecution ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    4    Thread 3772.0x7294 TreeFind (treeReturn=treeReturn@entry=0x1d4cf600,
+      root=0x3ca10014, key=0xf6bcb8 <lispsym+56>,
+      compare=compare@entry=0xd26690 <ChunkCompare>) at ../mps/code/tree.c:100
+    5    Thread 3772.0x1c50 0x7760a1cc in ntdll!ZwWaitForWorkViaWorkerFactory ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    6    Thread 3772.0x3a98 0x7760a1cc in ntdll!ZwWaitForWorkViaWorkerFactory ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+    7    Thread 3772.0x69d4 0x7760a5d1 in ntdll!DbgBreakPoint ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+  (gdb) bt
+  #0  0x7760890c in ntdll!ZwWaitForMultipleObjects ()
+     from C:/WINDOWS/SysWOW64/ntdll.dll
+  #1  0x75800f3f in WaitForMultipleObjectsEx ()
+     from C:/WINDOWS/SysWOW64/KernelBase.dll
+  #2  0x00000002 in ?? ()
+  #3  0x0b0a7c84 in ?? ()
+  #4  0x75800d98 in WaitForMultipleObjects ()
+     from C:/WINDOWS/SysWOW64/KernelBase.dll
+  #5  0x00c8db94 in sys_cond_wait (cond=0xb0a7c68,
+      mutex=mutex@entry=0xf9a248 <global_lock>) at systhread.c:345
+  #6  0x00c8c59e in thread_join_callback (arg=0xcbdcb60) at thread.c:1157
+  #7  0x00ba7353 in flush_stack_call_func1 (
+      func=func@entry=0xc8c529 <thread_join_callback>, arg=arg@entry=0xcbdcb60)
+      at alloc.c:5365
+  #8  0x00c8d095 in flush_stack_call_func (arg=0xcbdcb60,
+      func=0xc8c529 <thread_join_callback>) at lisp.h:4896
+  #9  Fthread_join (thread=213764965) at thread.c:1184
+  #10 0x00bde496 in eval_sub (form=288194587) at eval.c:2739
+  #11 0x00bde5d3 in Fprogn (body=<optimized out>) at eval.c:459
+  #12 0x00bdea78 in funcall_lambda (fun=<optimized out>, nargs=nargs@entry=0,
+      arg_vector=0x1b1e1490) at eval.c:3506
+  #13 0x00bdef18 in funcall_general (fun=<optimized out>,
+      numargs=numargs@entry=0, args=args@entry=0x1b1e1490) at eval.c:3211
+  #14 0x00c3c75c in exec_byte_code (fun=<optimized out>,
+      args_template=args_template@entry=0, nargs=nargs@entry=0, args=0x1b1e1490,
+      args@entry=0x7bfef20) at bytecode.c:842
+  #15 0x00bdeab0 in funcall_lambda (fun=<optimized out>, nargs=nargs@entry=0,
+      arg_vector=0x7bfef20) at eval.c:3408
+  #16 0x00bdef18 in funcall_general (fun=<optimized out>,
+      numargs=numargs@entry=0, args=args@entry=0x7bfef20) at eval.c:3211
+  #17 0x00bdbed2 in Ffuncall (args=0x7bfef18, nargs=1) at eval.c:3249
+  #18 Ffuncall (nargs=1, args=0x7bfef18) at eval.c:3223
+  #19 0x00bdc2eb in call0 (fn=187743885) at lisp.h:3849
+  #20 Fhandler_bind_1 (nargs=3, args=0x1b1e1448) at eval.c:1600
+  #21 0x00c3c825 in exec_byte_code (fun=<optimized out>, args_template=513,
+      args_template@entry=256, nargs=3, nargs@entry=1, args=0x1b1e1448,
+      args@entry=0x7bff120) at lisp.h:750
+  #22 0x00bdeab0 in funcall_lambda (fun=<optimized out>, nargs=1,
+      arg_vector=arg_vector@entry=0x7bff120) at eval.c:3408
+  #23 0x00bdec10 in apply_lambda (fun=<optimized out>, args=<optimized out>,
+      count=<optimized out>, count@entry=384) at eval.c:3371
+  #24 0x00bdd9a0 in eval_sub (form=213522075) at eval.c:2828
+  #25 0x00be0a06 in Feval (form=213522075, lexical=56) at eval.c:2592
+  #26 0x00bdb832 in funcall_subr (subr=<optimized out>, numargs=<optimized out>,
+      numargs@entry=2, args=<optimized out>, args@entry=0x1b1e11b8) at eval.c:3319
+  #27 0x00c3c825 in exec_byte_code (fun=<optimized out>, args_template=769,
+      args_template@entry=0, nargs=2, nargs@entry=0, args=0x1b1e11b8,
+      args@entry=0x7bff560) at lisp.h:750
+  #28 0x00bdeab0 in funcall_lambda (fun=<optimized out>, nargs=0,
+      arg_vector=arg_vector@entry=0x7bff560) at eval.c:3408
+  #29 0x00bdec10 in apply_lambda (fun=<optimized out>, args=<optimized out>,
+      count=<optimized out>, count@entry=128) at eval.c:3371
+  #30 0x00bdd9a0 in eval_sub (form=202480835) at eval.c:2828
+  #31 0x00be0a06 in Feval (form=202480835, lexical=56) at eval.c:2592
+  #32 0x00b10a67 in top_level_2 () at lisp.h:1183
+  #33 0x00bd6fef in internal_condition_case (
+      bfun=bfun@entry=0xb109d0 <top_level_2>, handlers=168,
+      hfun=hfun@entry=0xb1e383 <cmd_error>) at eval.c:1734
+  #34 0x00b1237c in top_level_1 (ignore=0) at lisp.h:1183
+  #35 top_level_1 (ignore=0) at keyboard.c:1204
+  #36 0x00bd6ed8 in internal_catch (tag=90944,
+      func=func@entry=0xb12314 <top_level_1>, arg=0) at eval.c:1414
+  #37 0x00b10866 in command_loop () at lisp.h:1183
+  #38 0x00b1de91 in recursive_edit_1 () at keyboard.c:766
+  #39 0x00b1e1bc in Frecursive_edit () at keyboard.c:849
+  #40 0x00dc2f87 in main (argc=<optimized out>, argv=<optimized out>)
+      at emacs.c:2655
+  (gdb) thread 4
+  [Switching to thread 4 (Thread 3772.0x7294)]
+  #0  TreeFind (treeReturn=treeReturn@entry=0x1d4cf600, root=0x3ca10014,
+      key=0xf6bcb8 <lispsym+56>, compare=compare@entry=0xd26690 <ChunkCompare>)
+      at ../mps/code/tree.c:100
+  100         switch (cmp) {
+  (gdb) bt
+  #0  TreeFind (treeReturn=treeReturn@entry=0x1d4cf600, root=0x3ca10014,
+      key=0xf6bcb8 <lispsym+56>, compare=compare@entry=0xd26690 <ChunkCompare>)
+      at ../mps/code/tree.c:100
+  #1  0x00d4c54a in ChunkOfAddr (addr=<optimized out>, arena=<optimized out>,
+      chunkReturn=<synthetic pointer>) at ../mps/code/tract.c:330
+  #2  _mps_fix2 (mps_ss=mps_ss@entry=0x1d4cf76c,
+      mps_ref_io=mps_ref_io@entry=0x1d4cf650) at ../mps/code/trace.c:1494
+  #3  0x00c83ea8 in fix_lisp_obj (ss=ss@entry=0x1d4cf76c,
+      pobj=pobj@entry=0xd7f6168) at igc.c:1308
+  #4  0x00c87853 in fix_cons (cons=0xd7f6160, ss=0x1d4cf76c) at igc.c:2190
+  #5  dflt_scan_obj (ss=ss@entry=0x1d4cf76c, start=start@entry=0xd7f6160)
+      at igc.c:2618
+  #6  0x00c881d1 in dflt_scan (ss=0x1d4cf76c, start=0xd7f5e08, limit=0xd7f62d0)
+      at igc.c:2739
+  #7  0x00d66c39 in TraceScanFormat (limit=0xd7f62d0, base=0xd7f5e08,
+      ss=0x1d4cf768) at ../mps/code/trace.c:1633
+  #8  amcSegScan (totalReturn=0x1d4cf764, seg=0xd06e9e8, ss=0x1d4cf768)
+      at ../mps/code/poolamc.c:1432
+  #9  0x00d8853d in traceScanSegRes (ts=ts@entry=1, rank=rank@entry=1,
+      arena=arena@entry=0x7d10000, seg=seg@entry=0xd06e9e8)
+      at ../mps/code/trace.c:1285
+  #10 0x00d88829 in traceScanSeg (ts=1, rank=1, arena=0x7d10000, seg=0xd06e9e8)
+      at ../mps/code/trace.c:1361
+  #11 0x00d89537 in TraceAdvance (trace=<optimized out>)
+      at ../mps/code/trace.c:1822
+  #12 0x00d969ef in TracePoll (workReturn=workReturn@entry=0x1d4cf8b0,
+      collectWorldReturn=collectWorldReturn@entry=0x1d4cf8ac,
+      globals=globals@entry=0x7d10008, collectWorldAllowed=1)
+      at ../mps/code/trace.c:1943
+  #13 0x00d96bb7 in ArenaPoll (globals=globals@entry=0x7d10008)
+      at ../mps/code/global.c:745
+  #14 0x00d97347 in mps_ap_fill (p_o=p_o@entry=0x1d4cf980,
+      mps_ap=mps_ap@entry=0xb2c19a4, size=size@entry=24)
+      at ../mps/code/mpsi.c:1101
+  #15 0x00c84acb in alloc_impl (size=size@entry=24, type=type@entry=IGC_OBJ_CONS,
+      ap=0xb2c19a4) at igc.c:5177
+  #16 0x00c8a257 in alloc (type=IGC_OBJ_CONS, size=24) at igc.c:5205
+  #17 igc_make_cons (car=0, cdr=187621347) at igc.c:5241
+  #18 0x00ba8351 in Fcons (cdr=<optimized out>, car=0) at alloc.c:2638
+  #19 Fmake_list (length=64000002, init=0) at alloc.c:2765
+  #20 0x00bde288 in eval_sub (form=282776227) at eval.c:2742
+  #21 0x00bdebcc in apply_lambda (fun=<optimized out>, args=<optimized out>,
+      count=<optimized out>, count@entry=64) at eval.c:3366
+  #22 0x00bdd9a0 in eval_sub (form=282768323) at eval.c:2828
+  #23 0x00bde5d3 in Fprogn (body=<optimized out>) at eval.c:459
+  #24 0x00bdea78 in funcall_lambda (fun=<optimized out>, nargs=nargs@entry=0,
+      arg_vector=0x1d4cfda4) at eval.c:3506
+  #25 0x00bdef18 in funcall_general (fun=<optimized out>,
+      numargs=numargs@entry=0, args=args@entry=0x1d4cfda4) at eval.c:3211
+  #26 0x00bdbed2 in Ffuncall (args=0x1d4cfd9c, nargs=1) at eval.c:3249
+  #27 Ffuncall (nargs=nargs@entry=1, args=args@entry=0x1d4cfd9c) at eval.c:3223
+  #28 0x00c8beff in invoke_thread_function () at thread.c:763
+  #29 0x00bd6fef in internal_condition_case (
+      bfun=bfun@entry=0xc8becc <invoke_thread_function>, handlers=56,
+      hfun=hfun@entry=0xc8bc34 <record_thread_error>) at eval.c:1734
+  #30 0x00c8c08a in run_thread (state=0xcbdcb60) at lisp.h:1183
+  #31 0x761f8aed in msvcrt!_beginthread () from C:/WINDOWS/SysWOW64/msvcrt.dll
+  #32 0x761f8bc1 in msvcrt!_endthread () from C:/WINDOWS/SysWOW64/msvcrt.dll
+  #33 0x75d75d49 in KERNEL32!BaseThreadInitThunk ()
+     from C:/WINDOWS/SysWOW64/kernel32.dll
+  Backtrace stopped: frame did not save the PC
+  (gdb)
+
+
+From MAILER-DAEMON Sat Nov 21 07:50:56 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUkYS-0003J1-4s
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 07:50:56 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eller.helmut@gmail.com>)
+ id 1xUkYP-0003In-Rd
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 07:50:54 -0500
+Received: from mail-wr1-x430.google.com ([2a00:1450:4864:20::430])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <eller.helmut@gmail.com>)
+ id 1xUkYO-0003TS-0B
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 07:50:53 -0500
+Received: by mail-wr1-x430.google.com with SMTP id
+ ffacd0b85a97d-490f38e9688so1308796f8f.0
+ for <emacs-devel@gnu.org>; Sat, 21 Nov 2026 04:50:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1795265450; x=1795870250; darn=gnu.org;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+ :reply-to:content-type;
+ bh=emjDauY6cHQvGSk6RD2pGnZDIopvQG3SddKsqcLGedc=;
+ b=c2QokSXCDJqErhhMnT1Kw638NuDQirbxML6TArqmRs6Jrxb7dXnpNF9ByeXiXeAl8v
+ VDoucTvxj4rvua8vMrMn6xAzmpV4ralbSfkpesCtkRXkFVgFKM2eC2Yl1yj5+KrFAlZy
+ EYqdPBEI4HC2oic2GGe7Wpcw9BP8tRRyNJ8Blj8X+sWkAWP/fYpaFZqY9VXk0SZB2Ztf
+ G9fTUMnUEgDjbbDB7L0nzyjLXiWctXRJii9sqxrppYtPjHxiC93BLrarwgbw7YN1QG5I
+ MX+d5WyS9ub28vrewlzzG7too5ClvG8WnOh2lCsItjXChmaSYleAX21BBGdDysf2njzX
+ /N8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1795265450; x=1795870250;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=emjDauY6cHQvGSk6RD2pGnZDIopvQG3SddKsqcLGedc=;
+ b=yh6ZxUiV7ON+TutOEIoKgkKXA/jTvE0XXmdRUw3+TMN7OEMy/xEl6hpQ2R0yn8jvnO
+ C6C3BdXoRvW6Kh7Hjdy8mBSMp8zDge4Hgis0cUtQcyjTRh7eI8QDFfhFkPAQW6hOc2GW
+ ItZlwKN9yoy5dovSflj+eZevxHDu3DX/yCZsaFBH7wDBnVcBdyS/WpSZ6BQjc760z98s
+ Kt+uJiNhtZYXRhVNwQBZgQIMwiKaFwS6GJS1cmek1mCPH+il9owqgefiQNlJLlTerR3G
+ B99Ieeh00Ygg9JARUb9rqAyvQKmni2hTwLHhrvAKB7D5J5rjEt3U5BsXX/R5i0m9qwst
+ qLmQ==
+X-Gm-Message-State: APuU4Z/v7hyJZYKJaYC0FnmWZprRLfcc9eU+FZLzg8F9ZvPZL0rxl7oQ
+ oGwbf/cGcooE/ZorX3zpXKaAZwP7mTDRaQQyy0y9gO11FCXUh/9Jf27bg+/0Ng==
+X-Gm-Gg: AZFdTZcz1oY6WpsZ/j4wdgPqdDuVeV8PYFOAPNw+foS6nytwLYSdPinL4OpXI/yCoLb
+ yCPBj05i5ZTxlaochAQlqZ/mM6w+BbGGXBrQWn/r7D+dZ/hy5NDlCM/PP09kcWgjQN4KsYfGJf/
+ AtNxCt8jzDxyFprrL7p1ViEN71Es0wtkaasRGNjKA6uxp48CYO3RWQkEd2sZvTWEPm+TwUiyGs0
+ gQDBObWWqRdkeBnk1omIDmq/zu/BCySqlo+UPSI0iVfW5rGBvMb/o8C/on5ZZp6+qlKvY/bw6As
+ EazW1pOGP0k5poYQvVCFrlv6H7YpA7d42njju4Fn334tn2xuHcr056C0RBgY8j1arMORVKdgXpX
+ u/kwtpwv4O/dgVKGmR6mMsXfb7OamR60XOJeRu8l+qFVq4ZPqdbnfFEBW3/hj/xQMMbqEV08182
+ RgMFDiC9wXNwXMW4f3PNsBj71xCsn70uN0fdMM+DQPsNAy+KXhoT67iw8q+2IXyB5ONZj/MF6em
+ ORLncUaFTOEQQJOcL6tX0G2sSt8ZE67MdODXL38upYlqEAKnLto26ujpBRP0aQrBPx5peDmB4gO
+ oQFzCw9ji5Pjm3dshIg7QouAOncJHCAXKYr85pJ1THG0W7xFebkQTONsZN+B
+X-Received: by 2002:a05:6000:26ca:b0:4a9:faef:7aae with SMTP id
+ ffacd0b85a97d-4abafd02fdcmr13096290f8f.5.1795265449656; 
+ Sat, 21 Nov 2026 04:50:49 -0800 (PST)
+Received: from hessra (dial-189137.pool.broadband44.net. [212.46.189.137])
+ by smtp.gmail.com with ESMTPSA id
+ ffacd0b85a97d-4ab69bf61b8sm10373994f8f.19.2026.11.21.04.50.48
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Sat, 21 Nov 2026 04:50:49 -0800 (PST)
+From: Helmut Eller <eller.helmut@gmail.com>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: emacs-devel@gnu.org
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+In-Reply-To: <86mrr2gy8p.fsf@gnu.org>
+References: <86ik1qimel.fsf@gnu.org> <86h5haim9t.fsf@gnu.org>
+ <87zev2mlyn.fsf@gmail.com> <86mrr2gy8p.fsf@gnu.org>
+Date: Sat, 21 Nov 2026 13:50:48 +0100
+Message-ID: <87h5hamjpz.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=2a00:1450:4864:20::430;
+ envelope-from=eller.helmut@gmail.com; helo=mail-wr1-x430.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 12:50:54 -0000
+
+On Sat, Nov 21 2026, Eli Zaretskii wrote:
+
+>> From: Helmut Eller <eller.helmut@gmail.com>
+>> Cc: emacs-devel@gnu.org
+>> Date: Sat, 21 Nov 2026 13:02:24 +0100
+>> 
+>> On Sat, Nov 21 2026, Eli Zaretskii wrote:
+>> 
+>> >> Date: Sat, 21 Nov 2026 11:06:26 +0200
+>> >> From: Eli Zaretskii <eliz@gnu.org>
+>> >> Cc: emacs-devel@gnu.org
+>> >> 
+>> >> This new test intermittently hangs in the MS-Windows build.  When it
+>> >> hangs, Emacs seems to be busy-waiting, because it consumes 100% of 1
+>> >> execution unit.
+>> >> 
+>> >> Let me know if I can provide more information.
+>> >
+>> > More info: if I run only the last 2 tests, like this:
+>> >
+>> >   $ make -C test src/igc-tests SELECTOR='"thread"'
+>> >
+>> > it seems to _never_ hang.  So maybe it's some left-over from previous
+>> > tests, perhaps due to how large is the MPS arena?
+>> 
+>> Does it also hang for:
+>> 
+>>  make -C test src/igc-tests SELECTOR='(not "largest")' ?
+>
+> No, that runs without hanging and succeeds.
+>
+>> I think there is a bug in the policy that decides when to start a
+>> collection.  It sometimes seems to start a collection for every
+>> allocation even if there is plenty of room left.  At that point
+>> everything becomes very slow.  Maybe that's the case here and test does
+>> not actually hang, it's just very slow.
+>
+> How slow can it legitimately be?
+
+Very :-)
+
+> I've waited for 5 - 10 minutes
+> before deciding that it hung.  (Should I wait longer?)
+
+No.
+
+> attaching GDB produces the backtraces shown below for the main thread
+> and for the other thread (which seems to run the igc collection), in
+> case that helps.
+>
+>> It think the tests that allocate very large objects can trigger that
+>> bug.  On Linux, I can use
+>> 
+>>    ulimit -S -d $((1024 * 1024 * 4))
+>> 
+>> to make the "largest" tests complete faster.  Is there something like
+>> ulimit for MS-Windows?
+>
+> Not AFAIK, no.
+
+OK, I will try to set a commit limit.
+
+The "largest" tests are also problematic on MacOS, because of the
+"automatic memory compression" feature or whatever it's called.  The
+large objects contain only zeros and presumably can be compressed very
+well.  There the tests also become very slow even though one can
+allocate huge objects.
+
+> Here's the backtrace I mentioned above.
+[...]
+>   (gdb) bt
+>   #0  TreeFind (treeReturn=treeReturn@entry=0x1d4cf600, root=0x3ca10014,
+>       key=0xf6bcb8 <lispsym+56>, compare=compare@entry=0xd26690 <ChunkCompare>)
+>       at ../mps/code/tree.c:100
+>   #1  0x00d4c54a in ChunkOfAddr (addr=<optimized out>, arena=<optimized out>,
+>       chunkReturn=<synthetic pointer>) at ../mps/code/tract.c:330
+>   #2  _mps_fix2 (mps_ss=mps_ss@entry=0x1d4cf76c,
+>       mps_ref_io=mps_ref_io@entry=0x1d4cf650) at ../mps/code/trace.c:1494
+>   #3  0x00c83ea8 in fix_lisp_obj (ss=ss@entry=0x1d4cf76c,
+>       pobj=pobj@entry=0xd7f6168) at igc.c:1308
+>   #4  0x00c87853 in fix_cons (cons=0xd7f6160, ss=0x1d4cf76c) at igc.c:2190
+>   #5  dflt_scan_obj (ss=ss@entry=0x1d4cf76c, start=start@entry=0xd7f6160)
+>       at igc.c:2618
+>   #6  0x00c881d1 in dflt_scan (ss=0x1d4cf76c, start=0xd7f5e08, limit=0xd7f62d0)
+>       at igc.c:2739
+>   #7  0x00d66c39 in TraceScanFormat (limit=0xd7f62d0, base=0xd7f5e08,
+>       ss=0x1d4cf768) at ../mps/code/trace.c:1633
+>   #8  amcSegScan (totalReturn=0x1d4cf764, seg=0xd06e9e8, ss=0x1d4cf768)
+>       at ../mps/code/poolamc.c:1432
+>   #9  0x00d8853d in traceScanSegRes (ts=ts@entry=1, rank=rank@entry=1,
+>       arena=arena@entry=0x7d10000, seg=seg@entry=0xd06e9e8)
+>       at ../mps/code/trace.c:1285
+>   #10 0x00d88829 in traceScanSeg (ts=1, rank=1, arena=0x7d10000, seg=0xd06e9e8)
+>       at ../mps/code/trace.c:1361
+>   #11 0x00d89537 in TraceAdvance (trace=<optimized out>)
+>       at ../mps/code/trace.c:1822
+>   #12 0x00d969ef in TracePoll (workReturn=workReturn@entry=0x1d4cf8b0,
+>       collectWorldReturn=collectWorldReturn@entry=0x1d4cf8ac,
+>       globals=globals@entry=0x7d10008, collectWorldAllowed=1)
+>       at ../mps/code/trace.c:1943
+>   #13 0x00d96bb7 in ArenaPoll (globals=globals@entry=0x7d10008)
+>       at ../mps/code/global.c:745
+>   #14 0x00d97347 in mps_ap_fill (p_o=p_o@entry=0x1d4cf980,
+>       mps_ap=mps_ap@entry=0xb2c19a4, size=size@entry=24)
+>       at ../mps/code/mpsi.c:1101
+>   #15 0x00c84acb in alloc_impl (size=size@entry=24, type=type@entry=IGC_OBJ_CONS,
+>       ap=0xb2c19a4) at igc.c:5177
+>   #16 0x00c8a257 in alloc (type=IGC_OBJ_CONS, size=24) at igc.c:5205
+>   #17 igc_make_cons (car=0, cdr=187621347) at igc.c:5241
+>   #18 0x00ba8351 in Fcons (cdr=<optimized out>, car=0) at alloc.c:2638
+
+I don't see anything suspicious.  Just the usual GC work.
+
+Helmut
+
+
+From MAILER-DAEMON Sat Nov 21 08:48:48 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUlSS-00079f-EZ
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 08:48:48 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>) id 1xUlSR-00078S-0l
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 08:48:47 -0500
+Received: from mout.web.de ([212.227.15.14])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>) id 1xUlSP-0003nF-3n
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 08:48:46 -0500
+DKIM2-Signature: i=1; m=1; t=1795268923; mf=PGFybmVfYmFiQHdlYi5kZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+; d=web.de;
+ s=s29768273:rsa-sha256:ITsmlO6/htP7trQlSM9SNek0C/cv
+ sAme38JzVgItVMLUasZENBkLAPxPkkYt0Fx+j9tT+kq0YWRMl6apis+coUd6lLsRHfn4rQMcvev
+ r9faA4y/zL2o93ioM1J8laI3fTNLre+Rz74ppah2blzlSh6+PcXWPeaAVpp0ZfBOTUHBJFNfYGg
+ pOE3JtVNyxnD844l7sez4V8A4msvFwiCCCrEgUs5A18tC7q/e6W1Po+jcNvz4u3spjn5Msy1udc
+ V7l+AOuWX2nvweE2j4Qx01oYegkZG+UswM/j7fRywtrb760ojHaR767YOnWDXMu1+Cy2/KFC6u0
+ +CWs3jRD+lgW1w==;
+Message-Instance: m=1; h=sha256: HuMuldfht72FkXCgkN3GYOagnSLK/f02EiamRblwrII=:
+ VhVhYYS3fsHGrzTURLDX6DNisbWxFhJwzZHVNNqW1Bo=, sha512:
+ HOYhr2/u3qxC/UtvysQ5pXjF3y2MzxUsPSMGRSE7+l+pMW4i2yVpG4e/W4jHfvmskoBrlQpYKtCgnZ5kbhhOiA==:
+ VRlj8XghIb4Vehz3/yMg+SyHNgqmQb2xq4o/rd+jM67WQcYTBb3QW5Yxavg3SjzkTxSmQQpnVPO7NDGGFXG4tw==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+ s=s29768273; t=1795268917; x=1795873717; i=arne_bab@web.de;
+ bh=n8KaqCqivMB7tN6olCp2yOd2Z8BaLtFdaAuPtlwmFv4=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:cc:content-transfer-encoding:
+ content-type:date:from:message-id:mime-version:reply-to:subject:
+ to;
+ b=JPQawWqgTOlf0mJicsdfUmjGb2amQKJTO1aYWSFBd4BaYrgh8B1S1UwY3vkDgLFs
+ ESq4O5cYTtIvxyd9Nw+2kQKceLY+QnvYApqdC/5qXnLu10RCg9wKeDA+lHFadOt+w
+ Jynjt9PSAPWjPkxEJwcDL9I+bjelmAZksFSlmreM/LSFBEo0PHZ8KDPbGkhZKem9S
+ F5Bq5wB5NFCjVoxFu7wiqOuisFZt+IxBAZkfILlMD7OTye2rNXF6JaGDI+Mvn4dWD
+ VpGY3XsyvZGmXuXce7x2glGbuFZvt7do6KU95tUn6a/Kp/yJZhsyc1Gd4KK1vMLYM
+ qAM1jpFulrncGrl77A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M76bb-1xclnm31kF-009aQk; Sat, 21
+ Nov 2026 14:48:37 +0100
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+ shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+Subject: Re: ELPA submission: vibe-spell
+In-Reply-To: <86tslairs0.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87cxs71j7m.fsf@web.de>
+ <87eccnxc1p.fsf@posteo.net> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org>
+User-Agent: mu4e 1.14.4; emacs 31.1
+Date: Sat, 21 Nov 2026 14:48:36 +0100
+Message-ID: <87jym6nvm3.fsf@web.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Provags-ID: V03:K1:2bKMQ8sV/EV28GJ31hw6Oh+zslJcjs97IkTaipJ3dWUPt8MF6X3
+ zZlP5ikmgF6OnSnByqV6xyEL5vq00kIcn1C9R0SYzAf50yudaD1/JCWHC9ZVK3CCT2aJeXz
+ lgPH0jgbWiBVIEG7sdECcE3uPbHOOQHnYNEPM0IbENOzlK1ZdUeKSUEjj76ADnHGJGTcu0b
+ blXf++zce39urao8NfEKg==
+UI-OutboundReport: notjunk:1;M01:P0:6xYHbHjn190=;nsvhmClNlBHoK+PEILXC6WC/iXb
+ vT6cJQvIJI+JdsrExESr0bm2cACQRWeCyO0GpDt7wGc8+GSXUO3E4HAYR+6t/JBHuzAidYLIS
+ nNMmkxpbGn08ylJpHnONOKxa+3kTQAk+wkwZZ78CQZO1+hTKZBucqYUKr2x8JXDVgL9LPDXYo
+ ja9Nh63UNoQKtgo5ePuFyPrDAIWVkb0V6KitVNgG28XBxqQPzLYtVXzolatcnE3jkKLWHnCSg
+ iaiZRgsarPu0/Bpod0muKPZuS2Z00lU8hbwxQEiBJ2XuQSKyD9sOgfv1bpGCIMFhrwoWLtvui
+ WXMY7M2aL5milxL4YPD+Za96OpzrJwsUQHpSiPAwb7JagL1HaUgv8TCyQ3/ntPS6GbTAYWe0V
+ bAYgPOTIDI5X9jKmm9T/WrA3/WHfzKgRFVNZ5M6bDWE8cZQBCc8F7lC1JtwOClHIWUh0kZ1wJ
+ ckuh+XZCy8l+2RDGXecXzuU64IznXiWwOzR1P39AA1GS+zsWgY9Xb3lCF6t4YE8I9SwMFWWUJ
+ EaeOoyCxvZmTm+nMrjhKbAKv+csTuQWicCxDF91ltZy3xqKRFq/HdjzT/PMXv/OISs9xmT9ky
+ KYli9q60Oi+HmIErVNd+Dj5X8040OmgH8eRviNLtNiKp+GHx2B4e33m6Nh4kc4G/qIcosbeis
+ 4HDjP+uspxwBIuftQ6H8mEUirX/FMxkbC7i9JRUhbHHhpB0uPJNwXZcs172KucMYWAD9BjxJb
+ BRRKNh2iKebL9vwUS/6VNGZCuMwt4SJNKVcSj3hdksBJqj6+S0Srx8ldzJ+Ks5mCFC3RGusX5
+ NfLWpbuF4mTDMUPl7VSTWCKm8E8GSjg71CqQZfZ8x83us0e5pfo0yrCyzFIclwqEIpL33Dnfh
+ QTECRlkhQTnPrYf7beqfSiKT3BmRh0AmW7ocFhy93t7CWd/L7niWt3+31sWnme07aHR3lkLl3
+ Ur6GEQoBhHnZHCmhlLH5rq3NV1/v8YmN5wzccHn08RLnJzDcnyrvZO2KA5jp/5YHZqp9+wfdP
+ u8h/JLO1CI8fIVKvSEx4Y/iCZs3qHZSFh6RptVld2Yc8SVbX9HOPgXggY+mu7mOMIvNAyPZQi
+ 8AqZEEIXE4R505KJMjIRe+z2GAQqURdDwUlDepg2PRWfV4F6w4ndoKa2TvXt/FSRfI93t1hJK
+ UKptCOvqucDjQHOgIDQjmb68YKY9BspWXcXf8N28LJllXhpCDPB37a2psypJYpbJxTFAe9q2G
+ btqkUQULLNKjfR3B3C9ntt5O3WkNmporwwzi4o+iSRu2K3+7aILVBT/WP49kd5RFxvuREplX2
+ vWErfwROb3IA1WJsNceUNl7XpoMqD1mU44zV4kHO8VZe8Dpxcd0NMhfQK6BB7Io5VDqdL11ZV
+ UMI+GVdZU6ZMJ2ujS2Mezy/vGrF7D1ml9CILcxwowOsefYj8JJUF+Sg8V05PL8gScPSyNZYoj
+ S1dxpE11kVi55n465NfRLgRPmdKSGD3Mr1P+3oqtR2puCJEAL4dizxIfy2zhY+ZV5x13AiCo4
+ LsyBeekJrrVjBI1JPFmG51z+P5GxvRI1zkgeJ7CJ7bvudy1WYAni4BncfUMDI92VJvk2Sry06
+ iEj3bHGd3jqMOP7J4hykxNSipwyRM8nd9Shb39dyyP2igjDYwT8SF/Cz9rle/DtVdMoS5nk+Z
+ wolgcXAMv6fd3hqQ1gTHi8ae+7twmrcO4qtnT8LcsT5KHSiPWBxpJCzZL+RjDEkBdm60NDwzs
+ bll65daeSN8amil9AAs3OyrtdLfhFew4UWbyM3gq15bLl70Rm6lqif/xf/uJg2uugu9v2zcIy
+ lMOPxPqD2UcXpYPz90o5E+ibLWXW9CGf7aukbWRdwtHSq0PTLvJSxDIAHJhfXy6MrrLbaVf1l
+ 92klYmghNXehV6X0LX406YGqyUHUGgS5p7/bJiwHnuJPbrSALIiI1ElNb6kO8mtooEf0XYQjv
+ 3ixvJN7TA0dwGIxhJik1Wslcbe7nXXtJUHlJK1+vS0lKoAOOe+aON+tnupHK0vuitvgx5ivif
+ oHccusXC406g6KNmDTf5kiLnBS5N6FdRyD6ML1rZU3e36+GrE2Peh8yF+ikWidT6eJE2hODIU
+ CMDTBz0FR60OjjN8DbQT9UcFz9HxTEwK7c8VLquEF4oMsWmIn5+ygrKFeaCLXOP405SrBWXOA
+ OqtzH7uuio7LE0M3GUqvkrrmFHh2w9+xfHo+uVB4P6Ub7eQnuPzA4YK/yRAKbnorAUdcoQOZ1
+ PNCbIaMOSkPVMuntqxuSqLr6z7YjxGKO1HUW9/vIS4jpctT2C3FcE0cCixZmlIzVPkvC78xsK
+ d9eqDpLVFnKn6rif7W9Y+qgxfHqqAsrNU2DhOutA8mDSlx9rbDxF7OH8NOsO6AIwe3gsb4bgV
+ MOt7GciSkFnoQfzpTh9arVjfUC8jNtMAPyQxTTdOmPSH59do6rq7u+dDp46balHjLFY2wA41g
+ jnnFe2hRXBIVoWzdA3GovB/R2uGqUCQlc99I+rkVkU5lig9Fyywpy6oN5R4VjGfQrQk/qwzRP
+ qQTlqoTS2KI8d1ydhc5VWM0PBuGihtonGwutxlkjvLZPqS6MF880rTk9n+kR2nHdmGhwNdkNa
+ AWRwIDug40Ik5p7Ja3joUPlBuX2OqJRgxjiBXcuCuX5Mg2iLLufi5w/qL8NNUqG7bNpZcd8rd
+ p/x2/E6gdd1hrsbNGZmuL9mZ8zB6XcGD4zVws32tOZNpBo3olZAS4I3xi/EcyDtcYFBp+Dr5/
+ vouDAyPiRoheob1aE8YXF5+3sdRBfspw1ToVpxjc3ygt5UsHQe9I0kj9JcDTmJsQ93zHFWuwA
+ YHQdGERL5CFLVgXPPF8SuBNotCK97ORVZq4+AJB6yw80SuM7zW4+tdeX6Nub3cuP41ID1fXZa
+ s5wCK9Sc1f+izBd0hWvK8r98zuUa+UtIKWTI3UG7nADNjM3ZO6iaTOx4XfMG2aQ0r98sSDcQ0
+ bYKZMjlQxAKRn2r0Z8eq2EaLRs7VGFtjHjg7KsabI745legUibwCg8XxGh1G2zKIsPH9rXkwn
+ jo3w/In2D6W11xIQeDJe5bwK27MtafrYhtq7w/BV3UkQB7fGqANC0m0Oc3dwAqIgQBDZjwSAW
+ SQyVr+iNZ2HiG6jIPZqUg5aoZ0CpnjlJDzwkhhmeYFof51ouGtNjnxuRztoUIKg8pX2Dwifdj
+ taWApJufq+mgUP5+y1NyqlSLhJfqpwxWkZSmi9c2SVN+dtH+Ztm1OBoSUedKiQ757LyjEsAkZ
+ RECXNt/H1cokll+4DMvwrg06aeh8GCDrOug/UaI/CEj0mgUd9UEeDIO7y882fr2iICb2DKaAK
+ 76zuQdTEHd9Azi1TeCWNaRmn2wGbo++WeA2+Adox8Ty6QISd9cjy9DJTi/xRDs3UQIkQX8bVI
+ muVENbMtsXekCA+FlINx4RwMMPhdaaKnlIWmA6gRxfEfvg7claGcXpbLAVXxgJIL6+UKbsYLY
+ d6KIQmt3jg3iGeryPetOh317CFiJWX3bNQzCJsMzRDvvEFNKYrLDpoEc2c9wGxrxqo9WaHl8m
+ lzDmkfoQk6GH4g3L4+NvBhvJiCo+xX3HcJlVw2RA3cPVfjHakWMQ+DY60O4ipizdfObtCr9VZ
+ 0WZNJzJv56i/XrrsGwUQRkDFSnjvM7edhlvAkaOE2F4p6+gQzNTdOk6qTE/6YM2DMpb/uCYC1
+ VrgzZhZ77cPhQOjp0QuJcHhL2sKRLR9IgNfTR8XEBMgROTAKbbQekji0X+SOpUtS63lkgiCU9
+ 0SJXkYeJeDQc7f+6NU6+t2DNbHb3TA4ww37CWRyMrQUmSWitvI5AP6BDJWfy0K37sfP5J3hQv
+ ksSGv8w1ErFVLwxeYLhNjTUWXd4kS5ePkzCvl2cnLCBs/dDkgpvWkDFCUp6iFFZrhfzBqRwHL
+ i6XNB3xIdcbfcna4yJZmcLyW+IfJfNYS7/FHg3xU3oDwJsvJ2RryzP+wp7FQSLyqzNygaHkFE
+ Cmr9xECh7F09iAkpJKq1B1DnIT3Q/+7UIrFrCEDPkwoFfJy3vQKT7sdA8F98W3LT8UgvCmcgB
+ n2T2cxdfFi3HgosiTJWFI298yHUGKBsw6YKXqDkkG5X1Q3/BRQnCFm2pwpV06dNpIYQ2paF7w
+ igSoo042T+BOMPsqr9wEpu1EWkBmIrw6X3VK3+UXMtpS6HAEvycdT+dagbtdq7xxuI1F8w4gn
+ 7njPz5Io0MxFXaDC195vZDDq1Q0qMR7InmMJzmykIcPHT7aKdKp+UdnRgPw1ElIamkrXAyWuA
+ tv/UmAoodPrrJhXi3o1f4LhxmNinPLYjzC6trJTeTFMjSFaAuB/9RVSnel/O3k6TaZzS6IwWl
+ yEoO8sOlBXlLFR9E6FeCPkYTSJyOKTiL+9PXVdut4Nv/OF51iBnLbGVWMj/XJX61GB4U+8Je/
+ 5etE92MKvb5pStRmfpufpFVeucdQg0auRdklA9LUbE/qnuwOtkuPN/MqgO9a/DGFi9gQkgBo6
+ oUxLPOe/c5xt8cBVcLRNbgZzqLGwYqQfHlE5h6FjQVMswrazi1Vw1XRmBAJnlkl8utioHK3cq
+ dQmsMluSX6ZfB8YIXCyWH6LPolBXVA0AfjUSkwUoDmmX4vEsBRF0EOcjOePfoI4cf7RmhM7bN
+ lbcP1qCyurVzSapohZ8Kctl6V/tdjE52u1eCBIjt9wPXVmclJ2oKhdPbkP1r+bOaUWMtD0jk2
+ Vc3IKJCU1mJsF57WJGaHdVEG/XvTNmVmeTJRLnGlh7uW1fzmSGgXfZLrT+01HYdtlfha+amUf
+ oAPRQaZAZvksf5z4Amkae+djsrhZlQZl8uC55/tt3OFKsQOj1URgpi3fmBAEfrqeh+r0zdesh
+ gpQ70X4bJrAUTWTkog/RNh2EwTcoSqAf/L3rUXeQs48wtfBaUUpX1FbDrTNG3d9EtviCVAXZp
+ V3/5ObYCQINopQa/edT1PYh+Y+649Qkel0j75I0sSsT+DEXGRVMbKlmx935Bbvq0SMP6bJY9u
+ ShOgtACOWBNa7ZMo01iObfWl/hvqYVXmYYEshzYrlhiVnodu0OlUcAfJ8DzqY9DeZXIVjIH40
+ zlXH73EKSWxA2532Yx6LhGs61VD+yel+pQvoesjOY2OdzCfAFqqKC+p2YN0s7lvg8tBV0teVE
+ etyUbS8n0a+jWkRgsIxlQbXpAnWZiZEt7RP+rvGPpTVARkHK0uZlEppmP+nXaYqBuyIrR0ARs
+ rnCJlxobKJneve33yM2G3gaFqDclqYEj4BpKfVT2DiXWUHPZfpeoBf0O9qjNKF/dqowHqjoRb
+ /sfBiTfy5+jq6tNaUsHW0q+ScOYTDWTn7K6/wphLkm3/QcKECPxF12F07Kq2AdzvHbbDR1mYM
+ JRoeylg271WhX4Y8QTir9xFwOSXPn+6epSfpbU5B/BbNNWaS1kC9VyRujRGZsaR2SFeW7UzOi
+ IcSqeaBMWKbb0zHTXW4t8so92oVktHZ+NsWvYXDH+YaZWqmaCaf1vfXLeHtAbwsqJrVYAlyvJ
+ knsIbxZtgiCSvN9DhyTpBdamEu4HchEBETo9AuZDTEx/AxZWwhGIhv6tuKEGOwY8yzr+Xhrct
+ q8KNzpf50HVdP5XUucwfdzvGzVokAIRs94ysby7xaXIZJoCaQK2IJnG1CGFYfha2jvLtfP0T9
+ sW5czsnT91g8I+SdOdPUPXWXfgQMDnDhbNfNkk8GlIgT7mJz/K/f4xSiyn+400cawBH10Ldv0
+ LDRGBh+kaet9IdvH/2Mn3uJEZBy6MyVjau38Mzhbc2oB0ya4oJ3H2oGxau6QZEefnXLDmnAWE
+ vn72MOFZk5EoeZCYRpDkugzD6km6/zOoTMV+zhOupmu4NgCy256jk41LJu8/HHMi0men8rPYE
+ Q11+xtDp0ontR0kLZDm9Tn142MmHEXvDjZFAInAkT1lwxFgP+k8bnUVAby1wLkD+9LQyGCVyo
+ U/A9zZe/c3uQpsqO8thnWz79nRwp51xmsAA0korKLhj/v20AjpWF3ai+myF1x2rH20ZCwjleU
+ 4QjoqDXu3VoJutvaU0NcNpVQ2fNbgtMdN3sTdgCTXBDvoy4odWgE5FV3BKfY6Kp72Z5lLnjnW
+ CZ6cWUYB1vQUP3x92St5gvLFgyXdX5L4GtJKxd3GmYBSTIXGmRunErvgDVyxFoBZEh/WeqADY
+ K/LUHAeoFhLRdkAG4Rtt8vOb4e1D7lwwrlhUxxIT2fO5N6OmEeDuan8IsaBWALv1TS1EGKxdZ
+ HWdW2fCoDQgt1RxZjSUq5osCB7pATJJHRmuncJcTtX7pmYW7j7UK1qSashNwmVoNhzh7Atnsz
+ F2Ym8c8vnNUkZj64wxl6S1+7R9fDrIhQjOuci8lPhNz0T5sMypCgiqqkiuoUYEjsAKlS7hvjS
+ 5xibmDncjCm83ypEhx34KuOPwWcwTc9r8rrzQ1D8pv/sQSAK7OcXehdTDX8Yr0Jx17CXrZBkc
+ b7NtwJ607f8Ld5GuQjuNw1JELlv+Z9zUdKKFFMLCLWiVNbCzx9MRvPz3qM71T00dmL3ml1lIK
+ 6khnTsP5ZAatSteMdlvLtA/BoJ1LqLSOkqARnWB9iB7nsVrqTu5lj9+PLJDV+lwU+RJHpyfvv
+ d5E+8CPip8hdFOcDaIH4LdXXZ3zvkYC36+e1c3LaDuU1DfFYtyanwZfE6BT6LGtwnwm5FR+ms
+ Klx5rlvV1cqntjFlmyRMUHGHnBt+ASwdLPXxtG4m2JCywtJzrbGeLd+rMwtTi8k+yz+i+C8Ea
+ haknWHRTjyr3M1FiAIa8PNuJGeOQwbsAo56onZ1BPpXz/Tfa/YsQPkEtRc7l4JXRmq8eGt7bW
+ uw0cWocO+Sz9EvkJBaaxggoOaplM5fcTEVOY16DxOJbsUA9uOEfLEoRVFFGYkrkeOR0wOUoO3
+ KR0EbDoOayNxE8kjODa8COC6SQOjvRccn2hnezCsEFBZHlXUPpfG03aZzDVqwKBnx1L8rNVu3
+ jxgsIJTELpepnWRL3Oh1DYPi/7hm5cv8eOmnHMBEYvwCOpjPGWPUh+nm+HAnPC8AgD0+mXkKE
+ d76Qcp+E6hf01GgLExLL0q8RQxUStWyiD5pK8NpVEJd+/v4xpzgGZTd5o/VPsPc6ilcpc44xY
+ EYVrl2Obh93oG1/am+CDaFpJtTwWLruVpRfuHdw1x0qyaqBPBh4z9za3KcQpv1I2wrtdbb5eL
+ zK+FC5Op2J9Xeot+z5HhYBKvXOwiiQWeiSbjErsSotIzussFf0+6aMhQV3ujN+LzHaXpOw5LQ
+ 2Bk7kVRd93E9eqC80QaXQ3kmgIGaQoTa31atzreV2Ustic0MY7bVsGPfWm8SqtLMAC5PMzC0s
+ p/Sr8E7CTg//E5Ge9RLroIvq43ZgRlIWPQCEC7rV6N1s7PeXCSqXvRLRFGnLjEuDTv/lLPJZv
+ RI8VoPrhL0QXWWe4XeZBx93gOYj/5brLroVzZCgQfnAHcpaUBv5R0qDnOGEamTUHAwEs8B5J2
+ flBFtuuq7jDNdsCYtupnHUDAIJWJoWBzHLimxhrxgY8KmHCCTjTm0OgqF6hNxBRd1yn/Nd
+Received-SPF: pass client-ip=212.227.15.14; envelope-from=arne_bab@web.de;
+ helo=mout.web.de
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_MSPIKE_H3=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 13:48:47 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+> incorrect use of LLMs.  We are already dealing with it, and I see no
+> reason to think we won't be able to continue dealing with it.
+>
+>> > I prefer to decide whether or not to work with someone depending on
+>> > the answers, not on their source, real or imaginary.  See bug#82057 to
+>> > understand what I'm talking about.
+>>=20
+>> I prefer to talk to people, even where machines can talk smooth.
+>
+> since you bring this up: there are some people on our lists with whom
+> I prefer not to talk, but I do, because they contribute to Emacs.  I'm
+> sure every one of us has these experiences, where our personal
+> preferences take a back seat to our duties as Emacs maintainers and
+> developers.
+
+I think we=E2=80=99re getting closer to a core difference in the view on th=
+is.
+
+You=E2=80=99re saying =E2=80=9Cwe can manage, because we already sometimes =
+see similar
+problems=E2=80=9D.
+
+Sometimes there=E2=80=99s a contributor who doesn=E2=80=99t learn from revi=
+ews. And
+sometimes such a contributor has more time than maintainers, sapping
+time that could be spent on more productive things.=C2=B9 That=E2=80=99s a =
+disbalance
+that must not become too big to keep the project maintainable.
+
+=C2=B9 I see the irony of writing this in a thread that saps time. I=E2=80=
+=99m trying
+  to keep it short.
+
+LLM-code is similar to that, but vastly different in scale. While the
+contributor who doesn=E2=80=99t learn still has to type all text themselves=
+, the
+amount of text an LLM produces is only limited by the money thrown at
+it. So the disbalance becomes much worse and LLM contributions can drown
+out contributions written by hand while a lower and lower fraction of
+reviews you write is read by people who learn from them.
+
+At which fraction do the first maintainers say that that=E2=80=99s no longer
+worth it, requesting to change procedures in a way that also makes it
+harder to contribute hand-written code?
+
+>> other projects. While I do think Emacs is special, I don=E2=80=99t think=
+ it is
+>> special enough to be unaffected.
+>
+> There's no evidence of that in sight.  All the evidence you and others
+> have brought up until now are either irrelevant or something we
+> already deal with, and deal successfully.
+
+Regarding that I=E2=80=99m watching vibe-spell. If that gets accepted into =
+ELPA
+despite even RMS saying twice it shouldn=E2=80=99t be, I see that as eviden=
+ce
+that we don=E2=80=99t deal with that successfully. Not yet failing like pro=
+jects
+that already crumbled, but still no longer successfully.
+
+Best wishes,
+Arne
+=2D-=20
+Unpolitisch sein
+hei=C3=9Ft politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJgBAEBCABKFiEE801qEjXQSQPNItXAE++NRSQDw+sFAmsBoTUbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyEBxhcm5lX2JhYkB3ZWIuZGUACgkQE++NRSQDw+vm
+9A/9GOd9zKHDyCi0watbKgtzESn+H17IHcuxZNZ2NV/wSNAfQ5aMd64cpyUVIW1z
+1gRkhEwgAb7jH82/+ipVafa6Zt1gDbHXmpKn7MqSuAEQ1cs8dj3Xlx0tRbokMvxF
+juzfzn9GQNv1sKHncl8ksLz/TSCabQ+Aev56sZ4c/8gUIx3cc98udkHLUifNaU9H
+LfcgM0ymnKIHYHjXi0lw9J8EZqKR8e2QudTMgyvVksmO0fk+HE9h7qAmOgO8GozT
+3naz7g/DEuXwTBLS/v9ro3DvDecgOWMgwX+ZFgsn9TG9V4pi7Y81iHggt4Pywv6J
+LzQSFBSl4S+WBvLMfgMCJhbcFw8AbKt1M7PRXgvbsik4xkAMP3WSm3KDUMhD9e1Y
+Sz5ocK8xHp7v/24BtxTkzZeDZtiiSxwbKhZjkzNOirAf1+JmlzVqaSTGfbg+24TD
+fYWLRdAK5n4hNc87HwlPLyUCUK5Oo4SkorJihXkSLlWRnyfoxQfm2B+yIGCY3Opm
+oc10ivLVdyN1t0Wg7FX6T6/Ye9ihT2cegX2w3UDKZqb97ugksG4sLonfYo+PJmwC
+0l4u2FZ4dOmD52wgK1tsEmlQMKFS4k5xL2TZlaM8qgCwnzsAYbEDhjOe+ZDF74fz
+lUfC/qsnPftUXzJX/LuFrb4wHEEwZ+3olWJMV5zjUzDAvzCI4AQBAQgAShYhBN0o
+vebZh1yrzkqLHdzPDbMLwQVIBQJrAaE1GxSAAAAAAAQADm1hbnUyLDIuNSsxLjEy
+LDIsMhAcYXJuZV9iYWJAd2ViLmRlAAoJENzPDbMLwQVI4o8D/2/T6aTMN4sLK6bd
+iNE3aLnSEbY5G2Ttp1kyZFxMDLB98Os1DNm98m2eb03io617vSrHze5X0QfscMb0
+AvebAdzbxcBd6QYlWTf4bCpHbEzx2V2Xm6Wv+fHA+uY+gZNvBpRHquLz5/lEBW+l
+C6WmoJvB+1H/L0AwhN0s1qCeF6AH
+=y4tI
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+From MAILER-DAEMON Sat Nov 21 09:30:24 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUm6h-0006V4-VC
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 09:30:24 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>) id 1xUm6f-0006Up-Ml
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 09:30:21 -0500
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eliz@gnu.org>)
+ id 1xUm6e-0002dV-AA; Sat, 21 Nov 2026 09:30:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+ s=fencepost-gnu-org; h=MIME-version:References:Subject:In-Reply-To:To:From:
+ Date; bh=0GJ2lJcgMTni8L0Ryoy5TR386m6ZfCs/Ebp8iQEbhxk=; b=VmnqQ7ae+OAfT5vgzQQl
+ mGEEa4gYKgBxk4mTQQ6CvKOjEPbHt4az7V2dGncDpXQxXpott4khs3UtiWrUp29Ilw2ED/Ns/XJnt
+ ZpKqZ/iTlMQ9s5PP5sGQMR507smJG3vcJj+h90nLvO5Vv1nT0CLYvN53gBjE4C+4F2rTxXMHKKm5a
+ C89azT5jnMlTfx17xIXw0MvJ+4wGGUIxJ4DkvMbQRVysM8PXU3R8BqsNIUIm7vhNNJo/7XhJ3YRab
+ eeZVFlr68V0dla6sF8Vhng+f3M+B8V8XfEWs6x4QRWWUo8nbLeO14qXZnLNWvR6CHwNEUxjX0Djan
+ an4Lr1s0jmH/qg==;
+Date: Sat, 21 Nov 2026 16:30:08 +0200
+Message-Id: <86ld6mgsun.fsf@gnu.org>
+From: Eli Zaretskii <eliz@gnu.org>
+To: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Cc: joel.reicher@gmail.com, rms@gnu.org, philipk@posteo.net,
+ shipmints@gmail.com, arstoffel@gmail.com, emacs-devel@gnu.org
+In-Reply-To: <87jym6nvm3.fsf@web.de> (arne_bab@web.de)
+Subject: Re: ELPA submission: vibe-spell
+References: <877bis35nn.fsf@gmail.com> <87cxs71j7m.fsf@web.de>
+ <87eccnxc1p.fsf@posteo.net> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de>
+ <86tslairs0.fsf@gnu.org> <87jym6nvm3.fsf@web.de>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 14:30:22 -0000
+
+> From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+> Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+>   shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+> Date: Sat, 21 Nov 2026 14:48:36 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> > incorrect use of LLMs.  We are already dealing with it, and I see no
+> > reason to think we won't be able to continue dealing with it.
+> >
+> >> > I prefer to decide whether or not to work with someone depending on
+> >> > the answers, not on their source, real or imaginary.  See bug#82057 to
+> >> > understand what I'm talking about.
+> >> 
+> >> I prefer to talk to people, even where machines can talk smooth.
+> >
+> > since you bring this up: there are some people on our lists with whom
+> > I prefer not to talk, but I do, because they contribute to Emacs.  I'm
+> > sure every one of us has these experiences, where our personal
+> > preferences take a back seat to our duties as Emacs maintainers and
+> > developers.
+> 
+> I think we’re getting closer to a core difference in the view on this.
+> 
+> You’re saying “we can manage, because we already sometimes see similar
+> problems”.
+> 
+> Sometimes there’s a contributor who doesn’t learn from reviews. And
+> sometimes such a contributor has more time than maintainers, sapping
+> time that could be spent on more productive things.¹ That’s a disbalance
+> that must not become too big to keep the project maintainable.
+> 
+> ¹ I see the irony of writing this in a thread that saps time. I’m trying
+>   to keep it short.
+> 
+> LLM-code is similar to that, but vastly different in scale. While the
+> contributor who doesn’t learn still has to type all text themselves, the
+> amount of text an LLM produces is only limited by the money thrown at
+> it. So the disbalance becomes much worse and LLM contributions can drown
+> out contributions written by hand while a lower and lower fraction of
+> reviews you write is read by people who learn from them.
+
+Once again, please have more faith in our abilities to detect and
+reject this, if and when it happens.  There's definitely no reason to
+fear it before it happens.
+
+> At which fraction do the first maintainers say that that’s no longer
+> worth it, requesting to change procedures in a way that also makes it
+> harder to contribute hand-written code?
+
+I don't think I understand what you are asking about.  Why would we
+change procedures in a way that make it harder to write code?
+
+> >> other projects. While I do think Emacs is special, I don’t think it is
+> >> special enough to be unaffected.
+> >
+> > There's no evidence of that in sight.  All the evidence you and others
+> > have brought up until now are either irrelevant or something we
+> > already deal with, and deal successfully.
+> 
+> Regarding that I’m watching vibe-spell. If that gets accepted into ELPA
+> despite even RMS saying twice it shouldn’t be, I see that as evidence
+> that we don’t deal with that successfully.
+
+Deal with what, exactly? what did vibe-spell do to Emacs that is
+harmful?
+
+
+From MAILER-DAEMON Sat Nov 21 11:44:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xUoCS-0003Kj-OF
+	for mharc-emacs-devel@gnu.org; Sat, 21 Nov 2026 11:44:28 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>) id 1xUoCQ-0003KR-UQ
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 11:44:26 -0500
+Received: from mout.web.de ([217.72.192.78])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <arne_bab@web.de>) id 1xUoCP-0006io-6y
+ for emacs-devel@gnu.org; Sat, 21 Nov 2026 11:44:26 -0500
+DKIM2-Signature: i=1; m=1; t=1795279464; mf=PGFybmVfYmFiQHdlYi5kZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+; d=web.de;
+ s=s29768273:rsa-sha256:ClVtL9cCgLIa0LXAtQqtmEMSrWXY
+ p08UsyMqI4h3deRmbpWQC8rbRV5qjXtIXV8oFJdJCErVlQxCvyWvAj7JIHuNeJjgVeisiGTtI4N
+ jMZK78gl5uI/GYGn4rOQI85KyDntyLgtwRq8IV72op8mcUwM5klPGn5ZQuJpI43Kk2Pir8PmpSL
+ sXu4qjLss2DwBGXuTuNsz/bSe0YjmL/9CLVlunpAwbZdUwO6b/xz8uGbQwmzZbPQA+X//A3EF+0
+ nK35AK0mvMz58GGDJ+IZs7F2f37U9BYH0NN4CGytjXHtCSqRrPdIxrcKEypE8aGW+u3eCgjgiCL
+ P09V0sYnuW7Sxw==;
+Message-Instance: m=1; h=sha256: fj/BjyjNMdBWN+TzNEjS42wjXrbsKEMNOZ6f0GM2PVA=:
+ wyG/efkdQbG6uUWZGrLg8LnFOhAXIwa7mHZREMyewtU=, sha512:
+ qeZ0fKLJsssaPWC4CVFHhl5YNlBrG4a4f+r6C37T6dQBPl0ch3rI+2OfXHc6IwVWR2rQJ77Os4pdHoH+R1xOGA==:
+ b2674V5tOwJsIZqk8juvBecPkDQSiwHjR5gqsKPBW9FolImWk/fSk9DtBvQ7vUVpMhbrnlUz6Tc6RfbYvhqIcg==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+ s=s29768273; t=1795279460; x=1795884260; i=arne_bab@web.de;
+ bh=y86C4gAJYYkanCh7qSr0pYkyRBEyalIiWHJM0BTi23M=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:cc:content-transfer-encoding:
+ content-type:date:from:message-id:mime-version:reply-to:subject:
+ to;
+ b=rXqOtRXV2cRRwFSlcVxjaxGZvswyQblAHB27UTM548nRzFM9FBFMjztFjy2BZpPS
+ HpdHedAbeLWCscPznNnJVnovub85hC/uk7Z7CgRYMSiBYA3bFcJEcAdbo37eLi9FK
+ UqZ61XWDiv+6p5y3k/x3+YjyKC2YP0fA6mMfP1GEN0lqWBNYateEIqcBemuMfJtgN
+ mTITZLL2KJRfGfuY4Vv5G43FayS6nZisjrRq41JA6Jg45E7xrieV1Q20BNuo+40wK
+ LzCes4FEG7GGcd6i8wzt4g51r12k3h5QH60OfPlayXZv9WZRJS9ppKanlGPnzJ6Gx
+ uFqJZDC2mGiFEeMO9Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mho0A-1y8Hoq12lk-00eBrf; Sat, 21
+ Nov 2026 17:44:20 +0100
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+To: Eli Zaretskii <eliz@gnu.org>
+Cc: joel.reicher@gmail.com,  rms@gnu.org,  philipk@posteo.net,
+ shipmints@gmail.com,  arstoffel@gmail.com,  emacs-devel@gnu.org
+Subject: Re: ELPA submission: vibe-spell
+In-Reply-To: <86ld6mgsun.fsf@gnu.org>
+References: <877bis35nn.fsf@gmail.com> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org>
+ <87jym6nvm3.fsf@web.de> <86ld6mgsun.fsf@gnu.org>
+User-Agent: mu4e 1.14.4; emacs 31.1
+Date: Sat, 21 Nov 2026 17:44:18 +0100
+Message-ID: <87tslam8wt.fsf@web.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Provags-ID: V03:K1:SAM4dF437nmuUQQcBhmMQl2CPvks6MB+qVW+KipI0Xj8bQh+mOg
+ UnsmDGRcDkkrHo4p/RqZx1unf8TjcuBo/kBPYZkr71POYo5yJJ4KdQbdOHFZtt2OP9JZb8U
+ 8QzpZ7eiEnhloQQAtJuKmnrX2dAgF5RfqJ0DOKrwdETavgPdcG/U/H+cRxw3EQYuHO4Sm53
+ lZTjXFF6xc3asczug5Wvw==
+UI-OutboundReport: notjunk:1;M01:P0:zVw4Glm+W9I=;CPf0adcvKe69pg3LG7shCj1uFU0
+ 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
+ GisEBgt0C0BmtTRdm/gEHv3m0Lhw==
+Received-SPF: pass client-ip=217.72.192.78; envelope-from=arne_bab@web.de;
+ helo=mout.web.de
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, RCVD_IN_MSPIKE_H4=0.001, RCVD_IN_MSPIKE_WL=0.001,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Sat, 21 Nov 2026 16:44:27 -0000
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> At which fraction do the first maintainers say that that=E2=80=99s no lo=
+nger
+>> worth it, requesting to change procedures in a way that also makes it
+>> harder to contribute hand-written code?
+>
+> I don't think I understand what you are asking about.  Why would we
+> change procedures in a way that make it harder to write code?
+
+Because if LLM-code contributions overload maintainers, either
+procedures are changed to reject LLM-code, or procedures are changed to
+raise the bar for contributing, or maintainers can=E2=80=99t keep up which =
+also
+raises the bar for contributing.
+
+>> Regarding that I=E2=80=99m watching vibe-spell. If that gets accepted in=
+to ELPA
+>> despite even RMS saying twice it shouldn=E2=80=99t be, I see that as evi=
+dence
+>> that we don=E2=80=99t deal with that successfully.
+>
+> Deal with what, exactly? what did vibe-spell do to Emacs that is
+> harmful?
+
+I already wrote my arguments on that (except for those that others had
+written already) and don=E2=80=99t want to run in circles by rehashing them.
+
+Best wishes,
+Arne
+=2D-=20
+Unpolitisch sein
+hei=C3=9Ft politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJgBAEBCABKFiEE801qEjXQSQPNItXAE++NRSQDw+sFAmsBymMbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyEBxhcm5lX2JhYkB3ZWIuZGUACgkQE++NRSQDw+sI
+jA/8CQdPSDEc+vA8HHgHQTw+8VcqLFUtCTti0ppgrfE2e4cwh8Y4egWOketUDPfp
+zI/GwA3q2Bk5KlEPu9KfzsNtntmWc9Zc6zxfEknl0zDEIJomG4cPshq9yFGhASV6
+oPr3VycXVs4XXTgPvcElcFpFvaZwZcKqAgXcbgdqd0qbFBRdtUpfM0dvmlDbf9KV
++L2CYUKEaO2og1xW1zb6hWbgfiZjlTC6eK7JoSkqoaIMnoKkzGdtUw5uKJkNDBdw
+y5xymNnaw2eL6fY9tRIZQmZoO4lGTGeIcdri+7PH0o3reEcUL0urdQjrIasjqbYA
+2J4YloLq7KuLb9ay7St6MwxXFqsufBSH/rimsQsvhQGsYTxvNknB+w+dhfinrBKw
+jq8DFpvZ7S1EtX73joeaz9OMizsh50o/5JiPmM5gfXkpTWJU8Bj2ocCvHZD1Awvz
+wZjPwaeSbtASoyzt5fJxo7eojqHbzJ16KGAWut7vEV6Ma52xCApLPGA1PXcxcLlr
+/p1s1fiTHbDL8kreXlWO8JBDrgdQBDWMsXmOcJ0V9zzD/d62DIRhliNUmUzb3CVy
+aaXkWDx1CiXMRcxWsKsTiv483IILw61pp1xrZrhzUH6ob5pfrH+YIYaivio7/3RU
+NAEqsDWUa+l7DIEnwOGixaEhlMCQUS43U0RbKaHpbidwRz2I4AQBAQgAShYhBN0o
+vebZh1yrzkqLHdzPDbMLwQVIBQJrAcpjGxSAAAAAAAQADm1hbnUyLDIuNSsxLjEy
+LDIsMhAcYXJuZV9iYWJAd2ViLmRlAAoJENzPDbMLwQVIe8oD/iNe4PCRpKFDi1xq
+QkcgNU84AOeAjnZjSPEfWv3gozpEJHUpXiMX5jom95TrdL+fYc7KEVgbvj62iHs5
+c6RbEgrsNzToWVriJU0HPkv2SowHU9VJV0syJpZb4SWh5giXc2fvyHZh2gWjdoyK
+vmH6+vHFu4FVGqOVCzxOnxIJ8XVj
+=dAPQ
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
