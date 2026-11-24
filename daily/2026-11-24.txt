@@ -1,0 +1,452 @@
+emacs-devel messages from 2026-11-23T18:15:00+01:00 to 2026-11-24T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-23T20:06:00+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [gnu] externals/vc-jj 4d3f579528 2/3: Fix failing test case
+Message-ID: <jwva4mzid1v.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <DCDE4188-7C5D-42AE-9DE2-592E2458ECE3@constantly.at>
+References: <179535964553.399.13407014601794196721@vcs2.savannah.gnu.org>
+ <20261122150055.3B5D1C1D069@vcs2.savannah.gnu.org>
+ <jwvmrr0c1qm.fsf-monnier+emacs@gnu.org>
+ <DCDE4188-7C5D-42AE-9DE2-592E2458ECE3@constantly.at>
+
+>> Better would be to write the test so that it checks that we get
+>> something we consider as "correct", rather than just comparing to one
+>> specific result.
+>
+> Not a bad idea.  (The test failed because jj added some context in the chunk
+> headers of its diff output after the test was written.)
+>
+> Does diff-mode have an API?
+
+'fraid not  🙁
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-24T04:13:49+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: [gnu] externals/diff-hl 0114638b7d 1/2: Support both old and new
+ calling conventions for vc-jj--process-lines
+Message-ID: <0082f2a7-5140-4df9-a4c2-b97ec43a8cb9@gutov.dev>
+In-Reply-To: <jwvwlq4c1w8.fsf-monnier+emacs@gnu.org>
+References: <179535948539.30799.398349477719232899@vcs2.savannah.gnu.org>
+ <20261122145805.EAEB5C1F57B@vcs2.savannah.gnu.org>
+ <jwvwlq4c1w8.fsf-monnier+emacs@gnu.org>
+
+Hi Stefan,
+
+On 22/11/2026 17:39, Stefan Monnier wrote:
+> Reminds me: WIBNI we could move the backend-specific code to
+> `vc-BACKEND.el`?
+
+Add 'rev-parse' as a backend action, something like that?
+
+Might be good. We'd have to pick the places to use it inside Emacs too, 
+I think. Otherwise backends either forget to define it or forget to 
+update it.
+
+Maybe vc-revision-other-window? So that using HEAD with it would switch 
+to "resolved" revision in the buffer name. If that makes sense.
+
+================================================================================
+Date: 2026-11-24T08:14:56+01:00
+From: =?utf-8?Q?Peter_M=C3=BCnster?= <pm@a16n.net>
+Subject: Re: [New package] org-yaap
+Message-ID: <87o6belmz3.fsf@a16n.net>
+In-Reply-To: <87a4mzlkn5.fsf@amypillow@lavache.com>
+References: <87a4mzlkn5.fsf@amypillow@lavache.com>
+
+On Mon, Nov 23 2026, Amy Pillow wrote:
+
+> I would like your help testing porting that to org-yaap
+
+Hi Amy,
+
+I think, that I won’t be of much help, but you can always ask specific
+questions.
+
+
+> I would love to help add support for Android.
+
+Of course, you can do that.
+
+
+> I'm saddened to still see it as a todo item
+
+It’s no more there...
+
+
+> let me know if it's appropriate to add to ELPA.
+
+I did not read your code, but I guess there won’t be any problems if you
+respect the guidelines.
+
+Kind regards,
+-- 
+           Peter
+
+================================================================================
+Date: 2026-11-24T09:46:42+01:00
+From: Augusto Stoffel <arstoffel@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87jym21urx.fsf@gmail.com>
+In-Reply-To: <877biktlyw.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net>
+
+On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+
+> To open a can of worms at the end, it might not be a bad idea to use a
+> different name for the package.  My hunch is that some of the attention
+> this thread has attracted is due to the name that has a negative
+> connotation.  The approach to spelling is sound after all, it is not
+> just a "vibe-check".  What do you think of "espell"?
+
+I've renamed the package to Elspell, and it's now at
+https://github.com/astoff/elspell
+
+================================================================================
+Date: 2026-11-24T09:58:09+01:00
+From: Michael Albinus <michael.albinus@gmx.de>
+Subject: Re: speedbar
+Message-ID: <87jym24ndq.fsf@gmx.de>
+In-Reply-To: <huU74fwgRlC71ZOWHn1H1A@gmail.com>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <86y0anih39.fsf@gnu.org> <jwvik1rmdvg.fsf-monnier+emacs@gnu.org>
+ <huU74fwgRlC71ZOWHn1H1A@gmail.com>
+
+Vincenzo Pupillo <v.pupillo@gmail.com> writes:
+
+> Ciao, 
+
+Hi Vincenzo,
+
+> +*** New function 'speedbar-switch-back-to-previous-display-mode'.
+> +Switch back to the previous display mode.  Replace a lambda in
+> +'speedbar-mode-map'.
+> +
+> +*** New function 'speedbar-switch-to-quick-buffer-display-mode'.
+> +Switch into Quick Buffers display mode.  Replace a lambda in
+> +'speedbar-mode-map'.
+> +
+> +*** New function 'speedbar-switch-to-files-display-mode'.
+> +Switch back to the Files display mode.  Replace a lambda in
+> +'speedbar-mode-map'.
+
+All three symbols are commands, not functions.
+
+"Replace a lambda in 'speedbar-mode-map'" is implementation detail, and
+doesn't belong to NEWS. Instead, you can write.
+
+Bound to 'r' in the 'speedbar-mode-map'.
+
+(use the correct key).
+
+> +*** New function 'speedbar-close'.
+> +Close the 'speedbar' window or frame.
+> +
+> +*** New funcion 'speedbar-delete'.
+> +Delete the 'speedbar-frame' or close the 'speedbar-window'.
+
+Both symbols are commands, not functions. Mention their bindings in
+'speedbar-mode-map'.
+
+Best regards, Michael.
+
+================================================================================
+Date: 2026-11-24T11:27:15+01:00
+From: Amy Pillow <amypillow@lavache.com>
+Subject: Re: [New package] org-yaap
+Message-ID: <871p8aa5j0.fsf@amypillow@lavache.com>
+In-Reply-To: <87o6belmz3.fsf@a16n.net>
+References: <87a4mzlkn5.fsf@amypillow@lavache.com> <87o6belmz3.fsf@a16n.net>
+
+Peter Münster <pm@a16n.net> writes:
+
+> On Mon, Nov 23 2026, Amy Pillow wrote:
+>
+>> I would like your help testing porting that to org-yaap
+>
+> Hi Amy,
+>
+> I think, that I won’t be of much help, but you can always ask specific
+> questions.
+>
+>
+>> I would love to help add support for Android.
+>
+> Of course, you can do that.
+>
+>
+
+:)
+
+Can't promise any specific timing but always love to find areas to share
+experiences.
+
+>> I'm saddened to still see it as a todo item
+>
+> It’s no more there...
+>
+
+It is in the elisp file in 0.1.4 still, but good to hear:
+
+    ;;; Todo:
+
+    ;; - Make use of https://github.com/jwiegley/alert in
+    ;;   org-notify-action-message.
+
+
+>> let me know if it's appropriate to add to ELPA.
+>
+> I did not read your code, but I guess there won’t be any problems if you
+> respect the guidelines.
+
+Thank you, I probably should've sent this in two emails but your package
+is so closely related I thought I'd ping you at the same time. The
+second half of the email was directed more at Emacs maintainers that
+usually like to give some feedback before adding a new package.
+
+-- 
+
+>
+> Kind regards,
+>           Peter
+
+Best,
+
+Amy
+
+================================================================================
+Date: 2026-11-24T12:48:39+01:00
+From: Amy Pillow <amypillow@lavache.com>
+Subject: Re: [NonGNU ELPA] New package: card-games
+Message-ID: <87qzga8n6w.fsf@amypillow@lavache.com>
+In-Reply-To: <CAJf-WoRWYo1OCR3QzWqdX29SA3fP45DXOi+BNDHF9JA+ZjzKBg@mail.gmail.com>
+References: <CAJf-WoRWYo1OCR3QzWqdX29SA3fP45DXOi+BNDHF9JA+ZjzKBg@mail.gmail.com>
+
+Corwin Brust <corwin@bru.st> writes:
+
+> Greetings,
+>
+
+Hi Corwin,
+
+>              I used Claude (mostly Opus 4.8, recently Opus 5.2) to
+> refine from a pair of hand-written proofs of concept. Each LLM
+> supported commit for this package is so marked with an Assisted-by
+> trailer.
+
+I don't believe you.  I don't believe that only 12 of the 57 commits
+were assisted or fully authored by an llm, or that you hand-wrote 1600
+lines of the 2000 line test file.  For example, it's hard for me to
+accept 09adcaa or 905d598 were written fully by you.
+
+I have no authority over you, or over Emacs or anything, and I really do
+appreciate the work you do for Emacs, it is simply too blatant not to
+call it out; truth matters.
+
+-- 
+
+> Thanks,
+> Corwin Brust
+
+Best,
+
+Amy
+
+================================================================================
+Date: 2026-11-24T13:08:06+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <87tsl6ig9l.fsf@athena.silentflame.com>
+In-Reply-To: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+
+Pedro A. Aranda [20/Nov  8:15am +01] wrote:
+> Hi
+>
+> I would like to request that the function
+> (completion--selected-candidate) is "promoted" to
+> (completion-selected-candidate).
+>
+> The use case:
+>
+> I'm using it to put my currently selected candidate in the *Completions*
+> buffer in the kill ring for further usage.
+>
+> It's handy when hacking Elisp:
+> You can use describe-variable, function, face, you name it;
+> use the completions framework to search for your candidate;
+> and then put the selected candidate in the kill ring.
+>
+> All the magic in the attached video is a simple interactive function
+> that implements this workflow.
+
+Adding some minibuffer.el people for comment.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-24T16:36:26+01:00
+From: Corwin Brust <corwin@bru.st>
+Subject: Re: [NonGNU ELPA] New package: card-games
+Message-ID: <CAJf-WoRRdbbS_Bq6zxsCdqgucPJTRDve0qkp=-=cew9J0a7kgQ@mail.gmail.com>
+In-Reply-To: <3162524081079503823@unknownmsgid>
+References: <CAJf-WoRWYo1OCR3QzWqdX29SA3fP45DXOi+BNDHF9JA+ZjzKBg@mail.gmail.com>
+ <3162524081079503823@unknownmsgid>
+
+Amy,
+
+Thanks for you comments, no just your directness but the important
+shared value you state directly.
+
+In truth I didn't audit the commit report provided in that email.   I
+can do some analysis: it's quite possible you are correct.  I started
+with two handcoded POC files I built within dungeon-mode: one using
+EIEIO (which succeeded) and one using cons structures, lambda, and
+macros (which was easy to get started with and hard to move forward
+from: there's a post on my blog from not too long after I decided
+there was something to this "MLM assisted coding"; I used this project
+to explore that exact question).
+
+FTR, my conclusion on the wither MLM generative coding support is that
+the greatest boons are on the non-technical side, specifically uniform
+appliication of methologies especially as toward robustness or clarity
+and then, probably more importantly access, such as to non-programmer
+identifying people so we too can  create our own programs.
+
+I'm extremely grateful to you for making your points. What is
+important to you is clear: and I believe it shoudl be important to all
+of us who work to make Free Software everyone's first choice.  I'm
+embarassed I didn't bother doubling checking those numbers.  I'll
+report back when I have some I can personally offer some specific
+measure of confidence in.  If you believe that work does (or should
+have) some influece on including my work in non-GNU ELPA please be
+direct in saying that.
+
+
+On Tue, Nov 24, 2026 at 5:48 AM Amy Pillow <amypillow@lavache.com> wrote:
+>
+> Corwin Brust <corwin@bru.st> writes:
+>
+> > Greetings,
+> >
+>
+> Hi Corwin,
+>
+> >              I used Claude (mostly Opus 4.8, recently Opus 5.2) to
+> > refine from a pair of hand-written proofs of concept. Each LLM
+> > supported commit for this package is so marked with an Assisted-by
+> > trailer.
+>
+> I don't believe you.  I don't believe that only 12 of the 57 commits
+> were assisted or fully authored by an llm, or that you hand-wrote 1600
+> lines of the 2000 line test file.  For example, it's hard for me to
+> accept 09adcaa or 905d598 were written fully by you.
+>
+> I have no authority over you, or over Emacs or anything, and I really do
+> appreciate the work you do for Emacs, it is simply too blatant not to
+> call it out; truth matters.
+>
+> --
+>
+> > Thanks,
+> > Corwin Brust
+>
+> Best,
+>
+> Amy
+>
+>
+
+================================================================================
+Date: 2026-11-24T17:14:40+01:00
+From: Juri Linkov <juri@linkov.net>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <874id6s2j3.fsf@mail.linkov.net>
+In-Reply-To: <87tsl6ig9l.fsf@athena.silentflame.com>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+ <87tsl6ig9l.fsf@athena.silentflame.com>
+
+>> I would like to request that the function
+>> (completion--selected-candidate) is "promoted" to
+>> (completion-selected-candidate).
+>>
+>> The use case:
+>>
+>> I'm using it to put my currently selected candidate in the *Completions*
+>> buffer in the kill ring for further usage.
+
+I welcome this change.  Maybe we should have a key to copy
+the selected candidate or reuse the existing key like
+
+  (keymap-set minibuffer-local-map "C-w"
+              (lambda ()
+                (interactive)
+                (if (region-active-p)
+                    (call-interactively 'kill-region)
+                  (kill-new (completion--selected-candidate)))))
+
+================================================================================
+Date: 2026-11-24T17:38:09+01:00
+From: Pedro Andres Aranda Gutierrez <paaguti@gmail.com>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <CAO48Bk99bN+HnY=6p2nJTLp9_07_mJ2V9sMLvo_zC_VWvML+aQ@mail.gmail.com>
+In-Reply-To: <874id6s2j3.fsf@mail.linkov.net>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+ <87tsl6ig9l.fsf@athena.silentflame.com> <874id6s2j3.fsf@mail.linkov.net>
+
+I use it like this:
+
+ (keymap-set minibuffer-local-map "C-w"
+              (lambda ()
+                (interactive)
+                (let ((str (or (completion--selected-candidate) ;; Try to
+get the candidate from *Completions*
+                               (minibuffer-contents-no-properties)))) ;; By
+default, get what I typed
+                     (kill-new str))))
+
+Best, /PA
+
+On Tue, 24 Nov 2026 at 17:33, Juri Linkov <juri@linkov.net> wrote:
+
+> >> I would like to request that the function
+> >> (completion--selected-candidate) is "promoted" to
+> >> (completion-selected-candidate).
+> >>
+> >> The use case:
+> >>
+> >> I'm using it to put my currently selected candidate in the *Completions*
+> >> buffer in the kill ring for further usage.
+>
+> I welcome this change.  Maybe we should have a key to copy
+> the selected candidate or reuse the existing key like
+>
+>   (keymap-set minibuffer-local-map "C-w"
+>               (lambda ()
+>                 (interactive)
+>                 (if (region-active-p)
+>                     (call-interactively 'kill-region)
+>                   (kill-new (completion--selected-candidate)))))
+>
+
+
+-- 
+Fragen sind nicht da, um beantwortet zu werden,
+Fragen sind da um gestellt zu werden
+Georg Kreisler
+
+"Sagen's Paradeiser" (ORF: Als Radiohören gefährlich war) => write BE!
+Year 2 of the New Koprocracy
+
+*IA: onomatopeya del rebuznar*
+
+This was produced by a human (implied virtues and weaknesses acknowledged)
+Don't feed your ArtStup (SKA AI) with this. It won't make YOU smarter...
+
