@@ -1,0 +1,1378 @@
+emacs-devel messages from 2026-11-24T18:15:00+01:00 to 2026-11-25T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-24T19:18:55+01:00
+From: Spencer Baugh <sbaugh@janestreet.com>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <CAO=BR8M8h4E6pLSxWo=cJfsk_jF16Q7n=irpXdYz8t1YgbL-yA@mail.gmail.com>
+In-Reply-To: <CAO48Bk99bN+HnY=6p2nJTLp9_07_mJ2V9sMLvo_zC_VWvML+aQ@mail.gmail.com>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+ <87tsl6ig9l.fsf@athena.silentflame.com> <874id6s2j3.fsf@mail.linkov.net>
+ <CAO48Bk99bN+HnY=6p2nJTLp9_07_mJ2V9sMLvo_zC_VWvML+aQ@mail.gmail.com>
+
+This seems reasonable to me.
+
+On Tue, Nov 24, 2026 at 11:38 AM Pedro Andres Aranda Gutierrez <
+paaguti@gmail.com> wrote:
+
+> I use it like this:
+>
+>  (keymap-set minibuffer-local-map "C-w"
+>               (lambda ()
+>                 (interactive)
+>                 (let ((str (or (completion--selected-candidate) ;; Try to
+> get the candidate from *Completions*
+>                                (minibuffer-contents-no-properties)))) ;;
+> By default, get what I typed
+>                      (kill-new str))))
+>
+> Best, /PA
+>
+> On Tue, 24 Nov 2026 at 17:33, Juri Linkov <juri@linkov.net> wrote:
+>
+>> >> I would like to request that the function
+>> >> (completion--selected-candidate) is "promoted" to
+>> >> (completion-selected-candidate).
+>> >>
+>> >> The use case:
+>> >>
+>> >> I'm using it to put my currently selected candidate in the
+>> *Completions*
+>> >> buffer in the kill ring for further usage.
+>>
+>> I welcome this change.  Maybe we should have a key to copy
+>> the selected candidate or reuse the existing key like
+>>
+>>   (keymap-set minibuffer-local-map "C-w"
+>>               (lambda ()
+>>                 (interactive)
+>>                 (if (region-active-p)
+>>                     (call-interactively 'kill-region)
+>>                   (kill-new (completion--selected-candidate)))))
+>>
+>
+>
+> --
+> Fragen sind nicht da, um beantwortet zu werden,
+> Fragen sind da um gestellt zu werden
+> Georg Kreisler
+>
+> "Sagen's Paradeiser" (ORF: Als Radiohören gefährlich war) => write BE!
+> Year 2 of the New Koprocracy
+>
+> *IA: onomatopeya del rebuznar*
+>
+> This was produced by a human (implied virtues and weaknesses acknowledged)
+> Don't feed your ArtStup (SKA AI) with this. It won't make YOU smarter...
+>
+
+================================================================================
+Date: 2026-11-24T20:37:43+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: [gnu] externals/diff-hl 0114638b7d 1/2: Support both old and
+ new calling conventions for vc-jj--process-lines
+Message-ID: <jwvld6iggyo.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <0082f2a7-5140-4df9-a4c2-b97ec43a8cb9@gutov.dev>
+References: <179535948539.30799.398349477719232899@vcs2.savannah.gnu.org>
+ <20261122145805.EAEB5C1F57B@vcs2.savannah.gnu.org>
+ <jwvwlq4c1w8.fsf-monnier+emacs@gnu.org>
+ <0082f2a7-5140-4df9-a4c2-b97ec43a8cb9@gutov.dev>
+
+>> Reminds me: WIBNI we could move the backend-specific code to
+>> `vc-BACKEND.el`?
+> Add 'rev-parse' as a backend action, something like that?
+
+I must admit, I have not looked enough at the code to have a clear idea
+of what kind of backend operation would be needed for it.
+
+> Might be good. We'd have to pick the places to use it inside Emacs too,
+> I think.  Otherwise backends either forget to define it or forget to
+> update it.
+
+That would be nice as well, indeed.
+
+> Maybe vc-revision-other-window? So that using HEAD with it would switch to
+> "resolved" revision in the buffer name. If that makes sense.
+
+Sounds good to me,
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-24T21:09:40+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: speedbar
+Message-ID: <jwvbj7eggks.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <huU74fwgRlC71ZOWHn1H1A@gmail.com>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <86y0anih39.fsf@gnu.org> <jwvik1rmdvg.fsf-monnier+emacs@gnu.org>
+ <huU74fwgRlC71ZOWHn1H1A@gmail.com>
+
+Hi Vincenzo,
+
+> attached is the patch. Currently, 'describe-mode' doesn't display dynamically 
+> generated keybindings (for example, 'GUD' has its own as well), but at least 
+> it shows the same thing for both 'speedbar-frame' and 'speedbar-window'. 
+
+Thanks.  That looks like a good improvement to the code.
+I don't myself have much experience using Speedbar, so I'm hesitant to
+install it because I'm not sure if it might affect a corner case
+behavior of which I'm not aware, but maybe we should just go ahead and
+fix any problem that show up, if/when they show up?
+
+In the mean time, I suggest you address Michael's comments, and I have
+a few trivial nitpicks below as well.
+
+
+=== Stefan
+
+
+> 'describe-mode' displays the same key bindings for ‘speedbar-frame’ and
+> ‘speedbar-window’  except for the dynamic ones, such as those for the
+> various display modes.
+
+It's not completely unambiguous here whether what you write describes
+the state before your change or after your change.  Please try and
+rephrase to clarify what the patch changes and why.
+
+> * etc/NEWS: Announce the new functions.
+> * lisp/speedbar
+> (speedbar-switch-back-to-previous-display-mode): New function.
+> (speedbar-switch-to-quick-buffer-display-mode): New function.
+> (speedbar-switch-to-files-display-mode): New function.
+> (speedbar-close): New function.
+> (speedbar-delete): New function.
+
+Here also you can use the work "command" which is more precise than
+"function".
+Also you can collapse this down to:
+
+    (speedbar-switch-back-to-previous-display-mode)
+    (speedbar-switch-to-quick-buffer-display-mode)
+    (speedbar-switch-to-files-display-mode)
+    (speedbar-close, speedbar-delete): New commands.
+
+Tho, I think I'd prefer
+
+    (speedbar-switch-back-to-previous-display-mode)
+    (speedbar-switch-to-quick-buffer-display-mode)
+    (speedbar-switch-to-files-display-mode): New commands, extracted
+    from 'speedbar-mode-map'.
+    (speedbar-close, speedbar-delete): New commands.
+
+> (speedbar-easymenu-definition-trailer): Now it's a variable; a function
+> is no longer needed.
+
+Please try and write text that describes a change rather than
+a state.  E.g. "Make it a variable again instead of a function".
+
+> (speedbar-reconfigure-keymaps): The function is now a bit simpler.
+
+Same here.  E.g. "Simplify".
+
+Also, the change removes a call to `dframe-update-keymap`
+but no part of the commit message explains why, so someone could think
+that it was an unintentional change, so next to "Simplify" please
+mention the replacement of `dframe-update-keymap` with
+the new q/Q bindings in the mode map.
+
+> -*** 'speedbar-easymenu-definition-trailer' is now a function.
+> +*** 'speedbar-easymenu-definition-trailer' is now a variable.
+
+Don't the above two just cancel each other?
+
+> +*** New function 'speedbar-switch-back-to-previous-display-mode'.
+> +Switch back to the previous display mode.  Replace a lambda in
+> +'speedbar-mode-map'.
+> +
+> +*** New function 'speedbar-switch-to-quick-buffer-display-mode'.
+> +Switch into Quick Buffers display mode.  Replace a lambda in
+> +'speedbar-mode-map'.
+> +
+> +*** New function 'speedbar-switch-to-files-display-mode'.
+> +Switch back to the Files display mode.  Replace a lambda in
+> +'speedbar-mode-map'.
+> +
+> +*** New function 'speedbar-close'.
+> +Close the 'speedbar' window or frame.
+> +
+> +*** New funcion 'speedbar-delete'.
+> +Delete the 'speedbar-frame' or close the 'speedbar-window'.
+
+The NEWS files already tends to be "too long", so I think it's best to
+try and not get into so much details.  I think I'd collapse this down to
+something like:
+
+    *** New named commands for a few keybindings.
+    Specifically 'speedbar-switch-back-to-previous-display-mode'.
+    'speedbar-switch-to-quick-buffer-display-mode'
+    'speedbar-switch-to-files-display-mode',
+    'speedbar-close', and 'speedbar-delete'.
+
+> @@ -797,18 +828,18 @@ speedbar-mode-map
+>      ;;  (define-key map [delete] 'speedbar-scroll-down)
+>  
+>      ;; Short cuts I happen to find useful.
+> -    (define-key map "r"
+> -      (lambda () (interactive)
+> -        (speedbar-change-initial-expansion-list
+> -         speedbar-previously-used-expansion-list-name)))
+> -    (define-key map "b"
+> -      (lambda () (interactive)
+> -        (speedbar-change-initial-expansion-list "quick buffers")))
+> -    (define-key map "f"
+> -      (lambda () (interactive)
+> -        (speedbar-change-initial-expansion-list "files")))
+> +    (define-key map "r" 'speedbar-switch-back-to-previous-display-mode)
+> +    (define-key map "b" 'speedbar-switch-to-quick-buffer-display-mode)
+> +    (define-key map "f" 'speedbar-switch-to-files-display-mode)
+> +
+> +    ;; Help.
+> +    (define-key map "h" 'describe-mode)
+
+Use #'?
+
+================================================================================
+Date: 2026-11-24T21:14:43+01:00
+From: Philip Kaludercic <philipk@posteo.net>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87o6beng0c.fsf@posteo.net>
+In-Reply-To: <87jym21urx.fsf@gmail.com>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <87jym21urx.fsf@gmail.com>
+
+Augusto Stoffel <arstoffel@gmail.com> writes:
+
+> On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+>
+>> To open a can of worms at the end, it might not be a bad idea to use a
+>> different name for the package.  My hunch is that some of the attention
+>> this thread has attracted is due to the name that has a negative
+>> connotation.  The approach to spelling is sound after all, it is not
+>> just a "vibe-check".  What do you think of "espell"?
+>
+> I've renamed the package to Elspell, and it's now at
+> https://github.com/astoff/elspell
+
+I think that sounds like a nice name.  The current discussion appears to
+have ran to a halt, with neither side convincing the other, I would
+argue that we should go ahead with adding the package to NonGNU ELPA.
+Still, I think we should leave a few more days (say until the end of the
+week) for final comments.
+
+================================================================================
+Date: 2026-11-24T21:41:32+01:00
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <CAN+1Hbp-7puZvxHh192aEs==W4C=NMoFWp4k-YYjYkp5kT3YFw@mail.gmail.com>
+In-Reply-To: <87o6beng0c.fsf@posteo.net>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <87jym21urx.fsf@gmail.com>
+ <87o6beng0c.fsf@posteo.net>
+
+On Tue, Nov 24, 2026 at 3:15 PM Philip Kaludercic <philipk@posteo.net>
+wrote:
+
+> Augusto Stoffel <arstoffel@gmail.com> writes:
+>
+> > On Tue, 10 Nov 2026, Philip Kaludercic wrote:
+> >
+> >> To open a can of worms at the end, it might not be a bad idea to use a
+> >> different name for the package.  My hunch is that some of the attention
+> >> this thread has attracted is due to the name that has a negative
+> >> connotation.  The approach to spelling is sound after all, it is not
+> >> just a "vibe-check".  What do you think of "espell"?
+> >
+> > I've renamed the package to Elspell, and it's now at
+> > https://github.com/astoff/elspell
+>
+> I think that sounds like a nice name.  The current discussion appears to
+> have ran to a halt, with neither side convincing the other, I would
+> argue that we should go ahead with adding the package to NonGNU ELPA.
+> Still, I think we should leave a few more days (say until the end of the
+> week) for final comments.
+
+
+Bikeshedding at a good time before the package gets added.  As the package
+is Hunspell related given its ties to the Hunspell file format, how about
+we consider "hunspell" (nobody will confuse it with Hunspell proper since
+it'll be in xELPA) or "elhunspell" or "helspell" .  (Considering the length
+of this controversial thread over these weeks, heckspell, hellspell, or
+expel.)
+
+================================================================================
+Date: 2026-11-24T22:39:30+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+Message-ID: <87h5h5lxil.fsf@gmail.com>
+In-Reply-To: <87h5hamjpz.fsf@gmail.com>
+References: <86ik1qimel.fsf@gnu.org> <86h5haim9t.fsf@gnu.org>
+ <87zev2mlyn.fsf@gmail.com> <86mrr2gy8p.fsf@gnu.org>
+ <87h5hamjpz.fsf@gmail.com>
+
+On Sat, Nov 21 2026, Helmut Eller wrote:
+
+> OK, I will try to set a commit limit.
+
+Setting a lower commit limit only helped when it was very low.
+
+I think the problem with those tests is that there are ambiguous
+interior pointers to the large vectors on the stack.  For now, I marked
+those tests as failing on 32-bit machines.  The tests should now finish,
+even if they fail.
+
+The problem is more serious on 32-bit machines and gets worse the larger
+the vectors are.  The old GC doesn't seem to have this problem, so I
+guess ambiguous interior pointers don't retain objects there; only
+ambiguous pointers to the beginning of objects.  In the long run, it
+would be nice if we could disable interior pointers for igc, but for now
+we need them.
+
+Helmut
+
+================================================================================
+Date: 2026-11-24T23:20:02+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <jwvik1lg9eq.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <874id6s2j3.fsf@mail.linkov.net>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+ <87tsl6ig9l.fsf@athena.silentflame.com>
+ <874id6s2j3.fsf@mail.linkov.net>
+
+>   (keymap-set minibuffer-local-map "C-w"
+>               (lambda ()
+>                 (interactive)
+>                 (if (region-active-p)
+             ^^^^^^^^^^^^^^
+
+I think this should be `use-region-p`.
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-24T23:56:16+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: feature/igc3 c67251c1ec6 1/2: Mark some igc-tests as failing
+ for 32-bit systems
+Message-ID: <jwv1p89g7rp.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <20261124212704.86931C1394C@vcs2.savannah.gnu.org>
+References: <179555562394.20094.5135123430806393541@vcs2.savannah.gnu.org>
+ <20261124212704.86931C1394C@vcs2.savannah.gnu.org>
+
+>     Mark some igc-tests as failing for 32-bit systems
+>     
+>     With MPS on 32-bit machines, the tests that create large vectors are
+>     problematic because apparently there are too many false positives of
+>     conservatively recognized interior pointers.  This causes the large
+>     vectors to be retained and leaves too little memory for other uses.
+
+Is this problem specific to the igc code?
+If so why?  Is it "more conservative"?
+
+Or would those tests suffer similarly with the old GC?
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-25T01:58:45+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xW1LR-00DIwH-Dj@fencepost.gnu.org>
+In-Reply-To: <86ld6mgsun.fsf@gnu.org> (message from Eli Zaretskii on Sat, 21
+ Nov 2026 16:30:08 +0200)
+References: <877bis35nn.fsf@gmail.com> <87cxs71j7m.fsf@web.de>
+ <87eccnxc1p.fsf@posteo.net> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de>
+ <86tslairs0.fsf@gnu.org> <87jym6nvm3.fsf@web.de> <86ld6mgsun.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > LLM-code is similar to that, but vastly different in scale. While the
+  > > contributor who doesn’t learn still has to type all text themselves, the
+  > > amount of text an LLM produces is only limited by the money thrown at
+  > > it. So the disbalance becomes much worse and LLM contributions can drown
+  > > out contributions written by hand while a lower and lower fraction of
+  > > reviews you write is read by people who learn from them.
+
+  > Once again, please have more faith in our abilities to detect and
+  > reject this, if and when it happens.  There's definitely no reason to
+  > fear it before it happens.
+
+We must always ask whether the contribution was generated partly
+or wholly by an LLM.  That is quick and easy.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-25T02:00:11+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xW1Mp-00DJFJ-US@fencepost.gnu.org>
+In-Reply-To: <868q2nk3tw.fsf@gnu.org> (message from Eli Zaretskii on Fri, 20
+ Nov 2026 15:52:27 +0200)
+References: <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <awAyz7ncyQxVcN8P@tuxteam.de> <86h5hbk8kj.fsf@gnu.org>
+ <awA+gcJa9CQu7hIl@tuxteam.de>
+ <86cxrzk4t0.fsf@gnu.org> <awBNvq1tc0cNv9VR@tuxteam.de>
+ <868q2nk3tw.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > Humans invented writing aeons ago -- I can enjoy some (one-way)
+  > > communication with Socrates or D.E.Knth without picking up the
+  > > phone. Yes, that's nearly magic.
+
+  > I wonder how this is relevant to the issues at hand.  I don't think it
+  > is.
+
+  > > IMHO, /this/ is what software freedoms 1 and 3 are about.
+
+  > Then let's disagree and move on.  (I think you misunderstand what
+  > those freedoms are about.  Yes, they can be interpreted as you do,
+  > given that you have these ideas, but they are not about your ideas,
+  > they are about freedom of using software to our benefits.)
+
+Eli, I agree that communication among developers is not the purpose of
+these freedoms.  The purpose of these freedoms is to make our software
+do what we want it to do.
+
+But the communication is very important to the functioning of the
+community in which we do that.  It will be quite difficult for us to
+make our programs serve us if involving LLMs impedes our communication
+about what the program does and what we do or don't want it to do.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-25T02:00:55+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xW1NX-00DJRD-EK@fencepost.gnu.org>
+In-Reply-To: <87y0anrffj.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+I think you two are exchanging terse messages in a form of back and
+forth ripostes, in a way that doesn't involve paying deep attention to
+each other.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-25T05:45:30+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+Message-ID: <jwvo6bd7cls.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <87h5h5lxil.fsf@gmail.com> (message from Helmut Eller
+ <eller.helmut@gmail.com> on Tue, 24 Nov 2026 22:39:30 +0100)
+References: <86ik1qimel.fsf@gnu.org> <86h5haim9t.fsf@gnu.org>
+ <87zev2mlyn.fsf@gmail.com> <86mrr2gy8p.fsf@gnu.org>
+ <87h5hamjpz.fsf@gmail.com> <87h5h5lxil.fsf@gmail.com>
+
+> The problem is more serious on 32-bit machines and gets worse the larger
+> the vectors are.  The old GC doesn't seem to have this problem, so I
+> guess ambiguous interior pointers don't retain objects there; only
+> ambiguous pointers to the beginning of objects.  In the long run, it
+> would be nice if we could disable interior pointers for igc, but for now
+> we need them.
+
+Our conservative scanning does retain vectors when encountering interior
+"pointers", tho not for all such pointers.  Admittedly, the condition
+when we do and when we don't is rather intricate:
+
+    /* Return VECTOR if P points within it, NULL otherwise.  */
+    
+    static struct Lisp_Vector *
+    live_vector_pointer (struct Lisp_Vector *vector, void *p)
+    {
+      void *vvector = vector;
+      char *cvector = vvector;
+      char *cp = p;
+      ptrdiff_t offset = cp - cvector;
+      return ((offset == Lisp_Vectorlike
+               || offset == 0
+               || (sizeof vector->header <= offset
+                   && offset < vector_nbytes (vector)
+                   && (! (vector->header.size & PSEUDOVECTOR_FLAG)
+                       ? (offsetof (struct Lisp_Vector, contents) <= offset
+                          && (((offset - offsetof (struct Lisp_Vector, contents))
+                               % word_size)
+                              == 0))
+                       /* For non-bool-vector pseudovectors, treat any pointer
+                          past the header as valid since it's too much of a pain
+                          to write special-case code for every pseudovector.  */
+                       : (! PSEUDOVECTOR_TYPEP (&vector->header, PVEC_BOOL_VECTOR)
+                          || offset == offsetof (struct Lisp_Bool_Vector, size)
+                          || (offsetof (struct Lisp_Bool_Vector, data) <= offset
+                              && (((offset
+                                    - offsetof (struct Lisp_Bool_Vector, data))
+                                   % sizeof (bits_word))
+                                  == 0))))))
+              ? vector : NULL);
+    }
+
+I think in practice for your test case the relevant constraint is that
+the interior pointer should be a multiple of `word_size`.  Is that more
+strict than what igc does?
+
+
+=== Stefan
+
+================================================================================
+Date: 2026-11-25T07:10:45+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <f7e04cfd-b33d-4093-9099-590e8001dae5@gmail.com>
+In-Reply-To: <jwvik1lg9eq.fsf-monnier+emacs@gnu.org>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+ <87tsl6ig9l.fsf@athena.silentflame.com> <874id6s2j3.fsf@mail.linkov.net>
+ <jwvik1lg9eq.fsf-monnier+emacs@gnu.org>
+
+On 24/11/26 23:20, Stefan Monnier wrote:
+>>    (keymap-set minibuffer-local-map "C-w"
+>>                (lambda ()
+>>                  (interactive)
+>>                  (if (region-active-p)
+>               ^^^^^^^^^^^^^^
+> 
+> I think this should be `use-region-p`.
+> 
+> 
+> === Stefan
+
++1
+That's why I try with the completion candidate and fallback to the 
+minibuffer contents.
+
+If the point is not over a completions candidate, I think it more 
+logical to copy what has been typed by the user in the minibuffer. 
+Sometimes I arrive at the variable/function without needing to be in the 
+completions buffer.
+
+/PA
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-11-25T07:55:33+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <87a4mxpfh6.fsf@web.de>
+In-Reply-To: <E1xW1NX-00DJRD-EK@fencepost.gnu.org>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <E1xW1NX-00DJRD-EK@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+> I think you two are exchanging terse messages in a form of back and
+> forth ripostes, in a way that doesn't involve paying deep attention to
+> each other.
+
+I shortened my recent messages because I think the arguments are
+exchanged.
+
+I don’t want to let an argument I see as wrong and that hasn’t been
+given in that exact form before stand without reply, because that is too
+easily treated as agreeing with it. Which I see as a dangerous direction
+because I fear that by incrementally adding dependencies on proprietary
+or SaaSS LLMs we are losing major parts of the freedom to work without
+dependency on proprietary tools, a freedom many of us worked hard to
+achieve.
+
+But I also don’t want to really re-open the discussion to run more
+circles around similar arguments as the ones exchanged already.
+
+I do not have the impression that it’s possible to reach a consensus at
+the moment, and since it should be clear due to legal risks that
+LLM-generated output currently must not be accepted into Emacs, I do not
+see the risks as sufficiently immediate to warrant rehashing the
+arguments.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-25T07:58:41+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <874id5pfby.fsf@web.de>
+In-Reply-To: <87a4mxpfh6.fsf@web.de>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <86se0xs7rp.fsf@gmail.com> <86ld6pl0kh.fsf@gnu.org>
+ <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org>
+ <87y0anrffj.fsf@web.de> <E1xW1NX-00DJRD-EK@fencepost.gnu.org>
+ <87a4mxpfh6.fsf@web.de>
+
+"Dr. Arne Babenhauserheide" <arne_bab@web.de> writes:
+
+> because I fear that by incrementally adding dependencies on proprietary
+> or SaaSS LLMs we are losing major parts of the freedom to work without
+> dependency on proprietary tools, a freedom many of us worked hard to
+> achieve.
+
+To clarify: I think that last point (worked hard to achieve) applies to
+all people in this discussion.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-25T09:40:38+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 c67251c1ec6 1/2: Mark some igc-tests as failing
+ for 32-bit systems
+Message-ID: <875wxll2wp.fsf@gmail.com>
+In-Reply-To: <jwv1p89g7rp.fsf-monnier+emacs@gnu.org>
+References: <179555562394.20094.5135123430806393541@vcs2.savannah.gnu.org>
+ <20261124212704.86931C1394C@vcs2.savannah.gnu.org>
+ <jwv1p89g7rp.fsf-monnier+emacs@gnu.org>
+
+On Tue, Nov 24 2026, Stefan Monnier wrote:
+
+>>     Mark some igc-tests as failing for 32-bit systems
+>>     
+>>     With MPS on 32-bit machines, the tests that create large vectors are
+>>     problematic because apparently there are too many false positives of
+>>     conservatively recognized interior pointers.  This causes the large
+>>     vectors to be retained and leaves too little memory for other uses.
+>
+> Is this problem specific to the igc code?
+> If so why?  Is it "more conservative"?
+>
+> Or would those tests suffer similarly with the old GC?
+
+After I fixed how used memory is computed for the old GC, the test for
+(normal) vectors also fails for the old GC.  The other tests (for
+strings, bool-vectors, and hash tables) don't fail for the old GC.
+
+It seems that allocate_string_data creates MEM_TYPE_NON_LISP blocks and
+mark_maybe_pointer doesn't seem to do anything with such blocks.  If
+that's correct, then the old GC ingores interior pointers into string
+data and it would not be surprising that the test for large strings
+passes.
+
+Hash tables use hash_table_alloc_bytes to create its vectors and those
+are also ignored by mark_maybe_pointer.
+
+For bool-vectors I'm not sure what's going on.  Maybe those are small
+enough to fail often.
+
+Helmut
+
+================================================================================
+Date: 2026-11-25T12:12:33+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <87fqwpi2qm.fsf@athena.silentflame.com>
+In-Reply-To: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+
+Pedro A. Aranda [20/Nov  8:15am +01] wrote:
+> Hi
+>
+> I would like to request that the function
+> (completion--selected-candidate) is "promoted" to
+> (completion-selected-candidate).
+>
+> The use case:
+>
+> I'm using it to put my currently selected candidate in the *Completions*
+> buffer in the kill ring for further usage.
+>
+> It's handy when hacking Elisp:
+> You can use describe-variable, function, face, you name it;
+> use the completions framework to search for your candidate;
+> and then put the selected candidate in the kill ring.
+>
+> All the magic in the attached video is a simple interactive function
+> that implements this workflow.
+
+Could you prepare a patch?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-25T12:14:21+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: feature/igc3 status
+Message-ID: <87cxrti2nm.fsf@athena.silentflame.com>
+In-Reply-To: <878q2yqtdz.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com>
+ <87a4p6angg.fsf@gmail.com> <878q2yz9rw.fsf@athena.silentflame.com>
+ <878q2yqtdz.fsf@gmail.com>
+
+Helmut Eller [12/Nov 10:41am +01] wrote:
+> On Thu, Nov 12 2026, Sean Whitton wrote:
+>
+>> Hello Helmut,
+>>
+>> Helmut Eller [24/Sep  1:38pm +02] wrote:
+>>> On Thu, Sep 24 2026, Sean Whitton wrote:
+>>>
+>>>> Hello igc devs,
+>>>>
+>>>> I was wondering how things are going, and whether you might have a
+>>>> better idea about when a merge to master might be possible, to get wider
+>>>> testing.
+>>>
+>>> Currently I'm working on bug#79200, i.e. merging the
+>>> scratch/igc/weak-undo-list branch into scratch/igc3.
+>>>
+>>> As for merging with master:
+>>>
+>>> - there is still the scratch/gc-handles branch that I never merged
+>>>   (bug#80609).  I'm not sure if I should bring that up-to-date and merge
+>>>   it separately or simply include it in the big merge.
+>>>
+>>> - I should probably look over the signal handling code again before the
+>>>   big merge.
+>>
+>> Have you had a chance to look over the signal handling code yet?
+>
+> No, not yet.  I guess I should make time for that soon.
+
+Sorry to pester but I think this might be done now?
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-25T12:22:29+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <49d3103a-2134-4663-b028-9bc8beab58e5@gmail.com>
+In-Reply-To: <87fqwpi2qm.fsf@athena.silentflame.com>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+ <87fqwpi2qm.fsf@athena.silentflame.com>
+
+Yes, why not ;-)
+
+Best, /PA
+
+On 25/11/26 12:12, Sean Whitton wrote:
+> Pedro A. Aranda [20/Nov  8:15am +01] wrote:
+>> Hi
+>>
+>> I would like to request that the function
+>> (completion--selected-candidate) is "promoted" to
+>> (completion-selected-candidate).
+>>
+>> The use case:
+>>
+>> I'm using it to put my currently selected candidate in the *Completions*
+>> buffer in the kill ring for further usage.
+>>
+>> It's handy when hacking Elisp:
+>> You can use describe-variable, function, face, you name it;
+>> use the completions framework to search for your candidate;
+>> and then put the selected candidate in the kill ring.
+>>
+>> All the magic in the attached video is a simple interactive function
+>> that implements this workflow.
+> 
+> Could you prepare a patch?
+> 
+
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-11-25T12:58:53+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <8651321d-1b46-47e6-9097-a99ab1df63e7@gmail.com>
+In-Reply-To: <87fqwpi2qm.fsf@athena.silentflame.com>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+ <87fqwpi2qm.fsf@athena.silentflame.com>
+
+First try attached :-)
+
+
+On 25/11/26 12:12, Sean Whitton wrote:
+> Pedro A. Aranda [20/Nov  8:15am +01] wrote:
+>> Hi
+>>
+>> I would like to request that the function
+>> (completion--selected-candidate) is "promoted" to
+>> (completion-selected-candidate).
+>>
+>> The use case:
+>>
+>> I'm using it to put my currently selected candidate in the *Completions*
+>> buffer in the kill ring for further usage.
+>>
+>> It's handy when hacking Elisp:
+>> You can use describe-variable, function, face, you name it;
+>> use the completions framework to search for your candidate;
+>> and then put the selected candidate in the kill ring.
+>>
+>> All the magic in the attached video is a simple interactive function
+>> that implements this workflow.
+> 
+> Could you prepare a patch?
+> 
+
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-11-25T13:16:01+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: igc-tests-thread-incremental-gc hangs in MinGW build
+Message-ID: <86ld6hds3i.fsf@gnu.org>
+In-Reply-To: <87h5h5lxil.fsf@gmail.com> (message from Helmut Eller on Tue, 24
+ Nov 2026 22:39:30 +0100)
+References: <86ik1qimel.fsf@gnu.org> <86h5haim9t.fsf@gnu.org>
+ <87zev2mlyn.fsf@gmail.com> <86mrr2gy8p.fsf@gnu.org>
+ <87h5hamjpz.fsf@gmail.com> <87h5h5lxil.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: emacs-devel@gnu.org
+> Date: Tue, 24 Nov 2026 22:39:30 +0100
+> 
+> On Sat, Nov 21 2026, Helmut Eller wrote:
+> 
+> > OK, I will try to set a commit limit.
+> 
+> Setting a lower commit limit only helped when it was very low.
+> 
+> I think the problem with those tests is that there are ambiguous
+> interior pointers to the large vectors on the stack.  For now, I marked
+> those tests as failing on 32-bit machines.  The tests should now finish,
+> even if they fail.
+
+Thanks.  I hope this could be improved in the future.
+
+> The problem is more serious on 32-bit machines and gets worse the larger
+> the vectors are.  The old GC doesn't seem to have this problem, so I
+> guess ambiguous interior pointers don't retain objects there; only
+> ambiguous pointers to the beginning of objects.  In the long run, it
+> would be nice if we could disable interior pointers for igc, but for now
+> we need them.
+
+================================================================================
+Date: 2026-11-25T13:31:16+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86ik1ldre3.fsf@gnu.org>
+In-Reply-To: <E1xW1LR-00DIwH-Dj@fencepost.gnu.org> (message from Richard
+ Stallman on Tue, 24 Nov 2026 19:58:45 -0500)
+References: <877bis35nn.fsf@gmail.com> <87cxs71j7m.fsf@web.de>
+ <87eccnxc1p.fsf@posteo.net> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de>
+ <86tslairs0.fsf@gnu.org> <87jym6nvm3.fsf@web.de> <86ld6mgsun.fsf@gnu.org>
+ <E1xW1LR-00DIwH-Dj@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: arne_bab@web.de, joel.reicher@gmail.com, philipk@posteo.net,
+> 	shipmints@gmail.com, arstoffel@gmail.com, emacs-devel@gnu.org
+> Date: Tue, 24 Nov 2026 19:58:45 -0500
+> 
+>   > > LLM-code is similar to that, but vastly different in scale. While the
+>   > > contributor who doesn’t learn still has to type all text themselves, the
+>   > > amount of text an LLM produces is only limited by the money thrown at
+>   > > it. So the disbalance becomes much worse and LLM contributions can drown
+>   > > out contributions written by hand while a lower and lower fraction of
+>   > > reviews you write is read by people who learn from them.
+> 
+>   > Once again, please have more faith in our abilities to detect and
+>   > reject this, if and when it happens.  There's definitely no reason to
+>   > fear it before it happens.
+> 
+> We must always ask whether the contribution was generated partly
+> or wholly by an LLM.  That is quick and easy.
+
+We already do that.  Also, experience taught me that detecting code or
+text produced by LLM is not very hard.
+
+================================================================================
+Date: 2026-11-25T13:39:13+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86h5h5dr0u.fsf@gnu.org>
+In-Reply-To: <E1xW1Mp-00DJFJ-US@fencepost.gnu.org> (message from Richard
+ Stallman on Tue, 24 Nov 2026 20:00:11 -0500)
+References: <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <awAyz7ncyQxVcN8P@tuxteam.de> <86h5hbk8kj.fsf@gnu.org>
+ <awA+gcJa9CQu7hIl@tuxteam.de>
+ <86cxrzk4t0.fsf@gnu.org> <awBNvq1tc0cNv9VR@tuxteam.de>
+ <868q2nk3tw.fsf@gnu.org> <E1xW1Mp-00DJFJ-US@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: tomas@tuxteam.de, arne_bab@web.de, joel.reicher@gmail.com,
+> 	philipk@posteo.net, shipmints@gmail.com, arstoffel@gmail.com,
+> 	emacs-devel@gnu.org
+> Date: Tue, 24 Nov 2026 20:00:11 -0500
+> 
+>   > > Humans invented writing aeons ago -- I can enjoy some (one-way)
+>   > > communication with Socrates or D.E.Knth without picking up the
+>   > > phone. Yes, that's nearly magic.
+> 
+>   > I wonder how this is relevant to the issues at hand.  I don't think it
+>   > is.
+> 
+>   > > IMHO, /this/ is what software freedoms 1 and 3 are about.
+> 
+>   > Then let's disagree and move on.  (I think you misunderstand what
+>   > those freedoms are about.  Yes, they can be interpreted as you do,
+>   > given that you have these ideas, but they are not about your ideas,
+>   > they are about freedom of using software to our benefits.)
+> 
+> Eli, I agree that communication among developers is not the purpose of
+> these freedoms.  The purpose of these freedoms is to make our software
+> do what we want it to do.
+> 
+> But the communication is very important to the functioning of the
+> community in which we do that.  It will be quite difficult for us to
+> make our programs serve us if involving LLMs impedes our communication
+> about what the program does and what we do or don't want it to do.
+
+No disagreement here.  But please note the crucial difference between
+what you wrote (to which I agree, and I hope 10+ years of my being
+Emacs maintainer prove that my conduct is according to that) and what
+Tomas wrote.  You are talking about communications within the
+community (assuming, I believe, verbal communications such as this
+email exchange).  Whereas Tomas said that he "communicates" via the
+code that he and others write, that such communications are _the_
+reason why we develop Emacs around here, and that those freedoms are
+about this aspect of developing code.  I'd say it's a far cry from
+what you and I are saying.
+
+================================================================================
+Date: 2026-11-25T14:30:46+01:00
+From: Sean Whitton <spwhitton@spwhitton.name>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <877bi1hwc9.fsf@athena.silentflame.com>
+In-Reply-To: <8651321d-1b46-47e6-9097-a99ab1df63e7@gmail.com>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+ <87fqwpi2qm.fsf@athena.silentflame.com>
+ <8651321d-1b46-47e6-9097-a99ab1df63e7@gmail.com>
+
+Pedro A. Aranda [25/Nov 12:58pm +01] wrote:
+> First try attached :-)
+
+Ah -- I am not sure we have consensus to bind C-w for this, I meant just
+the promotion of the function to public, with appropriate documentation
+updates.
+
+-- 
+Sean Whitton
+
+================================================================================
+Date: 2026-11-25T14:31:44+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <03ebc013-c34d-43f1-9728-d1ea21f26ad1@gutov.dev>
+In-Reply-To: <86ld7021f6.fsf@gnu.org>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <20260902102306.B61B0C0DA35@vcs2.savannah.gnu.org>
+ <bf8fc82a-38a8-4db6-be1e-8c0279bad37f@gutov.dev> <86h5k66hbd.fsf@gnu.org>
+ <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev> <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev> <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev> <86fqzd1lz8.fsf@gnu.org>
+ <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org> <86ld94ys2e.fsf@gnu.org>
+ <jwvzexkhvl3.fsf-monnier+emacs@gnu.org> <86ecewymbl.fsf@gnu.org>
+ <jwv1pavu5y1.fsf-monnier+emacs@gnu.org> <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev> <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev> <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev> <86cxsqtk1y.fsf@gnu.org>
+ <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev> <86tslo22z6.fsf@gnu.org>
+ <218e62c4-662a-4fac-9d19-33b173d448dc@gutov.dev> <86ld7021f6.fsf@gnu.org>
+
+On 10/11/2026 16:42, Eli Zaretskii wrote:
+
+>>>> There are a few rough edges:
+>>>> - Unclear if this should work with every xref command. That would mean
+>>>> more potential clashes with others' prefix effects, and a need to
+>>>> document this somewhere in a common place. OT2H the benefits are there too.
+>>>
+>>> I don't think this should go beyond the particular command we are
+>>> discussing.  As you point out, there are too many potential issues,
+>>> and the need is not clear at all.
+>>
+>> So far you've mentioned two commands, I think. M-. as the main one but
+>> also xref-find-by-kind?
+> 
+> No, I meant only xref-find-by-kind.  M-. is less of a problem, IME.
+> So if the solution works only for xref-find-by-kind, I'm okay with
+> that.
+
+Sounds like a vote of confidence for the new command (that's great!), 
+but you described the issue as general in your workflow. So I'm 
+surprised a little.
+
+We can try it out in xref-find-by-kind, but if we only stop at that, I 
+think the UI might look irregular to our users: the "xref find" commands 
+share some similar behaviors in this area.
+
+>>>> - No support for defaulting to the symbol at point (it uses whatever
+>>>> symbol is in the previous buffer).
+>>>
+>>> Hmm... why is that? why can't you use the symbol at point as the
+>>> default?  Is this a technical problem or a deeper problem?
+>>
+>> Just a technical one - I've looked at which changes it will require in
+>> xref-read-identifier, and the results seemed pretty ugly. But there is
+>> no hard barrier.
+> 
+> Can you elaborate about the difficulties?
+
+xref-read-identifier calls several different methods of the xref 
+backend. And it starts with xref-find-backend itself.
+
+It would seem natural to wrap the body in something like 
+xref--with-origin-buffer like I have done indirectly now, but then in 
+the middle of it we have the 'xref-backend-identifier-at-point' call, 
+which ideally would be done at the current location (not the previous one).
+
+Although that might be moot, with e.g. Eglot using the current server in 
+xref-backend-identifier-at-point, which won't be available in an unknown 
+buffer. Simpler backends could do it, though, like elisp/etags.
+
+Even if we skip this, looks like any affected command will need to get 
+wrapped in xref--with-origin-buffer like in the attached patch - both 
+the interactive form and the body. That's kind of messy.
+
+The patch should work, please test.
+
+If we do want this feature across all related commands, think I have an 
+idea though...
+
+================================================================================
+Date: 2026-11-25T15:19:31+01:00
+From: Jean Louis <bugs@gnu.support>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <5c5e2ec7cf8468d439c23fc257f9fe9b@gnu.support>
+In-Reply-To: <874id5pfby.fsf@web.de>
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com> <867bi9krv4.fsf@gnu.org>
+ <861p8haw7h.fsf@gmail.com> <86zev5jamu.fsf@gnu.org>
+ <864idca2zs.fsf@gmail.com> <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <E1xW1NX-00DJRD-EK@fencepost.gnu.org> <87a4mxpfh6.fsf@web.de>
+ <874id5pfby.fsf@web.de>
+
+On 2026-11-25 09:58, Dr. Arne Babenhauserheide wrote:
+>> because I fear that by incrementally adding dependencies on 
+>> proprietary
+>> or SaaSS LLMs we are losing major parts of the freedom to work without
+>> dependency on proprietary tools, a freedom many of us worked hard to
+>> achieve.
+
+I would add, from personal experience, that any Emacs Lisp problem can 
+be solved with locally running models published under a free license, 
+such as Qwen 3.8 27B or Qwen Flash Next 125B. These run very fast with 
+16–24 GB of VRAM.
+
+Code generated by a SaaSS LLM can also be understood and improved with 
+locally running models.
+
+My point is this: for anyone using a SaaSS LLM, there is also a free LLM 
+that can run locally and do the same job for Emacs Lisp. The user can 
+improve it further by providing an Emacs Lisp documentation MCP server, 
+so the model can understand how each function works.
+
+Thus the mentioned dependency on SaaSS LLM is for me not real!
+
+-- 
+Jean Louis
+
+================================================================================
+Date: 2026-11-25T15:38:37+01:00
+From: Vincenzo Pupillo <v.pupillo@gmail.com>
+Subject: Re: speedbar
+Message-ID: <weJR_itXRnqXD1T_k0naOw@gmail.com>
+In-Reply-To: <jwvbj7eggks.fsf-monnier+emacs@gnu.org>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <huU74fwgRlC71ZOWHn1H1A@gmail.com> <jwvbj7eggks.fsf-monnier+emacs@gnu.org>
+
+Ciao Stefan, thank you. 
+I've been using the 'speedbar' for quite some time, especially 'sr-speedbar'. 
+That's why I thought it would be better to modify the one that's already in 
+Emacs directly. Attached is the new version of the patches. 
+
+Vincenzo
+
+In data martedì 24 novembre 2026 21:09:40 Ora standard dell’Europa centrale, 
+Stefan Monnier ha scritto:
+> Hi Vincenzo,
+> 
+> > attached is the patch. Currently, 'describe-mode' doesn't display
+> > dynamically generated keybindings (for example, 'GUD' has its own as
+> > well), but at least it shows the same thing for both 'speedbar-frame' and
+> > 'speedbar-window'.
+> Thanks.  That looks like a good improvement to the code.
+> I don't myself have much experience using Speedbar, so I'm hesitant to
+> install it because I'm not sure if it might affect a corner case
+> behavior of which I'm not aware, but maybe we should just go ahead and
+> fix any problem that show up, if/when they show up?
+> 
+> In the mean time, I suggest you address Michael's comments, and I have
+> a few trivial nitpicks below as well.
+> 
+> 
+> === Stefan
+> 
+> > 'describe-mode' displays the same key bindings for ‘speedbar-frame’ and
+> > ‘speedbar-window’  except for the dynamic ones, such as those for the
+> > various display modes.
+> 
+> It's not completely unambiguous here whether what you write describes
+> the state before your change or after your change.  Please try and
+> rephrase to clarify what the patch changes and why.
+> 
+> > * etc/NEWS: Announce the new functions.
+> > * lisp/speedbar
+> > (speedbar-switch-back-to-previous-display-mode): New function.
+> > (speedbar-switch-to-quick-buffer-display-mode): New function.
+> > (speedbar-switch-to-files-display-mode): New function.
+> > (speedbar-close): New function.
+> > (speedbar-delete): New function.
+> 
+> Here also you can use the work "command" which is more precise than
+> "function".
+> Also you can collapse this down to:
+> 
+>     (speedbar-switch-back-to-previous-display-mode)
+>     (speedbar-switch-to-quick-buffer-display-mode)
+>     (speedbar-switch-to-files-display-mode)
+>     (speedbar-close, speedbar-delete): New commands.
+> 
+> Tho, I think I'd prefer
+> 
+>     (speedbar-switch-back-to-previous-display-mode)
+>     (speedbar-switch-to-quick-buffer-display-mode)
+>     (speedbar-switch-to-files-display-mode): New commands, extracted
+>     from 'speedbar-mode-map'.
+>     (speedbar-close, speedbar-delete): New commands.
+> 
+> > (speedbar-easymenu-definition-trailer): Now it's a variable; a function
+> > is no longer needed.
+> 
+> Please try and write text that describes a change rather than
+> a state.  E.g. "Make it a variable again instead of a function".
+> 
+> > (speedbar-reconfigure-keymaps): The function is now a bit simpler.
+> 
+> Same here.  E.g. "Simplify".
+> 
+> Also, the change removes a call to `dframe-update-keymap`
+> but no part of the commit message explains why, so someone could think
+> that it was an unintentional change, so next to "Simplify" please
+> mention the replacement of `dframe-update-keymap` with
+> the new q/Q bindings in the mode map.
+> 
+> > -*** 'speedbar-easymenu-definition-trailer' is now a function.
+> > +*** 'speedbar-easymenu-definition-trailer' is now a variable.
+> 
+> Don't the above two just cancel each other?
+> 
+> > +*** New function 'speedbar-switch-back-to-previous-display-mode'.
+> > +Switch back to the previous display mode.  Replace a lambda in
+> > +'speedbar-mode-map'.
+> > +
+> > +*** New function 'speedbar-switch-to-quick-buffer-display-mode'.
+> > +Switch into Quick Buffers display mode.  Replace a lambda in
+> > +'speedbar-mode-map'.
+> > +
+> > +*** New function 'speedbar-switch-to-files-display-mode'.
+> > +Switch back to the Files display mode.  Replace a lambda in
+> > +'speedbar-mode-map'.
+> > +
+> > +*** New function 'speedbar-close'.
+> > +Close the 'speedbar' window or frame.
+> > +
+> > +*** New funcion 'speedbar-delete'.
+> > +Delete the 'speedbar-frame' or close the 'speedbar-window'.
+> 
+> The NEWS files already tends to be "too long", so I think it's best to
+> try and not get into so much details.  I think I'd collapse this down to
+> something like:
+> 
+>     *** New named commands for a few keybindings.
+>     Specifically 'speedbar-switch-back-to-previous-display-mode'.
+>     'speedbar-switch-to-quick-buffer-display-mode'
+>     'speedbar-switch-to-files-display-mode',
+>     'speedbar-close', and 'speedbar-delete'.
+> 
+> > @@ -797,18 +828,18 @@ speedbar-mode-map
+> > 
+> >      ;;  (define-key map [delete] 'speedbar-scroll-down)
+> >      
+> >      ;; Short cuts I happen to find useful.
+> > 
+> > -    (define-key map "r"
+> > -      (lambda () (interactive)
+> > -        (speedbar-change-initial-expansion-list
+> > -         speedbar-previously-used-expansion-list-name)))
+> > -    (define-key map "b"
+> > -      (lambda () (interactive)
+> > -        (speedbar-change-initial-expansion-list "quick buffers")))
+> > -    (define-key map "f"
+> > -      (lambda () (interactive)
+> > -        (speedbar-change-initial-expansion-list "files")))
+> > +    (define-key map "r" 'speedbar-switch-back-to-previous-display-mode)
+> > +    (define-key map "b" 'speedbar-switch-to-quick-buffer-display-mode)
+> > +    (define-key map "f" 'speedbar-switch-to-files-display-mode)
+> > +
+> > +    ;; Help.
+> > +    (define-key map "h" 'describe-mode)
+> 
+> Use #'?
+
+================================================================================
+Date: 2026-11-25T16:21:18+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <awb87uTuqif+V37i@tuxteam.de>
+In-Reply-To: <86h5h5dr0u.fsf@gnu.org>
+References: <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de>
+ <awAyz7ncyQxVcN8P@tuxteam.de> <86h5hbk8kj.fsf@gnu.org>
+ <awA+gcJa9CQu7hIl@tuxteam.de> <86cxrzk4t0.fsf@gnu.org>
+ <awBNvq1tc0cNv9VR@tuxteam.de> <868q2nk3tw.fsf@gnu.org>
+ <E1xW1Mp-00DJFJ-US@fencepost.gnu.org> <86h5h5dr0u.fsf@gnu.org>
+
+On Wed, Nov 25, 2026 at 02:39:13PM +0200, Eli Zaretskii wrote:
+
+[...]
+
+> No disagreement here.  But please note the crucial difference between
+> what you wrote (to which I agree, and I hope 10+ years of my being
+> Emacs maintainer prove that my conduct is according to that) and what
+> Tomas wrote.  You are talking about communications within the
+> community (assuming, I believe, verbal communications such as this
+> email exchange).  Whereas Tomas said that he "communicates" via the
+> code that he and others write, that such communications are _the_
+> reason why we develop Emacs around here, and that those freedoms are
+> about this aspect of developing code.  I'd say it's a far cry from
+> what you and I are saying.
+
+Roughly agree (except the "_the_" part, I'd rather qualify it as "_a_").
+
+Cheers & thanks
+-- 
+tomás
+
+================================================================================
+Date: 2026-11-25T17:16:51+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: Re: FR: Promote (completion--selected-candidate)
+Message-ID: <abbf3c02-7e92-40c9-8413-afec6a530e4f@gmail.com>
+In-Reply-To: <877bi1hwc9.fsf@athena.silentflame.com>
+References: <888723e9-f2a7-4b52-ac6d-6747b3a76b91@gmail.com>
+ <87fqwpi2qm.fsf@athena.silentflame.com>
+ <8651321d-1b46-47e6-9097-a99ab1df63e7@gmail.com>
+ <877bi1hwc9.fsf@athena.silentflame.com>
+
+OK, so we were talking about this...
+
+Best, /PA
+
+On 25/11/26 14:30, Sean Whitton wrote:
+> Pedro A. Aranda [25/Nov 12:58pm +01] wrote:
+>> First try attached :-)
+> 
+> Ah -- I am not sure we have consensus to bind C-w for this, I meant just
+> the promotion of the function to public, with appropriate documentation
+> updates.
+> 
+
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
