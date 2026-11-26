@@ -104397,3 +104397,2159 @@ ZmZlci12aXNpYmxlLWNvbXBsZXRpb25zLS1hbHdheXMtYmluZAotLSAKMi41My4wCgo=
 --------------PbdJqjh086bmVwYa4YTGj9wM--
 
 
+From MAILER-DAEMON Wed Nov 25 12:42:07 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWH0Q-0007yO-Pd
+	for mharc-emacs-devel@gnu.org; Wed, 25 Nov 2026 12:42:06 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eller.helmut@gmail.com>)
+ id 1xWH0N-0007xx-9c
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 12:42:04 -0500
+Received: from mail-wm1-x32e.google.com ([2a00:1450:4864:20::32e])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <eller.helmut@gmail.com>)
+ id 1xWH0L-0000n7-OM
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 12:42:02 -0500
+Received: by mail-wm1-x32e.google.com with SMTP id
+ 5b1f17b1804b1-4bb64ef5a14so61910115e9.1
+ for <emacs-devel@gnu.org>; Wed, 25 Nov 2026 09:42:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1795628520; x=1796233320; darn=gnu.org;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+ :reply-to:content-type;
+ bh=G85DZo0YeMtaiDWTdkpyZWbINwROqck30PlX0z9PqC8=;
+ b=zd0TgrvBzcS8tpLEqLB2/YB9MnXdsk6KShX8iKzZ7mWwu/TL0RxDkw8jDIL6DmG3eh
+ KkIdAkydQ3w2EBFiukgcpaHxiHIA2hv84TD7bI4cXPfYShigs8myL8OovyGxhI/Fnan1
+ +tPwF6J81uFGAa7DShR9nQN8k0IqdOk9BSR693Zss+WKegFDZB572m3v9qbYAVRICe/4
+ FGZc9ak97za7YteWfjAPTwu+x/ZhRhg5/wrBCaJJpulGIixdbBVYKaWuL37QGHyPsl7q
+ oXAyn6GFlZHGMeIuI57XqQqvP04xpSN3m27Z2v9cmj3XmMAK3O9lu11f2/Ui/3SBdpHb
+ KEMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1795628520; x=1796233320;
+ h=content-type:mime-version:user-agent:message-id:date:references
+ :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=G85DZo0YeMtaiDWTdkpyZWbINwROqck30PlX0z9PqC8=;
+ b=XuAjCeOW37ttm2sCYGr9dK+Kz1bxcqab8uwMBc12tZuG+lUna/Fn9gKKFQgEmPKcQq
+ 2+yug3PWzmoks5sDTBeqHzRaZ8Ruk37LRzxrrfzSt/EDgrCr0bFxD/PW8k9ae9Esz9//
+ j5wV7b7iX2Ih96ACoZIVe5jgR/FhnLzxdttF4zyN17zPxdzxs/cwvW+XQjiNCaCjMNja
+ oBt/Xf/hVs/eJ9QB7BdSgFR0RvW9ajfdTOW5W9WStyeeRZdAW2LzKJuFX6qnoQShFoqE
+ AChjcany/SMG666yqQnWJw6Pe752x1keqTOL7Y0Avr05jRsMdlSEdOmpMyxR8eh4W1YF
+ 9CTg==
+X-Forwarded-Encrypted: i=1;
+ AL+hErENi9494qfyK2VR17h9RKZQwce1Ng/sJ8wi7/7RuVLG3XxUYr5zwTWPwpMcmtZLydGjJQTKLtRQZoEA0A==@gnu.org
+X-Gm-Message-State: APuU4Z+0NbGkviP4xy7360Ax7gi1KKM6y2ed/BXJWcl2lymSPiHmHAG2
+ M9jlGMAbRPxjyQCO/W+hiNW0M8dTmvzTYNNinwcLJM8+0O3hRB0YAFUmwPb/yA==
+X-Gm-Gg: AZFdTZc0EP1eJtybgicdM9Y2kqGNTdsQRJLoeoldLznIGSFoK/XNe0F14mtXG/iok64
+ 2fiXv3la9d0i4ZJO/irR+/Syv5cGGBvic/B7f7hThaqtMVCp0urE2wNO5l11kwAyhD4UkIHbQ3H
+ 7TNe9NImQNBoso3AhbVu9P31k+Yb8rTzzOC46kzlfcYn4y7cXtQzTlaX54tJAQm6xYl05uSry6g
+ rVMZiSNeWdQ19oAhL+DDytH9TePMN0zULOIwNiJHST5jyyk12s0IVzi5ow+S02SbTMnwhX1uHfY
+ 5npBH93R2/vOofxL4nfT00gkIAY4tqtosADkKsSM06A1WOkK3KAeLOy65LsII7v4dQU9OEUXQYl
+ 0CdETezNcBTTCJJCB+AIQZHdx55dSguNlf65hpTdYvLDq8Gf+JUREO831MVuE3gXR495IkN/p8O
+ CSn0nORQxHC3OA1FoQKOI8Q+iqsSzJ31HsdyQIQoZlX5OmPY1G0kHNdxKryjY27KEFIPHvkYch8
+ P729jcpQO5M9eMFzSRvPlmhL7AUU5NLEolCAblpz3bqTTU+4YNJTGZpRfsVYz1h1s/1Xzre4dJ7
+ +QZHy+vrh/tfjITTeIJNCHErgULZAI2UMeh40z3op8BQ3sFOsOkuuwYz9gl8
+X-Received: by 2002:a05:600c:638f:b0:4bb:7581:2bb9 with SMTP id
+ 5b1f17b1804b1-4bb8892692dmr334743595e9.22.1795628519868; 
+ Wed, 25 Nov 2026 09:41:59 -0800 (PST)
+Received: from hessra (dial-189137.pool.broadband44.net. [212.46.189.137])
+ by smtp.gmail.com with ESMTPSA id
+ ffacd0b85a97d-4ab6ae2dd55sm34407835f8f.30.2026.11.25.09.41.59
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Wed, 25 Nov 2026 09:41:59 -0800 (PST)
+From: Helmut Eller <eller.helmut@gmail.com>
+To: Sean Whitton <spwhitton@spwhitton.name>
+Cc: Pip Cet <pipcet@protonmail.com>,  emacs-devel@gnu.org
+Subject: Re: feature/igc3 status
+In-Reply-To: <87cxrti2nm.fsf@athena.silentflame.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com>
+Date: Wed, 25 Nov 2026 18:41:58 +0100
+Message-ID: <87y0agkduh.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=2a00:1450:4864:20::32e;
+ envelope-from=eller.helmut@gmail.com; helo=mail-wm1-x32e.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 25 Nov 2026 17:42:05 -0000
+
+On Wed, Nov 25 2026, Sean Whitton wrote:
+
+> Helmut Eller [12/Nov 10:41am +01] wrote:
+>> On Thu, Nov 12 2026, Sean Whitton wrote:
+>>
+>>> Hello Helmut,
+>>>
+>>> Helmut Eller [24/Sep  1:38pm +02] wrote:
+>>>> On Thu, Sep 24 2026, Sean Whitton wrote:
+>>>>
+>>>>> Hello igc devs,
+>>>>>
+>>>>> I was wondering how things are going, and whether you might have a
+>>>>> better idea about when a merge to master might be possible, to get wider
+>>>>> testing.
+>>>>
+>>>> Currently I'm working on bug#79200, i.e. merging the
+>>>> scratch/igc/weak-undo-list branch into scratch/igc3.
+>>>>
+>>>> As for merging with master:
+>>>>
+>>>> - there is still the scratch/gc-handles branch that I never merged
+>>>>   (bug#80609).  I'm not sure if I should bring that up-to-date and merge
+>>>>   it separately or simply include it in the big merge.
+>>>>
+>>>> - I should probably look over the signal handling code again before the
+>>>>   big merge.
+>>>
+>>> Have you had a chance to look over the signal handling code yet?
+>>
+>> No, not yet.  I guess I should make time for that soon.
+>
+> Sorry to pester but I think this might be done now?
+
+Right, the signal handling part is done now.  Next, I will try to merge
+master into feature/igc3.
+
+Then ask if it is good enough for the big merge?
+
+Helmut
+
+
+From MAILER-DAEMON Wed Nov 25 12:47:42 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWH5p-0001fY-HT
+	for mharc-emacs-devel@gnu.org; Wed, 25 Nov 2026 12:47:42 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xWH5m-0001ez-AP
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 12:47:38 -0500
+Received: from mail-vs1-xe30.google.com ([2607:f8b0:4864:20::e30])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <shipmints@gmail.com>)
+ id 1xWH5i-0001FR-RW
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 12:47:37 -0500
+Received: by mail-vs1-xe30.google.com with SMTP id
+ ada2fe7eead31-7d2d95c5d81so4224311137.0
+ for <emacs-devel@gnu.org>; Wed, 25 Nov 2026 09:47:34 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795628853; cv=none;
+ d=google.com; s=arc-20260327;
+ b=VrLdZgjYxN2hpCr9SUkMevllSoMapfNU5I11ZfXjNQ7ra0ilRW6z/3Out1RY1huyf/
+ p1yEL5YISzByuQvjXZWRQ8cR1eIVu2rBgOWD8UFumUHgmjvdtIFvuCGSLB3CHoBI6tLc
+ F2+59mb8zWwNo+UQbRMv80CRK1q/lZLcDlprVOT+F5SZ9vP13DYLTGfxPQRME892/kDM
+ F9bNjfriZKAWxV7YXqfTimZv/TTICoHXeL1135yHqKRCzCIPywR4Elzvsqrb402TIWOJ
+ jwvet1ZxKgrSzU/FymbnVCwOJjLFbrYmZKytyE81KyVgEZ1yEFE/gYreAIMHg/bZdetf
+ roEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20260327; 
+ h=cc:to:subject:message-id:date:from:in-reply-to:references
+ :mime-version:dkim-signature;
+ bh=T+zxcKxlhb/YZ7K8jA5h0NAa1OUeEuhgTCBtMOlb2gQ=;
+ fh=kcTKMW8/bGn/INIIb5VxOwHer0R7+ECR1MqTs4C6l5k=;
+ b=sh4qLoTGCTA/2kVB0bmhJx/VQBHE39yq/SVNGzZC7+EVMdSOYYYDxJGY1UPiDcHpv+
+ 5DPyuHErsoffnrmVd9YzlRkWjfWtrt+zLvDy7JaiMP+ZsmVhMI1lTkR5N1nUvmWheI38
+ sAGz6i+xW48DDNqW3q3Rdus9aR53mSizFuo8MUttEER8MLbY2NB02LbqASX8irndxRII
+ /8vceAFedMbxG3Jq0MZLtul/pRfeEgehJAHqq6OpD7A9etiH+2hxGNuCkmLrl2qYX+vV
+ PEi14vCN1KNXUi717jvPbuobTGS2nl+2FXf+Raz8RoOwphTgUbTndwrI9Z5xDVG8lhRC
+ HDPw==; darn=gnu.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1795628853; x=1796233653; darn=gnu.org;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+ :content-type; bh=T+zxcKxlhb/YZ7K8jA5h0NAa1OUeEuhgTCBtMOlb2gQ=;
+ b=T7Ai8XsfzPciofo/55dzsTahs1mwXC4QFwvYbDajl6uzxkDlV72QA1mO1jT0X4tdwh
+ XJzK80poP3e6YDSuetLs1FwDM5uEN+StTB9FUTPvAisQPpqmQnHnKnq694mpYr2PfljZ
+ yZb4TBeoxBCxmOvAf0rg/Vz8dFwzpWJC7vpN1BWzsk60ufF+mSoUCv7u7mfD4+SJ3yDr
+ u+dA439fiP6WndhAgKVX5/ddqYEq/V6zjSA/AGcH5qLEXb1DSjlQujWTjDQtugNH9nXd
+ 3XLz6fyUatXEGtOSJ5ZB8p13FDj12Bo/p4t2ENnKR7y9is8MpxsULIvD1s+5umMP8BGa
+ QlCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1795628853; x=1796233653;
+ h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+ :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+ :subject:date:message-id:reply-to:content-type;
+ bh=T+zxcKxlhb/YZ7K8jA5h0NAa1OUeEuhgTCBtMOlb2gQ=;
+ b=D9x31w4bRfvnx+4emekGdr1KqkBTmaFk4o6cLrbcbtfvMNqxCsSz1gqOBTG97GadNC
+ R9ebjW/239pRQKKFOh+zTfbQ7plvMPmoKkAzqYHd48sre8rIugTZcf9m3jA/lejfYvzH
+ V0TRYMqhSOMooJDBGbB8dqtbED+yxeZeaHytgL0WNX1tjkZaRrOiBO0ymhTlEqywZsvU
+ 6FePHL4R2An73pHHQPEPwkrIQplhEgkKk+BBUV4JDM3Kd15kxq2FRZRAG8vDQZ9t1bPz
+ djNxdQYaX2S2iZzyHDi4UIyiKcRGtFSX5V8hXUkxcu1FY/YK4b1cCtAfqAwHHygvAr65
+ iEvg==
+X-Forwarded-Encrypted: i=1;
+ AL+hErEoH9p3bc4yhheIbGAY7d2qxRTxU2vNFEEMPuCV03xV1afbhlTYxK4dB+aj077oxtrTZEUbmvM132f3Ew==@gnu.org
+X-Gm-Message-State: APuU4Z+SrLxjgZhJxjAWTy+errjZt0zMWKruFj3FktHtbT0fdrwMg49j
+ BWchglkgTT8VWSYhlHB7CuHlrekZySoN06idPgD0TXj5zRNdHhNh0p3ABMDDPBlpCiNsC7ohi4i
+ Q90K04xGDzBvsKZV2gFlI57h09f8HpVs=
+X-Gm-Gg: AZFdTZeb2C10chU5WL6LCMK+WnPIXbPtV0895ugxkG4UZDHjSfYnuF3vsIbP80lGwlh
+ aQcddnxZbDZv6xMsetMjMYiJklZ3CvB6HSvwolZw1ELMHnKUoY9LtuWWuqTK25wdPtqHnLDmz3a
+ ZFsNuZ/GWsCFHNbH9x6HdPa2ixfVwdFQ1i8ZVgNdP/tHiFgSG6PY0xqap2GDPFc01YIzUSi4Kal
+ 6rQMrciGYYlVebu1ZUxwhLWnpT5BFr3vBmyTn7+Iibi17XkjharS3oEKMDO5BY44cAB7c/0BbKL
+ w06H5FdGrZF0XKQzwK4xVOrFRR27irWrvEiEYnxNZ//N+bcGdNO1wa2Z45it9X+e7nqSAGJee6m
+ 9YlFBf4NXTku+mJPoUqEjTJXV0tlhS5/TcTyfDezK0xz8K7V9sbawCscsw+OVYu9/gwBTB7N9FW
+ tgXGeX2W522jrGJblymEbK/tD0VISRc54u3Y8zuFfmXfauS7PMpM4PWfok5auCSerJiKFif1QXt
+ V5Z6eWhN5+doULvz6uqEIWhw42EMeg+9eEA4cka/FUHOA6VnZScX7RRmEr+1Q==
+X-Received: by 2002:a05:6102:1489:b0:7cb:cfcf:3d01 with SMTP id
+ ada2fe7eead31-7d6dba0f7f0mr7963779137.33.1795628853365; Wed, 25 Nov 2026
+ 09:47:33 -0800 (PST)
+MIME-Version: 1.0
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+In-Reply-To: <87y0agkduh.fsf@gmail.com>
+From: =?UTF-8?Q?St=C3=A9phane_Marks?= <shipmints@gmail.com>
+Date: Wed, 25 Nov 2026 12:47:22 -0500
+X-Gm-Features: Aa3M54qhjOVGMcyAi93kH32KPRuvYePcLinkIWtZF2LxvDrsg9JObCETGGfsGsI
+Message-ID: <CAN+1Hbo7AvQ7SuLqDNzzPfMmFLg35TuiTV1G28E4dYadbLqXjw@mail.gmail.com>
+Subject: Re: feature/igc3 status
+To: Helmut Eller <eller.helmut@gmail.com>
+Cc: Sean Whitton <spwhitton@spwhitton.name>, Pip Cet <pipcet@protonmail.com>,
+ emacs-devel@gnu.org
+Content-Type: multipart/alternative; boundary="000000000000f4111c06611d6b55"
+Received-SPF: pass client-ip=2607:f8b0:4864:20::e30;
+ envelope-from=shipmints@gmail.com; helo=mail-vs1-xe30.google.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ HTML_MESSAGE=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 25 Nov 2026 17:47:38 -0000
+
+--000000000000f4111c06611d6b55
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Nov 25, 2026 at 12:42=E2=80=AFPM Helmut Eller <eller.helmut@gmail.c=
+om>
+wrote:
+
+> On Wed, Nov 25 2026, Sean Whitton wrote:
+>
+> > Helmut Eller [12/Nov 10:41am +01] wrote:
+> >> On Thu, Nov 12 2026, Sean Whitton wrote:
+> >>
+> >>> Hello Helmut,
+> >>>
+> >>> Helmut Eller [24/Sep  1:38pm +02] wrote:
+> >>>> On Thu, Sep 24 2026, Sean Whitton wrote:
+> >>>>
+> >>>>> Hello igc devs,
+> >>>>>
+> >>>>> I was wondering how things are going, and whether you might have a
+> >>>>> better idea about when a merge to master might be possible, to get
+> wider
+> >>>>> testing.
+> >>>>
+> >>>> Currently I'm working on bug#79200, i.e. merging the
+> >>>> scratch/igc/weak-undo-list branch into scratch/igc3.
+> >>>>
+> >>>> As for merging with master:
+> >>>>
+> >>>> - there is still the scratch/gc-handles branch that I never merged
+> >>>>   (bug#80609).  I'm not sure if I should bring that up-to-date and
+> merge
+> >>>>   it separately or simply include it in the big merge.
+> >>>>
+> >>>> - I should probably look over the signal handling code again before
+> the
+> >>>>   big merge.
+> >>>
+> >>> Have you had a chance to look over the signal handling code yet?
+> >>
+> >> No, not yet.  I guess I should make time for that soon.
+> >
+> > Sorry to pester but I think this might be done now?
+>
+> Right, the signal handling part is done now.  Next, I will try to merge
+> master into feature/igc3.
+>
+> Then ask if it is good enough for the big merge?
+
+
+I tried a igc3 build for the first time a week ago on macOS and it hung at
+some point.  I didn't have a debugger attached or a debug build at the time
+so I have nothing actually useful to report beyond that.  Are there any
+tips for testing/debugging on macOS that I can use to assist as I have time
+to try?
+
+--000000000000f4111c06611d6b55
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
+t-family:monospace">On Wed, Nov 25, 2026 at 12:42=E2=80=AFPM Helmut Eller &=
+lt;<a href=3D"mailto:eller.helmut@gmail.com">eller.helmut@gmail.com</a>&gt;=
+ wrote:</div></div><div class=3D"gmail_quote gmail_quote_container"><blockq=
+uote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1p=
+x solid rgb(204,204,204);padding-left:1ex">On Wed, Nov 25 2026, Sean Whitto=
+n wrote:<br>
+<br>
+&gt; Helmut Eller [12/Nov 10:41am +01] wrote:<br>
+&gt;&gt; On Thu, Nov 12 2026, Sean Whitton wrote:<br>
+&gt;&gt;<br>
+&gt;&gt;&gt; Hello Helmut,<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Helmut Eller [24/Sep=C2=A0 1:38pm +02] wrote:<br>
+&gt;&gt;&gt;&gt; On Thu, Sep 24 2026, Sean Whitton wrote:<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;&gt; Hello igc devs,<br>
+&gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;&gt; I was wondering how things are going, and whether you =
+might have a<br>
+&gt;&gt;&gt;&gt;&gt; better idea about when a merge to master might be poss=
+ible, to get wider<br>
+&gt;&gt;&gt;&gt;&gt; testing.<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt; Currently I&#39;m working on bug#79200, i.e. merging the<b=
+r>
+&gt;&gt;&gt;&gt; scratch/igc/weak-undo-list branch into scratch/igc3.<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt; As for merging with master:<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt; - there is still the scratch/gc-handles branch that I neve=
+r merged<br>
+&gt;&gt;&gt;&gt;=C2=A0 =C2=A0(bug#80609).=C2=A0 I&#39;m not sure if I shoul=
+d bring that up-to-date and merge<br>
+&gt;&gt;&gt;&gt;=C2=A0 =C2=A0it separately or simply include it in the big =
+merge.<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt; - I should probably look over the signal handling code aga=
+in before the<br>
+&gt;&gt;&gt;&gt;=C2=A0 =C2=A0big merge.<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Have you had a chance to look over the signal handling code ye=
+t?<br>
+&gt;&gt;<br>
+&gt;&gt; No, not yet.=C2=A0 I guess I should make time for that soon.<br>
+&gt;<br>
+&gt; Sorry to pester but I think this might be done now?<br>
+<br>
+Right, the signal handling part is done now.=C2=A0 Next, I will try to merg=
+e<br>
+master into feature/igc3.<br>
+<br>
+Then ask if it is good enough for the big merge?</blockquote><div><br></div=
+><div style=3D"font-family:monospace" class=3D"gmail_default">I tried a igc=
+3 build for the first time a week ago on macOS and it hung at some point.=
+=C2=A0 I didn&#39;t have a debugger attached or a debug build at the time s=
+o I have nothing actually useful to report beyond that.=C2=A0 Are there any=
+ tips for testing/debugging on macOS that I can use to assist as I have tim=
+e to try?</div></div></div>
+
+--000000000000f4111c06611d6b55--
+
+
+From MAILER-DAEMON Wed Nov 25 13:53:06 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWI77-0000Ix-L5
+	for mharc-emacs-devel@gnu.org; Wed, 25 Nov 2026 13:53:05 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xWI75-0000Ho-Lk
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 13:53:03 -0500
+Received: from fhigh-a4-smtp.messagingengine.com ([103.168.172.155])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <dmitry@gutov.dev>) id 1xWI71-0005w8-BN
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 13:53:00 -0500
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+ by mailfhigh.phl.internal (Postfix) with ESMTP id F334814003DA
+ for <emacs-devel@gnu.org>; Wed, 25 Nov 2026 13:52:54 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+ by phl-compute-02.internal (MEProxy); Wed, 25 Nov 2026 13:52:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gutov.dev; h=cc
+ :cc:content-transfer-encoding:content-type:content-type:date
+ :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to; s=fm2; t=1795632774;
+ x=1795719174; bh=cvNf0kIpwzYMD3ooYrkGEArvJnlcMUHYt1/wf+jzMpY=; b=
+ SM5mmXIPy89t0b2B8JGbJ1CBQZaCGojjXXVr74rkHXcZwvjLiyiNKdr4gLb/PMM/
+ cxv2Yd0aK1B/qn8Nkkkiu9IXUa7FUlkI1RBjemuKJJZi3AyzfrXjaqDDCX+yni9B
+ QDtHMbZXJHaXWKPtfmB2bV0eMJj04uI6sLerSZZt9GG07HnyXj5HChAqBEZ085ef
+ FBM4+NJENEQGp3a3pGSSYnwTjXG+peZyp6AIa53ZXl18o3ZBMI79xksKpQBf3HgB
+ w/vgmSGKsQHHER3u4z+qF80uZ6wr1xDdepZYOdnlCDVI4GPe5a6AbCL+N6Hqmpet
+ hyt6BBYvrK+Ym8LxCiBJGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-transfer-encoding
+ :content-type:content-type:date:date:feedback-id:feedback-id
+ :from:from:in-reply-to:in-reply-to:message-id:mime-version
+ :references:reply-to:subject:subject:to:to:x-me-proxy
+ :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795632774; x=
+ 1795719174; bh=cvNf0kIpwzYMD3ooYrkGEArvJnlcMUHYt1/wf+jzMpY=; b=4
+ 4ShXdm5H6LwOG1CgFF++qMD9di2OBHkN2x/+85GB8vj/7IIb/FB1FhKe9fMUiU4p
+ Fa7xdD8YEk7o7BeUA8WG4aDTF3cjaPRtQcn/ZR4eTp7ssbnbURxVSmW11/OD474G
+ pRX7sIGjp5RLhIVuU5M01MJUEeDv6CONoFpFdBHEyJpjo1Wiq6ZH8g+6oWd4E9Nn
+ QF2Z1zNpmOvLrzEGEaAPhojwEDDT1ZdB/IiB6V1hG9z0rwrC+gbPWyfuH9UuUopD
+ eeWEQFJE6bJc+hd8WRq9aIaE8Qw2iMT7yjRkCzZhx4jWnBsX9h6CPldMNyLsfpF0
+ xOO4/rwx7Q8V7qQxptyuw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+ repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+ action=sign d=gutov.dev a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1795632774; d=gutov.dev;
+ mf=PGRtaXRyeUBndXRvdi5kZXY+; rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm2:rsa-sha256:OfR59VPcp8zHPeyDIVfjFZjO7RLlnEp167i7lJcb4WSqUM3
+ pN6RHeYzBcG/7s5DjUm4L6sLymzr26SGAhaj5gIAfJ0dEDrPLdEXYz0k8d0spQ9l
+ bRrQfdfBaSpUbzZxefpP4yAxaL6MqfB7gT7uJkQnjDG+j3KDU6U63IRj7rCUbcTG
+ 5PrMQZyI5ikWBKITt56pKRB7YWS08Z5XgFwiboHBhuNmlTteJqD1g5kb7jE9Z2Uy
+ XXuetBNNW0rVypa86mSgmeIuYjlahZEsJ+4JaJJ9Kenpvo7mabL1Eqc21DDXD6gC
+ mNl8BMASHvjqGOE57K4YG19EB6UI0dpVaC+Md2A==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+ repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+ action=mi-m=1; hc=14;
+ hn=cc,content-language,content-transfer-encoding,content-type,
+ date,feedback-id,from,in-reply-to,message-id,mime-version,
+ references,subject,to,user-agent;
+Message-Instance: m=1;
+ h=sha256:JKHabUyLUn/pI0tIBq+HFuDR86i7IWWCsxUwAfAsCws=:ba4at5BXNuCnpaUr5L/cATjbjY03vMNjWibJRkSu9YM=;
+X-ME-Sender: <xms:hi4Ha4hjs3O94GWqi-PA1d4uxhqk_7B14Qybg0bwlnQYadF4gc2zTQ>
+ <xme:hi4Ha4BRXIMxP6ioK8b7pHEYgHva6UApZSM2Pc0yAOXV9jIeixDuMhyescO5-opzj
+ u-M9xKFTI4FBg1cUn0rqlp1asb0MgNTmxJwP1zwiWHknyfk9ZvvrLavKg>
+X-ME-Received: <xmr:hi4Ha1HBcW-kiqUlgV28YyB3RhHThXVc1VdwUE-xPQe2At7RCd6ggmDh_QUNs4HowT5i>
+X-ME-Proxy-Cause: dmFkZTFqZhhs0q98uoJze5FgYs2GjjT0a+hneVBTJ0skv5NGGle9gEXTnBRl4HW7wdWVUX
+ YsWedPSFLZ1ASg2PBJBTi6b2wmCFHD2e2y9eQveWSwrxVF79NaJETsnj4kgxiO+ibuV7dI
+ 8sW1xS3F+9Mvu0M273l26y0tNcHha8weaxBLzljdnoAU8H/WsrlT+oV5tkmCNOeU7dYmNh
+ dvGhzRb/Ev+tIrfC48dcIxyp4eEOAnreIwPznLYewuXwumYJWQ6MV31+PrgTZOykwXea8n
+ mBoBvB4JUAc0AAtwN/XvhC2ct0Q/K5gjCk6itOPPhVgrfTvSrF1/TF9ww8r/XxNpoER2Iz
+ 8VE8U0X5qM1EIirKdeRG7kGqXEP0AlXpNmI+JDvuya0FoS/x5Kp9eMM8wOtzhZsIH0hcwG
+ A9eQ+ybCpbYEKjinJUvjUe5ldg3NE9lpaMNq7nOAfDyRIAPrqgoGcNsJhFO+3cDNVi0HH1
+ yYKWs2qjtWUWFYbenz0sb9vrMxYrvjjzLumFGf2R3buW1nrQVdoAPbmNTNWtUfGKV6C/qi
+ DXKKv9px8DXXUr07bCYvt6X7S0vwD5u3baEolK6ye+9C+mXuZvvMuNBksH0+s/5q4NZ9Gb
+ FZUDEQhNVI9j3Yt2J135O/z49Nk4Alc/hh0I+BzzCeM48A0dK3cnNcsZncZA
+X-ME-Proxy: <xmx:hi4Ha4Ij6vR-PsyowFvmbdxvvRweTxSeFtqyKrO8pxqsYy-0RKwmPw>
+ <xmx:hi4HaxkgsciJl7PwJAY_I419U1iGGgoirMHlNU08NEDD6Bm8xhMhSw>
+ <xmx:hi4Ha4Ru4ymGSF7zALq2tq30Vv4wgUmUjEedPLZXAvMVyoWz1dliSA>
+ <xmx:hi4Ha7K5uwwgWvB4t3XM7yEFxlm1XOBeCpSmw1VrCWh4Exqdh6xZeA>
+ <xmx:hi4HawPqIBzU9gntAOH2kN9QzBbNXikOa_ped2LNTn47c1ZWWQtbb6y2>
+Feedback-ID: i07de48aa:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 25 Nov 2026 13:52:53 -0500 (EST)
+Message-ID: <715b8d24-70a8-459d-a45e-fb324cb35203@gutov.dev>
+Date: Wed, 25 Nov 2026 20:52:50 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+To: Juri Linkov <juri@linkov.net>
+Cc: Eli Zaretskii <eliz@gnu.org>, monnier@iro.umontreal.ca, emacs-devel@gnu.org
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <86h5k66hbd.fsf@gnu.org> <4cebf24a-9c7d-435f-a90f-51257cc8a3bf@gutov.dev>
+ <86h5k5343a.fsf@gnu.org> <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org> <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org> <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+ <86zex0z4k9.fsf@gnu.org> <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev>
+ <86se1nvf3v.fsf@gnu.org> <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev>
+ <86cxsqtk1y.fsf@gnu.org> <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev>
+ <87v764g2bt.fsf@mail.linkov.net>
+Content-Language: en-US
+From: Dmitry Gutov <dmitry@gutov.dev>
+In-Reply-To: <87v764g2bt.fsf@mail.linkov.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: pass client-ip=103.168.172.155; envelope-from=dmitry@gutov.dev;
+ helo=fhigh-a4-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 25 Nov 2026 18:53:04 -0000
+
+On 10/11/2026 18:16, Juri Linkov wrote:
+>> Or this could be a separate command or set of commands. Maybe
+>> a keymap. repeat-mode wouldn't help, though, if I understand your usage:
+>> any intervening commands would break out of it. So some prefix seems
+>> inevitable. Unless we add a command (e.g. a mode) that switches to this way
+>> of operation until the mode is disabled.
+> This reminds me parallel sequences of visiting locations by next-error.
+
+Reminiscent yes, but at a given time we only need to refer to one 
+previous location.
+
+> Would be nice to try avoiding such complexity in this case.
+> Maybe it would be sufficient to define the global variable
+> for the last used backend?
+
+I'm not sure it would help. We could have a variable for "last used 
+buffer and position", but that pair is fetchable from history, as we can 
+see.
+
+The backend alone wouldn't help since its methods often depend on the 
+right buffer being current (with its minor modes and local variables). 
+The buffer position, while often less important, can at least in theory 
+affect the behavior too.
+
+So we seem stuck with wrapping 'xref--with-origin-buffer' in all places 
+where this behavior is needed.
+
+Or I suppose we could have return a very special backend that does 
+backward navigation and then delegates all its methods to "real" 
+backend. I haven't prototyped that yet, could be caveats.
+
+
+From MAILER-DAEMON Wed Nov 25 14:21:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWIYb-0006SY-2f
+	for mharc-emacs-devel@gnu.org; Wed, 25 Nov 2026 14:21:29 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <eller.helmut@gmail.com>)
+ id 1xWIYY-0006K4-LL
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 14:21:26 -0500
+Received: from mail-wr1-x431.google.com ([2a00:1450:4864:20::431])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <eller.helmut@gmail.com>)
+ id 1xWIYW-0000p2-UL
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 14:21:26 -0500
+Received: by mail-wr1-x431.google.com with SMTP id
+ ffacd0b85a97d-498f5fa5103so3687717f8f.2
+ for <emacs-devel@gnu.org>; Wed, 25 Nov 2026 11:21:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1795634483; x=1796239283; darn=gnu.org;
+ h=content-transfer-encoding:content-type:mime-version:user-agent
+ :message-id:date:references:in-reply-to:subject:cc:to:from:from:to
+ :cc:subject:date:message-id:reply-to:content-type;
+ bh=E2I/YWqSs7Gd7SbHfTkbcBiARIOsKghA+SM0zA9Pj9M=;
+ b=tp35TZBUHZhZhCqJb3a+PHhhE/avTw2fDX8KWRHIgNTku5bl1dCKy+YPoH3B1btzYd
+ 5/mFS8Wy2dQyFpEb2nJe+EHSJPv0MzmyG3/1fec+MWG0eUlcMb28iZcfy+MAh3Dpxw/6
+ tWU6hvBOsITiV8taMw59x5F7HXgwc6SIUFuWjlAnOaFnaG/NlZtvTl18tzKtq3gbm4b3
+ y06qWr5NJXOvKlpFScA98v0hzFzTjuqVwTfb7S5sDSC0tAWrmbmcl2w0wV7hlXO3Q4gw
+ RSDV8lUtfggwRKzlBQoa/Usba9qnOtktLAmQcOy/YtuQa3UslFuaK9IHW8Kpyg8pG4oU
+ 3bbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1795634483; x=1796239283;
+ h=content-transfer-encoding:content-type:mime-version:user-agent
+ :message-id:date:references:in-reply-to:subject:cc:to:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=E2I/YWqSs7Gd7SbHfTkbcBiARIOsKghA+SM0zA9Pj9M=;
+ b=vyEiq3xAuSDNHXNZ7SiYH2da3CRQn0AzEaWUbCDoRGLItQvxBpljmLphBrFqrE3AFj
+ k97vfk2O54NKxSfFiNjuRDjN1jV07vdEZHOIvtJxTAXh8+gQjx7NV3vPK/gWqzxYUKYL
+ +ECl8rAZTs93aXTMRqYGJjIUfkVhR9d5b+7OfeHfpcDg8HxDTNBZONGJpVV0OmwXIq2W
+ lvhqihfctkrLyFk5XzqIAkhXGUhZPSrpDfg5WSeDu0Q3qwN8zQnkXULnfmfvNh0Spmnk
+ 2qNgBn1XywNEncqlucwwrgR4kwBm5zZ12umZFNITg2YdxnCiOT2F3aMx5NfoEhWCCSOt
+ jiyg==
+X-Forwarded-Encrypted: i=1;
+ AL+hErGZ6Sftao1yp87/O+Fj1dEKL24zTez/TqeWeBwe25e9ByZuY/2Rxh1/t44Q6ig48X5fnhxc/2GyVVEe0g==@gnu.org
+X-Gm-Message-State: APuU4Z+lo173FlR4x92ZASBM93DYwIjpna2NqvUtBFyVHp0CZo/UQoxt
+ s3LRmOKjI5dyKMX15s02Vdf0Fppu0YEgKsIoLuBqG4rVShZqQ0Mamy0bY+IVtA==
+X-Gm-Gg: AZFdTZeVW0JUf+y98DWDdwzCFHIXqbtqhrvNjbq+h7v7KBxwQlThqptT3pEBBNe4iO3
+ B8Y5YWfo8AqFUewLqo/V+wAdL6+dUoYR1DxQgk7vyPjt2hqGcnBM+JcmA4aKsO2wrYkJpNqMyB+
+ /gg/pd81nQhabAYcQGXaEzqenariCGVXj6L8H/tx83PWPsgEq9zbozndBoPMx41A70jUduFwGj3
+ WqkZ7bwwEDTaW1hkhLZSeNxk17ZF45/+F1rfa+DhR/k320MZoSVXSokEvbGkO6xfhgVMyoxMlbv
+ nSWnY3LMq25hSYIP+8B4Sg0wwDRQpbvHklCoPgWICqasemgpxWB+uSgwBBKk+7eaACcKpx3SLDP
+ u+VB5TpD2nweGT/FeiLfYX0KE5BS8sfr8SnBwK25DoQ7pjFQ4aRQIvDdA2opfq365NtcOzVhOHD
+ oLFsW7WUs2rrXdwyMgIIKuru8ljWLXHBIfT5BqfiCaOnAS7KbZMvxsdmMQhR/aCJDsw5xd+lkxd
+ fxAPHCBWUEPAlX/DlGGh/hH19tO+abHofA05j2LUMuHeZ6Xmc+Dr7deepLy3OjdqMHwKpaprgTj
+ 7XsXufwmw6CqJ4dE4Mhv4SjjMuAadkyVkB2TOZ8a+weBNSPQhwV9M1NDubqM
+X-Received: by 2002:a5d:5888:0:b0:490:a481:7ac8 with SMTP id
+ ffacd0b85a97d-4abb532ea79mr34798026f8f.29.1795634483049; 
+ Wed, 25 Nov 2026 11:21:23 -0800 (PST)
+Received: from hessra (dial-189137.pool.broadband44.net. [212.46.189.137])
+ by smtp.gmail.com with ESMTPSA id
+ ffacd0b85a97d-4b34e9c3ffesm20011250f8f.19.2026.11.25.11.21.22
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Wed, 25 Nov 2026 11:21:22 -0800 (PST)
+From: Helmut Eller <eller.helmut@gmail.com>
+To: =?utf-8?Q?St=C3=A9phane?= Marks <shipmints@gmail.com>
+Cc: Sean Whitton <spwhitton@spwhitton.name>,  Pip Cet
+ <pipcet@protonmail.com>,  emacs-devel@gnu.org
+Subject: Re: feature/igc3 status
+In-Reply-To: <CAN+1Hbo7AvQ7SuLqDNzzPfMmFLg35TuiTV1G28E4dYadbLqXjw@mail.gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <CAN+1Hbo7AvQ7SuLqDNzzPfMmFLg35TuiTV1G28E4dYadbLqXjw@mail.gmail.com>
+Date: Wed, 25 Nov 2026 20:21:21 +0100
+Message-ID: <87se0ok98u.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=2a00:1450:4864:20::431;
+ envelope-from=eller.helmut@gmail.com; helo=mail-wr1-x431.google.com
+X-Spam_score_int: -10
+X-Spam_score: -1.1
+X-Spam_bar: -
+X-Spam_report: (-1.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FORGED_GMAIL_RCVD=1,
+ FREEMAIL_FROM=0.001, RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 25 Nov 2026 19:21:27 -0000
+
+On Wed, Nov 25 2026, St=C3=A9phane Marks wrote:
+
+> On Wed, Nov 25, 2026 at 12:42=E2=80=AFPM Helmut Eller <eller.helmut@gmail=
+.com>
+> wrote:
+>
+>  On Wed, Nov 25 2026, Sean Whitton wrote:
+>
+>  > Helmut Eller [12/Nov 10:41am +01] wrote:
+>  >> On Thu, Nov 12 2026, Sean Whitton wrote:
+>  >>
+>  >>> Hello Helmut,
+>  >>>
+>  >>> Helmut Eller [24/Sep  1:38pm +02] wrote:
+>  >>>> On Thu, Sep 24 2026, Sean Whitton wrote:
+>  >>>>
+>  >>>>> Hello igc devs,
+>  >>>>>
+>  >>>>> I was wondering how things are going, and whether you might have a
+>  >>>>> better idea about when a merge to master might be possible, to get
+>  wider
+>  >>>>> testing.
+>  >>>>
+>  >>>> Currently I'm working on bug#79200, i.e. merging the
+>  >>>> scratch/igc/weak-undo-list branch into scratch/igc3.
+>  >>>>
+>  >>>> As for merging with master:
+>  >>>>
+>  >>>> - there is still the scratch/gc-handles branch that I never merged
+>  >>>>   (bug#80609).  I'm not sure if I should bring that up-to-date and
+>  merge
+>  >>>>   it separately or simply include it in the big merge.
+>  >>>>
+>  >>>> - I should probably look over the signal handling code again before
+>  the
+>  >>>>   big merge.
+>  >>>
+>  >>> Have you had a chance to look over the signal handling code yet?
+>  >>
+>  >> No, not yet.  I guess I should make time for that soon.
+>  >
+>  > Sorry to pester but I think this might be done now?
+>
+>  Right, the signal handling part is done now.  Next, I will try to merge
+>  master into feature/igc3.
+>
+>  Then ask if it is good enough for the big merge?
+>
+> I tried a igc3 build for the first time a week ago on macOS and it hung at
+> some point.  I didn't have a debugger attached or a debug build at the ti=
+me
+> so I have nothing actually useful to report beyond that.  Are there any t=
+ips
+> for testing/debugging on macOS that I can use to assist as I have time to
+> try?
+
+Sorry, I can't help with that.  I only run macOS in a Qemu-VM to see if
+the Objective-C code still compiles.  I guess that testing/debugging the
+igc branch is not that different from the master branch.
+
+Helmut
+
+
+From MAILER-DAEMON Wed Nov 25 16:35:46 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWKeU-0007Ik-W0
+	for mharc-emacs-devel@gnu.org; Wed, 25 Nov 2026 16:35:44 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <amypillow@lavache.com>)
+ id 1xWKeP-0007IC-AD
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 16:35:37 -0500
+Received: from msg-4.mailo.com ([213.182.54.15] helo=mailo.com)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <amypillow@lavache.com>)
+ id 1xWKeM-0004I9-LZ
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 16:35:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lavache.com;
+ s=mailo; t=1795642530;
+ bh=4Gi6kefhPjbSHvnB3YmRR5dtjlMpxIGuoMSD5tSPzFw=;
+ h=X-EA-Auth:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+ b=eGvZ3TY15OvllmTAAA5XHHYOwjVbSymgXDi2TZ/gm6X0ij8e5xHO1CSB2XwkMUe3w
+ hwbTfDUsLpq7UcUUGHrw/L7KTfg9ScI8Jxse+LEbCgU/2oxNqKX3QWhurkKHw/HaK0
+ +H44n0GiGC8ec429+C3m4yuUObL15G8AAwhCgFT8=
+Received: by be1-3.in.mailobj.net [192.168.91.13] with ESMTP
+ via ip-206.mailobj.net [213.182.55.206]
+ Wed, 25 Nov 2026 22:35:30 +0100 (CET)
+X-EA-Auth: p4O/I7iM3VxcgNx2n6xQ7FYzlT8D1TsOSm9QswaRChH/USyEv4mis1lAJdHoT/+jRy78WGnhM3PLBbwZFWLJxc2XhPxF12iWMjh0iAyxXiQ=
+From: Amy Pillow <amypillow@lavache.com>
+To: Corwin Brust <corwin@bru.st>
+Cc: Emacs developers <emacs-devel@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: card-games
+In-Reply-To: <CAJf-WoRRdbbS_Bq6zxsCdqgucPJTRDve0qkp=-=cew9J0a7kgQ@mail.gmail.com>
+References: <CAJf-WoRWYo1OCR3QzWqdX29SA3fP45DXOi+BNDHF9JA+ZjzKBg@mail.gmail.com>
+ <3162524081079503823@unknownmsgid>
+ <CAJf-WoRRdbbS_Bq6zxsCdqgucPJTRDve0qkp=-=cew9J0a7kgQ@mail.gmail.com>
+Date: Wed, 25 Nov 2026 22:35:30 +0100
+Message-ID: <87jym04msd.fsf@amypillow@lavache.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Received-SPF: pass client-ip=213.182.54.15; envelope-from=amypillow@lavache.com;
+ helo=mailo.com
+X-Spam_score_int: -10
+X-Spam_score: -1.1
+X-Spam_bar: -
+X-Spam_report: (-1.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, MSGID_MULTIPLE_AT=1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 25 Nov 2026 21:35:40 -0000
+
+Corwin Brust <corwin@bru.st> writes:
+
+> Amy,
+>
+> Thanks for you comments, no just your directness but the important
+> shared value you state directly.
+>
+> I'm extremely grateful to you for making your points. What is
+> important to you is clear: and I believe it shoudl be important to all
+> of us who work to make Free Software everyone's first choice.  I'm
+> embarassed I didn't bother doubling checking those numbers.  I'll
+> report back when I have some I can personally offer some specific
+> measure of confidence in.
+
+I look forward to that.
+
+>                            If you believe that work does (or should
+> have) some influece on including my work in non-GNU ELPA please be
+> direct in saying that.
+
+Not at all,
+
+> On Tue, Nov 24, 2026 at 5:48=E2=80=AFAM Amy Pillow <amypillow@lavache.com=
+> wrote:
+>>
+>> Corwin Brust <corwin@bru.st> writes:
+>>
+>> > Greetings,
+>> >
+>>
+>> Hi Corwin,
+>>
+>> >              I used Claude (mostly Opus 4.8, recently Opus 5.2) to
+>> > refine from a pair of hand-written proofs of concept. Each LLM
+>> > supported commit for this package is so marked with an Assisted-by
+>> > trailer.
+>>
+>> I don't believe you.  I don't believe that only 12 of the 57 commits
+>> were assisted or fully authored by an llm, or that you hand-wrote 1600
+>> lines of the 2000 line test file.  For example, it's hard for me to
+>> accept 09adcaa or 905d598 were written fully by you.
+>>
+>> I have no authority over you, or over Emacs or anything, and I really do
+>> appreciate the work you do for Emacs, it is simply too blatant not to
+>> call it out; truth matters.
+>>
+>> --
+>>
+>> > Thanks,
+>> > Corwin Brust
+>>
+>> Best,
+>>
+>> Amy
+>>
+>>
+>
+
+--=20
+Best,
+
+Amy
+
+
+
+
+From MAILER-DAEMON Wed Nov 25 17:08:26 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWLAA-0000OG-4O
+	for mharc-emacs-devel@gnu.org; Wed, 25 Nov 2026 17:08:26 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <amypillow@lavache.com>)
+ id 1xWLA8-0000O3-Bh
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 17:08:24 -0500
+Received: from msg-4.mailo.com ([213.182.54.15] helo=mailo.com)
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <amypillow@lavache.com>)
+ id 1xWLA6-0001XQ-Fp
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 17:08:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lavache.com;
+ s=mailo; t=1795644499;
+ bh=l1Tgc1dqAbuAwRNFDFHU2UiZ8pfkqVU7EcY1WXjudtw=;
+ h=X-EA-Auth:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type;
+ b=i5SgGCFNId8vgxGZXNd7KYuOEvL9XGLY6ItjPn46nIVtQmW7Bo4QhN7CihZgKU64t
+ I1wyeuPuuLtSs8O2hY1aEmuS6DCBAu9Kr50fK1OhhSDJwT3ffiCOYeTh4jxKAp7d9p
+ SnCQjnCBhmknvs0GEXp3x9tD4dKSc35xgDISwPJ8=
+Received: by be1-3.in.mailobj.net [192.168.91.13] with ESMTP
+ via ip-206.mailobj.net [213.182.55.206]
+ Wed, 25 Nov 2026 23:08:19 +0100 (CET)
+X-EA-Auth: cREfMrnjw52T7j/Zc/VLcFdmWFYFtPZqyTu6NLkgZ9hiNqhOAzWBrMP/9s3HTicp0OGE/PnlgU3ESDZD+2GuAZ/gke+6fY8p4c3Sa+pPaoQ=
+From: Amy Pillow <amypillow@lavache.com>
+To: Corwin Brust <corwin@bru.st>
+Cc: Emacs developers <emacs-devel@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: card-games
+In-Reply-To: <87jym04msd.fsf@amypillow@lavache.com>
+References: <CAJf-WoRWYo1OCR3QzWqdX29SA3fP45DXOi+BNDHF9JA+ZjzKBg@mail.gmail.com>
+ <3162524081079503823@unknownmsgid>
+ <CAJf-WoRRdbbS_Bq6zxsCdqgucPJTRDve0qkp=-=cew9J0a7kgQ@mail.gmail.com>
+ <87jym04msd.fsf@amypillow@lavache.com>
+Date: Wed, 25 Nov 2026 23:08:19 +0100
+Message-ID: <87cxrs4l9o.fsf@amypillow@lavache.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=213.182.54.15; envelope-from=amypillow@lavache.com;
+ helo=mailo.com
+X-Spam_score_int: -10
+X-Spam_score: -1.1
+X-Spam_bar: -
+X-Spam_report: (-1.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, MSGID_MULTIPLE_AT=1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Wed, 25 Nov 2026 22:08:24 -0000
+
+Amy Pillow <amypillow@lavache.com> writes:
+
+ Corwin Brust <corwin@bru.st> writes:
+
+> Amy,
+>
+> Thanks for you comments, no just your directness but the important
+> shared value you state directly.
+>
+> I'm extremely grateful to you for making your points. What is
+> important to you is clear: and I believe it shoudl be important to all
+> of us who work to make Free Software everyone's first choice.  I'm
+> embarassed I didn't bother doubling checking those numbers.  I'll
+> report back when I have some I can personally offer some specific
+> measure of confidence in.
+
+I look forward to that.
+
+>                            If you believe that work does (or should
+> have) some influece on including my work in non-GNU ELPA please be
+> direct in saying that.
+
+Not at all, I don't have any strong opinions on that...  I simply hoped
+that you valued honesty and integrity and that would be enough of a
+reason to change behavior.
+
+-- 
+Best,
+
+Amy
+
+
+
+
+From MAILER-DAEMON Wed Nov 25 22:15:25 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWPxE-0007mE-Mq
+	for mharc-emacs-devel@gnu.org; Wed, 25 Nov 2026 22:15:25 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jimjoe@gmx.net>) id 1xWPx6-0007lx-7N
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 22:15:18 -0500
+Received: from mout.gmx.net ([212.227.15.15])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <jimjoe@gmx.net>) id 1xWPx3-0004nv-9M
+ for emacs-devel@gnu.org; Wed, 25 Nov 2026 22:15:15 -0500
+DKIM2-Signature: i=1; m=1; t=1795662908; mf=PGppbWpvZUBnbXgubmV0Pg==;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+; d=gmx.net;
+ s=s31663417:rsa-sha256:sSpatHsQ5ywBwEECqMo4RjVvzFyD
+ E6BwQnZ4ZiP1ZjF45SK9TCGDd40MnWYOhsetz4KJknnPwuPrW2dom5SNBhTJ6nq19iJ01oCsdA+
+ cg/QCLxOTj1J1aLkExXkIQAthJ5dh71b390Dpdb1zs9R3N9MCnLXjVVys+5qTudhGcghuGoGsGY
+ 9fjeGZSt62iULZogwif9mB8NG97J6QR5VRJliHOvCRTLC+Nn1e6hqCN3S0NLSe9Cp56YRwjJMxf
+ 8xaXyZgJ9/HVUGcPjYDxXgPf/+PIaM8GOxsa9WKcgKSXDYAoz8YmYlNEeDtqRgoUVGD17phoYsZ
+ wQCRMRZxSIuUcw==;
+Message-Instance: m=1; h=sha256: KXwGfTu32U+rp64cEMzC4+9xoH3zuwSaGJJxUFrju5Q=:
+ F9MAW+MYeCyfJajMWN6AQJkMPYSYjis9BbNc8r7Sf3o=, sha512:
+ n6s8uM0drha9nciSMUIFOAE6wp6fNGdm2eMbOcgytYD6WSKOA0plK8R3M8KxN90gKj82MshKKdVyGuoJ4QC82w==:
+ i6OEt96WiWI0unTe/vqS3PKuKeZ9R26b0Sa2lMSAqC3CxVGhklUbGnc6cY1s52F/uIVWcohpnthU9YbjGDxFzw==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+ s=s31663417; t=1795662908; x=1796267708; i=jimjoe@gmx.net;
+ bh=W47vmoy9uKrSM+eTW9t1lAFC1/8G55adn5HPdZp6Xd0=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:cc:content-transfer-encoding:
+ content-type:date:from:message-id:mime-version:reply-to:subject:
+ to;
+ b=oXHTGAvHtJCjsukmuUo9GYqD3NdTPFJHFl4lmDIBcqh9Dm+PwFyEEA8+lK188jpk
+ p4cRXoeaCLDvh4dQykggWuYt4UTzRiVcKVM8nOBqqwoTrE4i+qvBWEsawsUmwJ/bH
+ eYEyr3/F+t1sgIw2/kheB6X7CH5WFGdUFs5JPwscue2/Hzkcvf8iuJtYnq6mXsFOp
+ viBtq4BF1LkcBtO7mEGNc1fgixkfQ08V7iylsFh+5fxmxezUFmnMfpDRc3/z2Ad/u
+ HIMZRekgZioS1iHVBfN1OOVnWZwORo1MWqujZ9pK1uYDQTUzXeBH50AZVxcIN7AXF
+ ouNTHtBcpis+duJB2g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mnps0-1yKJwf3bkQ-00Zpbw; Thu, 26
+ Nov 2026 04:15:08 +0100
+From: James Thomas <jimjoe@gmx.net>
+To: Filipp Gunbin <fgunbin@fastmail.fm>
+Cc: emacs-devel@gnu.org
+Subject: Re: Future history discoverability
+In-Reply-To: <m1tswlqgmc.fsf@fastmail.fm>
+References: <f104f17c32829a7be42bed2e5f8453bf.matthewktromp@gmail.com>
+ <m1h5w8ottq.fsf@fastmail.fm> <s2dseey7nov.fsf@gmx.net>
+ <m1ikftzqn7.fsf@fastmail.fm> <s48ikd1mjp3.fsf@gmx.net>
+ <s48ecnpmi86.fsf@gmx.net> <m1tswlqgmc.fsf@fastmail.fm>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Date: Thu, 26 Nov 2026 08:45:49 +0530
+Message-ID: <s48cxrs5llm.fsf@gmx.net>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Provags-ID: V03:K1:p4TapVxPNkaRLOZojNhEsudWWqdNZFVpibeqaXVy8kxJfhMtHEj
+ ucMG4irNFD3jnBgErL4YFfyAq3Cd1OSP/P9rbIdySxX0bwLc0TVnwEzpLwVcfKamUyu9tP7
+ 3IEAOoMhP0ByAgdrGB78HW5WxKHM6XtRdfC8aCLS7bt+fXDx0FLU6eJR6Lrzuw3ctK6zZOR
+ hGU2uPuRI7S61M7nWPANw==
+UI-OutboundReport: notjunk:1;M01:P0:gRV0bNAHLX8=;KuvklQjyGQfzxbKH4AmZNTJXXWQ
+ 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
+ KMlAQP9wSL4z9MT3X8IhDoWX
+Received-SPF: pass client-ip=212.227.15.15; envelope-from=jimjoe@gmx.net;
+ helo=mout.gmx.net
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_MSPIKE_H5=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 26 Nov 2026 03:15:20 -0000
+
+Filipp Gunbin <> writes:
+
+> On 17/01/2026 01:40 +0530, James Thomas wrote:
+>
+>> James Thomas <> writes:
+>>
+>>> Filipp Gunbin <> writes:
+>>>
+>>>> On 01/11/2025 03:12 +0530, James Thomas wrote:
+>>>>
+>>>>> Filipp Gunbin <> writes:
+>>>>>
+>>>>>> On 08/10/2025 18:24 -0400, matthewktromp@gmail.com wrote:
+>>>>>>
+>>>>>>> Future history is a cool feature.  But it's not an especially
+>>>>>>> obvious
+>>>>>>> feature.  For many commands which prompt with the minibuffer,
+>>>>>>> the
+>>>>>>> only
+>>>>>>> way to learn that there is useful future history available is
+>>>>>>> to
+>>>>>>> try
+>>>>>>> to use it by hitting M-n.  So I imagine there are a lot of
+>>>>>>> users
+>>>>>>> using
+>>>>>>> commands with future history available who don't even know that
+>>>>>>> it
+>>>>>>> exists.  I'm thinking about how it could be made more
+>>>>>>> discoverable.
+>>>>>>
+>>>>>> Oh yes, it's super-cool, especially if you know that you can
+>>>>>> isearch
+>>>>>> over history and future history with C-s and C-r.  For me, this
+>>>>>> essentially makes fancy completion / suggestions redundand.
+>>>>>>
+>>>>>> Given the power of this [future-]history + isearch-minibuffer
+>>>>>> combination, IMO it deserves much more prominent coverage in
+>>>>>> info
+>>>>>> (and
+>>>>>> even maybe in tutorial).
+>>>>>
+>>>>> Yes! But I find future history annoying in some cases in this
+>>>>> regard:
+>>>>> For e.g. when I want to go to the most recently buried buffer
+>>>>> using
+>>>>> "C-x
+>>>>> b C-r <part buffer name> RET' (with completions-sort nil) and
+>>>>> fail
+>>>>> to...
+>>>>
+>>>> This works fine both with C-r (isearch-backward over history) and
+>>>> with
+>>>> C-s (isearch-forward over future history), I use it all the time.
+>>>
+>>> ...
+
+>> To clarify further, try this (with completions-sort nil):
+>>
+>> - <F1> R elisp RET
+>> - C-x b RET (return to another buffer)
+>> - <F1> r
+>> - q
+>> - C-x b C-r Info RET RET
+>>
+>> ...is guaranteed to give me the second (Emacs) manual. But not
+>> always,
+>> because future history complicates things. :-)
+
+FWIW just want to let you know that what I actually wanted was:
+
+>>> reaching the _most recently buried_ buffer
+
+...for which I use 'C-x b C-s *info C-s...' until it fails, then 'RET'.
+
+Regards,
+James
+
+
+From MAILER-DAEMON Thu Nov 26 02:53:27 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWUIJ-0004wO-8l
+	for mharc-emacs-devel@gnu.org; Thu, 26 Nov 2026 02:53:27 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <juri@linkov.net>) id 1xWUIH-0004vk-6H
+ for emacs-devel@gnu.org; Thu, 26 Nov 2026 02:53:25 -0500
+Received: from mout-p-102.mailbox.org ([2001:67c:2050:0:465::102])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <juri@linkov.net>)
+ id 1xWUIF-0008Sm-4M; Thu, 26 Nov 2026 02:53:24 -0500
+Received: from smtp102.mailbox.org (smtp102.mailbox.org
+ [IPv6:2001:67c:2050:b231:465::102])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4jZpgx6ZD4zKm8y;
+ Thu, 26 Nov 2026 08:53:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linkov.net; s=MBO0001; 
+ t=1795679597;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=urW8gkXr7sCt7cUaWbxE9S32GW9PNYpdq0yVWCy5hHI=;
+ b=NmFGsTxxHsvEsAT1Gxq5LhU2AYinHSKBmxbsKuewqMDwW7MGWRVU4uAXfawR/U1QBwOApn
+ PVLl3ltjm4pCueVZdfCQoZ+ZtOTFwdqqX3CGprDrc3F76OzR2CDYqya058GOssDSZ3BXUl
+ E31+UJdtNECwNN6q3FQ9hWG0jn/haX9puF16iQHytB4oQ44SBZGr4d8uQTqC0Myz8cSCDk
+ E60n9LXoymLtite+Fv3zokjcqRu6SsQ8ZSIwQx2rTra4im2rza+hga1jyLPjQgvdKtYGil
+ hw3JFCDmjYcCkrKvnUjn1PVJAuFEl56QJ1k35ThNkjKnMOX3m7tyjjJ+JOzKww==
+Authentication-Results: outgoing_mbo_mout; dkim=none;
+ spf=pass (outgoing_mbo_mout: domain of juri@linkov.net designates
+ 2001:67c:2050:b231:465::102 as permitted sender)
+ smtp.mailfrom=juri@linkov.net
+From: Juri Linkov <juri@linkov.net>
+To: Dmitry Gutov <dmitry@gutov.dev>
+Cc: Eli Zaretskii <eliz@gnu.org>,  monnier@iro.umontreal.ca,
+ emacs-devel@gnu.org
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+In-Reply-To: <715b8d24-70a8-459d-a45e-fb324cb35203@gutov.dev>
+Organization: LINKOV.NET
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <86h5k5343a.fsf@gnu.org>
+ <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+ <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev>
+ <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev>
+ <86cxsqtk1y.fsf@gnu.org>
+ <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev>
+ <87v764g2bt.fsf@mail.linkov.net>
+ <715b8d24-70a8-459d-a45e-fb324cb35203@gutov.dev>
+Date: Thu, 26 Nov 2026 09:50:19 +0200
+Message-ID: <87bj7c8210.fsf@mail.linkov.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/32.0.50 (x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Rspamd-Queue-Id: 4jZpgx6ZD4zKm8y
+Received-SPF: pass client-ip=2001:67c:2050:0:465::102;
+ envelope-from=juri@linkov.net; helo=mout-p-102.mailbox.org
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 26 Nov 2026 07:53:25 -0000
+
+>> Would be nice to try avoiding such complexity in this case.
+>> Maybe it would be sufficient to define the global variable
+>> for the last used backend?
+>
+> I'm not sure it would help. We could have a variable for "last used buffer
+> and position", but that pair is fetchable from history, as we can see.
+
+Fetching from history might be sufficient (or maybe also using
+window-local history when 'xref-history-storage' is customized
+to 'xref-window-local-history').
+
+I suppose this would help to solve the real problem that I experience.
+Sometimes in another working tree (for example, in a branch)
+in a ELisp file 'M-.' needs to jump to the original tree
+where Emacs was started.  But sometimes 'M-.' needs to jump
+to the file in the branch tree.  For the former need to use
+'elisp' backend, for the latter 'etags' backend.  So would be nice
+to have a way to select the backend and keep it for navigation.
+
+
+From MAILER-DAEMON Thu Nov 26 03:52:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWVDR-0003dP-HF
+	for mharc-emacs-devel@gnu.org; Thu, 26 Nov 2026 03:52:29 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <v.pupillo@gmail.com>)
+ id 1xWVDQ-0003d9-Ex
+ for emacs-devel@gnu.org; Thu, 26 Nov 2026 03:52:28 -0500
+Received: from mail-wr1-x431.google.com ([2a00:1450:4864:20::431])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+ (Exim 4.90_1) (envelope-from <v.pupillo@gmail.com>)
+ id 1xWVDN-0007RK-LQ
+ for emacs-devel@gnu.org; Thu, 26 Nov 2026 03:52:28 -0500
+Received: by mail-wr1-x431.google.com with SMTP id
+ ffacd0b85a97d-4a68190a2a7so5607579f8f.1
+ for <emacs-devel@gnu.org>; Thu, 26 Nov 2026 00:52:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gmail.com; s=20260707; t=1795683144; x=1796287944; darn=gnu.org;
+ h=content-transfer-encoding:content-type:mime-version:references
+ :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+ :date:message-id:reply-to:content-type;
+ bh=mUFCqXNpw62ff1/pvoVF8xc+lqSQHjRgIuXGC4chYsg=;
+ b=iD4Ls4TkTWCKQguSbodkRmYJlYHk02uVen0iIabxG/ISdkWwLb19FdmsgsPimjS9ie
+ o5/sdvwY2tK1Opj/i3UNuj659wQ1YU9reNwWrIMeovHIvQQDOhWJ/jHWz0MsVrtDQJOu
+ 4ITxcauezGdd0b6m+nrX/KdMf5Cz+LJFW6ZvLbneyAWd3JEHcmR0FMslAwUE/ObM5zBY
+ +sUWW69hiVHI2L8jljFlLbjCWy04M0Uxu3nVX6mk1q4bFNoD9gcCo2UNTuEgTWPgrfOO
+ glsxTj/pf4l6apObi44ZOsY0PW8NVDDex5XNz4RUIF5hisILBrzSH4r1lwHRYnQVWP9m
+ U/8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20260707; t=1795683144; x=1796287944;
+ h=content-transfer-encoding:content-type:mime-version:references
+ :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+ :content-type;
+ bh=mUFCqXNpw62ff1/pvoVF8xc+lqSQHjRgIuXGC4chYsg=;
+ b=OttEoXNP5CxtjR+TWZOlj5MezpoTd1JHmyNwN2pWhTUr+MMWenbj3Jul4DW23iZN4L
+ zJ4EE3EZvX5EbzYVGeCUqKYG4TV+Tpc7ZhnzkdtRX5Rnu/cu8xDIsyqPcUMoAPonTaBB
+ Mz9iyRpDi4PfgNqfzRia1VbpzSBf5bjmCp67jjhbhZGxfNcmydsqHfCk2mFNNyjtNjTr
+ jLLas/G0xxoHqAQUzR0GNS5K00rmkgizMlcxVGiOeFbsSOXaXYPLhVCZCCnGVYiePY40
+ NvOPEBr5kAAuk9eu4T4BkX3HE0FE5EUf/x4oJb7FA6mC+CvRy07XEQGB+8M6KIroXN3w
+ 81PA==
+X-Forwarded-Encrypted: i=1;
+ AL+hErGKlNGwyZmyhYx224leBw34Dbg72UXrht1y3Qnn1gaSOVZvguR0ydczqlcf0/59KMYHTB9kejgj2Rl/CQ==@gnu.org
+X-Gm-Message-State: APuU4Z+ooqjc689gTkzSL1NOtfFA5SdBFRkgeZos41dPOI6C8a5pb+Kj
+ hcSzE7G66gPbilltK/4nGDl7w1CzmXtnzpi/B3MjXSdo+grHU28p3HqM
+X-Gm-Gg: AZFdTZcKOCDa2wGO3jJNQ/NgcJwWPeIuy0Lu3tRpIq68+w7oCJqHEQTUNwvzXAR7Zu5
+ B8epmntYUEavYiJO18TFjF9w3gdM/GoXPE8c2lza0yhfU8o783CVN0ae+0G+n3D9fsBzE5JH1pN
+ cP45YNbix07O1OymiDFzwg0CdjxhT1gv8O2gR20OHIkCsZdBWZHaDCLS1oBrOw0Nb1Z+x2STjkT
+ IJ9COdBkwgFuxdy8B2lttH5Hq6asnalUcp+FJiZcoWyEzJNBjtxeqzTpwx+RuuC9p0COSulr03u
+ pVuskhSYqloG6fXELFWzh6GN42QWMl2v5FtKVvSYpMsCPY34+8soDQsxaPk9rroLukJ1XHNqo7K
+ cWqyiVs2O7Yj7eJYgxRl/LpLF8xArvG5crA9/dFnRYVOea8yEvZbMak7SOaFnfHl9pwydXTfFMR
+ hK6kScRf2vr49zWOwKCP1iKETnQ/lzzU5RmgSrdZ1e75Ygf7aDLuDziyvZUkmC5oOvGgiww2CWe
+ GpKtRogY94bqLbvV5+1bcBkhImcnbIt90y6kdO9ugb2wMdvHJ80CMfPggRekusJh6ZhRpxq3MCI
+ JvIlhAmTnBr6lBWve3zsMwiEasLbsf1XAXMthfEcLcqjinQqpb/fvUJCvw==
+X-Received: by 2002:adf:e006:0:10b0:4a6:8012:19a with SMTP id
+ ffacd0b85a97d-4abb18cb896mr27175819f8f.22.1795683143663; 
+ Thu, 26 Nov 2026 00:52:23 -0800 (PST)
+Received: from 3-191.divsi.unimi.it (3-191.divsi.unimi.it. [159.149.3.191])
+ by smtp.gmail.com with ESMTPSA id
+ ffacd0b85a97d-4ad644140b5sm35892076f8f.17.2026.11.26.00.52.22
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Thu, 26 Nov 2026 00:52:22 -0800 (PST)
+From: Vincenzo Pupillo <v.pupillo@gmail.com>
+To: Michael Albinus <michael.albinus@gmx.de>
+Cc: Eli Zaretskii <eliz@gnu.org>, Stefan Monnier <monnier@iro.umontreal.ca>,
+ benleis1@gmail.com, emacs-devel@gnu.org
+Subject: Re: speedbar
+Date: Tue, 24 Nov 2026 15:20:56 +0100
+Message-ID: <20MNw9I7RZKhglA-9eF9Zg@gmail.com>
+In-Reply-To: <87jym24ndq.fsf@gmx.de>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <huU74fwgRlC71ZOWHn1H1A@gmail.com> <87jym24ndq.fsf@gmx.de>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="nextPartordWiJdRSRKFqn4LJpwA5Q"
+Content-Transfer-Encoding: 7Bit
+Received-SPF: pass client-ip=2a00:1450:4864:20::431;
+ envelope-from=v.pupillo@gmail.com; helo=mail-wr1-x431.google.com
+X-Spam_score_int: 2
+X-Spam_score: 0.2
+X-Spam_bar: /
+X-Spam_report: (0.2 / 5.0 requ) BAYES_00=-1.9, DATE_IN_PAST_24_48=1.34,
+ DKIM_SIGNED=0.1, DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ FORGED_GMAIL_RCVD=1, FREEMAIL_FROM=0.001, RCVD_IN_DNSWL_NONE=-0.0001,
+ SPF_HELO_NONE=0.001, SPF_PASS=-0.001 autolearn=no autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 26 Nov 2026 08:52:28 -0000
+
+This is a multi-part message in MIME format.
+
+--nextPartordWiJdRSRKFqn4LJpwA5Q
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+Thanks, Michael. The updated patch is attached.
+
+Vincenzo
+
+
+In data marted=C3=AC 24 novembre 2026 09:58:09 Ora standard dell=E2=80=99Eu=
+ropa centrale,=20
+Michael Albinus ha scritto:
+> Vincenzo Pupillo <v.pupillo@gmail.com> writes:
+> > Ciao,
+>=20
+> Hi Vincenzo,
+>=20
+> > +*** New function 'speedbar-switch-back-to-previous-display-mode'.
+> > +Switch back to the previous display mode.  Replace a lambda in
+> > +'speedbar-mode-map'.
+> > +
+> > +*** New function 'speedbar-switch-to-quick-buffer-display-mode'.
+> > +Switch into Quick Buffers display mode.  Replace a lambda in
+> > +'speedbar-mode-map'.
+> > +
+> > +*** New function 'speedbar-switch-to-files-display-mode'.
+> > +Switch back to the Files display mode.  Replace a lambda in
+> > +'speedbar-mode-map'.
+>=20
+> All three symbols are commands, not functions.
+>=20
+> "Replace a lambda in 'speedbar-mode-map'" is implementation detail, and
+> doesn't belong to NEWS. Instead, you can write.
+>=20
+> Bound to 'r' in the 'speedbar-mode-map'.
+>=20
+> (use the correct key).
+>=20
+> > +*** New function 'speedbar-close'.
+> > +Close the 'speedbar' window or frame.
+> > +
+> > +*** New funcion 'speedbar-delete'.
+> > +Delete the 'speedbar-frame' or close the 'speedbar-window'.
+>=20
+> Both symbols are commands, not functions. Mention their bindings in
+> 'speedbar-mode-map'.
+>=20
+> Best regards, Michael.
+
+--nextPartordWiJdRSRKFqn4LJpwA5Q
+Content-Disposition: attachment;
+ filename="0001-Speedbar-The-h-keybinding-displays-describe-mode.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/x-patch; charset="UTF-8";
+ name="0001-Speedbar-The-h-keybinding-displays-describe-mode.patch"
+
+=46rom 633337b49957b7be65cee4ca5017fa40e87b6d5e Mon Sep 17 00:00:00 2001
+=46rom: Vincenzo Pupillo <v.pupillo@gmail.com>
+Date: Mon, 23 Nov 2026 13:40:31 +0100
+Subject: [PATCH] =3D?UTF-8?q?Speedbar:=3D20The=3D20=3DE2=3D80=3D9Ch=3DE2=3D=
+80=3D9D=3D20keybind?=3D
+ =3D?UTF-8?q?ing=3D20displays=3D20'describe-mode'.?=3D
+MIME-Version: 1.0
+Content-Type: text/plain; charset=3DUTF-8
+Content-Transfer-Encoding: 8bit
+
+'describe-mode' displays the same key bindings for =E2=80=98speedbar-frame=
+=E2=80=99 and
+=E2=80=98speedbar-window=E2=80=99  except for the dynamic ones, such as tho=
+se for the
+various display modes.
+
+* etc/NEWS: Announce the new functions.
+* lisp/speedbar
+(speedbar-switch-back-to-previous-display-mode): New function.
+(speedbar-switch-to-quick-buffer-display-mode): New function.
+(speedbar-switch-to-files-display-mode): New function.
+(speedbar-close): New function.
+(speedbar-delete): New function.
+(speedbar-mode-map): Use the new functions instead of lambdas.
+(speedbar-easymenu-definition-trailer): Now it's a variable; a function
+is no longer needed.
+(speedbar-reconfigure-keymaps): The function is now a bit simpler.
+
+Co-Authored-By: Stefan Monnier <monnier@iro.umontreal.ca>
+=2D--
+ etc/NEWS         | 24 +++++++++++-
+ lisp/speedbar.el | 98 +++++++++++++++++++++++++++---------------------
+ 2 files changed, 79 insertions(+), 43 deletions(-)
+
+diff --git a/etc/NEWS b/etc/NEWS
+index 15c389a6f29..ff566a35750 100644
+=2D-- a/etc/NEWS
++++ b/etc/NEWS
+@@ -3070,7 +3070,29 @@ Meant to be given a global binding convenient to the=
+ user.  Example:
+ - 'speedbar-window-max-width' defines the maximum width of the
+   'speedbar-window' when it is closed and then restored.
+=20
+=2D*** 'speedbar-easymenu-definition-trailer' is now a function.
++*** 'speedbar-easymenu-definition-trailer' is now a variable.
++
++*** New command 'speedbar-switch-back-to-previous-display-mode'.
++Switch back to the previous display mode.  Bound to 'r' in
++'speedbar-mode-map'.
++
++*** New command 'speedbar-switch-to-quick-buffer-display-mode'.
++Switch into Quick Buffers display mode.  Bound to 'b' in
++'speedbar-mode-map'.
++
++*** New command 'speedbar-switch-to-files-display-mode'.
++Switch back to the Files display mode.  Bound to 'f' in
++'speedbar-mode-map'.
++
++*** New command 'speedbar-close'.
++Close the 'speedbar' window or frame.  Bound to 'q' in
++'speedbar-mode-map'.
++
++*** New command 'speedbar-delete'.
++Delete the 'speedbar-frame' or close the 'speedbar-window'.
++Bound to 'Q' in 'speedbar-mode-map'.
++
++*** Add 'h' keybinding to 'describe-mode' in 'speedbar-mode-map'.
+=20
+ ** Icomplete
+=20
+diff --git a/lisp/speedbar.el b/lisp/speedbar.el
+index 8ad2863a06b..1f28c8c9609 100644
+=2D-- a/lisp/speedbar.el
++++ b/lisp/speedbar.el
+@@ -777,6 +777,37 @@ speedbar-mode-syntax-table
+     st)
+   "Syntax-table used on the speedbar.")
+=20
++(defun speedbar-switch-back-to-previous-display-mode ()
++  "Switch back to the previous display mode."
++  (interactive)
++  (speedbar-change-initial-expansion-list
++   speedbar-previously-used-expansion-list-name))
++
++(defun speedbar-switch-to-quick-buffer-display-mode ()
++  "Switch into Quick Buffers display mode.
++After one use, the previous display mode is restored."
++  (interactive)
++  (speedbar-change-initial-expansion-list "quick buffers"))
++
++(defun speedbar-switch-to-files-display-mode ()
++  "Switch back to the Files display mode."
++  (interactive)
++  (speedbar-change-initial-expansion-list "files"))
++
++(defun speedbar-close ()
++  "Close the 'speedbar'."
++  (interactive)
++  (if (eq (speedbar-frame-or-window) 'window)
++      (speedbar-window-close)
++    (dframe-close-frame)))
++
++(defun speedbar-delete ()
++  "Delete the 'speedbar-frame' or close the 'speedbar-window'."
++  (interactive)
++  (if (eq (speedbar-frame-or-window) 'window)
++      (speedbar-window-close)
++    (delete-frame)))
++
+ (defvar speedbar-mode-map
+   (let ((map (make-keymap)))
+     (suppress-keymap map t)
+@@ -797,18 +828,18 @@ speedbar-mode-map
+     ;;  (define-key map [delete] 'speedbar-scroll-down)
+=20
+     ;; Short cuts I happen to find useful.
+=2D    (define-key map "r"
+=2D      (lambda () (interactive)
+=2D        (speedbar-change-initial-expansion-list
+=2D         speedbar-previously-used-expansion-list-name)))
+=2D    (define-key map "b"
+=2D      (lambda () (interactive)
+=2D        (speedbar-change-initial-expansion-list "quick buffers")))
+=2D    (define-key map "f"
+=2D      (lambda () (interactive)
+=2D        (speedbar-change-initial-expansion-list "files")))
++    (define-key map "r" 'speedbar-switch-back-to-previous-display-mode)
++    (define-key map "b" 'speedbar-switch-to-quick-buffer-display-mode)
++    (define-key map "f" 'speedbar-switch-to-files-display-mode)
++
++    ;; Help.
++    (define-key map "h" 'describe-mode)
+=20
+     (dframe-update-keymap map)
++    ;; Replace certain key combinations related to 'dframe' with
++    ;; specific ones for 'speedbar'.
++    (keymap-set map "q" #'speedbar-close)
++    (keymap-set map "Q" #'speedbar-delete)
+     map)
+   "Keymap used in speedbar buffer.")
+=20
+@@ -903,17 +934,11 @@ speedbar-easymenu-definition-special
+     )
+   "Additional menu items while in file-mode.")
+=20
+=2D(defun speedbar-easymenu-definition-trailer ()
+=2D  "Return menu items appearing at the end of the speedbar menu."
+=2D  (let ((type (speedbar-frame-or-window)))
+=2D    (cond ((eq type 'frame)
+=2D	   '(["Customize..." speedbar-customize t]
+=2D	     ["Close" dframe-close-frame t]
+=2D	     ["Quit" delete-frame t]))
+=2D	  ((eq type 'window)
+=2D	   '(["Customize..." speedbar-customize t]
+=2D	     ["Close" speedbar-window-close
+=2D	      :keys "q" :active t])))))
++(defvar speedbar-easymenu-definition-trailer
++  '(["Customize..." speedbar-customize t]
++    ["Close" speedbar-close t]
++    ["Quit" speedbar-delete t])
++  "Menu items appearing at the end of the speedbar menu.")
+=20
+ (defvar speedbar-desired-buffer nil
+   "Non-nil when speedbar is showing buttons specific to a special mode.
+@@ -1330,6 +1355,7 @@ speedbar-reconfigure-keymaps
+   "Reconfigure the menu-bar in a speedbar frame.
+ Different menu items are displayed depending on the current display mode
+ and the existence of packages."
++  ;; FIXME: Use `:filter' for the dynamic part of the menu?
+   (let ((md (append
+ 	     speedbar-easymenu-definition-base
+ 	     (if speedbar-shown-directories
+@@ -1361,28 +1387,16 @@ speedbar-reconfigure-keymaps
+ 			     (setq alist (cdr alist)))
+ 			   displays)))
+ 	     ;; The trailer
+=2D	     (speedbar-easymenu-definition-trailer)))
+=2D	(localmap (save-excursion
+=2D		    (let ((cf (selected-frame)))
+=2D		      (prog2
+=2D			  (dframe-select-attached-frame speedbar-frame)
+=2D			  (if (local-variable-p
+=2D			       'speedbar-special-mode-key-map
+=2D			       (current-buffer))
+=2D			      speedbar-special-mode-key-map)
+=2D			(select-frame cf))))))
++	     speedbar-easymenu-definition-trailer)))
+     (with-current-buffer speedbar-buffer
+=2D      (let ((local-keymap (or localmap
+=2D                              (speedbar-initial-keymap)
+=2D                              ;; This creates a small keymap we can glom=
+ the
+=2D                              ;; menu adjustments into.
+=2D                              (speedbar-make-specialized-keymap))))
+=2D        (if speedbar-prefer-window
+=2D            (progn
+=2D              (keymap-set local-keymap "q" 'speedbar-window-close)
+=2D              (keymap-set local-keymap "Q" 'speedbar-window-close))
+=2D          (dframe-update-keymap local-keymap))
+=2D
++      (let ((local-keymap (or
++                           (if (local-variable-p
++                                'speedbar-special-mode-kye-map)
++                               speedbar-special-mode-key-map)
++                           (speedbar-initial-keymap)
++                           ;; This creates a small keymap we can glom the
++                           ;; menu adjustments into.
++                           (speedbar-make-specialized-keymap))))
+         (use-local-map local-keymap)
+         ;; Now add the new menu
+         (easy-menu-define speedbar-menu-map (current-local-map)
+=2D-=20
+2.56.1
+
+
+--nextPartordWiJdRSRKFqn4LJpwA5Q--
+
+
+
+
+
+From MAILER-DAEMON Thu Nov 26 05:50:08 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWX3I-0001kj-6b
+	for mharc-emacs-devel@gnu.org; Thu, 26 Nov 2026 05:50:08 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xWX3D-0001k2-Di
+ for emacs-devel@gnu.org; Thu, 26 Nov 2026 05:50:03 -0500
+Received: from fout-a6-smtp.messagingengine.com ([103.168.172.149])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <spwhitton@spwhitton.name>)
+ id 1xWX3C-000700-2Y
+ for emacs-devel@gnu.org; Thu, 26 Nov 2026 05:50:03 -0500
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+ by mailfout.phl.internal (Postfix) with ESMTP id 128D2EC0A14
+ for <emacs-devel@gnu.org>; Thu, 26 Nov 2026 05:49:56 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-01.internal (MEProxy); Thu, 26 Nov 2026 05:49:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spwhitton.name;
+ h=cc:cc:content-type:content-type:date:date:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:subject:subject:to:to; s=fm2; t=1795690195; x=
+ 1795776595; bh=C5qloCe6t5V4xm770ppkrIMW4DoWn4V8I1LHsflTKJ0=; b=n
+ b6cvaVi6fY4ZsMHJzuu7d6tNe1fLi3G+bTBbJN0npTOG4DEL9L3ZS3fP9NfOEqcY
+ pvwtJRQ4j8eAILNMSA4cK65uT123ctO2QQ+Unt9LU9LTPt8IukIT9E/8iuxYQLLN
+ E0ZvwAXQHzMdxreUp/iiBtYeRBppy1gXUGZCKhEF07ahDwYAgvxOGgjI/iqHypuj
+ Gh0xv3keIHlxtAlkOCUYp8AWGWIHqmcp3qA3qkBM/Xtccs373zqWymHN9LIb/t1e
+ KR0pR7vaOLe6/Vu6l4R6zJ+9GsNspdpP5TjyPLtGPkSI5NbeN/Wg2e9uzjp9q2+6
+ +5grKrwWEJABMOBNg/8uQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+ 1795690195; x=1795776595; bh=C5qloCe6t5V4xm770ppkrIMW4DoWn4V8I1L
+ HsflTKJ0=; b=RsacUADkhE5wIl0Xy5kpligo7kiiMzHo5jLjwOkdIEawhf64+/1
+ dQ8U+MdsTWQhcpj24WV2Bce60kymt/96yhkz/58Z5bGytPVIDeItyhR7Lbl9HvED
+ c0CTQXuUHhedt14znkG9U63L50gpHGLfyyba7cKN6nG8Kmi38plotsocwXGD/fVK
+ PkDxbwNMyVDfb/vI2WFiD3Ao9Mkbx7oKAE+PcQHlxigrq/JmnMvp7V/7hZhjtJ0y
+ BltyVNogvAk886N3uVij/qpYb12uYL1rp6rroa2C9GGWVTR3LJMnViWFpm1rmZO7
+ Stg6LYvnNwHJaFv4IIShvSqQAfKNAXdgUyQ==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+ repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+ action=sign d=spwhitton.name a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1795690195; d=spwhitton.name;
+ mf=PHNwd2hpdHRvbkBzcHdoaXR0b24ubmFtZT4=;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm2:rsa-sha256:JqOeYf4sRAThAlsm2AnsTKNAWzeCk6/GP/VMokjgG3ZWxxJ
+ wQf7ud6vH0tjH93WlSYD1+xzjO9ERCXxobMJt655FS1JZF2GgejZqbTg4RsiGIpz
+ MtEevZhQL92NdJFFo/XBbTMO2XYZC4dV0BD5GpI2klJVy3lahxW+v6kNqLF07Jzc
+ 8pW53yASFuwyvTxX9GuJw3c76onbo9o8lKqKrmoiN0nalsUUj8s+n3QiJ0vy1OXE
+ 6Zf30ufpVXnFPl6oq/ajOB+BiFt53G7FBwJHX/5+gQUH3GZ82ng7krjkfGPP/7Rh
+ leAeYFE2wBsop2/JfoxhcmBydbe5LIcm08Dci4Q==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+ repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+ action=mi-m=1; hc=11;
+ hn=cc,content-type,date,feedback-id,from,in-reply-to,message-id,
+ mime-version,references,subject,to;
+Message-Instance: m=1;
+ h=sha256:n57Hkb5JWVUa3YoIXd/YFnsvsiUZMrsRJeQnjh0owxM=:ewZ6en56lOy3e+oHzrVeElTZB9u4KWa0gVPoByOvzJA=;
+X-ME-Sender: <xms:0w4Ia3FjF_SVUeb3KlXpTsi40c2xehF6zy-Bm2nHN8LnVP1_7zg3IA>
+ <xme:0w4Ia0deCqZbSjGEkJ5X3b5-KBIRMTHffXd8ISED9Rqv1mrWtfXVLiLkKfGhooVWq
+ DUzl2sZ4uKETzUR5YxM3qMOjS5uN3ipxschimL4Ho_657iLLgcNL3hf>
+X-ME-Received: <xmr:0w4IaxH4ZOziVLd8bAMLcZn23dQJxi2EMulOqPMJUnxnV2CTmoUVK2kBIRiNPW7UcR5JDKaNzIsdtRtzbMz6uD3fX5wx-tcVIw>
+X-ME-Proxy-Cause: dmFkZTFAxdf518+QQPGW03QfKgJw3i961NcbaDnH0s9eD9hN09KM4f1h5kgiikymFyEHlO
+ 2WS6hVjaE0rwRplIdwA+qMVDFYrQr5KHfXBYFVJ50iFZ8D+1i6QxmuhXSWltY0EEM6wuh4
+ L/LJC03iiVk+45jKrsiaWzirar5AflIZx2nJDcU52XXP/ESrnn88/RBDtujGWTpesTNFGd
+ yjSHzZirGNqA/tSNmn5txKSmeCw8vgbNrYzVKCQw+ymhbF5HQpxXKCdG3dE5B1vvAa9WRz
+ 1l+QzJX9Z5yehgq7H/phlawZDXrxZ+4G+iA+1hjHF7YsGqZLykUDIk+JJTTLLZvgLFrWqy
+ r/Si8SfCZvBeseIoTusXaHDcbC8Cz3IzJOLcW7s8r6r3MAfsdCE64IM1A3DFR1nSCpPeDh
+ 42xiYfDejDFLsRIoB+Vu0IoFXqDgs7J3BRGSo5O49FcS6b2xx7Av8MGmyjW7/qo2g+b0kF
+ sfJBt7khSkMlaaryUZxNbLDOyQoj/N27fRGhwJuU2A9vVzCHyX/2GdC88uUa8B6rEM/TSk
+ 7JKVl582PCmbSv6S4hzndWnVRXQSvrjYkkTFLOq4uxd12rH7nyWGANDHkFx04B+73yDkmN
+ Sb/P2szKH3Gk2ePxruGpb8MqTBqe8IBcxh1NymIVr/AgteDKl8o8rVXk8Tyg
+X-ME-Proxy: <xmx:0w4Ia9Wlty5g9YDKrL9y7MR5gMiaeU6ysd6Hzr8hdulFkJ3S16rk0A>
+ <xmx:0w4Ia4IHdedHzoNjQfV-kN6hvw5siw3pacx4GZ_ug979c8-dMD8l7A>
+ <xmx:0w4Ia18MizLLEUykKeV6hH2Ems4wWJIe5Vu28AlWhImlb901j-_dlw>
+ <xmx:0w4IazLUJunOV7cnIEWaJd5sQTlR--zHKu4ndUT15zuk8u0tD59uwg>
+ <xmx:0w4IazM6e3OKKHTNBkFdk0pDyRAz6-fMi7qSpgkVhvGVhspgAmS3B8y3>
+Feedback-ID: i62564b17:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Nov 2026 05:49:55 -0500 (EST)
+Received: by athena.silentflame.com (Postfix, from userid 1000)
+ id C3ED027B49E; Thu, 26 Nov 2026 10:49:53 +0000 (GMT)
+From: Sean Whitton <spwhitton@spwhitton.name>
+To: Helmut Eller <eller.helmut@gmail.com>, Eli Zaretskii <eliz@gnu.org>
+Cc: Pip Cet <pipcet@protonmail.com>, emacs-devel@gnu.org
+Subject: Re: feature/igc3 status
+In-Reply-To: <87y0agkduh.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com>
+ <87a4p6angg.fsf@gmail.com> <878q2yz9rw.fsf@athena.silentflame.com>
+ <878q2yqtdz.fsf@gmail.com> <87cxrti2nm.fsf@athena.silentflame.com>
+ <87y0agkduh.fsf@gmail.com>
+Date: Thu, 26 Nov 2026 10:49:53 +0000
+Message-ID: <87y0afhnou.fsf@athena.silentflame.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=103.168.172.149;
+ envelope-from=spwhitton@spwhitton.name; helo=fout-a6-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 26 Nov 2026 10:50:03 -0000
+
+Helmut Eller [25/Nov  6:41pm +01] wrote:
+> Right, the signal handling part is done now.  Next, I will try to merge
+> master into feature/igc3.
+>
+> Then ask if it is good enough for the big merge?
+
+I think Eli and I are both on board with that.
+
+You can go ahead!
+
+-- 
+Sean Whitton
+
+
+From MAILER-DAEMON Thu Nov 26 09:19:01 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWaJQ-0004Qt-D3
+	for mharc-emacs-devel@gnu.org; Thu, 26 Nov 2026 09:19:01 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <michael.albinus@gmx.de>)
+ id 1xWaJM-0004Q1-P5
+ for emacs-devel@gnu.org; Thu, 26 Nov 2026 09:18:57 -0500
+Received: from mout.gmx.net ([212.227.15.19])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <michael.albinus@gmx.de>)
+ id 1xWaJL-0002rw-9M
+ for emacs-devel@gnu.org; Thu, 26 Nov 2026 09:18:56 -0500
+DKIM2-Signature: i=1; m=1; t=1795702734; mf=PG1pY2hhZWwuYWxiaW51c0BnbXguZGU+;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+; d=gmx.de;
+ s=s31663417:rsa-sha256:Er1dbgtkQp2ZAJCxmlX9WxilnRip
+ UERx1ytWXJAUQQtXpTGxnD/Sbu1LYqH9gBVvdWUiaoXjuQoRI79mtQhmCBMLdAbHhz4/qXD73IE
+ TZD16XJGwPK7ST8bTuudnRH/YniwQGMUTgnrNG89n5eLwVywp+/fGuwDHIeuo9LgGN5de79HDkJ
+ rRLGlWlywB3idhmJ4iIiRiuCzqbjYWwZHFC54rJ9K8ptlXIKQTCI/BbxJ4X8OuV4XmnozGcgkN6
+ 4kvQMbOJUWWreoOfJKTaIrAWiU5rraYSUQX8qJbGSLxZlRpOmmGJDQM5FacgdywEznwd69LN/RF
+ Pc/6dH4xWKJgJQ==;
+Message-Instance: m=1; h=sha256: cDTVpN/0nGopiiDaIwOOzAYfCfqq/76G0C8m80Ok4uA=:
+ BKZB6R289PDvulGvaXhvF4qWdLZy8BAnqVS/p3TMyDE=, sha512:
+ d2B4yKxAaFhdXQAF90h5OE7NH7sdcV1wwbUjfjZKTx8U9U8DYMY7URM52DXzV2LIbDd0Rxferrj+VXuunmg58w==:
+ RSlotuI21MqoGxtkj1utSzCwf+2ztXhNCfHm39n5PXDALpkcCcoDzjaswWqV9jON/hQFwt+TnO0oL2RDomJvog==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+ s=s31663417; t=1795702724; x=1796307524; i=michael.albinus@gmx.de;
+ bh=BKZB6R289PDvulGvaXhvF4qWdLZy8BAnqVS/p3TMyDE=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:Date:
+ Message-ID:MIME-Version:Content-Type:cc:content-transfer-encoding:
+ content-type:date:from:message-id:mime-version:reply-to:subject:
+ to;
+ b=FA3gwJ7V7Uwfhq/MEB/WM1Yo6GFM3ZDzlcp0JOWfH+RmtsU7cK78cDLP264dCZuc
+ zbBTxT1R4Z7/HeM9TwyF11QIg09Vby3Cs76rox1/pgyNENr0eZwF/tGPjcfMsyGO6
+ B/t66SYjvDaRWWl4FaCY0G1m/FEckHySc9h0R1xRlo2C3SBifujjHl4U/yH3wILgJ
+ qQ2ZOKdrjZPIfGUh1ljEbeGBSXA4j8uUC9yA2COSQoEq6F+XDvWoHE5AShS1OBRb/
+ p6UdWz5xcFfJ/B1i+uWmn8ctLsgvT0x1p/uTo/M5W37urGUkySbUtRNZ2seWBuvK1
+ y3wUoDVGECaaPFN4dw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxDp4-1yPlEa26Js-00zdv1; Thu, 26
+ Nov 2026 15:18:44 +0100
+From: Michael Albinus <michael.albinus@gmx.de>
+To: Vincenzo Pupillo <v.pupillo@gmail.com>
+Cc: Eli Zaretskii <eliz@gnu.org>,  Stefan Monnier
+ <monnier@iro.umontreal.ca>,  benleis1@gmail.com,  emacs-devel@gnu.org
+Subject: Re: speedbar
+In-Reply-To: <20MNw9I7RZKhglA-9eF9Zg@gmail.com>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <huU74fwgRlC71ZOWHn1H1A@gmail.com> <87jym24ndq.fsf@gmx.de>
+ <20MNw9I7RZKhglA-9eF9Zg@gmail.com>
+Date: Thu, 26 Nov 2026 15:18:42 +0100
+Message-ID: <87o6bbbrr1.fsf@gmx.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Provags-ID: V03:K1:xE6rs0HT5hOlbQCMq5H23Wz9kg/tiY/R1DCWE0PPihNPDxvUVay
+ bchkDGCqdaQdbi5V4pZzPZ24z1R2vUQB63UdnV38KkfQHx9kBGy0yPuyDnsLpWpcs+gkG0x
+ bTGbaL7njMdDKQ2KNLCVjoxckZlDAXc3FHx/qxeUHxskw9G8iTNKTFtkvUQkTc2OiWYzksL
+ g6jfzQaSVlW6spKf0ocFg==
+UI-OutboundReport: notjunk:1;M01:P0:0R2xwt91DZc=;vGyF2XMlJtLVMbD9XxYeDcE+YLd
+ DjS1EZyPuW9QxZTpfK8Pd1gFTvxkNtOmsr50xCsL+sVkbtIi+B9fy29AnD69fE5rmQyFQi8dx
+ HHPohDSvz6NVEPaIhNzyCdI84Qftty0jP9nrlOX7tbUZYil67zUBraE60Pe4nm0EKX7YOTHYb
+ BvDRUEth6cu6XsFiOfF2IZFfD0346PUIeac6bq4ZRS02CDFaX3pkKtJ41D0Gdp+mVnwgJtFot
+ 0piBj1dl3pq6BT4IviFk3cO+3QHK16kSFCuf7LgQx/AJOjjGejwltEK63llmezMehfigwk0EU
+ 2cvsvGSSR6V6hsn/miKQp1qhh/n4Ke3HtFjXqITiwjmJrtwEHZkaPPZHzsUg2UmeJgDioe1ED
+ Nsv5QVgfUX4cc/KO1BTD8N3ju6WB6UfL8bcocmn0+1W9at9qcUIPQ3wlrSsK1wpp6jfbeK6Yg
+ mzob+dzfbWNT9J7EFvx1TaVqHTZeLZQeJV5s1GRElN4JaKp8pxX12CUd7aCh8iXrp+0YMlqm/
+ Jm4RkjG0bw+Roxe3BMLWFARgarlFXzGeW6nvCRURy6w1TVZXjFi5tlBaIBrnC/PVmG7BtRl6h
+ iEqM2iWqlwUN/jAoyyXA+WakvIKYZcSwFBnybgdL2F6AXNN+LomG41h4qfdcK/iulQehTWzKg
+ Ck8DuUTMcVxZ3gIER94488J/+uv+5st2Z1G0JiaoF/bOtFMpWfH6kU05077ouZ1902ZtL0VQw
+ reIDweam0x7Tylx+MmmwSrwV2TRIcncjiIU6ElBoLYFz47CAH01Efx1hYPRKsgI6Uim5HsHvM
+ p+xIfj7UXJAlSMAwEEgfnGMKIyhQDSZt+ZOUvwHTKK6oTKRu4WqRc/N77cQJJ2mpO2jAcR7Iu
+ iiBarOC54rfEyL+OKVVlBOSYzBLPC3kfu/tc9yQ5+IUAMgjPVlE0gTPHKxCRmO0YwXincoiyF
+ epB6upIcC5sGcF9ptP5cpzClxyMlAGpcVNoLH5f9vZNyiQWlWZ8V4aJbKgVGWqT0LQflDNodY
+ 0Q38xOm2h/8AuEW+YX6ZTTby/DDkL7zl07hVktFnQiwyuDVT6n7SJH8MvppxOXuGNsRfUietR
+ fQqNB0fvwn6uvp04978xJPf+lM6C1sKQEL5e96PNAMrCEHg8Offn/rzAszBn4OyrCbHB4pGpc
+ 1R7I6ORC9Io8qFN9qq98W3eYV7b1H/AKym5WYF3ROn3YxEw/ZcFGu8aJ7B2I5cbZoknAqjtbx
+ iIeaN3ZXrE/2R4yxQLHvSi2hnM3ZMvVMP2nXm/yf+CTc96z3AZJ6eTOCbIY0QY+QDZnTWwZ9j
+ 3zWmyxp1QxRPBTdQyo9Mts4GXLE1bX7FOPnRVIdbJYUCcO8OCHFSnLqKuKWZ9sSqCMUwhQ7jc
+ PCdG8GVsmu6uAM9TeWkYZxgNRRy/dCghsoFuC09MZwV3TSoHUxYHXt/A/2fUOWBnoACJyNa9y
+ 6VyGZKj2ueskazOpqDbrX6oqR35mg3HACq8GvYjh3Cy799gcVPJuQFXK5lZ1qZnvqLxSEv+u9
+ mvNWcrP8bXaLMHT4WILcJ9qrUDqyRC9M+my+LVIoNsScO11FTiopde21FgcPzjyLpT+/X1vC4
+ V7S0y/+orKYQuiayuLE6D9cT00QhDTtlHIE6fOc15k9gq6yRDyFBR8lmdImnySTwFBWmu3dRN
+ qGpVVerNyTgzqIJpjDMKcSh4P8/0nSOM31imfAAU+TWXFg1hvaKl03eZVECMgRVC4stGSXC8l
+ Ylq2ro6/bbajlAuswGrKJxuFAa7gvttOybZ0i3DtZorS9/tp1x+P0l6ZYHhc7gEpqgj83uxM5
+ uH0+vSLkTckSXLght+CIc+tzUh9caX3O+KqtyeQysL1CWx03rkpqiV0HRW++jfK+7NqZmNZ0X
+ ZzU08Uf1Y0gCa2A3gZ0VzlI+ceIIhia69ynRZtLKsIOMYqwf0wPO5MBYDlU3loXcB8DgfEBrE
+ M9BF7/HPClS0kmGWVtUU/9iEkuW+n+nTDyNyl3E49GwY0Km57zyk2Pa0IehUiaveFCmdu0qnM
+ 1BUijjLAvbB4a4l5Z9l1Nds5soKmIbU9tGTviSZQXXZK0N7JXUjitPboL26+T5yFXPj2gZsiC
+ ffieU14f8/yAjzaSrMN2iJ7NY0am3EHINGo+DA8fViBZrBuqYSKOCeJeud4QsOwGfJf/xwRgW
+ bqeYNOEOGQ7A2h+oe09ralgpIGrOE+QCSdf1Zl0zQ8ULaAQb+iVtQviYYGSN3zBzW1RWynD9W
+ vJwtDH0gcPwgboPJ8l1I7ZQhBihpFAt8HnZkGtq/iZTeZt6fjo4CscLR4CpwGugDqhVhAieyl
+ +DSSYHIG822FCsplTmhVQbPrmCVnYgPRCyQkEMkpn/rHEFSQ3Nl68gcGu7thYx12d91bnMKw/
+ pzqE9K5qT86U5Lm1Zp3l2BL6qywc8042y8Kyhl6V1dbxZcBPlbC+jSNnBwo/uc/0g6A+i5CxF
+ g5Y032L7NTmzCpBdWgeNzRzygC/M3FnJVzV1510O6ctc4q+OdlqmX4ejj8BbFpJPWbEW76Je/
+ 2fnZDgUfpJGECEgDTcWeoMI8pbG/FISB4ROEhC+fMYWnrmVtKA6qHog3X00N3Nv9EXdu4zw9w
+ 1M0RB9YdAlY6wxqwOAon1ndFypVcJ48BIa5TNMqpZquckY7LCLIRmUZXOTCjAxhPsbCFHzTxF
+ MXvE6qlpxY/AFu++1VRfNAZlEz6IwYRUrkKRDyMM1MzFqIac1z2iOPmBqvrXUfcFD/uVW+XYI
+ szAvyxhMt1AJO/rIeiv0o7Y30r8KHLfWk1sp5RcS5SqGwVuiVvjkExJAMfXc/ObBf8WhxBUbj
+ Zf95MxVI00a171XdFDWN2OIV4+nob91Ar6puq8csb3gCCPU7uF6lER92NU01BEzWLnYesMrTn
+ SRBzn1cKD1JgXiBEjRXMGxaab44InixDQ0vx7K9J87BTgeM1XtaER9g77G80cjS3P7owuaE8g
+ bXTtenDC4kVqKqnr9fa5eLH5OG9UzQs8S5+wBAuN3vgO0wghnaLavVi3PDdH4KLWsUbiLlpsL
+ iVbocHN8lgG76MYMmmkjhmp/ztFS4U6Lutf87kcYps8KLKnD8GRgdpuhiAsF7j61X3DgtklDE
+ 3seqTBdtLYGla1SoUF3uET5j9woAzkAHZBj2uCItn9jPCxRfz5P+jR7YsunN0Ui3gZSOYEf08
+ w0vosqsqONIZh8MpMzVtyxcI77MwyaIx/AZGcQfdlMtr1sFklMi0YhxlbYjX4oQR7o2HgUvzH
+ G/WMbYEU6HkVX2n8gp68Duplhw/w4OfN2JdhsjLuK9l1lObu08Wk2w1ipHXuBSKX0lXq4anV0
+ 8Dlq9mHHTODG0V/MiI289ppyd1tZyxGjH5Z7O1bxCpWoUMO2WIE2k8yX+5icVq0RuIvzr30k6
+ S00FgZs19qT071EEGhVaWTF6D2xyHt+DuImhfAs9SML06FrXlb62kgoBLISqfEkeET0rUYCGy
+ ckHg1WDgflNme0JjD6K3dohp55Nfo0VY9FRPYKY8m0my8E5zO2r7iepjAocHxOj71+1tyD52n
+ GojJRLlpA8xarhlE/yjCE+siyrLMOUhnF28X5h+RwnMliLmuSNoFugpbOMLa0QTcxgNdQ5nmj
+ Nu58ao+1gK2pcIVnsHQtHneu17imy2JPfrpe0gD00QtD1oDPAzrgz0gDv3QGSIWxSPtd19wAl
+ 411mhp9hCkkZM4AKjZTkkUwl0oTusr/T5BZekJzmuAJzuoKO2peGcIcAf0G8R426tp2a3/zyU
+ 8Yiwthxfnf9ay601diLt3HvtUwoj26zSpk1lISe4c3XTp2tLF1TIQZ8Je6p3Q3de4KgdaGnqR
+ m+y2XnpwjYyMuxjsyd3Rblg5561m0XIHcXXcJD+qjvxMV+9VG1WX19UAdNmA8EN/119BPuDzd
+ +HyXL/DtXy/AhGg3PxJcdTYJYiXiQ9DeCRLLdLHeX7ScBwURVimLEfDWVsvDTYe28hs8Tlgbu
+ 4F1qnm7n/4tGxN7rojgudlNRST4OR/F0iZ0mCRqIdMpQdYZPoRN8730cQMAnMISqirEiSybbB
+ 2mlihIbn1ihIyY2rx9YQJ5YYPDEuranFKyfQO+DpcQscSGogu/cmXOZHuciWyMfGa4mXJWaY3
+ MjGzeCltMgVpar2dRPz29DnCxaduGT92YJ5TiY3alGXlOxYLgsaFBOUPpUiIiGPKspZQEs0gF
+ vITtyV64vHLWhuXtYsNVDZ2GyyjjAVMRPkdTwFtuWgaDIALTGibDWRUCUFnuD8/jL5IYhWWgf
+ G+VHrKBeVo3jP5CNhd42qIUM4SIn4AgDL03hE/Y9ALceWXQT6QA1HeE08XALoLisTEd3a61V5
+ IQflkyCQrzcBuI31Dm64ydnhJsfOTBRJ/JtKyFBuVgREtDDBmGuuBD4EB7c9Uqz9XN2JNBtT9
+ 81UdwlOg/wHOJW+j3JNiZ54QAl6ZqDr2FJ9Zrq8QKtaKBZ6gCe4kLLj8WmWrI/4C5tlVhiCLc
+ J873top6TQ4ZTT7fyRuWhrDN8Mnt211EHpN5BZWvOKTip24T6fHFSiLfz3+cErzSZwmaNn3UM
+ H63J3EdT2Q1MgkuhSLGQ9sdN0gMFEJtJVZOBZZUbqAPaaUOqlRzxsOqDopyTu1dTi8G9WmiKy
+ r7O4SLgtBRW/QSex9F+klZ0I6tGzf1Dv5cqHFaMkRzhDi1/Uy1qp89R53X//wNwe9IDeLZYkH
+ jgwCxdrku1DNCML0kSnRV1PF9BABqjYIDGuyMrj5oVNr/jJE7Vf9EBk3LZr43WYly8UZbRF+F
+ QXYtI3VIN4XwzDwR607dwKiyTEppJz42Qd0zAzMqOYDrxlbtkI/qkMl03YGs2VTlm1azOp89a
+ T3tjsLAqDqYh1++8bV4ixgk6Lb4JncPuO1GLVhtw/QErNSmXUGetWTbHpWGTLlT0UNOgrFDPl
+ KUhMt0b+6rIsIFxSCeiHx2b1iIox5pN0VAz1GbKKqCGKTdKAEWpO0g90JAZtXhOj5V4c8gsc5
+ 4k33y1QcTUnbU+OK7PU/5/EmXKpPX9W84wetkTcATjYheoped0mGXUhtwMOwzsu8xi5ANelc4
+ pUSGDtgl+D3ROEgvwGqvh7VRsqi7dIXpaEsHwJnctUuxaeugg9SwhvtYAw58k/7c2rM6jyOU1
+ VeKSY49ZAWr24IH4EXq11sUS03sFeHnzv8ez+hBdds9ZJcY0S4vO6abAyhlFXx9E88s9wb7xU
+ UdFbGp8nFC2BYD4TFxBLGyKK1d6X+KvmuQ5tfeAscCVrjZ5QutQigmdxSb60XENher3lXF2Tf
+ CwQsD8v5FwzvVVDaMisluwmEaHdBTxMJgmctksYRoDGOA8qqjTr+e63RoBjrN9hcThN0N9hni
+ aulCIB0lqiiIokvrm0eCrrsA8Lsn+D9Y+P4WiByErYE/BnE918mLIWAQUP6wuZ2ekYYaXDCjx
+ MBWSBb+o9X3i3oz/txwFysmNO9yXIY7KV6dCHDhWMNX6yIaB+GSV88UvGe5lmt2KDP2Hbduwb
+ lmYt0qPQC38uWM+jLnMBGgZrreQy9hUk0GGLvqfpIlWQuDo0RxXu5AA1ZZ3RLGsH6B85xmT5P
+ yFVhSyat7sY8AbhlIPTahGUp7GlvNOg5W8OlBZ3d0STYBIut6O6z56gBV+oGzcjtlvUKtLaiz
+ XcziOmsY/22O+y4KSBJbZYpUzevq7DiJpBTblANJjuJalUqHkXAU4PorzFhuDxFYt6mYojAn3
+ Qb72sVWIN2vnWHX8CgBPH939xNwi4L6F5O0H1QUjxUYgKWHoxdJm0qZ+iN9K9yFU0Tcl/uGob
+ d/YixUVzJoxdQd+weBzzY+5PT/uqKTtXgYB6097zXTn+R20RQ99TcnGN+R625ZXvX/u57lSet
+ 0gZOkgO3Xb/ZrcTW64y3cCwO0biyTkZic4KjSioxQZXTqXTejN8pUVa8cQ3jIcB/geq6oXsxf
+ 5QHwLEAiLV8+PdIEekj08PjWwLAlUskzMAhiM3oqXTqXIDlPtQT0IyhQXYjWua4wUjivEM/GQ
+ yd+nLDeR0122e22JOa9hrod71ETLiLdMOWI8yFW1T5Kiko1BfhbGBS31Bszh+MejvYfr+VlcM
+ Bs8PjT4VCtPjdRtFUeu1vaChPSZSXFoaqYI5zXzci9RRbln3qsRe4geHrKNj3UdMM50vb39yB
+ ceyLWyNihjJ0K8PSWt1gAiJH/SBncxFJOnHpM5jKWpb1rGiOjouNa6pySxq+KXIveuxYnLbmj
+ BMp/FI1HAL93jaFe6G1L0zFNqBz6PmWP8kCNqqX+514nGDUCaBxkDSnASUpnBFOHpP1E9oODb
+ JloNvrMuckmrFQrhNSUZ2+kvfL6nBBcDm8o9nPjf1r9ONNEQJ00bXqPDweCLZeG3ZGdj7tHDc
+ 8eYDTC78GaN8OwGAZ70+o5zbt3zNwy2R7+FglkXr4Iw43MNUDqSD4XNUda65IX0DUw0vxiJVb
+ 8Z2au8l4W5pxpVUCEOF3mbXnWlGxCaP0NtYe1rs0NXP+xwjudfYcR5B9T7z8eBjE3HNSo6ORM
+ K2evqK2Z2HVNd/WTlzpLBadwhWIgB4njrK1vubesjNW/VN4w5Gmz4J+0XZ0BplISRS1q8wmuI
+ YMNfNMsMMEKokX8q9W167bcrl8TAv2ZiKKYYK6lpXsKgR0c/HFaiCqzJqX/Bu5KXemrRh3V6H
+ ilSAgkzWQPgdcOflr1m/Ly/VwQ1xt15uVloTN3oGo5it2zsvrIpjKjZQlpq23cAUWCpYA9PJ1
+ L7rwSUwO4+1ZZ0eCgJHW9bmdG98VxvVonXeD2qYpPCfLPry7wdgMp0qOVCqa0DgYz0VvN0F9l
+ JCfJY45THvDZv9kmFg0L0oBwCj8dkR5Ob2eRQZCytqEAgiezWnpyHKeHerLE4CYFS4YATlQ/C
+ 5DFWwYmDmOxYp4HY6kcl6EpHx1SxjrSgsvNcTtWWeW6jdSHI9CUiW67J9XLcsLFdsWlQA+GT9
+ 9WFd58+7hkWXeBX4fUNUOVgoZTocYB+etaLlToaQVKppemFuiI2C6+h6a+eS6l94MKyzcxL3x
+ ylXhW80f+QSZDd5TjNf7Q/Gnm6OoJ+CmF3d9tvZt3as8WghKwxPl2NKYISH1A0PKYjyFTXZEc
+ AKHx7fhL+sAK0NVExcE/hjIDY/CXlHomQPWIynicv/E6gxQvhLo/UtIDuATR79wSmy0k4p+bJ
+ fcsdHgP5hFvxFV/Vj5R5Kz+AO3D6ymdEPGupG9SEgI
+Received-SPF: pass client-ip=212.227.15.19;
+ envelope-from=michael.albinus@gmx.de; helo=mout.gmx.net
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_MSPIKE_H4=0.001, RCVD_IN_MSPIKE_WL=0.001, SPF_HELO_NONE=0.001,
+ SPF_PASS=-0.001 autolearn=unavailable autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 26 Nov 2026 14:18:57 -0000
+
+Vincenzo Pupillo <v.pupillo@gmail.com> writes:
+
+Hi Vincenzo,
+
+> Thanks, Michael. The updated patch is attached.
+
+Looks OK to me.
+
+> Vincenzo
+
+Best regards, Michael.
+
+
+From MAILER-DAEMON Thu Nov 26 09:40:29 2026
+Received: from list by lists1p.gnu.org with archive (Exim 4.90_1)
+	id 1xWaeB-0005H5-4J
+	for mharc-emacs-devel@gnu.org; Thu, 26 Nov 2026 09:40:28 -0500
+Received: from eggs.gnu.org ([2001:470:142:3::10])
+ by lists1p.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <fgunbin@fastmail.fm>)
+ id 1xWae8-0005DU-P3
+ for emacs-devel@gnu.org; Thu, 26 Nov 2026 09:40:24 -0500
+Received: from fout-b7-smtp.messagingengine.com ([202.12.124.150])
+ by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+ (Exim 4.90_1) (envelope-from <fgunbin@fastmail.fm>)
+ id 1xWae7-0004W6-3l
+ for emacs-devel@gnu.org; Thu, 26 Nov 2026 09:40:24 -0500
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+ by mailfout.stl.internal (Postfix) with ESMTP id A569B1D00484
+ for <emacs-devel@gnu.org>; Thu, 26 Nov 2026 09:40:20 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+ by phl-compute-03.internal (MEProxy); Thu, 26 Nov 2026 09:40:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
+ cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+ :in-reply-to:message-id:mime-version:references:reply-to:subject
+ :subject:to:to; s=fm3; t=1795704020; x=1795790420; bh=t713TejA4Y
+ DNMjaDkTGEm1UjteBD+Rhb1jG3gdhuSj4=; b=EeYEcozxBE+8bRY2VhJFXA7/mc
+ lPewGefi8YAuoLHP+nWGno78xUpbH/vxQZeH35jmU2/9yW18TMOAapM7gFa4hrrO
+ B8uQYtm4y7Q+EZkrkBsPJt7wFoZ14B0dBQPft8Uk/yztgTDEwE3xolPfMkSTS3Xp
+ PvHRgJhbEdNvhU2aZwoGcyZo70kcU+uiDaAXJ9GBS5Y9EGL6OynxAOLwSzXfi/+K
+ e1Dzn33ZynvfPaBgIqPOxRbv9aWC39N6DQRSW2V+mIqwKSrAhpg5GrrJ3yBdUGtV
+ IqyUpZ6yift5EDHNNBeAn5bpDzk/6Ubm+6G7267DLe4SFannO3Bai7uOAmfw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:content-type:date:date
+ :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+ :message-id:mime-version:references:reply-to:subject:subject:to
+ :to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+ 1795704020; x=1795790420; bh=t713TejA4YDNMjaDkTGEm1UjteBD+Rhb1jG
+ 3gdhuSj4=; b=5yyABQrca+1RKa51V8WRJ0gmyiGdqXGd0E0ImNfbVhQx6JVcVEr
+ zn+Usx3r5UH0Dp3aDUwF97DCOIFSSWbHZKHLkLeX4luGVmpJXoDoUV2FQ0RpReob
+ xaKHWplUOZtsE52Y0IOd4/ViN4FOxCpXHOKzZBZi9JhQqJeOa5rNF5abHVDvyLxR
+ ZyHfA9d8n4qIrFHVWujtSM6IDa7LCP7hmd64XIVnfT1xzK7RK0xRyyQ4H1/kZjv8
+ AWeez3wM2A93Y0ihV4By+RcPas9Llfm1xNWsq2w6X1HhB2XwyeoNlcf3h0CnoybK
+ 1LgGwp6wjHtZyA6VVQZ7qacVwDqFLppgRyA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+ repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+ action=sign d=fastmail.fm a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1795704020; d=fastmail.fm;
+ mf=PGZndW5iaW5AZmFzdG1haWwuZm0+;
+ rt=PGVtYWNzLWRldmVsQGdudS5vcmc+;
+ s=fm3:rsa-sha256:YUOQMP/+gbkIKRMUPO32kfvNPuwbNpfBIIZOI8RU82RcG+2
+ ClSZaSYrVdBGZyxWXeQ714Bjtt6PY17pehxhXtqnDHwL5Cvtttn10oCPFuei/Tzo
+ 3D7iMm4ROdCbodQxCitgwLtSEe1QZ/N59lQF5xYmWF5dEGYYN6pLIdL3H0OH4tW9
+ jsxj79VXdCwnTxRg28fvJr5SoB8AR/W9SPB4vSmz4zqnyCPGnJBJ9M42TsRAij67
+ Etarp6drg9+YpzCQn3o5ApckTFEKk5/YYHYODhpjlDz1Wmg/YSGd7QM7XB0mlAAb
+ kg+r4s0UuR9esL1MxbKQcnpDQTGdsWfR5W5rODA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+ repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+ action=mi-m=1; hc=14;
+ hn=cc,content-type,date,feedback-id,from,in-reply-to,
+ mail-followup-to,message-id,mime-version,organization,
+ references,subject,to,user-agent;
+Message-Instance: m=1;
+ h=sha256:5SvBQPh624uWK8k7IaPmSwB3ph+7NJuyCrYAp4yWaho=:t713TejA4YDNMjaDkTGEm1UjteBD+Rhb1jG3gdhuSj4=;
+X-ME-Sender: <xms:1EQIaz-c8VackfmskwFOcTpUb4OTnNBuZGJqHmJ_S18qlESjYmFL9g>
+ <xme:1EQIa8AN_4TSK9k7GmIzEuPXWKA1-jjCICnJ8_-WXpvfLvcjHd-MDqu9hsDAapDkG
+ sRyhros7DHwMo9qVyUG4WqBNMV-hH59PtrZvmRucYMmiLVm4YB3cQ>
+X-ME-Received: <xmr:1EQIazxk8gKnFt4gPO9j4nxFw9hgHNmzwqlBeiS_1vNBOBPO9l51OabSQ2wEtjo>
+X-ME-Proxy-Cause: dmFkZTFCq2dLQZWHEziBLD+rJd4cOOVZlTnp7LLQDlvgYu/WznsqkF1gEyIxDbRYvwbF7q
+ 4dOahPT8PtBOHGg3v7xceEVVvX6DNXWUy4f98/wkLixV4OZz/7sGe+s1vrQxCtRPtjwesU
+ MZNTQkys6rEatPfEcLM5WIBZFUVw3y0xQN/lrvoRDrjgL+sMOMKxNd+qAzVdF35yKaC3Q/
+ V7wZdo/XNvm6uosFWaIkU4IwRW3+XqdY7+TkTY9U++SrybmzIcz/7y9ifFXyW+yFE/tr6k
+ 4TZxjbpXoCYe4b7R0TGxnY9f1FgOINGwIDrOTupCQIPO9/Rv9BhSeJoD2QUVDrE5qz0aAq
+ HhM7EkS5sR5haNCVTekayni6r4iaeKILGcd+Upb4Fch7ckwE9m7UZcmjDffMwitCPE+gQ+
+ u3KOt6vBjIcbfmGMF0nF65g1RKE5YsODrsCt/nZhdZFs1zEx0NlV3fYU0aVe/Q67/tcfOf
+ Be6wfg3rp3I+JCsFINp1x1gF5PU/30U2PkEAL6m3jQrSmfWx0ld6C5euE/g8D/8IsxW6cM
+ C1ueWH3zXFSmvdc5VIemfTmoVb/wFZ7O/dVJvMtvLKukRTtxWkbExfdzEBa3XosrAdKsiU
+ Zs4QtKaIfFFe77KIxyc+BUK5gmMR4Jwth/PsMhZSlKNLgxNeY1cGlPtiS2EA
+X-ME-Proxy: <xmx:1EQIaxQ1Jk9gEukH1Nzf1wboBKFkzyqwelm2iGUGf5GzccsJyHdfmQ>
+ <xmx:1EQIa6-HrYHtZceMmnvbIYJjvZVtRmNo2wAL6T-4lbiE-waMp6a_hg>
+ <xmx:1EQIa4pI-B08OicY0c2M2ZoSqnkneB1sgbu4bR3-BCKeHBlw1EO9bA>
+ <xmx:1EQIa3lc4UiCitOOFzQ51-npUnRDg5CD261MEb6MpndbX8TrLXLkKQ>
+ <xmx:1EQIa3JA2jV0rTuvQS60oE-1-JGNmjN5OlCqs_Qp-VlB02x-6BxfyK4y>
+Feedback-ID: id48c41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Nov 2026 09:40:19 -0500 (EST)
+From: Filipp Gunbin <fgunbin@fastmail.fm>
+To: James Thomas <jimjoe@gmx.net>
+Cc: emacs-devel@gnu.org
+Subject: Re: Future history discoverability
+In-Reply-To: <s48cxrs5llm.fsf@gmx.net>
+Organization: https://plainsoftware.org
+References: <f104f17c32829a7be42bed2e5f8453bf.matthewktromp@gmail.com>
+ <m1h5w8ottq.fsf@fastmail.fm> <s2dseey7nov.fsf@gmx.net>
+ <m1ikftzqn7.fsf@fastmail.fm> <s48ikd1mjp3.fsf@gmx.net>
+ <s48ecnpmi86.fsf@gmx.net> <m1tswlqgmc.fsf@fastmail.fm>
+ <s48cxrs5llm.fsf@gmx.net>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Mail-Followup-To: James Thomas <jimjoe@gmx.net>, emacs-devel@gnu.org
+Date: Thu, 26 Nov 2026 17:40:16 +0300
+Message-ID: <m1wlpzac6n.fsf@fastmail.fm>
+MIME-Version: 1.0
+Content-Type: text/plain
+Received-SPF: pass client-ip=202.12.124.150; envelope-from=fgunbin@fastmail.fm;
+ helo=fout-b7-smtp.messagingengine.com
+X-Spam_score_int: -20
+X-Spam_score: -2.1
+X-Spam_bar: --
+X-Spam_report: (-2.1 / 5.0 requ) BAYES_00=-1.9, DKIM_SIGNED=0.1,
+ DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1, DKIM_VALID_EF=-0.1, FREEMAIL_FROM=0.001,
+ RCVD_IN_DNSWL_NONE=-0.0001, SPF_HELO_PASS=-0.001,
+ SPF_PASS=-0.001 autolearn=ham autolearn_force=no
+X-Spam_action: no action
+X-BeenThere: emacs-devel@gnu.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: "Emacs development discussions." <emacs-devel.gnu.org>
+List-Unsubscribe: <https://lists.gnu.org/mailman/options/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=unsubscribe>
+List-Archive: <https://lists.gnu.org/archive/html/emacs-devel>
+List-Post: <mailto:emacs-devel@gnu.org>
+List-Help: <mailto:emacs-devel-request@gnu.org?subject=help>
+List-Subscribe: <https://lists.gnu.org/mailman/listinfo/emacs-devel>,
+ <mailto:emacs-devel-request@gnu.org?subject=subscribe>
+X-List-Received-Date: Thu, 26 Nov 2026 14:40:25 -0000
+
+On 26/11/2026 08:45 +0530, James Thomas wrote:
+
+> FWIW just want to let you know that what I actually wanted was:
+>
+>>>> reaching the _most recently buried_ buffer
+>
+> ...for which I use 'C-x b C-s *info C-s...' until it fails, then 'RET'.
+
+But searching by name is not the best thing when you have such generic
+buffer names.
+
+In the particular case of info files, a better thing would be using a
+numeric prefix arg to C-h i to assign a number to a new buffer, and then
+access it with the same key sequence.
+
+--8<---------------cut here---------------start------------->8---
+A numeric prefix argument of N selects an Info buffer named "*info*<N>".
+--8<---------------cut here---------------end--------------->8---
+
+
