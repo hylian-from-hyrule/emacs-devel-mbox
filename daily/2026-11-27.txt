@@ -1,0 +1,1634 @@
+emacs-devel messages from 2026-11-26T18:15:00+01:00 to 2026-11-27T18:15:00+01:00
+
+================================================================================
+Date: 2026-11-26T22:51:22+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <878q2fjm79.fsf@gmail.com>
+In-Reply-To: <87y0afhnou.fsf@athena.silentflame.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com>
+
+On Thu, Nov 26 2026, Sean Whitton wrote:
+
+> Helmut Eller [25/Nov  6:41pm +01] wrote:
+>> Right, the signal handling part is done now.  Next, I will try to merge
+>> master into feature/igc3.
+>>
+>> Then ask if it is good enough for the big merge?
+>
+> I think Eli and I are both on board with that.
+>
+> You can go ahead!
+
+I merged master into feature/igc3.
+
+Maybe people could look now at code on the branch with something like
+
+  git diff master feature/igc3 -- src/lisp.h
+
+for the files they are familiar with and report problematic changes.
+Especially those that aren't guarded by HAVE_MPS.
+
+Helmut
+
+================================================================================
+Date: 2026-11-27T00:26:24+01:00
+From: Dmitry Gutov <dmitry@gutov.dev>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <9a316be4-60ba-48b8-a6e7-8be039a6d004@gutov.dev>
+In-Reply-To: <87bj7c8210.fsf@mail.linkov.net>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <86h5k5343a.fsf@gnu.org> <11d66437-26be-470f-b7e1-e2929d7b742d@gutov.dev>
+ <861pb3opn7.fsf@gnu.org> <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org> <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+ <86zex0z4k9.fsf@gnu.org> <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev>
+ <86se1nvf3v.fsf@gnu.org> <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev>
+ <86cxsqtk1y.fsf@gnu.org> <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev>
+ <87v764g2bt.fsf@mail.linkov.net>
+ <715b8d24-70a8-459d-a45e-fb324cb35203@gutov.dev>
+ <87bj7c8210.fsf@mail.linkov.net>
+
+On 26/11/2026 09:50, Juri Linkov wrote:
+>>> Would be nice to try avoiding such complexity in this case.
+>>> Maybe it would be sufficient to define the global variable
+>>> for the last used backend?
+>>
+>> I'm not sure it would help. We could have a variable for "last used buffer
+>> and position", but that pair is fetchable from history, as we can see.
+> 
+> Fetching from history might be sufficient (or maybe also using
+> window-local history when 'xref-history-storage' is customized
+> to 'xref-window-local-history').
+
+Yep yep, (xref--get-history) should correctly delegate there.
+
+Right now my plan is to add a manner of invocation that will mean "use 
+location from before the latest jump". So that location will only be 
+"kept" while you keep using that invocation (e.g. 'C-u C-u') or if the 
+regular jump continues to be with the same backend.
+
+Using the same concept, I'm considering other UI approaches. E.g. prefix 
+command (but it'll either need a binding or expect the user to M-x type 
+it in full). A minor mode was discussed as an option, but a binary 
+yes-or-no doesn't seem very suitable for this kind of feature (it would 
+be easy to do, though).
+
+Opinions welcome.
+
+Eli's suggestion is implemented in the patch I already sent, but that's 
+rather limited in scope.
+
+> I suppose this would help to solve the real problem that I experience.
+> Sometimes in another working tree (for example, in a branch)
+> in a ELisp file 'M-.' needs to jump to the original tree
+> where Emacs was started.  But sometimes 'M-.' needs to jump
+> to the file in the branch tree.  For the former need to use
+> 'elisp' backend, for the latter 'etags' backend.  So would be nice
+> to have a way to select the backend and keep it for navigation.
+
+Hmm, I'm not sure how to conceptualize this kind of feature. Choosing 
+just a backend seems insufficient, like described earlier.
+
+We could have a prompt to choose an earlier location as a location to 
+jump from, though. Maybe grouped by backend, but I'm not sure about that 
+- after all you might as well have two different worktrees using the 
+same backend (e.g. Eglot) and you might still want to be able to choose 
+between them.
+
+Maybe a command that sets an "origin location" (with completion) for all 
+subsequent jumps is the way to go. And a command that resets it.
+
+Or a command that affects just the next jump. Though this would probably 
+be easier to apply with 'C-u C-u', as discussed before.
+
+As for implementation strategy, I'm thinking of a new backend type that 
+could be returned by xref-find-backend and wraps a tuple 
+backend/buffer/position retrieved from history (or just buffer/position, 
+since backend is recoverable).
+
+================================================================================
+Date: 2026-11-27T02:52:42+01:00
+From: arthur miller <arthur.miller@live.com>
+Subject: 2 crashes + 1 error and 2 don't know whether it is bug 
+Message-ID: <VI1PR09MB2496F54771B749E301876B3896412@VI1PR09MB2496.eurprd09.prod.outlook.com>
+In-Reply-To: 
+References: 
+
+Patch 4 and 5 are crashes. Patch 2 is also an obvious error.
+Patch 1 and 3 I don't know, decide for yourself whether it is a bug
+or not (I think they are).
+
+Also to note, I have used LLM and I see you don't accept LLM
+contribs, so decide for yourself whether these are acceptable
+or not. Each is very small, so IDK, non-substantial?, or rewrite
+or throw away the tests or just see as bug reports. Do what
+works for you.
+
+================================================================================
+Date: 2026-11-27T05:47:08+01:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <m2a4mu6fub.fsf@gmail.com>
+In-Reply-To: <878q2fjm79.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+
+Helmut Eller <eller.helmut@gmail.com> writes:
+
+> On Thu, Nov 26 2026, Sean Whitton wrote:
+>
+>> Helmut Eller [25/Nov  6:41pm +01] wrote:
+>>> Right, the signal handling part is done now.  Next, I will try to merge
+>>> master into feature/igc3.
+>>>
+>>> Then ask if it is good enough for the big merge?
+>>
+>> I think Eli and I are both on board with that.
+>>
+>> You can go ahead!
+>
+> I merged master into feature/igc3.
+>
+> Maybe people could look now at code on the branch with something like
+>
+>   git diff master feature/igc3 -- src/lisp.h
+>
+> for the files they are familiar with and report problematic changes.
+> Especially those that aren't guarded by HAVE_MPS.
+>
+> Helmut
+
+Diffing ObjC files currently leads to an error:
+
+  .../emacs/github/master % git diff master...feature/igc3 -- src/nsterm.m
+  fatal: Last expression must not be negated: !^[[:space:]]*(do|for|if|else|return|switch|while)\n!^[[:space:]]*[[:alpha:]_][[:alnum:]_]*:[[:space:]]*($|/[/*])\n^[[:space:]]*([-+][[:space:]]*\\([^)]+\\)[[:space:]]*[[:alpha:]_].*)$\n^((::[[:space:]]*)?[[:alpha:]_][[:alnum:]_]*[[:space:]]*\\(.*)$\n^(@(implementation|interface|protocol)[[:space:]].*)$\n^((#define[[:space:]]|DEFUN).*)$
+
+Cause seems to be:
+
+  513b6a8a7083ba70625df7ecb9546e92cfbad0d4
+  Author:     Robert Pluim <rpluim@gmail.com>
+  AuthorDate: Thu Nov 26 14:48:39 2026 +0100
+  Commit:     Robert Pluim <rpluim@gmail.com>
+  CommitDate: Thu Nov 26 14:49:26 2026 +0100
+
+  Parent:     457d4b90627 Add a diff driver for NEWS files
+  Merged:     emacs-20 emacs-23 emacs-30 tty-cursor
+  Contained:  master
+  Follows:    emacs-31.1.90 (1379)
+
+  ; * autogen.sh (hooks): Fix objc diff xfuncname.
+
+My Git is 
+
+  .../emacs/github/master % git --version
+  git version 2.56.1
+
+which is from homebrew. I am on macOS 27.2.1.
+
+================================================================================
+Date: 2026-11-27T05:50:41+01:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <m25wxi6foe.fsf@gmail.com>
+In-Reply-To: <878q2fjm79.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+
+Helmut Eller <eller.helmut@gmail.com> writes:
+
+> On Thu, Nov 26 2026, Sean Whitton wrote:
+>
+>> Helmut Eller [25/Nov  6:41pm +01] wrote:
+>>> Right, the signal handling part is done now.  Next, I will try to merge
+>>> master into feature/igc3.
+>>>
+>>> Then ask if it is good enough for the big merge?
+>>
+>> I think Eli and I are both on board with that.
+>>
+>> You can go ahead!
+>
+> I merged master into feature/igc3.
+>
+> Maybe people could look now at code on the branch with something like
+>
+>   git diff master feature/igc3 -- src/lisp.h
+>
+> for the files they are familiar with and report problematic changes.
+> Especially those that aren't guarded by HAVE_MPS.
+>
+> Helmut
+
+Hi Helmut,
+
+I've made a change log for the merge from src/ns*.[hmc].
+Hope that's okay ;-).
+
+2026-11-27  Gerd Möllmann  <gerd.moellmann@gmail.com>
+
+	* src/nsterm.h (EmacsView): Make emacsframe a struct frame **.
+	(EmacsScroller): Remove frame and window members, add
+	m_lisp_window.
+	(lispWindow, lispFrame): Declare new accessor methods. All users
+	of window and frame in all files changed.
+
+	* src/nsterm.m: The emacsframe member in EmacsView has been
+	changed in nsterm.h from struct frame * to struct frame **. All
+	uses adapted.
+	(EV_TRAILER): Add a frame parameter, all call sites changed.
+	(hold_event): Use igc_realloc_ambig if HAVE_MPS.
+	(ns_term_init)[HAVE_MPS]: Use igc_xzalloc_ambig.
+	([EmacsView dealloc]):  Free emacsframe.
+	([EmacsView initFrameFromEmacs:]): Allocate emacsframe.
+	([EmacsScroller lispWindow]): New method.
+	([EmacsScroller lispFrame]): New method.
+	([EmacsScroller initFrame:window:]): Allocate m_lisp_window.
+	([EmacsScroller initFrame:window:]): Use lisp_frame
+	([EmacsScroller mark]): Do nothing for igc.
+
+	* src/nsfns.m (Fns_frame_list_z_order): emacsframe is now struct
+	frame **.
+
+	* src/nsmenu.m (ns_menu_show)[HAVE_MPS]: Don't inhibit GC.
+
+================================================================================
+Date: 2026-11-27T06:01:22+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xWo5K-004EgC-J3@fencepost.gnu.org>
+In-Reply-To: <87bj7hkxqa.fsf@web.de> (arne_bab@web.de)
+References: <877bis35nn.fsf@gmail.com> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org>
+ <87jym6nvm3.fsf@web.de> <f86d2ed739adfadeb38904c3edeff2ee@gnu.support>
+ <87bj7hkxqa.fsf@web.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  >  Airlie expressed a concern that there might not be anything left for
+  >  those people to write; as soon as an idea is raised, somebody can
+  >  summon an implementation from an LLM. Alice Ryhl agreed that this
+  >  could be a problem. Ojeda suggested setting up a way to assign a
+  >  project to a developer for a period; Hellwig said that the only reason
+  >  to do that would be for training purposes. Otherwise, why wait when
+  >  there is an implementation ready? Ojeda said that supporting
+  >  developers who do not want to use LLMs is also a good reason.«
+  > https://lwn.net/Articles/1099594/
+
+  > What followed was that the requirement to add Assisted-By to commit
+  > messages was dropped¹ and replaced by a "be transparent … you can …"
+  > guideline for cover letters².
+  > ¹ https://docs.kernel.org/process/coding-assistants.html
+  > ² https://docs.kernel.org/process/generated-content.html
+
+  > That’s a classical example how social dynamics weaken a policy that
+  > allows LLM output under some conditions and begin to push people out who
+  > write code by hand (though Ojeda still spoke up against that).
+
+This is an issue we must properly address.  It sounds like they didn't try.
+
+Linux adheres to the open source philosophy.  If Linux development
+became totally dependent on a nonfree tool, they might not see a
+problem in that.  We, in contrast, _must_ make sure that does not
+happen.
+
+This is an additional reason to put explicit limits on our usage of
+LLMs.  It does not imply _never_ using them.  But we should _never_
+steer anyone towards a nonfree or SaaSS LLM.
+
+Another issue is that we must take care not to be locked into one
+particular LLM, either in general or in working on one piece of code.
+Those who do use LLMs should switch around, to make sure of this.
+
+We should also make sure that LLMs don't pressure us into using
+certain kinds of designs and not others.
+
+All this is supposing that the copyright issues have been resolved.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-27T06:01:57+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA usefulness criteria =?iso-8859-1?Q?=E2=80=94?= judging
+ niche packages before their users are known
+Message-ID: <E1xWo5t-004EpX-6H@fencepost.gnu.org>
+In-Reply-To: <88ee8b34d2c04c3c4718dfffbad1e6d2@gnu.support> (message from Jean
+ Louis on Sun, 22 Nov 2026 12:29:27 +0300)
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net> <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support> <87v75tertn.fsf@posteo.net>
+ <E1xUxJe-00F84p-G4@fencepost.gnu.org> <867bi5gta8.fsf@gnu.org>
+ <88ee8b34d2c04c3c4718dfffbad1e6d2@gnu.support>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > To make this concrete, here are some examples of work where such 
+  > packages are genuinely useful to my staff, and where a package might be 
+  > rejected simply because the need is unfamiliar to the decision makers:
+
+This is a border case.  If it is very specialized, but very useful to
+your staff because your staff often does some specialized task, there
+may be no reason at all to include that in Emacs, but perhaps a reason
+to teach all your staff to use it.  Your staff might also maintain it.
+
+
+  > - coffee trade: predicting drying, hulling, and weight losses; 
+  > forecasting income; converting prices from pounds and cents to USD/kg 
+  > and other currencies; producing receipts; managing families and the 
+  > benefits they receive. This is not an abstract problem for the people 
+  > involved, it affects their daily life and income. It minimizes 
+  > exploitation.
+
+  > - seed cleaning business: estimating prices and weight losses; also 
+  > lumber trade. It helps agricultural sector.
+
+  > - converting a shipping container into a home: volume and material 
+  > calculations. Most reviewers do not live in a container, but the people 
+  > who do need exactly this kind of calculation. It helps development of 
+  > countries, as containers are mostly used in construction and mining 
+  > industries, remotely. Investors employ employees... development take 
+  > stage.
+
+  > - converting the ARC1960 geodetic datum to WGS84 and back; calculating 
+  > excavator loads, cycles, and capacities. It helps families. One person 
+  > may use it, or single staff member, yet the outcome helps whole families 
+  > in this case.
+
+I think we want to avoid spending our time on packages so specialized
+as that.  There could be tens of thousands of them!  I'm glad that
+people do these things, but we must not accept any kind of
+responsibily for taking care of them.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-27T06:03:46+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xWo7e-004FgT-Fi@fencepost.gnu.org>
+In-Reply-To: <87o6bh74ne.fsf@localhost> (message from Ihor Radchenko on Sun,
+ 22 Nov 2026 06:38:11 +0000)
+References: <875wxrr7a3.fsf@web.de> <86bj7jk4g8.fsf@gnu.org>
+ <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org> <87jym6nvm3.fsf@web.de>
+ <86ld6mgsun.fsf@gnu.org> <87tslam8wt.fsf@web.de>
+ <87zev2qcuz.fsf@posteo.net> <87o6bim1bg.fsf@web.de>
+ <86eccdh162.fsf@gnu.org> <awKKjWVIzRNTCbVT@tuxteam.de>
+ <87o6bh74ne.fsf@localhost>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > Yes, the maintainers can push back there. As much as I admire
+  > > current maintainership, I fear this will become a superhuman
+  > > task.
+
+  > Do you have any reasons to believe that addressing this potential issues
+  > needs to be done earlier rather than later? If earlier, how earlier? Or
+  > is there any specific condition you have in mind?
+
+The crucial moments will be those when we face the choice of trusting
+a proposed change from an LLM, or leaving a problem unfixed for a
+time.  We are likely to feel pressure to accept the change.
+
+If the change is easy to understand, it may do no harm (in terms of
+design) to accept it.  But if it is hard to understand, we should
+decline it.
+
+We can help ourselves stay ready to say no if we practice the will
+power to say no.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-27T06:03:52+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xWo7k-004Fla-St@fencepost.gnu.org>
+In-Reply-To: <awKKjWVIzRNTCbVT@tuxteam.de> (tomas@tuxteam.de)
+References: <875wxrr7a3.fsf@web.de> <86bj7jk4g8.fsf@gnu.org>
+ <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org>
+ <87jym6nvm3.fsf@web.de> <86ld6mgsun.fsf@gnu.org>
+ <87tslam8wt.fsf@web.de> <87zev2qcuz.fsf@posteo.net>
+ <87o6bim1bg.fsf@web.de> <86eccdh162.fsf@gnu.org> <awKKjWVIzRNTCbVT@tuxteam.de>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > The situation is asymmetrical: non-LLM alternatives can be made
+  > harder, partly under control of the LLM generated code. There is
+  > a huge financial interest in doing so.
+
+I don't follow this argument.  Could you state it more concretely?
+What might the LLM developers do that would make non-LLM maintenance
+harder?
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-27T06:04:08+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <E1xWo80-004Fv4-CG@fencepost.gnu.org>
+In-Reply-To: <86fqwth20y.fsf@gnu.org> (message from Eli Zaretskii on Sun, 22
+ Nov 2026 07:24:13 +0200)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <87jym9gaoq.fsf@posteo.net> <E1xUxJs-00F8eh-A4@fencepost.gnu.org>
+ <86fqwth20y.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > 2. What role have LLMs played in developing Nuspell so far?
+
+  > None, AFAICT.
+
+  > > 3. What does the developer say about what role LLMs will play in
+  > > developing Nuspell for the foreseeable future?
+
+  > I don't think we contacted them.  There are no documents in the
+  > Nuspell repository that touch these issues.
+
+How about if we interface Emacs to Nuspell?  The new features will
+be appreciated.
+
+Can someone tell me how to email the developer?  I have a feature
+to suggest.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-27T06:04:24+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <E1xWo8G-004G2w-HI@fencepost.gnu.org>
+In-Reply-To: <867bi5gta8.fsf@gnu.org> (message from Eli Zaretskii on Sun, 22
+ Nov 2026 10:33:03 +0200)
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support> <87v75tertn.fsf@posteo.net>
+ <E1xUxJe-00F84p-G4@fencepost.gnu.org> <867bi5gta8.fsf@gnu.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > There's nothing wrong with writing such programs in Emacs Lisp and
+  > running them in Emacs, but the point here is that we only accept ELPA
+  > packages that seem to be useful to enough people, not just to the
+  > person who wrote the package.  That means the package should solve a
+  > problem or problems that are of interest to enough people.
+
+We are talking at cross purposes.  The original report was that these
+features ARE useful to a community, but it is a fairly small
+community.  I get the impression that it is useful to post somehow
+about the implementations of these features.
+
+I think that if we could easily guide people who implement
+such features to a way to make them independent of Emacs, but could
+be used somehow in Emacs, they would be more useful
+and less work for us.
+
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-27T06:12:11+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: Why isn't it a Code of Conduct question? - Re: Human Emacs
+Message-ID: <E1xWoFn-004PDd-EF@fencepost.gnu.org>
+In-Reply-To: <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org> (message from
+ Ellie on Tue, 10 Nov 2026 05:54:22 +0000)
+References: <67ec7770-6d4b-4dc8-8780-284ceb013ed9@horse64.org>
+ <86y0b22kkk.fsf@gnu.org> <0a144207-5fbe-4795-9bfb-a10645a86ba3@horse64.org>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+  > > As have been explained, we (and the entire GNU Project) are waiting
+  > > for lawyers to provide their recommendations, and for the GNU Project
+  > > leadership to translate them into practical guidance. 
+
+  > So wouldn't it make sense to wait and not allow LLM contributions until 
+  > that happened?
+
+Yes, it does.
+
+We have learned a lot about the situation with code written by LLMs
+in the past couple weeks, finding out what other projects have discovered.
+We are likely to learn a lot more in the next few months.
+And since this is not limited to experience had by Emacs development,
+We don't have to _use_ LLMs to learn what they might do to us
+if we did use them.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-27T06:13:50+01:00
+From: Richard Stallman <rms@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: card-games
+Message-ID: <E1xWoHO-004R87-60@fencepost.gnu.org>
+In-Reply-To: <CAJf-WoRWYo1OCR3QzWqdX29SA3fP45DXOi+BNDHF9JA+ZjzKBg@mail.gmail.com>
+ (message from Corwin Brust on Mon, 23 Nov 2026 06:10:24 -0600)
+References: <CAJf-WoRWYo1OCR3QzWqdX29SA3fP45DXOi+BNDHF9JA+ZjzKBg@mail.gmail.com>
+
+[[[ To any NSA and FBI agents reading my email: please consider    ]]]
+[[[ whether defending the US Constitution against all enemies,     ]]]
+[[[ foreign or domestic, requires you to follow Snowden's example. ]]]
+
+1. I can imagine what this would do with a solitaire game,
+but how does it handle two-player games?  Emacs is not particularly
+a platform for such activity.
+
+2. Is there a benefit to have this somehow attached to Emacs?
+I don't see it.
+
+3. GNU packages should not include any LLM output.
+(That is an interim legal policy, while we study
+what our long-term policy about LLM output should be.)
+
+NonGNU ELPA packages are not _part of_ GNU Emacs.
+But they are associated closely with GNU Emacs.
+That makes them a borderline case.  We should aim to have
+less, not more, in NonGNU ELPA that was developed with LLM.
+
+-- 
+Dr Richard Stallman (https://stallman.org)
+Chief GNUisance of the GNU Project (https://gnu.org)
+Founder, Free Software Foundation (https://fsf.org)
+Internet Hall-of-Famer (https://internethalloffame.org)
+
+================================================================================
+Date: 2026-11-27T07:39:17+01:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <m2y0ae4w2y.fsf@gmail.com>
+In-Reply-To: <m25wxi6foe.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m25wxi6foe.fsf@gmail.com>
+
+Gerd Möllmann <gerd.moellmann@gmail.com> writes:
+
+> Helmut Eller <eller.helmut@gmail.com> writes:
+>
+>> On Thu, Nov 26 2026, Sean Whitton wrote:
+>>
+>>> Helmut Eller [25/Nov  6:41pm +01] wrote:
+>>>> Right, the signal handling part is done now.  Next, I will try to merge
+>>>> master into feature/igc3.
+>>>>
+>>>> Then ask if it is good enough for the big merge?
+>>>
+>>> I think Eli and I are both on board with that.
+>>>
+>>> You can go ahead!
+>>
+>> I merged master into feature/igc3.
+>>
+>> Maybe people could look now at code on the branch with something like
+>>
+>>   git diff master feature/igc3 -- src/lisp.h
+>>
+>> for the files they are familiar with and report problematic changes.
+>> Especially those that aren't guarded by HAVE_MPS.
+>>
+>> Helmut
+>
+> Hi Helmut,
+>
+> I've made a change log for the merge from src/ns*.[hmc].
+> Hope that's okay ;-).
+>
+> 2026-11-27  Gerd Möllmann  <gerd.moellmann@gmail.com>
+>
+> 	* src/nsterm.h (EmacsView): Make emacsframe a struct frame **.
+> 	(EmacsScroller): Remove frame and window members, add
+> 	m_lisp_window.
+> 	(lispWindow, lispFrame): Declare new accessor methods. All users
+> 	of window and frame in all files changed.
+>
+> 	* src/nsterm.m: The emacsframe member in EmacsView has been
+> 	changed in nsterm.h from struct frame * to struct frame **. All
+> 	uses adapted.
+> 	(EV_TRAILER): Add a frame parameter, all call sites changed.
+> 	(hold_event): Use igc_realloc_ambig if HAVE_MPS.
+> 	(ns_term_init)[HAVE_MPS]: Use igc_xzalloc_ambig.
+> 	([EmacsView dealloc]):  Free emacsframe.
+> 	([EmacsView initFrameFromEmacs:]): Allocate emacsframe.
+> 	([EmacsScroller lispWindow]): New method.
+> 	([EmacsScroller lispFrame]): New method.
+> 	([EmacsScroller initFrame:window:]): Allocate m_lisp_window.
+> 	([EmacsScroller initFrame:window:]): Use lisp_frame
+> 	([EmacsScroller mark]): Do nothing for igc.
+>
+> 	* src/nsfns.m (Fns_frame_list_z_order): emacsframe is now struct
+> 	frame **.
+>
+> 	* src/nsmenu.m (ns_menu_show)[HAVE_MPS]: Don't inhibit GC.
+
+A bit more of the same:
+
+	* src/dispextern.h (struct glyph_magtrix) [HAVE_MPS] New member
+	igc_info.
+	(struct face, struct face_cache, struct image)
+	(struct image_cache): Use GC_HEADER.
+	(FACE_CACHE_BUCKETS_SIZE): New.
+
+	* src/dispnew.c (new_glyph_matrix) [HAVE_MPS]: Use
+	igc_alloc_glyph_matrix.
+	(free_glyph_matrix) [HAVE_MPS]: Use igc_xfree or xfree.
+	(new_glyph_pool) [HAVE_MPS]: Use igc_alloc_glyph_pool.
+	(free_glyph_pool) [HAVE_MPS]: Use igc_xfree.
+	(save_current_matrix) [HAVE_MPS]: Use igc_xzalloc_ambig.
+	(restore_current_matrix) [HAVE_MPS]: Use igc_xfree.
+	(handle_window_change_signal_2): Renamed from
+	handle_window_change_signal,
+	(handle_window_change_signal): New implemenation.
+	(process_pending_sigwinch) [HAVE_MPS]: New function.
+	(syms_of_display) [HAVE_MPS]: Init and staticpro
+	space_glyph.object.
+
+	* src/xdisp.c (pop_it) [HAVE_MPS]: Make sure we have up-to-date
+	collectable objects in bidi_it.
+	(display_echo_area) [HAVE_MPS]: Don't inhibit GC.
+	(unwind_format_mode_line): Unchain markers.
+	(decode_mode_spec): Don't inhibit GC.
+	(append_glyph, append_composite_glyph, produce_image_glyph)
+	(produce_xwidget_glyph, append_stretch_glyph)
+	(append_glyphless_glyph): Init glyph->frame.
+	(protect_global_values) [HAVE_MPS]: New function.
+	(syms_of_xdisp) [HAVE_MPS]: Additional staticpros. Let pdumper
+	call protect_global_values after load.
+
+================================================================================
+Date: 2026-11-27T07:58:44+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <878q2e3gm3.fsf@web.de>
+In-Reply-To: <E1xWo7k-004Fla-St@fencepost.gnu.org>
+References: <875wxrr7a3.fsf@web.de> <86bj7jk4g8.fsf@gnu.org>
+ <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org> <87jym6nvm3.fsf@web.de>
+ <86ld6mgsun.fsf@gnu.org> <87tslam8wt.fsf@web.de>
+ <87zev2qcuz.fsf@posteo.net> <87o6bim1bg.fsf@web.de>
+ <86eccdh162.fsf@gnu.org> <awKKjWVIzRNTCbVT@tuxteam.de>
+ <E1xWo7k-004Fla-St@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+>   > The situation is asymmetrical: non-LLM alternatives can be made
+>   > harder, partly under control of the LLM generated code. There is
+>   > a huge financial interest in doing so.
+>
+> I don't follow this argument.  Could you state it more concretely?
+> What might the LLM developers do that would make non-LLM maintenance
+> harder?
+
+For example they can add pre-prompts (instructions which are injected
+into instructions users actually gave) that push models to produce more
+lower-level code, like skipping abstractions that would be easy to
+understand for humans.
+
+Or to just producing far more code (e.g. with small alterations embedded
+in other code), so the amount of code can’t easily be refactored without
+using an LLM.
+
+Or promoting the use of mechanical beautifying tools that blow up diffs,
+increasing the effort for humans to review them. Example:
+https://linuxstans.com/linux-7-4-rc2-ai-bug-fixes-bpf/
+> much of the diffstat is scripted [small LLM changes] noise.
+
+Or make LLM "review agents" push for adding tests that don’t bring
+benefit but add more work for any functional change. Like the recent 40k
+line patch added as bugfixes to Linux during the release candidate phase:
+https://linuxstans.com/linus-torvalds-ai-companion/
+(this was a patch by a long-standing contributor who should know better)
+
+
+As an aside: that article says "the first draft of the cover letter came
+from an LLM coding assistant working under his direction", which is a
+classical mistake that leads to anchoring effects (humans being attached
+to the first version they saw which biases the options considered):
+https://en.wikipedia.org/wiki/Anchoring_effect
+
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-27T08:16:54+01:00
+From: "Dr. Arne Babenhauserheide" <arne_bab@web.de>
+Subject: Re: ELPA usefulness criteria =?utf-8?B?w6LigqzigJ0=?= judging niche
+ packages before their users are known
+Message-ID: <8733sm3frt.fsf@web.de>
+In-Reply-To: <E1xWo5t-004EpX-6H@fencepost.gnu.org>
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net> <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support> <87v75tertn.fsf@posteo.net>
+ <E1xUxJe-00F84p-G4@fencepost.gnu.org> <867bi5gta8.fsf@gnu.org>
+ <88ee8b34d2c04c3c4718dfffbad1e6d2@gnu.support>
+ <E1xWo5t-004EpX-6H@fencepost.gnu.org>
+
+Richard Stallman <rms@gnu.org> writes:
+
+>   > - seed cleaning business: estimating prices and weight losses; also 
+>   > lumber trade. It helps agricultural sector.
+…
+> I think we want to avoid spending our time on packages so specialized
+> as that.  There could be tens of thousands of them!  I'm glad that
+> people do these things, but we must not accept any kind of
+> responsibily for taking care of them.
+
+This seems to be more a case of providing an archive so people can find
+ready-made solutions to specific tasks. Kind of like emacswiki was used,
+but with search integrated into Emacs via package.el.
+
+Having ready-made solutions for most tasks is a genuine advantage that
+for example gives development in Python or Java or Javascript an
+advantage, as long as it does not add maintenance burden.
+
+Best wishes,
+Arne
+-- 
+Unpolitisch sein
+heißt politisch sein,
+ohne es zu merken.
+https://www.draketo.de
+
+================================================================================
+Date: 2026-11-27T08:43:52+01:00
+From: Juri Linkov <juri@linkov.net>
+Subject: Re: xref-find-by-kind in etags, was: Re: master e630bc4fd72: ; Fix
+ some recently added docs.
+Message-ID: <87jylylnwn.fsf@mail.linkov.net>
+In-Reply-To: <9a316be4-60ba-48b8-a6e7-8be039a6d004@gutov.dev>
+References: <178834458635.27869.6042317250059805973@vcs2.savannah.gnu.org>
+ <861pb3opn7.fsf@gnu.org>
+ <3fb7054a-1420-49fa-b043-c0c62b92844e@gutov.dev>
+ <86fqzd1lz8.fsf@gnu.org> <jwvy0d5ji2k.fsf-monnier+emacs@gnu.org>
+ <86ld94ys2e.fsf@gnu.org> <jwvzexkhvl3.fsf-monnier+emacs@gnu.org>
+ <86ecewymbl.fsf@gnu.org> <jwv1pavu5y1.fsf-monnier+emacs@gnu.org>
+ <86mrtin4j8.fsf@gnu.org>
+ <b821fd96-ddb0-452c-880d-70ea59eff997@gutov.dev>
+ <86zex0z4k9.fsf@gnu.org>
+ <d6ef1c94-0005-4477-bed5-8d92c0b282e3@gutov.dev>
+ <86se1nvf3v.fsf@gnu.org>
+ <c49837c1-9670-4543-8289-af4aced45e52@gutov.dev>
+ <86cxsqtk1y.fsf@gnu.org>
+ <15109257-4187-4f25-b933-51b1542cb9a2@gutov.dev>
+ <87v764g2bt.fsf@mail.linkov.net>
+ <715b8d24-70a8-459d-a45e-fb324cb35203@gutov.dev>
+ <87bj7c8210.fsf@mail.linkov.net>
+ <9a316be4-60ba-48b8-a6e7-8be039a6d004@gutov.dev>
+
+> Or a command that affects just the next jump. Though this would probably be
+> easier to apply with 'C-u C-u', as discussed before.
+
+It would be convenient if 'C-u C-u' will allow choosing a preferable backend,
+then subsequent invocations will reuse it from the previous location
+without requiring typing 'C-u C-u' again before every next command.
+
+> As for implementation strategy, I'm thinking of a new backend type that
+> could be returned by xref-find-backend and wraps a tuple
+> backend/buffer/position retrieved from history (or just buffer/position,
+> since backend is recoverable).
+
+Then such dispatcher backend should always be the first backend
+in the list of backends to return one of the remaining backends.
+However, it's not easy to keep it always first since a buffer-local
+hook might be added at the top, thus overriding the dispatcher backend.
+
+================================================================================
+Date: 2026-11-27T08:51:50+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <86a4mud84p.fsf@gnu.org>
+In-Reply-To: <E1xWo5K-004EgC-J3@fencepost.gnu.org> (message from Richard
+ Stallman on Fri, 27 Nov 2026 00:01:22 -0500)
+References: <877bis35nn.fsf@gmail.com> <874idjxa4a.fsf@web.de>
+ <E1xTTS1-004ofn-3n@fencepost.gnu.org> <86se0xs7rp.fsf@gmail.com>
+ <86ld6pl0kh.fsf@gnu.org> <86v75tb067.fsf@gmail.com>
+ <867bi9krv4.fsf@gnu.org> <861p8haw7h.fsf@gmail.com>
+ <86zev5jamu.fsf@gnu.org> <864idca2zs.fsf@gmail.com>
+ <86o6bkj6fu.fsf@gnu.org> <87y0anrffj.fsf@web.de> <86ik1rk8p6.fsf@gnu.org>
+ <87bj7jr8r7.fsf@web.de> <86eccfk7oj.fsf@gnu.org> <875wxrr7a3.fsf@web.de>
+ <86bj7jk4g8.fsf@gnu.org> <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org>
+ <87jym6nvm3.fsf@web.de> <f86d2ed739adfadeb38904c3edeff2ee@gnu.support>
+ <87bj7hkxqa.fsf@web.de> <E1xWo5K-004EgC-J3@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: bugs@gnu.support, eliz@gnu.org, joel.reicher@gmail.com,
+> 	philipk@posteo.net, shipmints@gmail.com, arstoffel@gmail.com,
+> 	emacs-devel@gnu.org
+> Date: Fri, 27 Nov 2026 00:01:22 -0500
+> 
+>   >  Airlie expressed a concern that there might not be anything left for
+>   >  those people to write; as soon as an idea is raised, somebody can
+>   >  summon an implementation from an LLM. Alice Ryhl agreed that this
+>   >  could be a problem. Ojeda suggested setting up a way to assign a
+>   >  project to a developer for a period; Hellwig said that the only reason
+>   >  to do that would be for training purposes. Otherwise, why wait when
+>   >  there is an implementation ready? Ojeda said that supporting
+>   >  developers who do not want to use LLMs is also a good reason.«
+>   > https://lwn.net/Articles/1099594/
+> 
+>   > What followed was that the requirement to add Assisted-By to commit
+>   > messages was dropped¹ and replaced by a "be transparent … you can …"
+>   > guideline for cover letters².
+>   > ¹ https://docs.kernel.org/process/coding-assistants.html
+>   > ² https://docs.kernel.org/process/generated-content.html
+> 
+>   > That’s a classical example how social dynamics weaken a policy that
+>   > allows LLM output under some conditions and begin to push people out who
+>   > write code by hand (though Ojeda still spoke up against that).
+> 
+> This is an issue we must properly address.  It sounds like they didn't try.
+> 
+> Linux adheres to the open source philosophy.  If Linux development
+> became totally dependent on a nonfree tool, they might not see a
+> problem in that.  We, in contrast, _must_ make sure that does not
+> happen.
+> 
+> This is an additional reason to put explicit limits on our usage of
+> LLMs.  It does not imply _never_ using them.  But we should _never_
+> steer anyone towards a nonfree or SaaSS LLM.
+
+I don't see how this and similar issues can be properly addressed
+before the relevant events happen.  We are talking about dynamics in
+project development processes and procedures in response to submission
+of certain kind of changes or to certain suggestions to change the
+procedures.  We can only address those if and when they happen, not in
+advance.
+
+> Another issue is that we must take care not to be locked into one
+> particular LLM, either in general or in working on one piece of code.
+> Those who do use LLMs should switch around, to make sure of this.
+> 
+> We should also make sure that LLMs don't pressure us into using
+> certain kinds of designs and not others.
+
+This looks into a far future, under many implicit assumptions, like
+the assumption that LLM-generated patches are freely acceptable.  We
+are far from being there any time soon, so I don't understand the
+almost-compulsive worrying by several people here about stuff that
+didn't happen and IMNSHO is unlikely to ever happen in our project.
+
+> All this is supposing that the copyright issues have been resolved.
+
+Yes, another premature assumption.
+
+================================================================================
+Date: 2026-11-27T08:52:12+01:00
+From: tomas@tuxteam.de
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <awk2rMYcmSLvdM36@tuxteam.de>
+In-Reply-To: <878q2e3gm3.fsf@web.de>
+References: <86tslairs0.fsf@gnu.org> <87jym6nvm3.fsf@web.de>
+ <86ld6mgsun.fsf@gnu.org> <87tslam8wt.fsf@web.de>
+ <87zev2qcuz.fsf@posteo.net> <87o6bim1bg.fsf@web.de>
+ <86eccdh162.fsf@gnu.org> <awKKjWVIzRNTCbVT@tuxteam.de>
+ <E1xWo7k-004Fla-St@fencepost.gnu.org> <878q2e3gm3.fsf@web.de>
+
+On Fri, Nov 27, 2026 at 07:58:44AM +0100, Dr. Arne Babenhauserheide wrote:
+> Richard Stallman <rms@gnu.org> writes:
+> 
+> >   > The situation is asymmetrical [...]
+
+> > I don't follow this argument.  Could you state it more concretely?
+> > What might the LLM developers do that would make non-LLM maintenance
+> > harder?
+> 
+> For example they can add pre-prompts [...]
+
+Thanks Arne. This was precisely what I meant -- just you came up with
+better examples than I would have.
+
+My point is that commercial AI companies are so desperate for revenue
+that they /will/ use this power to skew the playing field whenever they
+can. My plea is to be vigilant to not become their playing field.
+
+Cheers
+-- 
+t
+
+================================================================================
+Date: 2026-11-27T09:01:24+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <867bhyd7or.fsf@gnu.org>
+In-Reply-To: <E1xWo7e-004FgT-Fi@fencepost.gnu.org> (message from Richard
+ Stallman on Fri, 27 Nov 2026 00:03:46 -0500)
+References: <875wxrr7a3.fsf@web.de> <86bj7jk4g8.fsf@gnu.org>
+ <877bi7p7zs.fsf@web.de> <86tslairs0.fsf@gnu.org> <87jym6nvm3.fsf@web.de>
+ <86ld6mgsun.fsf@gnu.org> <87tslam8wt.fsf@web.de>
+ <87zev2qcuz.fsf@posteo.net> <87o6bim1bg.fsf@web.de>
+ <86eccdh162.fsf@gnu.org> <awKKjWVIzRNTCbVT@tuxteam.de>
+ <87o6bh74ne.fsf@localhost> <E1xWo7e-004FgT-Fi@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: tomas@tuxteam.de, eliz@gnu.org, arne_bab@web.de,
+> 	philipk@posteo.net, joel.reicher@gmail.com,
+> 	shipmints@gmail.com, arstoffel@gmail.com, emacs-devel@gnu.org
+> Date: Fri, 27 Nov 2026 00:03:46 -0500
+> 
+>   > > Yes, the maintainers can push back there. As much as I admire
+>   > > current maintainership, I fear this will become a superhuman
+>   > > task.
+> 
+>   > Do you have any reasons to believe that addressing this potential issues
+>   > needs to be done earlier rather than later? If earlier, how earlier? Or
+>   > is there any specific condition you have in mind?
+> 
+> The crucial moments will be those when we face the choice of trusting
+> a proposed change from an LLM, or leaving a problem unfixed for a
+> time.  We are likely to feel pressure to accept the change.
+
+We almost _never_ trust any proposed changes.  The changes submitted
+to us are always thoroughly reviewed, usually by several people.
+There's a very small number of people who are trusted to install
+changes without review, and even for those, a couple of core
+maintainers watch the installed changes and raise any issues they see
+post-factum.
+
+So "trusting LLM-generated changes" is not on the table, and shouldn't
+be, IMO.  Every such change should be reviewed as we do with any other
+changes, probably even more thoroughly.  And I don't see why we would
+be "likely to feel pressure" in these matters, more than we do now
+with changes produced by humans.  If anything, I think any pressure to
+accept changes, if it exists, is _greater_ when talking to a person
+than when it's machine-generated, because we know a person has
+feelings that we don't want to hurt, to avoid the risk of losing a
+potential contributor and possibly a future member of the development
+team.
+
+> If the change is easy to understand, it may do no harm (in terms of
+> design) to accept it.  But if it is hard to understand, we should
+> decline it.
+
+We don't accept changes that are not understandable, full stop.  Once
+again, this is a non-issue.
+
+> We can help ourselves stay ready to say no if we practice the will
+> power to say no.
+
+We said NO already quite a few times, so I see no problem with us
+being ready for doing that in the future.
+
+================================================================================
+Date: 2026-11-27T09:03:07+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <865wxid7lw.fsf@gnu.org>
+In-Reply-To: <E1xWo80-004Fv4-CG@fencepost.gnu.org> (message from Richard
+ Stallman on Fri, 27 Nov 2026 00:04:08 -0500)
+References: <877bis35nn.fsf@gmail.com> <87o6c44dbz.fsf@posteo.net>
+ <877biktlyw.fsf@posteo.net> <E1xSDYt-009g2W-Bs@fencepost.gnu.org>
+ <CAN+1HbqkcVa3-BHzMdWssiBFFrN6Wpq+5vxDK0PDDP_sqbueQw@mail.gmail.com>
+ <87cxs71j7m.fsf@web.de> <87eccnxc1p.fsf@posteo.net>
+ <874idjxa4a.fsf@web.de> <E1xTTS1-004ofn-3n@fencepost.gnu.org>
+ <87jym9gaoq.fsf@posteo.net> <E1xUxJs-00F8eh-A4@fencepost.gnu.org>
+ <86fqwth20y.fsf@gnu.org> <E1xWo80-004Fv4-CG@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: philipk@posteo.net, arne_bab@web.de, shipmints@gmail.com,
+> 	arstoffel@gmail.com, emacs-devel@gnu.org
+> Date: Fri, 27 Nov 2026 00:04:08 -0500
+> 
+>   > > 2. What role have LLMs played in developing Nuspell so far?
+> 
+>   > None, AFAICT.
+> 
+>   > > 3. What does the developer say about what role LLMs will play in
+>   > > developing Nuspell for the foreseeable future?
+> 
+>   > I don't think we contacted them.  There are no documents in the
+>   > Nuspell repository that touch these issues.
+> 
+> How about if we interface Emacs to Nuspell?  The new features will
+> be appreciated.
+
+I think what we have in ispell.el already provides that.  Nuspell is
+just another spell-checker which supports the Ispell protocol, like
+Ispell, Aspell, and Hunspell.  We support all of them already.
+
+================================================================================
+Date: 2026-11-27T09:04:37+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <875wxiwvhm.fsf@gmail.com>
+In-Reply-To: <m25wxi6foe.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m25wxi6foe.fsf@gmail.com>
+
+On Fri, Nov 27 2026, Gerd Möllmann wrote:
+
+>> I merged master into feature/igc3.
+>>
+>> Maybe people could look now at code on the branch with something like
+>>
+>>   git diff master feature/igc3 -- src/lisp.h
+>>
+>> for the files they are familiar with and report problematic changes.
+>> Especially those that aren't guarded by HAVE_MPS.
+>>
+>> Helmut
+>
+> Hi Helmut,
+>
+> I've made a change log for the merge from src/ns*.[hmc].
+> Hope that's okay ;-).
+
+Sure.  Should we commit those somewhere?
+
+>
+> 2026-11-27  Gerd Möllmann  <gerd.moellmann@gmail.com>
+>
+> 	* src/nsterm.h (EmacsView): Make emacsframe a struct frame **.
+> 	(EmacsScroller): Remove frame and window members, add
+> 	m_lisp_window.
+> 	(lispWindow, lispFrame): Declare new accessor methods. All users
+> 	of window and frame in all files changed.
+>
+> 	* src/nsterm.m: The emacsframe member in EmacsView has been
+> 	changed in nsterm.h from struct frame * to struct frame **. All
+> 	uses adapted.
+> 	(EV_TRAILER): Add a frame parameter, all call sites changed.
+> 	(hold_event): Use igc_realloc_ambig if HAVE_MPS.
+> 	(ns_term_init)[HAVE_MPS]: Use igc_xzalloc_ambig.
+> 	([EmacsView dealloc]):  Free emacsframe.
+> 	([EmacsView initFrameFromEmacs:]): Allocate emacsframe.
+> 	([EmacsScroller lispWindow]): New method.
+> 	([EmacsScroller lispFrame]): New method.
+> 	([EmacsScroller initFrame:window:]): Allocate m_lisp_window.
+> 	([EmacsScroller initFrame:window:]): Use lisp_frame
+> 	([EmacsScroller mark]): Do nothing for igc.
+>
+> 	* src/nsfns.m (Fns_frame_list_z_order): emacsframe is now struct
+> 	frame **.
+>
+> 	* src/nsmenu.m (ns_menu_show)[HAVE_MPS]: Don't inhibit GC.
+>
+>
+
+================================================================================
+Date: 2026-11-27T09:05:53+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: [NonGNU ELPA] New package: tvwall
+Message-ID: <864id2d7ha.fsf@gnu.org>
+In-Reply-To: <E1xWo8G-004G2w-HI@fencepost.gnu.org> (message from Richard
+ Stallman on Fri, 27 Nov 2026 00:04:24 -0500)
+References: <1a1e8449bd3.69373cbd549128.4027309764853683670@getmediawall.com>
+ <87o6bnf4ui.fsf@posteo.net>
+ <d1e2e87c702de519e2cdd92259b623b0@gnu.support>
+ <874idejl2q.fsf@hiperboreo.eu>
+ <d071372a3111da7c57629de3ca06dd81@gnu.support> <87v75tertn.fsf@posteo.net>
+ <E1xUxJe-00F84p-G4@fencepost.gnu.org> <867bi5gta8.fsf@gnu.org>
+ <E1xWo8G-004G2w-HI@fencepost.gnu.org>
+
+> From: Richard Stallman <rms@gnu.org>
+> Cc: philipk@posteo.net, bugs@gnu.support, oscarfv@eclipso.eu,
+> 	team@getmediawall.com, emacs-devel@gnu.org
+> Date: Fri, 27 Nov 2026 00:04:24 -0500
+> 
+>   > There's nothing wrong with writing such programs in Emacs Lisp and
+>   > running them in Emacs, but the point here is that we only accept ELPA
+>   > packages that seem to be useful to enough people, not just to the
+>   > person who wrote the package.  That means the package should solve a
+>   > problem or problems that are of interest to enough people.
+> 
+> We are talking at cross purposes.  The original report was that these
+> features ARE useful to a community, but it is a fairly small
+> community.  I get the impression that it is useful to post somehow
+> about the implementations of these features.
+> 
+> I think that if we could easily guide people who implement
+> such features to a way to make them independent of Emacs, but could
+> be used somehow in Emacs, they would be more useful
+> and less work for us.
+
+I don't think we are talking at cross purposes, no.  I think we are
+saying the same things, just with slightly different words.  E.g., you
+sar talking about "a fairly small community" whereas I wrote "useful
+to enough people, not just the person who wrote the package", but you
+shouldn't interpret what I wrote too literally: "a small community" is
+not significantly different from "one person", for this purpose.
+
+================================================================================
+Date: 2026-11-27T09:19:15+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: ELPA submission: vibe-spell
+Message-ID: <861p86d6v0.fsf@gnu.org>
+In-Reply-To: <awk2rMYcmSLvdM36@tuxteam.de> (tomas@tuxteam.de)
+References: <86tslairs0.fsf@gnu.org> <87jym6nvm3.fsf@web.de>
+ <86ld6mgsun.fsf@gnu.org> <87tslam8wt.fsf@web.de>
+ <87zev2qcuz.fsf@posteo.net> <87o6bim1bg.fsf@web.de>
+ <86eccdh162.fsf@gnu.org> <awKKjWVIzRNTCbVT@tuxteam.de>
+ <E1xWo7k-004Fla-St@fencepost.gnu.org>
+ <878q2e3gm3.fsf@web.de> <awk2rMYcmSLvdM36@tuxteam.de>
+
+> Date: Fri, 27 Nov 2026 08:52:12 +0100
+> From: tomas@tuxteam.de
+> Cc: rms@gnu.org, eliz@gnu.org, philipk@posteo.net, joel.reicher@gmail.com,
+> 	shipmints@gmail.com, arstoffel@gmail.com, emacs-devel@gnu.org
+> 
+> On Fri, Nov 27, 2026 at 07:58:44AM +0100, Dr. Arne Babenhauserheide wrote:
+> > Richard Stallman <rms@gnu.org> writes:
+> > 
+> > >   > The situation is asymmetrical [...]
+> 
+> > > I don't follow this argument.  Could you state it more concretely?
+> > > What might the LLM developers do that would make non-LLM maintenance
+> > > harder?
+> > 
+> > For example they can add pre-prompts [...]
+> 
+> Thanks Arne. This was precisely what I meant -- just you came up with
+> better examples than I would have.
+> 
+> My point is that commercial AI companies are so desperate for revenue
+> that they /will/ use this power to skew the playing field whenever they
+> can. My plea is to be vigilant to not become their playing field.
+
+Please! we are _already_ vigilant!!  I pointed to an example of a
+recent discussion on the bug list, if someone still has doubts.
+
+Can we please stop these messages based on implicit mistrust of the
+abilities of the Emacs maintainers and our competence in doing our
+job?  Not only is it an insult, it adds that to the injury of
+completely ignoring the existing examples which are clear evidence to
+the contrary!  And yet these claims keep coming in, time and again.
+
+Please keep these fears to yourself until and unless you actually see
+us bending to those tricks and malevolent practices.  Please!
+
+================================================================================
+Date: 2026-11-27T09:20:27+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <86zeuubs8k.fsf@gnu.org>
+In-Reply-To: <875wxiwvhm.fsf@gmail.com> (message from Helmut Eller on Fri, 27
+ Nov 2026 09:04:37 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m25wxi6foe.fsf@gmail.com> <875wxiwvhm.fsf@gmail.com>
+
+> From: Helmut Eller <eller.helmut@gmail.com>
+> Cc: Sean Whitton <spwhitton@spwhitton.name>,  Eli Zaretskii <eliz@gnu.org>,
+>   Pip Cet <pipcet@protonmail.com>,  emacs-devel@gnu.org
+> Date: Fri, 27 Nov 2026 09:04:37 +0100
+> 
+> On Fri, Nov 27 2026, Gerd Möllmann wrote:
+> 
+> >> I merged master into feature/igc3.
+> >>
+> >> Maybe people could look now at code on the branch with something like
+> >>
+> >>   git diff master feature/igc3 -- src/lisp.h
+> >>
+> >> for the files they are familiar with and report problematic changes.
+> >> Especially those that aren't guarded by HAVE_MPS.
+> >>
+> >> Helmut
+> >
+> > Hi Helmut,
+> >
+> > I've made a change log for the merge from src/ns*.[hmc].
+> > Hope that's okay ;-).
+> 
+> Sure.  Should we commit those somewhere?
+
+They should all be in the commit log message when you merge the igc3
+branch onto master.
+
+================================================================================
+Date: 2026-11-27T09:30:19+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <871p86smlg.fsf@gmail.com>
+In-Reply-To: <m2a4mu6fub.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m2a4mu6fub.fsf@gmail.com>
+
+>>>>> On Fri, 27 Nov 2026 05:47:08 +0100, Gerd Möllmann <gerd.moellmann@gmail.com> said:
+
+
+    Gerd> Diffing ObjC files currently leads to an error:
+
+    Gerd>   .../emacs/github/master % git diff master...feature/igc3 -- src/nsterm.m
+    Gerd>   fatal: Last expression must not be negated:
+    Gerd> !^[[:space:]]*(do|for|if|else|return|switch|while)\n!^[[:space:]]*[[:alpha:]_][[:alnum:]_]*:[[:space:]]*($|/[/*])\n^[[:space:]]*([-+][[:space:]]*\\([^)]+\\)[[:space:]]*[[:alpha:]_].*)$\n^((::[[:space:]]*)?[[:alpha:]_][[:alnum:]_]*[[:space:]]*\\(.*)$\n^(@(implementation|interface|protocol)[[:space:]].*)$\n^((#define[[:space:]]|DEFUN).*)$
+
+I fixed that yesterday with 513b6a8a708, but you still have the old
+entry. You should remove the diff entry for objc in your repo
+.gitconfig, and rerun autogen.sh
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-27T09:32:42+01:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <m2tsl24qtx.fsf@gmail.com>
+In-Reply-To: <86zeuubs8k.fsf@gnu.org>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m25wxi6foe.fsf@gmail.com> <875wxiwvhm.fsf@gmail.com>
+ <86zeuubs8k.fsf@gnu.org>
+
+Eli Zaretskii <eliz@gnu.org> writes:
+
+>> From: Helmut Eller <eller.helmut@gmail.com>
+>> Cc: Sean Whitton <spwhitton@spwhitton.name>,  Eli Zaretskii <eliz@gnu.org>,
+>>   Pip Cet <pipcet@protonmail.com>,  emacs-devel@gnu.org
+>> Date: Fri, 27 Nov 2026 09:04:37 +0100
+>> 
+>> On Fri, Nov 27 2026, Gerd Möllmann wrote:
+>> 
+>> >> I merged master into feature/igc3.
+>> >>
+>> >> Maybe people could look now at code on the branch with something like
+>> >>
+>> >>   git diff master feature/igc3 -- src/lisp.h
+>> >>
+>> >> for the files they are familiar with and report problematic changes.
+>> >> Especially those that aren't guarded by HAVE_MPS.
+>> >>
+>> >> Helmut
+>> >
+>> > Hi Helmut,
+>> >
+>> > I've made a change log for the merge from src/ns*.[hmc].
+>> > Hope that's okay ;-).
+>> 
+>> Sure.  Should we commit those somewhere?
+>
+> They should all be in the commit log message when you merge the igc3
+> branch onto master.
+
+That's what I remembered from last time. Do we need some management of
+who writes changelogs for which files, to avoid duplicate work?
+
+================================================================================
+Date: 2026-11-27T09:40:55+01:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <m2o6ba4qg8.fsf@gmail.com>
+In-Reply-To: <871p86smlg.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m2a4mu6fub.fsf@gmail.com> <871p86smlg.fsf@gmail.com>
+
+Robert Pluim <rpluim@gmail.com> writes:
+
+>>>>>> On Fri, 27 Nov 2026 05:47:08 +0100, Gerd Möllmann <gerd.moellmann@gmail.com> said:
+>
+>
+>     Gerd> Diffing ObjC files currently leads to an error:
+>
+>     Gerd>   .../emacs/github/master % git diff master...feature/igc3 -- src/nsterm.m
+>     Gerd>   fatal: Last expression must not be negated:
+>     Gerd> !^[[:space:]]*(do|for|if|else|return|switch|while)\n!^[[:space:]]*[[:alpha:]_][[:alnum:]_]*:[[:space:]]*($|/[/*])\n^[[:space:]]*([-+][[:space:]]*\\([^)]+\\)[[:space:]]*[[:alpha:]_].*)$\n^((::[[:space:]]*)?[[:alpha:]_][[:alnum:]_]*[[:space:]]*\\(.*)$\n^(@(implementation|interface|protocol)[[:space:]].*)$\n^((#define[[:space:]]|DEFUN).*)$
+>
+> I fixed that yesterday with 513b6a8a708, but you still have the old
+> entry. You should remove the diff entry for objc in your repo
+> .gitconfig, and rerun autogen.sh
+>
+> Robert
+
+Thanks!
+
+Worked even without removing the old entry from .git/config before
+running autogen.sh
+
+================================================================================
+Date: 2026-11-27T11:15:19+01:00
+From: Helmut Eller <eller.helmut@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <87y0aevavc.fsf@gmail.com>
+In-Reply-To: <871p86smlg.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m2a4mu6fub.fsf@gmail.com> <871p86smlg.fsf@gmail.com>
+
+On Fri, Nov 27 2026, Robert Pluim wrote:
+
+>     Gerd> Diffing ObjC files currently leads to an error:
+>
+>     Gerd>   .../emacs/github/master % git diff master...feature/igc3 -- src/nsterm.m
+>     Gerd>   fatal: Last expression must not be negated:
+>     Gerd> !^[[:space:]]*(do|for|if|else|return|switch|while)\n!^[[:space:]]*[[:alpha:]_][[:alnum:]_]*:[[:space:]]*($|/[/*])\n^[[:space:]]*([-+][[:space:]]*\\([^)]+\\)[[:space:]]*[[:alpha:]_].*)$\n^((::[[:space:]]*)?[[:alpha:]_][[:alnum:]_]*[[:space:]]*\\(.*)$\n^(@(implementation|interface|protocol)[[:space:]].*)$\n^((#define[[:space:]]|DEFUN).*)$
+>
+> I fixed that yesterday with 513b6a8a708,
+
+Bad timing :-)
+
+Helmut
+
+================================================================================
+Date: 2026-11-27T12:20:59+01:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <m2jyly4j1g.fsf@gmail.com>
+In-Reply-To: <m2y0ae4w2y.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m25wxi6foe.fsf@gmail.com> <m2y0ae4w2y.fsf@gmail.com>
+
+Gerd Möllmann <gerd.moellmann@gmail.com> writes:
+
+>> Hi Helmut,
+>>
+>> I've made a change log for the merge from src/ns*.[hmc].
+>> Hope that's okay ;-).
+>>
+>> 2026-11-27  Gerd Möllmann  <gerd.moellmann@gmail.com>
+...
+>
+> A bit more of the same:
+
+...
+
+And more, the whole thing as an attachment.
+
+There is one file, etc/.lldbinit, that someone needs to check if it works
+with master as it is in feature/igc3. I can't do that, sorry. Background
+is that it contains things I had in my fork cl-packages, where the
+original igc comes from.
+
+I guess the changes in comp.el can go? Not 100 % sure, but I think so.
+
+================================================================================
+Date: 2026-11-27T12:40:11+01:00
+From: "Pedro A. Aranda" <paaguti@gmail.com>
+Subject: [FR] tab-line: add a way to disable mouse-clicks on the tab with the
+ group name
+Message-ID: <e927044d-d11e-4e3c-81ab-ee248b8aacb2@gmail.com>
+In-Reply-To: 
+References: 
+
+Hi
+
+I've given my tab-line configuration a revamp after seeing the last 
+patches on tab-line.el.
+
+As part of this revamping, I have written a function to switch to the 
+next group, which I'm preparing to contribute as a patch (not yet there, 
+though).
+
+My main motivation was that I found the mouse-driven interaction with 
+the tab showing the group somehow confusing.
+CAVEAT: it may be just me ;-).
+
+Anyhow, it would be nice to have a function/defcustom to disable mouse 
+clicks on that specific tab.
+
+Thanks, /PA
+-- 
+Pedro A. Aranda
+ox-latex & ox-beamer maintainer
+
+Sagen's Paradeiser! (ORF: Als Radiohören gefährlich war) => write BE!
+IA: onomatopeya del rebuzno
+2nd year of the New Koprocracy
+
+================================================================================
+Date: 2026-11-27T12:58:16+01:00
+From: Eli Zaretskii <eliz@gnu.org>
+Subject: Re: feature/igc3 status
+Message-ID: <86y0aebi5j.fsf@gnu.org>
+In-Reply-To: <m2tsl24qtx.fsf@gmail.com> (message from Gerd =?utf-8?Q?M?=
+ =?utf-8?Q?=C3=B6llmann?= on Fri, 27 Nov 2026 09:32:42 +0100)
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m25wxi6foe.fsf@gmail.com> <875wxiwvhm.fsf@gmail.com>
+ <86zeuubs8k.fsf@gnu.org> <m2tsl24qtx.fsf@gmail.com>
+
+> From: Gerd Möllmann <gerd.moellmann@gmail.com>
+> Cc: Helmut Eller <eller.helmut@gmail.com>,  spwhitton@spwhitton.name,
+>   pipcet@protonmail.com,  emacs-devel@gnu.org
+> Date: Fri, 27 Nov 2026 09:32:42 +0100
+> 
+> Eli Zaretskii <eliz@gnu.org> writes:
+> 
+> >> From: Helmut Eller <eller.helmut@gmail.com>
+> >> Cc: Sean Whitton <spwhitton@spwhitton.name>,  Eli Zaretskii <eliz@gnu.org>,
+> >>   Pip Cet <pipcet@protonmail.com>,  emacs-devel@gnu.org
+> >> Date: Fri, 27 Nov 2026 09:04:37 +0100
+> >> 
+> >> On Fri, Nov 27 2026, Gerd Möllmann wrote:
+> >> 
+> >> >> I merged master into feature/igc3.
+> >> >>
+> >> >> Maybe people could look now at code on the branch with something like
+> >> >>
+> >> >>   git diff master feature/igc3 -- src/lisp.h
+> >> >>
+> >> >> for the files they are familiar with and report problematic changes.
+> >> >> Especially those that aren't guarded by HAVE_MPS.
+> >> >>
+> >> >> Helmut
+> >> >
+> >> > Hi Helmut,
+> >> >
+> >> > I've made a change log for the merge from src/ns*.[hmc].
+> >> > Hope that's okay ;-).
+> >> 
+> >> Sure.  Should we commit those somewhere?
+> >
+> > They should all be in the commit log message when you merge the igc3
+> > branch onto master.
+> 
+> That's what I remembered from last time. Do we need some management of
+> who writes changelogs for which files, to avoid duplicate work?
+
+Someone™ should take all the provided suggestions for commit logs and
+produce a coherent commit log message for the merge-commit, yes.
+
+================================================================================
+Date: 2026-11-27T13:08:32+01:00
+From: =?utf-8?Q?Gerd_M=C3=B6llmann?= <gerd.moellmann@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <m2fqwm4gu7.fsf@gmail.com>
+In-Reply-To: <m2jyly4j1g.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m25wxi6foe.fsf@gmail.com> <m2y0ae4w2y.fsf@gmail.com>
+ <m2jyly4j1g.fsf@gmail.com>
+
+Gerd Möllmann <gerd.moellmann@gmail.com> writes:
+
+> Gerd Möllmann <gerd.moellmann@gmail.com> writes:
+>
+>>> Hi Helmut,
+>>>
+>>> I've made a change log for the merge from src/ns*.[hmc].
+>>> Hope that's okay ;-).
+>>>
+>>> 2026-11-27  Gerd Möllmann  <gerd.moellmann@gmail.com>
+> ...
+>>
+>> A bit more of the same:
+>
+> ...
+>
+> And more, the whole thing as an attachment.
+>
+> There is one file, etc/.lldbinit, that someone needs to check if it works
+> with master as it is in feature/igc3. I can't do that, sorry. Background
+> is that it contains things I had in my fork cl-packages, where the
+> original igc comes from.
+>
+> I guess the changes in comp.el can go? Not 100 % sure, but I think so.
+
+And a final merge-changelog, this time including all files from a
+complete diff between master and feature/igc3, from the beginning to the
+first new file in mps.
+
+For mps/ I've only added a "new directly". I don't think it makes sense
+to list files individually.
+
+Remains the .lldinit thing (see above) and comp.el as review comments.
+
+I'll procrastinate now until I get triggered. (Please note that I don't
+have an account on savannah anymore, so I can't commit anything.)
+
+================================================================================
+Date: 2026-11-27T15:00:09+01:00
+From: Robert Pluim <rpluim@gmail.com>
+Subject: Re: feature/igc3 status
+Message-ID: <87se0mqsra.fsf@gmail.com>
+In-Reply-To: <87y0aevavc.fsf@gmail.com>
+References: <87ld8r9bgo.fsf@athena.silentflame.com> <87a4p6angg.fsf@gmail.com>
+ <878q2yz9rw.fsf@athena.silentflame.com> <878q2yqtdz.fsf@gmail.com>
+ <87cxrti2nm.fsf@athena.silentflame.com> <87y0agkduh.fsf@gmail.com>
+ <87y0afhnou.fsf@athena.silentflame.com> <878q2fjm79.fsf@gmail.com>
+ <m2a4mu6fub.fsf@gmail.com> <871p86smlg.fsf@gmail.com>
+ <87y0aevavc.fsf@gmail.com>
+
+>>>>> On Fri, 27 Nov 2026 11:15:19 +0100, Helmut Eller <eller.helmut@gmail.com> said:
+
+    Helmut> On Fri, Nov 27 2026, Robert Pluim wrote:
+    Gerd> Diffing ObjC files currently leads to an error:
+    >> 
+    Gerd> .../emacs/github/master % git diff master...feature/igc3 -- src/nsterm.m
+    Gerd> fatal: Last expression must not be negated:
+    Gerd> !^[[:space:]]*(do|for|if|else|return|switch|while)\n!^[[:space:]]*[[:alpha:]_][[:alnum:]_]*:[[:space:]]*($|/[/*])\n^[[:space:]]*([-+][[:space:]]*\\([^)]+\\)[[:space:]]*[[:alpha:]_].*)$\n^((::[[:space:]]*)?[[:alpha:]_][[:alnum:]_]*[[:space:]]*\\(.*)$\n^(@(implementation|interface|protocol)[[:space:]].*)$\n^((#define[[:space:]]|DEFUN).*)$
+    >> 
+    >> I fixed that yesterday with 513b6a8a708,
+
+    Helmut> Bad timing :-)
+
+Bad testing :-) I had the right one in one file, and committed the other.
+
+Robert
+--
+
+================================================================================
+Date: 2026-11-27T17:03:53+01:00
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: Re: speedbar
+Message-ID: <jwv1p86fekr.fsf-monnier+emacs@gnu.org>
+In-Reply-To: <weJR_itXRnqXD1T_k0naOw@gmail.com>
+References: <CADP9qHuYU5mfQRhzDAdrspLKHHHC5EuuEbc_RPH1JuJEfca6Dg@mail.gmail.com>
+ <huU74fwgRlC71ZOWHn1H1A@gmail.com>
+ <jwvbj7eggks.fsf-monnier+emacs@gnu.org>
+ <weJR_itXRnqXD1T_k0naOw@gmail.com>
+
+> I've been using the 'speedbar' for quite some time, especially 'sr-speedbar'.
+> That's why I thought it would be better to modify the one that's already in
+> Emacs directly.  Attached is the new version of the patches. 
+
+I just pushed your patch to `master` (with minor tweaks to the commit
+message to use the present tense when describing the change, see the
+GNU Coding Standards), thank you.
+
+
+=== Stefan
+
